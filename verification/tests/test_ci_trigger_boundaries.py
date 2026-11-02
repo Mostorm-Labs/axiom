@@ -13,26 +13,13 @@ def trigger_block(name: str) -> str:
 
 
 class CiTriggerBoundaryTest(unittest.TestCase):
-    def test_poc03_trigger_is_its_positive_dependency_allowlist(self):
-        trigger = trigger_block("poc03.yml")
-        required = (
-            '"r1-full-skia-sdk.lock.json"',
-            '"pocs/large_scene/**"',
-            '"pocs/ink_engine/**"',
-            '"runtime/foundation/**"',
-            '"runtime/scene/**"',
-            '"CMakeLists.txt"',
-            '"CMakePresets.json"',
-            '"cmake/**"',
-            '"docs/api/canvas_runtime_api_v1.h"',
-            '"docs/api/canvas_runtime_api_v1.manifest.json"',
-            '"tools/check_runtime_abi_manifest.py"',
-            '"tools/check_runtime_boundaries.py"',
-        )
-        for path in required:
-            self.assertIn(path, trigger)
-        self.assertNotIn('"runtime/**"', trigger)
-        self.assertNotIn('"runtime/semantic/**"', trigger)
+    def test_historical_hosts_are_available_only_on_request(self):
+        for name in ('poc02.yml', 'poc03.yml', 'rf01.yml',
+                     'g3-web-reference-host.yml', 'g3-windows-reference-host.yml'):
+            events = trigger_block(name).split('on:\n', 1)[1].split('\njobs:', 1)[0]
+            self.assertIn('  workflow_dispatch:', events)
+            for automatic in ('  pull_request:', '  push:', '  schedule:'):
+                self.assertNotIn(automatic, events, name)
 
     def test_g1_semantic_lane_owns_semantic_inputs_without_poc03_dependency(self):
         trigger = trigger_block("g1-semantic-codec.yml")

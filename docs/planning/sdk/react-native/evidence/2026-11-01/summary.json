@@ -1,0 +1,73 @@
+{
+  "format": "axiom-rn-development-evidence-v1",
+  "source_revision": "d7ce720aa4f6b139011a9593e2623535e1d3adb1",
+  "sdk_version": "0.2.0",
+  "qualification": "NOT_QUALIFIED",
+  "release": {
+    "sdk_version": "0.1.0",
+    "source_revision": "07126c4c378afdfba8636bd2cd0452c271357136",
+    "run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41309580105",
+    "conclusion": "success",
+    "github_release": "https://github.com/Mostorm-Labs/axiom/releases/tag/v0.1.0",
+    "npm_package": "@mostorm/axiom@0.1.0",
+    "npm_tag": "latest",
+    "npm_evidence": "hosted publish-npm log: published + version readback; local registry credential returns 401"
+  },
+  "platforms": {
+    "android": {
+      "native_library": "BUILT_ARM64",
+      "jni": "BUILT_ARM64",
+      "react_native_aar": "BUILT",
+      "aar_sha256": "25be44d93db1d61a2d525a3794baf22c4283212fe669264b745b3efdf032ee85",
+      "full_app": "BUILT_ARM64_DEBUG",
+      "physical_input": "NOT_RUN",
+      "apk_sha256": "f34a478f84165a5070d4d5339668b1ea3d0d445e7a0ac5bf8239a4da1788c0b2",
+      "runtime": "NOT_RUN_NO_DEVICE"
+    },
+    "ios": {
+      "native_library": "BUILT_DEVICE_AND_ARM64_SIMULATOR",
+      "react_native_app": "BUILT_ARM64_SIMULATOR",
+      "launch": "SESSION_ATTACHED_UI_VISIBLE",
+      "app_executable_sha256": "58c70ca273e4a06675d3ee9738bc089e2c865fdd273cfddb2687df831a516de3",
+      "native_library_sha256": "9eba7ca7e9cbcca967b08b8a53c6430366aabf440b5079d9e84c042bf86c0c0b",
+      "capture": "ios-simulator-session.png",
+      "physical_input": "NOT_RUN",
+      "notes": "Arm64 only. Generic universal simulator build fails slice selection. Set Podfile and Xcode deployment to 17.0. Metro local symlink needs watchFolders + resolver.nodeModulesPaths."
+    },
+    "macos": {
+      "native_library": "BUILT_ARM64",
+      "appkit_host": "REAL_METAL_INPUT_AND_REMOUNT_HISTORY_PASSED",
+      "react_native_app": "NOT_RUN",
+      "physical_input": "NOT_RUN"
+    },
+    "windows": {
+      "native_library": "NOT_BUILT",
+      "react_native_app": "NOT_RUN",
+      "physical_input": "NOT_RUN"
+    }
+  },
+  "missing_implementation": [
+    "Native IME effect/fact integration in the new RN hosts"
+  ],
+  "verification": {
+    "node_controller_tests": 12,
+    "release_package_tests": 27,
+    "ci_routing_tests": 11,
+    "runtime_boundary_contract_files": 116,
+    "native_c_and_registry": "PASSED",
+    "real_runtime_transport": "PASSED",
+    "web_external_cases": 52,
+    "web_controller_cases": 17,
+    "web_frame_shell_axis_demo": "PASSED"
+  },
+  "baseline_failures": [
+    "Local Debug FC00XRuntimeComposition rebind assertion reproduced without cache fix",
+    "Local full FC02Text timeout; required hosted Windows SDK regression set passed"
+  ],
+  "scope_limits": [
+    "No Gate or P34 acceptance",
+    "No four-platform RN support claim",
+    "No physical touch/IME acceptance",
+    "Native SDK staging is development delivery only"
+  ]
+}

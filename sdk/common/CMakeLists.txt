@@ -19,3 +19,13 @@ if(BUILD_TESTING AND NOT EMSCRIPTEN AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
   target_link_libraries(axiom_ink_v2_native_session_tests PRIVATE axiom_sdk_session)
   add_test(NAME InkV2NativeSession COMMAND axiom_ink_v2_native_session_tests)
 endif()
+if(BUILD_TESTING AND NOT EMSCRIPTEN AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+  add_executable(axiom_native_transport_host ../native/tests/transport_host.cpp)
+  target_link_libraries(axiom_native_transport_host PRIVATE axiom_sdk_session)
+  include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
+  axiom_resolve_host_text_font()
+  target_include_directories(axiom_native_transport_host PRIVATE
+    ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${AXIOM_HOST_FONT_INCLUDE})
+  target_compile_definitions(axiom_native_transport_host PRIVATE
+    NATIVE_TEST_CJK="${AXIOM_HOST_FONT_PATH}" NATIVE_TEST_FONTS="${AXIOM_HOST_FONT_CATALOG_ROOT}")
+endif()

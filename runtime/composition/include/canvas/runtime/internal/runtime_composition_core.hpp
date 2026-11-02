@@ -219,6 +219,8 @@ class RuntimeCompositionCore final {
   [[nodiscard]] bool canonicalProviderAvailable() const noexcept;
   [[nodiscard]] bool previewProviderAvailable() const noexcept;
   [[nodiscard]] bool setPlatformPresentationDeferred(bool deferred) noexcept;
+  // Native platform input port; preserves Runtime camera/preview ownership.
+  [[nodiscard]] bool applyViewportNavigation(const interaction::ViewportNavigationSample&) noexcept;
   [[nodiscard]] RuntimeCompositionState state() const noexcept { return state_; }
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   // White-box qualification only. Ordinary consumers must use RuntimeFacade,

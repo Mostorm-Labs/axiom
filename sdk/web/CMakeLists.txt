@@ -18,8 +18,14 @@ set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs
 add_custom_command(TARGET axiom_js_runtime POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
+file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/axiom.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/axiom.d.mts"
+  DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
+file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/internal" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/api" DESTINATION js)
 foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
-  configure_file("${file}" "${CMAKE_CURRENT_BINARY_DIR}/${file}" COPYONLY)
+  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/${file}" _web_source)
+  string(REPLACE "'../api/" "'./api/" _web_source "${_web_source}")
+  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${file}" "${_web_source}")
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${file}" DESTINATION js)
 endforeach()
 configure_file("${PROJECT_SOURCE_DIR}/verification/sdk_web_external/consumer/pointer_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" COPYONLY)

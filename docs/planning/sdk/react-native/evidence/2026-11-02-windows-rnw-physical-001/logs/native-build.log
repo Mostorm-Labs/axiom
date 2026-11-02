@@ -1,0 +1,562 @@
+COMMAND ["C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "tools/setup_build_environment.py", "--semantic", "--target", "windows-x64-msvc-static", "--facts-output", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-native\\environment.json", "--status", "--offline"]
+Axiom Build Environment
+Host: windows-x64
+Target: windows-x64-msvc-static
+Semantic release: semantic-sdk-v2-14e3d492c9b7f970
+releaseSetId: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+host-tools: windows-x64 / fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85
+  source: store
+  path: C:\Users\Chado\AppData\Local\Axiom\sdk\packages\semantic\host-tools\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85
+runtimes: windows-x64-msvc-static / aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c
+  source: store
+  path: C:\Users\Chado\AppData\Local\Axiom\sdk\packages\semantic\runtimes\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c
+ABI: {"buildType": "Release", "crt": "static-release", "cxxRuntime": "msvc", "cxxStandard": 20, "exceptions": true, "iteratorDebugLevel": 0, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}
+Network: not used
+{"core": {"depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b", "enabled": false}, "environment": {"AXIOM_DEPS_DIR": "D:\\DevResources\\Axiom\\core-deps-windows-x64", "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe", "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"}, "format": "axiom-build-environment-v2", "host": "windows-x64", "semantic": {"enabled": true, "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514", "mode": "v2", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "resolution": {"artifacts": [{"family": "semantic", "identity": "fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "key": "windows-x64", "kind": "host-tools", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "sha256": "6be86ab9c88bfdcc137d28672d7e5809c82ff8836296f737c08966005087d77c", "source": "store"}, {"family": "semantic", "identity": "aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "key": "windows-x64-msvc-static", "kind": "runtimes", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "sha256": "7a936b388c4368e360c0c857a776d6a7b2a7dcaab5d5613f3273198aadbbbe23", "source": "store"}], "family": "semantic", "format": "axiom-sdk-resolution-v1", "host": "windows-x64", "index": {"identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\release-sets\\semantic\\14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea\\semantic-sdk-index.json", "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "source": "store"}, "metadata": {"abi": {"buildType": "Release", "crt": "static-release", "cxxRuntime": "msvc", "cxxStandard": 20, "exceptions": true, "iteratorDebugLevel": 0, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}, "abseilVersion": "20250512.1", "hostTool": "windows-x64", "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "protobufVersion": "36.0", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "target": "windows-x64-msvc-static", "toolchain": {"cmakeVersion": "cmake version 3.30.5", "compiler": "clang-cl", "compilerTarget": "x86_64-pc-windows-msvc", "compilerVersion": "clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)", "cxxRuntime": "msvc", "llvmVersion": "22.1.8", "msvcVersion": "14.51.36231", "ninjaVersion": "1.11.1.git.kitware.jobserver-1", "windowsSdkVersion": "10.0.26100.0"}}, "networkUsed": false, "target": "windows-x64-msvc-static"}}, "target": "windows-x64-msvc-static"}
+COMMAND ["C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "tools/setup_build_environment.py", "--semantic", "--target", "windows-x64-msvc-static", "--offline", "--status"]
+Axiom Build Environment
+Host: windows-x64
+Target: windows-x64-msvc-static
+Semantic release: semantic-sdk-v2-14e3d492c9b7f970
+releaseSetId: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+host-tools: windows-x64 / fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85
+  source: store
+  path: C:\Users\Chado\AppData\Local\Axiom\sdk\packages\semantic\host-tools\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85
+runtimes: windows-x64-msvc-static / aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c
+  source: store
+  path: C:\Users\Chado\AppData\Local\Axiom\sdk\packages\semantic\runtimes\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c
+ABI: {"buildType": "Release", "crt": "static-release", "cxxRuntime": "msvc", "cxxStandard": 20, "exceptions": true, "iteratorDebugLevel": 0, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}
+Network: not used
+{"core": {"depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b", "enabled": false}, "environment": {"AXIOM_DEPS_DIR": "D:\\DevResources\\Axiom\\core-deps-windows-x64", "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe", "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"}, "format": "axiom-build-environment-v2", "host": "windows-x64", "semantic": {"enabled": true, "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514", "mode": "v2", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "resolution": {"artifacts": [{"family": "semantic", "identity": "fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "key": "windows-x64", "kind": "host-tools", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85", "sha256": "6be86ab9c88bfdcc137d28672d7e5809c82ff8836296f737c08966005087d77c", "source": "store"}, {"family": "semantic", "identity": "aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "key": "windows-x64-msvc-static", "kind": "runtimes", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "sha256": "7a936b388c4368e360c0c857a776d6a7b2a7dcaab5d5613f3273198aadbbbe23", "source": "store"}], "family": "semantic", "format": "axiom-sdk-resolution-v1", "host": "windows-x64", "index": {"identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "networkUsed": false, "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\release-sets\\semantic\\14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea\\semantic-sdk-index.json", "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "source": "store"}, "metadata": {"abi": {"buildType": "Release", "crt": "static-release", "cxxRuntime": "msvc", "cxxStandard": 20, "exceptions": true, "iteratorDebugLevel": 0, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}, "abseilVersion": "20250512.1", "hostTool": "windows-x64", "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "protobufVersion": "36.0", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "target": "windows-x64-msvc-static", "toolchain": {"cmakeVersion": "cmake version 3.30.5", "compiler": "clang-cl", "compilerTarget": "x86_64-pc-windows-msvc", "compilerVersion": "clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)", "cxxRuntime": "msvc", "llvmVersion": "22.1.8", "msvcVersion": "14.51.36231", "ninjaVersion": "1.11.1.git.kitware.jobserver-1", "windowsSdkVersion": "10.0.26100.0"}}, "networkUsed": false, "target": "windows-x64-msvc-static"}}, "target": "windows-x64-msvc-static"}
+COMMAND ["C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python312\\python.exe", "tools/skia/fetch.py", "--profile", "tools/skia/profiles/r1-full-v1.json", "--lock", "r1-full-skia-sdk.lock.json", "--target", "windows-x64-d3d12", "--variant", "release"]
+{"bytes": 0, "path": "D:\\DevResources\\Axiom\\core-deps-windows-x64\\skia-sdk\\windows-x64-d3d12\\release", "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa", "seconds": 1.266, "source": "installed", "target": "windows-x64-d3d12"}
+COMMAND ["cmake", "-S", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical", "-B", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-native", "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_RENDER=ON", "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON", "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON", "-DAXIOM_BUILD_NATIVE_SDK=ON", "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF", "-DAXIOM_INSTALL_DEVELOPER_COMPONENTS=OFF", "-DAXIOM_BUILD_WINDOWS_SDK=OFF", "-DAXIOM_BUILD_DEBUG_UI=OFF", "-DCANVAS_SKIA_SDK_ROOT=D:\\DevResources\\Axiom\\core-deps-windows-x64\\skia-sdk\\windows-x64-d3d12\\release", "-DCanvasSkia_DIR=D:\\DevResources\\Axiom\\core-deps-windows-x64\\skia-sdk\\windows-x64-d3d12\\release\\lib\\cmake\\CanvasSkia", "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe", "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c", "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY", "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF", "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"]
+-- The C compiler identification is MSVC 19.51.36246.0
+-- The CXX compiler identification is MSVC 19.51.36246.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Found Python3: C:/Users/Chado/AppData/Local/Programs/Python/Python312/python.exe (found version "3.12.10") found components: Interpreter
+-- Configuring done (13.1s)
+-- Generating done (0.5s)
+-- Build files have been written to: C:/Users/Chado/.codex/worktrees/axiom-rn-windows-physical/out/rn-windows-native
+COMMAND ["cmake", "--build", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-native", "--target", "axiom_native", "--parallel", "6"]
+[0/2] Re-checking globbed directories...
+[1/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\input\src\input_router.cpp for CXX dependencies
+[2/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\input\src\arc_input_adapter.cpp for CXX dependencies
+[3/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\input\src\active_pointer_registry.cpp for CXX dependencies
+[4/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\input\src\platform_interaction_ingress.cpp for CXX dependencies
+[5/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\input\src\web_input_adapter.cpp for CXX dependencies
+[6/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_engine.cpp for CXX dependencies
+[7/422] Generating CXX dyndep file runtime\input\CMakeFiles\canvas_runtime_input.dir\CXX.dd
+[8/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\stroke_session.cpp for CXX dependencies
+[9/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\ink_engine.cpp for CXX dependencies
+[10/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\pointer_trace.cpp for CXX dependencies
+[11/422] Generating generated/auditoryworks/axiom/v1/brush_engine.pb.cc, generated/auditoryworks/axiom/v1/brush_stroke.pb.cc, generated/auditoryworks/axiom/v1/common.pb.cc, generated/auditoryworks/axiom/v1/compact_stroke.pb.cc, generated/auditoryworks/axiom/v1/connector.pb.cc, generated/auditoryworks/axiom/v1/container_operations.pb.cc, generated/auditoryworks/axiom/v1/document_background.pb.cc, generated/auditoryworks/axiom/v1/erase_mask.pb.cc, generated/auditoryworks/axiom/v1/geometry.pb.cc, generated/auditoryworks/axiom/v1/object.pb.cc, generated/auditoryworks/axiom/v1/operation.pb.cc, generated/auditoryworks/axiom/v1/paint.pb.cc, generated/auditoryworks/axiom/v1/property.pb.cc, generated/auditoryworks/axiom/v1/rich_text.pb.cc, generated/auditoryworks/axiom/v1/section.pb.cc, generated/auditoryworks/axiom/v1/snapshot.pb.cc, generated/auditoryworks/axiom/v1/table.pb.cc, generated/auditoryworks/axiom/v1/vector_path.pb.cc, generated/auditoryworks/axiom/v1/brush_engine.pb.h, generated/auditoryworks/axiom/v1/brush_stroke.pb.h, generated/auditoryworks/axiom/v1/common.pb.h, generated/auditoryworks/axiom/v1/compact_stroke.pb.h, generated/auditoryworks/axiom/v1/connector.pb.h, generated/auditoryworks/axiom/v1/container_operations.pb.h, generated/auditoryworks/axiom/v1/document_background.pb.h, generated/auditoryworks/axiom/v1/erase_mask.pb.h, generated/auditoryworks/axiom/v1/geometry.pb.h, generated/auditoryworks/axiom/v1/object.pb.h, generated/auditoryworks/axiom/v1/operation.pb.h, generated/auditoryworks/axiom/v1/paint.pb.h, generated/auditoryworks/axiom/v1/property.pb.h, generated/auditoryworks/axiom/v1/rich_text.pb.h, generated/auditoryworks/axiom/v1/section.pb.h, generated/auditoryworks/axiom/v1/snapshot.pb.h, generated/auditoryworks/axiom/v1/table.pb.h, generated/auditoryworks/axiom/v1/vector_path.pb.h
+[12/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\replay_runner.cpp for CXX dependencies
+[13/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\multipointer_replay.cpp for CXX dependencies
+[14/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\preview_model.cpp for CXX dependencies
+[15/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\arc_preview_bridge.cpp for CXX dependencies
+[16/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\programmable_brush.cpp for CXX dependencies
+[17/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\applied_operation_ledger.cpp for CXX dependencies
+[18/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\change_set.cpp for CXX dependencies
+[19/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\sha256_internal.cpp for CXX dependencies
+[20/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\resource_manifest.cpp for CXX dependencies
+[21/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\indexed_object_store.cpp for CXX dependencies
+[22/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\object_index.cpp for CXX dependencies
+[23/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\idempotency.cpp for CXX dependencies
+[24/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\table_content.cpp for CXX dependencies
+[25/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\reference_object_store.cpp for CXX dependencies
+[26/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\semantic_types.cpp for CXX dependencies
+[27/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\container_operation_normalization.cpp for CXX dependencies
+[28/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\container_operation_validation.cpp for CXX dependencies
+[29/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\operation_fingerprint.cpp for CXX dependencies
+[30/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\normalizer.cpp for CXX dependencies
+[31/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\container_topology_plan.cpp for CXX dependencies
+[32/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\operation_state_validator.cpp for CXX dependencies
+[33/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\staged_object_view.cpp for CXX dependencies
+[34/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\hierarchy_validation.cpp for CXX dependencies
+[35/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\connector_validation.cpp for CXX dependencies
+[36/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\stateful_validation.cpp for CXX dependencies
+[37/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\validator.cpp for CXX dependencies
+[38/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\container_operation_mapping.cpp for CXX dependencies
+[39/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\delete_closure.cpp for CXX dependencies
+[40/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\hierarchy_capability_validation.cpp for CXX dependencies
+[41/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\restore_planner.cpp for CXX dependencies
+[42/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\operation_specific_validation.cpp for CXX dependencies
+[43/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\rich_text_state_plan.cpp for CXX dependencies
+[44/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\brush_engine_codec.cpp for CXX dependencies
+[45/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\rich_text_state.cpp for CXX dependencies
+[46/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\codec.cpp for CXX dependencies
+[47/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\snapshot.cpp for CXX dependencies
+[48/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\snapshot_bootstrap.cpp for CXX dependencies
+[49/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\protobuf_object_mapping.cpp for CXX dependencies
+[50/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\replay.cpp for CXX dependencies
+[51/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\compact_stroke_mapping.cpp for CXX dependencies
+[52/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\apply_plan.cpp for CXX dependencies
+[53/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\atomic_apply.cpp for CXX dependencies
+[54/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\change_set_builder.cpp for CXX dependencies
+[55/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\semantic\src\operation_engine.cpp for CXX dependencies
+[56/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\brush_engine.pb.cc for CXX dependencies
+[57/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc for CXX dependencies
+[58/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\common.pb.cc for CXX dependencies
+[59/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\compact_stroke.pb.cc for CXX dependencies
+[60/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\connector.pb.cc for CXX dependencies
+[61/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\container_operations.pb.cc for CXX dependencies
+[62/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\document_background.pb.cc for CXX dependencies
+[63/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\erase_mask.pb.cc for CXX dependencies
+[64/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\geometry.pb.cc for CXX dependencies
+[65/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\object.pb.cc for CXX dependencies
+[66/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\operation.pb.cc for CXX dependencies
+[67/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\property.pb.cc for CXX dependencies
+[68/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\paint.pb.cc for CXX dependencies
+[69/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\rich_text.pb.cc for CXX dependencies
+[70/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\table.pb.cc for CXX dependencies
+[71/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\snapshot.pb.cc for CXX dependencies
+[72/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\text\src\sha256.cpp for CXX dependencies
+[73/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\section.pb.cc for CXX dependencies
+[74/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\text\src\text_layout.cpp for CXX dependencies
+[75/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_change_journal.cpp for CXX dependencies
+[76/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-native\runtime\semantic\generated\auditoryworks\axiom\v1\vector_path.pb.cc for CXX dependencies
+[77/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\direct_render_scene.cpp for CXX dependencies
+[78/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_binding.cpp for CXX dependencies
+[79/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene.cpp for CXX dependencies
+[80/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\incremental_runtime_coordinator.cpp for CXX dependencies
+[81/422] Generating CXX dyndep file runtime\text\CMakeFiles\canvas_runtime_text.dir\CXX.dd
+[82/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\incremental_runtime_full_materialization_bridge.cpp for CXX dependencies
+[83/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\reference_geometry.cpp for CXX dependencies
+[84/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\hierarchy_geometry.cpp for CXX dependencies
+[85/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\bounds_system.cpp for CXX dependencies
+[86/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\sketch_geometry.cpp for CXX dependencies
+[87/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\sketch_extended_geometry.cpp for CXX dependencies
+[88/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\corner_geometry.cpp for CXX dependencies
+[89/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\rounded_sketch_geometry.cpp for CXX dependencies
+[90/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\derived_geometry.cpp for CXX dependencies
+[91/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\connector_router.cpp for CXX dependencies
+[92/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_impact.cpp for CXX dependencies
+[93/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_delta.cpp for CXX dependencies
+[94/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_dependency_graph.cpp for CXX dependencies
+[95/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_record_store.cpp for CXX dependencies
+[96/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\scene_view.cpp for CXX dependencies
+[97/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\shadow_render_scene.cpp for CXX dependencies
+[98/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\spatial_delta.cpp for CXX dependencies
+[99/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\linear_spatial_index.cpp for CXX dependencies
+[100/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\uniform_grid_spatial_index.cpp for CXX dependencies
+[101/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\full_scene_compiler.cpp for CXX dependencies
+[102/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\scene\src\runtime_scene_projection.cpp for CXX dependencies
+[103/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_package_catalog.cpp for CXX dependencies
+[104/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_package.cpp for CXX dependencies
+[105/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\resolved_brush_state.cpp for CXX dependencies
+[106/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_execution_plan.cpp for CXX dependencies
+[107/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\vector_path_node.cpp for CXX dependencies
+[108/422] Generating CXX dyndep file runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\CXX.dd
+[109/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\chalk_dab_evaluator.cpp for CXX dependencies
+[110/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_session.cpp for CXX dependencies
+[111/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\compact_brush_quality.cpp for CXX dependencies
+[112/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\compact_brush_session.cpp for CXX dependencies
+[113/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\compact_contour.cpp for CXX dependencies
+[114/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\sha256_internal.cpp.obj
+[115/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\resource_manifest.cpp.obj
+[116/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\change_set.cpp.obj
+[117/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\idempotency.cpp.obj
+[118/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\object_index.cpp.obj
+[119/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\semantic_types.cpp.obj
+[120/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\table_content.cpp.obj
+[121/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\reference_object_store.cpp.obj
+[122/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\applied_operation_ledger.cpp.obj
+[123/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\indexed_object_store.cpp.obj
+[124/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_validation.cpp.obj
+[125/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_normalization.cpp.obj
+[126/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\operation_state_validator.cpp.obj
+[127/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\operation_fingerprint.cpp.obj
+[128/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_topology_plan.cpp.obj
+[129/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\connector_validation.cpp.obj
+[130/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\staged_object_view.cpp.obj
+[131/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\stateful_validation.cpp.obj
+[132/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\hierarchy_validation.cpp.obj
+[133/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[134/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\delete_closure.cpp.obj
+[135/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\hierarchy_capability_validation.cpp.obj
+[136/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\validator.cpp.obj
+[137/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\normalizer.cpp.obj
+[138/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state_plan.cpp.obj
+[139/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\restore_planner.cpp.obj
+[140/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\brush_engine_codec.cpp.obj
+[141/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\operation_specific_validation.cpp.obj
+[142/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[143/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\compact_stroke_mapping.cpp.obj
+[144/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\replay.cpp.obj
+[145/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[146/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[147/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\change_set_builder.cpp.obj
+[148/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\atomic_apply.cpp.obj
+[149/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[150/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[151/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\apply_plan.cpp.obj
+[152/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\operation_engine.cpp.obj
+[153/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[154/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[155/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\compact_stroke.pb.cc.obj
+[156/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[157/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[158/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[159/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[160/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\document_background.pb.cc.obj
+[161/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[162/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[163/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[164/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[165/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[166/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[167/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\brush_preview_handoff.cpp for CXX dependencies
+[168/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\legacy_v1_readonly.cpp for CXX dependencies
+[169/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[170/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\ink\src\vector_stroke_reference.cpp for CXX dependencies
+[171/422] Generating generated/crayon_coverage_v3_sksl.hpp
+[172/422] Generating generated/crayon_material_v3_sksl.hpp
+[173/422] Generating generated/drywet_coverage_v3_sksl.hpp
+[174/422] Generating generated/ink_coverage_sksl.hpp
+[175/422] Generating generated/drywet_material_v3_sksl.hpp
+[176/422] Generating generated/ink_material_sksl.hpp
+[177/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[178/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\table.pb.cc.obj
+[179/422] Generating generated/ink_coverage_v3_sksl.hpp
+[180/422] Generating generated/ink_material_v2_sksl.hpp
+[181/422] Generating generated/chalk_grain_png.hpp
+[182/422] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[183/422] Generating generated/chalk_shape_png.hpp
+[184/422] Generating generated/membrane_grain_png.hpp
+[185/422] Generating generated/membrane_shape_png.hpp
+[186/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\eraser_session.cpp for CXX dependencies
+[187/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\creation_session.cpp for CXX dependencies
+[188/422] Building CXX object runtime\text\CMakeFiles\canvas_runtime_text.dir\src\sha256.cpp.obj
+[189/422] Generating CXX dyndep file runtime\scene\CMakeFiles\canvas_runtime_scene.dir\CXX.dd
+[190/422] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[191/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\hit_test_service.cpp for CXX dependencies
+[192/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\editor_session.cpp for CXX dependencies
+[193/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\text_edit_session.cpp for CXX dependencies
+[194/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\interaction_runtime.cpp for CXX dependencies
+[195/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\interaction_dispatch_runtime.cpp for CXX dependencies
+[196/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\selection_session.cpp for CXX dependencies
+[197/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\region_selection_session.cpp for CXX dependencies
+[198/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\transform_session.cpp for CXX dependencies
+[199/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\transform_handle_drag.cpp for CXX dependencies
+[200/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\session_manager.cpp for CXX dependencies
+[201/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\editor_history.cpp for CXX dependencies
+[202/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\undoable_command.cpp for CXX dependencies
+[203/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\gesture_arbiter.cpp for CXX dependencies
+[204/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\interaction_dependency_footprint.cpp for CXX dependencies
+[205/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\multi_contact_coordinator.cpp for CXX dependencies
+[206/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_interaction_coordinator.cpp for CXX dependencies
+[207/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\viewport_interaction_controller.cpp for CXX dependencies
+[208/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\viewport_constraints.cpp for CXX dependencies
+[209/422] Building CXX object runtime\input\CMakeFiles\canvas_runtime_input.dir\src\input_router.cpp.obj
+[210/422] Building CXX object runtime\input\CMakeFiles\canvas_runtime_input.dir\src\arc_input_adapter.cpp.obj
+[211/422] Building CXX object runtime\input\CMakeFiles\canvas_runtime_input.dir\src\active_pointer_registry.cpp.obj
+[212/422] Building CXX object runtime\input\CMakeFiles\canvas_runtime_input.dir\src\web_input_adapter.cpp.obj
+[213/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\damage_tracker.cpp for CXX dependencies
+[214/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\render_group_manager.cpp for CXX dependencies
+[215/422] Building CXX object runtime\input\CMakeFiles\canvas_runtime_input.dir\src\platform_interaction_ingress.cpp.obj
+[216/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\selection_region_geometry.cpp for CXX dependencies
+[217/422] Generating CXX dyndep file runtime\ink\CMakeFiles\canvas_runtime_ink.dir\CXX.dd
+[218/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\visibility_resolver.cpp for CXX dependencies
+[219/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\direct_reference_source.cpp for CXX dependencies
+[220/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\editing_overlay.cpp for CXX dependencies
+[221/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\render_backend.cpp for CXX dependencies
+[222/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\frame_plan.cpp for CXX dependencies
+[223/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\surface_lifecycle.cpp for CXX dependencies
+[224/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\render_target.cpp for CXX dependencies
+[225/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\canonical_handoff.cpp for CXX dependencies
+[226/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\runtime_frame_coordinator.cpp for CXX dependencies
+[227/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\presentation_tracker.cpp for CXX dependencies
+[228/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\runtime_app_binding.cpp for CXX dependencies
+[229/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\preview_surface.cpp for CXX dependencies
+[230/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\image_resource.cpp for CXX dependencies
+[231/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_headless_backend.cpp for CXX dependencies
+[232/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\image_encode.cpp for CXX dependencies
+[233/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_text_resources.cpp for CXX dependencies
+[234/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\brush_outline_skia_path.cpp for CXX dependencies
+[235/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_ink_backend.cpp for CXX dependencies
+[236/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_compact_material.cpp for CXX dependencies
+[237/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_surface_provider.cpp for CXX dependencies
+[238/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_scene_renderer.cpp for CXX dependencies
+[239/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_renderer.cpp for CXX dependencies
+[240/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\control\src\build_info.cpp for CXX dependencies
+[241/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_brush_renderer.cpp for CXX dependencies
+[242/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\control\src\canvas_control_service.cpp for CXX dependencies
+[243/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_render_cache.cpp for CXX dependencies
+[244/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\render\src\skia_navigation_tiles.cpp for CXX dependencies
+[245/422] Building CXX object runtime\text\CMakeFiles\canvas_runtime_text.dir\src\text_layout.cpp.obj
+[246/422] Linking CXX static library runtime\text\canvas_runtime_text.lib
+[247/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_change_journal.cpp.obj
+[248/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_binding.cpp.obj
+[249/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\direct_render_scene.cpp.obj
+[250/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\incremental_runtime_full_materialization_bridge.cpp.obj
+[251/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\reference_geometry.cpp.obj
+[252/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\bounds_system.cpp.obj
+[253/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\incremental_runtime_coordinator.cpp.obj
+[254/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\sketch_geometry.cpp.obj
+[255/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\hierarchy_geometry.cpp.obj
+[256/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\sketch_extended_geometry.cpp.obj
+[257/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\corner_geometry.cpp.obj
+[258/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene.cpp.obj
+[259/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_dependency_graph.cpp.obj
+[260/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_impact.cpp.obj
+[261/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\rounded_sketch_geometry.cpp.obj
+[262/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\derived_geometry.cpp.obj
+[263/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_view.cpp.obj
+[264/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\shadow_render_scene.cpp.obj
+[265/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\connector_router.cpp.obj
+[266/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\spatial_delta.cpp.obj
+[267/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_delta.cpp.obj
+[268/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene_record_store.cpp.obj
+[269/422] Generating CXX dyndep file runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\CXX.dd
+[270/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\linear_spatial_index.cpp.obj
+[271/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_editing_runtime.cpp for CXX dependencies
+[272/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_appearance.cpp for CXX dependencies
+[273/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_table.cpp for CXX dependencies
+[274/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_image_export.cpp for CXX dependencies
+[275/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_section_commands.cpp for CXX dependencies
+[276/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_region_selection.cpp for CXX dependencies
+[277/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\region_selection_geometry.cpp for CXX dependencies
+[278/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_selection_summary.cpp for CXX dependencies
+[279/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\brush_commit_adapter.cpp for CXX dependencies
+[280/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_text_geometry.cpp for CXX dependencies
+[281/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\interaction\src\canvas_connector_routing.cpp for CXX dependencies
+[282/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\full_scene_compiler.cpp.obj
+[283/422] Linking CXX static library runtime\input\canvas_runtime_input.lib
+[284/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_engine.cpp.obj
+[285/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\stroke_session.cpp.obj
+[286/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\pointer_trace.cpp.obj
+[287/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\ink_engine.cpp.obj
+[288/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\uniform_grid_spatial_index.cpp.obj
+[289/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\replay_runner.cpp.obj
+[290/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\preview_model.cpp.obj
+[291/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\arc_preview_bridge.cpp.obj
+[292/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\multipointer_replay.cpp.obj
+[293/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\programmable_brush.cpp.obj
+[294/422] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\runtime_scene_projection.cpp.obj
+[295/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_execution_plan.cpp.obj
+[296/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\resolved_brush_state.cpp.obj
+[297/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\vector_path_node.cpp.obj
+[298/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_package_catalog.cpp.obj
+[299/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\chalk_dab_evaluator.cpp.obj
+[300/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\compact_contour.cpp.obj
+[301/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_session.cpp.obj
+[302/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\legacy_v1_readonly.cpp.obj
+[303/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\compact_brush_session.cpp.obj
+[304/422] Generating CXX dyndep file runtime\render\CMakeFiles\canvas_runtime_render.dir\CXX.dd
+[305/422] Generating CXX dyndep file runtime\control\CMakeFiles\canvas_runtime_control.dir\CXX.dd
+[306/422] Linking CXX static library runtime\scene\canvas_runtime_scene.lib
+[307/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\compact_brush_quality.cpp.obj
+[308/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_preview_handoff.cpp.obj
+[309/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\vector_stroke_reference.cpp.obj
+[310/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\hit_test_service.cpp.obj
+[311/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\editor_session.cpp.obj
+[312/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\eraser_session.cpp.obj
+[313/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\interaction_dispatch_runtime.cpp.obj
+[314/422] Building CXX object runtime\ink\CMakeFiles\canvas_runtime_ink.dir\src\brush_package.cpp.obj
+[315/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\creation_session.cpp.obj
+[316/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\interaction_runtime.cpp.obj
+[317/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\selection_session.cpp.obj
+[318/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\region_selection_session.cpp.obj
+[319/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\transform_session.cpp.obj
+[320/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\transform_handle_drag.cpp.obj
+[321/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\session_manager.cpp.obj
+[322/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\gesture_arbiter.cpp.obj
+[323/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\interaction_dependency_footprint.cpp.obj
+[324/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\multi_contact_coordinator.cpp.obj
+[325/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\canvas_interaction_coordinator.cpp.obj
+[326/422] Generating CXX dyndep file runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\CXX.dd
+[327/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\viewport_interaction_controller.cpp.obj
+[328/422] Linking CXX static library runtime\ink\canvas_runtime_ink.lib
+[329/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\text_edit_session.cpp.obj
+[330/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\viewport_constraints.cpp.obj
+[331/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\damage_tracker.cpp.obj
+[332/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\editor_history.cpp.obj
+[333/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\visibility_resolver.cpp.obj
+[334/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_interaction.dir\src\undoable_command.cpp.obj
+[335/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\selection_region_geometry.cpp.obj
+[336/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\surface_lifecycle.cpp.obj
+[337/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\editing_overlay.cpp.obj
+[338/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\render_backend.cpp.obj
+[339/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\frame_plan.cpp.obj
+[340/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\render_group_manager.cpp.obj
+[341/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\canonical_handoff.cpp.obj
+[342/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\runtime_frame_coordinator.cpp.obj
+[343/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\presentation_tracker.cpp.obj
+[344/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\render_target.cpp.obj
+[345/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\direct_reference_source.cpp.obj
+[346/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\runtime_app_binding.cpp.obj
+[347/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\image_resource.cpp.obj
+[348/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\brush_outline_skia_path.cpp.obj
+[349/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\image_encode.cpp.obj
+[350/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\preview_surface.cpp.obj
+[351/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_text_resources.cpp.obj
+[352/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_surface_provider.cpp.obj
+[353/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_compact_material.cpp.obj
+[354/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_headless_backend.cpp.obj
+[355/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_scene_renderer.cpp.obj
+[356/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_ink_backend.cpp.obj
+[357/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\public_composition.cpp for CXX dependencies
+[358/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\resource_binding.cpp for CXX dependencies
+[359/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\scene_adapter.cpp for CXX dependencies
+[360/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_brush_renderer.cpp.obj
+[361/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\runtime_composition.cpp for CXX dependencies
+[362/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\canvas_runtime_facade.cpp for CXX dependencies
+[363/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\canvas_runtime_text.cpp for CXX dependencies
+[364/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\canvas_runtime_image.cpp for CXX dependencies
+[365/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\canvas_runtime_connector_sticky.cpp for CXX dependencies
+[366/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\canvas_runtime_section.cpp for CXX dependencies
+[367/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\runtime\composition\src\multi_selection_port.cpp for CXX dependencies
+[368/422] Linking CXX static library runtime\interaction\canvas_runtime_interaction.lib
+[369/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_renderer.cpp.obj
+[370/422] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\build_info.cpp.obj
+[371/422] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\canvas_control_service.cpp.obj
+[372/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_render_cache.cpp.obj
+[373/422] Building CXX object runtime\render\CMakeFiles\canvas_runtime_render.dir\src\skia_navigation_tiles.cpp.obj
+[374/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_table.cpp.obj
+[375/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_appearance.cpp.obj
+[376/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_image_export.cpp.obj
+[377/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\region_selection_geometry.cpp.obj
+[378/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_section_commands.cpp.obj
+[379/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_selection_summary.cpp.obj
+[380/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_region_selection.cpp.obj
+[381/422] Generating CXX dyndep file runtime\composition\CMakeFiles\canvas_runtime_composition.dir\CXX.dd
+[382/422] Linking CXX static library runtime\render\canvas_runtime_render.lib
+[383/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\sdk\common\session.cpp for CXX dependencies
+[384/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\apps\minimal_runtime_host\windows_d3d12_surface_provider.cpp for CXX dependencies
+[385/422] Linking CXX static library runtime\control\canvas_runtime_control.lib
+[386/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\apps\minimal_runtime_host\windows_runtime_adapter.cpp for CXX dependencies
+[387/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_editing_runtime.cpp.obj
+[388/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\brush_commit_adapter.cpp.obj
+[389/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\resource_binding.cpp.obj
+[390/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_text_geometry.cpp.obj
+[391/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\scene_adapter.cpp.obj
+[392/422] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_connector_routing.cpp.obj
+[393/422] Linking CXX static library runtime\interaction\canvas_runtime_editor.lib
+[394/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\public_composition.cpp.obj
+[395/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\runtime_composition.cpp.obj
+[396/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\canvas_runtime_facade.cpp.obj
+[397/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\canvas_runtime_text.cpp.obj
+[398/422] Generating CXX dyndep file sdk\common\CMakeFiles\axiom_sdk_session.dir\CXX.dd
+[399/422] Generating CXX dyndep file apps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_surface.dir\CXX.dd
+[400/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\sdk\native\src\native_session.cpp for CXX dependencies
+[401/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\sdk\native\src\skia_native_platform.cpp for CXX dependencies
+[402/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\sdk\native\src\windows_surface.cpp for CXX dependencies
+[403/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\canvas_runtime_image.cpp.obj
+[404/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\canvas_runtime_section.cpp.obj
+[405/422] Generating CXX dyndep file sdk\native\CMakeFiles\axiom_sdk_native_transport.dir\CXX.dd
+[406/422] Scanning C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\sdk\native\src\native_api.cpp for CXX dependencies
+[407/422] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_surface.dir\windows_d3d12_surface_provider.cpp.obj
+[408/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\canvas_runtime_connector_sticky.cpp.obj
+[409/422] Building CXX object runtime\composition\CMakeFiles\canvas_runtime_composition.dir\src\multi_selection_port.cpp.obj
+[410/422] Linking CXX static library runtime\composition\canvas_runtime_composition.lib
+[411/422] Generating CXX dyndep file sdk\native\CMakeFiles\axiom_native.dir\CXX.dd
+[412/422] Building CXX object sdk\native\CMakeFiles\axiom_sdk_native_transport.dir\src\windows_surface.cpp.obj
+[413/422] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_surface.dir\windows_runtime_adapter.cpp.obj
+[414/422] Linking CXX static library apps\minimal_runtime_host\axiom_minimal_windows_surface.lib
+[415/422] Building CXX object sdk\native\CMakeFiles\axiom_native.dir\src\native_api.cpp.obj
+[416/422] Building CXX object sdk\native\CMakeFiles\axiom_sdk_native_transport.dir\src\skia_native_platform.cpp.obj
+[417/422] Building CXX object sdk\native\CMakeFiles\axiom_sdk_native_transport.dir\src\native_session.cpp.obj
+[418/422] Building CXX object sdk\common\CMakeFiles\axiom_sdk_session.dir\session.cpp.obj
+[419/422] Linking CXX static library sdk\common\axiom_sdk_session.lib
+[420/422] Linking CXX static library sdk\native\axiom_sdk_native_transport.lib
+[421/422] Linking CXX shared library sdk\native\axiom_native.dll
+COMMAND ["cmake", "--install", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-native", "--prefix", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-install", "--component", "AxiomNative"]
+-- Install configuration: "Release"
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/lib/axiom_native.lib
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/bin/axiom_native.dll
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/include/axiom/native.h
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/share/axiom-native/version.json
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/axiom-font.otf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/catalog.json
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Comic_Neue
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Comic_Neue/ComicNeue-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Comic_Neue/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Excalifont
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Excalifont/Excalifont-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Excalifont/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Excalifont/README.md
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Fira_Sans
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Fira_Sans/FiraSans-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Fira_Sans/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/handwriting-sources.json
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Mono
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Mono/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Sans
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Sans/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/IBM_Plex_Sans/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter_Tight
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter_Tight/InterTight-VariableFont_wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter_Tight/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Inter_Tight/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Open_Sans
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Open_Sans/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Open_Sans/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Oswald
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Oswald/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Oswald/Oswald-VariableFont_wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Oswald/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Roboto
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Roboto/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Roboto/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/STIX_Two_Text
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/STIX_Two_Text/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/STIX_Two_Text/README.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/STIX_Two_Text/STIXTwoText-VariableFont_wght.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Ubuntu
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Ubuntu/Ubuntu-Regular.ttf
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Ubuntu/UFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Xiaolai
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Xiaolai/OFL.txt
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Xiaolai/README.md
+-- Installing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-install/assets/fonts/Xiaolai/Xiaolai-Regular.ttf
+CMake Error at out/rn-windows-native/sdk/native/cmake_install.cmake:60 (file):
+  Syntax error in cmake code at
+
+    C:/Users/Chado/.codex/worktrees/axiom-rn-windows-physical/out/rn-windows-native/sdk/native/cmake_install.cmake:60
+
+  when parsing string
+
+    D:\DevResources\Axiom\core-deps-windows-x64\skia-sdk\windows-x64-d3d12\release/licenses/
+
+  Invalid character escape '\D'.
+Call Stack (most recent call first):
+  out/rn-windows-native/cmake_install.cmake:102 (include)
+
+
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\tools\release\build_native_sdk.py", line 96, in <module>
+    metadata = build(args.target, args.build.resolve(), args.output.resolve(), args.ndk, args.offline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\tools\release\build_native_sdk.py", line 76, in build
+    run(['cmake', '--install', directory, '--prefix', output, '--component', 'AxiomNative'], env)
+  File "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\tools\release\build_native_sdk.py", line 30, in run
+    subprocess.run([str(v) for v in command], check=True, cwd=REPO, env=env)
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cmake', '--install', 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-native', '--prefix', 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-install', '--component', 'AxiomNative']' returned non-zero exit status 1.

@@ -40,8 +40,8 @@ bool assignRootOrderKey(const std::vector<semantic::ObjectRecord>& objects,
 
 ConnectorCommandReceipt CanvasRuntimeFacade::createConnector(const ConnectorCreateRequest& request) {
   if (!ownerThread()) return rejectConnector(ConnectorFailureReason::kWrongThread);
-  if (!composition_ || !composition_->canMutate() || request.objectId.isZero()) return rejectConnector(ConnectorFailureReason::kNotReady);
-  semantic::ObjectRecord object{}; object.id=request.objectId; object.kind=semantic::ObjectKind::kConnector; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
+  if (!composition_ || !composition_->canMutate()) return rejectConnector(ConnectorFailureReason::kNotReady);
+  semantic::ObjectRecord object{}; object.id=request.objectId.isZero()?runtime_.allocateTextIdentity():request.objectId; if(object.id.isZero())return rejectConnector(ConnectorFailureReason::kObjectRejected); object.kind=semantic::ObjectKind::kConnector; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
   runtime_.materializeAppearance(object.properties,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kConnector);
   if (!assignRootOrderKey(runtime_.textObjects(), object.placement)) return rejectConnector(ConnectorFailureReason::kInvalidRequest);
   const auto f=runtime_.allocateOperationId(), i=runtime_.allocateOperationId();
@@ -54,22 +54,22 @@ ConnectorCommandReceipt CanvasRuntimeFacade::createConnector(const ConnectorCrea
     const auto failure=route?routeFailure(route->status):ConnectorFailureReason::kInvalidEndpoint;
     if(failure!=ConnectorFailureReason::kNone)return rejectConnector(failure);
   }
-  if(!runtime_.applyLocalHistoryOperation(forward,{i,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{request.objectId}}})) return rejectConnector(ConnectorFailureReason::kObjectRejected);
-  ConnectorCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=request.objectId; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
+  if(!runtime_.applyLocalHistoryOperation(forward,{i,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{object.id}}})) return rejectConnector(ConnectorFailureReason::kObjectRejected);
+  ConnectorCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=object.id; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
 }
 
 StickyCommandReceipt CanvasRuntimeFacade::createSticky(const StickyCreateRequest& request) {
   if (!ownerThread()) return rejectSticky(ConnectorFailureReason::kWrongThread);
-  if (!composition_ || !composition_->canMutate() || request.objectId.isZero()) return rejectSticky(ConnectorFailureReason::kNotReady);
-  semantic::ObjectRecord object{}; object.id=request.objectId; object.kind=semantic::ObjectKind::kSticky; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
+  if (!composition_ || !composition_->canMutate()) return rejectSticky(ConnectorFailureReason::kNotReady);
+  semantic::ObjectRecord object{}; object.id=request.objectId.isZero()?runtime_.allocateTextIdentity():request.objectId; if(object.id.isZero())return rejectSticky(ConnectorFailureReason::kObjectRejected); object.kind=semantic::ObjectKind::kSticky; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
   runtime_.materializeAppearance(object.properties,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kConnector);
   if (!assignRootOrderKey(runtime_.textObjects(), object.placement)) return rejectSticky(ConnectorFailureReason::kInvalidRequest);
   const auto f=runtime_.allocateOperationId(), i=runtime_.allocateOperationId();
   if(f.isZero()||i.isZero()) return rejectSticky(ConnectorFailureReason::kObjectRejected);
   semantic::Operation forward{f,runtime_.textDocument(),1,1,semantic::InsertObjectsOp{{object}}};
   if(runtime_.prepareTextOperation(forward).disposition!=semantic::PrepareDisposition::kPrepared || !runtime_.historySceneReady()) return rejectSticky(ConnectorFailureReason::kObjectRejected);
-  if(!runtime_.applyLocalHistoryOperation(forward,{i,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{request.objectId}}})) return rejectSticky(ConnectorFailureReason::kObjectRejected);
-  StickyCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=request.objectId; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
+  if(!runtime_.applyLocalHistoryOperation(forward,{i,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{object.id}}})) return rejectSticky(ConnectorFailureReason::kObjectRejected);
+  StickyCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=object.id; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
 }
 
 ConnectorCommandReceipt CanvasRuntimeFacade::setConnectorRouting(const ConnectorRoutingRequest& request) {

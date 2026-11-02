@@ -1,0 +1,71 @@
+get_default_flags is deprecated. Please remove the keys from the `use_react_native!` function
+if you are using the default already and pass the value you need in case you don't want the default
+Found 2 modules for target `AxiomMacConsumer-macOS`
+link_native_modules! {:ios_packages=>[{:configurations=>[], :name=>"react-native-safe-area-context", :root=>"/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/node_modules/react-native-safe-area-context", :path=>"../node_modules/react-native-safe-area-context", :podspec_path=>"/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/node_modules/react-native-safe-area-context/react-native-safe-area-context.podspec", :script_phases=>[]}, {:configurations=>[], :name=>"@mostorm/axiom-react-native", :root=>"/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/node_modules/@mostorm/axiom-react-native", :path=>"../node_modules/@mostorm/axiom-react-native", :podspec_path=>"/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/node_modules/@mostorm/axiom-react-native/AxiomReactNative.podspec", :script_phases=>[]}], :ios_project_root_path=>"/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos", :react_native_path=>"../node_modules/react-native-macos"}
+Auto-linking React Native modules for target `AxiomMacConsumer-macOS`: AxiomReactNative and react-native-safe-area-context
+Framework build type is static library
+[ReactNativeDependencies] Setting up ReactNativeDependencies...
+[ReactNativeDependencies] Building from source: true
+[ReactNativeDependencies] Source:
+[ReactNativeCore] Setting up ReactNativeCore...
+[ReactNativeCore] Building from source: true
+Configuring the target with the New Architecture
+[36m[1m[Codegen][0m Analyzing /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/package.json[0m
+[36m[1m[Codegen][0m [33mSearching for codegen-enabled libraries in the app.[0m
+[36m[1m[Codegen][0m [33mThe "codegenConfig" field is not defined in package.json. Assuming there is nothing to generate at the app level.[0m
+[36m[1m[Codegen][0m [33mSearching for codegen-enabled libraries in react-native.config.js[0m
+[36m[1m[Codegen][0m Found react-native-safe-area-context[0m
+[36m[1m[Codegen][0m Found @mostorm/axiom-react-native[0m
+[36m[1m[Codegen][0m Processing safeareacontext[0m
+[36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[36m[1m[Codegen][0m Supported Apple platforms: ios, macos, tvos, visionos for safeareacontext[0m
+[36m[1m[Codegen][0m Processing AxiomNativeSpec[0m
+[36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[36m[1m[Codegen][0m Supported Apple platforms: ios, macos for AxiomNativeSpec[0m
+[36m[1m[Codegen][0m Generating Native Code for safeareacontext - ios[0m
+[36m[1m[Codegen][0m Generated artifacts: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen[0m
+[36m[1m[Codegen][0m Generating Native Code for AxiomNativeSpec - ios[0m
+[36m[1m[Codegen][0m Generated artifacts: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen[0m
+[36m[1m[Codegen][0m Generating RCTThirdPartyComponentsProvider.h[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen/RCTThirdPartyComponentsProvider.h[0m
+[36m[1m[Codegen][0m Generating RCTThirdPartyComponentsProvider.mm[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen/RCTThirdPartyComponentsProvider.mm[0m
+[36m[1m[Codegen][0m Generating RCTModulesProvider.h[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen/RCTModuleProviders.h[0m
+[36m[1m[Codegen][0m Generating RCTModuleProviders.mm[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen/RCTModuleProviders.mm[0m
+[36m[1m[Codegen][0m Generating RCTAppDependencyProvider[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactAppDependencyProvider/RCTAppDependencyProvider.h[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactAppDependencyProvider/RCTAppDependencyProvider.mm[0m
+[36m[1m[Codegen][0m Generated podspec: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactAppDependencyProvider/ReactAppDependencyProvider.podspec[0m
+[36m[1m[Codegen][0m Generated podspec: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/ReactCodegen/ReactCodegen.podspec[0m
+[36m[1m[Codegen][0m Generating Package.swift[0m
+[36m[1m[Codegen][0m Generated artifact: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/build/generated/ios/Package.swift[0m
+[36m[1m[Codegen][0m [33mDone.[0m
+Analyzing dependencies
+Downloading dependencies
+Generating Pods project
+Setting USE_HERMES build settings
+Setting REACT_NATIVE_PATH build settings
+Setting SWIFT_ACTIVE_COMPILATION_CONDITIONS build settings
+[Ccache]: Ccache found at /opt/homebrew/bin/ccache
+[Ccache]: Pass ':ccache_enabled => true' to 'react_native_post_install' in your Podfile or set environment variable 'USE_CCACHE=1' to increase the speed of subsequent builds
+[SPM] Cleaning old SPM dependencies from Pods project
+[SPM] Adding SPM dependencies to Pods project
+[Privacy Manifest Aggregation] Appending aggregated reasons to existing PrivacyInfo.xcprivacy file.
+[Privacy Manifest Aggregation] Reading .xcprivacy files to aggregate all used Required Reason APIs.
+Setting CLANG_CXX_LANGUAGE_STANDARD to c++20 on /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-consumer/macos/AxiomMacConsumer.xcodeproj
+
+==================== DEPRECATION NOTICE =====================
+Calling `pod install` directly is deprecated in React Native
+because we are moving away from Cocoapods toward alternative
+solutions to build the project.
+* If you are using Expo, please run:
+`npx expo run:ios`
+* If you are using the Community CLI, please run:
+`yarn ios`
+=============================================================
+
+Pod install took 8 [s] to run
+Integrating client project
+Pod installation complete! There are 83 dependencies from the Podfile and 82 total pods installed.

@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: Web and native share public errors and an async controller factory
+ok 1 - Web and native share public errors and an async controller factory
+  ---
+  duration_ms: 1.0911
+  ...
+# Subtest: Controller copies queued arguments and preserves nested async reads
+ok 2 - Controller copies queued arguments and preserves nested async reads
+  ---
+  duration_ms: 2.9457
+  ...
+# Subtest: Unsubscribe and close gate queued event callbacks
+ok 3 - Unsubscribe and close gate queued event callbacks
+  ---
+  duration_ms: 1.2797
+  ...
+# Subtest: Failed close retains the controller so the data owner can release custody
+ok 4 - Failed close retains the controller so the data owner can release custody
+  ---
+  duration_ms: 0.4613
+  ...
+# Subtest: Close rejects new commands while the underlying owner is draining
+ok 5 - Close rejects new commands while the underlying owner is draining
+  ---
+  duration_ms: 0.3408
+  ...
+# Subtest: Listener rejection propagates to SDK dispatch to retain the operation cursor
+ok 6 - Listener rejection propagates to SDK dispatch to retain the operation cursor
+  ---
+  duration_ms: 0.3545
+  ...
+# Subtest: Native controller delegates controls and history through the existing wire vocabulary
+ok 7 - Native controller delegates controls and history through the existing wire vocabulary
+  ---
+  duration_ms: 5.4608
+  ...
+# Subtest: Foreign tokens are rejected before native dispatch, bytes copied before queue
+ok 8 - Foreign tokens are rejected before native dispatch, bytes copied before queue
+  ---
+  duration_ms: 0.6306
+  ...
+# Subtest: Transport validates queued byte types and gates subscriptions after close
+ok 9 - Transport validates queued byte types and gates subscriptions after close
+  ---
+  duration_ms: 1.0897
+  ...
+# Subtest: Native table commands capture generation and selection mutations carry both stamps
+ok 10 - Native table commands capture generation and selection mutations carry both stamps
+  ---
+  duration_ms: 0.6348
+  ...
+# Subtest: Portable native controller works without structuredClone in Hermes
+ok 11 - Portable native controller works without structuredClone in Hermes
+  ---
+  duration_ms: 0.468
+  ...
+# Subtest: Native reads reject while close is waiting for its owner
+ok 12 - Native reads reject while close is waiting for its owner
+  ---
+  duration_ms: 0.3631
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 170.3042

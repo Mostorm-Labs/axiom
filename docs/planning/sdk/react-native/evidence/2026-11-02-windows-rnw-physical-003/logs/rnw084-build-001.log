@@ -1,0 +1,313 @@
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj : warning NU1503: Skipping restore for project 'C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj'. The project file may be invalid or missing targets required for restore. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical.sln]
+  Determining projects to restore...
+  Restored C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj (in 8.87 sec).
+  Restored C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj (in 9.38 sec).
+ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+  Discovered package 'react-native-windows' with version '0.84.0'
+  - Running x64 node on a x64 machine
+  i Running x64 node on a x64 machine
+  - Running codegen-windows...
+  
+  Run codegen with options: 
+  {
+    "files": [
+      "src/specs/**/*Native*.[jt]s"
+    ],
+    "componentsWindows": true,
+    "internalComponents": false,
+    "cppStringType": "std::string",
+    "separateDataTypes": false,
+    "libraryName": "AxiomNativeSpec",
+    "methodOnly": false,
+    "modulesCxx": false,
+    "modulesTypeScriptTypes": false,
+    "modulesWindows": false,
+    "namespace": "MostormAxiom",
+    "outputDirectory": "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-consumer-084-new\\node_modules\\@mostorm\\axiom-react-native\\windows\\generated",
+    "test": false
+  }
+  Generating AxiomCanvasView.g.h
+  鈭?Running codegen-windows...
+  Success: Codegen-windows changes completed. (61ms)
+  64 bit MIDLRT Processing C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\node_modules\@mostorm\axiom-react-native\windows\ReactPackageProvider.idl
+  ReactPackageProvider.idl
+  64 bit MIDLRT Processing C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\winrt\winrtbase.idl
+  winrtbase.idl
+  64 bit MIDLRT Processing C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\winrt\midlbase.idl
+  midlbase.idl
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.interactiveexperiences\1.8.260430001\metadata\10.0.18362.0\microsoft.foundation.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.graphics.imaging.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.interactiveexperiences\1.8.260430001\metadata\10.0.18362.0\microsoft.graphics.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.reactnative\0.84.0\lib\uap10.0\microsoft.reactnative.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.security.authentication.oauth.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260505002\metadata\microsoft.ui.text.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.interactiveexperiences\1.8.260430001\metadata\10.0.18362.0\microsoft.ui.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260505002\metadata\microsoft.ui.xaml.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.web.webview2\1.0.3179.45\lib\microsoft.web.webview2.core.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.windows.ai.contentsafety.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.windows.ai.foundation.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.windows.ai.imaging.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ml\1.8.2197\metadata\microsoft.windows.ai.machinelearning.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.windows.ai.text.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.ai\1.8.76\metadata\microsoft.windows.ai.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applicationmodel.background.universalbgtask.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applicationmodel.background.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applicationmodel.dynamicdependency.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applicationmodel.resources.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applicationmodel.windowsappruntime.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.applifecycle.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.appnotifications.builder.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.appnotifications.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.badgenotifications.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.foundation.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.globalization.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.management.deployment.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.media.capture.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.pushnotifications.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.security.accesscontrol.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.storage.pickers.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.storage.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.system.power.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.foundation\1.8.260505001\metadata\microsoft.windows.system.winmd
+  Processing WinMD c:\users\chado\.nuget\packages\microsoft.windowsappsdk.widgets\1.8.251231004\metadata\microsoft.windows.widgets.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ai.actions.actionscontract\8.0.0.0\windows.ai.actions.actionscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ai.agents.agentscontract\2.0.0.0\windows.ai.agents.agentscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ai.machinelearning.machinelearningcontract\5.0.0.0\windows.ai.machinelearning.machinelearningcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ai.machinelearning.preview.machinelearningpreviewcontract\2.0.0.0\windows.ai.machinelearning.preview.machinelearningpreviewcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.activation.activatedeventscontract\1.0.0.0\windows.applicationmodel.activation.activatedeventscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.activation.activationcamerasettingscontract\1.0.0.0\windows.applicationmodel.activation.activationcamerasettingscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.activation.contactactivatedeventscontract\1.0.0.0\windows.applicationmodel.activation.contactactivatedeventscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.activation.webuisearchactivatedeventscontract\1.0.0.0\windows.applicationmodel.activation.webuisearchactivatedeventscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.background.backgroundalarmapplicationcontract\1.0.0.0\windows.applicationmodel.background.backgroundalarmapplicationcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.calls.background.callsbackgroundcontract\4.0.0.0\windows.applicationmodel.calls.background.callsbackgroundcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.calls.callsphonecontract\7.0.0.0\windows.applicationmodel.calls.callsphonecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.calls.callsvoipcontract\5.0.0.0\windows.applicationmodel.calls.callsvoipcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.calls.lockscreencallcontract\1.0.0.0\windows.applicationmodel.calls.lockscreencallcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.communicationblocking.communicationblockingcontract\2.0.0.0\windows.applicationmodel.communicationblocking.communicationblockingcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.fulltrustappcontract\2.0.0.0\windows.applicationmodel.fulltrustappcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.preview.inkworkspace.previewinkworkspacecontract\1.0.0.0\windows.applicationmodel.preview.inkworkspace.previewinkworkspacecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.preview.notes.previewnotescontract\2.0.0.0\windows.applicationmodel.preview.notes.previewnotescontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.preview.startupappspreviewcontract\1.0.0.0\windows.applicationmodel.preview.startupappspreviewcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.resources.management.resourceindexercontract\2.0.0.0\windows.applicationmodel.resources.management.resourceindexercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.search.core.searchcorecontract\1.0.0.0\windows.applicationmodel.search.core.searchcorecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.search.searchcontract\1.0.0.0\windows.applicationmodel.search.searchcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.socialinfo.socialinfocontract\2.0.0.0\windows.applicationmodel.socialinfo.socialinfocontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.startuptaskcontract\3.0.0.0\windows.applicationmodel.startuptaskcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.applicationmodel.wallet.walletcontract\2.0.0.0\windows.applicationmodel.wallet.walletcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.custom.customdevicecontract\1.0.0.0\windows.devices.custom.customdevicecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.deviceslowlevelcontract\3.0.0.0\windows.devices.deviceslowlevelcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.portable.portabledevicecontract\1.0.0.0\windows.devices.portable.portabledevicecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.power.powergridapicontract\1.0.0.0\windows.devices.power.powergridapicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.printers.extensions.extensionscontract\2.0.0.0\windows.devices.printers.extensions.extensionscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.printers.printerscontract\1.0.0.0\windows.devices.printers.printerscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.scanners.scannerdevicecontract\1.0.0.0\windows.devices.scanners.scannerdevicecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.smartcards.smartcardbackgroundtriggercontract\3.0.0.0\windows.devices.smartcards.smartcardbackgroundtriggercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.smartcards.smartcardemulatorcontract\6.0.0.0\windows.devices.smartcards.smartcardemulatorcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.devices.sms.legacysmsapicontract\1.0.0.0\windows.devices.sms.legacysmsapicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.foundation.foundationcontract\4.0.0.0\windows.foundation.foundationcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.foundation.universalapicontract\19.0.0.0\windows.foundation.universalapicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.gaming.input.gaminginputpreviewcontract\2.0.0.0\windows.gaming.input.gaminginputpreviewcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.gaming.preview.gamesenumerationcontract\2.0.0.0\windows.gaming.preview.gamesenumerationcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.gaming.ui.gamechatoverlaycontract\1.0.0.0\windows.gaming.ui.gamechatoverlaycontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.gaming.ui.gaminguiprovidercontract\1.0.0.0\windows.gaming.ui.gaminguiprovidercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.gaming.xboxlive.storageapicontract\1.0.0.0\windows.gaming.xboxlive.storageapicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.globalization.globalizationjapanesephoneticanalyzercontract\1.0.0.0\windows.globalization.globalizationjapanesephoneticanalyzercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.graphics.printing3d.printing3dcontract\4.0.0.0\windows.graphics.printing3d.printing3dcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.management.deployment.preview.deploymentpreviewcontract\1.0.0.0\windows.management.deployment.preview.deploymentpreviewcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.management.deployment.sharedpackagecontainercontract\1.0.0.0\windows.management.deployment.sharedpackagecontainercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.management.update.windowsupdatecontract\2.1.0.0\windows.management.update.windowsupdatecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.management.workplace.workplacesettingscontract\1.0.0.0\windows.management.workplace.workplacesettingscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.appbroadcasting.appbroadcastingcontract\1.0.0.0\windows.media.appbroadcasting.appbroadcastingcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.apprecording.apprecordingcontract\1.0.0.0\windows.media.apprecording.apprecordingcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.capture.appbroadcastcontract\2.0.0.0\windows.media.capture.appbroadcastcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.capture.appcapturecontract\4.0.0.0\windows.media.capture.appcapturecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.capture.appcapturemetadatacontract\1.0.0.0\windows.media.capture.appcapturemetadatacontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.capture.cameracaptureuicontract\1.0.0.0\windows.media.capture.cameracaptureuicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.capture.gamebarcontract\1.0.0.0\windows.media.capture.gamebarcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.devices.callcontrolcontract\1.0.0.0\windows.media.devices.callcontrolcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.mediacontrolcontract\1.0.0.0\windows.media.mediacontrolcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.playlists.playlistscontract\1.0.0.0\windows.media.playlists.playlistscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.media.protection.protectionrenewalcontract\1.0.0.0\windows.media.protection.protectionrenewalcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.networking.connectivity.wwancontract\3.0.0.0\windows.networking.connectivity.wwancontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.networking.networkoperators.legacynetworkoperatorscontract\1.0.0.0\windows.networking.networkoperators.legacynetworkoperatorscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.networking.sockets.controlchanneltriggercontract\3.0.0.0\windows.networking.sockets.controlchanneltriggercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.networking.xboxlive.xboxlivesecuresocketscontract\1.0.0.0\windows.networking.xboxlive.xboxlivesecuresocketscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.perception.automation.core.perceptionautomationcorecontract\1.0.0.0\windows.perception.automation.core.perceptionautomationcorecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.security.enterprisedata.enterprisedatacontract\5.0.0.0\windows.security.enterprisedata.enterprisedatacontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.security.exchangeactivesyncprovisioning.eascontract\1.0.0.0\windows.security.exchangeactivesyncprovisioning.eascontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.security.isolation.isolatedwindowsenvironmentcontract\5.0.0.0\windows.security.isolation.isolatedwindowsenvironmentcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.services.maps.guidancecontract\3.0.0.0\windows.services.maps.guidancecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.services.maps.localsearchcontract\4.0.0.0\windows.services.maps.localsearchcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.services.store.storecontract\4.0.0.0\windows.services.store.storecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.services.targetedcontent.targetedcontentcontract\1.0.0.0\windows.services.targetedcontent.targetedcontentcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.storage.provider.cloudfilescontract\7.0.0.0\windows.storage.provider.cloudfilescontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.power.thermal.powerthermalapicontract\1.0.0.0\windows.system.power.thermal.powerthermalapicontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.profile.platformautomaticappsignincontract\1.0.0.0\windows.system.profile.platformautomaticappsignincontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.profile.profilehardwaretokencontract\1.0.0.0\windows.system.profile.profilehardwaretokencontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.profile.profileretailinfocontract\1.0.0.0\windows.system.profile.profileretailinfocontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.profile.profilesharedmodecontract\2.0.0.0\windows.system.profile.profilesharedmodecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.profile.systemmanufacturers.systemmanufacturerscontract\3.0.0.0\windows.system.profile.systemmanufacturers.systemmanufacturerscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.systemmanagementcontract\7.0.0.0\windows.system.systemmanagementcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.userprofile.userprofilecontract\2.0.0.0\windows.system.userprofile.userprofilecontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.system.userprofile.userprofilelockscreencontract\1.0.0.0\windows.system.userprofile.userprofilelockscreencontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.applicationsettings.applicationssettingscontract\1.0.0.0\windows.ui.applicationsettings.applicationssettingscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.core.animationmetrics.animationmetricscontract\1.0.0.0\windows.ui.core.animationmetrics.animationmetricscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.core.corewindowdialogscontract\1.0.0.0\windows.ui.core.corewindowdialogscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.input.preview.text.previewtextcontract\1.0.0.0\windows.ui.input.preview.text.previewtextcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.shell.companionwindows.companionwindowscontract\1.0.0.0\windows.ui.shell.companionwindows.companionwindowscontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.shell.securityappmanagercontract\1.0.0.0\windows.ui.shell.securityappmanagercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.shell.tasks.apptaskcontract\2.0.0.0\windows.ui.shell.tasks.apptaskcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.shell.windowtabmanagercontract\1.0.0.0\windows.ui.shell.windowtabmanagercontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.uiautomation.uiautomationcontract\2.0.0.0\windows.ui.uiautomation.uiautomationcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.viewmanagement.viewmanagementviewscalingcontract\1.0.0.0\windows.ui.viewmanagement.viewmanagementviewscalingcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.xaml.core.direct.xamldirectcontract\5.0.0.0\windows.ui.xaml.core.direct.xamldirectcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.ui.xaml.hosting.hostingcontract\5.0.0.0\windows.ui.xaml.hosting.hostingcontract.winmd
+  Processing WinMD c:\program files (x86)\windows kits\10\references\10.0.26100.0\windows.web.http.diagnostics.httpdiagnosticscontract\2.0.0.0\windows.web.http.diagnostics.httpdiagnosticscontract.winmd
+  Microsoft(R) Metadata Merge Utility Version 10.0.49.
+  
+  
+  Processing input metadata file x64\Release\Unmerged\ReactPackageProvider.winmd.
+  Saved output metadata file MostormAxiom.winmd.
+  Validating metadata file x64\Release\Merged\MostormAxiom.winmd.
+  pch.cpp
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\node_modules\@mostorm\axiom-react-native\windows\x64\Release\Generated Files\winrt\impl\Microsoft.UI.Xaml.Media.Animation.0.h(2256,39): warning C4002: too many arguments for function-like macro invocation 'GetCurrentTime' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+  (compiling source file 'pch.cpp')
+  
+  ReactPackageProvider.cpp
+  module.g.cpp
+  JsiAbiApi.cpp
+  JsiApiContext.cpp
+  JsiValueHelpers.cpp
+  JSValue.cpp
+  JSValueTreeReader.cpp
+  JSValueTreeWriter.cpp
+  ModuleRegistration.cpp
+  ReactPromise.cpp
+  TurboModuleProvider.cpp
+  jsi.cpp
+  LongLivedObject.cpp
+  TurboModuleUtils.cpp
+  TurboModule.cpp
+  NodeApi.cpp
+  JSRuntimeApi.cpp
+  NodeApiJsiRuntime.cpp
+  NAPI_EXPERIMENTAL is enabled. Experimental features may be unstable.
+  NodeApiJsiLoader.cpp
+  WindowsMLAutoInitializer.cpp
+     Creating library C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomReactNative.lib and object C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomReactNative.exp
+  Generating code
+  6918 of 6936 functions (99.7%) were compiled, the rest were copied from previous compilation.
+    1535 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  AxiomReactNative.vcxproj -> C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomReactNative.dll
+  Discovered package 'react-native-windows' with version '0.84.0'
+  Running [npx @react-native-community/cli bundle --platform windows --entry-file index.js --bundle-output C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle --assets-dest C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle --dev false --reset-cache --sourcemap-output C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\sourcemaps\react\index.windows.bundle.packager.map --minify false] to build bundle file.
+  warn Package @mostorm/axiom-react-native contains invalid configuration: "dependency.platforms.ios.podspecPath" is not allowed. Please verify it's properly linked using "npx react-native config" command and contact the package maintainers about this.
+  [34m
+                          鈻掆枓鈻撯枔鈻撯枔鈻掆枓
+                       鈻掆枔鈻撯枔鈻掆枓鈻戔枒鈻掆枓鈻撯枔鈻撯枓
+                    鈻掆枔鈻撯枔鈻撯枒鈻戔枒鈻掆枓鈻掆枓鈻戔枒鈻戔枔鈻撯枔鈻撯枓
+                   鈻撯枔鈻掆枓鈻掆枔鈻撯枔鈻撯枔鈻撯枔鈻撯枔鈻撯枔鈻撯枓鈻掆枓鈻撯枔
+                   鈻撯枔鈻戔枒鈻戔枒鈻戔枓鈻撯枔鈻撯枔鈻撯枔鈻掆枒鈻戔枒鈻戔枒鈻撯枔
+                   鈻撯枔鈻戔枒鈻撯枔鈻掆枒鈻戔枒鈻掆枓鈻戔枒鈻戔枓鈻撯枓鈻戔枒鈻撯枔
+                   鈻撯枔鈻戔枒鈻撯枔鈻撯枔鈻撯枓鈻掆枓鈻掆枔鈻撯枔鈻撯枓鈻戔枒鈻撯枔
+                   鈻撯枔鈻戔枒鈻撯枔鈻撯枔鈻撯枔鈻撯枔鈻撯枔鈻撯枔鈻撯枓鈻戔枒鈻撯枔
+                   鈻撯枔鈻掆枒鈻戔枓鈻掆枔鈻撯枔鈻撯枔鈻撯枔鈻撯枓鈻戔枒鈻戔枓鈻撯枔
+                    鈻掆枔鈻撯枔鈻掆枒鈻戔枒鈻掆枔鈻撯枓鈻戔枒鈻戔枓鈻撯枔鈻撯枓
+                       鈻掆枔鈻撯枔鈻掆枒鈻戔枒鈻戔枓鈻撯枔鈻撯枓
+                          鈻掆枓鈻撯枔鈻撯枔鈻掆枓
+  
+  [39m
+  [33m[7m[1m WARN [22m[27m[39m the transform cache was reset.
+  [34m[1m                Welcome to Metro [37mv0.83.8[39m
+  [22m[39m[2m              Fast - Scalable - Integrated
+  
+  [22m
+  LOG:Writing bundle output to: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle
+  LOG:Writing sourcemap output to: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\sourcemaps\react\index.windows.bundle.packager.map
+  LOG:Done writing bundle output
+  LOG:Done writing sourcemap output
+  Running [C:\Users\Chado\.nuget\packages\microsoft.javascript.hermes\0.0.0-2605.6002-2279da22\tools\native\release\x86\hermes.exe -emit-binary -out C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle.hbc C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle -O -output-source-map] to precompile bundle file.
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(1897,20): warning G08CBB940: the variable "Promise" was not declared in function "promiseMethodWrapper" [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+          return new Promise((resolve, reject) => {
+                     ^~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(11054,7): warning G0204F30A: the variable "setTimeout" was not declared in function "logUncaughtError" [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+        setTimeout(function () {
+        ^~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(13832,31): warning G631B6206: the variable "nativeFabricUIManager" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+    var _nativeFabricUIManage = nativeFabricUIManager,
+                                ^~~~~~~~~~~~~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(13896,21): warning GEAF14D8F: the variable "clearTimeout" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+      cancelTimeout = clearTimeout;
+                      ^~~~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(18080,5): warning G77E22827: the variable "setImmediate" was not declared in function "handleResolved" [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+      setImmediate(function () {
+      ^~~~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(20193,29): warning G71D74270: the variable "performance" was not declared in anonymous arrow function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+            this._startTime = performance.now();
+                              ^~~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(21699,15): warning G515EE294: the variable "Blob" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+            new Blob();
+                ^~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(21838,24): warning G7B5B9C2F: the variable "FileReader" was not declared in function "readBlobAsArrayBuffer" [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+        var reader = new FileReader();
+                         ^~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(21891,40): warning GD910F56F: the variable "FormData" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+          } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+                                         ^~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(21893,44): warning G854FEA12: the variable "URLSearchParams" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+          } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+                                             ^~~~~~~~~~~~~~~
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\Bundle\index.windows.bundle(22146,23): warning G5E691841: the variable "XMLHttpRequest" was not declared in anonymous function [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+          var xhr = new XMLHttpRequest();
+                        ^~~~~~~~~~~~~~
+  warn Package @mostorm/axiom-react-native contains invalid configuration: "dependency.platforms.ios.podspecPath" is not allowed. Please verify it's properly linked using "npx react-native config" command and contact the package maintainers about this.
+  - Checking auto-linked files...
+  鈭?Checking auto-linked files...
+  Success: No auto-linking changes necessary. (33ms)
+  warn Package @mostorm/axiom-react-native contains invalid configuration: "dependency.platforms.ios.podspecPath" is not allowed. Please verify it's properly linked using "npx react-native config" command and contact the package maintainers about this.
+  - Running x64 node on a x64 machine
+  i Running x64 node on a x64 machine
+  - Running codegen-windows...
+  
+  i No codegenConfig specified in package.json - Skipping codegen-windows
+  Success: No codegen-windows changes necessary. (1ms)
+  pch.cpp
+  AxiomRNPhysical.cpp
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.cpp(21,104): warning C4100: 'showCmd': unreferenced parameter [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+  (compiling source file '/AxiomRNPhysical.cpp')
+  
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.cpp(21,55): warning C4100: 'instance': unreferenced parameter [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+  (compiling source file '/AxiomRNPhysical.cpp')
+  
+  AutolinkedNativeModules.g.cpp
+  JsiAbiApi.cpp
+  JsiApiContext.cpp
+  JsiValueHelpers.cpp
+  JSValue.cpp
+  JSValueTreeReader.cpp
+  JSValueTreeWriter.cpp
+  ModuleRegistration.cpp
+  ReactPromise.cpp
+  TurboModuleProvider.cpp
+  jsi.cpp
+  LongLivedObject.cpp
+  TurboModuleUtils.cpp
+  TurboModule.cpp
+  NodeApi.cpp
+  JSRuntimeApi.cpp
+  NodeApiJsiRuntime.cpp
+  NAPI_EXPERIMENTAL is enabled. Experimental features may be unstable.
+  NodeApiJsiLoader.cpp
+  UndockedRegFreeWinRT-AutoInitializer.cpp
+  WindowsAppRuntimeAutoInitializer.cpp
+  WindowsMLAutoInitializer.SelfContained.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 5647 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  AxiomRNPhysical.vcxproj -> C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomRNPhysical.exe

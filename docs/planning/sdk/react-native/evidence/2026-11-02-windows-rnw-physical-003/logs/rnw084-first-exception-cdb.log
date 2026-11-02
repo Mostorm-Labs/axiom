@@ -1,0 +1,131 @@
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.016 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+CommandLine: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomRNPhysical.exe
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff6`169a0000 00007ff6`169e6000   AxiomRNPhysical.exe
+ModLoad: 00007ff8`3bdd0000 00007ff8`3bfc8000   ntdll.dll
+ModLoad: 00007ff8`3a270000 00007ff8`3a332000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ff8`396b0000 00007ff8`399af000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ff8`3b8f0000 00007ff8`3ba8d000   C:\WINDOWS\System32\USER32.dll
+ModLoad: 00007ff8`39530000 00007ff8`39552000   C:\WINDOWS\System32\win32u.dll
+ModLoad: 00007ff8`3af70000 00007ff8`3af9b000   C:\WINDOWS\System32\GDI32.dll
+ModLoad: 00007ff8`39b70000 00007ff8`39c8a000   C:\WINDOWS\System32\gdi32full.dll
+ModLoad: 00007ff8`399b0000 00007ff8`39a4d000   C:\WINDOWS\System32\msvcp_win.dll
+ModLoad: 00007ff8`39560000 00007ff8`39660000   C:\WINDOWS\System32\ucrtbase.dll
+ModLoad: 00007ff8`39e50000 00007ff8`39f1d000   C:\WINDOWS\System32\OLEAUT32.dll
+ModLoad: 00007ff8`3afa0000 00007ff8`3b2f5000   C:\WINDOWS\System32\combase.dll
+ModLoad: 00007ff8`3ba90000 00007ff8`3bbb3000   C:\WINDOWS\System32\RPCRT4.dll
+(6e74.6e44): Break instruction exception - code 80000003 (first chance)
+ntdll!LdrpDoDebuggerBreak+0x30:
+00007ff8`3bea07a0 cc              int     3
+0:000> cdb: Reading initial command 'sxe -c ".exr -1; .ecxr; kv; q" eh; sxe -c ".exr -1; .ecxr; kv; q" c0000409; g'
+ModLoad: 00007ff8`3a160000 00007ff8`3a18f000   C:\WINDOWS\System32\IMM32.DLL
+ModLoad: 00007fff`bc730000 00007fff`bc976000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.WindowsAppRuntime.dll
+ModLoad: 00007ff8`3bbd0000 00007ff8`3bc7f000   C:\WINDOWS\System32\ADVAPI32.dll
+ModLoad: 00007ff8`3bce0000 00007ff8`3bd7e000   C:\WINDOWS\System32\msvcrt.dll
+ModLoad: 00007ff8`3ac60000 00007ff8`3acff000   C:\WINDOWS\System32\sechost.dll
+ModLoad: 00007ff8`39470000 00007ff8`39497000   C:\WINDOWS\System32\bcrypt.dll
+ModLoad: 00007ff8`39f20000 00007ff8`3a04b000   C:\WINDOWS\System32\ole32.dll
+ModLoad: 00007ff8`39320000 00007ff8`3934e000   C:\WINDOWS\SYSTEM32\USERENV.dll
+ModLoad: 00007ff8`39df0000 00007ff8`39e45000   C:\WINDOWS\System32\SHLWAPI.dll
+ModLoad: 00007ff8`33fe0000 00007ff8`34137000   C:\WINDOWS\SYSTEM32\wintypes.dll
+ModLoad: 00000160`73ef0000 00000160`73f3b000   C:\WINDOWS\SYSTEM32\powrprof.dll
+ModLoad: 00007ff8`33930000 00007ff8`33966000   C:\WINDOWS\SYSTEM32\XmlLite.dll
+ModLoad: 00007ff8`394a0000 00007ff8`39522000   C:\WINDOWS\System32\bcryptPrimitives.dll
+ModLoad: 00007ff8`37c80000 00007ff8`37c92000   C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+ModLoad: 00007ff8`38e00000 00007ff8`38e4b000   C:\WINDOWS\SYSTEM32\powrprof.dll
+ModLoad: 00007ff8`002b0000 00007ff8`002eb000   C:\WINDOWS\SYSTEM32\RoMetadata.dll
+ModLoad: 00007ff8`38dd0000 00007ff8`38de2000   C:\WINDOWS\SYSTEM32\UMPDC.dll
+ModLoad: 00007ff8`3b3c0000 00007ff8`3b46d000   C:\WINDOWS\System32\shcore.dll
+ModLoad: 00007ff8`35e00000 00007ff8`35e9e000   C:\WINDOWS\system32\uxtheme.dll
+ModLoad: 00007ff8`3ad00000 00007ff8`3ada9000   C:\WINDOWS\System32\clbcatq.dll
+ModLoad: 00007fff`4c120000 00007fff`4c82a000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.ReactNative.dll
+ModLoad: 00007ff8`1f5e0000 00007ff8`1f8d5000   C:\WINDOWS\SYSTEM32\uiautomationcore.dll
+ModLoad: 00007ff8`36540000 00007ff8`36b00000   C:\WINDOWS\SYSTEM32\d2d1.dll
+ModLoad: 00007ff8`35c00000 00007ff8`35db4000   C:\WINDOWS\SYSTEM32\WindowsCodecs.dll
+ModLoad: 00007ff8`1b6b0000 00007ff8`1b8de000   C:\WINDOWS\SYSTEM32\icu.dll
+ModLoad: 00007ff8`371e0000 00007ff8`37443000   C:\WINDOWS\SYSTEM32\d3d11.dll
+ModLoad: 00007ff8`36090000 00007ff8`360bf000   C:\WINDOWS\SYSTEM32\dwmapi.dll
+ModLoad: 00007ff8`36b00000 00007ff8`36d7f000   C:\WINDOWS\SYSTEM32\DWrite.dll
+ModLoad: 00007ff8`224a0000 00007ff8`224a7000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\VCRUNTIME140_1_APP.dll
+ModLoad: 00007fff`f6740000 00007fff`f6782000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\MSVCP140_APP.dll
+ModLoad: 00007ff8`21f50000 00007ff8`21f58000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\VCRUNTIME140_APP.dll
+ModLoad: 00007ff8`35390000 00007ff8`35486000   C:\WINDOWS\SYSTEM32\PROPSYS.dll
+ModLoad: 00007ff8`37ca0000 00007ff8`37d96000   C:\WINDOWS\SYSTEM32\dxgi.dll
+ModLoad: 00000160`73f60000 00000160`73f8c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00000160`73f30000 00000160`73f5c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00007ff8`1d070000 00007ff8`1d10c000   C:\WINDOWS\SYSTEM32\msvcp140.DLL
+ModLoad: 00007ff8`24280000 00007ff8`242ac000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00000160`73f30000 00000160`73f3c000   C:\WINDOWS\SYSTEM32\vcruntime140_1.DLL
+ModLoad: 00007ff8`24b10000 00007ff8`24b1c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140_1.dll
+ModLoad: 00007fff`bcfe0000 00007fff`bd0dd000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\CoreMessagingXP.dll
+ModLoad: 00007ff8`35060000 00007ff8`35152000   C:\Windows\System32\CoreMessaging.dll
+ModLoad: 00007ff8`3af00000 00007ff8`3af6b000   C:\WINDOWS\System32\WS2_32.dll
+(6e74.6e44): Windows Runtime Originate Error - code 40080201 (first chance)
+(6e74.6e44): C++ EH exception - code e06d7363 (first chance)
+*** WARNING: Unable to verify checksum for AxiomRNPhysical.exe
+ExceptionAddress: 00007ff8396eb699 (KERNELBASE!RaiseException+0x0000000000000069)
+   ExceptionCode: e06d7363 (C++ EH exception)
+  ExceptionFlags: 00000001
+NumberParameters: 4
+   Parameter[0]: 0000000019930520
+   Parameter[1]: 000000169117f930
+   Parameter[2]: 00007ff6169b5098
+   Parameter[3]: 00007ff6169a0000
+Unable to get exception context, HRESULT 0x8000FFFF
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+00000016`9117f7c0 00007ff6`169a7999     : 00007ff6`169b1d90 00000000`00000000 00000000`00000000 00000016`9117f988 : KERNELBASE!RaiseException+0x69
+00000016`9117f8a0 00007ff6`169a4860     : 00000000`00000000 000033a8`44e0ea3c 00000000`80040154 00000000`00000000 : AxiomRNPhysical!_CxxThrowException+0x99
+00000016`9117f900 00007ff6`169a4bb6     : 00000016`9117fa50 00000016`9117fab0 00007ff6`169b1d90 00000000`00000000 : AxiomRNPhysical!winrt::throw_hresult+0x160
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!winrt::check_hresult+0xd6 (Inline Function @ 00007ff6`169a4bb6)
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!winrt::get_activation_factory+0x119 (Inline Function @ 00007ff6`169a4bb6)
+00000016`9117f960 00007ff6`169a16f9     : 00000160`725a1f80 00000160`725a1f80 00000016`9117fb00 00000000`00000000 : AxiomRNPhysical!winrt::impl::factory_cache_entry<winrt::MostormAxiom::ReactPackageProvider,winrt::Windows::Foundation::IActivationFactory>::call<winrt::MostormAxiom::ReactPackageProvider (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>+0x176
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!winrt::impl::call_factory_cast+0x48 (Inline Function @ 00007ff6`169a16f9)
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!winrt::MostormAxiom::ReactPackageProvider::{ctor}+0x48 (Inline Function @ 00007ff6`169a16f9)
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!winrt::Microsoft::ReactNative::RegisterAutolinkedNativeModulePackages+0x48 (Inline Function @ 00007ff6`169a16f9)
+00000016`9117fa00 00007ff6`169a61f9     : 00000000`0000000a 00000000`00000000 00000000`00000000 00000000`00000000 : AxiomRNPhysical!WinMain+0x259
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : AxiomRNPhysical!invoke_main+0x21 (Inline Function @ 00007ff6`169a61f9)
+00000016`9117fd20 00007ff8`3a287374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : AxiomRNPhysical!__scrt_common_main_seh+0x109
+00000016`9117fd60 00007ff8`3be1cc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+00000016`9117fd90 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'

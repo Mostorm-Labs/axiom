@@ -1,0 +1,61 @@
+{
+  "name": "@mostorm/axiom-react-native",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "peerDependencies": {
+    "react": "19.2.0 || 19.2.3",
+    "react-native": "0.83.10 || 0.84.1",
+    "react-native-windows": "0.84.0",
+    "react-native-macos": "0.83.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-windows": {
+      "optional": true
+    },
+    "react-native-macos": {
+      "optional": true
+    }
+  },
+  "codegenConfig": {
+    "name": "AxiomNativeSpec",
+    "type": "all",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "dev.mostorm.axiom"
+    },
+    "ios": {
+      "modules": {
+        "AxiomNative": {
+          "className": "AxiomNative"
+        }
+      },
+      "components": {
+        "AxiomCanvasView": {
+          "className": "AxiomCanvasView"
+        }
+      }
+    },
+    "windows": {
+      "namespace": "MostormAxiom",
+      "outputDirectory": "windows/generated",
+      "generators": [
+        "componentsWindows"
+      ]
+    }
+  },
+  "react-native": "./src/index.ts",
+  "files": [
+    "src/**",
+    "apple/**",
+    "android/**",
+    "windows/**",
+    "native/**",
+    "*.podspec",
+    "react-native.config.cjs",
+    "README.md",
+    "example.tsx"
+  ]
+}

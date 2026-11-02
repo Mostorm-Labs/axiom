@@ -1,0 +1,39 @@
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+Build started 11/2/2026 12:08:14 AM.
+
+     1>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" on node 1 (default targets).
+     1>ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+     1>CppWinRTGetResolvedWinMD:
+         GetResolvedWinMD: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\x64\Debug\MostormAxiom.winmd
+     1>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\ReactNativeArchitecture.props(19,5): warning : Property 'UseFabric' was set to 'false'. Projects built against the New Architecture require Fabric so it will be set to 'true'. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+     1>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\ReactNativeArchitecture.props(23,5): warning : Property 'UseWinUI3' was set to 'false'. Projects built against the New Architecture require WinUI3 so it will be set to 'true'. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+       ReactNativeWindowsVersionCheck:
+         Discovered package 'react-native-windows' with version '0.83.3'
+     1>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\RequireSolution.targets(12,5): error : The property SolutionPath is not defined. This project requires being built via a valid solution file. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+     1>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default target) (1) ->
+       (WindowsAppSDKVerifyTransitiveDependencies target) -> 
+         ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default target) (1) ->
+       (EnsureUseFabricForNewArch target) -> 
+         C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\ReactNativeArchitecture.props(19,5): warning : Property 'UseFabric' was set to 'false'. Projects built against the New Architecture require Fabric so it will be set to 'true'. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default target) (1) ->
+       (EnsureUseWinUI3ForNewArch target) -> 
+         C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\ReactNativeArchitecture.props(23,5): warning : Property 'UseWinUI3' was set to 'false'. Projects built against the New Architecture require WinUI3 so it will be set to 'true'. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default target) (1) ->
+       (RequireSolutionTargets target) -> 
+         C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\RequireSolution.targets(12,5): error : The property SolutionPath is not defined. This project requires being built via a valid solution file. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+
+    3 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.11

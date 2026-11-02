@@ -754,7 +754,10 @@ bool validTableEditChange(const EditTableOp& edit) {
         if(before.grid!=after.grid||before.rows.size()!=after.rows.size()||before.columns.size()!=after.columns.size())return false;
         std::size_t changes=0;const auto axes=[&](const auto& a,const auto& b){for(std::size_t i=0;i<a.size();++i){if(a[i].id!=b[i].id)return false;if(a[i].size!=b[i].size)++changes;}return true;};
         if(!axes(before.rows,after.rows)||!axes(before.columns,after.columns)||changes>1)return false;
-        for(std::size_t i=0;i<before.cells.size();++i)if(before.cells[i].fill!=after.cells[i].fill||before.cells[i].text.document!=after.cells[i].text.document)return false;return true;
+        for(std::size_t i=0;i<before.cells.size();++i) {
+            if(before.cells[i].fill!=after.cells[i].fill||before.cells[i].text.document!=after.cells[i].text.document) return false;
+        }
+        return true;
     }
     if(before.rows!=after.rows||before.columns!=after.columns)return false;
     if(edit.action==TableEditKind::kGridStyle)return before.cells==after.cells;

@@ -1,0 +1,60 @@
+{
+  "cwd": "out/rn-windows-consumer-084-new",
+  "commands": [
+    {
+      "command": "npm ci --no-audit --no-fund",
+      "node": "22.13.0",
+      "exit": 0,
+      "evidence": "logs/rnw084-npm-ci.log"
+    },
+    {
+      "command": "npx react-native init-windows --template cpp-app --name AxiomRNPhysical --namespace AxiomRNPhysical --overwrite",
+      "exit": 0,
+      "evidence": "consumer/windows/AxiomRNPhysical/AxiomRNPhysical.vcxproj; tool output retained in chat"
+    },
+    {
+      "command": "node node_modules/react-native/cli.js autolink-windows --no-telemetry",
+      "exit": 0,
+      "evidence": "consumer/windows/AxiomRNPhysical/AutolinkedNativeModules.g.cpp"
+    },
+    {
+      "command": "MSBuild windows/AxiomRNPhysical.sln /t:AxiomRNPhysical /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v145 /p:PlatformToolsetVersion=145 /p:WindowsTargetPlatformVersion=10.0.26100.0 /p:AppxBundle=Never /m:2 /nr:false /v:minimal",
+      "exit": 0,
+      "runs": [
+        "logs/rnw084-build-001.log",
+        "logs/rnw084-build-002.log",
+        "logs/rnw084-build-003.log"
+      ],
+      "note": "001 also included /restore"
+    },
+    {
+      "command": "CDB first-chance EH capture of actual RNW app; see log for exact initial debugger command",
+      "exit": 0,
+      "evidence": "logs/rnw084-first-exception-cdb.log",
+      "note": "Debugger exits after capturing fault; exit 0 is NOT app PASS"
+    },
+    {
+      "command": "Read-only ChildWindowFromPointEx at Canvas center",
+      "exitBefore": 1,
+      "exitAfter": 0,
+      "evidence": [
+        "logs/rnw084-zorder-before.json",
+        "logs/rnw084-zorder-after.json"
+      ]
+    },
+    {
+      "cwd": ".",
+      "command": "python -m unittest discover -s tools/release/tests -v",
+      "exit": 0,
+      "tests": 27,
+      "evidence": "logs/rnw084-release-tests.log"
+    },
+    {
+      "cwd": ".",
+      "command": "node --test verification/sdk_controller/controller_test.mjs verification/sdk_controller/transport_test.mjs",
+      "exit": 0,
+      "tests": 12,
+      "evidence": "logs/rnw084-controller-tests.log"
+    }
+  ]
+}

@@ -301,6 +301,7 @@ gtest_discover_tests(canvas_semantic_payload_structure_test)
 
 add_executable(canvas_semantic_g1_04_c_geometry_overflow_source_test
   g1_04_c_geometry_overflow_source_test.cpp
+  ../src/container_operation_validation.cpp
   ../src/resource_manifest.cpp
   ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_g1_04_c_geometry_overflow_source_test

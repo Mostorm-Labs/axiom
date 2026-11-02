@@ -1,0 +1,30 @@
+{
+  "runId": "rnw-physical-002",
+  "exactSourceRevision": "1c8aebc4909c410465cd1bd3c554d01b64be170a",
+  "sdkVersion": "0.2.0",
+  "rn": "0.83.10",
+  "rnw": "0.83.3",
+  "react": "19.2.0",
+  "platform": "Windows x64",
+  "toolchain": "Visual Studio 2026 / MSVC v145 / Windows SDK 10.0.26100.0",
+  "tests": {
+    "minimalRnw": "PASS: window and accessible text",
+    "realAutolinkMinimal": "PASS: window and accessible text",
+    "sdkImportOnly": "PASS",
+    "controllerCreate": "BLOCKED: process exits 0xC0000409 in ucrtbase.dll",
+    "fullAxiomApp": "BLOCKED: process exits 0xC0000409 before targetable RN view",
+    "canvasInteraction": "NOT_RUN",
+    "brushVerification": "NOT_RUN",
+    "erasers": "NOT_RUN",
+    "undoRedo": "NOT_RUN",
+    "detachReattach": "NOT_RUN",
+    "nativeIme": "OPEN/BLOCKED"
+  },
+  "fault": {
+    "exception": "0xC0000409",
+    "module": "ucrtbase.dll",
+    "event": "Application Error 1000 / WER 1001",
+    "isolation": "reproduces when createNativeController invokes Axiom native session creation; absent for minimal and import-only"
+  },
+  "conclusion": "BLOCKED_EVIDENCE"
+}

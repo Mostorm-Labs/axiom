@@ -1,0 +1,28 @@
+{
+  "collected_at": "2026-11-02T04:03:29.044982+00:00",
+  "staged_payload_checks": [
+    {
+      "stage": "out/rn-macos-navigation-f4d1/native",
+      "source_revision": "f4d179c3284022cca46d87dba348e086bdd8b207",
+      "entries_verified": 60,
+      "mismatches": []
+    },
+    {
+      "stage": "out/rn-macos-navigation-f4d1/package",
+      "source_revision": "f4d179c3284022cca46d87dba348e086bdd8b207",
+      "entries_verified": 139,
+      "mismatches": []
+    }
+  ],
+  "pods_project_sha256": "41103e7d83260ca28bb7e6cdcc537d9befda8b01c67e8692b6fb0d08546ce7ae",
+  "pods_source_refs": [
+    "46EB2E00000660 /* AxiomCanvasHost.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = AxiomCanvasHost.mm; path = \"../../../../../rn-macos-navigation-f4d1/package/apple/AxiomCanvasHost.mm\"; sourceTree = \"<group>\"; };",
+    "46EB2E00000670 /* AxiomCanvasView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AxiomCanvasView.h; path = \"../../../../../rn-macos-navigation-f4d1/package/apple/AxiomCanvasView.h\"; sourceTree = \"<group>\"; };",
+    "46EB2E00000680 /* AxiomCanvasView.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = AxiomCanvasView.mm; path = \"../../../../../rn-macos-navigation-f4d1/package/apple/AxiomCanvasView.mm\"; sourceTree = \"<group>\"; };",
+    "46EB2E00000690 /* AxiomNative.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AxiomNative.h; path = \"../../../../../rn-macos-navigation-f4d1/package/apple/AxiomNative.h\"; sourceTree = \"<group>\"; };",
+    "46EB2E000006A0 /* AxiomNative.mm */ = {isa = PBXFileReference; includeInIndex = 1; name = AxiomNative.mm; path = \"../../../../../rn-macos-navigation-f4d1/package/apple/AxiomNative.mm\"; sourceTree = \"<group>\"; };"
+  ],
+  "package_symlink_target": "out/rn-macos-navigation-f4d1/package",
+  "source_delta_to_review_head": "git diff --quiet f4d179c3 844ffda3 -- sdk/react-native/apple sdk/native sdk/api runtime/composition: exit 0",
+  "note": "The review-head change is Windows sources/docs and package peer metadata; unchanged Mac sources do not constitute a physical retest of the newer package."
+}

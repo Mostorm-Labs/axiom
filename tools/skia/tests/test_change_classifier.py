@@ -11,15 +11,17 @@ from classify_r1_changes import ALL_TARGETS, classify
 
 
 class ChangeClassifierTest(unittest.TestCase):
-    def test_semantic_runtime_changes_do_not_trigger_scene_workflows(self) -> None:
+    def test_scene_reference_workflows_are_manual_only(self) -> None:
         workflows = Path(__file__).resolve().parents[3] / ".github/workflows"
         for name in ("poc03.yml", "rf01.yml"):
             trigger = (workflows / name).read_text(encoding="utf-8").split(
                 "concurrency:", maxsplit=1
             )[0]
+            self.assertIn("  workflow_dispatch:", trigger)
+            self.assertNotIn("  pull_request:", trigger)
+            self.assertNotIn("  push:", trigger)
             self.assertNotIn('"runtime/**"', trigger)
             self.assertNotIn('"tools/bootstrap_deps.py"', trigger)
-            self.assertIn('"runtime/scene/**"', trigger)
 
     def test_lock_change_with_only_semantic_dependencies_does_not_trigger_skia(self) -> None:
         before = {

@@ -90,8 +90,10 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         with tarfile.open(packed / filename) as package:
             package.extractall(extracted, filter='data')
         consumer = extracted / 'package'
-        required = ['axiom.mjs', 'internal/axiom.mjs', 'axiom.d.mts', 'axiom.wasm',
-                    'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
+        required = ['axiom.mjs', 'internal/axiom.mjs', 'axiom.d.mts',
+                    'api/axiom.mjs', 'api/axiom.d.mts', 'api/internal/controller.mjs',
+                    'api/internal/transport.mjs', 'api/internal/transport.d.mts', 'api/internal/values.mjs',
+                    'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
                     'example.html', 'serve.py', 'package.json', 'README.md', 'manifest.json']
         required += [path.relative_to(root).as_posix()
                      for path in (root / 'licenses').rglob('*') if path.is_file()]

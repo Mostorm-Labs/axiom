@@ -1,0 +1,38 @@
+{
+  "format": "axiom-android-pointer-input-regression-v1",
+  "recorded_at": "2026-11-02T05:46:49.043159+00:00",
+  "native_source_revision": "afa46640fc5f18ee36323d934f8e7516f2ec54bc",
+  "adapter": "Committed in this revision: sdk/react-native/android/.../AxiomCanvasView.kt maps Android pointer IDs id+1; native SDK source remains afa46640",
+  "device": "Google Pixel 7 / Android17 / API37 / USB arm64-v8a",
+  "physical_before_fix": "USER_REPORTED_FAILED: 画不出来东西，没有preview也没有canonical",
+  "root_cause": "RN Android forwarded zero-based MotionEvent pointer ID 0 unchanged; Runtime pointer identity reserves zero as invalid",
+  "fix": "Map MotionEvent id to id.toLong()+1 at the Host input boundary; same identity used for all contact phases",
+  "synthetic_regression_before": "FAILED: Android pointer ID 0 did not enter Runtime",
+  "synthetic_regression_after": "SYNTHETIC_VIEW_JNI_RUNTIME_PASSED; object commit, Undo/Redo, Cancel and contact retirement",
+  "physical_after_fix": "USER_CONFIRMED_DRAWING_AND_PREVIEW_NORMAL",
+  "qualification": "NOT_QUALIFIED",
+  "scope_limits": [
+    "Synthetic events do not establish physical touch or displayed preview/canonical pixels.",
+    "Native Runtime build-info still identifies afa46640; the Kotlin patch is separately hashed and not relabeled as a clean-source SDK.",
+    "No Native IME/real-pressure/performance/Gate/P34/release acceptance."
+  ],
+  "physical_confirmation": "用户确认：现在可以绘制，preview/笔迹都正常",
+  "physical_final_state": {
+    "objects": 11,
+    "active_contacts": 0,
+    "camera_scale": 0.7145843505859375,
+    "generation": 13,
+    "source": "final physical Runtime log after user touch"
+  },
+  "physical_scope": [
+    "single/multi touch input reached Runtime",
+    "preview and committed strokes visibly worked after pointer identity fix"
+  ],
+  "not_established": [
+    "object/partial eraser physical result in this follow-up",
+    "Undo/Redo physical result in this follow-up",
+    "systematic zoom/lifecycle/IME/performance qualification",
+    "full platform qualification"
+  ],
+  "provenance_note": "This evidence is committed in the current branch revision; the final commit is reported by Git after amend/push. Base native/runtime source remains afa46640."
+}

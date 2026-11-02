@@ -4954,10 +4954,10 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   // create a brush/ARC handoff identity. Retire their last transient frame
   // only after this canonical frame has been accepted, so the compositor
   // never exposes the old canonical position between pointer-up and redraw.
-  if (retire && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
+  if (retire && !previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
     (void)clearTransientOverlay();
   }
-  if (retire && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
+  if (retire && !previewActive() && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
     (void)clearTransientOverlay();
   }
   lastSubmittedCanonicalFrame_.reset();

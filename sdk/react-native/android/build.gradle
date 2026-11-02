@@ -1,0 +1,32 @@
+buildscript {
+ repositories { google(); mavenCentral() }
+ dependencies {
+  classpath 'com.android.tools.build:gradle:8.11.0'
+  classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20'
+ }
+}
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'com.facebook.react'
+def nativeSdk = project.findProperty('axiomNativeSdkRoot') ?: file('../native/android').absolutePath
+def availableAbis = file("${nativeSdk}/lib").listFiles()?.findAll {
+ it.isDirectory() && new File(it, 'libaxiom_native.so').isFile()
+}?.collect { it.name } ?: []
+def requestedAbis = project.findProperty('reactNativeArchitectures')?.split(',')?.toList() ?: availableAbis
+if (requestedAbis.isEmpty() || !availableAbis.containsAll(requestedAbis)) {
+ throw new GradleException("Axiom native package ABIs ${availableAbis} do not cover requested ${requestedAbis}")
+}
+android {
+ namespace 'dev.mostorm.axiom'
+ compileSdk 36
+ ndkVersion '27.2.12479018'
+ defaultConfig {
+  minSdk 26
+  ndk { abiFilters.addAll(requestedAbis) }
+  externalNativeBuild { cmake { arguments "-DAXIOM_NATIVE_SDK_ROOT=${nativeSdk}"; cppFlags '-std=c++20' } }
+ }
+ externalNativeBuild { cmake { path 'CMakeLists.txt' } }
+ sourceSets { main { jniLibs.srcDirs = ["${nativeSdk}/lib"]; assets.srcDirs = ['../native/assets'] } }
+}
+react { jsRootDir = file('../src/specs'); libraryName = 'AxiomNativeSpec'; codegenJavaPackageName = 'dev.mostorm.axiom' }
+dependencies { implementation 'com.facebook.react:react-android' }

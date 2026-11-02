@@ -1,0 +1,230 @@
+warn Package @mostorm/axiom-react-native contains invalid configuration: "dependency.platforms.ios.podspecPath" is not allowed. Please verify it's properly linked using "npx react-native config" command and contact the package maintainers about this.
+The command could not be loaded, possibly because:
+  * You intended to execute a .NET application:
+      The application 'nuget' does not exist.
+  * You intended to execute a .NET SDK command:
+      No .NET SDKs were found.
+
+Download a .NET SDK:
+https://aka.ms/dotnet-download
+
+Learn about SDK resolution:
+https://aka.ms/dotnet/sdk-not-found
+The command could not be loaded, possibly because:
+  * You intended to execute a .NET application:
+      The application 'nuget' does not exist.
+  * You intended to execute a .NET SDK command:
+      No .NET SDKs were found.
+
+Download a .NET SDK:
+https://aka.ms/dotnet-download
+
+Learn about SDK resolution:
+https://aka.ms/dotnet/sdk-not-found
+- Running x64 node on a x64 machine
+i Running x64 node on a x64 machine
+- Verbose: ON
+i Verbose: ON
+Looking for VS installs with version range: [18.6.0,19.0)
+Looking for vswhere at: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+- Found compatible MSBuild at C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\amd64 (18.6.11828.311)
+√ Found compatible MSBuild at C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\amd64 (18.6.11828.311)
+- Restoring NuGet packages 
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+Build started 11/2/2026 12:02:10 AM.
+
+Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" on node 1 (Restore target(s)).
+ValidateSolutionConfiguration:
+  Building solution configuration "Debug|x64".
+C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj : warning NU1503: Skipping restore for project 'C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj'. The project file may be invalid or missing targets required for restore. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln]
+_GetAllRestoreProjectPathItems:
+  Determining projects to restore...
+Restore:
+  X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+  X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (Restore target(s)).
+
+Build succeeded.
+
+"C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (Restore target) (1) ->
+(_FilterRestoreGraphProjectInputItems target) -> 
+  C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj : warning NU1503: Skipping restore for project 'C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj'. The project file may be invalid or missing targets required for restore. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln]
+
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.75
+√ Restoring NuGet packages 
+- Auto-linking...
+
+Parsing project...
+Found Windows app project, config:
+{
+  folder: 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-consumer',
+  sourceDir: 'windows',
+  solutionFile: 'AxiomRNPhysical.sln',
+  project: {
+    projectFile: 'AxiomRNPhysical\\AxiomRNPhysical.vcxproj',
+    projectName: 'AxiomRNPhysical',
+    projectLang: 'cpp',
+    projectGuid: '{08382878-DD4C-47CB-99A3-517E5E33CA1C}'
+  },
+  experimentalFeatures: {
+    RnwNewArch: 'true',
+    UseExperimentalNuget: 'true',
+    ReactExperimentalFeaturesSet: 'true'
+  },
+  rnwConfig: {
+    'init-windows': {
+      name: 'AxiomRNPhysical',
+      namespace: 'AxiomRNPhysical',
+      template: 'cpp-app'
+    },
+    projectArch: 'new',
+    projectLang: 'cpp',
+    projectType: 'app'
+  }
+}
+Parsing dependencies...
+@mostorm/axiom-react-native has Windows implementation, config:
+{
+  folder: 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-consumer\\node_modules\\@mostorm\\axiom-react-native',
+  projects: [
+    {
+      projectFile: 'AxiomReactNative.vcxproj',
+      directDependency: true,
+      projectName: 'AxiomReactNative',
+      projectLang: 'cpp',
+      projectGuid: '{A6812F1E-610F-42B7-97DA-C4DD8DA09782}',
+      cppHeaders: [Array],
+      cppPackageProviders: [Array],
+      csNamespaces: [Array],
+      csPackageProviders: [Array]
+    }
+  ],
+  solutionFile: null,
+  nugetPackages: [],
+  sourceDir: 'windows'
+}
+Adding @mostorm/axiom-react-native.
+Calculating AutolinkedNativeModules.g.cpp...
+Reading AutolinkedNativeModules.g.cpp...
+No changes to AutolinkedNativeModules.g.cpp.
+Calculating AutolinkedNativeModules.g.h...
+Reading AutolinkedNativeModules.g.h...
+No changes to AutolinkedNativeModules.g.h.
+Calculating AutolinkedNativeModules.g.props...
+Reading AutolinkedNativeModules.g.props...
+No changes to AutolinkedNativeModules.g.props.
+Calculating AutolinkedNativeModules.g.targets...
+Reading AutolinkedNativeModules.g.targets...
+No changes to AutolinkedNativeModules.g.targets.
+Calculating AxiomRNPhysical.sln changes...
+Processing AxiomReactNative.vcxproj...
+No changes to AxiomRNPhysical.sln.
+√ Auto-linking...
+Success: No auto-linking changes necessary. (43ms)
+- Found Solution: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln
+√ Found Solution: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln
+- Build configuration: Debug
+i Build configuration: Debug
+- Build platform: x64
+i Build platform: x64
+Running MSBuild with args /clp:NoSummary;NoItemAndPropertyList;Verbosity=normal /nologo /p:Configuration=Debug /p:Platform=x64 /p:AppxBundle=Never /bl:C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\msbuild_25408_build.binlog /flp1:errorsonly;logfile=C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\msbuild_25408_build.err /flp2:warningsonly;logfile=C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\msbuild_25408_build.wrn /maxCpuCount /restore /p:RestorePackagesConfig=true /p:RunAutolinkCheck=false
+- Building Solution
+Build started 11/2/2026 12:02:11 AM.
+
+     1>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" on node 1 (Restore target(s)).
+     1>ValidateSolutionConfiguration:
+         Building solution configuration "Debug|x64".
+     1>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj : warning NU1503: Skipping restore for project 'C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj'. The project file may be invalid or missing targets required for restore. [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln]
+       _GetAllRestoreProjectPathItems:
+         Determining projects to restore...
+       Restore:
+         X.509 certificate chain validation will use the default trust store selected by .NET for code signing.
+         X.509 certificate chain validation will use the default trust store selected by .NET for timestamping.
+         Restoring packages for C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj...
+         Restoring packages for C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj...
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative.cxx/index.json
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative/index.json
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative.cxx/index.json 418ms
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative.cxx/0.83.3/microsoft.reactnative.cxx.0.83.3.nupkg
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative/index.json 887ms
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative/0.83.3/microsoft.reactnative.0.83.3.nupkg
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.javascript.hermes/index.json
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.javascript.hermes/index.json 275ms
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.javascript.hermes/0.0.0-2608.12001-35d34796/microsoft.javascript.hermes.0.0.0-2608.12001-35d34796.nupkg
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.reactnative.cxx/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.reactnative/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.javascript.hermes/index.json
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.reactnative.cxx/index.json 509ms
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative/0.83.3/microsoft.reactnative.0.83.3.nupkg 2006ms
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.reactnative.cxx/0.83.3/microsoft.reactnative.cxx.0.83.3.nupkg 2311ms
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.javascript.hermes/0.0.0-2608.12001-35d34796/microsoft.javascript.hermes.0.0.0-2608.12001-35d34796.nupkg 1533ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.javascript.hermes/index.json 1458ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.reactnative/index.json 1710ms
+           GET https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.windowsappsdk.foundation/index.json
+           GET https://api.nuget.org/v3-flatcontainer/microsoft.windowsappsdk.foundation/index.json
+           OK https://pkgs.dev.azure.com/ms/f56d2c40-9e15-47a4-b7e0-69fef83912ea/_packaging/9467e302-f58d-45a1-9f9f-588df6f4d04c/nuget/v3/flat2/microsoft.windowsappsdk.foundation/index.json 645ms
+           OK https://api.nuget.org/v3-flatcontainer/microsoft.windowsappsdk.foundation/index.json 2467ms
+         Installed Microsoft.ReactNative.Cxx 0.83.3 from https://pkgs.dev.azure.com/ms/react-native/_packaging/react-native-public/nuget/v3/index.json to C:\Users\Chado\.nuget\packages\microsoft.reactnative.cxx\0.83.3 with content hash 6YjHZnmVt49e0uRQFxmLE0I8C/rM5WQDsuN5eVlyTV8TpVGAmtLbG+3wPKrHLqkGEgTdbmioIqdhXEqwfTwsrg==.
+         Installed Microsoft.ReactNative 0.83.3 from https://pkgs.dev.azure.com/ms/react-native/_packaging/react-native-public/nuget/v3/index.json to C:\Users\Chado\.nuget\packages\microsoft.reactnative\0.83.3 with content hash g8RXpBvchbGaMlvjGj937eYnhDC0R1H8jM4cqXP6nZ3r1HCp7VJoUKHSosxeSIAOjE7yfYNbpQy7eA+r0/+2Og==.
+           GET https://api.nuget.org/v3/vulnerabilities/index.json
+         Installed Microsoft.JavaScript.Hermes 0.0.0-2608.12001-35d34796 from https://pkgs.dev.azure.com/ms/react-native/_packaging/react-native-public/nuget/v3/index.json to C:\Users\Chado\.nuget\packages\microsoft.javascript.hermes\0.0.0-2608.12001-35d34796 with content hash 6EirG0swfzCbfajtXtUUUFJJqi0yYzYOMRjkx0XcLB1a8qYjAhRcFdAfsNDvxPbs0ErI+6++EjBZquf3YFQZDA==.
+           OK https://api.nuget.org/v3/vulnerabilities/index.json 578ms
+           GET https://api.nuget.org/v3-vulnerabilities/2026.10.28.05.41.06/vulnerability.base.json
+           GET https://api.nuget.org/v3-vulnerabilities/2026.10.28.05.41.06/2026.11.01.11.41.44/vulnerability.update.json
+           OK https://api.nuget.org/v3-vulnerabilities/2026.10.28.05.41.06/vulnerability.base.json 585ms
+           OK https://api.nuget.org/v3-vulnerabilities/2026.10.28.05.41.06/2026.11.01.11.41.44/vulnerability.update.json 2044ms
+         Generating MSBuild file C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\obj\AxiomReactNative.vcxproj.nuget.g.props.
+         Generating MSBuild file C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\obj\AxiomReactNative.vcxproj.nuget.g.targets.
+         Writing assets file to disk. Path: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\obj\project.assets.json
+         Writing packages lock file at disk. Path: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\packages.lock.json
+         Restored C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj (in 3.79 min).
+         Generating MSBuild file C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\obj\AxiomRNPhysical.vcxproj.nuget.g.props.
+         Generating MSBuild file C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\obj\AxiomRNPhysical.vcxproj.nuget.g.targets.
+         Writing assets file to disk. Path: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\obj\project.assets.json
+         Writing packages lock file at disk. Path: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\packages.lock.json
+         Restored C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj (in 3.8 min).
+         
+         NuGet Config files used:
+             C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\NuGet.Config
+             C:\Users\Chado\AppData\Roaming\NuGet\NuGet.Config
+         
+         Feeds used:
+             https://pkgs.dev.azure.com/ms/react-native/_packaging/react-native-public/nuget/v3/index.json
+             https://api.nuget.org/v3/index.json
+         
+         Installed:
+             2 package(s) to C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj
+             3 package(s) to C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj
+     1>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (Restore target(s)).
+   1:2>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" on node 1 (default targets).
+     1>ValidateSolutionConfiguration:
+         Building solution configuration "Debug|x64".
+   1:2>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (1:2) is building "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj" (2:2) on node 1 (default targets).
+     2>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj(18,3): error MSB4019: The imported project "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.props" was not found. Confirm that the expression in the Import declaration "$(WapProjPath)\Microsoft.DesktopBridge.props", which evaluated to "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\\Microsoft.DesktopBridge.props", is correct, and that the file exists on disk.
+     2>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj" (default targets) -- FAILED.
+   1:2>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (1:2) is building "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (4:6) on node 3 (default targets).
+     4>ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+   1:2>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (1:2) is building "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (3:10) on node 2 (default targets).
+     3>ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+     3>CppWinRTGetResolvedWinMD:
+         GetResolvedWinMD: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\x64\Debug\MostormAxiom.winmd
+     3>C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.Cpp.WindowsSDK.targets(46,5): error MSB8036: The Windows SDK version 10.0.22621.0 was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting "Retarget solution". [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj]
+     3>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\@mostorm\axiom-react-native\windows\AxiomReactNative.vcxproj" (default targets) -- FAILED.
+     4>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (default targets) -- FAILED.
+     1>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.sln" (default targets) -- FAILED.
+× Building Solution
+- Build failed with message 2:2>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj(18,3): error MSB4019: The imported project "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.props" was not found. Confirm that the expression in the Import declaration "$(WapProjPath)\Microsoft.DesktopBridge.props", which evaluated to "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\\Microsoft.DesktopBridge.props", is correct, and that the file exists on disk.. Check your build configuration.
+× Build failed with message 2:2>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj(18,3): error MSB4019: The imported project "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.props" was not found. Confirm that the expression in the Import declaration "$(WapProjPath)\Microsoft.DesktopBridge.props", which evaluated to "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\\Microsoft.DesktopBridge.props", is correct, and that the file exists on disk.. Check your build configuration.
+- It is possible your installation is missing required software dependencies. Dependencies can be automatically installed by running C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\scripts\rnw-dependencies.ps1 from an elevated PowerShell prompt.
+For more information, go to http://aka.ms/rnw-deps
+× It is possible your installation is missing required software dependencies. Dependencies can be automatically installed by running C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\scripts\rnw-dependencies.ps1 from an elevated PowerShell prompt.
+For more information, go to http://aka.ms/rnw-deps
+- Gathering MSBuild data for telemetry.
+i Gathering MSBuild data for telemetry.
+- Unable to find msbuildproperties.g.json
+i Unable to find msbuildproperties.g.json
+Command failed with error MSBuildError: 2:2>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical.Package\AxiomRNPhysical.Package.wapproj(18,3): error MSB4019: The imported project "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\Microsoft.DesktopBridge.props" was not found. Confirm that the expression in the Import declaration "$(WapProjPath)\Microsoft.DesktopBridge.props", which evaluated to "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\DesktopBridge\\Microsoft.DesktopBridge.props", is correct, and that the file exists on disk.
+Your telemetry sessionId was 421c5f6bc7aa1d80eb8fc73eae5bd19a

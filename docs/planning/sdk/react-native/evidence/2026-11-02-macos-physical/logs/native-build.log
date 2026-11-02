@@ -1,0 +1,143 @@
+COMMAND ["/opt/homebrew/opt/python@3.12/bin/python3.12", "tools/setup_build_environment.py", "--semantic", "--target", "macos-arm64", "--facts-output", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-sdk-macos-3902/environment.json", "--status", "--offline"]
+Axiom Build Environment
+Host: macos-arm64
+Target: macos-arm64
+Semantic release: semantic-sdk-v2-14e3d492c9b7f970
+releaseSetId: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+host-tools: macos-universal / 12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f
+  source: store
+  path: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f
+runtimes: macos-arm64 / 0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+  source: store
+  path: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+ABI: {"buildType": "Release", "cxxRuntime": "libc++", "cxxStandard": 20, "exceptions": true, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}
+Network: not used
+{"core": {"depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b", "enabled": false}, "environment": {"AXIOM_DEPS_DIR": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64", "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc", "AXIOM_SEMANTIC_HOST_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "AXIOM_SEMANTIC_RUNTIME_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "AXIOM_SEMANTIC_SDK_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4"}, "format": "axiom-build-environment-v2", "host": "macos-arm64", "semantic": {"enabled": true, "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514", "mode": "v2", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "resolution": {"artifacts": [{"family": "semantic", "identity": "12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "key": "macos-universal", "kind": "host-tools", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "sha256": "3a5f3aa354128897945fd84217ae6570caa7f44511e3e051e3948142c15a8146", "source": "store"}, {"family": "semantic", "identity": "0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "key": "macos-arm64", "kind": "runtimes", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "sha256": "77e92101a10a489e7c47e0fe5904b06eebc94c0871159640ef767e6ac0bff850", "source": "store"}], "family": "semantic", "format": "axiom-sdk-resolution-v1", "host": "macos-arm64", "index": {"identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/release-sets/semantic/14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea/semantic-sdk-index.json", "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "source": "store"}, "metadata": {"abi": {"buildType": "Release", "cxxRuntime": "libc++", "cxxStandard": 20, "exceptions": true, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}, "abseilVersion": "20250512.1", "hostTool": "macos-universal", "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "protobufVersion": "36.0", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "target": "macos-arm64", "toolchain": {"cmakeVersion": "cmake version 3.30.5", "compiler": "apple-clang", "compilerTarget": "arm64-apple-darwin24.6.0", "compilerVersion": "Apple clang version 17.0.0 (clang-1700.0.13.5)", "cxxRuntime": "libc++", "deploymentTarget": "15.0.0", "ninjaVersion": "1.11.1.git.kitware.jobserver-1", "sdkName": "macosx", "sdkVersion": "15.5", "xcodeVersion": "Xcode 16.4\nBuild version 16F6"}}, "networkUsed": false, "target": "macos-arm64"}}, "target": "macos-arm64"}
+COMMAND ["/opt/homebrew/opt/python@3.12/bin/python3.12", "tools/setup_build_environment.py", "--semantic", "--target", "macos-arm64", "--offline", "--status"]
+Axiom Build Environment
+Host: macos-arm64
+Target: macos-arm64
+Semantic release: semantic-sdk-v2-14e3d492c9b7f970
+releaseSetId: 14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea
+host-tools: macos-universal / 12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f
+  source: store
+  path: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f
+runtimes: macos-arm64 / 0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+  source: store
+  path: /Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4
+ABI: {"buildType": "Release", "cxxRuntime": "libc++", "cxxStandard": 20, "exceptions": true, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}
+Network: not used
+{"core": {"depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b", "enabled": false}, "environment": {"AXIOM_DEPS_DIR": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64", "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc", "AXIOM_SEMANTIC_HOST_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "AXIOM_SEMANTIC_RUNTIME_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "AXIOM_SEMANTIC_SDK_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4"}, "format": "axiom-build-environment-v2", "host": "macos-arm64", "semantic": {"enabled": true, "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514", "mode": "v2", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "resolution": {"artifacts": [{"family": "semantic", "identity": "12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "key": "macos-universal", "kind": "host-tools", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f", "sha256": "3a5f3aa354128897945fd84217ae6570caa7f44511e3e051e3948142c15a8146", "source": "store"}, {"family": "semantic", "identity": "0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "key": "macos-arm64", "kind": "runtimes", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "sha256": "77e92101a10a489e7c47e0fe5904b06eebc94c0871159640ef767e6ac0bff850", "source": "store"}], "family": "semantic", "format": "axiom-sdk-resolution-v1", "host": "macos-arm64", "index": {"identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "networkUsed": false, "root": "/Users/qing/Library/Application Support/Axiom/sdk/release-sets/semantic/14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea/semantic-sdk-index.json", "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "source": "store"}, "metadata": {"abi": {"buildType": "Release", "cxxRuntime": "libc++", "cxxStandard": 20, "exceptions": true, "linkage": "static", "pic": true, "rtti": true, "sanitizer": "none"}, "abseilVersion": "20250512.1", "hostTool": "macos-universal", "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5", "protobufVersion": "36.0", "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea", "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970", "target": "macos-arm64", "toolchain": {"cmakeVersion": "cmake version 3.30.5", "compiler": "apple-clang", "compilerTarget": "arm64-apple-darwin24.6.0", "compilerVersion": "Apple clang version 17.0.0 (clang-1700.0.13.5)", "cxxRuntime": "libc++", "deploymentTarget": "15.0.0", "ninjaVersion": "1.11.1.git.kitware.jobserver-1", "sdkName": "macosx", "sdkVersion": "15.5", "xcodeVersion": "Xcode 16.4\nBuild version 16F6"}}, "networkUsed": false, "target": "macos-arm64"}}, "target": "macos-arm64"}
+COMMAND ["/opt/homebrew/opt/python@3.12/bin/python3.12", "tools/skia/fetch.py", "--profile", "tools/skia/profiles/r1-full-v1.json", "--lock", "r1-full-skia-sdk.lock.json", "--target", "macos-arm64-metal", "--variant", "release"]
+{"bytes": 0, "path": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release", "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731", "seconds": 0.162, "source": "installed", "target": "macos-arm64-metal"}
+COMMAND ["cmake", "-S", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom", "-B", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-sdk-macos-3902", "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_RENDER=ON", "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON", "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON", "-DAXIOM_BUILD_NATIVE_SDK=ON", "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF", "-DAXIOM_INSTALL_DEVELOPER_COMPONENTS=OFF", "-DAXIOM_BUILD_WINDOWS_SDK=OFF", "-DAXIOM_BUILD_DEBUG_UI=OFF", "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release", "-DCanvasSkia_DIR=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/cmake/CanvasSkia", "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc", "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4", "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY", "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF", "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF", "-DCMAKE_OSX_ARCHITECTURES=arm64", "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0"]
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-sdk-macos-3902
+COMMAND ["cmake", "--build", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-sdk-macos-3902", "--target", "axiom_native", "--parallel", "6"]
+[0/2] Re-checking globbed directories...
+[1/17] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[2/17] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[3/17] Linking CXX static library runtime/control/libcanvas_runtime_control.a
+[4/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_composition.cpp.o
+[5/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o
+[6/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_facade.cpp.o
+[7/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_connector_sticky.cpp.o
+[8/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_image.cpp.o
+[9/17] Copying OS X Content sdk/native/AxiomNative.framework/Versions/A/Headers/native.h
+[10/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/multi_selection_port.cpp.o
+[11/17] Linking CXX static library runtime/composition/libcanvas_runtime_composition.a
+[12/17] Building OBJCXX object sdk/native/CMakeFiles/axiom_sdk_native_transport.dir/src/metal_surface.mm.o
+[13/17] Building CXX object sdk/native/CMakeFiles/axiom_sdk_native_transport.dir/src/skia_native_platform.cpp.o
+[14/17] Building CXX object sdk/native/CMakeFiles/axiom_native.dir/src/native_api.cpp.o
+[15/17] Building CXX object sdk/native/CMakeFiles/axiom_sdk_native_transport.dir/src/native_session.cpp.o
+[16/17] Linking CXX static library sdk/native/libaxiom_sdk_native_transport.a
+[17/17] Linking CXX shared library sdk/native/AxiomNative.framework/Versions/A/AxiomNative
+ld: warning: ignoring duplicate libraries: '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libexpat.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libfreetype2.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libharfbuzz.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libicu.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libjpeg.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libjpeg12.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libjpeg16.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libjsonreader.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libpng.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskcms.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskia.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskottie.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskparagraph.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskresources.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libsksg.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskshaper.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskunicode_core.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libskunicode_icu.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libsvg.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libwebp.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libwebp_sse41.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libwuffs.a', '/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/libzlib.a'
+COMMAND ["cmake", "--install", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-sdk-macos-3902", "--prefix", "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native", "--component", "AxiomNative"]
+-- Install configuration: "Release"
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Resources
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A/Resources
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A/Resources/Info.plist
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A/AxiomNative
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A/Headers
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/A/Headers/native.h
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Versions/Current
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/AxiomNative
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/lib/AxiomNative.framework/Headers
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/include/axiom/native.h
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/share/axiom-native/version.json
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/axiom-font.otf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Fira_Sans
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Fira_Sans/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Fira_Sans/FiraSans-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter_Tight
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter_Tight/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter_Tight/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter_Tight/InterTight-VariableFont_wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Comic_Neue
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Comic_Neue/ComicNeue-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Comic_Neue/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Excalifont
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Excalifont/README.md
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Excalifont/Excalifont-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Excalifont/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Sans
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Sans/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Sans/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/STIX_Two_Text
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/STIX_Two_Text/STIXTwoText-VariableFont_wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/STIX_Two_Text/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/STIX_Two_Text/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Mono
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/IBM_Plex_Mono/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter/Inter-VariableFont_opsz,wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Inter/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Oswald
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Oswald/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Oswald/Oswald-VariableFont_wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Oswald/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Open_Sans
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Open_Sans/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Open_Sans/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Roboto
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Roboto/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Roboto/README.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/catalog.json
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Ubuntu
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Ubuntu/Ubuntu-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Ubuntu/UFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Xiaolai
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Xiaolai/README.md
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Xiaolai/Xiaolai-Regular.ttf
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/Xiaolai/OFL.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/assets/fonts/handwriting-sources.json
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/Skia.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/libjpeg-turbo.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/Expat.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/HarfBuzz.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/zlib.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/Wuffs.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/libpng.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/libwebp.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/ICU.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/skia/FreeType.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/semantic
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/semantic/Abseil.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/semantic/Protobuf.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/semantic/utf8_range.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/nlohmann-json/LICENSE.MIT
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/noto-cjk/LICENSE.txt
+-- Installing: /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/rn-macos-navigation-f4d1/native/licenses/noto-cjk/NOTICE.txt
+{"format": "axiom-native-development-v1", "target": "macos-arm64", "sdk_version": "0.2.0", "source_revision": "f4d179c3284022cca46d87dba348e086bdd8b207", "dirty": false, "qualification": "NOT_QUALIFIED"}

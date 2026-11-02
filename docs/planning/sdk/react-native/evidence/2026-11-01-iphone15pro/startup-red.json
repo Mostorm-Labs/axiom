@@ -1,0 +1,41 @@
+{
+  "exception": {
+    "codes": "0x0000000000000001, 0x00000001933872d8",
+    "rawCodes": [
+      1,
+      6764917464
+    ],
+    "type": "EXC_BREAKPOINT",
+    "signal": "SIGTRAP"
+  },
+  "termination": {
+    "code": 5,
+    "namespace": "SIGNAL",
+    "indicator": "Trace/BPT trap: 5"
+  },
+  "faulting_thread": "main",
+  "frames": [
+    {
+      "symbol": "___UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption_block_invoke",
+      "offset": 700
+    },
+    {
+      "symbol": "_dispatch_client_callout",
+      "offset": 16
+    },
+    {
+      "symbol": "_dispatch_once_callout",
+      "offset": 32
+    },
+    {
+      "symbol": "-[UIApplication workspace:didCreateScene:withTransitionContext:completion:]",
+      "offset": 324
+    },
+    {
+      "symbol": "-[UIApplicationSceneClientAgent scene:didInitializeWithEvent:completion:]",
+      "offset": 288
+    }
+  ],
+  "cause": "RN temporary consumer did not adopt UIScene; UIKit traps before Axiom startup on this physical iOS version",
+  "fix": "Consumer SceneDelegate and UIApplicationSceneManifest; SDK native library source unchanged"
+}

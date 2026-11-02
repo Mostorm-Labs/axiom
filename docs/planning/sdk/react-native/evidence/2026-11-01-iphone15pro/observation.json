@@ -1,0 +1,86 @@
+{
+  "format": "axiom-ios-physical-observation-v1",
+  "observed_at": "2026-11-01T22:16:56+08:00",
+  "sdk_version": "0.2.0",
+  "sdk_source_revision": "d7ce720aa4f6b139011a9593e2623535e1d3adb1",
+  "review_head_before_evidence": "937feb840f176b1b78d035d6b7972ce12fe181b7",
+  "build_profile": "Release/iphoneos/arm64/iOS17+",
+  "bundle_identifier": "dev.mostorm.axiom.rn.physical",
+  "ui_host_identity": "React Native 0.83.10 Fabric AxiomCanvasHost UIView, consumer UISceneDelegate",
+  "platform_backend_identity": "UIKit coalesced touches -> PlatformPointerBatch",
+  "renderer_identity": "Skia/Metal; independent canonical and preview CAMetalLayer providers",
+  "result": "PHYSICAL_MANUAL_SMOKE_COMPLETED",
+  "scope": "finger input, editing, handoff and listed lifecycle smoke checks; no overall platform qualification",
+  "automated_observations": {
+    "signed_build": "SUCCEEDED",
+    "signature_verification": "SUCCEEDED",
+    "device_install": "SUCCEEDED",
+    "launch_after_uiscene_fix": "RUNNING",
+    "runtime_pointer_commits": 16,
+    "all_logged_pointer_apply_succeeded": true,
+    "last_logged_commit": {
+      "pointer": "26",
+      "ok": "1",
+      "objects": "9",
+      "scene_generation": "23"
+    },
+    "last_capture_state": {
+      "objects": 9,
+      "generation": "23",
+      "active_contacts": 0,
+      "camera_scale": 1.21,
+      "can_undo": true,
+      "can_redo": false
+    },
+    "screenshots": [
+      "physical-drawing.png",
+      "physical-after-verification.png"
+    ],
+    "process_remained_running": true
+  },
+  "manual_test_steps": [
+    {
+      "step": "partial eraser shows progressive erasure",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    },
+    {
+      "step": "object eraser removes object at gesture completion",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    },
+    {
+      "step": "Undo and Redo",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    },
+    {
+      "step": "two-finger zoom",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    },
+    {
+      "step": "Detach then Reattach retains strokes and History",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    },
+    {
+      "step": "background then foreground remains usable",
+      "result": "USER_CONFIRMED_NORMAL",
+      "source": "User replied 都正常 to the explicit physical-test checklist"
+    }
+  ],
+  "not_established": [
+    "Native IME is not implemented",
+    "Apple Pencil/real pressure (iPhone finger test only)",
+    "systematic six-brush material fidelity",
+    "rotation resize (not part of user-confirmed checklist)",
+    "measured latency/FPS",
+    "stale command generation rejection on this device",
+    "exact per-provider submission/readback/present counters",
+    "screen recording (device reports unsupported capability)"
+  ],
+  "recording": "UNAVAILABLE_DEVICE_CAPABILITY; screenshots and Runtime log retained",
+  "classification": "IOS_PHYSICAL_SMOKE_RECORDED_RN_NOT_QUALIFIED",
+  "remaining_platforms": "Windows/macOS RN and Android runtime/physical checks remain open"
+}
