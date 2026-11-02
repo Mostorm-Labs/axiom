@@ -20,6 +20,10 @@ It is an engineering result only; it does not issue G5 or P34 acceptance.
 - Scene delta publication reuses the already-published ordered snapshot. Pure
   content/transform updates avoid a second ordered-cache materialization and
   sort; insert/delete/order changes still perform the required publication sort.
+- SceneRecordStore object lookup now resolves through its stable ObjectId→arena
+  handle index after localized mutations, so a single lookup does not rebuild
+  the ordered cache. This is the first GeometryChunk prerequisite; it is not
+  yet a chunked ordered publication or visible-candidate chunk index.
 
 ## Evidence
 
@@ -51,3 +55,10 @@ Tile, Scheduler, or ResourceBudget completion.
 
 No SDK/API/ABI, semantic schema, BrushEngine, Skia lock, or platform contract was
 changed. No official G5/P34 PASS is claimed.
+
+## Web smoke
+
+The accepted arm64 Emscripten 6.0.6 toolchain, locked Web Skia SDK and matching
+root SDK artifacts configured and built successfully. Chrome 156 launched, but
+the consumer did not expose `window.probe` before the runner timeout. The run is
+recorded as `BLOCKED_EVIDENCE`; no Web PASS is inferred from the successful build.

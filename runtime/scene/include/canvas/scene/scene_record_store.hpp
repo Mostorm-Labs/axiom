@@ -22,6 +22,7 @@ class SceneRecordStore final {
         std::uint64_t fullSortCount = 0;
         std::uint64_t fullReindexCount = 0;
         std::uint64_t fullRebuildCount = 0;
+        std::uint64_t orderedCacheMaterializationCount = 0;
         std::uint64_t localizedMutationCount = 0;
     };
 

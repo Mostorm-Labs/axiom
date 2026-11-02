@@ -67,6 +67,13 @@ int main() {
         std::cerr << "Stable slot locality failed\n";
         return EXIT_FAILURE;
     }
+    const auto beforeFind = store.localityDiagnostics();
+    if (store.find(before.objectId) == nullptr ||
+        store.localityDiagnostics().orderedCacheMaterializationCount !=
+            beforeFind.orderedCacheMaterializationCount) {
+        std::cerr << "localized find rebuilt ordered cache\n";
+        return EXIT_FAILURE;
+    }
 
     auto runSequence = [](std::size_t population, bool readBetween) {
         SceneRecordStore local;
