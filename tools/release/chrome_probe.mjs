@@ -30,7 +30,7 @@ async function probe(executable,output) {
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'axiom-chrome-probe-'));let browser,result;
   try {
     const started=await launchChrome(executable,path.join(root,'profile'));browser=started.browser;
-    const response=await fetch(`http://127.0.0.1:${started.port}/json/version`,{signal:AbortSignal.timeout(10000)});
+    const response=await fetch(`http://127.0.0.1:${started.port}/json/version`,{signal:AbortSignal.timeout(60000)});
     if(!response.ok)throw Error(`Chrome version endpoint: ${response.status}`);
     result={status:'ENVIRONMENT_READY',browser:await response.json(),startup:started.diagnostics()};
   }catch(error){result={status:'ENVIRONMENT_BLOCKED',error:String(error)};process.exitCode=1;}
