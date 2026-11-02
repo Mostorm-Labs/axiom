@@ -45,20 +45,20 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
             if(c->stroke.snapshot.paint.alpha*c->stroke.snapshot.paint.opacity>0)
                 path=buildVectorBrushOutlineSkPath(c->stroke.vector_output.outline,c->stroke.vector_output.fill_rule,c->stroke.vector_output.closed);
         } else if(const auto* compact=std::get_if<semantic::CompactStrokeContent>(&r.content)) {
-            const auto& s=compact->stroke;const auto& c=s.config;
+            const auto& s=compact->stroke;const auto& config=s.config;
             if(!semantic::validCompactStroke(s))return Hit::kInvalid;
-            if(c.family!=foundation::InkFamily::kRound&&c.family!=foundation::InkFamily::kMarker)return Hit::kUnsupported;
-            if(c.opacity*c.color[3]<=0)break;
-            if(c.algorithmVersion!=4)return Hit::kUnsupported;
+            if(config.family!=foundation::InkFamily::kRound&&config.family!=foundation::InkFamily::kMarker)return Hit::kUnsupported;
+            if(config.opacity*config.color[3]<=0)break;
+            if(config.algorithmVersion!=4)return Hit::kUnsupported;
             // Reuse the renderer's compiler and ribbon path, including pressure,
             // smoothing, caps and tapers. No second brush geometry algorithm.
-            const auto contour=ink::compileCompactContour(c,s.knots);
+            const auto contour=ink::compileCompactContour(config,s.knots);
             for(std::size_t i=0;i+1<contour.patches.size();++i)
                 decorations.push_back(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));
             for(const auto& cap:contour.caps){
                 SkPathBuilder b;b.addCircle(0,0,f(cap.radius));auto p=b.detach();
                 SkMatrix matrix;matrix.setTranslate(f(cap.x),f(cap.y));
-                if(c.family==foundation::InkFamily::kMarker){matrix.preRotate(f(c.markerAngle*57.29577951308232));matrix.preScale(1,f(c.markerFlatness));}
+                if(config.family==foundation::InkFamily::kMarker){matrix.preRotate(f(config.markerAngle*57.29577951308232));matrix.preScale(1,f(config.markerFlatness));}
                 decorations.push_back(p.makeTransform(matrix));
             }
         } else if(const auto* legacy=std::get_if<semantic::VectorStrokeContent>(&r.content)) {
