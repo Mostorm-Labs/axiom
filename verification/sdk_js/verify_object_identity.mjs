@@ -15,7 +15,7 @@ try {
   const hashes = {};
   for (const name of ['axiom.mjs', 'internal', 'api', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs']) {
     await fs.cp(path.resolve(process.argv[2], name), path.join(files, name), {recursive: true});
-    if (name !== 'internal') hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
+    if (!['internal', 'api'].includes(name)) hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
   }
   hashes['internal/axiom.mjs'] = createHash('sha256').update(await fs.readFile(path.join(files, 'internal/axiom.mjs'))).digest('hex');
   observation.files = hashes;
