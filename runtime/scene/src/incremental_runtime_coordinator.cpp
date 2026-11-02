@@ -280,6 +280,17 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     auto runtimePrepared = runtimeScene_.prepareIncremental(input.post_state, *input.changes);
     if (!runtimePrepared) {
         abortPublication();
+        if (runtimePrepared.error().code == foundation::ErrorCode::kRequiresFullRebuild) {
+            // The dependency closure is outside the first flat-leaf domain.
+            // Recover directly from the authoritative post-state; do not
+            // materialize a discarded full projection during preparation.
+            const SceneCommitInput recoveryInput(input.after_generation, input.post_state);
+            auto recovered = recover(compiler, recoveryInput);
+            if (!recovered) return recovered;
+            auto receipt = std::move(recovered.value());
+            receipt.incrementalFailure = runtimePrepared.error();
+            return foundation::Result<SceneSyncReceipt>::success(std::move(receipt));
+        }
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
     if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) {

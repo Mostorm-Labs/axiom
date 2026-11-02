@@ -28,8 +28,19 @@ public:
   static void incremental(RuntimeScene& scene, const semantic::SemanticReadView& view,
                           const semantic::ChangeSet& changes) {
     auto prepared=scene.prepareIncremental(view,changes);
-    if(!prepared)throw std::runtime_error("prepare incremental projection");
+    if(!prepared) {
+      if (prepared.error().code != foundation::ErrorCode::kRequiresFullRebuild)
+        throw std::runtime_error("prepare incremental projection");
+      auto recovered=scene.replace(view);
+      if(!recovered)throw std::runtime_error("full projection recovery");
+      return;
+    }
     scene.publish(std::move(prepared.value()));
+  }
+  static foundation::Result<RuntimeScene::PreparedPublication> prepareIncremental(
+      const RuntimeScene& scene, const semantic::SemanticReadView& view,
+      const semantic::ChangeSet& changes) {
+    return scene.prepareIncremental(view, changes);
   }
 };
 }
@@ -233,6 +244,44 @@ void changes(bool fullAuthority=false){
       const auto oracle=projectRuntimeScene(store.allObjects(),after);
       require(std::equal(scene.records().begin(),scene.records().end(),oracle.records.begin(),oracle.records.end()),"dependency fallback differs");
     }
+  }
+  // A flat object is not automatically independent: content that carries a
+  // resource must stay on the full projection path until resource reverse
+  // dependencies are owned by RuntimeScene.
+  {
+    semantic::ReferenceObjectStore resourceStore;
+    semantic::ObjectRecord image;
+    image.id=ObjectId::fromUint64(200);
+    image.kind=semantic::ObjectKind::kImage;
+    image.kind_version=1;
+    image.content=semantic::ImageContent{.resource_id=semantic::ResourceId{ObjectId::fromUint64(900)}};
+    require(semantic::internal::ObjectStoreMutator::insertFresh(resourceStore,image),"insert resource image");
+    RuntimeScene resourceScene;
+    require(bool(resourceScene.replace({resourceStore,semantic::SemanticGeneration{1}})),"seed resource scene");
+    image.transform.tx=10;
+    require(semantic::internal::ObjectStoreMutator::replaceExisting(resourceStore,image),"update resource image");
+    ObservedStore observed(resourceStore);
+    const auto delta=semantic::ChangeSet::fromChanges(semantic::SemanticGeneration{1},semantic::SemanticGeneration{2},
+      {{image.id,semantic::SemanticChangeFlags::kContent,{}}});
+    auto prepared=IncrementalRuntimeTestAccess::prepareIncremental(resourceScene,{observed,semantic::SemanticGeneration{2}},delta);
+    require(!prepared && prepared.error().code==foundation::ErrorCode::kRequiresFullRebuild,
+      "resource-bearing content did not explicitly request full projection fallback");
+    auto recovered=resourceScene.replace({observed,semantic::SemanticGeneration{2}});
+    require(bool(recovered)&&observed.scans==1,"resource-bearing content full projection fallback failed");
+  }
+  // Document-level background state is outside the flat object closure.
+  {
+    semantic::ReferenceObjectStore backgroundStore;
+    RuntimeScene backgroundScene;
+    require(bool(backgroundScene.replace({backgroundStore,semantic::SemanticGeneration{1}})),"seed background scene");
+    ObservedStore observed(backgroundStore);
+    const auto delta=semantic::ChangeSet::fromChanges(semantic::SemanticGeneration{1},semantic::SemanticGeneration{2},
+      {},{},true);
+    auto prepared=IncrementalRuntimeTestAccess::prepareIncremental(backgroundScene,{observed,semantic::SemanticGeneration{2}},delta);
+    require(!prepared && prepared.error().code==foundation::ErrorCode::kRequiresFullRebuild,
+      "document background change did not explicitly request full projection fallback");
+    auto recovered=backgroundScene.replace({observed,semantic::SemanticGeneration{2}});
+    require(bool(recovered)&&observed.scans==1,"document background full projection fallback failed");
   }
   std::cout<<"300 deterministic create/update/delete/reorder changes and hierarchy fallback agree\n";
 }

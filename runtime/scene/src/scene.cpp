@@ -182,6 +182,44 @@ bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
     return false;
 }
 
+bool requiresFullProjectionForLocalUpdate(const semantic::ObjectRecord& object) {
+    // The first locality domain is deliberately limited to leaves whose
+    // derived geometry is a pure function of the record itself. Text/layout,
+    // decoded resources and material resources remain on the authoritative
+    // full path until RuntimeScene owns their reverse-dependency closure.
+    switch (object.kind) {
+    case semantic::ObjectKind::kRichText:
+    case semantic::ObjectKind::kTable:
+    case semantic::ObjectKind::kSection:
+        return true;
+    default:
+        break;
+    }
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&object.content)) {
+        if (shape->label.has_value()) return true;
+    }
+    return std::visit([](const auto& content) {
+        using T = std::decay_t<decltype(content)>;
+        if constexpr (std::is_same_v<T, semantic::ImageContent>) {
+            return !content.resource_id.value.isZero();
+        } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
+            return content.stroke.brush.texture_resource_id.has_value();
+        } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
+            return content.stroke.brush.texture_resource_id.has_value();
+        } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
+            return std::any_of(content.stroke.snapshot.resources.begin(),
+                               content.stroke.snapshot.resources.end(),
+                               [](const auto& resource) { return !resource.resource_id.isZero(); });
+        } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
+            return std::any_of(content.stroke.snapshot.resources.begin(),
+                               content.stroke.snapshot.resources.end(),
+                               [](const auto& resource) { return !resource.resource_id.isZero(); });
+        } else {
+            return false;
+        }
+    }, object.content);
+}
+
 std::vector<SpatialRecord> makeSpatialRecords(std::span<const SceneRecord> records) {
     std::vector<SpatialRecord> spatialRecords;
     spatialRecords.reserve(records.size());
@@ -331,9 +369,26 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                       "RuntimeScene incremental generation does not match published state"));
     }
     try {
+        // A generation-only ChangeSet has no dependency roots. Advance the
+        // projection stamp while retaining the published records; this is
+        // safe even when the document contains unsupported dependency kinds.
+        if (changes.objects().empty() && changes.resourceChanges().empty() &&
+            !changes.documentBackgroundChanged()) {
+            RuntimeSceneProjection next = _projection;
+            next.generation = post_state.generation();
+            PreparedPublication publication{std::move(next)};
+            publication.localized = true;
+            publication.fullProjectionAuthority = _fullProjectionAuthority;
+            return foundation::Result<PreparedPublication>::success(std::move(publication));
+        }
         // A flat independent-leaf document is a closed dependency domain. Any
         // structural/relation/resource uncertainty uses the existing full path.
-        if (!_flatIndependent || !changes.resourceChanges().empty()) return prepare(post_state);
+        if (!_flatIndependent || !changes.resourceChanges().empty() ||
+            changes.documentBackgroundChanged()) {
+            return foundation::Result<PreparedPublication>::failure(
+                makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                          "Scene dependency closure requires full projection"));
+        }
         std::vector<semantic::ObjectRecord> changed;
         changed.reserve(changes.objects().size());
         std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> selected;
@@ -345,10 +400,20 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 if (object->placement.parent_id || object->kind == semantic::ObjectKind::kConnector ||
                     object->kind == semantic::ObjectKind::kGroup || object->kind == semantic::ObjectKind::kSection ||
                     object->kind == semantic::ObjectKind::kTable)
-                    return prepare(post_state);
+                    return foundation::Result<PreparedPublication>::failure(
+                        makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                                  "Hierarchy or relation dependency requires full projection"));
                 if (!isSupportedRuntimeKind(object->kind) || object->id.isZero())
                     return foundation::Result<PreparedPublication>::failure(
                         makeError(foundation::ErrorCode::kInvalidRecord, "Invalid incremental object"));
+                // A flat leaf can still depend on external resources or
+                // layout state. Until RuntimeScene owns reverse dependency
+                // closure, keep those edits on the authoritative full path.
+                if (requiresFullProjectionForLocalUpdate(*object)) {
+                    return foundation::Result<PreparedPublication>::failure(
+                        makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                                  "Object dependency closure requires full projection"));
+                }
                 changed.push_back(*object);
             } else {
                 removed.insert(change.object_id);
