@@ -30,6 +30,21 @@ def run(command, env=None):
     subprocess.run([str(v) for v in command], check=True, cwd=REPO, env=env)
 
 
+def strip_android_runtime(output, ndk):
+    """Remove debug/unneeded ELF sections from the publishable Android runtime."""
+    output, ndk = Path(output), Path(ndk)
+    if not output.is_absolute() or not ndk.is_absolute():
+        raise ValueError('Android strip paths must be absolute')
+    prebuilt = ndk / 'toolchains/llvm/prebuilt'
+    candidates = list(prebuilt.glob('*/bin/llvm-strip'))
+    if len(candidates) != 1:
+        raise ValueError('accepted NDK llvm-strip was not found')
+    binary = output / 'lib/libaxiom.so'
+    if not binary.is_file():
+        raise ValueError('Android native runtime is missing: ' + str(binary))
+    run([candidates[0], '--strip-unneeded', binary])
+
+
 def build(target, directory, output, ndk=None, offline=False):
     if output.exists():
         raise ValueError('refusing to overwrite native install: ' + str(output))
@@ -74,6 +89,8 @@ def build(target, directory, output, ndk=None, offline=False):
     run(configure, env)
     run(['cmake', '--build', directory, '--target', 'axiom_native', '--parallel', '6'], env)
     run(['cmake', '--install', directory, '--prefix', output, '--component', 'AxiomNative'], env)
+    if target.startswith('android-'):
+        strip_android_runtime(output, ndk)
     metadata = {'format': 'axiom-native-development-v1', 'target': target, 'runtime_name': 'axiom',
                 'sdk_version': json.loads((REPO / 'sdk/version.json').read_text())['version'],
                 'source_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),

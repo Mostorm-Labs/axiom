@@ -2,4 +2,5 @@
 
 Android Fabric/JNI adapter package. Install it together with
 `@mostorm/axiom-react-native`; `native/android` contains the matching
-`libaxiom.so` per advertised ABI and deterministic assets.
+arm64-v8a and x86_64 `libaxiom.so` files and deterministic assets. Release
+runtime libraries are stripped of debug/unneeded ELF sections.

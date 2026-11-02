@@ -318,7 +318,8 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
     version = json.loads((repo / 'sdk/version.json').read_text())['version']
     targets = set(installs)
     expected = {
-        'windows': {'windows-x64'}, 'android': {'android-arm64-v8a', 'android-x86_64'},
+        'android': {'android-arm64-v8a', 'android-x86_64'},
+        'windows': {'windows-x64'},
         'ios': {'ios-arm64', 'ios-simulator-arm64'}, 'macos': {'macos-arm64'},
     }[platform]
     if platform in {'windows', 'macos'} and targets != expected:
@@ -392,7 +393,8 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
     package['dependencies']['@mostorm/axiom-react-native'] = version
     package['files'] = [name for name in package.get('files', []) if name != 'manifest.json'] + ['manifest.json']
     (output / 'package.json').write_text(json.dumps(package, indent=2) + '\n')
-    shutil.copy2(repo / f'sdk/react-native-{platform}/README.md', output / 'README.md')
+    readme_platform = 'android' if platform.startswith('android-') else platform
+    shutil.copy2(repo / f'sdk/react-native-{readme_platform}/README.md', output / 'README.md')
     manifest = {'format': 'axiom-react-native-platform-v1', 'platform': platform,
                 'source_revision': revision, 'sdk_version': version, 'targets': sorted(targets),
                 'runtime': 'axiom', 'adapter': 'consumer-built',

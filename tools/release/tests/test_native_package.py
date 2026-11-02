@@ -80,6 +80,14 @@ class NativePackageTest(unittest.TestCase):
         self.assertNotIn('{{', windows)
         self.assertIn('<UseExperimentalNuget', windows)
 
+    def test_android_runtime_fixture_is_eligible_for_post_install_strip(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage = self.fixture(root, 'android-arm64-v8a')
+            runtime = stage / 'lib/libaxiom.so'
+            self.assertTrue(runtime.is_file())
+            self.assertEqual(runtime.read_bytes(), b'fixture')
+
     def setUp(self):
         self.source = patch('tools.release.native_package.source_identity', return_value=('a'*40, False))
         self.source.start()
@@ -108,7 +116,7 @@ class NativePackageTest(unittest.TestCase):
         path = stage / 'share/axiom-native/version.json'
         path.parent.mkdir(parents=True)
         path.write_text((REPO / 'sdk/version.json').read_text())
-        self.provenance(stage, target)
+        self.provenance(stage, 'android-arm64-v8a' if target == 'android-arm64-v8a' else target)
         return stage
 
     def provenance(self, stage, target='android-arm64-v8a'):

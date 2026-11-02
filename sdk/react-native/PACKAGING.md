@@ -12,7 +12,7 @@ adapter plus the matching `sdk/native` Runtime build:
 | Package | Adapter | Runtime payload |
 | --- | --- | --- |
 | `@mostorm/axiom-react-native-windows` | RNW/C++/WinRT `MostormAxiom.dll` | `axiom.dll` + `axiom.lib` |
-| `@mostorm/axiom-react-native-android` | JNI/Fabric `libaxiom_react_native_android.so` | `libaxiom.so` per ABI |
+| `@mostorm/axiom-react-native-android` | JNI/Fabric `libaxiom_react_native_android.so` | arm64-v8a and x86_64 `libaxiom.so` |
 | `@mostorm/axiom-react-native-ios` | Fabric/Objective-C++ | `axiom.xcframework` |
 | `@mostorm/axiom-react-native-macos` | RN macOS/Objective-C++ | `axiom.framework` |
 
