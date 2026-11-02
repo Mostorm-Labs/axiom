@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>Surface resize display continuity</title>
+<style>body{margin:0}#mount{width:480px;height:320px}</style><div id="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const checks=[],errors=[];let held=false,delayed=0,frames=0,sdk;
+const original=WebGL2RenderingContext.prototype.clientWaitSync;
+WebGL2RenderingContext.prototype.clientWaitSync=function(...args){
+  const result=original.apply(this,args);
+  if(held&&(result===this.ALREADY_SIGNALED||result===this.CONDITION_SATISFIED)){++delayed;return this.TIMEOUT_EXPIRED;}
+  return result;
+};
+const raf=()=>new Promise(requestAnimationFrame);
+const until=async(fn,label)=>{for(let i=0;i<300;++i){if(fn())return;await raf();}throw Error('timeout '+label);};
+const check=(ok,label)=>{if(!ok)throw Error(label);checks.push(label);};
+// Sample the actual uppermost visible display layer. No Runtime/private state.
+const visibleBlue=()=>{
+  const mount=document.getElementById('mount');
+  const layers=[...mount.querySelectorAll('canvas')].filter(c=>getComputedStyle(c).visibility!=='hidden');
+  const top=layers.sort((a,b)=>Number(getComputedStyle(a).zIndex||0)-Number(getComputedStyle(b).zIndex||0)).at(-1);
+  const image=document.createElement('canvas');image.width=image.height=1;
+  image.getContext('2d').drawImage(top,top.width*.2,top.height*.25,1,1,0,0,1,1);
+  const p=image.getContext('2d').getImageData(0,0,1,1).data;
+  return p[2]>p[0]+20&&p[3]>200;
+};
+try{
+  sdk=await createRuntime({mount:document.getElementById('mount'),permission:'localSingleUser',builtinFonts:false,onFrame:()=>++frames,onError:e=>errors.push(String(e))});
+  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+  await sdk.selectShape('rectangle');await sdk.setAppearance({selected:false,fill:[0,0,1,1]});
+  for(const [type,x,y]of [['pointerdown',40,40],['pointermove',200,160],['pointerup',200,160]])
+    sdk.canvas.dispatchEvent(new PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:x,clientY:y,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));
+  await until(()=>sdk.readState().generation===sdk.readState().lastCommit.presentedGeneration&&visibleBlue(),'initial frame');
+  const before=frames,generation=sdk.readState().generation;held=true;
+  for(const width of [520,560,500]){
+    document.getElementById('mount').style.width=width+'px';
+    await until(()=>sdk.readState().surface.width===width,'new metrics');
+    for(let i=0;i<3;++i){await raf();check(visibleBlue(),'visible content survives resize '+width+' frame '+i);}
+    check(frames===before,'pending resize never emits a canonical receipt');
+  }
+  check(delayed>0,'real completed GPU fences were held');
+  held=false;await until(()=>frames>before,'new binding presentation');
+  check(visibleBlue(),'new surface replaces retained content');
+  check(sdk.readState().generation===generation&&sdk.readState().objects===1,'resize preserves canonical document');
+  check(!errors.length,'no rejected frames');
+  await sdk.close();check(!document.getElementById('mount').children.length,'close releases all display layers');
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',checks,frames,delayed,errors});
+}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',checks,error:String(e),frames,delayed,errors});}
+finally{held=false;WebGL2RenderingContext.prototype.clientWaitSync=original;await sdk?.close().catch(()=>{});}
+</script>

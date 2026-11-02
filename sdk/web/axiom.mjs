@@ -1,4 +1,4 @@
-export const SDK_VERSION = '0.1.0';
+export const SDK_VERSION = '0.1.1';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }
@@ -15,17 +15,23 @@ export async function createRuntime({mount, documentId, restore, initialResource
   documentId ??= newId();
   if (!(mount instanceof HTMLElement) || mount.children.length || !/^[0-9a-f]{32}$/.test(documentId) || /^0+$/.test(documentId))
     throw new AxiomError('INVALID_ARGUMENT', 'An empty mount element and a nonzero Id128 are required');
-  const canonical = document.createElement('canvas'), preview = document.createElement('canvas');
+  const canonical = document.createElement('canvas'), preview = document.createElement('canvas'), retained = document.createElement('canvas');
   const id = `axiom-sdk-${++serial}-${Math.random().toString(36).slice(2)}`;
   canonical.id = `${id}-canonical`; preview.id = `${id}-preview`;
+  retained.id = `${id}-retained`;
   const oldPosition = mount.style.position;
+  const oldOverflow = mount.style.overflow;
   const positioned = getComputedStyle(mount).position === 'static';
   if (positioned) mount.style.position = 'relative';
-  for (const canvas of [canonical, preview]) Object.assign(canvas.style, {position:'absolute',inset:'0',width:'100%',height:'100%'});
-  canonical.style.touchAction = 'none'; preview.style.pointerEvents = 'none'; preview.style.visibility = 'hidden';
+  mount.style.overflow = 'hidden';
+  for (const canvas of [canonical, preview, retained]) Object.assign(canvas.style, {position:'absolute',top:'0',left:'0'});
+  canonical.style.touchAction = 'none'; canonical.style.zIndex = '0';
+  preview.style.pointerEvents = 'none'; preview.style.visibility = 'hidden'; preview.style.zIndex = '1';
+  retained.style.pointerEvents = 'none'; retained.style.visibility = 'hidden'; retained.style.zIndex = '2';
   mount.append(canonical, preview);
   let module, closed = false, closing = false, scheduled = 0, observer, disposeInput, text, lastPresented = '0', tail = Promise.resolve();
-  let boundWidth=0,boundHeight=0,boundDpr=0,pendingResize=false;
+  let boundWidth=0,boundHeight=0,boundDpr=0,pendingResize=false,resizeTimer=0;
+  let retainedActive=false;
   let closeBarrier=false;
   const listeners=new Map();let listenerSequence=0;
   const emitError = error => { if (onError) queueMicrotask(() => {if(!closed)onError(error);}); };
@@ -75,8 +81,14 @@ export async function createRuntime({mount, documentId, restore, initialResource
     scheduled = 0; if (closed || closing) return;
     try {
       const frame = call('frame');
+      if (retainedActive && !pendingResize && frame.surfaceReady) {
+        retained.remove();retained.width=retained.height=0;retainedActive=false;
+      }
       dispatch();
-      if (frame.presented && frame.presented !== lastPresented) { lastPresented = frame.presented; if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}}); }
+      if (frame.presented && frame.presented !== lastPresented) {
+        lastPresented = frame.presented;
+        if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});
+      }
       if (frame.pending || frame.retry || text?.snapshot().phase) schedule();
     } catch(error) { emitError(error); }
   };
@@ -88,18 +100,52 @@ export async function createRuntime({mount, documentId, restore, initialResource
   };
   const cleanup = () => {
     listeners.clear();
-    cancelAnimationFrame(scheduled); observer?.disconnect(); disposeInput?.(); text?.dispose();
+    cancelAnimationFrame(scheduled); clearTimeout(resizeTimer); observer?.disconnect(); disposeInput?.(); text?.dispose();
     for(const [name,fn,options] of events)canonical.removeEventListener(name,fn,options);
-    canonical.remove();preview.remove();if(positioned&&mount.style.position==='relative')mount.style.position=oldPosition;
+    canonical.remove();preview.remove();retained.remove();if(positioned&&mount.style.position==='relative')mount.style.position=oldPosition;
+    if(mount.style.overflow==='hidden')mount.style.overflow=oldOverflow;
+  };
+  const sizeDisplay = (canvas, width, height) => {
+    canvas.style.width = `${width}px`;canvas.style.height = `${height}px`;
+  };
+  const retainVisibleFrame = () => {
+    if (retainedActive) return true;
+    if (!canonical.width || !canonical.height) return false;
+    try {
+      retained.width = canonical.width;retained.height = canonical.height;
+      sizeDisplay(retained,boundWidth,boundHeight);
+      const pixels=retained.getContext('2d');
+      pixels.drawImage(canonical,0,0);
+      if(preview.style.visibility==='visible')pixels.drawImage(preview,0,0);
+      // A retained frame is display continuity only. Its logical pixel size
+      // and origin stay fixed while the mount reveals/clips the old viewport.
+      retained.style.visibility = 'visible';mount.append(retained);retainedActive = true;
+      return true;
+    } catch { retained.remove();retained.width=retained.height=0;retainedActive = false;return false; }
   };
   const resize = () => {
+    clearTimeout(resizeTimer);resizeTimer=0;
     const rect=mount.getBoundingClientRect(), dpr=devicePixelRatio || 1;
     if(!(rect.width>0 && rect.height>0 && rect.width*dpr<=16384 && rect.height*dpr<=16384))throw new AxiomError('INVALID_SIZE','Mount dimensions exceed the supported surface range');
     const state=call('state').value;
     if(state.activeContacts){pendingResize=true;return;}
-    if(state.surface.available && rect.width===boundWidth && rect.height===boundHeight && dpr===boundDpr)return;
+    if(state.surface.available && rect.width===boundWidth && rect.height===boundHeight && dpr===boundDpr){pendingResize=false;schedule();return;}
+    if (boundWidth > 0 && boundHeight > 0) retainVisibleFrame();
     canonical.width=preview.width=Math.round(rect.width*dpr);canonical.height=preview.height=Math.round(rect.height*dpr);
+    sizeDisplay(canonical,rect.width,rect.height);sizeDisplay(preview,rect.width,rect.height);
     call('resize',{width:rect.width,height:rect.height,dpr});boundWidth=rect.width;boundHeight=rect.height;boundDpr=dpr;pendingResize=false;schedule();
+  };
+  const requestResize = () => {
+    if(closed||closing)return;
+    const rect=mount.getBoundingClientRect(),dpr=devicePixelRatio||1;
+    if(rect.width===boundWidth&&rect.height===boundHeight&&dpr===boundDpr)return;
+    pendingResize=true;clearTimeout(resizeTimer);
+    // Native window resizing generates many observations. Keep old pixels at
+    // 1:1 logical size, then bind only the latest dimensions after it settles.
+    resizeTimer=setTimeout(()=>{
+      resizeTimer=0;if(closed||closing)return;
+      try{resize();text.sync();}catch(error){if(error.code!=='BUSY')emitError(error);}
+    },120);
   };
   const events = [];
   try {
@@ -114,6 +160,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const initial=mount.getBoundingClientRect(),dpr=devicePixelRatio||1;
     if(!(initial.width>0&&initial.height>0))throw new AxiomError('INVALID_SIZE');
     canonical.width=preview.width=Math.round(initial.width*dpr);canonical.height=preview.height=Math.round(initial.height*dpr);
+    sizeDisplay(canonical,initial.width,initial.height);sizeDisplay(preview,initial.width,initial.height);
     call('open',{documentId,builtinFonts,width:initial.width,height:initial.height,dpr,canonical:`#${canonical.id}`,preview:`#${preview.id}`,...(restore?{restore:restore.metadata}:{}),...(initialResources?{initialResources}:{})},restore?.bytes);
     boundWidth=initial.width;boundHeight=initial.height;boundDpr=dpr;
     call('multi',{action:'permission',mode:enumValue({unconfigured:0,localSingleUser:1,contextUnavailable:2},permission)});
@@ -121,6 +168,11 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const [{installPointerInput},{installTextInput}]=await Promise.all([import('./pointer_input.mjs'),import('./text_input.mjs')]);
     text=installTextInput({module,handle:1,canvas:canonical,stage:mount,schedule});
     mount.querySelector('textarea').id=`${id}-ime`;
+    // Flush final native metrics before the collector translates a new Down.
+    // Active contacts keep their existing binding until the last Up/Cancel.
+    const inputSize=()=>{if(pendingResize)try{resize();text.sync();}catch(error){emitError(error);}};
+    canonical.addEventListener('pointerdown',inputSize,true);
+    events.push(['pointerdown',inputSize,true]);
     disposeInput=installPointerInput({canvas:canonical,logicalSize:()=>[boundWidth,boundHeight],submit:fact=>{
       try{call('pointer',fact);text.sync();if(pendingResize&&fact.phase>=2)resize();changed();schedule();return true;}catch(error){emitError(error);return false;}
     }});
@@ -129,13 +181,13 @@ export async function createRuntime({mount, documentId, restore, initialResource
     listen('pointermove',e=>{if(e.pointerType==='mouse'&&!e.buttons){const r=canonical.getBoundingClientRect();try{call('hover',{x:e.clientX-r.left,y:e.clientY-r.top});schedule();}catch(error){emitError(error);}}});
     listen('wheel',e=>{e.preventDefault();const r=canonical.getBoundingClientRect();try{
       if(e.ctrlKey){const s=call('state').value;call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale:s.camera.scale*Math.exp(-e.deltaY*.01)});}
-      else call('control',{kind:'pan',x:-e.deltaX,y:-e.deltaY});text.sync();schedule();
+      else call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});text.sync();schedule();
     }catch(error){emitError(error);}},{passive:false});
-    const contextLost=e=>{e.preventDefault();try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
+    const contextLost=e=>{e.preventDefault();retainVisibleFrame();try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
     const contextRestored=()=>{if(!canonical.getContext('webgl2').isContextLost()&&!preview.getContext('webgl2').isContextLost())try{resize();}catch(error){emitError(error);}};
     for(const c of [canonical,preview]){c.addEventListener('webglcontextlost',contextLost);c.addEventListener('webglcontextrestored',contextRestored);}
     const inputCleanup=disposeInput;disposeInput=()=>{inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
-    observer=new ResizeObserver(()=>{if(closed||closing)return;try{resize();text.sync();}catch(error){if(error.code!=='BUSY')emitError(error);}});observer.observe(mount);
+    observer=new ResizeObserver(requestResize);observer.observe(mount);
     const control=async args=>{
       const selected=['size','transform','delete','lock','visible','unlock','order'].includes(args.kind)||(args.kind==='appearance'&&args.selected!==false);
       const stamp=selected?call('state').value:null;

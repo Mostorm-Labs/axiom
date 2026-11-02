@@ -1116,8 +1116,12 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     if (!creation.begin(key, creationPreset_, CreationStyle{std::move(creationProperties)},
                         {content.first, content.second}, viewport, seed, objectId)) { eraseSession(); return false; }
   canonicalPresentationDirty_ = true;
-    if (platformPresentationDeferred_) transientOverlayDirty_ = true;
-    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+    // A zero-size box has no transient geometry yet. Do not repaint the
+    // canonical target on Down; the first valid Move will submit the preview.
+    if (creation.preview().valid) {
+      if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+      else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+    }
     return true;
   }
   const auto session = creations_.find(key);
@@ -4125,6 +4129,7 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
   }
   previewController_->setSurfaceMetrics(metrics);
   publishSurfaceBinding();
+  // Surface metrics change the visible extent, not the Runtime camera.
   return true;
 }
 

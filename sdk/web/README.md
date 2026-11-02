@@ -30,6 +30,15 @@ buffers, DPR, pointer capture, resize and WebGL context restoration. Run
 `python serve.py`, then open `/example.html` for a consumer using only this public
 module. No Emscripten or C++ compiler is required to consume the built JS package.
 The distribution can also be packed locally with `npm pack --ignore-scripts`.
+The demo canvas fills the viewport; tools, properties and status float above it
+and do not change its metrics. A mount resize reveals/clips the current pixels
+at their existing logical scale and origin. The SDK coalesces continuous resize
+observations until 120 ms of inactivity, then updates both surfaces to the latest
+metrics. Starting a pointer contact flushes a pending resize before coordinate
+collection. Resizing does not pan/zoom the Runtime camera or change the document.
+The SDK clips its display layers to the mount and restores the mount's prior
+inline overflow value on close. A retained frame bridges the buffer replacement
+until qualified presentation; it does not emit a canonical completion receipt.
 Its whitelist includes the internal loader; release verification exercises the
 extracted npm package in Chrome as well as the ZIP. The package is named
 `@mostorm/axiom`; `publishConfig` binds it to the private Nearhub registry and the

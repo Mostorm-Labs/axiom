@@ -67,12 +67,12 @@ try {
   const rectangleButton = `(document.querySelector('[data-tool="shape:0"]')||[...document.querySelectorAll('button')].find(b=>b.textContent==='rectangle'))`;
   await evaluate(`${rectangleButton}.click()`);
   await until(`${rectangleButton}?.getAttribute('aria-pressed')==='true'`,'tool receipt');
-  const point=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.left+60,y:r.top+60}})()`);
+  const point=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.left+60,y:r.top+180}})()`);
   await send('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',buttons:1,clickCount:1});
   await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x+100,y:point.y+70,button:'left',buttons:1});
   await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x+100,y:point.y+70,button:'left',buttons:0,clickCount:1});
   await until(`document.getElementById('status').textContent.includes('1 objects')`,'rectangle');
-  await until(`(()=>{const c=document.querySelector('#canvas canvas'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(90,c.height-90,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20&&p[3]>0})()`,'visible rectangle');
+  await until(`(()=>{const c=document.querySelector('#canvas canvas'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(90,c.height-210,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20&&p[3]>0})()`,'visible rectangle');
   observation.example={status:await evaluate(`document.getElementById('status').textContent`),toolIndicated:true,visibleRectangle:true,input:'Chrome CDP mouse'};
   if(errors.length)throw Error('Example exception');
   console.log(JSON.stringify({example:observation.example}));

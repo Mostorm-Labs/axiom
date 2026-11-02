@@ -195,6 +195,49 @@ TEST_F(SelectionInput, SectionRegionBackgroundIsSelectableWithoutContent) {
     EXPECT_TRUE(snapshot().regionUnsupportedKinds.empty());
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
+TEST_F(SelectionInput, SurfaceResizeKeepsCameraAndViewCoordinates) {
+    auto& editor=c.qualificationRuntime();
+    ASSERT_TRUE(editor.setViewportZoomAt(2.0F,200.0F,150.0F));
+    const auto before=snapshot();
+    const auto worldBefore=editor.viewportGesture();
+    for(const auto metrics : {render::SurfaceMetrics{920,680,1840,1360,2,1},
+                              render::SurfaceMetrics{600,400,1200,800,2,1},
+                              render::SurfaceMetrics{800,600,800,600,1,1}}) {
+        ASSERT_TRUE(c.resizeSurface(metrics));
+        const auto after=snapshot();
+        EXPECT_FLOAT_EQ(after.cameraScale,before.cameraScale);
+        EXPECT_FLOAT_EQ(after.cameraTranslationX,before.cameraTranslationX);
+        EXPECT_FLOAT_EQ(after.cameraTranslationY,before.cameraTranslationY);
+        EXPECT_EQ(after.semanticGeneration,before.semanticGeneration);
+        EXPECT_EQ(editor.viewportGesture().translationX,worldBefore.translationX);
+        EXPECT_EQ(editor.viewportGesture().translationY,worldBefore.translationY);
+    }
+}
+TEST_F(SelectionInput, UnsupportedTextureKeepsSupportedRectangleAndLassoSelection) {
+    auto& editor=c.qualificationRuntime();
+    ASSERT_TRUE(editor.setSelectionMode(false));
+    ASSERT_TRUE(editor.selectTool(interaction::CanvasEditingRuntime::ToolMode::kBrush));
+    ASSERT_TRUE(editor.selectBrushProfile("chalk-grain-v1",3));
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,205,125));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,225,140));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,240,150));
+    ASSERT_EQ(c.semanticObjectCount(),4U);
+    const auto generation=snapshot().semanticGeneration;
+    mode(runtime::CanvasSelectionMode::kRectangle);
+    rectangle(90,90,350,170);
+    EXPECT_EQ(selected().size(),2U);
+    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
+    EXPECT_FALSE(snapshot().regionUnsupportedKinds.empty());
+    EXPECT_EQ(snapshot().semanticGeneration,generation);
+    mode(runtime::CanvasSelectionMode::kFreeform);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,90,90));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,350,90));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,350,170));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,90,170));
+    EXPECT_EQ(selected().size(),2U);
+    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
+    EXPECT_EQ(snapshot().semanticGeneration,generation);
+}
 TEST_F(SelectionInput, MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade) {
     rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);const auto before=snapshot();
     runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=9100;
