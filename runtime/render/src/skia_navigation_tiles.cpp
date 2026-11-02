@@ -23,7 +23,12 @@ bool intersects(const foundation::WorldRect& a,const foundation::WorldRect& b){
 }
 bool supported(const ReferenceTraversalEntry& e){
     const auto& t=e.record.transform;
-    if(t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0||!e.record.eraseMasks.empty())return false;
+    // Erase masks are object-local render effects. They are safe in a world
+    // tile because the tile source is rendered into an isolated transparent
+    // surface and the shared Skia command path applies the mask before the
+    // tile is composed. Rejecting them here forced every pan/zoom after a
+    // partial erase through exact full-scene preparation.
+    if(t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)return false;
     if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return true;
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
     return v&&v->content.stroke.snapshot.material_mode==1;
@@ -270,6 +275,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<stroke.knots.size())continue;
             compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
+            if (!entry.record.eraseMasks.empty())
+                drawEraseMasksToSkCanvas(*job.surface->getCanvas(), entry);
         }else drawValidatedIsolatedEntryToSkCanvas(*job.surface->getCanvas(),entry);
         ++job.source;job.knot=0;++work.sourceSteps;
     }

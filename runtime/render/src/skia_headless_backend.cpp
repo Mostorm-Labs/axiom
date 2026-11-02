@@ -899,6 +899,10 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 
 namespace internal {
 
+void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
+    eraseMasks(canvas, entry);
+}
+
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
                                   const semantic::ObjectRecord& object,
                                   const scene::ConnectorGeometry* route) {
@@ -1021,7 +1025,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry, images, textResources, true,false,nullptr,grid);
-        eraseMasks(canvas, entry);
+        drawEraseMasksToSkCanvas(canvas, entry);
         if (isolatedInk) canvas.restore();
         canvas.restore();
     }
@@ -1030,7 +1034,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
 
 void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
     drawCommand(canvas,entry,nullptr,nullptr,true,false,coverage,grid,work,compatibleCoverage,targets);
-    eraseMasks(canvas,entry);
+    drawEraseMasksToSkCanvas(canvas,entry);
 }
 
 void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
@@ -1058,7 +1062,7 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(canvas, entry, images, textResources, true);
-        eraseMasks(canvas, entry);
+        drawEraseMasksToSkCanvas(canvas, entry);
         if (isolatedInk) canvas.restore();
         canvas.restore();
     }
@@ -1133,7 +1137,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
         if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
         canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
         drawCommand(*canvas, entry, _images, &_textResources, false, true);
-        eraseMasks(*canvas, entry);
+        internal::drawEraseMasksToSkCanvas(*canvas, entry);
         if (isolatedInk) canvas->restore();
         canvas->restore();
         kinds.push_back(entry.record.kind);
