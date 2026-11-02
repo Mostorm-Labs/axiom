@@ -592,6 +592,41 @@ void partialEraserPointerUpDoesNotSubmitBlankingFrame() {
          "pointer-up must not submit a final blanking preview frame");
 }
 
+void partialEraserPointerUpDoesNotChangeCommittedTrace() {
+  Host host;
+  assert(host.bindSurface(256U, 256U));
+  assert(host.beginBrushSession(1205U, 1U));
+  assert(host.appendBrushSample(1205U, 32.0, 96.0, 0.5, 1U));
+  assert(host.appendBrushSample(1205U, 160.0, 96.0, 0.5, 2U));
+  assert(host.finishBrushSession(1205U));
+  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.selectTool(Host::ToolMode::kPartialEraser));
+
+  canvas::input::PlatformPointerBatch down;
+  down.samples.push_back({11U, 1206U, 1U, 1'000U, 64.0F, 96.0F, 0.5F, 0.0F,
+                          0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch move;
+  move.samples.push_back({11U, 1206U, 2U, 2'000U, 96.0F, 96.0F, 0.5F, 0.0F,
+                          0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                          canvas::input::PointerPhase::kMove});
+  canvas::input::PlatformPointerBatch up;
+  // The up position is deliberately different. It must not silently extend
+  // the committed mask after the last rendered preview sample.
+  up.samples.push_back({11U, 1206U, 3U, 3'000U, 144.0F, 96.0F, 0.5F, 0.0F,
+                        0.0F, {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                        canvas::input::PointerPhase::kUp});
+  assert(host.acceptPlatformBatch(down, 1'000U));
+  assert(host.acceptPlatformBatch(move, 2'000U));
+  assert(host.acceptPlatformBatch(up, 3'000U));
+  const auto records = HistoryAccess::objects(host);
+  assert(records.size() == 1U && records.front().erase_masks.size() == 1U);
+  const auto& mask = std::get<canvas::semantic::SweptCircleMask>(
+      records.front().erase_masks.front().geometry);
+  assert(!mask.segments.empty());
+  assert(mask.segments.back().p1.position.x <= 100.0 &&
+         "pointer-up must not extend the committed partial-eraser trace");
+}
 void brushPreviewRestoresTintAfterPartialErase() {
   for (const bool deferred : {false, true}) {
     for (const bool cancel : {false, true}) {
@@ -858,6 +893,7 @@ int main() {
   partialEraserPublishesRealtimePreview();
   partialEraserDoesNotPreviewEraseShape();
   partialEraserPointerUpDoesNotSubmitBlankingFrame();
+  partialEraserPointerUpDoesNotChangeCommittedTrace();
   canonicalFeedbackMayPrecedeBrushPreviewFeedback();
   undoRedoReplaysCanonicalBrushCommit();
   freshCommitClearsRedoHistory();

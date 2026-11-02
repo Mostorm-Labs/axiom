@@ -638,9 +638,12 @@ bool CanvasEditingRuntime::eraser(const input::PointerSample& sample,
   if (!sample.key.valid()) return false;
   if (sample.phase == input::PointerPhase::kDown && !sample.predicted &&
       !eraserBegin(session)) return false;
+  // Pointer-up is terminal control. The last rendered move already owns the
+  // retained eraser trace; sampling the up coordinate here would extend the
+  // committed mask after the preview has stopped and cause a visible jump.
   if (sample.phase != input::PointerPhase::kCancel &&
-      !eraserSample(session, sample.x, sample.y,
-                    sample.phase != input::PointerPhase::kUp)) return false;
+      sample.phase != input::PointerPhase::kUp &&
+      !eraserSample(session, sample.x, sample.y, true)) return false;
   if (sample.phase == input::PointerPhase::kUp && !sample.predicted) {
     const auto finished = eraserFinish(session);
     return finished;

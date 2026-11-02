@@ -387,6 +387,40 @@ int main(int argc,char** argv) {
                         "new evaluator navigation missing coverage or manufactured canonical work");
             }
         }
+        {
+            // A partial erase changes only the masked stroke payload. The
+            // navigation feedback lane must still be able to retain and
+            // reproject that stroke instead of rejecting the whole source
+            // set and falling back to an exact full-scene render.
+            auto masked = stroke(886);
+            semantic::SweptCircleMask erase;
+            erase.segments.push_back({{{80.0, 64.0}, 12.0},
+                                      {{120.0, 64.0}, 12.0},
+                                      {93.333333, 64.0}, {106.666667, 64.0}});
+            masked.record.eraseMasks = {{ObjectId::fromUint64(887), erase}};
+            SkiaRenderer navigation;
+            RenderCacheOptions options;
+            options.navigationMaxSteps = 256;
+            options.navigationMicroseconds = 1000000;
+            navigation.setRenderCacheOptions(options);
+            const auto frame = plan(592, {masked});
+            NavigationSourceQuery query = [&](const foundation::WorldRect&,
+                                               std::vector<ReferenceTraversalEntry>& entries) {
+                entries = {masked};
+                return true;
+            };
+            for (unsigned n = 0; n < 128; ++n) {
+                require(navigate(navigation, provider, {1, 0, 0}, frame.frame, query).code ==
+                            BackendSubmissionCode::kAccepted,
+                        "masked stroke navigation rejected");
+                if (!navigation.navigationWork().pending) break;
+                require(n < 127, "masked stroke navigation does not converge");
+            }
+            require(navigation.navigationWork().coverageComplete &&
+                        navigation.navigationWork().sourceSteps > 0 &&
+                        navigation.submissionCount() == 0,
+                    "masked stroke fell back to canonical rendering during navigation");
+        }
 #if defined(G5_TEST_WEBGL)
         // Multiple device-grid boundaries, partial edge extents, transparent
         // material and resource denial are exercised on the actual GL context.

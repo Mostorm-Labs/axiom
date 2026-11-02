@@ -53,6 +53,7 @@ void drawReferenceBackgroundToSkCanvas(SkCanvas&,const FramePlan&);
 void drawValidatedReferenceRangeToSkCanvas(SkCanvas&,const FramePlan&,
     std::size_t begin,std::size_t end,ImageResourceResolver*,SkiaTextResources*,
     bool includeInk=true,SkiaRenderCache* cache=nullptr,const CompactDeviceGrid* grid=nullptr);
+void drawEraseMasksToSkCanvas(SkCanvas&, const ReferenceTraversalEntry&);
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
     SkiaTextResources* textResources = nullptr, bool includeInk = true,
