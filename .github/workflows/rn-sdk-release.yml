@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Exact release tag to build without publishing'
+        description: 'Exact source ref to build without publishing'
         required: true
         type: string
 
@@ -42,7 +42,7 @@ jobs:
           revision=$(git rev-parse HEAD)
           version=$(python3 -c 'import json; print(json.load(open("sdk/version.json"))["version"])')
           test "$version" = "$SDK_VERSION"
-          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == push && "$GITHUB_REF_TYPE" == tag ]]; then
             test "$GITHUB_REF_NAME" = "v$version"
             publish=true
           else
@@ -165,7 +165,8 @@ jobs:
           python tools/release/native_package.py --platform windows \
             --install windows-x64=out/native/rn-native-windows-x64 \
             --output out/rn-windows --revision "$REVISION"
-          for package in out/rn-common out/rn-macos out/rn-ios out/rn-android out/rn-windows; do
+          mkdir -p out/rn-tarballs
+          for package in ./out/rn-common ./out/rn-macos ./out/rn-ios ./out/rn-android ./out/rn-windows; do
             npm pack "$package" --pack-destination out/rn-tarballs
           done
       - uses: actions/upload-artifact@v4
@@ -186,7 +187,7 @@ jobs:
     needs: [preflight, package]
     runs-on: ubuntu-24.04
     permissions:
-      contents: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -211,15 +212,6 @@ jobs:
           set -euo pipefail
           test -n "$NODE_AUTH_TOKEN"
           npm whoami --registry=http://npm.nearhub.cc/
-          for package in out/rn-sdk/rn-common out/rn-sdk/rn-macos out/rn-sdk/rn-ios out/rn-sdk/rn-android out/rn-sdk/rn-windows; do
+          for package in ./out/rn-sdk/rn-common ./out/rn-sdk/rn-macos ./out/rn-sdk/rn-ios ./out/rn-sdk/rn-android ./out/rn-sdk/rn-windows; do
             npm publish "$package" --ignore-scripts --access restricted --tag latest --registry=http://npm.nearhub.cc/
           done
-      - name: Create GitHub release record
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh release create "${GITHUB_REF_NAME}" --verify-tag --target '${{ needs.preflight.outputs.revision }}' \
-            --title "Axiom SDK ${SDK_VERSION}" --notes "React Native common TypeScript package plus Windows, Android, iOS and macOS platform packages. Native physical qualification remains separately scoped." \
-            --latest=false

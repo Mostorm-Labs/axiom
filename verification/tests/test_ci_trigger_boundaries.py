@@ -154,6 +154,11 @@ class CiTriggerBoundaryTest(unittest.TestCase):
                          'sdk-consumer-regressions.xml'):
             self.assertIn(required, builder)
 
+    def test_react_native_release_reuses_product_release_record(self):
+        workflow = (WORKFLOWS / "rn-sdk-release.yml").read_text(encoding="utf-8")
+        self.assertIn("npm publish", workflow)
+        self.assertNotIn("gh release create", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
