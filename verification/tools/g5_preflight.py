@@ -55,6 +55,18 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sdk_artifact_hashes(root: Path) -> dict[str, str]:
+    """Hash the complete consumer package, including current api/** exports."""
+    names = set(SDK_FILES)
+    api = root / "api"
+    if api.is_dir():
+        names.update(
+            str(path.relative_to(root)).replace(__import__("os").sep, "/")
+            for path in api.rglob("*") if path.is_file()
+        )
+    return {name: sha256(root / name) for name in sorted(names)}
+
+
 def canonical(value) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
 
@@ -246,7 +258,7 @@ def run_web(args):
         if before["tree_sha256"] != built["tree_sha256"]:
             raise RuntimeError("SOURCE_CHANGED during build: rerun on a stable source tree")
         sdk = build / "sdk/web"
-        hashes = {name: sha256(sdk / name) for name in SDK_FILES}
+        hashes = sdk_artifact_hashes(sdk)
         write(out / "sdk-artifacts.json", hashes)
         run_logged(["node", ROOT / "verification/runners/g5/browser_runner.mjs", sdk, args.browser,
                     out / "browser.json", "--renderer", args.renderer, "--samples", args.samples,
@@ -254,7 +266,7 @@ def run_web(args):
         browser = json.loads((out / "browser.json").read_text())
         result.update(classification=browser["classification"], checks=browser["checks"],
                       artifact_binding=hashlib.sha256(canonical(hashes)).hexdigest())
-        if hashes != {name: sha256(sdk / name) for name in SDK_FILES} or hashes != browser["sdk_files"]:
+        if hashes != sdk_artifact_hashes(sdk) or hashes != browser["sdk_files"]:
             raise RuntimeError("SDK artifacts changed between build and browser execution")
         result["metrics"] = browser.get("summary")
         result["accumulation"] = browser.get("accumulation")
