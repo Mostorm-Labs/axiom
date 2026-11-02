@@ -1,6 +1,6 @@
 {
   "name": "@mostorm/axiom-react-native-windows",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Axiom React Native Windows adapter and axiom.dll runtime package",
   "private": false,
   "publishConfig": {"access": "restricted", "registry": "http://npm.nearhub.cc/", "tag": "latest"},
@@ -12,6 +12,6 @@
     "windows": {"namespace": "MostormAxiom", "outputDirectory": "windows/generated", "generators": ["componentsWindows"]}
   },
   "files": ["windows/**", "src/specs/**", "native/**", "react-native.config.cjs", "README.md", "manifest.json", "package.json"],
-  "dependencies": {"@mostorm/axiom-react-native": "0.3.0"},
+  "dependencies": {"@mostorm/axiom-react-native": "0.3.1"},
   "peerDependencies": {"react": "19.2.0 || 19.2.3", "react-native": "0.83.10 || 0.84.1", "react-native-windows": "0.84.0"}
 }
