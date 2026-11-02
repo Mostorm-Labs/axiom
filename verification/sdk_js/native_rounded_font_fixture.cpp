@@ -26,10 +26,8 @@ int main(int argc, char **argv) {
         std::uint64_t id;
     };
     const Font fonts[] = {
-        {"Excalifont/Excalifont-Regular.ttf",
-         "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247", 0xFC0310},
-        {"Xiaolai/Xiaolai-Regular.ttf",
-         "e2f68daf0e72777a8cf58bc83de1b98634b251e537ddbfca24b0ae50d1802da2", 0xFC0311}};
+        {"imported/Excalifont/Excalifont-Regular.ttf",
+         "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247", 0xFC0310}};
     for (const auto &f : fonts) {
         const auto bytes = load(std::filesystem::path(AXIOM_TEST_FONT_ROOT) / f.file);
         semantic::ResourceManifestEntry e;
@@ -41,12 +39,6 @@ int main(int argc, char **argv) {
         e.decode_version = 1;
         e.layout_version = 1;
         e.metadata = {8, 1, 16, 0, 24, 1};
-        if (f.id == 0xFC0310) {
-            e.layout_version = 2;
-            e.metadata = {8, 2, 16, 0, 24, 1, 34, 16};
-            const auto fallback = foundation::ObjectId::fromUint64(0xFC0311);
-            e.metadata.insert(e.metadata.end(), fallback.bytes.begin(), fallback.bytes.end());
-        }
         manifest.entries.push_back(e);
     }
     if (!owner.bindInitialResourceManifest(manifest, 1))
@@ -117,8 +109,8 @@ int main(int argc, char **argv) {
         t.document.paragraphs.push_back(
             {foundation::ObjectId::fromUint64(130 + i),
              {semantic::ParagraphAlignment::kLeft, 1.25, 0, 0},
-             {{i ? "Xiaolai 小赖 中文手绘 English" : "Excalifont Canvas 2323 我爱我家",
-               {semantic::ResourceId{foundation::ObjectId::fromUint64(i ? 0xFC0311 : 0xFC0310)},
+            {{"Excalifont Canvas 2323 我爱我家",
+               {semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0310)},
                 30,
                 400,
                 false,

@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <iterator>
 using namespace canvas;
-TEST(HandwritingFont, ManifestAdmitsExplicitOneHopFallbackAndRejectsDanglingOrCycles) {
+TEST(HandwritingFont, ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles) {
     semantic::ResourceManifest m;
     semantic::ResourceManifestEntry a, b;
     a.resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(1)};
@@ -33,7 +33,7 @@ TEST(HandwritingFont, ManifestAdmitsExplicitOneHopFallbackAndRejectsDanglingOrCy
     m.entries[1].metadata = a.metadata;
     EXPECT_FALSE(semantic::validateResourceManifest(m));
 }
-TEST(HandwritingFont, MixedTextUsesOnlyPrimaryAndExplicitFallbackAndInvalidatesOnMissingBytes) {
+TEST(HandwritingFont, MixedTextUsesNotoAndExcalifontWithoutSystemFallback) {
     runtime::MemoryResourceProvider resources;
     text::RichTextLayoutService layout(resources, {600, 1});
     const semantic::ResourceId latin{foundation::ObjectId::fromUint64(1)},
@@ -43,11 +43,11 @@ TEST(HandwritingFont, MixedTextUsesOnlyPrimaryAndExplicitFallbackAndInvalidatesO
         return std::vector<std::uint8_t>{std::istreambuf_iterator<char>(in), {}};
     };
     resources.publish(latin.value, load("/Excalifont/Excalifont-Regular.ttf"));
-    resources.publish(cjk.value, load("/Xiaolai/Xiaolai-Regular.ttf"));
+    resources.publish(cjk.value, load("/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf"));
     layout.registerFont(
-        {latin, "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247", 0, cjk});
+        {latin, "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247", 0});
     layout.registerFont(
-        {cjk, "e2f68daf0e72777a8cf58bc83de1b98634b251e537ddbfca24b0ae50d1802da2", 0});
+        {cjk, "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b", 0});
     semantic::RichTextContent content;
     content.document.paragraphs.push_back(
         {foundation::ObjectId::fromUint64(10),

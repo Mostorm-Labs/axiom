@@ -1,12 +1,12 @@
 {
   "name": "@mostorm/axiom-react-native-macos",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Axiom React Native macOS adapter and axiom.framework runtime package",
   "private": false,
   "publishConfig": {"access": "restricted", "registry": "http://npm.nearhub.cc/", "tag": "latest"},
   "type": "module",
   "codegenConfig": {"name": "AxiomNativeSpec", "type": "all", "jsSrcsDir": "src/specs", "ios": {"modules": {"AxiomNative": {"className": "AxiomNative"}}, "components": {"AxiomCanvasView": {"className": "AxiomCanvasView"}}}},
   "files": ["apple/**", "src/specs/**", "native/**", "*.podspec", "react-native.config.cjs", "README.md", "manifest.json", "package.json"],
-  "dependencies": {"@mostorm/axiom-react-native": "0.3.2"},
+  "dependencies": {"@mostorm/axiom-react-native": "0.3.3"},
   "peerDependencies": {"react": "19.2.0 || 19.2.3", "react-native": "0.83.10 || 0.84.1", "react-native-macos": "0.83.0"}
 }

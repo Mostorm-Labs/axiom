@@ -95,6 +95,8 @@ class NativePackageTest(unittest.TestCase):
         stage = root / 'native'
         names = ['include/axiom/native.h',
                      'assets/axiom-font.otf', 'assets/fonts/catalog.json',
+                     'assets/fonts/Excalifont/Excalifont-Regular.ttf',
+                     'assets/fonts/Excalifont/OFL.txt', 'assets/fonts/Excalifont/README.md',
                      'licenses/skia/Skia.txt', 'licenses/semantic/Protobuf.txt']
         names.append('bin/axiom.dll' if target == 'windows-x64' else 'lib/libaxiom.so')
         if target == 'windows-x64':
@@ -187,6 +189,19 @@ class NativePackageTest(unittest.TestCase):
                 self.module().stage_react_native(REPO, {'android-arm64-v8a': first, 'android-x86_64': second}, root / 'output', 'a' * 40)
             self.assertFalse((root / 'output').exists())
 
+    def test_rejects_stale_imported_font_payload_before_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage = self.fixture(root)
+            stale = stage / 'assets/fonts/Xiaolai/Xiaolai-Regular.ttf'
+            stale.parent.mkdir(parents=True)
+            stale.write_bytes(b'legacy font')
+            self.provenance(stage)
+            with self.assertRaisesRegex(ValueError, 'unexpected published font asset'):
+                self.module().stage_react_native_platform(REPO, 'android',
+                    {'android-arm64-v8a': stage}, root / 'output', 'a' * 40)
+            self.assertFalse((root / 'output').exists())
+
     def test_native_source_revision_cannot_be_relabelled_by_staging(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -214,8 +229,9 @@ class NativePackageTest(unittest.TestCase):
                 {'macos-arm64': stage}, root / 'output', 'a' * 40)
             self.assertEqual(result['platform'], 'macos')
             framework = root / 'output/native/macos/axiom.framework'
-            self.assertTrue((framework / 'Versions/Current').is_symlink())
+            self.assertFalse((framework / 'Versions/Current').exists())
             self.assertTrue((framework / 'axiom').is_symlink())
+            self.assertEqual((framework / 'axiom').readlink().as_posix(), 'Versions/A/axiom')
 
     def apple_fixture(self, root, target):
         stage = self.fixture(root)
@@ -247,16 +263,16 @@ class NativePackageTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             stage = self.apple_fixture(root, 'macos-arm64')
-            for family in ['one', 'two']:
-                path = stage / 'assets/fonts' / family / 'font.otf'
-                path.parent.mkdir()
-                path.write_bytes(family.encode())
+            for name in ['Excalifont-Regular.ttf', 'OFL.txt', 'README.md']:
+                path = stage / 'assets/fonts/Excalifont' / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(name.encode())
             self.provenance(stage, 'macos-arm64')
             result = self.module().stage_react_native(REPO, {'macos-arm64': stage}, root / 'output', 'a'*40)
-            for family in ['one', 'two']:
-                name = 'native/AxiomAssets.bundle/fonts/' + family + '/font.otf'
+            for name in ['Excalifont-Regular.ttf', 'OFL.txt', 'README.md']:
+                name = 'native/AxiomAssets.bundle/fonts/Excalifont/' + name
                 self.assertIn(name, result['files'])
-                self.assertEqual((root / 'output' / name).read_bytes(), family.encode())
+                self.assertEqual((root / 'output' / name).read_bytes(), Path(name).name.encode())
             self.assertIn("s.resources = 'native/AxiomAssets.bundle'",
                           (root / 'output/AxiomReactNative.podspec').read_text())
 

@@ -308,9 +308,9 @@ try {
 
   const textGroup = group(context, 'text-parameters');
   const textDetails=group(details,'text-details');
-  const fontChoices=[['','选择字体…'],...sdk.text.fonts().entries.map(f=>[f.id,f.family==='Excalifont'?'Excalifont · 手绘':f.family==='Xiaolai'?'Xiaolai · 小赖':f.family])];
+  const fontChoices=[['','选择字体…'],...sdk.text.fonts().entries.map(f=>[f.id,f.family==='Excalifont'?'Excalifont · 手绘':f.family])];
   const fontFamily=select(textGroup,'字体','text-font',fontChoices);fontFamily.onchange=()=>{if(fontFamily.value)void run(()=>sdk.text.format({font:fontFamily.value}));};
-  const fontHint=document.createElement('span');fontHint.className='hint';fontHint.textContent='Excalifont 中文使用小赖回退';textGroup.append(fontHint);
+  const fontHint=document.createElement('span');fontHint.className='hint';fontHint.textContent='中文使用 Noto Sans CJK SC';textGroup.append(fontHint);
   const fontSize = select(textGroup, '字号', 'text-size', [['', '设置字号…'], ['32', 'Title · 32'], ['24', 'Heading · 24'], ['20', 'Subheading · 20'], ['16', 'Body · 16']]);
   fontSize.onchange = () => run(() => sdk.text.format({fontSize: Number(fontSize.value)}));
   const textButtons = [];
@@ -431,7 +431,7 @@ try {
     textDetails.hidden=textGroup.hidden;
     if (!textGroup.hidden) {
       setValue(fontFamily,text.format.font??'');fontFamily.disabled=text.phase===0&&(!text.formatObject||/^0+$/.test(text.formatObject));
-      fontHint.textContent=fontFamily.disabled?'点击画板开始输入，再选择字体':'Excalifont 中文使用小赖回退';
+      fontHint.textContent=fontFamily.disabled?'点击画板开始输入，再选择字体':'中文使用 Noto Sans CJK SC';
       fontHint.hidden=!fontFamily.disabled&&fontFamily.value!==sdk.text.fonts().entries.find(f=>f.family==='Excalifont')?.id;
       const size = text.format.fontSize;
       if (size && !Array.from(fontSize.options).some(option => option.value === String(size))) fontSize.add(new Option(String(size), String(size)));

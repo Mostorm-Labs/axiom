@@ -36,7 +36,10 @@ def validate_install(root, target, version, revision):
     root = Path(root).resolve(strict=True)
     _, binary, _ = PLATFORMS[target]
     required = [binary, 'include/axiom/native.h', 'assets/axiom-font.otf',
-                'assets/fonts/catalog.json', 'licenses/skia/Skia.txt',
+                'assets/fonts/catalog.json',
+                'assets/fonts/Excalifont/Excalifont-Regular.ttf',
+                'assets/fonts/Excalifont/OFL.txt',
+                'assets/fonts/Excalifont/README.md', 'licenses/skia/Skia.txt',
                 'licenses/semantic/Protobuf.txt', 'share/axiom-native/version.json']
     if target == 'windows-x64':
         required += ['lib/axiom.lib', 'assets/icudtl.dat']
@@ -77,6 +80,35 @@ def validate_install(root, target, version, revision):
     return root
 
 
+PUBLISHED_FONT_FILES = {
+    'fonts/catalog.json',
+    'fonts/Excalifont/Excalifont-Regular.ttf',
+    'fonts/Excalifont/OFL.txt',
+    'fonts/Excalifont/README.md',
+}
+
+
+def _published_asset_files(root):
+    root = Path(root)
+    result = []
+    for path in (root / 'assets').rglob('*'):
+        if not path.is_file() or path.name == 'icudtl.dat':
+            continue
+        relative = path.relative_to(root / 'assets').as_posix()
+        if relative.startswith('fonts/') and relative not in PUBLISHED_FONT_FILES:
+            raise ValueError('unexpected published font asset: ' + relative)
+        result.append(path)
+    return result
+
+
+def _copy_published_assets(source, destination, *, include_icudtl=False):
+    source, destination = Path(source), Path(destination)
+    for path in _published_asset_files(source):
+        _copy_tree(path, destination / path.relative_to(source / 'assets'))
+    if include_icudtl and (source / 'assets/icudtl.dat').is_file():
+        _copy_tree(source / 'assets/icudtl.dat', destination / 'icudtl.dat')
+
+
 def _stage_react_native(repo, installs, output, revision):
     repo, output = Path(repo), Path(output)
     if output.exists() or output.is_symlink() or not installs or not re.fullmatch('[0-9a-f]{40}', revision):
@@ -89,7 +121,7 @@ def _stage_react_native(repo, installs, output, revision):
         raise ValueError('iOS delivery requires device and simulator installs')
     validated = {target: validate_install(root, target, version, revision) for target, root in installs.items()}
     asset_sets = [{p.relative_to(root / 'assets').as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                   for p in (root / 'assets').rglob('*') if p.is_file() and p.name != 'icudtl.dat'}
+                   for p in _published_asset_files(root)}
                   for root in validated.values()]
     if any(value != asset_sets[0] for value in asset_sets):
         raise ValueError('native resource set differs across targets')
@@ -129,10 +161,10 @@ def _stage_react_native(repo, installs, output, revision):
         if target == 'windows-x64':
             (directory / 'lib').mkdir(exist_ok=True)
             shutil.copy2(root / 'lib/axiom.lib', directory / 'lib/axiom.lib')
-            shutil.copytree(root / 'assets', directory / 'assets')
+            _copy_published_assets(root, directory / 'assets', include_icudtl=True)
         if not shared_assets:
             shared_assets = True
-            shutil.copytree(root / 'assets', output / 'native/assets', ignore=shutil.ignore_patterns('icudtl.dat'))
+            _copy_published_assets(root, output / 'native/assets')
     if ios:
         apple = output / 'native/apple'
         apple.mkdir()
@@ -194,7 +226,6 @@ def _normalize_apple_framework(framework):
             shutil.rmtree(current)
         else:
             current.unlink()
-    current.symlink_to('A', target_is_directory=True)
     for name in ('axiom', 'Headers', 'Resources'):
         root = framework / name
         if root.exists() or root.is_symlink():
@@ -202,7 +233,7 @@ def _normalize_apple_framework(framework):
                 shutil.rmtree(root)
             else:
                 root.unlink()
-        root.symlink_to(Path('Versions') / 'Current' / name,
+        root.symlink_to(Path('Versions') / 'A' / name,
                         target_is_directory=name != 'axiom')
 
 
@@ -213,7 +244,7 @@ def _package_files(root):
 
 def _resource_set(validated):
     return [{p.relative_to(root / 'assets').as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-             for p in (root / 'assets').rglob('*') if p.is_file() and p.name != 'icudtl.dat'}
+             for p in _published_asset_files(root)}
             for root in validated.values()]
 
 
@@ -319,7 +350,7 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
         _copy_tree(validated['windows-x64'] / 'bin/axiom.dll', runtime / 'bin/axiom.dll')
         _copy_tree(validated['windows-x64'] / 'lib/axiom.lib', runtime / 'lib/axiom.lib')
         _copy_tree(validated['windows-x64'] / 'include', runtime / 'include')
-        shutil.copytree(validated['windows-x64'] / 'assets', runtime / 'assets')
+        _copy_published_assets(validated['windows-x64'], runtime / 'assets', include_icudtl=True)
         shutil.copytree(validated['windows-x64'] / 'licenses', output / 'native/licenses')
     elif platform == 'android':
         _copy_tree(source_dir / 'android', output / 'android')
@@ -329,7 +360,7 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
             _, _, destination = PLATFORMS[target]
             _copy_tree(root / PLATFORMS[target][1], output / 'native/android' / destination)
             _copy_tree(root / 'include', output / 'native/android/include')
-        shutil.copytree(next(iter(validated.values())) / 'assets', output / 'native/assets')
+        _copy_published_assets(next(iter(validated.values())), output / 'native/assets')
         shutil.copytree(next(iter(validated.values())) / 'licenses', output / 'native/licenses')
     else:
         _copy_tree(source_dir / 'apple', output / 'apple')
@@ -342,13 +373,13 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
                             '-framework', str(validated['ios-arm64'] / 'lib/axiom.framework'),
                             '-framework', str(validated['ios-simulator-arm64'] / 'lib/axiom.framework'),
                             '-output', str(apple / 'axiom.xcframework')], check=True)
-            shutil.copytree(validated['ios-arm64'] / 'assets', output / 'native/assets')
+            _copy_published_assets(validated['ios-arm64'], output / 'native/assets')
             _copy_tree(validated['ios-arm64'] / 'include', output / 'native/include')
             shutil.copytree(validated['ios-arm64'] / 'licenses', output / 'native/licenses')
         else:
             _copy_tree(validated['macos-arm64'] / 'lib/axiom.framework', output / 'native/macos/axiom.framework')
             _normalize_apple_framework(output / 'native/macos/axiom.framework')
-            shutil.copytree(validated['macos-arm64'] / 'assets', output / 'native/assets')
+            _copy_published_assets(validated['macos-arm64'], output / 'native/assets')
             _copy_tree(validated['macos-arm64'] / 'include', output / 'native/include')
             shutil.copytree(validated['macos-arm64'] / 'licenses', output / 'native/licenses')
         bundle = output / 'native/AxiomAssets.bundle'

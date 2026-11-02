@@ -58,6 +58,13 @@ def copy_file(source, destination):
     shutil.copy2(source, destination)
 
 
+def copy_published_imported_fonts(source, destination):
+    """Copy only the runtime font catalog and the supported imported face."""
+    source, destination = Path(source), Path(destination)
+    copy_file(source / 'catalog.json', destination / 'catalog.json')
+    shutil.copytree(source / 'Excalifont', destination / 'Excalifont', symlinks=True)
+
+
 def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision):
     if platform not in ('windows', 'web'):
         raise ValueError('unknown platform')
@@ -90,7 +97,7 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
         copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf', sdk / 'example/axiom-font.otf')
         copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/LICENSE.txt', sdk / 'example/axiom-font.LICENSE.txt')
         copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/NOTICE.txt', sdk / 'example/axiom-font.NOTICE.txt')
-        shutil.copytree(repo / 'assets/fonts/imported', sdk / 'example/fonts', symlinks=True)
+        copy_published_imported_fonts(repo / 'assets/fonts/imported', sdk / 'example/fonts')
         if platform == 'web':
             shutil.copytree(repo / '.deps/nlohmann-json/single_include/nlohmann', sdk / 'example/json/nlohmann', symlinks=True)
             copy_file(repo / '.deps/nlohmann-json/LICENSE.MIT', sdk / 'example/json/LICENSE.MIT')
@@ -137,7 +144,7 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
                 copy_file(demo / name, app / name)
             copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/LICENSE.txt', app / 'licenses/noto-cjk-LICENSE.txt')
             copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/NOTICE.txt', app / 'licenses/noto-cjk-NOTICE.txt')
-            font_root = repo / 'assets/fonts/imported'
+            font_root = repo / 'assets/fonts/imported/Excalifont'
             for path in font_root.rglob('*'):
                 if path.is_file() and ('license' in path.name.lower() or 'ofl' in path.name.lower() or 'notice' in path.name.lower()):
                     copy_file(path, app / 'licenses/imported' / path.relative_to(font_root))
