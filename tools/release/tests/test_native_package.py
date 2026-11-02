@@ -198,6 +198,17 @@ class NativePackageTest(unittest.TestCase):
                 self.module().stage_react_native(REPO, {'android-arm64-v8a': stage}, root / 'output', 'a'*40)
             self.assertFalse((root/'output').exists())
 
+    def test_apple_framework_artifact_symlink_materialization_does_not_reject_identity(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp); stage = self.apple_fixture(root, 'macos-arm64')
+            # Simulate artifact transport materializing an additional framework
+            # link as a regular file while preserving the native identity.
+            (stage / 'lib/axiom.framework/Versions').mkdir()
+            (stage / 'lib/axiom.framework/Versions/Current').write_bytes(b'link-materialized')
+            result = self.module().stage_react_native_platform(REPO, 'macos',
+                {'macos-arm64': stage}, root / 'output', 'a' * 40)
+            self.assertEqual(result['platform'], 'macos')
+
     def apple_fixture(self, root, target):
         stage = self.fixture(root)
         (stage / 'lib/libaxiom.so').unlink()
