@@ -14,12 +14,15 @@ Pod::Spec.new do |s|
  s.requires_arc = true
  # Built by tools/release/build_native_sdk.py from accepted locked dependencies.
  # No internal Runtime/Skia headers or dependency archives are installed.
- s.ios.vendored_frameworks = 'native/apple/AxiomNative.xcframework'
- s.osx.vendored_frameworks = 'native/macos/AxiomNative.framework'
+ s.ios.vendored_frameworks = 'native/apple/axiom.xcframework'
+ s.osx.vendored_frameworks = 'native/macos/axiom.framework'
  s.resources = 'native/AxiomAssets.bundle'
  s.frameworks = 'Metal', 'QuartzCore'
  s.ios.frameworks = 'UIKit'
  s.osx.frameworks = 'AppKit'
- s.pod_target_xcconfig = { 'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20' }
+ s.pod_target_xcconfig = {
+   'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20',
+   'HEADER_SEARCH_PATHS' => '$(PODS_TARGET_SRCROOT)/native/include'
+ }
  install_modules_dependencies(s)
 end

@@ -19,7 +19,7 @@ class AxiomCanvasView(context: Context): FrameLayout(context), Choreographer.Fra
   private var running=false
   private var boundWidth=0
   private var boundHeight=0
-  companion object { init { System.loadLibrary("axiom_rn") } }
+  companion object { init { System.loadLibrary("axiom_react_native_android") } }
   private external fun attach(token: String, canonical: Surface, preview: Surface, width: Float, height: Float, dpr: Float): Long
   private external fun detach(token: String, generation: Long): Boolean
   private external fun resize(token: String, generation: Long, width: Float, height: Float, dpr: Float): Boolean

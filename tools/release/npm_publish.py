@@ -59,7 +59,7 @@ def prepare_package(archive, output, revision):
         package = json.loads(z.read('package.json'))
         if package.get('name') != PACKAGE_NAME or package.get('private') is not False:
             raise ValueError('npm scope/name/private policy mismatch')
-        if package.get('publishConfig') != {'registry': REGISTRY, 'tag': 'latest'}:
+        if package.get('publishConfig') != {'access': 'restricted', 'registry': REGISTRY, 'tag': 'latest'}:
             raise ValueError('npm registry/tag policy mismatch')
         if package.get('scripts'):
             raise ValueError('lifecycle scripts are forbidden in this consumer payload')

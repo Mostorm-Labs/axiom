@@ -1,7 +1,7 @@
 # Windows React Native physical verification handoff
 
 Copy the prompt below into Codex on the Windows machine. This verifies the private
-RN 0.2.0 development SDK, not the independently published Web/Windows SDK 0.1.0.
+RN 0.3.0 package release candidate, not the independently published Web/Windows SDK line.
 Use the latest verified descendant of the branch anchor; bind evidence to the exact
 clean source and rebuilt binaries. No native package publication is authorized.
 
@@ -12,7 +12,7 @@ App + AxiomCanvasView；不能用 Web、WebView、普通 Win32 demo 或 host tes
 仓库：https://github.com/Mostorm-Labs/axiom.git
 分支：origin/codex/react-native-sdk
 最低基线：1c8aebc4909c410465cd1bd3c554d01b64be170a
-SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0。
+SDK：0.3.0 release candidate，平台证据仍为 NOT_QUALIFIED；禁止修改既有 tag。
 
 1. 先检查已有工作树与未提交文件，git fetch origin；使用独立 worktree 和
    codex/rn-windows-physical 分支，从上述远端分支当前 head 开始。
@@ -34,7 +34,8 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
 3. 在干净源码上构建和打包（输出目录必须是新目录；不能覆盖旧证据）：
 
    python tools/release/build_native_sdk.py --target windows-x64 --build out/rn-windows-native --output out/rn-windows-install
-   python tools/release/native_package.py --install windows-x64=out/rn-windows-install --output out/rn-windows-package --revision (git rev-parse HEAD)
+   python tools/release/native_package.py --common --output out/rn-common-package --revision (git rev-parse HEAD)
+   python tools/release/native_package.py --platform windows --install windows-x64=out/rn-windows-install --output out/rn-windows-package --revision (git rev-parse HEAD)
 
    builder 会执行第二次 Semantic offline resolution，保留日志。
    核对 native-manifest.json/package manifest 的 source_revision、版本与哈希。
@@ -54,7 +55,8 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
    UI 只能调用包根入口的 Controller 和 AxiomCanvasView，不使用私有 deep import。
    本地 file: symlink 时给 Metro 配置 staged package watchFolders 和 app
    node_modulesPaths，按 RNW 的 platform resolver 解析 react-native。
-   确认 axiom_native.dll、ICU/fonts/assets 实际复制到 App 可访问的位置。
+   确认 `MostormAxiom.dll`（RNW 适配层）、`axiom.dll`（纯 Runtime）以及
+   ICU/fonts/assets 实际复制到 App 可访问的位置；两者不是同一个二进制。
    非打包应用必须初始化 app-local Windows App SDK。C++/WinRT provider
    的输出名为 MostormAxiom.dll（与 activation namespace 一致）；不要再用
    AxiomReactNative.dll 的旧输出冒充本轮构建。Canvas HWND 必须在自己的
@@ -91,5 +93,5 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
 最终报告实际测试范围、失败和未验证项。只有完整的本轮证据可交付时标记
 READY_FOR_CONTROL_REVIEW；环境/构建/实际输入验证未完成则返回
 BLOCKED_EVIDENCE: <具体原因>，并保留已经完成的局部证据。
-RN 0.2.0 仍保持 NOT_QUALIFIED；不得签发 P34/Gate/release PASS。
+RN 0.3.0 在没有完整物理证据前仍保持 NOT_QUALIFIED；不得签发 P34/Gate/release PASS。
 ```

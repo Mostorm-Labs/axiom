@@ -8,7 +8,7 @@ import com.facebook.react.module.annotations.ReactModule
 
 @ReactModule(name = "AxiomNative")
 class AxiomNativeModule(context: ReactApplicationContext) : NativeAxiomSpec(context) {
-  companion object { init { System.loadLibrary("axiom_rn") } }
+  companion object { init { System.loadLibrary("axiom_react_native_android") } }
   private external fun initialize(root: String): Int
   private external fun create(options: String, snapshot: ByteArray): String
   private external fun call(session: String, request: String, bytes: ByteArray): String
@@ -24,7 +24,7 @@ class AxiomNativeModule(context: ReactApplicationContext) : NativeAxiomSpec(cont
     owner(promise) {
       val bytes=data(snapshot)
       // Assets are copied from the matching SDK release; never a network URL.
-      val root=java.io.File(reactApplicationContext.filesDir,"axiom-sdk-0.2.0")
+      val root=java.io.File(reactApplicationContext.filesDir,"axiom-sdk-0.3.0")
       if (!java.io.File(root,"fonts/catalog.json").isFile) {
         fun copyAssets(relative: String, destination: java.io.File) {
           val children=reactApplicationContext.assets.list(relative) ?: emptyArray()

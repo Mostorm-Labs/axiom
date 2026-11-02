@@ -52,7 +52,8 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v145</PlatformToolset>
     <!-- C++/WinRT resolves ReactPackageProvider by its namespace activation
-         name (MostormAxiom), so the DLL filename must match that namespace. -->
+         name (MostormAxiom), so the adapter DLL keeps that activation name.
+         The pure Runtime next to it is named axiom.dll. -->
     <TargetName>MostormAxiom</TargetName>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
@@ -95,7 +96,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\native\windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>axiom_native.lib;shell32.lib;user32.lib;windowsapp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>axiom.lib;shell32.lib;user32.lib;windowsapp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
       <ModuleDefinitionFile>AxiomReactNative.def</ModuleDefinitionFile>
@@ -125,7 +126,7 @@
     <Midl Include="ReactPackageProvider.idl" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\native\windows\bin\axiom_native.dll"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><Link>axiom_native.dll</Link></Content>
+    <Content Include="..\native\windows\bin\axiom.dll"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><Link>axiom.dll</Link></Content>
     <Content Include="..\native\windows\assets\**\*"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><Link>AxiomAssets\%(RecursiveDir)%(Filename)%(Extension)</Link></Content>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

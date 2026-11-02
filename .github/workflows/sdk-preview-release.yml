@@ -106,7 +106,12 @@ jobs:
           python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json
           --lock r1-full-skia-sdk.lock.json --target ${{ matrix.skia_target }} --variant release
       - name: Test release packaging rules
-        run: python -m unittest tools.release.tests.test_preview_package tools.release.tests.test_consumer_package tools.release.tests.test_npm_publish -v
+        run: >-
+          python -m unittest
+          tools.release.tests.test_preview_package
+          tools.release.tests.test_consumer_package
+          tools.release.tests.test_npm_publish
+          tools.release.tests.test_native_package -v
       - name: Check public JavaScript SDK types
         if: matrix.platform == 'web'
         run: npx --yes --ignore-scripts --package typescript@5.9.3 -- tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts
