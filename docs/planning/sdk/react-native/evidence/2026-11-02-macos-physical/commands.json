@@ -1,0 +1,56 @@
+{
+  "review_head_before_evidence": "844ffda3c4a265f3a2bbb8b180a6575bb3355f90",
+  "scope": "macOS evidence/docs only pending; native scoped build is Debug supplemental; physical App is f4d179c3 Release",
+  "checks": [
+    {
+      "name": "scoped-build",
+      "command": "cmake --build out/object-identity --parallel 6 --target axiom_ink_v2_runtime_tests axiom_brush_batch_frame_retry_tests axiom_fc00x_runtime_composition_tests axiom_native_registry_tests axiom_apple_host_tests axiom_native_c_tests",
+      "exit_code": 0,
+      "log": "logs/scoped-build-fresh.log",
+      "result": "exit 0; no work to do"
+    },
+    {
+      "name": "scoped-ctest",
+      "command": "ctest --test-dir out/object-identity --output-on-failure -R '^(InkV2Runtime|FC00XBrushBatchEvaluation|FC00XBrushBatchSemantics|FC00XCanonicalBusyPreviewProgress|FC00XPreviewBusyCanonicalProgress|FC00XLiveBrushPreview|SDKNativeNavigationPreview|SDKNativeRegistry|SDKAppleHost|SDKNativeCConsumer)$'",
+      "exit_code": 0,
+      "log": "logs/scoped-ctest-fresh.log",
+      "result": "10/10"
+    },
+    {
+      "name": "controller-transport",
+      "command": "node --test verification/sdk_controller/controller_test.mjs verification/sdk_controller/transport_test.mjs",
+      "exit_code": 0,
+      "log": "logs/controller-transport-corrected.log",
+      "result": "12/12"
+    },
+    {
+      "name": "native-runtime",
+      "command": "node verification/sdk_controller/native_runtime_test.mjs out/object-identity/sdk/common/axiom_native_transport_host",
+      "exit_code": 0,
+      "log": "logs/native-runtime-corrected.log",
+      "result": "exit 0"
+    },
+    {
+      "name": "release-package",
+      "command": "python3 -m unittest tools.release.tests.test_native_package tools.release.tests.test_consumer_package tools.release.tests.test_preview_package tools.release.tests.test_npm_publish",
+      "exit_code": 0,
+      "log": "logs/release-package-fresh.log",
+      "result": "27/27"
+    },
+    {
+      "name": "runtime-boundary",
+      "command": "python3 tools/check_runtime_boundaries.py --root .",
+      "exit_code": 0,
+      "log": "logs/runtime-boundary-final.log",
+      "result": "116 files"
+    },
+    {
+      "name": "signature",
+      "command": "codesign --verify --deep --strict '/Users/qing/Applications/Axiom RN Test.app'",
+      "exit_code": 0,
+      "log": "logs/codesign-verify.log",
+      "result": "exit 0"
+    }
+  ],
+  "initial_invocation_error": "logs/node-invocation-note.txt"
+}

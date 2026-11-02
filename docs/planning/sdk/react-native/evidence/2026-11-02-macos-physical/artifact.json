@@ -1,0 +1,43 @@
+{
+  "format": "axiom-macos-rn-physical-artifact-v1",
+  "tested_source_revision": "f4d179c3284022cca46d87dba348e086bdd8b207",
+  "sdk_version": "0.2.0",
+  "app_path": "/Users/qing/Applications/Axiom RN Test.app",
+  "configuration": "Release/macosx/arm64",
+  "bundle_identifier": "org.reactjs.native.AxiomMacConsumer",
+  "signature": {
+    "type": "ad-hoc",
+    "verify": "codesign --verify --deep --strict passed"
+  },
+  "installed_files": {
+    "Contents/MacOS/AxiomMacConsumer": {
+      "sha256": "fec98c2ab95768a3661197b24464e415b2457e2abdbf54a469051d9f52905446",
+      "bytes": 11710240
+    },
+    "Contents/Resources/main.jsbundle": {
+      "sha256": "f5449bdc3dcd015ff8264a5b2ad6b79141431f5832bbe556adf7b45797ff905c",
+      "bytes": 1610715
+    },
+    "Contents/Frameworks/AxiomNative.framework/Versions/A/AxiomNative": {
+      "sha256": "3bb078206bdf9e60300eef37204e33a24436ce7e3ac9a3db3dda1d78daccfb5d",
+      "bytes": 30667344
+    },
+    "Contents/Info.plist": {
+      "sha256": "ed81727c25cd00266bea09b4ff859ad0d3d1031031725cccea381207a2727444",
+      "bytes": 1769
+    },
+    "Contents/Frameworks/hermesvm.framework/Versions/0/hermesvm": {
+      "sha256": "5434dc70324310edb97125c65bd88488c7922fc01745496894f79cf571c114b9",
+      "bytes": 6752832
+    },
+    "Contents/Resources/AxiomAssets.bundle/Info.plist": {
+      "sha256": "10daba572882b9a921bff6c08a0faa91054806f8c5629d26eebbea6409f374e3",
+      "bytes": 424
+    }
+  },
+  "unsigned_package_manifest": "native/native-manifest.json and package/package-manifest.json (f4d179c3; hashes before ad-hoc signing)",
+  "metro": "not required; bundled main.jsbundle loaded unconditionally",
+  "package_lock_note": "The generated consumer package-lock retained a historical file:../rn-macos-physical-1c8a/package entry. The tested Pods were regenerated from the f4d179c3 staged package/symlink; do not use the stale lock entry as source identity.",
+  "qualification": "NOT_QUALIFIED",
+  "review_head_before_evidence": "844ffda3c4a265f3a2bbb8b180a6575bb3355f90"
+}

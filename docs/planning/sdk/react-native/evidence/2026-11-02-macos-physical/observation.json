@@ -1,0 +1,85 @@
+{
+  "format": "axiom-macos-rn-physical-observation-v1",
+  "observed_at": "2026-11-02T11:50:33.514987+08:00",
+  "sdk_version": "0.2.0",
+  "tested_source_revision": "f4d179c3284022cca46d87dba348e086bdd8b207",
+  "tested_source_clean": true,
+  "build_profile": "Release/macosx/arm64/macOS15+",
+  "app_identity": "AxiomMacConsumer standalone Release app; bundled JS; Metro not required",
+  "ui_host_identity": "React Native macOS 0.83.0 Fabric AxiomCanvasHost NSView in SwiftUI window",
+  "platform_backend_identity": "AppKit mouse/trackpad events -> Native C/POD navigation -> Runtime viewport owner",
+  "renderer_identity": "Skia/Metal; independent canonical and preview providers; preview zPosition 1, canonical zPosition 0",
+  "device": {
+    "model": "Mac14,2",
+    "chip": "Apple M2",
+    "arch": "arm64",
+    "os": "macOS 27.0.1",
+    "os_build": "26A434",
+    "display": "built-in Retina 1710x1112 logical at 60Hz",
+    "gpu": "Apple M2 Metal4"
+  },
+  "automated_observations": {
+    "native_build": "SUCCEEDED",
+    "standalone_release_build": "SUCCEEDED",
+    "signature_verification": "SUCCEEDED (ad-hoc, deep strict)",
+    "scoped_ctest": "10/10 passed",
+    "release_package_tests": "27/27 passed",
+    "capture": "physical-after-verification.png",
+    "fresh_scoped_ctest": "10/10 passed",
+    "fresh_controller_transport_node": "12/12 passed",
+    "fresh_native_runtime_transport": "PASS",
+    "fresh_runtime_boundary": "116 contract files passed",
+    "fresh_diff_check": "PASS",
+    "capture_transcription": {
+      "source": "visual transcription of final screenshot (not all values are exposed by Accessibility)",
+      "objects": 6,
+      "document_generation": "11",
+      "active_contacts": 0,
+      "zoom": 0.65,
+      "tool_label": "Partial erase",
+      "app_state_label": "inactive",
+      "can_undo": true,
+      "can_redo": false
+    }
+  },
+  "manual_test_steps": [
+    {
+      "step": "standalone app startup without a persistent Metro server",
+      "result": "USER_REPORTED_USABLE_ON_EARLIER_STANDALONE_ITERATION; final f4d179c3 app running observed",
+      "source": "Earlier user message: 哇 可以使用了诶; final screenshot shows f4d179c3 standalone header"
+    },
+    {
+      "step": "macOS trackpad navigation smoke after magnify/scroll adaptation",
+      "result": "USER_CONFIRMED_TEST_PASSED",
+      "source": "User replied 测试通过 to the navigation follow-up; no per-gesture recording or separate per-step receipts were retained",
+      "scope": "pinch/pan follow-up and post-gesture usability; numeric anchor/alignment/terminal cases are supplemental automated tests, not individually captured physical oracles"
+    }
+  ],
+  "not_established": [
+    "macOS RN app was physically tested from f4d179c3; it was not rebuilt/retested after Windows evidence commit 844ffda3",
+    "native IME",
+    "stylus/real pressure",
+    "systematic DPI/rotation/lost-context lifecycle matrix",
+    "measured latency/FPS and provider counters",
+    "exhaustive six-brush material fidelity",
+    "stale-generation rejection on a physical device",
+    "individual physical confirmation of object-erase timing, progressive partial erase, Undo/Redo, detach/reattach, or background/foreground in this macOS run (the earlier explicit 都正常 checklist belonged to iOS)",
+    "separate runtime generation, attachment generation, per-provider identity/counters and command receipts were not captured; screenshot generation is document/scene state, not assumed to be runtime generation",
+    "live macOS preview recording was not retained",
+    "current review-head macOS App physical retest"
+  ],
+  "classification": "MACOS_PHYSICAL_SMOKE_RECORDED_RN_NOT_QUALIFIED",
+  "windows_evidence": "Preserved from origin/codex/react-native-sdk@844ffda3; repository Windows run 003 remains PARTIAL/NOT_QUALIFIED and is not relabeled.",
+  "files": {
+    "screenshot": "physical-after-verification.png",
+    "accessibility": "accessibility-observation.txt",
+    "artifact_hashes": "manifest.json",
+    "native_manifest": "native/native-manifest.json",
+    "package_manifest": "package/package-manifest.json"
+  },
+  "visual_observations": [
+    "Final f4d179c3 app shows multiple retained strokes with gaps and no active contacts. This screenshot alone does not prove live preview, erase timing, Undo/Redo, or detach/background lifecycle.",
+    "Visible zoom 0.65 corroborates non-default camera scale; it does not establish quantitative physical anchor accuracy."
+  ],
+  "review_head_before_evidence": "844ffda3c4a265f3a2bbb8b180a6575bb3355f90"
+}

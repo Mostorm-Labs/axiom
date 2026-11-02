@@ -171,3 +171,24 @@ real pressure, rotation resize, measured performance, detailed render counters
 and the other platforms remain unqualified. Screen recording was unavailable on
 this device; screenshots and Runtime logs were retained. RN 0.2.0 remains private
 and NOT_QUALIFIED. No Gate or P34 acceptance is issued.
+
+## macOS physical evidence follow-up (2026-11-02)
+
+The macOS standalone Release consumer was physically exercised after the f4d179c3
+trackpad-navigation implementation. Evidence is under
+`evidence/2026-11-02-macos-physical/`. The tested binary/package source is exactly
+f4d179c3284022cca46d87dba348e086bdd8b207; the evidence was organized after pulling
+844ffda3c4a265f3a2bbb8b180a6575bb3355f90, which is the Windows evidence descendant.
+The macOS app was not rebuilt against 844ffda3, so this record preserves the tested
+source identity rather than relabeling it.
+
+The user confirmed the macOS trackpad-navigation follow-up passed. The final
+standalone App capture shows retained strokes, document/scene generation 11, no
+active contacts and zoom 0.65. JS is bundled. This is a manual navigation smoke
+observation, not individual evidence of every editing/lifecycle step; the earlier
+explicit multi-item physical checklist belonged to iOS and is not reused here.
+Scoped native/runtime tests were 10/10, Controller/Transport Node tests 12/12, the
+real Session/Runtime transport check passed, and release/package tests were 27/27.
+Native IME, real pressure, measured performance, full physical editing/lifecycle
+coverage and exhaustive brush fidelity remain open. RN 0.2.0 stays private and
+`NOT_QUALIFIED`; no Gate, P34, or release acceptance is issued.

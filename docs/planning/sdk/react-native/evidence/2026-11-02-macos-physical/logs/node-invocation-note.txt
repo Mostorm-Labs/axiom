@@ -1,0 +1,6 @@
+Initial invocation incorrectly included native_runtime_test.mjs in node --test without its required host executable argv[2].
+Observed error: ERR_INVALID_ARG_TYPE: The "file" argument must be of type string. Received undefined at spawn(process.argv[2]).
+12 Controller/Transport cases passed and the extra script failed to start.
+Corrected: node --test verification/sdk_controller/controller_test.mjs verification/sdk_controller/transport_test.mjs (12/12).
+Corrected integration entry: node verification/sdk_controller/native_runtime_test.mjs out/object-identity/sdk/common/axiom_native_transport_host (exit 0).
+This was a verification invocation error, not a recorded product regression. See the corrected logs.
