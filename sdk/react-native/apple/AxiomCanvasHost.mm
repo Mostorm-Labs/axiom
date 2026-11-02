@@ -85,6 +85,24 @@
  if(_mouse){[self sendMouse:event phase:1];[self serviceFrame];}
 }
 - (void)mouseUp:(NSEvent*)event{if(_mouse){[self sendMouse:event phase:2];[self serviceFrame];}_mouse=NO;}
+- (void)magnifyWithEvent:(NSEvent*)event{
+ if(!_attachment||!_sessionToken.length||event.magnification==0)return;
+ const auto anchor=[self convertPoint:event.locationInWindow fromView:nil];
+ const axiom_native_navigation_sample sample{sizeof(sample),AXIOM_NATIVE_ABI_VERSION,
+  AXIOM_NATIVE_ZOOM,0,0,float(anchor.x),float(anchor.y),float(1.0+event.magnification)};
+ if(axiom_native_navigation(_sessionToken.UTF8String,_attachment,&sample)==AXIOM_NATIVE_OK)
+  [self serviceFrame];
+}
+- (void)scrollWheel:(NSEvent*)event{
+ if(!_attachment||!_sessionToken.length)return;
+ const float units=event.hasPreciseScrollingDeltas?1.0F:10.0F;
+ const float dx=-float(event.scrollingDeltaX)*units,dy=-float(event.scrollingDeltaY)*units;
+ if(dx==0&&dy==0)return;
+ const axiom_native_navigation_sample sample{sizeof(sample),AXIOM_NATIVE_ABI_VERSION,
+  AXIOM_NATIVE_PAN,dx,dy,0,0,1};
+ if(axiom_native_navigation(_sessionToken.UTF8String,_attachment,&sample)==AXIOM_NATIVE_OK)
+  [self serviceFrame];
+}
 #else
 - (void)sendTouches:(NSSet<UITouch*>*)touches event:(UIEvent*)event phase:(unsigned)phase{
  if(!_attachment)return;

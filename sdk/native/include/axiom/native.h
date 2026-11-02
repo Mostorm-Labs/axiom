@@ -33,6 +33,15 @@ typedef struct axiom_native_sample {
  float x,y,pressure,tilt_x,tilt_y;
  uint32_t phase,tool,flags,provenance;
 } axiom_native_sample;
+enum axiom_native_navigation_kind { AXIOM_NATIVE_PAN=0, AXIOM_NATIVE_ZOOM=1 };
+/* Host viewport facts, not document edits. Values are logical view points;
+   pan subtracts delta_x/y, zoom multiplies Runtime scale by scale_delta around
+   anchor_x/y (including zero). All fields must be finite; scale_delta > 0.
+   Runtime owns camera math and its existing 0.25..8 gesture zoom limits. */
+typedef struct axiom_native_navigation_sample {
+ uint32_t size,abi_version,kind;
+ float delta_x,delta_y,anchor_x,anchor_y,scale_delta;
+} axiom_native_navigation_sample;
 /* asset_root UTF-8 absolute path, immutable resources/licenses from the same
    release. One library initializes once on the platform UI thread. */
 AXIOM_NATIVE_API int axiom_native_initialize(const char* asset_root,size_t length);
@@ -42,6 +51,10 @@ AXIOM_NATIVE_API int axiom_native_detach(const char* session,uint64_t generation
 AXIOM_NATIVE_API int axiom_native_resize(const char* session,uint64_t generation,float width,float height,float dpr);
 AXIOM_NATIVE_API int axiom_native_frame(const char* session,uint64_t generation);
 AXIOM_NATIVE_API int axiom_native_input(const char* session,uint64_t generation,const axiom_native_sample*,size_t count);
+/* Borrowed for this synchronous UI-owner-thread, non-reentrant call only.
+   Requires the exact current attachment generation; no buffer is retained.
+   OK means camera applied, not frame presentation or document persistence. */
+AXIOM_NATIVE_API int axiom_native_navigation(const char* session,uint64_t generation,const axiom_native_navigation_sample*);
 /* Host-only input path. JS pointer/surface/close JSON is rejected. Return OK
    indicates transport succeeded; inspect JSON ok/code for semantic rejection. */
 AXIOM_NATIVE_API int axiom_native_call(const char* session,const char* json,size_t length,const uint8_t*,size_t size,axiom_native_buffer*);

@@ -1,5 +1,6 @@
 #pragma once
 #include "session.hpp"
+#include <canvas/interaction/viewport_interaction_controller.hpp>
 #include <functional>
 #include <map>
 #include <thread>
@@ -23,6 +24,7 @@ public:
  bool resize(const std::string&,std::uint64_t,float,float,float);
  bool frame(const std::string&,std::uint64_t);
  bool input(const std::string&,std::uint64_t,const input::PlatformPointerBatch&);
+ bool navigate(const std::string&,std::uint64_t,const interaction::ViewportNavigationSample&);
  std::string call(const std::string&,std::string_view,std::span<const std::uint8_t>);
  bool close(const std::string&);
 private:

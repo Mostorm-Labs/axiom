@@ -211,6 +211,52 @@ void canonicalFeedbackKeepsAnUnfinishedBrushPreview() {
   assert(!composition.previewActive() && !provider->overlayVisible());
 }
 
+void nativeNavigationKeepsBrushPreviewAndCanonicalAligned() {
+  using namespace canvas;
+  runtime::RuntimeCompositionCore composition;
+  assert(composition.open() && composition.bindSurface(256U, 256U));
+  assert(composition.registerSource(95U) && composition.setPlatformPresentationDeferred(true));
+  input::PlatformPointerBatch batch;
+  batch.samples.push_back({95U, 1U, 1U, 1000U, 20.0F, 40.0F, 0.5F, 0.0F, 0.0F,
+      {}, {}, input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+  assert(composition.submit(batch));
+  batch.samples.front().sequence=2;batch.samples.front().timestampNs=2000;
+  batch.samples.front().phase=input::PointerPhase::kMove;batch.samples.front().x=80;
+  assert(composition.submit(batch));
+  runtime::RuntimeFrameOpportunity before{};
+  assert(composition.serviceFrameOpportunity(false,before) && before.previewWork);
+  assert(composition.finishFrameOpportunity({before.previewWork,true}));
+  assert(composition.applyViewportNavigation({interaction::ViewportNavigationKind::kBrowserGesture,
+      0,0,0,0,2}));
+  assert(composition.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,
+      -10,5,0,0,1}));
+  runtime::RuntimeFrameOpportunity zoomed{};
+  assert(composition.serviceFrameOpportunity(false,zoomed) && zoomed.previewWork);
+  assert(composition.finishFrameOpportunity({zoomed.previewWork,true}));
+  std::vector<std::uint8_t> pixels(256U*256U*4U);
+  assert(composition.readPreviewRgba(pixels));
+  // World (50,40) -> view (110,75): both presenters must use this same camera.
+  const auto at=(75U*256U+110U)*4U;
+  assert(pixels[at+3]>0 && pixels[at]>pixels[at+1] && pixels[at+1]>pixels[at+2]);
+  assert(pixels[(40U*256U+50U)*4U+3U]==0);
+  const auto previewPresents=composition.previewRenderState().presentCount;
+  runtime::RuntimeFrameOpportunity idle{};
+  assert(composition.serviceFrameOpportunity(false,idle) && !idle.previewWork);
+  assert(composition.previewRenderState().presentCount==previewPresents);
+  batch.samples.front().sequence=3;batch.samples.front().timestampNs=3000;
+  batch.samples.front().phase=input::PointerPhase::kUp;batch.samples.front().x=170;batch.samples.front().y=75;
+  assert(composition.submit(batch));
+  runtime::RuntimeFrameOpportunity commit{};
+  assert(composition.serviceFrameOpportunity(false,commit) && commit.canonicalWork);
+  if(commit.previewWork)assert(composition.finishFrameOpportunity({commit.previewWork,true}));
+  assert(composition.receivePlatformPresented({*commit.canonicalWork,render::PresentOutcome::kPresented,
+      render::PresentEvidenceKind::kPlatformQualified,std::nullopt}));
+  assert(composition.readCanonicalRgba(pixels));
+  assert(pixels[at]<180 && pixels[at+3]>0);
+  assert(pixels[(40U*256U+50U)*4U]>245);
+  assert(!composition.previewActive());
+}
+
 void logicalInputMatchesCanonicalAndPreviewPixels() {
   canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.open());
@@ -709,6 +755,7 @@ void fitIncludesEarlierUnchangedObjects() {
 }
 
 int main(int argc, char** argv) {
+  if (argc > 1 && std::string(argv[1]) == "native-navigation") { nativeNavigationKeepsBrushPreviewAndCanonicalAligned(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "live-brush-preview") { canonicalFeedbackKeepsAnUnfinishedBrushPreview(); return 0; }
   canonicalFeedbackKeepsAnUnfinishedBrushPreview();
   if (argc > 1 && std::string(argv[1]) == "fit-full-scene") { fitIncludesEarlierUnchangedObjects(); return 0; }

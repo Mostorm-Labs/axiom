@@ -12,6 +12,7 @@
 #include <mutex>
 #include <cstring>
 #include <atomic>
+#include <cmath>
 
 namespace {
 std::unique_ptr<canvas::sdk::NativeSessions> registry;
@@ -54,6 +55,18 @@ int axiom_native_attach(const char* s,const axiom_native_view* view,uint64_t* ge
 int axiom_native_detach(const char* s,uint64_t g){return safe([&]() -> int {if(const int status=check())return status;if(!token(s))return AXIOM_NATIVE_INVALID_ARGUMENT;return registry->detach(s,g)?AXIOM_NATIVE_OK:AXIOM_NATIVE_REJECTED;});}
 int axiom_native_resize(const char* s,uint64_t g,float w,float h,float d){return safe([&]() -> int {if(const int status=check())return status;if(!token(s))return AXIOM_NATIVE_INVALID_ARGUMENT;return registry->resize(s,g,w,h,d)?AXIOM_NATIVE_OK:AXIOM_NATIVE_REJECTED;});}
 int axiom_native_frame(const char* s,uint64_t g){return safe([&]() -> int {if(const int status=check())return status;if(!token(s))return AXIOM_NATIVE_INVALID_ARGUMENT;return registry->frame(s,g)?AXIOM_NATIVE_OK:AXIOM_NATIVE_REJECTED;});}
+int axiom_native_navigation(const char* s,uint64_t g,const axiom_native_navigation_sample* sample){return safe([&]() -> int {
+ if(const int status=check())return status;
+ if(!token(s)||!sample||sample->size!=sizeof(*sample)||sample->abi_version!=AXIOM_NATIVE_ABI_VERSION||
+    sample->kind>AXIOM_NATIVE_ZOOM||!std::isfinite(sample->delta_x)||!std::isfinite(sample->delta_y)||
+    !std::isfinite(sample->anchor_x)||!std::isfinite(sample->anchor_y)||
+    !std::isfinite(sample->scale_delta)||sample->scale_delta<=0)return AXIOM_NATIVE_INVALID_ARGUMENT;
+ const canvas::interaction::ViewportNavigationSample input{
+  sample->kind==AXIOM_NATIVE_PAN?canvas::interaction::ViewportNavigationKind::kWheelPan:
+    canvas::interaction::ViewportNavigationKind::kBrowserGesture,
+  sample->delta_x,sample->delta_y,sample->anchor_x,sample->anchor_y,sample->scale_delta};
+ return registry->navigate(s,g,input)?AXIOM_NATIVE_OK:AXIOM_NATIVE_REJECTED;
+});}
 int axiom_native_input(const char* s,uint64_t g,const axiom_native_sample* samples,size_t n){return safe([&]() -> int {
  if(const int status=check())return status;if(!token(s)||!samples||!n||n>4096)return AXIOM_NATIVE_INVALID_ARGUMENT;
  canvas::input::PlatformPointerBatch batch;batch.samples.reserve(n);

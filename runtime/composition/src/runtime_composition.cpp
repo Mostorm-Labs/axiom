@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <cmath>
 #include <limits>
 #include <random>
 #include <string>
@@ -739,6 +740,17 @@ bool RuntimeCompositionCore::setPlatformPresentationDeferred(bool deferred) noex
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
   runtime_->setPlatformPresentationDeferred(deferred);
   return true;
+}
+bool RuntimeCompositionCore::applyViewportNavigation(
+    const interaction::ViewportNavigationSample& sample) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ ||
+      !canMutate() || !runtime_->surface().available ||
+      (sample.kind != interaction::ViewportNavigationKind::kWheelPan &&
+       sample.kind != interaction::ViewportNavigationKind::kBrowserGesture) ||
+      !std::isfinite(sample.deltaX) || !std::isfinite(sample.deltaY) ||
+      !std::isfinite(sample.anchorX) || !std::isfinite(sample.anchorY) ||
+      !std::isfinite(sample.scaleDelta) || sample.scaleDelta <= 0.0F) return false;
+  return runtime_->applyViewportNavigation(sample);
 }
 std::optional<ResourcePortReceipt> RuntimeCompositionCore::resourceReceipt(
     foundation::ObjectId id) const noexcept {

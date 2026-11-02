@@ -71,6 +71,14 @@ bool NativeSessions::frame(const std::string& token,std::uint64_t generation){
  if(std::this_thread::get_id()!=thread_)return false;
  auto* e=find(token);return e&&e->attached&&e->generation==generation&&Json::parse(e->session->call(R"({"command":"frame"})")).value("ok",false);
 }
+bool NativeSessions::navigate(const std::string& token,std::uint64_t generation,
+                             const interaction::ViewportNavigationSample& sample){
+ if(std::this_thread::get_id()!=thread_)return false;
+ auto* e=find(token);
+ if(!e||e->busy||!e->attached||e->generation!=generation||!e->session)return false;
+ e->busy=true;struct Reset{bool& busy;~Reset(){busy=false;}}reset{e->busy};
+ return runtime::RuntimePlatformAccess::core(*e->session->composition()).applyViewportNavigation(sample);
+}
 bool NativeSessions::input(const std::string& token,std::uint64_t generation,const input::PlatformPointerBatch& batch){
  if(std::this_thread::get_id()!=thread_||batch.samples.empty()||batch.samples.size()>4096)return false;
  auto* e=find(token);if(!e||!e->attached||e->busy||e->generation!=generation)return false;

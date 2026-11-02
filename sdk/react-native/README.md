@@ -19,6 +19,23 @@ The package uses React Native 0.83.10, React 19.2.0, RN Windows 0.83.3 and RN ma
 
 This package is marked `qualification = NOT_QUALIFIED` until each platform has a real RN app build and physical input/lifecycle evidence.
 
+macOS collects trackpad magnification and precise scroll events in the native
+Canvas host, then delegates camera changes through generation-checked
+`axiom_native_navigation` to the shared Runtime viewport owner. Pinch zoom uses
+the event's view-local anchor and Runtime's 0.25–8 gesture limits; two-finger
+scroll pans the canvas (including momentum). It does not create document
+Operations or History entries. The shared TypeScript Controller is unchanged.
+The additive C/POD host record is size/ABI-versioned; values are borrowed only
+for the synchronous owner-thread call. Unknown/stale/detached sessions and
+malformed/non-finite navigation reject without changing the camera.
+
+For local macOS physical tests, use a Release consumer with bundled JS/assets,
+and load `main.jsbundle` from `Bundle.main`. A Debug consumer that loads an
+HTTP URL still requires Metro. After changing a local staged-package symlink,
+rerun `pod install` **from the consumer root** and inspect the Pods source paths:
+they must point at the same staged package as its framework and resources.
+Changing only a symlink does not update CocoaPods' resolved source paths.
+
 
 ## Current support boundary
 

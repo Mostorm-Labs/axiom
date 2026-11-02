@@ -215,6 +215,7 @@ if(BUILD_TESTING)
   endif()
   add_test(NAME FC00XRuntimeComposition COMMAND axiom_fc00x_runtime_composition_tests)
   add_test(NAME FC00XLiveBrushPreview COMMAND axiom_fc00x_runtime_composition_tests live-brush-preview)
+  add_test(NAME SDKNativeNavigationPreview COMMAND axiom_fc00x_runtime_composition_tests native-navigation)
   add_test(NAME FC00XCancelKeepsViewport COMMAND axiom_fc00x_runtime_composition_tests cancel-camera)
   add_test(NAME FC00XFitFullScene COMMAND axiom_fc00x_runtime_composition_tests fit-full-scene)
 
