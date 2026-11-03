@@ -20,6 +20,7 @@ add_custom_command(TARGET axiom_js_runtime POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
 file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/axiom.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/axiom.d.mts"
+  "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.d.mts"
   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
 file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/internal" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/api" DESTINATION js)

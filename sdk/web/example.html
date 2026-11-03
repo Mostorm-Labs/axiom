@@ -98,6 +98,7 @@
 </dialog>
 <script type="module">
 import {createRuntime} from './axiom.mjs';
+import {DEMO_BRUSHES, DEMO_DRAWING_TOOLS, DEMO_BOARD_ACTIONS, DEMO_PRESSURE_SOURCES, DEMO_SHAPES, DEMO_SELECTION_MODES, DEMO_ERASER_MODES, resolveDemoBrushChoices} from './api/demo-controls.mjs';
 const $ = id => document.getElementById(id);
 const status = $('status'), tools = $('tools');
 let sdk, syncContext = () => {}, syncBackground = () => {};
@@ -143,11 +144,9 @@ try {
     const element = button(parent, label, action); element.dataset.tool = key;
     element.setAttribute('aria-pressed', 'false'); toolButtons.push(element);
   };
-  for (const [label, tool, code] of [['Ink', 'ink', 0], ['Text', 'text', 4]])
-    addTool(label, `tool:${code}`, () => sdk.selectTool(tool));
-  for (const [shape, label, code] of [['rectangle', '矩形', 0], ['ellipse', '椭圆', 1], ['triangle', '三角形', 2], ['line', '直线', 3], ['arrow', '连线', 4], ['sticky', '便签', 5]])
-    addTool(label, `shape:${code}`, () => sdk.selectShape(shape));
-  addTool('Eraser', 'tool:2', () => sdk.selectTool('partialEraser'));
+  for (const tool of DEMO_DRAWING_TOOLS)
+    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool));
+  DEMO_SHAPES.forEach((shape, code) => addTool(shape.label, `shape:${code}`, () => sdk.selectShape(shape.id)));
   button(drawingGroup,'表格',()=> $('table-panel').showModal(),'table-open');
   const pathSamples={
     hole:[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'},{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],
@@ -182,17 +181,17 @@ try {
   });
 
   const inkGroup = group(context, 'ink-parameters');
-  const presetNames = {'round-regular':'规则圆头笔','round-handdrawn':'手绘圆头笔','laser-transient':'激光笔','marker-compact-v1':'马克笔','chalk-compact-v1':'粉笔','crayon-wax-v1':'蜡笔','watercolor-lite-v1':'轻量水彩','vector-solid-v1': '旧圆头笔', 'marker-flat-v1': '旧马克笔', 'chalk-grain-v1': '旧粉笔', 'membrane-v1': '纹理笔'};
   const presets = [...sdk.brushPresets().reduce((map,preset)=>{
     const previous=map.get(preset.profileId);
     if(!previous||preset.revision>previous.revision)map.set(preset.profileId,preset);
     return map;
   },new Map()).values()];
-  const brush = select(inkGroup, '笔刷', 'ink-preset', [['', '切换预设…'], ...presets.map((preset, index) => [String(index), presetNames[preset.profileId] || `笔刷 ${index + 1}`])]);
+  const brushChoices = resolveDemoBrushChoices(presets);
+  const brush = select(inkGroup, '笔刷', 'ink-preset', [['', '切换预设…'], ...brushChoices.map((preset, index) => [String(index), preset.label])]);
   const brushHint=document.createElement('span');brushHint.id='ink-hint';brushHint.className='hint';inkGroup.append(brushHint);
-  brush.onchange = () => run(async () => { if (brush.value !== '') { const preset = presets[Number(brush.value)]; await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); } });
+  brush.onchange = () => run(async () => { if (brush.value !== '') { const preset = brushChoices[Number(brush.value)]; await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); } });
 
-  const pressureMode=select(inkGroup,'压力来源','ink-pressure',[['1','模拟压力（默认）'],['2','设备压力（需设备能力）']]);
+  const pressureMode=select(inkGroup,'压力来源','ink-pressure',DEMO_PRESSURE_SOURCES.map(source=>[String(source.id),source.label]));
   const inkColor=field(inkGroup,'笔迹颜色','color','ink-color');
   inkColor.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c)await sdk.setBrushConfig({...c,color:rgba(inkColor.value,c.color[3])});});
   const inkControls={};
@@ -219,14 +218,14 @@ try {
   inkGroup.append(brushHint);
   pressureMode.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,pressureSource:Number(pressureMode.value)});syncBrush();}});
   const initialBrush=new URLSearchParams(location.search).get('brush');
-  const initialPreset=presets.find(p=>p.profileId===({crayon:'crayon-wax-v1',chalk:'chalk-compact-v1',watercolor:'watercolor-lite-v1'}[initialBrush]||'round-handdrawn'));
-  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(presets.indexOf(initialPreset));syncBrush();
+  const initialPreset=brushChoices.find(p=>p.profileId===({crayon:'crayon-wax-v1',chalk:'chalk-compact-v1',watercolor:'watercolor-lite-v1'}[initialBrush]||'round-handdrawn'))||brushChoices[0];
+  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(brushChoices.indexOf(initialPreset));syncBrush();
 
   const selectionGroup = group(context, 'selection-parameters');
-  const selectionMode = select(selectionGroup, '选择方式', 'selection-mode', [['point', '点选'], ['rectangle', '框选'], ['lasso', '套索']]);
+  const selectionMode = select(selectionGroup, '选择方式', 'selection-mode', DEMO_SELECTION_MODES.map(mode => [mode.id, mode.label]));
   selectionMode.onchange = () => run(() => sdk.setSelectionMode(selectionMode.value));
   const eraserGroup = group(context, 'eraser-parameters');
-  const eraserMode = select(eraserGroup, '擦除方式', 'eraser-mode', [['objectEraser', '整个对象'], ['partialEraser', '局部擦除']]);
+  const eraserMode = select(eraserGroup, '擦除方式', 'eraser-mode', DEMO_ERASER_MODES.map(mode => [mode.id, mode.label]));
   eraserMode.onchange = () => run(() => sdk.selectTool(eraserMode.value));
 
   const appearanceGroup = group(context, 'appearance-parameters');
@@ -356,16 +355,17 @@ try {
   const deleteButton = button(objectGroup, '删除', () => sdk.deleteSelection());
 
   const historyGroup = group(board);
-  const undo = button(historyGroup, 'Undo', () => sdk.undo(), 'undo');
-  const redo = button(historyGroup, 'Redo', () => sdk.redo(), 'redo');
-  button(historyGroup, 'Fit', () => sdk.fitContent(), 'fit');
+  const boardLabels = Object.fromEntries(DEMO_BOARD_ACTIONS.map(action => [action.id, action.label]));
+  const undo = button(historyGroup, boardLabels.undo, () => sdk.undo(), 'undo');
+  const redo = button(historyGroup, boardLabels.redo, () => sdk.redo(), 'redo');
+  button(historyGroup, boardLabels.fit, () => sdk.fitContent(), 'fit');
   const navigationGroup = group(board);
-  addTool('Select', 'tool:1', () => sdk.selectTool('select'), navigationGroup);
-  addTool('Hand', 'tool:3', () => sdk.selectTool('hand'), navigationGroup);
+  for (const tool of DEMO_DRAWING_TOOLS.filter(tool => tool.id === 'select' || tool.id === 'hand'))
+    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool), navigationGroup);
   const boardGroup = group(board);
   button(boardGroup, '创建分区', () => sdk.createSection(), 'section-create');
-  button(boardGroup, '背景', () => $('background-panel').showModal(), 'background-open');
-  button(boardGroup, '导出图片', () => $('export-panel').showModal(), 'export-open');
+  button(boardGroup, boardLabels.background, () => $('background-panel').showModal(), 'background-open');
+  button(boardGroup, boardLabels.export, () => $('export-panel').showModal(), 'export-open');
 
   const contextHint = document.createElement('span'); contextHint.className = 'hint'; context.append(contextHint);
   // The v1 actions array follows the SDK SelectionAction order. Availability
