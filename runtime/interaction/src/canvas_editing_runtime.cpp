@@ -4296,7 +4296,12 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
 
 bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept {
   presented=false;
-  const auto* exact=lastPresentedCanonicalFrameState_.get();
+  // A locally submitted canonical frame is already a valid visual source for
+  // disposable navigation feedback before platform PresentedFeedback arrives.
+  // It never qualifies CanonicalVisible or retires ARC preview state.
+  const auto* exact=lastSubmittedCanonicalFrameState_ != nullptr
+      ? lastSubmittedCanonicalFrameState_.get()
+      : lastPresentedCanonicalFrameState_.get();
   // A live preview or its seal changes navigation eligibility, not the cost
   // of rebuilding this camera. Keep exact preparation cooperative until a
   // replacement is submitted, including when input interrupts the settle.
@@ -4305,24 +4310,14 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       exact->metricsGeneration.value()==surface_.metricsGeneration &&
       exact->camera.generation.value()!=cameraGeneration();
   if(!exact || !surface_.available || !activeSurfaceProvider() ||
-     lastSubmittedCanonicalFrame_ || !canonicalPresentationDirty_ ||
+     !canonicalPresentationDirty_ ||
      exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
-     !pendingCanonicalIdentities_.empty() ||
          (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed()) ||
      creationActive() || selectionTransformActive() || regionSelectionActive() ||
       semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
       skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;return false;
-  }
-  // Viewport-only canonical work has no semantic handoff to satisfy while
-  // confirmed input is still arriving. Let Composition submit the independent
-  // latest preview without spending this opportunity on background refinement.
-  if(!brushSessions_.empty()){
-      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return navigationExactPreparation_;
-  }
-  if(previewActive()){
-      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return false;
   }
   const auto generation=cameraGeneration();
   if(navigationCameraGeneration_!=generation){
@@ -4344,9 +4339,18 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       std::vector<render::ReferenceTraversalEntry>& entries){
       const auto found=runtimeSceneHost_->query(SceneQuery{region});
       if(!found || found.value().revision!=exact->sceneReadToken)return false;
-      const render::VisibilityResult visibility{exact->sceneGeneration,exact->sceneReadToken,
-          region,found.value().diagnostics.candidatesExamined,found.value().backToFront.size(),
-          found.value().backToFront,{}};
+      const render::FrameState chunkFrame{
+          exact->viewId, exact->camera, region, exact->metrics,
+          exact->sceneGeneration, exact->sceneReadToken,
+          exact->surfaceGeneration, exact->metricsGeneration,
+          exact->frameId, exact->viewportClip};
+      const auto resolved = render::VisibilityResolver::resolve(
+          chunkFrame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
+      if (!resolved) return false;
+      auto visibility = resolved.value();
+      // The Scene query already owns ordering and candidate accounting. The
+      // resolver adds the renderer-owned GeometryChunk selections without
+      // mutating canonical Scene state.
       auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
       if(!sources)return false;
       entries=std::move(sources.value().entries);return true;

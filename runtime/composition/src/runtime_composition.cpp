@@ -490,6 +490,14 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
     if (!out.canonicalRequested && !runtime_->canonicalPresentationRetryable()) return false;
   }
   if (!captureCanonicalWork()) return false;
+  // Navigation feedback may reuse the most recently submitted canonical
+  // frame as a disposable visual source while its platform receipt is still
+  // pending. Do not expose that same canonical work to the platform fence a
+  // second time; the original work remains retained in RuntimeCompositionCore
+  // and will be completed by receivePlatformPresented().
+  if (out.navigationPending || out.navigationPresented) {
+    out.canonicalWork.reset();
+  }
   out.previewActive = runtime_->previewActive();
   out.previewDirty = runtime_->previewRenderState().dirty;
   if (out.previewActive && out.previewDirty && !pendingPreviewCapture_.has_value()) {
