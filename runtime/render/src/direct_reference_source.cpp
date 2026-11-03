@@ -540,11 +540,19 @@ static foundation::Result<ReferenceDrawList> buildSources(
         }
         auto command = commandFor(*record);
         if (!command) return foundation::Result<ReferenceDrawList>::failure(command.error());
-        list.entries.push_back(ReferenceTraversalEntry{
+        ReferenceTraversalEntry entry{
             .record = *record,
             .contributesPixels = record->kind != semantic::ObjectKind::kGroup,
             .command = std::move(command.value()),
-        });
+        };
+        const auto selected = std::find_if(visibility.chunkSelections.begin(),
+            visibility.chunkSelections.end(), [id](const auto& value) { return value.objectId == id; });
+        if (selected != visibility.chunkSelections.end() && !selected->fullObject &&
+            !selected->chunkIndices.empty()) {
+            entry.geometryChunkIndices = selected->chunkIndices;
+            entry.geometryChunked = true;
+        }
+        list.entries.push_back(std::move(entry));
     }
     AXIOM_FRAME_TIMING_END(entriesTiming);
     if(canonical){

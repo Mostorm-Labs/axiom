@@ -3,6 +3,8 @@
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/semantic/reference_object_store.hpp"
+#include "object_store_mutator.hpp"
 
 #include <cassert>
 #include <cstdint>
@@ -35,6 +37,12 @@ using canvas::render::SurfaceGeneration;
 using canvas::render::SurfaceMetrics;
 using canvas::render::ViewId;
 using canvas::render::VisibilityResolver;
+using canvas::RuntimeScene;
+using canvas::semantic::CompactStrokeContent;
+using canvas::semantic::CompactStrokeRecord;
+using canvas::semantic::ObjectRecord;
+using canvas::semantic::ReferenceObjectStore;
+using canvas::semantic::internal::ObjectStoreMutator;
 using canvas::semantic::SemanticGeneration;
 
 SceneRecord record(std::uint64_t id, std::uint64_t order, WorldRect bounds) {
@@ -141,11 +149,79 @@ void localizedResolutionDoesNotScaleWithTotalSceneSize() {
               << ",\"semantic_object_iterations\":0}\n";
 }
 
+void geometryChunkSelectionRemainsObjectOrdered() {
+    ReferenceObjectStore store;
+    ObjectRecord object;
+    object.id = ObjectId::fromUint64(1);
+    object.kind = canvas::semantic::ObjectKind::kVectorStroke;
+    object.kind_version = 3;
+    CompactStrokeRecord stroke;
+    stroke.knots.reserve(1024);
+    for (unsigned i = 0; i < 1024; ++i)
+        stroke.knots.push_back({static_cast<double>(i), 8.0, 32768});
+    object.content = CompactStrokeContent{std::move(stroke)};
+    assert(ObjectStoreMutator::insertFresh(store, object));
+
+    auto scene = makeScene({record(1, 1, WorldRect{0, 0, 1023, 16})});
+    RuntimeScene runtimeScene;
+    assert(runtimeScene.replace({store, SemanticGeneration{9}}));
+    const auto result = VisibilityResolver::resolve(
+        frame(WorldRect{300, -1, 310, 20}, 1), *scene, runtimeScene);
+    assert(result.hasValue());
+    assert(result.value().backToFront == std::vector<ObjectId>{ObjectId::fromUint64(1)});
+    assert(result.value().chunkSelections.size() == 1U);
+    const auto& selection = result.value().chunkSelections.front();
+    assert(selection.objectId == ObjectId::fromUint64(1));
+    assert(!selection.fullObject);
+    assert(selection.chunkIndices == std::vector<std::uint32_t>{1U});
+}
+
+void geometryChunkVisibilityBenchmark() {
+    for (const unsigned population : {100U, 500U, 1000U}) {
+        ReferenceObjectStore store;
+        std::vector<SceneRecord> records;
+        records.reserve(population);
+        for (unsigned index = 0; index < population; ++index) {
+            ObjectRecord object;
+            object.id = ObjectId::fromUint64(index + 1U);
+            object.kind = canvas::semantic::ObjectKind::kVectorStroke;
+            object.kind_version = 3;
+            CompactStrokeRecord stroke;
+            stroke.knots.reserve(1024);
+            for (unsigned i = 0; i < 1024; ++i)
+                stroke.knots.push_back({index == 0U ? static_cast<double>(i) : 10000.0 + i,
+                                        8.0, 32768});
+            object.content = CompactStrokeContent{std::move(stroke)};
+            object.placement.order_key = canvas::semantic::OrderKey(
+                std::vector<std::uint8_t>{static_cast<std::uint8_t>(index & 0xffU)});
+            assert(ObjectStoreMutator::insertFresh(store, object));
+            records.push_back(record(index + 1U, index + 1U,
+                index == 0U ? WorldRect{0, 0, 1023, 16} : WorldRect{10000, 0, 11024, 16}));
+            records.back().kind = SceneObjectKind::kVectorStroke;
+        }
+        auto scene = makeScene(std::move(records));
+        RuntimeScene runtimeScene;
+        assert(runtimeScene.replace({store, SemanticGeneration{9}}));
+        const auto result = VisibilityResolver::resolve(
+            frame(WorldRect{300, -1, 310, 20}, 1), *scene, runtimeScene);
+        assert(result.hasValue() && result.value().visibleRecords == 1U);
+        assert(result.value().chunkSelections.size() == 1U &&
+               result.value().chunkSelections.front().chunkIndices.size() == 1U);
+        std::cout << "{\"chunk_visibility_population\":" << population
+                  << ",\"candidates_examined\":" << result.value().candidatesExamined
+                  << ",\"visible_records\":" << result.value().visibleRecords
+                  << ",\"selected_chunks\":"
+                  << result.value().chunkSelections.front().chunkIndices.size() << "}\n";
+    }
+}
+
 } // namespace
 
 int main() {
     renderOwnsViewportQueryAndFinalOrder();
     cameraOnlyChangeLeavesCanonicalSceneUnchanged();
     localizedResolutionDoesNotScaleWithTotalSceneSize();
+    geometryChunkSelectionRemainsObjectOrdered();
+    geometryChunkVisibilityBenchmark();
     return 0;
 }

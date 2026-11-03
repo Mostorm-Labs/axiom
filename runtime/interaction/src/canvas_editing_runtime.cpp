@@ -4346,7 +4346,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       if(!found || found.value().revision!=exact->sceneReadToken)return false;
       const render::VisibilityResult visibility{exact->sceneGeneration,exact->sceneReadToken,
           region,found.value().diagnostics.candidatesExamined,found.value().backToFront.size(),
-          found.value().backToFront};
+          found.value().backToFront,{}};
       auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
       if(!sources)return false;
       entries=std::move(sources.value().entries);return true;
@@ -4445,7 +4445,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       frame.metrics, render::FrameRole::kCanonical};
   const auto buildDemand=[&]() -> std::shared_ptr<const render::FramePlan> {
   AXIOM_FRAME_TIMING_SCOPE(visibilityTiming,visibility);
-  auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  auto visibility = render::VisibilityResolver::resolve(
+      frame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
   AXIOM_FRAME_TIMING_END(visibilityTiming);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return {}; }
   // A selected object can be dragged into view from outside the canonical
@@ -5034,7 +5035,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
       frame.metrics, render::FrameRole::kPreview};
   if (frameCoordinator_.request(previewCapture) != render::RuntimeFrameDisposition::kAccepted) return false;
-  auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  auto visibility = render::VisibilityResolver::resolve(
+      frame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
   if (!visibility) return false;
   if (transformDrag_.active() &&
       std::find(visibility.value().backToFront.begin(), visibility.value().backToFront.end(),

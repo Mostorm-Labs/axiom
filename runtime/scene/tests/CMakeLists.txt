@@ -75,6 +75,12 @@ endif()
 add_test(NAME canvas_g2_a1_runtime_record_projection
          COMMAND canvas_g2_a1_runtime_record_projection)
 
+add_executable(canvas_g5_geometry_chunk_locality
+    geometry_chunk_locality_test.cpp)
+target_link_libraries(canvas_g5_geometry_chunk_locality PRIVATE canvas_runtime_scene canvas_runtime_semantic)
+target_compile_features(canvas_g5_geometry_chunk_locality PRIVATE cxx_std_20)
+add_test(NAME G5GeometryChunkLocality COMMAND canvas_g5_geometry_chunk_locality)
+
 add_executable(canvas_g2_a2_bounds_system_test bounds_system_test.cpp)
 target_link_libraries(canvas_g2_a2_bounds_system_test PRIVATE canvas_runtime_scene)
 target_compile_features(canvas_g2_a2_bounds_system_test PRIVATE cxx_std_20)

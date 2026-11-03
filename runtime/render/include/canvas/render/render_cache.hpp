@@ -57,6 +57,7 @@ class RenderSourceResolver final {
         const auto& a=cached.revisions;const auto& b=current.revisions;
         return cached.targetEpoch==current.targetEpoch && a.content==b.content &&
             a.clip==b.clip && a.effect==b.effect && a.resource==b.resource &&
+            a.geometry==b.geometry &&
             (cached.transformIndependent || a.transform==b.transform)
             ? RenderSourceKind::kRasterCache : RenderSourceKind::kDirect;
         // External traversal order is applied at composition, never baked in.

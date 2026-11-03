@@ -110,6 +110,10 @@ struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;
     bool contributesPixels = true;
     ReferenceCommand command;
+    // Optional locality metadata. Current renderers conservatively consume
+    // the complete object until chunk raster parity is proven.
+    std::vector<std::uint32_t> geometryChunkIndices;
+    bool geometryChunked = false;
 
     bool operator==(const ReferenceTraversalEntry&) const = default;
 };

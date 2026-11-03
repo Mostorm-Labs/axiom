@@ -50,6 +50,10 @@ void revisions(){
     require(rev.clip==afterTransform.clip+1&&rev.content==afterTransform.content,"clip conflated with content");
     (void)manager.update({&value,1},{10,0,90,100},2);rev=manager.find(value.record.objectId)->revisions;
     require(rev.resource==initial.resource+1&&rev.content==initial.content,"resource conflated with content");
+    value.geometryChunked=true;value.geometryChunkIndices={1};
+    (void)manager.update({&value,1},clip,2);rev=manager.find(value.record.objectId)->revisions;
+    require(rev.geometry==initial.geometry+1&&rev.content==initial.content,
+            "geometry selection conflated with content");
     value.record.properties.entries.push_back({3U,.5F});(void)manager.update({&value,1},clip,2);rev=manager.find(value.record.objectId)->revisions;
     require(rev.effect==initial.effect+1&&rev.content==initial.content,"effect revision not independent");
     auto other=value;other.record.objectId=ObjectId::fromUint64(2);

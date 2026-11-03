@@ -17,7 +17,9 @@ RenderGroupManager::Update RenderGroupManager::update(std::span<const ReferenceT
                 a.kind!=b.kind||a.kindVersion!=b.kindVersion||a.content!=b.content||old.source.command!=source.command||a.textLayout!=b.textLayout,
                 a.transform!=b.transform,clip_!=clip,a.properties!=b.properties||a.eraseMasks!=b.eraseMasks||a.derivedGeometry!=b.derivedGeometry,
                 old.ordinal!=ordinal||a.placement!=b.placement||old.source.contributesPixels!=source.contributesPixels,
-                old.resourceEpoch!=resourceEpoch||a.directDependencies!=b.directDependencies};
+                old.resourceEpoch!=resourceEpoch||a.directDependencies!=b.directDependencies,
+                old.source.geometryChunked!=source.geometryChunked ||
+                    old.source.geometryChunkIndices!=source.geometryChunkIndices};
             if(change.content||change.transform||change.clip||change.effect||change.order||change.resource||a.worldBounds!=b.worldBounds){
                 result.contributions.push_back({id,VisualContribution{a.worldBounds,old.source.contributesPixels,false},VisualContribution{b.worldBounds,source.contributesPixels,false}});
                 old.group.apply(change);old.source=source;
