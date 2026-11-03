@@ -4,8 +4,8 @@ using TextJson=nlohmann::json;
 std::string hexId(foundation::ObjectId id){std::string text;constexpr char hex[]="0123456789abcdef";for(auto b:id.bytes){text+=hex[b>>4];text+=hex[b&15];}return text;}
 foundation::ObjectId rawId(const std::string& text){if(text.size()!=32)throw std::invalid_argument("Id128");foundation::ObjectId id;const auto digit=[](char c)->int{if(c>='0'&&c<='9')return c-'0';if(c>='a'&&c<='f')return c-'a'+10;throw std::invalid_argument("hex");};for(std::size_t i=0;i<16;++i)id.bytes[i]=static_cast<std::uint8_t>(digit(text[i*2])*16+digit(text[i*2+1]));return id;}
 std::uint64_t decimal(const std::string& value){if(value.empty()||value.size()>20||value.find_first_not_of("0123456789")!=std::string::npos)throw std::invalid_argument("uint64");std::size_t count=0;auto number=std::stoull(value,&count);if(count!=value.size())throw std::invalid_argument("uint64");return number;}
-TextJson jsonToken(const runtime::TextSessionToken& t){return {{"runtime",std::to_string(t.runtimeInstance)},{"attachment",std::to_string(t.attachment)},{"view",std::to_string(t.view)},{"adapter",std::to_string(t.adapter)},{"session",std::to_string(t.session)},{"projection",std::to_string(t.projection)},{"document",hexId(t.document)},{"object",hexId(t.object)}};}
-runtime::TextSessionToken parseToken(const char* value){if(!value || std::strlen(value)>1024)throw std::invalid_argument("token");const auto j=TextJson::parse(value);return {decimal(j.at("runtime").get<std::string>()),decimal(j.at("attachment").get<std::string>()),decimal(j.at("view").get<std::string>()),decimal(j.at("adapter").get<std::string>()),decimal(j.at("session").get<std::string>()),decimal(j.at("projection").get<std::string>()),rawId(j.at("document").get<std::string>()),rawId(j.at("object").get<std::string>())};}
+TextJson jsonToken(const runtime::TextSessionToken& t){return {{"runtime",std::to_string(t.runtimeInstance)},{"attachment",std::to_string(t.attachment)},{"view",std::to_string(t.view)},{"adapter",std::to_string(t.adapter)},{"session",std::to_string(t.session)},{"projection",std::to_string(t.projection)},{"document",hexId(t.document)},{"object",hexId(t.object)},{"row",hexId(t.row)},{"column",hexId(t.column)}};}
+runtime::TextSessionToken parseToken(const char* value){if(!value || std::strlen(value)>1024)throw std::invalid_argument("token");const auto j=TextJson::parse(value);return {decimal(j.at("runtime").get<std::string>()),decimal(j.at("attachment").get<std::string>()),decimal(j.at("view").get<std::string>()),decimal(j.at("adapter").get<std::string>()),decimal(j.at("session").get<std::string>()),decimal(j.at("projection").get<std::string>()),rawId(j.at("document").get<std::string>()),rawId(j.at("object").get<std::string>()),j.contains("row")?rawId(j.at("row").get<std::string>()):foundation::ObjectId{},j.contains("column")?rawId(j.at("column").get<std::string>()):foundation::ObjectId{}};}
 TextJson jsonTarget(const runtime::CanvasTargetKey& t) {
     return {{"runtimeEpoch", std::to_string(t.runtimeEpoch)}, {"viewId", std::to_string(t.viewId)},
             {"viewEpoch", std::to_string(t.viewEpoch)}, {"attachmentEpoch", std::to_string(t.attachmentEpoch)}};
@@ -61,7 +61,7 @@ TextJson jsonFont(const runtime::FontCatalogEntry& f) {
 }
 }
 extern "C" {
-EMSCRIPTEN_KEEPALIVE const char* axiom_web_text_snapshot(std::uintptr_t h){static std::string result;auto* v=instance(h);if(!v)return "{}";auto& f=v->lifecycle.composition().controlFacade();const auto s=f.readTextEditor();const auto g=f.readTextGeometry();
+EMSCRIPTEN_KEEPALIVE const char* axiom_web_text_snapshot(std::uintptr_t h){static thread_local std::string result;auto* v=instance(h);if(!v)return "{}";auto& f=v->lifecycle.composition().controlFacade();const auto s=f.readTextEditor();const auto g=f.readTextGeometry();
  TextJson j={{"phase",s.phase},{"token",jsonToken(s.token)},{"sequence",std::to_string(s.nextInputSequence)},{"composition",std::to_string(s.composition)},{"effect",std::to_string(s.finishEffect)},{"exit",s.exitStatus},{"selection",{s.selection.start,s.selection.length}},{"replacement",{s.replacement.start,s.replacement.length}},{"width",s.width},{"projection",std::vector<std::uint16_t>(s.projection.begin(),s.projection.end())},{"preedit",std::vector<std::uint16_t>(s.preedit.begin(),s.preedit.end())},{"geometry",{{"diagnostics",g.diagnostics},{"available",g.available},{"caret",g.caret},{"layout",g.token.layout},{"camera",std::to_string(g.token.camera)}}}};
  j["format"] = jsonFormat(s.format); j["formatObject"] = hexId(s.formatObject); j["mixedFormat"] = s.mixedFormat;
  j["projectionLimit"] = s.projectionLimit; j["fonts"] = TextJson::array();
@@ -75,14 +75,16 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_text_intent_json(std::uintptr_t h, const char
     if (!v || !data || std::strlen(data) > 8192) return 4;
     try {
         const auto j = TextJson::parse(data);
+        if(!j.at("kind").is_number_integer()||j.at("kind").get<std::uint64_t>()>static_cast<std::uint64_t>(runtime::TextIntentKind::kFormat))return 4;
         const int kind = j.at("kind").get<int>();
-        if (kind < 0 || kind > static_cast<int>(runtime::TextIntentKind::kFormat)) return 4;
         runtime::TextIntent request;
         request.kind = static_cast<runtime::TextIntentKind>(kind);
         request.clientId = decimal(j.at("clientId").get<std::string>());
         request.requestId = decimal(j.at("requestId").get<std::string>());
         request.target = parseTarget(j.at("target"));
         request.token = parseToken(j.at("token").dump().c_str());
+        if(j.contains("row"))request.row=rawId(j.at("row").get<std::string>());
+        if(j.contains("column"))request.column=rawId(j.at("column").get<std::string>());
         if (j.contains("object")) request.object = rawId(j.at("object").get<std::string>());
         request.viewX = j.value("x", 0.0F); request.viewY = j.value("y", 0.0F);
         request.width = j.value("width", 320.0);
@@ -91,7 +93,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_text_intent_json(std::uintptr_t h, const char
     } catch (...) { return 4; }
 }
 EMSCRIPTEN_KEEPALIVE const char* axiom_web_text_intent_receipt(std::uintptr_t h, const char* client, const char* request) {
-    static std::string result;
+    static thread_local std::string result;
     auto* v = instance(h);
     if (!v || !client || !request) return "null";
     try {
@@ -101,7 +103,7 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_text_intent_receipt(std::uintptr_t h,
     } catch (...) { return "null"; }
 }
 EMSCRIPTEN_KEEPALIVE const char* axiom_web_font_catalog(std::uintptr_t h) {
-    static std::string result;
+    static thread_local std::string result;
     auto* v = instance(h); if (!v) return "null";
     const auto catalog = v->lifecycle.facade().readFontCatalog();
     TextJson entries = TextJson::array(); for (const auto& f : catalog.entries) entries.push_back(jsonFont(f));
@@ -109,7 +111,7 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_font_catalog(std::uintptr_t h) {
     return result.c_str();
 }
 EMSCRIPTEN_KEEPALIVE const char* axiom_web_font_status(std::uintptr_t h, const char* id) {
-    static std::string result;
+    static thread_local std::string result;
     auto* v = instance(h); if (!v || !id) return "null";
     try { const auto font = v->lifecycle.facade().readFontResourceStatus(rawId(id)); result = font ? jsonFont(*font).dump() : "null"; return result.c_str(); }
     catch (...) { return "null"; }

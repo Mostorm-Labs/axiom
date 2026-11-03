@@ -49,6 +49,15 @@ using foundation::WorldRect;
 
 using SceneOrderKey = foundation::StableOrderKey;
 
+struct GeometryChunk final {
+    std::uint32_t index = 0;
+    std::uint32_t pointOffset = 0;
+    std::uint32_t pointCount = 0;
+    foundation::WorldRect bounds{};
+    std::string digest;
+    bool operator==(const GeometryChunk&) const = default;
+};
+
 enum class SceneObjectKind : std::uint8_t {
     kShape = 1,
     kImage = 2,
@@ -79,6 +88,7 @@ struct RuntimeSceneRecord final {
     foundation::WorldRect worldBounds{};
     std::string referenceGeometryDigest{};
     std::vector<semantic::ObjectId> directDependencies{};
+    std::vector<GeometryChunk> geometryChunks{};
     std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
     std::uint64_t hierarchyOrder = 0;
 

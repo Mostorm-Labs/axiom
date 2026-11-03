@@ -58,6 +58,7 @@ foundation::Result<FullMaterializedScene> materializeFullScene(
                 .worldBounds = source.worldBounds,
                 .referenceGeometryDigest = source.referenceGeometryDigest,
                 .directDependencies = source.directDependencies,
+                .geometryChunks = source.geometryChunks,
                 .textLayout = source.textLayout,
                 .hierarchyOrder = source.hierarchyOrder,
             });

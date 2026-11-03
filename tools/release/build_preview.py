@@ -156,8 +156,10 @@ def main():
         '-DCMAKE_BUILD_TYPE=Release', '-DBUILD_TESTING=' + ('ON' if args.platform == 'windows' else 'OFF'), '-DCANVAS_BUILD_POC01=OFF',
         '-DCANVAS_BUILD_SEMANTIC=ON', '-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON',
         '-DCANVAS_BUILD_RENDER=ON', '-DCANVAS_BUILD_RF01=ON',
-        '-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON', '-DAXIOM_BUILD_DEBUG_UI=ON',
-        '-DAXIOM_DEBUG_UI_PROFILE=full', '-DCANVAS_SKIA_SDK_VARIANT=release',
+        '-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON',
+        '-DAXIOM_BUILD_DEBUG_UI=' + ('ON' if args.platform == 'windows' else 'OFF'),
+        '-DAXIOM_DEBUG_UI_PROFILE=' + ('full' if args.platform == 'windows' else 'off'),
+        '-DCANVAS_SKIA_SDK_VARIANT=release',
         '-DCANVAS_SKIA_SDK_ROOT=' + skia.as_posix(),
         '-DCanvasSkia_DIR=' + (skia / 'lib/cmake/CanvasSkia').as_posix(),
         *consumer_cmake_arguments(semantic, protoc)]

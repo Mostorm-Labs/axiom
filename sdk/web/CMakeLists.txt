@@ -1,10 +1,21 @@
+include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
+axiom_resolve_host_text_font()
+
+add_library(axiom_sdk_web_runtime_adapter STATIC web_runtime_adapter.cpp)
+target_link_libraries(axiom_sdk_web_runtime_adapter PUBLIC canvas_runtime_composition)
+target_include_directories(axiom_sdk_web_runtime_adapter PRIVATE
+  "${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host" "${AXIOM_HOST_FONT_INCLUDE}")
+target_compile_features(axiom_sdk_web_runtime_adapter PUBLIC cxx_std_20)
+target_compile_options(axiom_sdk_web_runtime_adapter PRIVATE -Wall -Wextra -Wpedantic -Werror)
+set_target_properties(axiom_sdk_web_runtime_adapter PROPERTIES OUTPUT_NAME axiom_web_runtime_adapter)
+
 add_executable(axiom_js_runtime bridge.cpp)
-target_link_libraries(axiom_js_runtime PRIVATE axiom_web_runtime_adapter axiom_sdk_session)
+target_link_libraries(axiom_js_runtime PRIVATE axiom_sdk_web_runtime_adapter axiom_sdk_session)
 target_compile_features(axiom_js_runtime PRIVATE cxx_std_20)
 target_compile_options(axiom_js_runtime PRIVATE -Wall -Wextra -Wpedantic -Werror -fexceptions)
 target_include_directories(axiom_js_runtime PRIVATE
   "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
-  "${PROJECT_SOURCE_DIR}/apps/axiom_canvas_demo/platform/web")
+  "${PROJECT_SOURCE_DIR}/sdk/common")
 target_link_options(axiom_js_runtime PRIVATE
   -fexceptions
   --no-entry -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web
@@ -31,7 +42,7 @@ foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${file}" DESTINATION js)
 endforeach()
 configure_file("${PROJECT_SOURCE_DIR}/verification/sdk_web_external/consumer/pointer_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" COPYONLY)
-configure_file("${PROJECT_SOURCE_DIR}/apps/axiom_canvas_demo/platform/web/text_input.js" "${CMAKE_CURRENT_BINARY_DIR}/text_input.mjs" COPYONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/text_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/text_input.mjs" COPYONLY)
 configure_file("${PROJECT_SOURCE_DIR}/verification/sdk_web_external/consumer/serve.py" "${CMAKE_CURRENT_BINARY_DIR}/serve.py" COPYONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/serve.py" DESTINATION js)
 get_filename_component(_js_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
@@ -53,6 +64,10 @@ endforeach()
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/licenses" DESTINATION js)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/text_input.mjs" DESTINATION js)
 install(FILES "$<TARGET_FILE:axiom_js_runtime>" DESTINATION js/internal)
+if(AXIOM_INSTALL_DEVELOPER_COMPONENTS AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
+   AND CMAKE_BUILD_TYPE STREQUAL "Release")
+  install(TARGETS axiom_sdk_web_runtime_adapter ARCHIVE DESTINATION lib)
+endif()
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   "${CMAKE_CURRENT_BINARY_DIR}/axiom.data" DESTINATION js)
 

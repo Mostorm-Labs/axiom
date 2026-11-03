@@ -28,6 +28,17 @@ try {
     const dest=path.join(files,name);await fs.mkdir(path.dirname(dest),{recursive:true});
     await fs.copyFile(path.join(path.resolve(sdkArg),name),dest);observation.sdk_files[name]=hash(await fs.readFile(dest));
   }
+  // Current Web SDK roots keep the shared facade under api/**. Preserve the
+  // package layout instead of importing private deep paths or silently
+  // falling back to an older wrapper shape.
+  const apiRoot=path.join(path.resolve(sdkArg),'api');
+  await fs.cp(apiRoot,path.join(files,'api'),{recursive:true});
+  const apiEntries=await fs.readdir(apiRoot,{recursive:true});
+  for(const entry of apiEntries){
+    const source=path.join(apiRoot,entry);
+    const stat=await fs.stat(source);
+    if(stat.isFile()) observation.sdk_files[path.posix.join('api',entry.split(path.sep).join('/'))]=hash(await fs.readFile(source));
+  }
   for(const [source,name] of [['browser.html','index.html'],['browser_metrics.mjs','browser_metrics.mjs']])
     await fs.copyFile(new URL(source,import.meta.url),path.join(files,name));
   server=http.createServer(async(req,res)=>{

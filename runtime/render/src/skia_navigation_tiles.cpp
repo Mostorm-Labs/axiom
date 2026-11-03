@@ -23,15 +23,38 @@ bool intersects(const foundation::WorldRect& a,const foundation::WorldRect& b){
 }
 bool supported(const ReferenceTraversalEntry& e){
     const auto& t=e.record.transform;
+    // Tile sources are rendered in world space.  The shared draw helper
+    // applies the record transform below for ordinary shapes.  Stroke
+    // coverage jobs still bake their geometry directly into the tile and
+    // therefore retain the identity-transform requirement.
+    if(!std::isfinite(t.a)||!std::isfinite(t.b)||!std::isfinite(t.c)||
+       !std::isfinite(t.d)||!std::isfinite(t.tx)||!std::isfinite(t.ty))return false;
     // Erase masks are object-local render effects. They are safe in a world
     // tile because the tile source is rendered into an isolated transparent
     // surface and the shared Skia command path applies the mask before the
     // tile is composed. Rejecting them here forced every pan/zoom after a
     // partial erase through exact full-scene preparation.
-    if(t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)return false;
-    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return true;
+    if(!e.record.eraseMasks.empty() &&
+       !std::holds_alternative<CompactStrokeReferenceCommand>(e.command) &&
+       !std::holds_alternative<BrushStrokeReferenceCommand>(e.command))return false;
+    const bool identity=t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
+    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity;
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
-    return v&&v->content.stroke.snapshot.material_mode==1;
+    if(v&&v->content.stroke.snapshot.material_mode==1)return identity;
+    return std::holds_alternative<ShapeReferenceCommand>(e.command);
+}
+
+void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+    const auto& t=entry.record.transform;
+    const bool identity=t.a==1.0&&t.b==0.0&&t.c==0.0&&t.d==1.0&&t.tx==0.0&&t.ty==0.0;
+    if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry);return;}
+    canvas.save();
+    canvas.concat(SkMatrix::MakeAll(static_cast<SkScalar>(t.a),static_cast<SkScalar>(t.c),
+                                    static_cast<SkScalar>(t.tx),static_cast<SkScalar>(t.b),
+                                    static_cast<SkScalar>(t.d),static_cast<SkScalar>(t.ty),
+                                    0.0F,0.0F,1.0F));
+    drawValidatedIsolatedEntryToSkCanvas(canvas,entry);
+    canvas.restore();
 }
 }
 void SkiaNavigationTiles::cancel(){
@@ -277,7 +300,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             if (!entry.record.eraseMasks.empty())
                 drawEraseMasksToSkCanvas(*job.surface->getCanvas(), entry);
-        }else drawValidatedIsolatedEntryToSkCanvas(*job.surface->getCanvas(),entry);
+        }else drawNavigationEntry(*job.surface->getCanvas(),entry);
         ++job.source;job.knot=0;++work.sourceSteps;
     }
     if(context&&submitted){

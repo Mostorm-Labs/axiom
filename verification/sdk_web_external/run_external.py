@@ -13,16 +13,22 @@ p.add_argument('--output', required=True, type=Path)
 p.add_argument('--export-dir', type=Path, help='new directory for the verified interactive browser assets')
 a = p.parse_args()
 repo = Path(__file__).resolve().parents[2]
-for sample, demo in [('text_bridge.inl','text_bridge.inl'), ('text_input.mjs','text_input.js')]:
-    if (Path(__file__).parent/'consumer'/sample).read_bytes() != (repo/'apps/axiom_canvas_demo/platform/web'/demo).read_bytes():
+for sample, source in [('text_bridge.inl', repo/'sdk/common/text_bridge.inl'),
+                       ('text_input.mjs', repo/'sdk/web/text_input.mjs')]:
+    if (Path(__file__).parent/'consumer'/sample).read_bytes() != source.read_bytes():
         raise RuntimeError('example text bridge diverged from the verified Web host: '+sample)
 env = os.environ.copy()
 env['EM_CONFIG'] = str(a.emsdk / '.emscripten')
 env['EMSDK_PYTHON'] = sys.executable
-env['EMSDK_NODE'] = str(a.emsdk / 'node/24.19.0_64bit/node.exe')
 env['EMSDK'] = str(a.emsdk)
 env['AXIOM_SDK_PYTHON'] = sys.executable
 env['PATH'] = str(a.emsdk / 'upstream/emscripten') + os.pathsep + env['PATH']
+node = a.emsdk / 'node/24.19.0_64bit/node.exe'
+if not node.is_file():
+    node = a.emsdk / 'node/24.19.0_64bit/bin/node'
+if not node.is_file():
+    raise RuntimeError('Emscripten Node runtime was not found')
+env['EMSDK_NODE'] = str(node)
 result = {'status':'NOT_RUN','steps':[]}
 with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
     root = Path(tmp).resolve()
@@ -55,7 +61,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
        '-DCMAKE_PREFIX_PATH='+str(a.semantic_root.resolve()),
        '-DCanvasSkia_DIR='+str(skia/'lib/cmake/CanvasSkia')],
       ['cmake','--build',str(build)],
-      [str(a.emsdk/'node/24.19.0_64bit/node.exe'), str(Path(__file__).parent/'control_api_test.mjs')]]
+      [str(node), str(Path(__file__).parent/'control_api_test.mjs')]]
     commands[1].append('-DAXIOM_NLOHMANN_INCLUDE_DIR='+str(source/'json'))
     for command in commands:
         run=subprocess.run(command,text=True,capture_output=True,env=env,check=False)
@@ -69,7 +75,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
         shutil.copyfile(source/'control_api.d.mts',build/'control_api.d.mts')
         shutil.copyfile(source/'text_input.mjs',build/'text_input.mjs')
         shutil.copyfile(source/'serve.py',build/'serve.py')
-        command=[str(a.emsdk/'node/24.19.0_64bit/node.exe'),str(Path(__file__).parent/'verify_browser.mjs'),
+        command=[str(node),str(Path(__file__).parent/'verify_browser.mjs'),
                  str(build),str(a.chrome.resolve())]
         try:
             run=subprocess.run(command,text=True,capture_output=True,env=env,check=False,timeout=180)
@@ -80,7 +86,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
             result['steps'].append({'command':command,'exit_code':run.returncode,'stdout':run.stdout,'stderr':run.stderr})
             result['status']='PASS_SCOPED' if run.returncode==0 else 'FAIL_BROWSER'
         if result['status']=='PASS_SCOPED':
-            command=[str(a.emsdk/'node/24.19.0_64bit/node.exe'),str(Path(__file__).parent/'verify_manual_browser.mjs'),
+            command=[str(node),str(Path(__file__).parent/'verify_manual_browser.mjs'),
                      str(build),str(a.chrome.resolve())]
             try:
                 run=subprocess.run(command,text=True,capture_output=True,env=env,check=False,timeout=180)

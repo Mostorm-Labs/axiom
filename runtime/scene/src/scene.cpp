@@ -6,6 +6,7 @@
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
+#include "canvas/scene/geometry_chunk.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -49,6 +50,7 @@ RuntimeSceneProjection projectRuntimeScene(
         projection.records.back().geometryBounds = bounds.geometry;
         projection.records.back().visualBounds = bounds.visual;
         projection.records.back().worldBounds = bounds.world;
+        projection.records.back().geometryChunks = scene::buildGeometryChunks(record.content);
         const semantic::RichTextContent* textContent = nullptr;
         if (record.kind == semantic::ObjectKind::kRichText)
             textContent = std::get_if<semantic::RichTextContent>(&record.content);
@@ -182,6 +184,44 @@ bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
     return false;
 }
 
+bool requiresFullProjectionForLocalUpdate(const semantic::ObjectRecord& object) {
+    // The first locality domain is deliberately limited to leaves whose
+    // derived geometry is a pure function of the record itself. Text/layout,
+    // decoded resources and material resources remain on the authoritative
+    // full path until RuntimeScene owns their reverse-dependency closure.
+    switch (object.kind) {
+    case semantic::ObjectKind::kRichText:
+    case semantic::ObjectKind::kTable:
+    case semantic::ObjectKind::kSection:
+        return true;
+    default:
+        break;
+    }
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&object.content)) {
+        if (shape->label.has_value()) return true;
+    }
+    return std::visit([](const auto& content) {
+        using T = std::decay_t<decltype(content)>;
+        if constexpr (std::is_same_v<T, semantic::ImageContent>) {
+            return !content.resource_id.value.isZero();
+        } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
+            return content.stroke.brush.texture_resource_id.has_value();
+        } else if constexpr (std::is_same_v<T, semantic::DabStrokeContent>) {
+            return content.stroke.brush.texture_resource_id.has_value();
+        } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
+            return std::any_of(content.stroke.snapshot.resources.begin(),
+                               content.stroke.snapshot.resources.end(),
+                               [](const auto& resource) { return !resource.resource_id.isZero(); });
+        } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
+            return std::any_of(content.stroke.snapshot.resources.begin(),
+                               content.stroke.snapshot.resources.end(),
+                               [](const auto& resource) { return !resource.resource_id.isZero(); });
+        } else {
+            return false;
+        }
+    }, object.content);
+}
+
 std::vector<SpatialRecord> makeSpatialRecords(std::span<const SceneRecord> records) {
     std::vector<SpatialRecord> spatialRecords;
     spatialRecords.reserve(records.size());
@@ -268,12 +308,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
             RuntimeSceneProjection projection{post_state.generation(), {}};
             projection.records.reserve(compiled.value().records.size());
-            for (auto& r : compiled.value().records) projection.records.push_back({
-                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
-                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
-                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
-                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.textLayout),r.hierarchyOrder});
+            for (auto& r : compiled.value().records) {
+                projection.records.push_back({
+                    r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                    std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                    std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                    std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                    std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+            }
             PreparedPublication result{std::move(projection)};
             result.fullProjectionAuthority = true;
             return foundation::Result<PreparedPublication>::success(std::move(result));
@@ -331,9 +373,26 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                       "RuntimeScene incremental generation does not match published state"));
     }
     try {
+        // A generation-only ChangeSet has no dependency roots. Advance the
+        // projection stamp while retaining the published records; this is
+        // safe even when the document contains unsupported dependency kinds.
+        if (changes.objects().empty() && changes.resourceChanges().empty() &&
+            !changes.documentBackgroundChanged()) {
+            RuntimeSceneProjection next = _projection;
+            next.generation = post_state.generation();
+            PreparedPublication publication{std::move(next)};
+            publication.localized = true;
+            publication.fullProjectionAuthority = _fullProjectionAuthority;
+            return foundation::Result<PreparedPublication>::success(std::move(publication));
+        }
         // A flat independent-leaf document is a closed dependency domain. Any
         // structural/relation/resource uncertainty uses the existing full path.
-        if (!_flatIndependent || !changes.resourceChanges().empty()) return prepare(post_state);
+        if (!_flatIndependent || !changes.resourceChanges().empty() ||
+            changes.documentBackgroundChanged()) {
+            return foundation::Result<PreparedPublication>::failure(
+                makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                          "Scene dependency closure requires full projection"));
+        }
         std::vector<semantic::ObjectRecord> changed;
         changed.reserve(changes.objects().size());
         std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> selected;
@@ -345,10 +404,20 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 if (object->placement.parent_id || object->kind == semantic::ObjectKind::kConnector ||
                     object->kind == semantic::ObjectKind::kGroup || object->kind == semantic::ObjectKind::kSection ||
                     object->kind == semantic::ObjectKind::kTable)
-                    return prepare(post_state);
+                    return foundation::Result<PreparedPublication>::failure(
+                        makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                                  "Hierarchy or relation dependency requires full projection"));
                 if (!isSupportedRuntimeKind(object->kind) || object->id.isZero())
                     return foundation::Result<PreparedPublication>::failure(
                         makeError(foundation::ErrorCode::kInvalidRecord, "Invalid incremental object"));
+                // A flat leaf can still depend on external resources or
+                // layout state. Until RuntimeScene owns reverse dependency
+                // closure, keep those edits on the authoritative full path.
+                if (requiresFullProjectionForLocalUpdate(*object)) {
+                    return foundation::Result<PreparedPublication>::failure(
+                        makeError(foundation::ErrorCode::kRequiresFullRebuild,
+                                  "Object dependency closure requires full projection"));
+                }
                 changed.push_back(*object);
             } else {
                 removed.insert(change.object_id);
@@ -362,12 +431,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 _textLayoutService, deferConnectorRoutes_);
             if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
             patch.records.clear();
-            for (auto& r : compiled.value().records) patch.records.push_back({
-                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
-                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
-                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
-                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.textLayout),r.hierarchyOrder});
+            for (auto& r : compiled.value().records) {
+                patch.records.push_back({
+                    r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                    std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                    std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                    std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                    std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+            }
         } else {
             patch = projectRuntimeScene(changed, post_state.generation(), _textLayoutService, deferConnectorRoutes_);
         }
@@ -623,9 +694,7 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
         }
 
-        _commitDiagnostics = SceneCommitDiagnostics{
-            .transactionCount = _commitDiagnostics.transactionCount + 1,
-        };
+        _commitDiagnostics.transactionCount += 1;
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;
@@ -707,11 +776,18 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
 
     try {
         std::vector<SceneRecord> stagedRecords;
-        auto currentRecords = _records.materializeSnapshot();
-        if (!currentRecords) {
-            return foundation::Result<SceneApplyReceipt>::failure(currentRecords.error());
+        bool reusedPublishedSnapshot = false;
+        if (_publishedSnapshotValid) {
+            stagedRecords = _publishedRecords;
+            reusedPublishedSnapshot = true;
+        } else {
+            auto currentRecords = _records.materializeSnapshot();
+            if (!currentRecords) {
+                return foundation::Result<SceneApplyReceipt>::failure(currentRecords.error());
+            }
+            stagedRecords = std::move(currentRecords.value());
         }
-        stagedRecords = std::move(currentRecords.value());
+        bool requiresPublicationSort = false;
         for (const auto& mutation : delta.mutations) {
             auto it = std::find_if(stagedRecords.begin(), stagedRecords.end(),
                                    [&](const SceneRecord& record) {
@@ -719,14 +795,20 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                                    });
             if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
                 stagedRecords.push_back(*mutation.after);
+                requiresPublicationSort = true;
             } else if (mutation.kind == SceneMutationKind::kUpdate && mutation.after &&
                        it != stagedRecords.end()) {
+                requiresPublicationSort = requiresPublicationSort ||
+                    mutation.before->orderKey != mutation.after->orderKey;
                 *it = *mutation.after;
             } else if (mutation.kind == SceneMutationKind::kRemove && it != stagedRecords.end()) {
                 stagedRecords.erase(it);
+                requiresPublicationSort = true;
             }
         }
-        std::sort(stagedRecords.begin(), stagedRecords.end(), backToFrontLess);
+        if (requiresPublicationSort) {
+            std::sort(stagedRecords.begin(), stagedRecords.end(), backToFrontLess);
+        }
         if (!stagePublicationSnapshot(stagedRecords)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
@@ -798,9 +880,9 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                 foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
         }
 
-        _commitDiagnostics = SceneCommitDiagnostics{
-            .transactionCount = _commitDiagnostics.transactionCount + 1,
-        };
+        _commitDiagnostics.transactionCount += 1;
+        if (reusedPublishedSnapshot) ++_commitDiagnostics.publishedSnapshotReuseCount;
+        if (requiresPublicationSort) ++_commitDiagnostics.publicationSortCount;
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;

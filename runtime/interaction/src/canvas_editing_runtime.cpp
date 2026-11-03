@@ -4308,9 +4308,10 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
      lastSubmittedCanonicalFrame_ || !canonicalPresentationDirty_ ||
      exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
-     !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
+     !pendingCanonicalIdentities_.empty() ||
+         (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed()) ||
      creationActive() || selectionTransformActive() || regionSelectionActive() ||
-     semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
+      semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
       skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;return false;
   }

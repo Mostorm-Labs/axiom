@@ -102,8 +102,10 @@ WorldRect SceneRecordStore::PreparedUpdate::contentBounds() const {
 }
 
 const SceneRecord* SceneRecordStore::find(ObjectId objectId) const {
-    materializeOrderedCache();
-    return findRecord(_records, _index, objectId);
+    const auto found = _handles.find(objectId);
+    if (found == _handles.end()) return nullptr;
+    const auto record = _arena.find(found->second);
+    return record == _arena.end() ? nullptr : &record->second;
 }
 
 RecordHandle SceneRecordStore::handleFor(ObjectId objectId) const noexcept {
@@ -132,6 +134,7 @@ void SceneRecordStore::materializeOrderedCache() const {
     }
     _records.clear();
     _index.clear();
+    ++_localityDiagnostics.orderedCacheMaterializationCount;
     _records.reserve(_orderIndex.size());
     for (const auto& [key, handle] : _orderIndex) {
         static_cast<void>(key);
