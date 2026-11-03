@@ -321,7 +321,7 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_ink_v2_material_tests tests/ink_v2_material_test.cpp)
     target_link_libraries(axiom_ink_v2_material_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     target_include_directories(axiom_ink_v2_material_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
-    foreach(material marker chalk crayon water parity presets sampling cache scene-mask visual tuning quality wax wax-mask drywet drywet-parity drywet-mask)
+    foreach(material marker chalk crayon water parity presets sampling cache scene-mask visual tuning quality wax wax-mask drywet drywet-parity drywet-mask chunk-range)
       add_test(NAME InkV2Material-${material} COMMAND axiom_ink_v2_material_tests ${material})
     endforeach()
 endif()
@@ -377,12 +377,31 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
             PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_render_headless_skia_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG
+                -Wno-missing-field-initializers)
     endif()
     add_test(NAME G3HeadlessSkia COMMAND axiom_render_headless_skia_tests)
     add_test(NAME FC05ConnectorPendingRaster COMMAND axiom_render_headless_skia_tests connector-pending)
     add_test(NAME FC05StickyFractionalProduction COMMAND axiom_render_headless_skia_tests production-sticky-fractional)
     add_test(NAME FC01TriangleConnectorRaster COMMAND axiom_render_headless_skia_tests fc01)
+
+    add_executable(axiom_render_skia_chunk_range_entry_tests
+        tests/skia_chunk_range_entry_test.cpp)
+    target_link_libraries(axiom_render_skia_chunk_range_entry_tests PRIVATE
+        canvas_runtime_render CanvasSkia::Skia)
+    target_include_directories(axiom_render_skia_chunk_range_entry_tests PRIVATE
+        "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_render_skia_chunk_range_entry_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_skia_chunk_range_entry_tests
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_skia_chunk_range_entry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG
+            -Wno-error=gnu-zero-variadic-macro-arguments -Wno-error=nested-anon-types
+            -Wno-error=gnu-anonymous-struct)
+    endif()
+    add_test(NAME G5SkiaChunkRangeEntry
+        COMMAND axiom_render_skia_chunk_range_entry_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
@@ -494,7 +513,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
             PRIVATE /W4 /permissive- /WX /EHsc)
     else()
         target_compile_options(axiom_render_visibility_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
 
     add_test(NAME G3Visibility COMMAND axiom_render_visibility_tests)
@@ -512,7 +531,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
             PRIVATE /W4 /permissive- /WX /EHsc)
     else()
         target_compile_options(axiom_render_direct_reference_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
 
     add_test(NAME G3DirectReference COMMAND axiom_render_direct_reference_tests)

@@ -131,7 +131,8 @@ void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::Ink
         canvas.drawCircle(0,0,static_cast<SkScalar>(cap.radius),paint);canvas.restore();}
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
-                                  std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed){
+                                  std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed,
+                                  bool allowStartCap,bool allowEndCap){
     if(config.algorithmVersion==5||config.algorithmVersion==6){drawPressureMaterialCoverage(canvas,config,knots,0,knots.size(),startDistance,totalDistance,seed);return;}
     if(config.algorithmVersion==4){drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots));return;}
     if(config.algorithmVersion!=3){drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());return;}
@@ -148,8 +149,8 @@ void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushCo
     builder.uniform("flatness")=float(marker?config.markerFlatness:1.);
     SkPaint paint;paint.setBlendMode(SkBlendMode::kLighten);
     const auto clip=canvas.getLocalClipBounds();
-    const bool startCap=startDistance>1e-6||config.startCap||config.startTaper>0;
-    const bool endCap=startDistance+ink::compactLength(knots)<totalDistance-1e-6||config.endCap||config.endTaper>0;
+    const bool startCap=allowStartCap&&(startDistance>1e-6||config.startCap||config.startTaper>0);
+    const bool endCap=allowEndCap&&(startDistance+ink::compactLength(knots)<totalDistance-1e-6||config.endCap||config.endTaper>0);
     for(std::size_t i=0;i<points.size();++i){
         const auto& a=points[i?i-1:0];const auto& b=points[i];
         const auto radius=float(std::max(a.radius,b.radius));if(radius<=0)continue;
@@ -181,10 +182,14 @@ void drawCompactCoverageRangeToSkCanvas(SkCanvas& canvas,const foundation::InkBr
         drawCompactContourCoverageToSkCanvas(canvas,config,emitted);return;
     }
     if(config.algorithmVersion==3){
-        const auto first=begin?begin-1:0;const auto last=std::min(end,knots.size());
+        // Retain one predecessor and two knots after the requested end. The
+        // first successor completes the final segment and the second keeps
+        // the final segment's finite brush support inside the chunk bounds.
+        const auto first=begin?begin-1:0;const auto last=std::min(end+2,knots.size());
         if(beginDistance<0)beginDistance=ink::compactLength(knots.first(first+1));
         if(totalDistance<0)totalDistance=ink::compactLength(knots);
-        drawCompactCoverageToSkCanvas(canvas,config,knots.subspan(first,last-first),beginDistance,totalDistance);return;
+        drawCompactCoverageToSkCanvas(canvas,config,knots.subspan(first,last-first),beginDistance,totalDistance,seed,
+                                      begin==0,end==knots.size());return;
     }
     SkRuntimeShaderBuilder builder(coverageEffect());
     const bool marker=config.family==foundation::InkFamily::kMarker;
@@ -231,8 +236,31 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
 
 void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                 std::span<const foundation::InkKnot> knots,std::uint64_t seed,
-                                CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid,bool compatibleCoverage,CompactCoverageTargets* targets){
+                                CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid,bool compatibleCoverage,CompactCoverageTargets* targets,
+                                const CompactStrokeRange* range){
     if(knots.empty())return;
+    std::vector<foundation::InkKnot> selected;
+    double rangeStartDistance = 0.0;
+    double rangeTotalDistance = -1.0;
+    bool rangeStartCap = true;
+    bool rangeEndCap = true;
+    if (range) {
+        if (range->begin >= range->end || range->end > knots.size()) return;
+        const auto first = range->begin ? range->begin - 1 : 0;
+        const auto last = std::min(range->end + 2, knots.size());
+        selected.assign(knots.begin() + static_cast<std::ptrdiff_t>(first),
+                        knots.begin() + static_cast<std::ptrdiff_t>(last));
+        knots = selected;
+        // startDistance is already anchored to the retained predecessor knot
+        // (the same convention used by drawCompactCoverageRangeToSkCanvas).
+        rangeStartDistance = range->startDistance;
+        rangeTotalDistance = range->totalDistance;
+        rangeStartCap = range->allowStartCap;
+        rangeEndCap = range->allowEndCap;
+        // The cooperative GPU job owns full-history cursor state. Keep the
+        // proven exact range path on the bounded CPU coverage/material tiles.
+        compatibleCoverage = false;
+    }
     if(compatibleCoverage&&targets&&config.algorithmVersion==3&&canvas.recordingContext()){
         CompactStrokeRasterJob job(canvas,config,knots,grid,true,targets->budget);
         while(!job.step(canvas,config,knots,seed,*targets,true,work)){}
@@ -278,7 +306,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         auto* target=tile->getCanvas();target->resetMatrix();target->clear(SK_ColorBLACK);
         target->translate(float(-x),float(-y));target->concat(matrix);
         if(coverage)target->drawPicture(coverage);
-        else drawCompactCoverageToSkCanvas(*target,config,knots,0,-1,seed);
+        else drawCompactCoverageToSkCanvas(*target,config,knots,
+                                            range ? rangeStartDistance : 0.0,
+                                            range ? rangeTotalDistance : -1.0,
+                                            seed,rangeStartCap,rangeEndCap);
         AXIOM_FRAME_TIMING_END(cpuTiming);
         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
         canvas.save();canvas.resetMatrix();canvas.clipRect(SkRect::MakeXYWH(float(x),float(y),float(w),float(h)));

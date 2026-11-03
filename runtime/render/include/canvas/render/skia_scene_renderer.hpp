@@ -18,6 +18,14 @@ class SkiaRenderCache;
 struct CompactRasterWork;
 class CompactCoverageTargets;
 struct CompactDeviceGrid final {int left=0,top=0,right=0,bottom=0;};
+struct CompactStrokeRange final {
+    std::size_t begin = 0;
+    std::size_t end = 0;
+    double startDistance = 0.0;
+    double totalDistance = -1.0;
+    bool allowStartCap = false;
+    bool allowEndCap = false;
+};
 // Only accepts an already validated isolated compact command; no second
 // geometry implementation is owned by the cache materializer.
 void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr, CompactRasterWork* work = nullptr, bool compatibleCoverage = false, CompactCoverageTargets* targets = nullptr);
@@ -29,12 +37,14 @@ struct CompactRasterWork final {
 };
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 std::span<const foundation::InkKnot>,std::uint64_t seed=0,
-                                CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr,bool compatibleCoverage=false, CompactCoverageTargets* targets=nullptr);
+                                CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr,bool compatibleCoverage=false, CompactCoverageTargets* targets=nullptr,
+                                const CompactStrokeRange* range=nullptr);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactContourCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,const ink::CompactContour&);
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-                                  std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1,std::uint64_t seed=0);
+                                  std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1,std::uint64_t seed=0,
+                                  bool allowStartCap=true,bool allowEndCap=true);
 // Same coverage equation, with original predecessor at a resumed offset.
 void drawCompactCoverageRangeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
     std::span<const foundation::InkKnot>,std::size_t begin,std::size_t end,double beginDistance=-1,double totalDistance=-1,std::uint64_t seed=0);

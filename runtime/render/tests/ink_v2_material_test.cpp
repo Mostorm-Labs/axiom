@@ -30,12 +30,43 @@ std::vector<std::uint8_t> draw(const foundation::InkBrushConfig& config,
 }
 unsigned alpha(const std::vector<std::uint8_t>& p,unsigned x,unsigned y){return p[(y*width+x)*4+3];}
 std::uint64_t sum(const std::vector<std::uint8_t>& p){std::uint64_t s=0;for(unsigned i=3;i<p.size();i+=4)s+=p[i];return s;}
+std::vector<std::uint8_t> coverage(const foundation::InkBrushConfig& config,std::span<const foundation::InkKnot> knots,std::size_t begin=0,std::size_t end=0,double distance=0,double total=-1){
+    render::RasterSkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"coverage resize");
+    auto frame=provider.acquire();auto* canvas=frame.frame.surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+    if(end)render::internal::drawCompactCoverageRangeToSkCanvas(*canvas,config,knots,begin,end,distance,total,42);
+    else render::internal::drawCompactCoverageToSkCanvas(*canvas,config,knots,0,-1,42);
+    provider.release();std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"coverage readback");return pixels;
+}
+std::vector<std::uint8_t> rangedStroke(const foundation::InkBrushConfig& config,
+                                       std::span<const foundation::InkKnot> knots,
+                                       std::size_t begin,std::size_t end,
+                                       double distance,double total){
+    render::RasterSkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"ranged stroke resize");
+    auto frame=provider.acquire();auto* canvas=frame.frame.surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+    render::internal::CompactStrokeRange range{begin,end,distance,total,begin==0,end==knots.size()};
+    render::internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,42,nullptr,nullptr,nullptr,false,nullptr,&range);
+    provider.release();std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"ranged stroke readback");return pixels;
+}
+std::vector<std::uint8_t> fullStroke(const foundation::InkBrushConfig& config,std::span<const foundation::InkKnot> knots){
+    render::RasterSkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"full stroke resize");
+    auto frame=provider.acquire();auto* canvas=frame.frame.surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+    render::internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,42);
+    provider.release();std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"full stroke readback");return pixels;
+}
 }
 int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="drywet"){
+    if(mode=="chunk-range"){
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;c.size=18;c.thinning=.65;c.startTaper=28;c.endTaper=46;
+        std::vector<foundation::InkKnot> path;for(unsigned i=0;i<900;++i)path.push_back({8.+i*.24,64.+7.*std::sin(i*.035),static_cast<std::uint16_t>(18000+(i%180)*220)});
+        const auto full=fullStroke(c,path);const std::size_t begin=256,end=770;const auto total=ink::compactLength(path);const auto start=ink::compactLength(std::span(path).first(begin));const auto part=rangedStroke(c,path,begin,end,start,total);
+        for(unsigned y=0;y<height;++y)for(unsigned x=0;x<width;++x)if(x>=static_cast<unsigned>(path[512].x)&&x<=static_cast<unsigned>(path[767].x)){
+            const auto index=(y*width+x)*4;
+            if(full[index+3]!=part[index+3]){std::cerr<<"diff x="<<x<<" y="<<y<<" full="<<unsigned(full[index+3])<<" part="<<unsigned(part[index+3])<<"\n";require(false,"chunk range alpha differs from Direct oracle");}
+        }
+    }else if(mode=="drywet"){
         for(const auto profile:{"chalk-compact-v1","watercolor-lite-v1"}){
             const auto loaded=ink::BrushPackageCatalog{}.loadDefault(profile,3);
             require(bool(loaded),"pressure chalk/watercolor revision missing");

@@ -10,6 +10,7 @@
 #include "include/core/SkData.h"
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "canvas/ink/compact_geometry.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/derived_geometry.hpp"
 
@@ -383,7 +384,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
-                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr) {
+                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -609,7 +610,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
         } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
-            internal::drawCompactStrokeToSkCanvas(canvas,command.content.stroke.config,command.content.stroke.knots,command.content.stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets);
+            internal::drawCompactStrokeToSkCanvas(canvas,command.content.stroke.config,command.content.stroke.knots,command.content.stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets,range);
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             if (stroke.vector_output.outline.empty()) return;
@@ -1033,7 +1034,35 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
 }
 
 void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
-    drawCommand(canvas,entry,nullptr,nullptr,true,false,coverage,grid,work,compatibleCoverage,targets);
+    std::optional<internal::CompactStrokeRange> range;
+    if (entry.geometryChunked) {
+        if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+            compact && compact->content.stroke.config.algorithmVersion == 3 &&
+            entry.record.eraseMasks.empty() && entry.record.transform.a == 1.0 &&
+            entry.record.transform.b == 0.0 && entry.record.transform.c == 0.0 &&
+            entry.record.transform.d == 1.0 && entry.record.transform.tx == 0.0 &&
+            entry.record.transform.ty == 0.0 && !entry.geometryChunkIndices.empty()) {
+            const auto firstIndex = *std::min_element(entry.geometryChunkIndices.begin(), entry.geometryChunkIndices.end());
+            const auto lastIndex = *std::max_element(entry.geometryChunkIndices.begin(), entry.geometryChunkIndices.end());
+            if (firstIndex < entry.record.geometryChunks.size() &&
+                lastIndex < entry.record.geometryChunks.size()) {
+                const auto& first = entry.record.geometryChunks[firstIndex];
+                const auto& last = entry.record.geometryChunks[lastIndex];
+                const auto begin = static_cast<std::size_t>(first.pointOffset);
+                const auto end = std::min<std::size_t>(compact->content.stroke.knots.size(),
+                    static_cast<std::size_t>(last.pointOffset) + last.pointCount);
+                if (begin < end && end <= compact->content.stroke.knots.size()) {
+                    range = internal::CompactStrokeRange{
+                        begin,end,
+                        ink::compactLength(std::span(compact->content.stroke.knots).first(begin)),
+                        ink::compactLength(compact->content.stroke.knots),
+                        begin == 0,end == compact->content.stroke.knots.size()};
+                }
+            }
+        }
+    }
+    drawCommand(canvas,entry,nullptr,nullptr,true,false,coverage,grid,work,compatibleCoverage,targets,
+                range ? &*range : nullptr);
     drawEraseMasksToSkCanvas(canvas,entry);
 }
 
