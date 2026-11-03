@@ -26,6 +26,7 @@ std::uint64_t lostGeneration = 0;
 bool previewVisibleObserved = false;
 bool interactive = false;
 bool interactiveReady = false;
+bool sceneMode = false;
 
 void status(const char* value) {
   EM_ASM({ document.getElementById('result').textContent = UTF8ToString($0); }, value);
@@ -62,6 +63,10 @@ void tick() {
     if (!interactiveReady && EM_ASM_INT({ return window.__axiomHostReady ? 1 : 0; })) {
       status("READY"); interactiveReady = true;
     }
+    return;
+  }
+  if (sceneMode) {
+    status("READY");
     return;
   }
   if (!upSeen && !recoveryStarted) { status("READY"); return; }
@@ -422,6 +427,7 @@ WebInstance* instance(std::uintptr_t handle) { return handle == 1 && owner ? &ex
 
 int main() {
   interactive = EM_ASM_INT({ return new URLSearchParams(location.search).has('selftest') ? 0 : 1; }) != 0;
+  sceneMode = EM_ASM_INT({ return new URLSearchParams(location.search).has('scene') ? 1 : 0; }) != 0;
   double logicalWidth = 200, logicalHeight = 150;
   float dpr = 2.0F;
   if (interactive) {

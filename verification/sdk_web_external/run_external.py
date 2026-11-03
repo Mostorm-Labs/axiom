@@ -11,6 +11,8 @@ p.add_argument('--emsdk', required=True, type=Path)
 p.add_argument('--chrome', required=True, type=Path)
 p.add_argument('--output', required=True, type=Path)
 p.add_argument('--export-dir', type=Path, help='new directory for the verified interactive browser assets')
+p.add_argument('--mode', choices=('lifecycle', 'scene'), default='lifecycle',
+               help='browser verification mode; scene runs the external rectangle plus long-stroke navigation scenario')
 a = p.parse_args()
 repo = Path(__file__).resolve().parents[2]
 for sample, source in [('text_bridge.inl', repo/'sdk/common/text_bridge.inl'),
@@ -75,6 +77,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
         shutil.copyfile(source/'serve.py',build/'serve.py')
         command=[str(node),str(Path(__file__).parent/'verify_browser.mjs'),
                  str(build),str(a.chrome.resolve())]
+        if a.mode == 'scene': command.append('scene')
         try:
             run=subprocess.run(command,text=True,capture_output=True,env=env,check=False,timeout=180)
         except subprocess.TimeoutExpired as error:
