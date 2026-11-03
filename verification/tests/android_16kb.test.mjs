@@ -11,6 +11,10 @@ test("Android instrumentation build declares ELF and APK 16 KB gates", async () 
     resolve(repositoryRoot, "verification/native/platform/android/CMakeLists.txt"),
     "utf8",
   );
+  const nativeRuntimeCmake = await readFile(
+    resolve(repositoryRoot, "sdk/native/CMakeLists.txt"),
+    "utf8",
+  );
   const gradle = await readFile(
     resolve(
       repositoryRoot,
@@ -25,6 +29,8 @@ test("Android instrumentation build declares ELF and APK 16 KB gates", async () 
 
   assert.match(cmake, /-z,max-page-size=16384/);
   assert.match(cmake, /-z,common-page-size=16384/);
+  assert.match(nativeRuntimeCmake, /if\(ANDROID\)[\s\S]*target_link_options\(axiom_native[\s\S]*-z,max-page-size=16384/);
+  assert.match(nativeRuntimeCmake, /if\(ANDROID\)[\s\S]*target_link_options\(axiom_native[\s\S]*-z,common-page-size=16384/);
   assert.match(gradle, /useLegacyPackaging\s*=\s*false/);
   assert.match(workflow, /"\$ZIPALIGN"\s+-c\s+-P\s+16\s+-v\s+4/);
   assert.match(workflow, /app-debug\.apk/);

@@ -15,7 +15,7 @@ NATIVE_REQUIRED=('bin/axiom.dll','lib/axiom.lib','include/axiom/api.h','include/
  'bin/share/axiom/icudtl.dat','bin/share/axiom/axiom-font.otf','bin/share/axiom/fonts/catalog.json',
  'licenses/semantic/Protobuf.txt','licenses/semantic/Abseil.txt','licenses/skia/Skia.txt',
  'licenses/noto-cjk/LICENSE.txt','licenses/nlohmann-json/LICENSE.MIT')
-JS_REQUIRED=('axiom.mjs','axiom.d.mts','internal/axiom.mjs','api/axiom.mjs','api/axiom.d.mts','api/internal/controller.mjs','api/internal/transport.mjs','api/internal/transport.d.mts','api/internal/values.mjs','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','example.html','serve.py','licenses/nlohmann-json-LICENSE.MIT')
+JS_REQUIRED=('axiom.mjs','axiom.d.mts','internal/axiom.mjs','api/axiom.mjs','api/axiom.d.mts','api/demo-controls.mjs','api/demo-controls.d.mts','api/internal/controller.mjs','api/internal/transport.mjs','api/internal/transport.d.mts','api/internal/values.mjs','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','example.html','serve.py','licenses/nlohmann-json-LICENSE.MIT')
 
 def validate_native_payload(prefix):
     libs={p.relative_to(prefix).as_posix() for p in prefix.rglob('*.lib')}
