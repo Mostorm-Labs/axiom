@@ -483,7 +483,15 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if(shouldCanonical && !forceCanonical && !editingTransient)
     out.navigationPending=runtime_->serviceNavigationPresentation(
         std::chrono::steady_clock::now(),out.navigationPresented);
-  if (shouldCanonical && !out.navigationPending && !editingTransient) {
+  // Selection chrome is a canonical overlay, but the first contact of a
+  // possible pinch is still under AutoIntent arbitration. Do not spend this
+  // frame opportunity on a full scene render before the second contact can
+  // claim the viewport gesture; the eventual single-pointer Up still
+  // submits the selection frame normally.
+  const bool awaitingViewportClaim = runtime_->selectionOverlay() != nullptr &&
+      runtime_->pendingViewportGesture();
+  if (shouldCanonical && !out.navigationPending && !editingTransient &&
+      !awaitingViewportClaim) {
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
     out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);

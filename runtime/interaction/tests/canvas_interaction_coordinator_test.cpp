@@ -23,8 +23,10 @@ int main() {
   assert(first.disposition == ContactDisposition::kPending);
   assert(first.route == InteractionRoute::kInk);
   assert(first.routesToInk);
+  assert(coordinator.pendingViewportGesture());
   auto second = coordinator.route(sample(b, PointerPhase::kDown, 20.0F, 0.0F, 2));
   assert(second.viewportClaimed && second.becameViewport);
+  assert(!coordinator.pendingViewportGesture());
   assert(second.route == InteractionRoute::kViewport);
   assert(!second.routesToInk);
   assert(coordinator.route(sample(a, PointerPhase::kMove, 40.0F, 0.0F, 3), viewport)

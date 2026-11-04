@@ -46,6 +46,11 @@ class CanvasInteractionCoordinator final {
   [[nodiscard]] bool viewportClaimed() const noexcept {
     return contacts_.viewportClaimed();
   }
+  // A first contact is held pending until the second contact either claims a
+  // viewport gesture or the sequence resolves as a single-pointer action.
+  [[nodiscard]] bool pendingViewportGesture() const noexcept {
+    return !contacts_.viewportClaimed() && contacts_.activeCount() != 0U;
+  }
   [[nodiscard]] bool canonicalMutation() const noexcept {
     return contacts_.canonicalMutation();
   }

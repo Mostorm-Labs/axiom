@@ -485,6 +485,11 @@ void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
 bool CanvasEditingRuntime::refreshResourceDerivedState() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
   ++presentationResourceEpoch_;exactDemand_.reset();
+  // ResourceProvider generations are external to the semantic Scene. Refresh
+  // the renderer-owned resource epoch as well, so retained navigation image
+  // tiles cannot outlive a replaced image/font payload.
+  skiaRenderer_.setImageResolver(imageResolver_);
+  previewRenderer_.setImageResolver(imageResolver_);
   if (sceneCoordinator_ != nullptr && textLayoutService_ != nullptr) {
     const auto refreshed = sceneCoordinator_->refreshTextResources();
     if (!refreshed) return false;
@@ -710,6 +715,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
   std::vector<ink::StrokePoint> predicted;
   confirmed.reserve(batch.samples.size());
   predicted.reserve(batch.samples.size());
+  bool viewportContactsChanged = false;
   for (const auto& sample : batch.samples) {
     // Legacy/native ingress may omit phase on already-open sessions. Only
     // feed contacts into the coordinator once a down has established them or
@@ -730,10 +736,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
           keyedStrokeIds_.erase(existing);
         }
       }
-      const auto viewportSamples = coordinator_->viewportSamples();
-      if (viewportSamples.size() >= 2U) {
-        (void)viewportController_->updateGesture(viewportSamples[0], viewportSamples[1]);
-      }
+      if (routing.viewportClaimed) viewportContactsChanged = true;
       if (routing.endedViewport) viewportController_->endGesture();
       if (routing.cancelsInk && sample.phase != input::PointerPhase::kUp &&
           keyedStrokeIds_.contains(sample.key)) {
@@ -764,6 +767,11 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
     }
   }
   if (confirmed.empty() && predicted.empty()) {
+    if (viewportContactsChanged) {
+      const auto viewportSamples = coordinator_->viewportSamples();
+      if (viewportSamples.size() >= 2U &&
+          !viewportController_->updateGesture(viewportSamples[0], viewportSamples[1])) return false;
+    }
     hud_.batch = batch.samples.size();
     return true;
   }
@@ -772,6 +780,11 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
     const auto it = keyedStrokeIds_.find(keyed);
     if (it == keyedStrokeIds_.end() || !preview_->updateKeyed(it->second, confirmed, predicted)) return false;
   } else if (!preview_->update(confirmed, predicted)) return false;
+  if (viewportContactsChanged) {
+    const auto viewportSamples = coordinator_->viewportSamples();
+    if (viewportSamples.size() >= 2U &&
+        !viewportController_->updateGesture(viewportSamples[0], viewportSamples[1])) return false;
+  }
   const auto firstNs = batch.samples.front().timestampNs;
   const auto lastNs = batch.samples.back().timestampNs;
   strokeStartNs_ = strokeStartNs_ == 0 ? firstNs : strokeStartNs_;
@@ -831,6 +844,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     return routed.accepted || routed.terminalCancel;
   }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
+    bool viewportContactsChanged = false;
     for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
       if(!sample.predicted&&sample.capabilities.tool!=input::PointerTool::kFinger&&tablePointer(sample.key,sample.phase,sample.x,sample.y))continue;
@@ -843,11 +857,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
         }
         if (routing.becameViewport) resetTouchTextTap();
         if (routing.endedViewport) viewportController_->endGesture();
-        if (routing.viewportClaimed) {
-          const auto contacts=coordinator_->viewportSamples();
-          if (contacts.size()>=2U) (void)viewportController_->updateGesture(contacts[0],contacts[1]);
-          canonicalPresentationDirty_=true;
-        }
+        if (routing.viewportClaimed) viewportContactsChanged = true;
         if (!routing.routesToInk) continue;
       }
       if (!dispatchRuntime_.submit(sample)) return false;
@@ -858,6 +868,12 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
           (!interaction_->textSession() ||
            interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
         (void)observeTouchTextTap(sample);
+    }
+    if (viewportContactsChanged) {
+      const auto contacts = coordinator_->viewportSamples();
+      if (contacts.size() >= 2U && !viewportController_->updateGesture(contacts[0], contacts[1]))
+        return false;
+      canonicalPresentationDirty_ = true;
     }
     if (routed.terminalCancel) cancelAllPointers();
     return routed.accepted || routed.terminalCancel;
@@ -927,12 +943,6 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     const auto downTimeDeltaNs = downTimestampNs != 0U &&
             sample.timestampNs >= downTimestampNs
         ? sample.timestampNs - downTimestampNs : 0U;
-    if (coordinator_->viewportClaimed()) {
-      const auto viewportSamples = coordinator_->viewportSamples();
-      if (viewportSamples.size() >= 2U) {
-        (void)viewportController_->updateGesture(viewportSamples[0], viewportSamples[1]);
-      }
-    }
     if (sample.key.valid()) {
       const auto content = viewportController_->viewToContent(sample.x, sample.y);
       routing.routedSample.x = content.first;
@@ -958,6 +968,12 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     }
   }
   if (!flushInk()) return false;
+  if (coordinator_->viewportClaimed()) {
+    const auto viewportSamples = coordinator_->viewportSamples();
+    if (viewportSamples.size() >= 2U &&
+        !viewportController_->updateGesture(viewportSamples[0], viewportSamples[1]))
+      return false;
+  }
   const auto viewportAfter = viewportController_->state();
   const bool viewportChanged = viewportBefore.scale != viewportAfter.scale ||
       viewportBefore.translationX != viewportAfter.translationX ||
@@ -4309,7 +4325,12 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
      exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
      !pendingCanonicalIdentities_.empty() ||
-         (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed()) ||
+         // Touch pinch claims the viewport through the contact coordinator.
+         // Trackpad wheel navigation has no contacts, so use the camera
+         // generation stamp as the equivalent claim; otherwise a selected
+         // image/shape forces every wheel tick through exact canonical render.
+         (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed() &&
+          !navigationExactPreparation_) ||
      creationActive() || selectionTransformActive() || regionSelectionActive() ||
       semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
       skiaRenderer_.cancelNavigationWork();
@@ -4338,6 +4359,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       now-navigationChangedAt_>=std::chrono::milliseconds(40);
   if(navigationSubmittedGeneration_==generation && !skiaRenderer_.navigationWork().pending && !idlePrewarm)return true;
   const auto& camera=viewportController_->state();
+  if (selectionOverlay() != nullptr) (void)renderSelectionOverlay();
   // Runtime owns the Scene query and ordered immutable commands. Render asks
   // for whole world tile regions, including its filter gutter.
   const render::NavigationSourceQuery query=[&](const foundation::WorldRect& region,
@@ -4352,7 +4374,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       entries=std::move(sources.value().entries);return true;
   };
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
-      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm);
+      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm,selectionOverlay());
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
   return true;

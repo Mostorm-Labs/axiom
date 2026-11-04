@@ -784,6 +784,8 @@ int main(int argc,char** argv) {
             require(navigate(nav,longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
             require(nav.navigationWork().pending&&nav.navigationWork().knotSteps<=256,
                     "long stroke did not yield inside coverage");
+            require(nav.navigationWork().prefixScanKnots <= 4096,
+                    "long stroke prefix work was not bounded");
             const auto beforeKnot=nav.navigationWork().knotSteps;
             // Slight camera motion does not obsolete a world-addressed job.
             require(navigate(nav,longSurface,{1,-.1F,0},current.frame,query).code==BackendSubmissionCode::kAccepted,
@@ -943,6 +945,38 @@ int main(int argc,char** argv) {
             "navigation reused another scene revision");
         compare(plan(92,{a},1,{1.1,0,0,1.1,4,-3}));
         renderer.clearRenderCache();
+
+        {
+            // Retaining a selected frame must cache content before chrome.
+            // Reprojection then draws current-camera handles once, at their
+            // logical size, rather than scaling stale handles from the image.
+            const auto base=plan(93,{});
+            EditingOverlay oldChrome(base.frame);
+            EditingOverlayInput selected;
+            selected.selectedObject=ObjectId::fromUint64(7601);
+            selected.selected=true;selected.worldBounds={80,45,140,85};
+            require(oldChrome.update(selected),"selected feedback chrome setup");
+            SkiaRenderer selectedRenderer;
+            require(selectedRenderer.renderFrame(provider,base,&oldChrome).code==BackendSubmissionCode::kAccepted,"selected feedback exact");
+            auto zoomed=plan(93,{},1,{1.5,0,0,1.5,0,0});
+            const FrameState overlayFrame{ViewId{1},CameraState{{256.F/3,128.F/3},1.5F,0,CameraGeneration{2}},
+                {0,0,256,128},{256,128,256,128,1,1},semantic::SemanticGeneration{93},
+                SceneRevision{93},SurfaceGeneration{1},MetricsGeneration{1},FrameId{93}};
+            EditingOverlay currentChrome(overlayFrame);
+            require(currentChrome.update(selected),"selected feedback zoomed chrome setup");
+            require(navigate(selectedRenderer,provider,{1.5F,0,0},base.frame,&currentChrome).code==BackendSubmissionCode::kAccepted,
+                    "selected feedback discarded content snapshot");
+            require(direct.renderFrame(reference,zoomed,&currentChrome).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                    "selected feedback scales stale chrome or draws handles twice");
+            NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out.clear();return true;};
+            unsigned steps=0;
+            do{
+                require(navigate(selectedRenderer,provider,{1.5F,0,0},base.frame,empty,false,&currentChrome).code==BackendSubmissionCode::kAccepted,"selected tile feedback");
+                require(++steps<128,"selected tile feedback stalled");
+            }while(selectedRenderer.navigationWork().pending);
+            require(pixels(provider)==pixels(reference),"selected tile feedback omitted current selection chrome");
+            require(selectedRenderer.submissionCount()==1,"selected navigation created canonical submission");
+        }
 
         compare(plan(1,{a}));
         const auto first=renderer.rasterizationCount();

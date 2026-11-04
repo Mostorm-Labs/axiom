@@ -214,6 +214,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectionAcquisitionMode(runtime::CanvasSelectionMode) noexcept;
   [[nodiscard]] runtime::CanvasSelectionMode selectionAcquisitionMode() const noexcept { return selectionAcquisitionMode_; }
   [[nodiscard]] bool regionSelectionActive() const noexcept { return regionSelection_.active(); }
+  [[nodiscard]] bool pendingViewportGesture() const noexcept {
+    return coordinator_ != nullptr && coordinator_->pendingViewportGesture();
+  }
   void cancelRegionSelection() noexcept;
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] runtime::SectionOutcome executeSectionIntent(const runtime::SectionIntent&) noexcept;

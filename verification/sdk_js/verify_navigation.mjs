@@ -2,7 +2,8 @@ import {chromium} from '../node_modules/playwright/index.mjs';
 import fs from 'node:fs/promises';import http from 'node:http';import path from 'node:path';
 import {createHash} from 'node:crypto';
 const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
-const html=await fs.readFile(new URL('./navigation_feedback.html',import.meta.url));
+const fixture=process.argv[4]||'navigation_feedback.html';
+const html=await fs.readFile(new URL(fixture,import.meta.url));
 const server=http.createServer(async(req,res)=>{try{
   const pathname=new URL(req.url,'http://localhost').pathname;
   const file=path.resolve(sdk,'.'+pathname);if(pathname!=='/'&&!file.startsWith(sdk+path.sep))throw Error('path');
@@ -18,7 +19,10 @@ try{
   await page.waitForFunction(()=>document.getElementById('result').textContent!=='PENDING',null,{timeout:60000});
   const result=JSON.parse(await page.locator('#result').textContent());
   const sha256={};for(const name of ['axiom.mjs','axiom.wasm','axiom.data','internal/axiom.mjs'])sha256[name]=createHash('sha256').update(await fs.readFile(path.join(sdk,name))).digest('hex');
-  await fs.writeFile(output,JSON.stringify({scope:'Chrome WebGL2 DPR2, synthetic ctrl-wheel and deliberately delayed completion polls; not physical input-to-photon',result,exceptions,sha256},null,2));
-  console.log(JSON.stringify({status:result.status,error:result.error,results:result.results,fences:result.fences,polls:result.polls,updated:result.samples.filter(x=>x.draws).length}));
+  const scope=fixture==='navigation_feedback.html'
+    ? 'Chrome WebGL2 DPR2, synthetic ctrl-wheel and deliberately delayed completion polls; not physical input-to-photon'
+    : 'Chrome WebGL2 DPR2, root SDK mixed scene with repeated image selection, synthetic wheel pan and ctrl-wheel zoom; not physical input-to-photon';
+  await fs.writeFile(output,JSON.stringify({scope,result,exceptions,sha256},null,2));
+  console.log(JSON.stringify({fixture,status:result.status,error:result.error,results:result.results,fences:result.fences,polls:result.polls,updated:result.samples?.filter(x=>x.draws).length,scenarios:result.scenarios}));
   if(result.status!=='PASS'||exceptions.length)process.exitCode=1;
 }finally{await browser.close();await new Promise(r=>server.close(r));}

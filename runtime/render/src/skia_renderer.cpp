@@ -61,6 +61,71 @@ void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
 }
 }
 
+namespace internal {
+void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metrics, const EditingOverlay& overlay) {
+    canvas.save();
+    canvas.scale(metrics.physicalWidth / metrics.logicalWidth,
+                  metrics.physicalHeight / metrics.logicalHeight);
+    drawAcquisition(canvas,overlay);
+    if(overlay.textCaret){
+        SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
+        const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas.drawPath(path.detach(),paint);};
+        for(const auto& quad:overlay.textSelection)draw(quad);
+        if (overlay.textCaretVisible) {
+            paint.setColor4f({0.05F,0.12F,0.2F,1},nullptr);draw(*overlay.textCaret);
+        }
+    }
+    SkPaint guidePaint;
+    guidePaint.setAntiAlias(true);
+    guidePaint.setStyle(SkPaint::kStroke_Style);
+    guidePaint.setStrokeWidth(1.0F);
+    guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
+    for (const auto& guide : overlay.guides()) {
+        canvas.drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
+                         guidePaint);
+    }
+    SkPaint attachmentPaint;
+    attachmentPaint.setAntiAlias(true);
+    attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+    for (const auto& point : overlay.attachmentPoints()) {
+        if (point.active) {
+            attachmentPaint.setColor4f(point.hovered
+                ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
+                : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+            canvas.drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
+                               attachmentPaint);
+        }
+    }
+    if (overlay.selectionOutline().visible) {
+        SkPaint chrome;
+        chrome.setAntiAlias(true);
+        chrome.setStyle(SkPaint::kStroke_Style);
+        chrome.setStrokeWidth(2.0F);
+        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
+        const auto& outline = overlay.selectionOutline();
+        SkPathBuilder path;
+        path.moveTo(outline.corners[0].x, outline.corners[0].y);
+        path.lineTo(outline.corners[1].x, outline.corners[1].y);
+        path.lineTo(outline.corners[2].x, outline.corners[2].y);
+        path.lineTo(outline.corners[3].x, outline.corners[3].y);
+        path.close();
+        canvas.drawPath(path.detach(), chrome);
+        chrome.setStyle(SkPaint::kFill_Style);
+        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
+                                HandleKind::kTopRight, HandleKind::kRight,
+                                HandleKind::kBottomRight, HandleKind::kBottom,
+                                HandleKind::kBottomLeft, HandleKind::kLeft,
+                                HandleKind::kRotation}) {
+            const auto& handle = overlay.handle(kind);
+            if (handle.kind == HandleKind::kNone) continue;
+            canvas.drawCircle(handle.center.x, handle.center.y,
+                               handle.visualRadius, chrome);
+        }
+    }
+    canvas.restore();
+}
+}
+
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
@@ -131,78 +196,11 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
     AXIOM_FRAME_TIMING_END(sceneTiming);
-    if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
-        auto* canvas = acquired.frame.surface->getCanvas();
-        if (selectionOverlay->creationPreview()) {
-            internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
-            internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
-        }
-        canvas->save();
-        canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
-                      plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
-        drawAcquisition(*canvas,*selectionOverlay);
-        if(selectionOverlay->textCaret){
-            SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
-            const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas->drawPath(path.detach(),paint);};
-            for(const auto& quad:selectionOverlay->textSelection)draw(quad);
-            if (selectionOverlay->textCaretVisible) {
-                paint.setColor4f({0.05F,0.12F,0.2F,1},nullptr);draw(*selectionOverlay->textCaret);
-            }
-        }
-        SkPaint guidePaint;
-        guidePaint.setAntiAlias(true);
-        guidePaint.setStyle(SkPaint::kStroke_Style);
-        guidePaint.setStrokeWidth(1.0F);
-        guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
-        for (const auto& guide : selectionOverlay->guides()) {
-            canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
-                             guidePaint);
-        }
-        SkPaint attachmentPaint;
-        attachmentPaint.setAntiAlias(true);
-        attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-        for (const auto& point : selectionOverlay->attachmentPoints()) {
-            if (point.active) {
-                attachmentPaint.setColor4f(point.hovered
-                    ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
-                    : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-                canvas->drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
-                                   attachmentPaint);
-            }
-        }
-        if (selectionOverlay->selectionOutline().visible) {
-        SkPaint chrome;
-        chrome.setAntiAlias(true);
-        chrome.setStyle(SkPaint::kStroke_Style);
-        chrome.setStrokeWidth(2.0F);
-        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
-        const auto& outline = selectionOverlay->selectionOutline();
-        SkPathBuilder path;
-        path.moveTo(outline.corners[0].x, outline.corners[0].y);
-        path.lineTo(outline.corners[1].x, outline.corners[1].y);
-        path.lineTo(outline.corners[2].x, outline.corners[2].y);
-        path.lineTo(outline.corners[3].x, outline.corners[3].y);
-        path.close();
-        canvas->drawPath(path.detach(), chrome);
-        chrome.setStyle(SkPaint::kFill_Style);
-        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
-                                HandleKind::kTopRight, HandleKind::kRight,
-                                HandleKind::kBottomRight, HandleKind::kBottom,
-                                HandleKind::kBottomLeft, HandleKind::kLeft,
-                                HandleKind::kRotation}) {
-            const auto& handle = selectionOverlay->handle(kind);
-            if (handle.kind == HandleKind::kNone) continue;
-            canvas->drawCircle(handle.center.x, handle.center.y,
-                               handle.visualRadius, chrome);
-        }
-        }
-        canvas->restore();
-    }
     if(result.code==BackendSubmissionCode::kAccepted){
         AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,navigation_snapshot);
         try {
             const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
-            if(resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && selectionOverlay==nullptr &&
+            if(resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && (!selectionOverlay || (!selectionOverlay->creationPreview() && !selectionOverlay->textCaret)) &&
                plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
                 navigationCache_.reset();
                 const auto reservation=resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true);
@@ -218,6 +216,14 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             }else navigationCache_.reset();
         }catch(const std::bad_alloc&){navigationCache_.reset();}
     }
+    if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
+        auto* canvas = acquired.frame.surface->getCanvas();
+        if (selectionOverlay->creationPreview()) {
+            internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
+            internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+        }
+        internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
+    }
     provider.release();
     if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
     ++submissions_;
@@ -230,7 +236,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
 }
 
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
-    const CanonicalViewportTransform& camera,const FrameState& current){
+    const CanonicalViewportTransform& camera,const FrameState& current,
+    const EditingOverlay* selectionOverlay){
     const auto cache=navigationCache_;
     if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
        cache->frame->viewId!=current.viewId || cache->frame->sceneGeneration!=current.sceneGeneration ||
@@ -258,11 +265,14 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
     canvas->scale(ratio,ratio);
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
-    canvas->restore();provider.release();
+    canvas->restore();
+    if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(*canvas,current.metrics,*selectionOverlay);
+    provider.release();
     return provider.present();
 }
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
-    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm){
+    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
+    const EditingOverlay* selectionOverlay){
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
@@ -278,12 +288,15 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||x>0||y>0||
            x+cache->frame->metrics.logicalWidth*ratio<current.metrics.logicalWidth||
            y+cache->frame->metrics.logicalHeight*ratio<current.metrics.logicalHeight)return false;
-        const auto feedback=renderNavigation(provider,camera,current);
+        const auto feedback=renderNavigation(provider,camera,current,selectionOverlay);
         if(feedback.code!=BackendSubmissionCode::kAccepted){feedbackFailure=feedback;return false;}
         cache->feedbackCamera=camera;return true;
     };
+    const auto drawOverlay=[&](SkCanvas& canvas){
+        if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(canvas,current.metrics,*selectionOverlay);
+    };
     try{
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);
         if(feedbackFailure){navigationTiles_.reset();return *feedbackFailure;}
         if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
         return result;

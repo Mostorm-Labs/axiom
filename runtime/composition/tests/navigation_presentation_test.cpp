@@ -200,8 +200,13 @@ void selectPinchUsesNavigationFeedback(){
  };
  batch(1,input::PointerPhase::kDown,70,50);
  batch(2,input::PointerPhase::kDown,150,50);
- batch(1,input::PointerPhase::kMove,60,45);
- batch(2,input::PointerPhase::kMove,160,55);
+ const auto beforeCoalesced = r.cameraGeneration();
+ input::PlatformPointerBatch coalesced;
+ input::PlatformPointerSample first{};first.source=7;first.pointer=1;first.sequence=++sequence;first.timestampNs=sequence*1'000'000;first.phase=input::PointerPhase::kMove;first.x=60;first.y=45;
+ input::PlatformPointerSample second{};second.source=7;second.pointer=2;second.sequence=++sequence;second.timestampNs=sequence*1'000'000;second.phase=input::PointerPhase::kMove;second.x=160;second.y=55;
+ coalesced.samples={first,second};
+ require(r.acceptPlatformBatch(coalesced,second.timestampNs),"coalesced pinch sample");
+ require(r.cameraGeneration()==beforeCoalesced+1,"coalesced pinch advanced camera more than once");
  bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
  unsigned steps=0;
  while(!presented){
@@ -212,10 +217,67 @@ void selectPinchUsesNavigationFeedback(){
  batch(1,input::PointerPhase::kUp,60,45);
  batch(2,input::PointerPhase::kUp,160,55);
 }
+void selectedWheelNavigationUsesFeedback(){
+ interaction::CanvasEditingRuntime r;
+ require(r.bindSurface(256,128)&&r.registerInputSource(7,"selected-wheel"),"selected wheel setup");
+ r.setPlatformPresentationDeferred(true);
+ semantic::ObjectRecord image;
+ image.id=foundation::ObjectId::fromUint64(7701);
+ image.kind=semantic::ObjectKind::kImage; image.kind_version=1;
+ image.placement.order_key=semantic::OrderKey({1});
+ semantic::ImageContent content;content.resource_id.value=foundation::ObjectId::fromUint64(7702);
+ content.intrinsic_width=64;content.intrinsic_height=48;content.width=64;content.height=48;
+ image.content=content;image.transform.tx=48;image.transform.ty=32;
+ semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(7703)},
+     r.documentId(),1,1,semantic::InsertObjectsOp{{image}}};
+ require(r.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync).disposition==semantic::ApplyDisposition::kApplied,"selected wheel image");
+ unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"selected wheel exact setup");
+ const auto exact=*r.lastSubmittedCanonicalFrame();
+ require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,
+         exact.metricsGeneration,render::PresentOutcome::kPresented,
+         render::PresentEvidenceKind::kPlatformQualified,{}}),"selected wheel exact feedback");
+ require(r.setSelectionMode(true)&&r.selectAtViewPoint(60,44),"selected wheel selection");
+ attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"selected wheel overlay frame");
+ const auto selected=*r.lastSubmittedCanonicalFrame();
+ require(r.receivePlatformPresented({selected.viewId,selected.frameId,selected.surfaceGeneration,
+         selected.metricsGeneration,render::PresentOutcome::kPresented,
+         render::PresentEvidenceKind::kPlatformQualified,{}}),"selected wheel overlay feedback");
+ const auto before=r.cameraGeneration();
+ require(r.setViewportZoomAt(1.35F,128,64),"selected wheel zoom");
+ require(r.cameraGeneration()==before+1,"selected wheel camera");
+ bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ unsigned steps=0;
+ while(!presented){
+  require(r.serviceNavigationPresentation(now,presented),"selected wheel navigation rejected");
+  require(++steps<128,"selected wheel navigation stalled");
+ }
+ require(!r.lastSubmittedCanonicalFrame(),"selected wheel emitted canonical receipt");
+ require(r.selectionOverlay() && r.selectionOverlay()->viewGeneration()==r.cameraGeneration(),
+         "selected wheel selection chrome did not follow navigation camera");
+ const auto semantic=r.semanticGeneration();const auto revision=r.sceneRevision();
+ // Native trackpads send wheel pan, then absolute zoom controls for both
+ // pinch directions. None of these events owns a touch contact.
+ for(unsigned i=0;i<24;++i){
+  if(i%3==0)require(r.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,3,-2}),"selected wheel pan");
+  else require(r.setViewportZoomAt(i%3==1?1.5F:1.15F,128,64),"selected wheel alternating zoom");
+  require(r.serviceNavigationPresentation(now+std::chrono::milliseconds(i*16),presented),"selected wheel lost feedback on repeated input");
+  require(!r.lastSubmittedCanonicalFrame(),"selected wheel rebuilt exact frame during navigation");
+  require(r.selectionOverlay()&&r.selectionOverlay()->viewGeneration()==r.cameraGeneration(),"selected wheel chrome lags repeated camera");
+ }
+ steps=0;
+ while(r.serviceNavigationPresentation(now+std::chrono::seconds(2),presented))
+  require(++steps<128,"selected wheel never reaches exact settle");
+ attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"selected wheel exact settle stalled");
+ require(r.semanticGeneration()==semantic&&r.sceneRevision()==revision&&r.selectedPrimaryObject()==image.id,
+         "selected wheel navigation changed selection or document");
+}
 int main(){
  retainedDemand();
  deferredShapeDrag();
- drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);handPanUsesNavigationFeedback();selectPinchUsesNavigationFeedback();
+ drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);handPanUsesNavigationFeedback();selectPinchUsesNavigationFeedback();selectedWheelNavigationUsesFeedback();
  interaction::CanvasEditingRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"navigation"),"prepare");
  require(r.selectBrushProfile("round-handdrawn",1),"compact brush");

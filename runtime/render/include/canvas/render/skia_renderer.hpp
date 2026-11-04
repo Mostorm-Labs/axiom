@@ -38,10 +38,12 @@ class SkiaRenderer final {
         const RenderPreparationBudget* preparation = nullptr);
     // Approximate navigation feedback only; never a canonical coverage receipt.
     [[nodiscard]] BackendSubmissionResult renderNavigation(
-        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);
+        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
+        const EditingOverlay* selectionOverlay=nullptr);
     [[nodiscard]] BackendSubmissionResult renderNavigation(
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
-        const NavigationSourceQuery&, bool allowPrewarm=false);
+        const NavigationSourceQuery&, bool allowPrewarm=false,
+        const EditingOverlay* selectionOverlay=nullptr);
     [[nodiscard]] NavigationWork navigationWork() const noexcept;
     void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
