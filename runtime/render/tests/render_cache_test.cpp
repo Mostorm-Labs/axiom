@@ -354,6 +354,7 @@ void checkGpuContours(TestSurface& provider){
         content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
         content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
         for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
         const auto prepared=geometry.get(entry,RenderCacheOptions{},geometryBudget);
         require(prepared&&prepared->isContour(),"GPU contour admission");
         for(unsigned pose:{3U,4U,5U,0U,1U,2U}){
