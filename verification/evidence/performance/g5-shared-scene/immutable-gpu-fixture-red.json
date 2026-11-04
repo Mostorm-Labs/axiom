@@ -1,0 +1,21 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "d11dd91bc77634d56efd29f7830060ec30f0537a70ec9ba34065060fe7ee450c",
+    "g5_render_cache_gpu.wasm": "96a8bbfe58affd57f0e31056997d24d221341f96df782cebc91c87f6a4207eed"
+  },
+  "probeArgument": "--gpu-candidate",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [],
+    "errors": [
+      "GPU contour admission"
+    ],
+    "code": 1,
+    "processExit": 0
+  },
+  "status": "FAIL"
+}
