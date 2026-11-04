@@ -45,13 +45,14 @@ class SkiaNavigationTiles final {
         TileKey key;
         std::shared_ptr<const Sources> sources;
         sk_sp<SkSurface> surface,coverage;
-        std::size_t source=0,knot=0;
+        std::size_t source=0,knot=0,primitive=0;
         bool sourceInitialized=false;
         double distance=0,totalDistance=0;
         std::optional<ink::CompactContourCompiler> contour;
         std::shared_ptr<const PreparedNavigationGeometry> geometry;
         std::uint64_t id=0,steps=0;
         bool prewarm=false;
+        bool cpuCoverage=false;
         resources::ResourceLease lease;
     };
     std::map<TileKey,Tile> tiles_;

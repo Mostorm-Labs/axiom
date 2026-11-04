@@ -10,9 +10,12 @@ const until=async(fn,label)=>{for(let i=0;i<1800;++i){if(fn())return;await raf()
 const proto=WebGL2RenderingContext.prototype;
 const bind=proto.bindFramebuffer;
 proto.bindFramebuffer=function(target,fb){if(target===this.FRAMEBUFFER||target===this.DRAW_FRAMEBUFFER)bindings.set(this,fb);return bind.call(this,target,fb);};
-for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced']){
+for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced','clear','blitFramebuffer','clearBufferfv','clearBufferiv','clearBufferuiv']){
   const raw=proto[name];proto[name]=function(...args){
-    if(active&&this.canvas===sdk?.canvas&&!bindings.get(this)){++active.draws;active.displayTimes.push(performance.now());}
+    const color=name==='clear'?!!(args[0]&this.COLOR_BUFFER_BIT):name==='blitFramebuffer'?!!(args[8]&this.COLOR_BUFFER_BIT):name.startsWith('clearBuffer')?args[0]===this.COLOR:true;
+    if(active&&color&&this.canvas===sdk?.canvas&&!bindings.get(this)){
+      ++active.draws;active.displayTimes.push(performance.now());if(name.startsWith('clear'))++active.colorClears;
+    }
     return raw.apply(this,args);
   };
 }
@@ -48,7 +51,7 @@ function touch(type,id,x,y){
 }
 async function phase(id,{mode='wheel',burst=1,panOnly=false}={}){
   const before=sdk.readState(),prior=frames.length;
-  const value={id,samples:[],displayTimes:[],draws:0,fences:[],longTasks:[],before};
+  const value={id,samples:[],displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],before};
   mark('begin',id);active=value;value.started=performance.now();
   value.contactDispatch=[];
   const contact=(...args)=>{const start=performance.now();touch(...args);value.contactDispatch.push({type:args[0],ms:performance.now()-start});};

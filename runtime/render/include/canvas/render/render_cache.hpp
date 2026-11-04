@@ -15,6 +15,9 @@ struct RenderCacheOptions final {
     std::int32_t tileScale=0;
     // Owner work policy for navigation feedback. Not a public SLO.
     std::size_t navigationMaxSteps=64;
+    // CPU time alone does not bound queued GPU paths. Coarse masks use CPU
+    // Skia coverage; fine GPU contours have a separate per-opportunity quota.
+    std::size_t navigationMaxGpuContourPrimitives=128;
     // V3 GPU saturated interior + pinned CPU exact edge; legacy stays CPU.
     bool gpuCoverageCandidate=true;
     // Navigation admission policies, internal only; neither preempts a query

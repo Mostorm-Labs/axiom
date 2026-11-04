@@ -20,6 +20,10 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));
     nav.overlay_cpu_ms=times(navigationRows.map(row=>row.overlay_ns/1e6));
     nav.initialization_cpu_ms=times(navigationRows.map(row=>row.initialization_ns/1e6).filter(Number.isFinite));
+    nav.gpuAdmission=navigationRows.every(row=>Number.isFinite(row.gpu_contours)&&Number.isFinite(row.coarse_masks))?{
+      contourPrimitives:total(navigationRows.map(r=>r.gpu_contours)),
+      coarseMasks:total(navigationRows.map(r=>r.coarse_masks))
+    }:null;
     nav.prepared=navigationRows.every(row=>Number.isFinite(row.prepared_builds))?{
       builds:total(navigationRows.map(r=>r.prepared_builds)),
       hits:total(navigationRows.map(r=>r.prepared_hits)),

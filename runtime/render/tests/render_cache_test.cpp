@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
+#include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
 #include "include/core/SkCanvas.h"
@@ -18,6 +19,12 @@ using namespace canvas;
 using namespace canvas::render;
 namespace {
 void require(bool value, const char* message) { if (!value) throw std::runtime_error(message); }
+int finishNative(int code){
+#if defined(G5_TEST_WEBGL)
+    EM_ASM({window.result.code=$0;window.result.nativeDone=true;},code);
+#endif
+    return code;
+}
 #if defined(G5_TEST_WEBGL)
 // Test-owned browser App. Production readback remains disabled; this reads
 // pixels only outside the measured loop to compare the actual GPU targets.
@@ -109,12 +116,87 @@ class FailingPresent final : public SkiaSurfaceProvider {
     std::uint64_t presentCount()const noexcept override{return raster.presentCount();}
 };
 }
+#if defined(G5_TEST_WEBGL)
+void checkGpuContours(TestSurface& provider){
+    const auto acquired=provider.acquire();auto* canvas=acquired.frame.surface->getCanvas();
+    const auto info=SkImageInfo::MakeN32Premul(600,300);
+    // Local contour selection must match complete paired paths on
+    // the actual Ganesh target as well as the native raster oracle.
+    internal::PreparedGeometryCache geometry;
+    auto geometryBudget=std::make_shared<resources::ResourceBudgetManager>();
+    for(const auto profile:{"round-handdrawn","marker-compact-v1"}){
+        auto entry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
+        content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
+        for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
+        const auto prepared=geometry.get(entry,RenderCacheOptions{},geometryBudget);
+        require(prepared&&prepared->isContour(),"GPU contour admission");
+        for(unsigned pose:{3U,4U,5U,0U,1U,2U}){
+            auto local=canvas->makeSurface(info),full=canvas->makeSurface(info);
+            for(auto* surface:{local.get(),full.get()}){
+                surface->getCanvas()->clear(SK_ColorBLACK);
+                surface->getCanvas()->clipRect(SkRect::MakeLTRB(3,2,575,290));
+                if(pose<3){surface->getCanvas()->translate(7.3F,-2.7F);
+                    surface->getCanvas()->scale(pose==0?.8F:1.2F,pose==1?.9F:1.1F);
+                    if(pose==2)surface->getCanvas()->rotate(11);
+                }else{const auto scale=std::ldexp(1.F,int(pose)-4);
+                    surface->getCanvas()->translate(2,2);surface->getCanvas()->scale(scale,scale);}
+            }
+            internal::PreparedGeometryDraw localWork;
+            if(pose>=3)for(std::size_t first=0;first<prepared->primitiveCount();first+=32){
+                const auto slice=prepared->drawContour(*local->getCanvas(),first,32);localWork.primitivesDrawn+=slice.primitivesDrawn;
+            }else localWork=prepared->drawContour(*local->getCanvas());
+            // Complete each target before starting the other. Even two full
+            // reference streams differ at an AA boundary when queued together
+            // on this shared Ganesh context. Readback is test-only, never a
+            // production synchronization primitive or a latency measurement.
+            std::vector<std::uint8_t> a(600*300*4),b(a.size());
+            require(local->readPixels(info,a.data(),2400,0,0),"GPU prepared readback");
+            internal::drawCompactContourCoverageToSkCanvas(*full->getCanvas(),content.stroke.config,
+                ink::compileCompactContour(content.stroke.config,content.stroke.knots));
+            require(full->readPixels(info,b.data(),2400,0,0),"GPU reference readback");
+            require(a==b,"GPU local contour differs from full geometry");
+            require(localWork.primitivesDrawn<prepared->primitiveCount(),"GPU contour locality missing");
+        }
+    }
+    provider.release();
+}
+#endif
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--stream-only"){testing::requireReferenceDrawStream();return finishNative(0);}
+#endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         SkiaRenderer renderer;
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--contour-only"){checkGpuContours(provider);return finishNative(0);}
+        {
+            SkiaRenderer nav;RenderCacheOptions options;
+            options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
+            options.navigationMaxGpuContourPrimitives=64;nav.setRenderCacheOptions(options);
+            auto entry=stroke(884);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+            c.stroke.config.smoothing=0;c.stroke.knots.clear();
+            for(unsigned i=0;i<1024;++i)c.stroke.knots.push_back({30.+i*.17,64.+std::sin(i*.2)*20,32768});
+            entry.record.content=c;entry.record.worldBounds={0,0,256,128};const auto frame=plan(584,{entry});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+            for(unsigned i=0;;++i){
+                const auto before=nav.navigationWork().gpuContourPrimitives;
+                require(navigate(nav,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"GPU contour admission");
+                require(nav.navigationWork().gpuContourPrimitives-before<=options.navigationMaxGpuContourPrimitives,
+                        "CPU allowance admitted excessive GPU contour work");
+                if(!nav.navigationWork().pending)break;require(i<127,"GPU contour admission stalled");
+            }
+            require(nav.navigationWork().gpuContourPrimitives>options.navigationMaxGpuContourPrimitives&&nav.navigationWork().coverageComplete,
+                    "GPU admission oracle did not exercise multi-opportunity path work");
+        }
+        if(argc>1&&std::string_view(argv[1])=="--continuity-only"){
+            testing::requireReferenceDrawStream();checkGpuContours(provider);return finishNative(0);
+        }
+#endif
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
@@ -456,35 +538,8 @@ int main(int argc,char** argv) {
                 require(a==b,"hybrid device tile seam differs from Direct");
                 if(transform==2)require(work.gpuTiles==0,"denied region budget still admitted hybrid work");
             }
-            // Local contour selection must match complete paired paths on
-            // the actual Ganesh target as well as the native raster oracle.
-            internal::PreparedGeometryCache geometry;
-            auto geometryBudget=std::make_shared<resources::ResourceBudgetManager>();
-            for(const auto profile:{"round-handdrawn","marker-compact-v1"}){
-                auto entry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
-                content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
-                content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
-                for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
-                const auto prepared=geometry.get(entry,RenderCacheOptions{},geometryBudget);
-                require(prepared&&prepared->isContour(),"GPU contour admission");
-                for(unsigned pose=0;pose<3;++pose){
-                    auto local=canvas->makeSurface(info),full=canvas->makeSurface(info);
-                    for(auto* surface:{local.get(),full.get()}){
-                        surface->getCanvas()->clear(SK_ColorBLACK);
-                        surface->getCanvas()->clipRect(SkRect::MakeLTRB(3,2,575,290));
-                        surface->getCanvas()->translate(7.3F,-2.7F);
-                        surface->getCanvas()->scale(pose==0?.8F:1.2F,pose==1?.9F:1.1F);
-                        if(pose==2)surface->getCanvas()->rotate(11);
-                    }
-                    const auto localWork=prepared->drawContour(*local->getCanvas());
-                    internal::drawCompactContourCoverageToSkCanvas(*full->getCanvas(),content.stroke.config,
-                        ink::compileCompactContour(content.stroke.config,content.stroke.knots));
-                    std::vector<std::uint8_t> a(600*300*4),b(a.size());
-                    require(local->readPixels(info,a.data(),2400,0,0)&&full->readPixels(info,b.data(),2400,0,0),"GPU contour readback");
-                    require(a==b&&localWork.primitivesDrawn<prepared->primitiveCount(),"GPU local contour differs from full geometry");
-                }
-            }
             provider.release();
+            checkGpuContours(provider);
         }
 #endif
         RenderCacheOptions tiled;tiled.tileCandidate=true;tiled.tileWorldSize=64;
@@ -547,8 +602,42 @@ int main(int argc,char** argv) {
             require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&
                     pixels(provider)==pixels(reference),"larger checkpoint allowance changed exact contour pixels");
         }
+        {
+            // A long smoothed contour fits the unchanged per-entry budget;
+            // knot-count-only worst-case path admission used to deny it and
+            // replay all knots for every world tile instead of sharing paths.
+            auto longEntry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+            content.stroke.knots.clear();
+            for(unsigned i=0;i<16384;++i)content.stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
+            longEntry.record.content=content;longEntry.record.worldBounds={0,0,660,128};
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=8;options.navigationMicroseconds=1000000;
+            nav.setRenderCacheOptions(options);const auto frame=plan(589,{longEntry});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={longEntry};return true;};
+            require(navigate(nav,provider,{1,-16,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"long contour acquisition");
+            require(nav.navigationWork().preparedGeometryBuilds==1&&nav.navigationWork().preparedGeometryBytes>0&&
+                    nav.navigationWork().preparedGeometryBytes<=options.maxEntryBytes,
+                    "long contour denied despite bounded materialized path storage");
+        }
         // Denied prepared geometry must resume the pinned scalar evaluator,
         // including the full-stroke distance/taper phase after each checkpoint.
+        {
+            auto entry=stroke(886);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+            content.stroke.config.smoothing=0;content.stroke.knots.clear();
+            for(unsigned i=0;i<512;++i)content.stroke.knots.push_back({20.+i*.4,64.+std::sin(i*.15)*20,32768});
+            entry.record.content=content;entry.record.worldBounds={0,0,256,128};
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+            nav.setRenderCacheOptions(options);const auto frame=plan(586,{entry});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+            require(navigate(nav,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"contour checkpoint setup");
+            const auto before=nav.navigationWork();
+            require(navigate(nav,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"contour checkpoint progress");
+            const auto after=nav.navigationWork();
+            require(after.contourPrimitivesTested>before.contourPrimitivesTested&&
+                    after.contourPrimitivesTested-before.contourPrimitivesTested<=32&&after.knotSteps==before.knotSteps,
+                    "prepared contour bypassed bounded primitive checkpoints");
+        }
         {
             auto denied=stroke(888);auto& s=std::get<CompactStrokeReferenceCommand>(denied.command).content.stroke;
             s.config.version=2;s.config.algorithmVersion=3;s.config.signalVersion=2;
@@ -816,6 +905,27 @@ int main(int argc,char** argv) {
             require(nav.navigationWork().coverageComplete&&retina.presentCount()>0&&nav.submissionCount()==submissions,
                     "budget-adapted feedback missing or qualified canonical");
             require(nav.navigationWork().retainedBytes<=RenderCacheOptions{}.maxBytes,"retina navigation exceeded budget");
+        }
+        {
+            // A cold viewport needs a complete coarse cover before fine
+            // refinement, even when an individual owner quantum is small.
+            // This is a work-count oracle, independent of machine timing.
+            RasterSkiaSurfaceProvider target;
+            require(target.resize(1600,1000).code==BackendSubmissionCode::kAccepted,"coarse target");
+            SkiaRenderer nav;RenderCacheOptions options;
+            options.navigationMaxSteps=8;options.navigationMaxQueries=4;options.navigationMicroseconds=1000000;
+            nav.setRenderCacheOptions(options);
+            FrameState frame{ViewId{1},{},{0,0,800,500},{800,500,1600,1000,2,1},
+                semantic::SemanticGeneration{706},SceneRevision{706},SurfaceGeneration{1},MetricsGeneration{1},FrameId{706}};
+            NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& entries){entries.clear();return true;};
+            require(navigate(nav,target,{1,-16,-8},frame,empty).code==BackendSubmissionCode::kAccepted,"coarse opportunity");
+            require(nav.navigationWork().coverageComplete&&nav.navigationWork().presented&&target.presentCount()==1,
+                    "cold viewport waited for fine cells before coarse feedback");
+            require(nav.navigationWork().pending&&nav.submissionCount()==0,
+                    "coarse feedback skipped refinement or manufactured canonical work");
+            require(navigate(nav,target,{1,-160,-80},frame,empty).code==BackendSubmissionCode::kAccepted&&
+                    nav.navigationWork().presented&&target.presentCount()==2,
+                    "nearby pan lost the complete coarse cover");
         }
         {
             FailingPresent failed;require(failed.resize(256,128).code==BackendSubmissionCode::kAccepted,"feedback failure target");
@@ -1193,6 +1303,6 @@ int main(int argc,char** argv) {
         require(renderer.renderFrame(provider,plan(32,{a,alias},provider.generation())).code==BackendSubmissionCode::kRejected,"duplicate source identity aliases cache pixels");
         require(provider.presentCount()==presents,"invalid identity presented");
         std::cout<<"unchanged canonical group reused across scene revisions\n";
-        return 0;
-    } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 1;}
+        return finishNative(0);
+    } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return finishNative(1);}
 }

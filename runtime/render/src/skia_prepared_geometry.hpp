@@ -23,7 +23,7 @@ class PreparedNavigationGeometry final {
     bool isContour()const noexcept{return contour_;}
     std::span<const double> distances()const noexcept{return distances_;}
     std::size_t primitiveCount()const noexcept{return ribbons_.size()+caps_.size();}
-    PreparedGeometryDraw drawContour(SkCanvas&)const;
+    PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0})const;
  private:
     friend class PreparedGeometryCache;
     struct Group {SkRect bounds;std::size_t begin=0,end=0;};
@@ -37,7 +37,7 @@ class PreparedNavigationGeometry final {
     resources::ResourceLease lease_;
     std::shared_ptr<PreparedGeometryUsage> usage_;
     std::size_t bytes_=0;
-    void build();
+    void build(ink::CompactContour* staged=nullptr);
     std::size_t footprint()const;
 };
 class PreparedGeometryCache final {

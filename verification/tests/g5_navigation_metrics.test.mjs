@@ -55,3 +55,11 @@ test('an interrupted selection receipt cannot qualify navigation settlement', ()
   phase.receipts.push({at:145},{at:160});
   assert.equal(summarizePhase(phase,[],[]).settle_ms,45);
 });
+
+test('GPU admission deltas remain separate from CPU and unknown old counters', () => {
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const row={elapsed_ns:0,overlay_ns:0,gpu_contours:64,coarse_masks:2};
+  const value=summarizePhase(phase,[row,{...row,gpu_contours:32,coarse_masks:1}],[]);
+  assert.deepEqual(value.navigation.gpuAdmission,{contourPrimitives:96,coarseMasks:3});
+  assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0}],[]).navigation.gpuAdmission,null);
+});

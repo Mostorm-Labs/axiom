@@ -142,7 +142,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":2,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
-                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"presented\":%s,\"coverage\":%s}\n",
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"presented\":%s,\"coverage\":%s}\n",
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
                 static_cast<unsigned long long>(work.queryNanoseconds-before.queryNanoseconds),static_cast<unsigned long long>(work.initializationNanoseconds-before.initializationNanoseconds),
@@ -161,6 +161,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.contourPrimitivesTested-before.contourPrimitivesTested),
                 static_cast<unsigned long long>(work.contourPrimitivesDrawn-before.contourPrimitivesDrawn),
                 static_cast<unsigned long long>(work.vectorPreparedUses-before.vectorPreparedUses),
+                static_cast<unsigned long long>(work.gpuContourPrimitives-before.gpuContourPrimitives),
+                static_cast<unsigned long long>(work.coarseMaskStarts-before.coarseMaskStarts),
                 work.presented?"true":"false",work.coverageComplete?"true":"false");
 #endif
         }
@@ -186,9 +188,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const foundation::WorldRect visible{-camera.translationX/camera.scale,-camera.translationY/camera.scale,
         (frame.metrics.logicalWidth-camera.translationX)/camera.scale,(frame.metrics.logicalHeight-camera.translationY)/camera.scale};
     const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3));
-    auto keys=grid_.coverage(visible,level,256),parents=grid_.coverage(visible,level-1,256);
+    // Prefer the nearest coarse level that covers the viewport in four cells.
+    // This bounds cold coverage work without querying an unnecessarily large
+    // world region or depending on an incomplete retained screenshot.
+    const auto coarseKeys=[&](int detail){
+        int coarse=std::max(-16,detail-1);auto cover=grid_.coverage(visible,coarse,256);
+        while(coarse>-16&&(cover.empty()||cover.size()>4)){--coarse;cover=grid_.coverage(visible,coarse,256);}
+        return cover;
+    };
+    auto keys=grid_.coverage(visible,level,256),parents=coarseKeys(level);
     while(level>-16&&(keys.empty()||parents.empty()||keys.size()+parents.size()>maximumTiles)){
-        --level;keys=grid_.coverage(visible,level,256);parents=grid_.coverage(visible,level-1,256);
+        --level;keys=grid_.coverage(visible,level,256);parents=coarseKeys(level);
     }
     if(keys.empty()||parents.empty()||keys.size()+parents.size()>maximumTiles)return BackendSubmissionResult::retry("world navigation residency cannot converge");
     if(level_&&*level_!=level)++work.levelChanges;
@@ -232,11 +242,16 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         release.active=true;if(!valid())return BackendSubmissionResult::rejected("stale navigation reacquire");target=acquired.frame.surface->getCanvas();
     }
     const auto ready=[&](TileKey key){auto it=tiles_.find(key);return it!=tiles_.end()&&it->second.image&&it->second.checkedScene==scene;};
+    // A newly exposed frontier owns priority over disposable refinement.
+    // Preserve coarse jobs across camera movement inside their world region;
+    // GPU batches keep their existing bounded completion/backpressure policy.
+    if(!work.coverageComplete&&job_&&job_->key.scale>parents.front().scale)cancel();
     // Before first complete coverage, admit several cheap cells within the
     // same wall-time allowance. Once feedback exists, keep setup to one unit.
     const auto queryLimit=work.presented?std::min(std::size_t(1),options.navigationMaxQueries):options.navigationMaxQueries;
     const auto initializationLimit=std::max(std::size_t(1),queryLimit);
-    std::size_t steps=0,queries=0,initializations=0;bool deferred=false,submitted=false;
+    std::size_t steps=0,queries=0,initializations=0,gpuPrimitives=0;bool deferred=false,submitted=false;
+    const auto gpuLimit=std::max(std::size_t(1),options.navigationMaxGpuContourPrimitives);
     const auto expired=[&]{return std::chrono::steady_clock::now()-started>=std::chrono::microseconds(options.navigationMicroseconds);};
     std::map<TileKey,std::shared_ptr<const Sources>> desired;
     auto load=[&](TileKey key)->bool{
@@ -296,7 +311,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         if(victim==tiles_.end())return false;
         work.retainedBytes-=tileBytes*3;tiles_.erase(victim);++work.evictions;return true;
     };
-    while(!deferred&&!gpuBlocked&&steps<std::max<std::size_t>(1,options.navigationMaxSteps)&&!expired()){
+    while(!deferred&&!gpuBlocked&&gpuPrimitives<gpuLimit&&steps<std::max<std::size_t>(1,options.navigationMaxSteps)&&!expired()){
         if(!job_){
             std::optional<TileKey> next;bool prewarm=false;
             for(const auto key:parents)if(!ready(key)){next=key;break;}
@@ -324,7 +339,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             auto job=std::make_unique<Job>();job->key=*next;job->sources=desired.at(*next);job->prewarm=prewarm;
             job->lease=resources::ResourceLease(budget,*token);
             job->surface=target->makeSurface(acquired.frame.surface->imageInfo().makeWH(extent,extent));
-            job->coverage=target->makeSurface(SkImageInfo::MakeN32Premul(extent,extent));
+            // Coarse cells collect whole strokes, including many overlapping
+            // Lighten ribbons. Rasterize this bounded coverage mask in Skia
+            // CPU memory and upload the completed mask; otherwise a small CPU
+            // opportunity can enqueue enough GPU path work to stall RAF itself.
+            // The material, scene tile and final presentation stay on the GPU.
+            const auto coverageInfo=SkImageInfo::MakeN32Premul(extent,extent);
+            job->cpuCoverage=next->scale<level&&std::all_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& entry){
+                const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+                return !compact||compact->content.stroke.config.algorithmVersion==4;
+            });
+            job->coverage=job->cpuCoverage?SkSurfaces::Raster(coverageInfo):target->makeSurface(coverageInfo);
             if(!job->surface||!job->coverage){deferred=true;break;}
             job->surface->getCanvas()->clear(SK_ColorTRANSPARENT);
             const auto b=grid_.bounds(*next);const float s=std::ldexp(1.F,next->scale);
@@ -348,13 +373,16 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command)){
             const auto& stroke=c->content.stroke;auto* draw=job.coverage->getCanvas();
             if(!job.sourceInitialized){
+                if(job.cpuCoverage)++work.coarseMaskStarts;
                 const auto range = compactRange(entry);
                 if (range.second <= range.first) { ++job.source; continue; }
                 job.knot = range.first;
+                draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
                 // The range renderer backs up one shared neighbor before
                 // drawing a chunk, so the distance is the length through the
                 // knot immediately before the requested span.
                 job.geometry=job.sources->geometry[job.source];
+                job.primitive=0;
                 const auto distances=job.geometry?job.geometry->distances():std::span<const double>{};
                 job.distance = job.knot < distances.size()
                     ? distances[job.knot] : ink::compactLength(std::span<const foundation::InkKnot>(
@@ -366,15 +394,19 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 } else if(stroke.config.algorithmVersion==4) {
                     job.contour.emplace(stroke.config);
                 } else job.contour.reset();
-                draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
                 job.sourceInitialized = true;
             }
             const auto range = compactRange(entry);
             std::size_t end=std::min(job.knot+32,range.second);
             if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
-                const auto drawn=job.geometry->drawContour(*draw);
+                const bool gpu=context&&!job.cpuCoverage;
+                const auto count=gpu?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
+                const auto drawn=job.geometry->drawContour(*draw,job.primitive,count);
                 work.contourPrimitivesTested+=drawn.primitivesTested;
                 work.contourPrimitivesDrawn+=drawn.primitivesDrawn;
+                if(gpu){work.gpuContourPrimitives+=drawn.primitivesDrawn;gpuPrimitives+=drawn.primitivesDrawn;}
+                job.primitive=std::min(job.primitive+count,job.geometry->primitiveCount());
+                if(job.primitive<job.geometry->primitiveCount()){++steps;continue;}
                 end = range.second;
             } else if(job.contour){
                 ink::CompactContour contours;job.contour->append({stroke.knots.data()+job.knot,end-job.knot},job.totalDistance,contours);

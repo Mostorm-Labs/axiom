@@ -43,8 +43,13 @@ try{
       const stats=window.lifecycleStats={requests:0,callbacks:0,callbackMs:0,maxCallbackMs:0,draws:0,events:[]};
       const raw=requestAnimationFrame;
       window.requestAnimationFrame=fn=>{++stats.requests;return raw(at=>{const start=performance.now();try{fn(at);}finally{const ms=performance.now()-start;++stats.callbacks;stats.callbackMs+=ms;stats.maxCallbackMs=Math.max(stats.maxCallbackMs,ms);}});};
-      for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced']){
-        const raw=WebGL2RenderingContext.prototype[name];WebGL2RenderingContext.prototype[name]=function(...a){++stats.draws;return raw.apply(this,a);};
+      // Historical `draws` field counts color submissions, including blank
+      // clears/blits. Idle must not conceal a clear-only render loop either.
+      for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced','clear','blitFramebuffer','clearBufferfv','clearBufferiv','clearBufferuiv']){
+        const raw=WebGL2RenderingContext.prototype[name];WebGL2RenderingContext.prototype[name]=function(...a){
+          const color=name==='clear'?!!(a[0]&this.COLOR_BUFFER_BIT):name==='blitFramebuffer'?!!(a[8]&this.COLOR_BUFFER_BIT):name.startsWith('clearBuffer')?a[0]===this.COLOR:true;
+          if(color)++stats.draws;return raw.apply(this,a);
+        };
       }
       for(const kind of ['visibilitychange','freeze','resume','webglcontextlost','webglcontextrestored'])document.addEventListener(kind,()=>stats.events.push({kind,at:performance.now(),visibility:document.visibilityState}),true);
     });

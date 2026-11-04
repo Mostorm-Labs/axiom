@@ -1,4 +1,5 @@
 #include "../src/skia_prepared_geometry.hpp"
+#include "reference_draw_stream_oracle.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -50,7 +51,11 @@ void localContourParity(){
                 if(view==3){c->rotate(13);c->skew(.2F,-.1F);}
                 if(view==4){SkMatrix m;m.setPerspX(.0001F);c->concat(m);}
             }
-            const auto work=prepared->drawContour(*actual->getCanvas());
+            PreparedGeometryDraw work;
+            if(view==0)for(std::size_t first=0;first<prepared->primitiveCount();first+=32){
+                const auto slice=prepared->drawContour(*actual->getCanvas(),first,32);
+                work.primitivesDrawn+=slice.primitivesDrawn;
+            }else work=prepared->drawContour(*actual->getCanvas());
             drawCompactContourCoverageToSkCanvas(*oracle->getCanvas(),stroke.config,
                 ink::compileCompactContour(stroke.config,stroke.knots));
             require(pixels(actual)==pixels(oracle),"local contour differs from full paired contour");
@@ -133,5 +138,25 @@ void budgetOwnerChange(){
     require(owner->used()>0&&denied->used()==0,"in-flight lease moved between owners");
     first.reset();cache.clear();require(owner->used()==0,"old budget owner leaked after replacement");
 }
+void stagingAdmission(){
+    auto entry=compact();auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    stroke.config.smoothing=.5;stroke.config.startTaper=40;stroke.config.endTaper=60;
+    stroke.knots.clear();
+    for(unsigned i=0;i<16384;++i)stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
+    PreparedGeometryCache cache;RenderCacheOptions options;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    auto acquired=cache.get(entry,options,budget);
+    require(acquired&&budget->used(resources::ResourceClass::kScratch)==0,
+            "long contour staging not admitted or temporary lease retained");
+    require(budget->used()==cache.statistics().residentBytes&&budget->used()<=options.maxEntryBytes,
+            "long contour resident lease does not match bounded storage");
+    cache.clear();acquired.reset();require(budget->used()==0,"long contour staging leaked");
+    stroke.config.smoothing=0;stroke.knots.resize(512);
+    PreparedGeometryCache constrained;options.maxEntryBytes=256*1024;
+    require(!constrained.get(entry,options,budget)&&budget->used()==0,
+            "denied path admission leaked its successful staging lease");
+    options.maxEntryBytes=8*1024*1024;
+    require(bool(constrained.get(entry,options,budget)),"denied staging did not recover with an adequate budget");
 }
-int main(){localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}
+}
+int main(){localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}

@@ -35,7 +35,7 @@ SkRect capBounds(const ink::ContourCap& cap){
 }
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
-void PreparedNavigationGeometry::build(){
+void PreparedNavigationGeometry::build(ink::CompactContour* staged){
     if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source_)){
         const auto& s=compact->content.stroke;
         distances_.resize(s.knots.size()+1,0);
@@ -43,7 +43,7 @@ void PreparedNavigationGeometry::build(){
             distances_[i]=distances_[i-1]+std::hypot(s.knots[i-1].x-s.knots[i-2].x,s.knots[i-1].y-s.knots[i-2].y);
         if(s.config.algorithmVersion!=4)return;
         contour_=true;
-        auto contour=ink::compileCompactContour(s.config,s.knots);
+        auto contour=staged?std::move(*staged):ink::compileCompactContour(s.config,s.knots);
         ribbons_.reserve(contour.patches.empty()?0:contour.patches.size()-1);
         for(std::size_t i=0;i+1<contour.patches.size();++i)
             ribbons_.push_back(compactContourRibbon(std::span(contour.patches).subspan(i,2)));
@@ -76,8 +76,9 @@ std::size_t PreparedNavigationGeometry::footprint()const{
     for(const auto& path:ribbons_)bytes+=path.approximateBytesUsed();
     if(vector_)bytes+=vector_->approximateBytesUsed();return bytes;
 }
-PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas)const{
+PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count)const{
     PreparedGeometryDraw work;if(!contour_)return work;
+    first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.stroke.config;
     auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
     bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
@@ -96,14 +97,20 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas)co
     }
     const auto visible=[&](const SkRect& bounds){return !cull||bounds.isEmpty()||!bounds.isFinite()||SkRect::Intersects(clip,bounds);};
     SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
-    for(const auto& group:ribbonGroups_){
+    for(auto g=first/32;g<ribbonGroups_.size()&&ribbonGroups_[g].begin<last;++g){
+        const auto& group=ribbonGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
-        for(auto i=group.begin;i<group.end;++i){++work.primitivesTested;
-            if(visible(ribbons_[i].getBounds())){canvas.drawPath(ribbons_[i],paint);++work.primitivesDrawn;}}
+        for(auto i=std::max(group.begin,first);i<std::min(group.end,last);++i){++work.primitivesTested;
+            if(visible(ribbons_[i].getBounds())){
+                canvas.drawPath(ribbons_[i],paint);
+                ++work.primitivesDrawn;}}
     }
-    for(const auto& group:capGroups_){
+    const auto capFirst=first>ribbons_.size()?first-ribbons_.size():0;
+    const auto capLast=last>ribbons_.size()?last-ribbons_.size():0;
+    for(auto g=capFirst/32;g<capGroups_.size()&&capGroups_[g].begin<capLast;++g){
+        const auto& group=capGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
-        for(auto i=group.begin;i<group.end;++i){++work.primitivesTested;const auto& cap=caps_[i];
+        for(auto i=std::max(group.begin,capFirst);i<std::min(group.end,capLast);++i){++work.primitivesTested;const auto& cap=caps_[i];
             if(!visible(capBounds(cap)))continue;
             canvas.save();canvas.translate(float(cap.x),float(cap.y));
             if(config.family==foundation::InkFamily::kMarker){canvas.rotate(float(config.markerAngle*57.29577951308232));canvas.scale(1,float(config.markerFlatness));}
@@ -135,17 +142,47 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     }
     while(entries_.size()>=limits.maxEntries)if(!evictUnused())return denied();
     const auto count=compact?compact->content.stroke.knots.size():vector->content.stroke.vector_output.outline.size();
-    const std::size_t unit=compact?(compact->content.stroke.config.algorithmVersion==4?2048:16):64;
+    const std::size_t unit=compact?16:64;
     const auto cap=std::min(limits.maxBytes,limits.maxEntryBytes);
     const auto base=sizeof(PreparedNavigationGeometry)+payloadBytes(entry.command)+65536;
     if(base>cap||count>(cap-base)/unit)return denied();
-    const auto estimate=base+count*unit;
+    auto estimate=base+count*unit;
+    ink::CompactContour staged;
+    resources::ResourceLease stagingLease;
+    const bool contour=compact&&compact->content.stroke.config.algorithmVersion==4;
+    if(contour){
+        // The pinned compiler emits at most one anchor/cap per knot, plus
+        // sixteen global taper cuts and two finish patches. Admit its exact
+        // temporary capacity before compiling, then admit paths from actual
+        // anchors rather than assuming 2KiB of paths for every input knot.
+        constexpr auto extra=18U;
+        const auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
+        if(count>std::numeric_limits<std::size_t>::max()-extra||count+extra>(cap-base)/stagingUnit)return denied();
+        const auto stagingBytes=base+(count+extra)*stagingUnit;
+        auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
+        while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
+        if(!token)return denied();stagingLease=resources::ResourceLease(budget,*token);
+        try{
+            staged.patches.reserve(count+extra);staged.caps.reserve(count+extra);
+            const auto& stroke=compact->content.stroke;
+            ink::CompactContourCompiler compiler(stroke.config);
+            const auto total=ink::compactLength(stroke.knots);
+            compiler.append(stroke.knots,total,staged);compiler.finish(total,staged);
+        }catch(const std::bad_alloc&){return denied();}
+        const auto ribbons=staged.patches.empty()?0:staged.patches.size()-1;
+        const auto perRibbon=sizeof(SkPath)+512+sizeof(PreparedNavigationGeometry::Group);
+        const auto perCap=sizeof(ink::ContourCap)+sizeof(PreparedNavigationGeometry::Group);
+        estimate=base+(count+1)*sizeof(double);
+        if(estimate>cap||staged.caps.capacity()>(cap-estimate)/perCap)return denied();
+        estimate+=staged.caps.capacity()*perCap;
+        if(ribbons>(cap-estimate)/perRibbon)return denied();estimate+=ribbons*perRibbon;
+    }
     auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
     while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
     if(!token)return denied();
     resources::ResourceLease admission(budget,*token);
     try{
-        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->build();
+        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->build(contour?&staged:nullptr);
         const auto bytes=candidate->footprint();if(bytes>estimate)return denied();
         // Owner-thread transaction: shrink the admitted peak to live storage.
         admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);if(!token)return denied();

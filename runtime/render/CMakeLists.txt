@@ -407,9 +407,11 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
     target_include_directories(axiom_prepared_geometry_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
     target_compile_features(axiom_prepared_geometry_tests PRIVATE cxx_std_20)
     if(MSVC)
-      target_compile_options(axiom_prepared_geometry_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+      target_compile_options(axiom_prepared_geometry_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG /GR-)
     else()
-      target_compile_options(axiom_prepared_geometry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG
+      # Published Skia omits RTTI for SkNoDrawCanvas. The recording oracle
+      # derives from that SDK type and does not use RTTI itself.
+      target_compile_options(axiom_prepared_geometry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG -fno-rtti
         -Wno-missing-field-initializers -Wno-error=gnu-zero-variadic-macro-arguments
         -Wno-error=nested-anon-types -Wno-error=gnu-anonymous-struct)
     endif()
