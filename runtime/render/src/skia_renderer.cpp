@@ -298,6 +298,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
+    // Exact scratch/coverage targets cannot help navigation. Release them only
+    // after its raster job is complete, leaving retained pixels and sources intact.
+    if(renderCache_)renderCache_->releaseIdleWorkBuffers();
     auto options=renderCacheOptions_;
     internal::RetainedNavigationSource retained;
     const auto cache=navigationCache_;

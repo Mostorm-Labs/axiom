@@ -32,6 +32,8 @@ class SkiaRenderCache final {
     void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
+    // Navigation may reclaim idle exact work buffers, never an active raster job.
+    bool releaseIdleWorkBuffers()noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
     SourceRetentions groupSourceLeases_;

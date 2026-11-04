@@ -140,6 +140,43 @@ void indexLinearParity(){
 #endif
 
 #if defined(CANVAS_RENDER_HAS_SKIA)
+void idleWorkBufferReclaim(){
+    auto object=line(71,256);
+    std::get<semantic::CompactStrokeContent>(object.content).stroke.config.algorithmVersion=4;
+    auto record=projectRuntimeScene({&object,1},semantic::SemanticGeneration{9}).records.front();
+    record.geometryIndex=scene::buildGeometryChunkIndex(record);
+    ReferenceTraversalEntry entry{record,true,CompactStrokeReferenceCommand{
+        scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)}};
+    RasterSkiaSurfaceProvider surface;check(surface.resize(256,128).code==BackendSubmissionCode::kAccepted,"scratch target");
+    FrameState state{ViewId{7},CameraState{{0,0},1,0,CameraGeneration{1}}, {0,0,256,128},{256,128,256,128,1,1},
+        semantic::SemanticGeneration{9},SceneRevision{9},SurfaceGeneration{surface.generation()},MetricsGeneration{4},FrameId{1}};
+    ReferenceDrawList list{state};list.viewportClip={0,0,256,128};list.entries={entry};FramePlan plan{state,std::move(list)};
+    constexpr std::size_t soft=1024*1024;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{soft,3*soft});
+    auto pool=std::make_shared<internal::SourceRetentionPool>();internal::SkiaRenderCache cache;
+    cache.budget=budget;cache.sourcePool=pool;
+    auto acquired=surface.acquire();cache.begin(plan,&surface,*acquired.frame.surface,0);
+    RenderPreparationBudget slice;slice.maxCoverageSteps=1;slice.maxMicroseconds=1000000;
+    using Progress=internal::SkiaRenderCache::Preparation;
+    auto progress=cache.prepare(*acquired.frame.surface->getCanvas(),plan,slice,nullptr,nullptr);
+    check(progress==Progress::kPending,"scratch guard did not retain an active raster job");
+    const auto busy=budget->used();check(!cache.releaseIdleWorkBuffers()&&budget->used()==busy,"active raster buffers released before its checkpoint retired");
+    for(unsigned i=0;progress==Progress::kPending&&i<256;++i)
+        progress=cache.prepare(*acquired.frame.surface->getCanvas(),plan,slice,nullptr,nullptr);
+    check(progress==Progress::kReady,"scratch fixture did not complete canonical preparation");
+    check(budget->used()<soft,"scratch fixture exceeded its soft limit before pressure");
+    const auto token=budget->reserve(resources::ResourceClass::kRaster,soft-budget->used()-128*1024,true);
+    check(bool(token),"scratch pressure admission");resources::ResourceLease pressure(budget,*token);
+    internal::PreparedGeometryCache geometry;geometry.setRetentionPool(pool);
+    check(!geometry.get(entry,RenderCacheOptions{},budget),"scratch fixture did not deny optional prepared paths");
+    const auto before=budget->used();check(cache.releaseIdleWorkBuffers()&&budget->used()<before,"idle canonical scratch kept navigation behind the soft cap");
+    const auto reclaimed=before-budget->used();
+    auto prepared=geometry.get(entry,RenderCacheOptions{},budget);
+    std::cout<<"{\"reclaimed_idle_bytes\":"<<reclaimed<<",\"soft_limit\":"<<soft<<"}\n";
+    check(prepared&&prepared->isContour()&&budget->used()<=soft,"idle buffer reclamation did not recover prepared paths within the same budget");
+    prepared.reset();geometry.clear();pressure.reset();cache.clear();surface.release();
+    check(budget->used()==0,"idle-buffer reclaim leaked retained sources or work buffers");
+}
 void sourceRetention(){
     auto object=line(1);semantic::ReferenceObjectStore store;
     check(semantic::internal::ObjectStoreMutator::insertFresh(store,object),"retention source insert");
@@ -204,7 +241,7 @@ int main(int argc,char** argv){try{
     if(argc<2||std::string_view(argv[1])=="--snapshot")snapshotSharing();
     if(argc<2||std::string_view(argv[1])=="--index")indexedSelection();
 #if defined(CANVAS_RENDER_HAS_SKIA)
-    if(argc<2||std::string_view(argv[1])=="--retention")sourceRetention();
+    if(argc<2||std::string_view(argv[1])=="--retention"){sourceRetention();idleWorkBufferReclaim();}
 #endif
     if(argc<2||std::string_view(argv[1])=="--readers")retainedReadersAndVersions();
 #if defined(CANVAS_RENDER_HAS_SKIA)
