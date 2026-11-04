@@ -70,12 +70,12 @@ async function phase(id){
   value.pixels=await pixels();return value;
 }
 window.probe={
-  async setup(workload,selected){
+  async setup(workload,selected,profile='round-handdrawn',revision=4){
     const started=performance.now();
     sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',
       permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:frame=>frames.push({at:performance.now(),...frame})});
     sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
-    sdk.data.attach({capacity:64});await sdk.selectBrush('round-handdrawn',4);
+    sdk.data.attach({capacity:64});const brushSelection=await sdk.selectBrush(profile,revision);
     for(let line=0;line<2;++line){
       const prior=frames.length;
       for(let i=0;i<2048;++i)pointer(i===0?'pointerdown':i===2047?'pointerup':'pointermove',40+i*1.5,
@@ -106,7 +106,7 @@ window.probe={
       if(!sdk.readState().selected.length||sdk.readState().primary!==target)throw Error('fixture target not selected');
     }else{await click(790,490);if(sdk.readState().selected.length)throw Error('fixture selection not cleared');}
     for(let i=0;i<12;++i)await raf();
-    return {workload,selected,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+    return {workload,selected,profile,revision,brushSelection,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
   },
   async run(){const cold=await phase('cold'),warm=await phase('warm');return {cold,warm,errors};},
   async close(){for(let p;(p=sdk.data.readNext());)sdk.data.release(p);await sdk.close();return {closed:!document.querySelector('#mount canvas'),errors};}

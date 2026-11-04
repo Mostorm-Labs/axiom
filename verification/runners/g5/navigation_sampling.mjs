@@ -11,6 +11,8 @@ const root=process.cwd(),sdk=path.resolve(process.argv[2]),output=path.resolve(p
 const repeats=Number(process.argv[4]??3),workloads=(process.argv[5]??'long-line,image,table,sticky').split(',');
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const expectTiming=process.env.AXIOM_EXPECT_TIMING!=='0';
+const profile=process.env.AXIOM_BRUSH_PROFILE??'round-handdrawn';
+const revision=Number(process.env.AXIOM_BRUSH_REVISION??(profile==='round-handdrawn'?4:1));
 const html=await fs.readFile(new URL('./navigation_sampling.html',import.meta.url));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 async function hashes(dir,prefix=''){
@@ -52,7 +54,7 @@ try{
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/sample.html`);
       await page.waitForFunction(()=>window.probe);
-      record.setup=await page.evaluate(({workload,selected})=>probe.setup(workload,selected),{workload,selected});
+      record.setup=await page.evaluate(({workload,selected,profile,revision})=>probe.setup(workload,selected,profile,revision),{workload,selected,profile,revision});
       record.raw=await page.evaluate(()=>probe.run());
       record.summary={};
       for(const phase of ['cold','warm'])record.summary[phase]=summarizePhase(record.raw[phase],rows.filter(r=>r.phase===phase&&r.kind==='navigation').map(r=>r.value),rows.filter(r=>r.phase===phase&&r.kind==='frame').map(r=>r.value));
@@ -81,7 +83,7 @@ try{
   const artifactStable=JSON.stringify(artifactsBefore)===JSON.stringify(artifactsAfter);
   const result={schema:'g5-web-cold-warm-v1',status:sourceStable&&artifactStable&&cases.length===repeats*workloads.length*2&&cases.every(r=>r.status==='MEASURED')?'MEASURED':'BLOCKED_EVIDENCE',
     sourceStable,artifactStable,sourceCommit:sourceBefore.commit,sourceTreeSha256:sourceBefore.tree_sha256,
-    browserVersion:browser?.version(),expectTiming,scope:'Headless Chrome, real WebGL2 renderer recorded per case; root SDK synthetic DOM wheel; cold Runtime cache vs repeated warm route; no physical/GPU execution/SLO claim',
+    browserVersion:browser?.version(),expectTiming,profile,revision,scope:'Headless Chrome, real WebGL2 renderer recorded per case; root SDK synthetic DOM wheel; cold Runtime cache vs repeated warm route; no physical/GPU execution/SLO claim',
     artifacts:artifactsBefore,cases:cases.map(({rows,raw,...r})=>r),host:{platform:os.platform(),arch:os.arch(),cpus:os.cpus().length,loadavg:os.loadavg(),memory:os.totalmem()}};
   await fs.writeFile(path.join(output,'source-after.json'),JSON.stringify(sourceAfter,null,2));
   await fs.writeFile(path.join(output,'summary.json'),JSON.stringify(result,null,2));

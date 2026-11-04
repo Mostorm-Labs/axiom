@@ -68,3 +68,9 @@ Render, shared by tile jobs. The resource owner must account for its lifetime,
 eviction and denial, including in-flight users. Local selection uses conservative
 finite support and preserves original contour pairing. No unresolved semantic
 decisions, authority conflict or new consumer API are introduced.
+
+Execution result: the baseline is committed as `8dcaa021`; exact checkpoint
+progress as `89a24b51`. Prepared/local geometry results, raw matched Web evidence,
+private GPU parity and exact-baseline full-suite failure comparison are retained
+in `verification/evidence/performance/g5-prepared-geometry/README.md`. No Gate or
+release acceptance is issued by this implementation record.

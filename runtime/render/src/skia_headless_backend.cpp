@@ -384,7 +384,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
-                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr) {
+                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr, const SkPath* preparedVectorPath = nullptr) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -619,10 +619,11 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                                       static_cast<float>(paintState.blue),
                                       static_cast<float>(paintState.alpha * paintState.opacity)});
             paint.setStyle(SkPaint::kFill_Style);
-            canvas.drawPath(buildVectorBrushOutlineSkPath(
+            const auto path=preparedVectorPath?*preparedVectorPath:buildVectorBrushOutlineSkPath(
                 std::span<const semantic::Vec2>(stroke.vector_output.outline.data(),
                                                  stroke.vector_output.outline.size()),
-                stroke.vector_output.fill_rule, stroke.vector_output.closed), paint);
+                stroke.vector_output.fill_rule, stroke.vector_output.closed);
+            canvas.drawPath(path, paint);
             // Chalk is still driven by the same canonical outline, but its
             // package material adds deterministic translucent grain marks at
             // render time. This keeps BrushEngine geometry identical while
@@ -1030,7 +1031,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     canvas.restore();
 }
 
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets, ImageResourceResolver* images, SkiaTextResources* textResources) {
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets, ImageResourceResolver* images, SkiaTextResources* textResources, const SkPath* preparedVectorPath) {
     std::optional<internal::CompactStrokeRange> range;
     if (entry.geometryChunked) {
         if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -1059,7 +1060,7 @@ void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraver
         }
     }
     drawCommand(canvas,entry,images,textResources,true,false,coverage,grid,work,compatibleCoverage,targets,
-                range ? &*range : nullptr);
+                range ? &*range : nullptr,preparedVectorPath);
     drawEraseMasksToSkCanvas(canvas,entry);
 }
 

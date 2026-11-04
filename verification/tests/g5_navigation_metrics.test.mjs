@@ -33,3 +33,17 @@ test('input display gap includes the first response and excludes exact settle', 
   assert.equal(value.input_display_submission_gap_ms.max,40);
   assert.equal(value.display_submission_gap_ms.max,540);
 });
+
+test('prepared geometry deltas are summed while resident bytes are a peak gauge', () => {
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const value=summarizePhase(phase,[
+    {elapsed_ns:0,overlay_ns:0,prepared_builds:1,prepared_hits:2,prepared_denied:0,prepared_bytes:100,contour_tested:20,contour_drawn:3,vector_prepared:0},
+    {elapsed_ns:0,overlay_ns:0,prepared_builds:0,prepared_hits:4,prepared_denied:1,prepared_bytes:80,contour_tested:10,contour_drawn:2,vector_prepared:1}
+  ],[]);
+  assert.equal(value.navigation.prepared.builds,1);
+  assert.equal(value.navigation.prepared.hits,6);
+  assert.equal(value.navigation.prepared.denied,1);
+  assert.equal(value.navigation.prepared.peakResidentBytes,100);
+  assert.equal(value.navigation.prepared.contourDrawn,5);
+  assert.equal(value.navigation.prepared.vectorUses,1);
+});

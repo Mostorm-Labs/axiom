@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: navigation summary retains tails and sums diagnostic deltas
+ok 1 - navigation summary retains tails and sums diagnostic deltas
+  ---
+  duration_ms: 0.757792
+  ...
+# Subtest: missing diagnostic rows remain unavailable rather than invented zero
+ok 2 - missing diagnostic rows remain unavailable rather than invented zero
+  ---
+  duration_ms: 0.147958
+  ...
+# Subtest: input display gap includes the first response and excludes exact settle
+ok 3 - input display gap includes the first response and excludes exact settle
+  ---
+  duration_ms: 0.518375
+  ...
+# Subtest: prepared geometry deltas are summed while resident bytes are a peak gauge
+ok 4 - prepared geometry deltas are summed while resident bytes are a peak gauge
+  ---
+  duration_ms: 0.146625
+  ...
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 5 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 11.319958
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 6 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 0.42225
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 7 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.132708
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 8 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.282291
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 9 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.298708
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 54.615875

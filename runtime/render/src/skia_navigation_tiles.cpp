@@ -52,8 +52,8 @@ std::pair<std::size_t, std::size_t> compactRange(const ReferenceTraversalEntry& 
     const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
     if (compact == nullptr || !entry.navigationChunkSpan) return {0, compact == nullptr ? 0U : compact->content.stroke.knots.size()};
     const auto& knots = compact->content.stroke.knots;
-    // Contour v4 carries paired anchors across the complete stroke. Until a
-    // chunk-local contour oracle exists, keep it on the complete-object path.
+    // V4 locality selects original paired contour primitives from prepared
+    // geometry. A raw knot subspan would change its stateful anchor history.
     if (compact->content.stroke.config.algorithmVersion == 4U)
         return {0, knots.size()};
     const auto begin = std::min<std::size_t>(entry.navigationChunkSpan->pointOffset, knots.size());
@@ -66,16 +66,17 @@ std::pair<std::size_t, std::size_t> compactRange(const ReferenceTraversalEntry& 
 }
 
 void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
-                         SkiaTextResources* textResources, ImageResourceResolver* images){
+                         SkiaTextResources* textResources, ImageResourceResolver* images,
+                         const SkPath* preparedVectorPath=nullptr){
     const auto& t=entry.record.transform;
     const bool identity=t.a==1.0&&t.b==0.0&&t.c==0.0&&t.d==1.0&&t.tx==0.0&&t.ty==0.0;
-    if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources);return;}
+    if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources,preparedVectorPath);return;}
     canvas.save();
     canvas.concat(SkMatrix::MakeAll(static_cast<SkScalar>(t.a),static_cast<SkScalar>(t.c),
                                     static_cast<SkScalar>(t.tx),static_cast<SkScalar>(t.b),
                                     static_cast<SkScalar>(t.d),static_cast<SkScalar>(t.ty),
                                     0.0F,0.0F,1.0F));
-    drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources);
+    drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources,preparedVectorPath);
     canvas.restore();
 }
 }
@@ -133,12 +134,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     struct Timing {
         NavigationWork& work;const NavigationWork before;std::chrono::steady_clock::time_point started;
         const FrameState& frame;const CanonicalViewportTransform& camera;const RenderCacheOptions& options;
+        PreparedGeometryCache& geometry;
         ~Timing(){
+            work.preparedGeometryBytes=geometry.statistics().residentBytes;
             const auto elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
             work.opportunityNanoseconds+=elapsed;
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
-            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":2,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,\"presented\":%s,\"coverage\":%s}\n",
+            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":2,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"presented\":%s,\"coverage\":%s}\n",
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
                 static_cast<unsigned long long>(work.queryNanoseconds-before.queryNanoseconds),static_cast<unsigned long long>(work.initializationNanoseconds-before.initializationNanoseconds),
@@ -150,10 +154,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.fallbackUses-before.fallbackUses),
                 static_cast<unsigned long long>(work.prefixScanKnots-before.prefixScanKnots),
                 static_cast<unsigned long long>(work.overlayNanoseconds-before.overlayNanoseconds),
+                static_cast<unsigned long long>(work.preparedGeometryBuilds-before.preparedGeometryBuilds),
+                static_cast<unsigned long long>(work.preparedGeometryHits-before.preparedGeometryHits),
+                static_cast<unsigned long long>(work.preparedGeometryDenied-before.preparedGeometryDenied),
+                static_cast<unsigned long long>(work.preparedGeometryBytes),
+                static_cast<unsigned long long>(work.contourPrimitivesTested-before.contourPrimitivesTested),
+                static_cast<unsigned long long>(work.contourPrimitivesDrawn-before.contourPrimitivesDrawn),
+                static_cast<unsigned long long>(work.vectorPreparedUses-before.vectorPreparedUses),
                 work.presented?"true":"false",work.coverageComplete?"true":"false");
 #endif
         }
-    } timing{work,before,started,frame,camera,options};
+    } timing{work,before,started,frame,camera,options,geometry_};
     work.presented=false;work.pending=false;work.coverageComplete=false;
     if(!query||!options.enabled||!budget||!std::isfinite(camera.scale)||camera.scale<=0||
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||
@@ -161,7 +172,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         return BackendSubmissionResult::retry("world navigation ineligible");
     if(provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
-        cancel();tiles_.clear();sources_.clear();prefixes_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();dirty_=true;level_.reset();
+        cancel();tiles_.clear();sources_.clear();geometry_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();dirty_=true;level_.reset();
         provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     const auto scene=frame.sceneReadToken.value();
@@ -237,35 +248,25 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const bool ok=query(expanded(grid_.bounds(key),std::ldexp(double(gutter),-key.scale)),sources);
         work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
         if(!ok||std::any_of(sources.begin(),sources.end(),[](const auto& e){return !supported(e);}))return false;
-        for (const auto& entry : sources) {
-            const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
-            if (compact == nullptr) continue;
-            const auto& stroke = compact->content.stroke;
-            const auto digest = entry.record.referenceGeometryDigest;
-            auto& cached = prefixes_[entry.record.objectId];
-            if (cached.scene != scene || cached.digest != digest || !cached.distances ||
-                cached.distances->size() != stroke.knots.size() + 1U) {
-                auto distances = std::make_shared<std::vector<double>>(stroke.knots.size() + 1U, 0.0);
-                for (std::size_t i = 2; i < distances->size(); ++i) {
-                    (*distances)[i] = (*distances)[i - 1] +
-                        std::hypot(stroke.knots[i - 1].x - stroke.knots[i - 2].x,
-                                   stroke.knots[i - 1].y - stroke.knots[i - 2].y);
-                }
-                std::shared_ptr<const ink::CompactContour> contour;
-                if (stroke.config.algorithmVersion == 4U) {
-                    contour = std::make_shared<const ink::CompactContour>(
-                        ink::compileCompactContour(stroke.config, stroke.knots));
-                }
-                cached = PrefixEntry{scene, digest, std::move(distances), std::move(contour)};
-                work.prefixScanKnots += stroke.knots.size();
-            }
-        }
         std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> ids;
         for(const auto& entry:sources)if(entry.record.objectId.isZero()||!ids.insert(entry.record.objectId).second)return false;
         ReferenceDrawList validation{.frame=frame,.entries={},.canonicalBytes={},.digest={}};
         validation.viewportClip={0,0,frame.metrics.logicalWidth,frame.metrics.logicalHeight};validation.entries=sources;
         if(validateReferencePlan(FramePlan{frame,std::move(validation)}).code!=BackendSubmissionCode::kAccepted)return false;
-        std::size_t bytes=sizeof(ReferenceTraversalEntry)*sources.size();
+        std::vector<std::shared_ptr<const PreparedNavigationGeometry>> geometry;
+        geometry.reserve(sources.size());
+        for(const auto& entry:sources){
+            const auto before=geometry_.statistics();
+            geometry.push_back(geometry_.get(entry,options,budget));
+            const auto after=geometry_.statistics();
+            work.preparedGeometryBuilds+=after.builds-before.builds;
+            work.preparedGeometryHits+=after.hits-before.hits;
+            work.preparedGeometryDenied+=after.denied-before.denied;
+            if(after.builds>before.builds)
+                if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command))
+                    work.prefixScanKnots+=compact->content.stroke.knots.size();
+        }
+        std::size_t bytes=(sizeof(ReferenceTraversalEntry)+sizeof(std::shared_ptr<const PreparedNavigationGeometry>))*sources.size();
         for(const auto& entry:sources){
             if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command))bytes+=c->content.stroke.knots.size()*sizeof(foundation::InkKnot)*2;
             if(const auto* v=std::get_if<BrushStrokeReferenceCommand>(&entry.command))bytes+=v->content.stroke.vector_output.outline.size()*sizeof(semantic::Vec2)*2+v->content.stroke.confirmed_samples.size()*sizeof(semantic::BrushConfirmedSample)*2;
@@ -276,7 +277,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         }
         if(!token){deferred=true;return false;}
         if(sources_.size()>=options.maxEntries)sources_.erase(sources_.begin());
-        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),resources::ResourceLease(budget,*token)});
+        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),std::move(geometry),resources::ResourceLease(budget,*token)});
         sources_.insert_or_assign(key,source);desired.emplace(key,std::move(source));return true;
     };
     // Revalidate only possible visible fallback cells, at the same query budget.
@@ -353,14 +354,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 // The range renderer backs up one shared neighbor before
                 // drawing a chunk, so the distance is the length through the
                 // knot immediately before the requested span.
-                const auto prefix = prefixes_.find(entry.record.objectId);
-                if (prefix != prefixes_.end()) job.prefixDistances = prefix->second.distances;
-                job.distance = job.prefixDistances && job.knot < job.prefixDistances->size()
-                    ? (*job.prefixDistances)[job.knot] : ink::compactLength(std::span<const foundation::InkKnot>(
+                job.geometry=job.sources->geometry[job.source];
+                const auto distances=job.geometry?job.geometry->distances():std::span<const double>{};
+                job.distance = job.knot < distances.size()
+                    ? distances[job.knot] : ink::compactLength(std::span<const foundation::InkKnot>(
                         stroke.knots.data(), job.knot));
-                job.totalDistance = job.prefixDistances && !job.prefixDistances->empty()
-                    ? job.prefixDistances->back() : ink::compactLength(stroke.knots);
-                if (stroke.config.algorithmVersion==4 && prefix != prefixes_.end() && prefix->second.contour) {
+                job.totalDistance = !distances.empty()?distances.back():ink::compactLength(stroke.knots);
+                if(!job.geometry)work.prefixScanKnots+=stroke.knots.size();
+                if (stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()) {
                     job.contour.reset();
                 } else if(stroke.config.algorithmVersion==4) {
                     job.contour.emplace(stroke.config);
@@ -370,24 +371,33 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             }
             const auto range = compactRange(entry);
             std::size_t end=std::min(job.knot+32,range.second);
-            const auto cachedContour = prefixes_.find(entry.record.objectId);
-            if(stroke.config.algorithmVersion==4 && cachedContour != prefixes_.end() && cachedContour->second.contour){
-                drawCompactContourCoverageToSkCanvas(*draw,stroke.config,*cachedContour->second.contour);
+            if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
+                const auto drawn=job.geometry->drawContour(*draw);
+                work.contourPrimitivesTested+=drawn.primitivesTested;
+                work.contourPrimitivesDrawn+=drawn.primitivesDrawn;
                 end = range.second;
             } else if(job.contour){
                 ink::CompactContour contours;job.contour->append({stroke.knots.data()+job.knot,end-job.knot},job.totalDistance,contours);
                 if(end==stroke.knots.size())job.contour->finish(job.totalDistance,contours);
                 drawCompactContourCoverageToSkCanvas(*draw,stroke.config,contours);
             }else drawCompactCoverageRangeToSkCanvas(*draw,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance,stroke.seed);
-            job.distance = job.prefixDistances && end < job.prefixDistances->size()
-                ? (*job.prefixDistances)[end] : job.distance;
+            const auto distances=job.geometry?job.geometry->distances():std::span<const double>{};
+            if(end<distances.size())job.distance=distances[end];
+            else for(auto i=std::max(std::size_t(1),job.knot);i<end;++i)
+                job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,
+                                         stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<range.second)continue;
             compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             if (!entry.record.eraseMasks.empty())
                 drawEraseMasksToSkCanvas(*job.surface->getCanvas(), entry);
-        }else drawNavigationEntry(*job.surface->getCanvas(),entry,textResources,images);
-        ++job.source;job.knot=0;job.sourceInitialized=false;++work.sourceSteps;
+        }else{
+            const auto& geometry=job.sources->geometry[job.source];
+            const auto* path=geometry?geometry->vectorPath():nullptr;
+            drawNavigationEntry(*job.surface->getCanvas(),entry,textResources,images,path);
+            if(path)++work.vectorPreparedUses;
+        }
+        ++job.source;job.knot=0;job.sourceInitialized=false;job.geometry.reset();++work.sourceSteps;
     }
     if(context&&submitted){
         auto completion=std::make_shared<Completion>();

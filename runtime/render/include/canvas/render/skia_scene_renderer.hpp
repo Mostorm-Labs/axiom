@@ -10,6 +10,7 @@
 class SkCanvas;
 class SkImage;
 class SkPicture;
+class SkPath;
 namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::render { class SkiaTextResources; }
 namespace canvas::render { class EditingOverlay; }
@@ -30,7 +31,7 @@ struct CompactStrokeRange final {
 };
 // Only accepts an already validated isolated compact command; no second
 // geometry implementation is owned by the cache materializer.
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr, CompactRasterWork* work = nullptr, bool compatibleCoverage = false, CompactCoverageTargets* targets = nullptr, ImageResourceResolver* images = nullptr, SkiaTextResources* textResources = nullptr);
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr, CompactRasterWork* work = nullptr, bool compatibleCoverage = false, CompactCoverageTargets* targets = nullptr, ImageResourceResolver* images = nullptr, SkiaTextResources* textResources = nullptr, const SkPath* preparedVectorPath = nullptr);
 struct CompactRasterWork final {
     std::uint64_t allocatedTiles = 0;
     std::uint64_t allocatedPixels = 0;

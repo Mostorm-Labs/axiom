@@ -6,6 +6,7 @@
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/skia_text_resources.hpp"
 #include "canvas/render/image_resource.hpp"
+#include "skia_prepared_geometry.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
@@ -28,7 +29,12 @@ class SkiaNavigationTiles final {
         ImageResourceResolver* images=nullptr,
         const std::function<void(SkCanvas&)>& drawOverlay={});
  private:
-    struct Sources {std::uint64_t scene=0;std::vector<ReferenceTraversalEntry> entries;resources::ResourceLease lease;};
+    struct Sources {
+        std::uint64_t scene=0;
+        std::vector<ReferenceTraversalEntry> entries;
+        std::vector<std::shared_ptr<const PreparedNavigationGeometry>> geometry;
+        resources::ResourceLease lease;
+    };
     struct Tile {
         std::shared_ptr<const Sources> sources;
         sk_sp<SkImage> image;
@@ -43,20 +49,14 @@ class SkiaNavigationTiles final {
         bool sourceInitialized=false;
         double distance=0,totalDistance=0;
         std::optional<ink::CompactContourCompiler> contour;
-        std::shared_ptr<const std::vector<double>> prefixDistances;
+        std::shared_ptr<const PreparedNavigationGeometry> geometry;
         std::uint64_t id=0,steps=0;
         bool prewarm=false;
         resources::ResourceLease lease;
     };
     std::map<TileKey,Tile> tiles_;
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
-    struct PrefixEntry final {
-        std::uint64_t scene = 0;
-        std::string digest;
-        std::shared_ptr<const std::vector<double>> distances;
-        std::shared_ptr<const ink::CompactContour> contour;
-    };
-    std::unordered_map<foundation::ObjectId, PrefixEntry, foundation::ObjectIdHash> prefixes_;
+    PreparedGeometryCache geometry_;
     std::unique_ptr<Job> job_;
     TileGrid grid_{256};
     scheduling::RuntimeScheduler scheduler_{4};

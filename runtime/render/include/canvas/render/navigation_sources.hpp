@@ -17,6 +17,9 @@ struct NavigationWork final {
     std::uint64_t prefixScanKnots=0;
     // Populated only in the opt-in diagnostic build.
     std::uint64_t overlayNanoseconds=0;
+    std::uint64_t preparedGeometryBuilds=0,preparedGeometryHits=0,preparedGeometryDenied=0;
+    std::uint64_t contourPrimitivesTested=0,contourPrimitivesDrawn=0,vectorPreparedUses=0;
+    std::size_t preparedGeometryBytes=0;
     std::int32_t selectedLevel=0;
 };
 }

@@ -9,6 +9,7 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
 #include "../src/compact_raster_internal.hpp"
+#include "../src/skia_prepared_geometry.hpp"
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #endif
@@ -385,6 +386,12 @@ int main(int argc,char** argv) {
                 require(navigation.navigationWork().coverageComplete&&navigation.navigationWork().sourceSteps>0&&
                         navigation.submissionCount()==0&&std::any_of(feedback.begin(),feedback.end(),[](auto channel){return channel<240;}),
                         "new evaluator navigation missing coverage or manufactured canonical work");
+                if(content.stroke.config.algorithmVersion==4){
+                    const auto work=navigation.navigationWork();
+                    require(work.preparedGeometryBuilds==1&&work.preparedGeometryHits>0&&
+                            work.preparedGeometryBytes>0&&work.contourPrimitivesDrawn>0,
+                            "v4 navigation did not use shared budgeted contour geometry");
+                }
             }
         }
         {
@@ -449,6 +456,34 @@ int main(int argc,char** argv) {
                 require(a==b,"hybrid device tile seam differs from Direct");
                 if(transform==2)require(work.gpuTiles==0,"denied region budget still admitted hybrid work");
             }
+            // Local contour selection must match complete paired paths on
+            // the actual Ganesh target as well as the native raster oracle.
+            internal::PreparedGeometryCache geometry;
+            auto geometryBudget=std::make_shared<resources::ResourceBudgetManager>();
+            for(const auto profile:{"round-handdrawn","marker-compact-v1"}){
+                auto entry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+                content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
+                content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
+                for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
+                const auto prepared=geometry.get(entry,RenderCacheOptions{},geometryBudget);
+                require(prepared&&prepared->isContour(),"GPU contour admission");
+                for(unsigned pose=0;pose<3;++pose){
+                    auto local=canvas->makeSurface(info),full=canvas->makeSurface(info);
+                    for(auto* surface:{local.get(),full.get()}){
+                        surface->getCanvas()->clear(SK_ColorBLACK);
+                        surface->getCanvas()->clipRect(SkRect::MakeLTRB(3,2,575,290));
+                        surface->getCanvas()->translate(7.3F,-2.7F);
+                        surface->getCanvas()->scale(pose==0?.8F:1.2F,pose==1?.9F:1.1F);
+                        if(pose==2)surface->getCanvas()->rotate(11);
+                    }
+                    const auto localWork=prepared->drawContour(*local->getCanvas());
+                    internal::drawCompactContourCoverageToSkCanvas(*full->getCanvas(),content.stroke.config,
+                        ink::compileCompactContour(content.stroke.config,content.stroke.knots));
+                    std::vector<std::uint8_t> a(600*300*4),b(a.size());
+                    require(local->readPixels(info,a.data(),2400,0,0)&&full->readPixels(info,b.data(),2400,0,0),"GPU contour readback");
+                    require(a==b&&localWork.primitivesDrawn<prepared->primitiveCount(),"GPU local contour differs from full geometry");
+                }
+            }
             provider.release();
         }
 #endif
@@ -511,6 +546,27 @@ int main(int argc,char** argv) {
                     "progress guard did not exercise the former 64-step ceiling");
             require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&
                     pixels(provider)==pixels(reference),"larger checkpoint allowance changed exact contour pixels");
+        }
+        // Denied prepared geometry must resume the pinned scalar evaluator,
+        // including the full-stroke distance/taper phase after each checkpoint.
+        {
+            auto denied=stroke(888);auto& s=std::get<CompactStrokeReferenceCommand>(denied.command).content.stroke;
+            s.config.version=2;s.config.algorithmVersion=3;s.config.signalVersion=2;
+            s.config.startTaper=80;s.config.endTaper=90;s.knots.clear();
+            for(unsigned i=0;i<20000;++i)s.knots.push_back({-20.+i*.05,64.+std::sin(i*.001)*12,32768});
+            denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
+            SkiaRenderer navigation;RenderCacheOptions options;options.maxEntryBytes=260*260*4*3;
+            options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
+            navigation.setRenderCacheOptions(options);const auto frame=plan(587,{denied});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={denied};return true;};
+            for(unsigned i=0;;++i){
+                require(navigate(navigation,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"denied geometry feedback");
+                if(!navigation.navigationWork().pending)break;
+                require(i<128,"denied geometry fallback stalled");
+            }
+            require(navigation.navigationWork().preparedGeometryDenied>0,"denial fixture did not deny geometry");
+            require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"denied geometry lost full-stroke distance phase");
         }
         // One long source must yield within the stroke; no intermediate target
         // pixels or receipt may escape, including on camera supersession.

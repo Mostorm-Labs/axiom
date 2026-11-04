@@ -155,7 +155,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
-    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_navigation_tiles.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_navigation_tiles.cpp src/skia_prepared_geometry.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia CanvasSkia::Paragraph)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
@@ -402,6 +402,18 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
     endif()
     add_test(NAME G5SkiaChunkRangeEntry
         COMMAND axiom_render_skia_chunk_range_entry_tests)
+    add_executable(axiom_prepared_geometry_tests tests/prepared_geometry_test.cpp)
+    target_link_libraries(axiom_prepared_geometry_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    target_include_directories(axiom_prepared_geometry_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+    target_compile_features(axiom_prepared_geometry_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_prepared_geometry_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_prepared_geometry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG
+        -Wno-missing-field-initializers -Wno-error=gnu-zero-variadic-macro-arguments
+        -Wno-error=nested-anon-types -Wno-error=gnu-anonymous-struct)
+    endif()
+    add_test(NAME G5PreparedGeometry COMMAND axiom_prepared_geometry_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)

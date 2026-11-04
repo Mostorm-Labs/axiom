@@ -14,6 +14,15 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));
     nav.overlay_cpu_ms=times(navigationRows.map(row=>row.overlay_ns/1e6));
     nav.initialization_cpu_ms=times(navigationRows.map(row=>row.initialization_ns/1e6).filter(Number.isFinite));
+    nav.prepared=navigationRows.every(row=>Number.isFinite(row.prepared_builds))?{
+      builds:total(navigationRows.map(r=>r.prepared_builds)),
+      hits:total(navigationRows.map(r=>r.prepared_hits)),
+      denied:total(navigationRows.map(r=>r.prepared_denied)),
+      peakResidentBytes:Math.max(...navigationRows.map(r=>r.prepared_bytes)),
+      contourTested:total(navigationRows.map(r=>r.contour_tested)),
+      contourDrawn:total(navigationRows.map(r=>r.contour_drawn)),
+      vectorUses:total(navigationRows.map(r=>r.vector_prepared))
+    }:null;
   }
   const stageTotals={};
   for(const row of frameRows)for(const [name,stage] of Object.entries(row.stages)){
