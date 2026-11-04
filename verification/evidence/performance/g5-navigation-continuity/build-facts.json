@@ -1,0 +1,52 @@
+{
+  "code_revision": "f959131de926065427348980ab8827f33b407b1e",
+  "source_tree_sha256": "e3f6832f6053646d2f6ec71a9d82e337687dcab539fa5d1d72ddcd38f71b11fd",
+  "sdk_version": "0.3.7",
+  "public_contract_changed": false,
+  "dependency_locks_changed": false,
+  "third_party_rebuilt": false,
+  "baseline_binding": "baseline-artifact-binding.json",
+  "measurement_source_note": "Sampling source can be dirty only from accumulating evidence files. Engine builds were configured at clean code revision. Exact source hashes must equal source-identity.json.",
+  "browser": "156.0.8078.80",
+  "surface": "Chrome WebGL2 via accepted prebuilt Skia Ganesh",
+  "timing_modes": [
+    "OFF main performance",
+    "ON counter corroboration"
+  ],
+  "provider_readback_during_measurement": "none; test pixel capture after settle",
+  "internal_transfer_note": "Coarse v4 masks use leased CPU raster memory and an implicit GPU upload. No zero-copy claim.",
+  "gpu_component_binding": {
+    "built_at_revision": "27f4a3fc7f993e4e1b7abd7805b1957ee10c660f",
+    "note": "All renderer sources/tests and GPU runner unchanged in the subsequent Runtime quiet-settle fix."
+  },
+  "semantic_lock_sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+  "skia_lock_sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+  "skia": {
+    "root": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+    "target": "web-wasm-webgl2",
+    "sdk_id": "8c5326038b9082ec2171a03ade3c953390fa7557dc7fd1f79196693a70fcda16",
+    "manifest_sha256": "075c5b7d44e5a5412d2b0ee7b3278e94d7b8289ebe60d94f4e54e4dad9009e87"
+  },
+  "cmake": {
+    "timing-off": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "AXIOM_ENABLE_FRAME_TIMING": "OFF",
+      "AXIOM_INSTALL_DEVELOPER_COMPONENTS": "OFF",
+      "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "CANVAS_SKIA_SDK_ROOT": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+      "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "CMAKE_TOOLCHAIN_FILE": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "CMAKE_CXX_COMPILER": null
+    },
+    "timing-on": {
+      "CMAKE_BUILD_TYPE": "Release",
+      "AXIOM_ENABLE_FRAME_TIMING": "ON",
+      "AXIOM_INSTALL_DEVELOPER_COMPONENTS": "OFF",
+      "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "CANVAS_SKIA_SDK_ROOT": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+      "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "CMAKE_TOOLCHAIN_FILE": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "CMAKE_CXX_COMPILER": null
+    }
+  }
+}

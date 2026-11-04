@@ -1,0 +1,140 @@
+#include "canvas/render/skia_renderer.hpp"
+#include "canvas/scene/scene_types.hpp"
+#include "canvas/ink/brush_package_catalog.hpp"
+#include <iostream>
+#include <stdexcept>
+#if defined(G5_TEST_WEBGL)
+#include "canvas/render/webgl_surface_backend.hpp"
+#include "include/core/SkSurface.h"
+#include "include/core/SkCanvas.h"
+#include "include/core/SkColorSpace.h"
+#include "../src/compact_raster_internal.hpp"
+#include "../src/skia_prepared_geometry.hpp"
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
+using namespace canvas;
+using namespace canvas::render;
+namespace {
+void require(bool value, const char* message) { if (!value) throw std::runtime_error(message); }
+int finishNative(int code){
+#if defined(G5_TEST_WEBGL)
+    EM_ASM({window.result.code=$0;window.result.nativeDone=true;},code);
+#endif
+    return code;
+}
+#if defined(G5_TEST_WEBGL)
+// Test-owned browser App. Production readback remains disabled; this reads
+// pixels only outside the measured loop to compare the actual GPU targets.
+class TestSurface final : public SkiaSurfaceProvider {
+    std::unique_ptr<WebGlSurfaceProvider> provider_;
+    std::uint64_t generation_=0,presents_=0;
+    bool lost_=false;
+  public:
+    RenderTargetInfo describe()const noexcept override{return provider_->describe();}
+    SkiaSurfaceAcquireResult acquire()noexcept override{
+        if(lost_)return SkiaSurfaceAcquireResult::rejected(SkiaSurfaceAcquireCode::kLost,"lost");
+        auto r=provider_->acquire();if(r.code==SkiaSurfaceAcquireCode::kAcquired)r.frame.generation=generation_;return r;}
+    void release()noexcept override{provider_->release();}
+    BackendSubmissionResult present()noexcept override{++presents_;return provider_->present();}
+    BackendSubmissionResult lose()noexcept override{lost_=true;return BackendSubmissionResult::accepted();}
+    BackendSubmissionResult resize(std::uint32_t width,std::uint32_t height)noexcept override{
+        if(!provider_){
+            static unsigned next=0;const auto id=++next;
+            EM_ASM({const c=document.createElement('canvas');c.id='cache-'+$0;c.width=$1;c.height=$2;document.body.append(c);},id,width,height);
+            const auto selector=std::string("#cache-")+std::to_string(id);
+            EmscriptenWebGLContextAttributes a;emscripten_webgl_init_context_attributes(&a);
+            a.majorVersion=2;a.alpha=true;a.antialias=false;a.depth=false;a.stencil=true;a.premultipliedAlpha=true;a.preserveDrawingBuffer=true;
+            const auto context=emscripten_webgl_create_context(selector.c_str(),&a);
+            if(context<=0||emscripten_webgl_make_context_current(context)!=EMSCRIPTEN_RESULT_SUCCESS)return BackendSubmissionResult::rejected("GPU test context");
+            provider_=WebGlSurfaceProvider::fromCurrentContext(width,height);
+        }
+        ++generation_;lost_=false;return provider_&&provider_->ready()?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("GPU test provider");}
+    BackendSubmissionResult readbackRgba(std::span<std::uint8_t> data)noexcept override{
+        const auto a=acquire();if(a.code!=SkiaSurfaceAcquireCode::kAcquired)return BackendSubmissionResult::rejected("readback acquire");
+        const auto info=SkImageInfo::Make(256,128,kRGBA_8888_SkColorType,kPremul_SkAlphaType,SkColorSpace::MakeSRGB());
+        const bool ok=a.frame.surface->readPixels(info,data.data(),256*4,0,0);release();
+        return ok?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("GPU test readback");}
+    std::uint64_t generation()const noexcept override{return generation_;}
+    BackendSubmissionResult advanceGeneration()noexcept override{++generation_;return BackendSubmissionResult::accepted();}
+    std::uint64_t readbackCount()const noexcept override{return 0;}
+    std::uint64_t cpuCopyCount()const noexcept override{return 0;}
+    std::uint64_t presentCount()const noexcept override{return presents_;}
+};
+#else
+using TestSurface=RasterSkiaSurfaceProvider;
+#endif
+FramePlan plan(std::uint64_t frameId, std::vector<ReferenceTraversalEntry> entries,
+               std::uint64_t generation = 1, WorldToViewAffine transform = {},
+               foundation::WorldRect clip = {0,0,256,128},
+               foundation::DocumentBackground background = {}, bool transparent=false, float dpr=1) {
+    FrameState frame{ViewId{1}, CameraState{{0,0},1,0,CameraGeneration{1}},
+        {0,0,256,128}, {256/dpr,128/dpr,256,128,dpr,dpr}, semantic::SemanticGeneration{frameId},
+        SceneRevision{frameId}, SurfaceGeneration{generation}, MetricsGeneration{1}, FrameId{frameId}};
+    ReferenceDrawList list{frame}; list.viewportClip=clip;
+    list.worldToView=transform; list.entries=std::move(entries);
+    return FramePlan{frame, std::move(list),background,transparent};
+}
+ReferenceTraversalEntry stroke(std::uint64_t id, double y=40) {
+    semantic::ObjectRecord object; object.id=ObjectId::fromUint64(id);
+    object.kind=semantic::ObjectKind::kVectorStroke; object.kind_version=3;
+    foundation::InkBrushConfig config; config.size=24; config.opacity=.55;
+    object.content=semantic::CompactStrokeContent{{config,id,{{20,y,32768},{225,y+20,48000}}}};
+    auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+    return {projection.records.front(),true,CompactStrokeReferenceCommand{std::get<semantic::CompactStrokeContent>(object.content)}};
+}
+std::vector<std::uint8_t> pixels(SkiaSurfaceProvider& provider) {
+    std::vector<std::uint8_t> output(256*128*4);
+    require(provider.readbackRgba(output).code==BackendSubmissionCode::kAccepted,"readback");
+    return output;
+}
+// Real browser GPU completion requires an event-loop turn between owner ticks.
+// Keep that yield in the private harness; production never sleeps or waits.
+template<class... Args>
+BackendSubmissionResult navigate(SkiaRenderer& renderer, SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera, Args&&... args) {
+#if defined(G5_TEST_WEBGL)
+    emscripten_sleep(1);
+#endif
+    return renderer.renderNavigation(provider,camera,std::forward<Args>(args)...);
+}
+class FailingPresent final : public SkiaSurfaceProvider {
+  public:
+    TestSurface raster;bool fail=true;
+    RenderTargetInfo describe()const noexcept override{return raster.describe();}
+    SkiaSurfaceAcquireResult acquire()noexcept override{return raster.acquire();}
+    void release()noexcept override{raster.release();}
+    BackendSubmissionResult present()noexcept override{return fail?BackendSubmissionResult::retry("injected present failure"):raster.present();}
+    BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h)noexcept override{return raster.resize(w,h);}
+    BackendSubmissionResult readbackRgba(std::span<std::uint8_t> d)noexcept override{return raster.readbackRgba(d);}
+    std::uint64_t generation()const noexcept override{return raster.generation();}
+    BackendSubmissionResult advanceGeneration()noexcept override{return raster.advanceGeneration();}
+    std::uint64_t readbackCount()const noexcept override{return raster.readbackCount();}
+    std::uint64_t cpuCopyCount()const noexcept override{return raster.cpuCopyCount();}
+    std::uint64_t presentCount()const noexcept override{return raster.presentCount();}
+};
+}
+int main(){try{TestSurface provider,reference;
+require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"reference");
+SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+            auto denied=stroke(888);auto& s=std::get<CompactStrokeReferenceCommand>(denied.command).content.stroke;
+            s.config.version=2;s.config.algorithmVersion=3;s.config.signalVersion=2;
+            s.config.startTaper=80;s.config.endTaper=90;s.knots.clear();
+            for(unsigned i=0;i<20000;++i)s.knots.push_back({-20.+i*.05,64.+std::sin(i*.001)*12,32768});
+            denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
+            SkiaRenderer navigation;RenderCacheOptions options;options.maxEntryBytes=260*260*4*3;
+            options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
+            navigation.setRenderCacheOptions(options);const auto frame=plan(587,{denied});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={denied};return true;};
+            for(unsigned i=0;;++i){
+                require(navigate(navigation,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"denied geometry feedback");
+                if(!navigation.navigationWork().pending)break;
+                require(i<128,"denied geometry fallback stalled");
+            }
+            require(navigation.navigationWork().preparedGeometryDenied>0,"denial fixture did not deny geometry");
+            require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"denied geometry lost full-stroke distance phase");
+
+return finishNative(0);}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return finishNative(1);}}

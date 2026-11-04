@@ -1,0 +1,21 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "76f2c77072f89e302874589ea9ae7a893022d13af5ff9e6bc6d895a8c71cad2d",
+    "g5_render_cache_gpu.wasm": "3803941d00f1adc8e7baf17f8e0d004ea5142757c99c4cfa4eaedfa54525c080"
+  },
+  "probeArgument": "--gpu-candidate",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [],
+    "errors": [
+      "denied geometry lost full-stroke distance phase"
+    ],
+    "code": 1,
+    "processExit": 0
+  },
+  "status": "FAIL"
+}

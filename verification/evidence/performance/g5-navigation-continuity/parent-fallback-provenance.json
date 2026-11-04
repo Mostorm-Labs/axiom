@@ -1,0 +1,13 @@
+{
+  "parent_revision": "51f93640be6a643f992d54e3b51b831e6669672a",
+  "test_source": "parent-fallback-test.cpp.txt",
+  "test_sha256": "21ef211db58aaf65a5e0b9c1fcf1dcbaa218b60f4e1c3d3666c895119c9ee16d",
+  "method": "git archive HEAD at parent; only render_cache_test.cpp replaced with isolated existing denied-geometry test and native completion status. All parent production sources unchanged. Accepted dependency symlink reused.",
+  "result": "same denied geometry lost full-stroke distance phase failure as current full GPU suite",
+  "verified_parent_production_files": {
+    "runtime/render/src/skia_navigation_tiles.cpp": "795240440c1ed606d70fb58ac8c89200ab0ed2317477b7839074cee115eea3ee",
+    "runtime/render/src/skia_prepared_geometry.cpp": "27b5627559ccf5a34eaa3de281bf23562281333305ca6d53c687a228fcc4bdd1",
+    "runtime/render/src/skia_navigation_tiles.hpp": "11420992d231d21fd5b2607f743c1b5b7eafb08033d8ea9415ade67b1ca3a72a",
+    "runtime/render/src/skia_prepared_geometry.hpp": "f8bd2768d03e9eb2cdffd9c14b3cb952b15c9b40d2ee4213acd9c9ad96f17dbd"
+  }
+}

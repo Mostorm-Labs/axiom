@@ -1,0 +1,30 @@
+{
+  "runtime_boundaries": "PASS:117 contract files",
+  "focused_node": "PASS:14 tests",
+  "native_targeted": "PASS:3 tests",
+  "full_native": "999/1066 passed;67 existing failed/not-run; no new names against archived baseline",
+  "full_build": "5 existing semantic/qualification target compile failures",
+  "full_gpu": "FAIL: denied geometry lost full-stroke distance phase; isolated parent production reproduces same error",
+  "gpu_continuity": "PASS:real Chrome WebGL2 quota + strict contour pixels + drawing stream",
+  "npm_test": "BLOCKED_ENVIRONMENT: tsc not found; all nine workspaces exit127",
+  "npm_workspaces": [
+    "@axiom/platform-conformance-cli",
+    "@axiom/platform-harness-android",
+    "@axiom/platform-harness-apple",
+    "@axiom/platform-harness-protocol",
+    "@axiom/platform-harness-runner",
+    "@axiom/platform-harness-scripted-adapter",
+    "@axiom/platform-harness-transport",
+    "@axiom/platform-harness-web",
+    "@axiom/semantic-conformance-cli"
+  ],
+  "full_build_failed_targets": [
+    "axiom_fc01_snap_creation_differential_tests",
+    "canvas_semantic_connector_stateful_validation_test",
+    "canvas_semantic_object_store_differential_test",
+    "canvas_semantic_stateful_kind_applicability_test",
+    "canvas_semantic_stateful_validation_differential_test"
+  ],
+  "quiet_settle_regression": "RED: incomplete coarse coverage held canonical settle after quiet interval; GREEN: G5Navigation passed, including <100ms feedback retention and >=100ms exact release.",
+  "final_full_ctest_log": "final-full-ctest.log.gz"
+}

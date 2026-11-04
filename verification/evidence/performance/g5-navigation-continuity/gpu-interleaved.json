@@ -1,0 +1,30 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "94d8af98a6718b8a95da544eb8a78db752d3ef59b437c9c25ae1be39ec4949fe",
+    "g5_render_cache_gpu.wasm": "44eb5fc9120d643cc3d5ce1f5f4b9bc2e2cb3f0d3de6e0f38d119f446da30329"
+  },
+  "probeArgument": "--contour-only",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [
+      "reference repeat=1 queried reference=1",
+      "interleaved reference channels=3"
+    ],
+    "errors": [
+      "pixel=259,106 actual=192 expected=112",
+      "pixel=259,106 actual=192 expected=112",
+      "pixel=259,106 actual=192 expected=112",
+      "GPU contour profile=round-handdrawn pose=1 channels=3 max=80",
+      "local GPU=1 prepared allowed=0",
+      "fresh path channels=3",
+      "GPU local contour differs from full geometry"
+    ],
+    "code": 1,
+    "processExit": 1
+  },
+  "status": "FAIL"
+}

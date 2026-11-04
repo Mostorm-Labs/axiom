@@ -1,0 +1,72 @@
+[
+  {
+    "case": "baseline-selected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-prepared-install/js",
+      "out/g5-continuity/final-baseline-selected",
+      "60000",
+      "3"
+    ],
+    "selected": true,
+    "exit_code": 0,
+    "seconds": 83.44153308868408
+  },
+  {
+    "case": "candidate-off-selected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-continuity/final-candidate-off-selected",
+      "120000",
+      "6"
+    ],
+    "selected": true,
+    "exit_code": 0,
+    "seconds": 148.13161396980286
+  },
+  {
+    "case": "baseline-unselected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-prepared-install/js",
+      "out/g5-continuity/final-baseline-unselected",
+      "60000",
+      "3"
+    ],
+    "selected": false,
+    "exit_code": 0,
+    "seconds": 81.27575516700745
+  },
+  {
+    "case": "candidate-off-unselected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-continuity/final-candidate-off-unselected",
+      "60000",
+      "3"
+    ],
+    "selected": false,
+    "exit_code": 0,
+    "seconds": 81.63196682929993
+  },
+  {
+    "case": "candidate-on-selected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-on-install/js",
+      "out/g5-continuity/final-candidate-on-selected",
+      "60000",
+      "3"
+    ],
+    "selected": true,
+    "exit_code": 0,
+    "seconds": 83.35181188583374
+  }
+]

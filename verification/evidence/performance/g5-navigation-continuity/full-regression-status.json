@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "out/host",
+      "-j3",
+      "--",
+      "-k",
+      "0"
+    ],
+    "exit_code": 1,
+    "seconds": 17.77605700492859,
+    "log": "out/g5-continuity-settle-full-build.log"
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/host",
+      "-j3",
+      "--output-on-failure"
+    ],
+    "exit_code": 8,
+    "seconds": 218.201651096344,
+    "log": "out/g5-continuity-settle-full-ctest.log"
+  }
+]

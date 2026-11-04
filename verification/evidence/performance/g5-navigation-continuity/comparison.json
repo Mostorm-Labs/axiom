@@ -1,0 +1,187 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "official_gate_pass_claimed": false,
+  "code_revision": "f959131de926065427348980ab8827f33b407b1e",
+  "source_tree_sha256": "e3f6832f6053646d2f6ec71a9d82e337687dcab539fa5d1d72ddcd38f71b11fd",
+  "comparison_metric": "Median of per-phase maximum input color-submission gaps; all maxima preserved.",
+  "cases": [
+    {
+      "selection": "selected",
+      "before_case": "baseline-selected",
+      "after_case": "candidate-off-selected",
+      "repeat_gap_maxima_ms": {
+        "before": [
+          267.20000000298023,
+          265.70000000298023,
+          332.3999999910593
+        ],
+        "after": [
+          67.80000001192093,
+          52,
+          154.5,
+          133.59999999403954,
+          101.80000001192093,
+          136.80000001192093
+        ]
+      },
+      "median_repeat_gap_ms": {
+        "before": 267.20000000298023,
+        "after": 117.70000000298023,
+        "reduction_fraction": 0.5595059880177116
+      },
+      "phases": [
+        {
+          "id": "after-freeze",
+          "before_gap_ms": 199.70000000298023,
+          "after_gap_ms": 199.29999999701977,
+          "before_settle_ms": 230.70000000298023,
+          "after_settle_ms": 112.20000000298023,
+          "before_raf_p99_ms": 22.900000005960464,
+          "after_raf_p99_ms": 23,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        },
+        {
+          "id": "after-idle",
+          "before_gap_ms": 200.09999999403954,
+          "after_gap_ms": 86.70000000298023,
+          "before_settle_ms": 198.59999999403954,
+          "after_settle_ms": 114.29999999701977,
+          "before_raf_p99_ms": 21,
+          "after_raf_p99_ms": 18.80000001192093,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        },
+        {
+          "id": "interrupted-selection",
+          "before_gap_ms": 344,
+          "after_gap_ms": 178.29999999701977,
+          "before_settle_ms": 216.5,
+          "after_settle_ms": 114.6000000089407,
+          "before_raf_p99_ms": 43.6000000089407,
+          "after_raf_p99_ms": 130.79999999701977,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        },
+        {
+          "id": "repeat-0",
+          "before_gap_ms": 267.20000000298023,
+          "after_gap_ms": 67.80000001192093,
+          "before_settle_ms": 313.59999999403954,
+          "after_settle_ms": 129.59999999403954,
+          "before_raf_p99_ms": 20.299999997019768,
+          "after_raf_p99_ms": 20.5,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        },
+        {
+          "id": "repeat-1",
+          "before_gap_ms": 265.70000000298023,
+          "after_gap_ms": 52,
+          "before_settle_ms": 312.90000000596046,
+          "after_settle_ms": 129.19999998807907,
+          "before_raf_p99_ms": 20,
+          "after_raf_p99_ms": 18.700000002980232,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        },
+        {
+          "id": "repeat-2",
+          "before_gap_ms": 332.3999999910593,
+          "after_gap_ms": 154.5,
+          "before_settle_ms": 183.40000000596046,
+          "after_settle_ms": 114.3999999910593,
+          "before_raf_p99_ms": 19.5,
+          "after_raf_p99_ms": 19.099999994039536,
+          "pixel_sha256": "14d4c1400544f28e20e8bdfecc7ac8542a2808b2bbdc4fad93a8ff0eebe93db8"
+        }
+      ]
+    },
+    {
+      "selection": "unselected",
+      "before_case": "baseline-unselected",
+      "after_case": "candidate-off-unselected",
+      "repeat_gap_maxima_ms": {
+        "before": [
+          331.90000000596046,
+          332.80000001192093,
+          200.79999999701977
+        ],
+        "after": [
+          154.5,
+          86.19999998807907,
+          68.20000000298023
+        ]
+      },
+      "median_repeat_gap_ms": {
+        "before": 331.90000000596046,
+        "after": 86.19999998807907,
+        "reduction_fraction": 0.7402832178772791
+      },
+      "phases": [
+        {
+          "id": "after-freeze",
+          "before_gap_ms": 199.09999999403954,
+          "after_gap_ms": 200.5,
+          "before_settle_ms": 230.70000000298023,
+          "after_settle_ms": 129.40000000596046,
+          "before_raf_p99_ms": 23.30000001192093,
+          "after_raf_p99_ms": 20.099999994039536,
+          "pixel_sha256": "5a96afecc7c849f9e30f9c4dd3cde2060e04221ea8dc5438089259cf08688cfa"
+        },
+        {
+          "id": "after-idle",
+          "before_gap_ms": 199.29999999701977,
+          "after_gap_ms": 118.29999999701977,
+          "before_settle_ms": 183,
+          "after_settle_ms": 131.59999999403954,
+          "before_raf_p99_ms": 19.799999997019768,
+          "after_raf_p99_ms": 19.200000002980232,
+          "pixel_sha256": "5a96afecc7c849f9e30f9c4dd3cde2060e04221ea8dc5438089259cf08688cfa"
+        },
+        {
+          "id": "repeat-0",
+          "before_gap_ms": 331.90000000596046,
+          "after_gap_ms": 154.5,
+          "before_settle_ms": 198.70000000298023,
+          "after_settle_ms": 115.69999998807907,
+          "before_raf_p99_ms": 38.79999999701977,
+          "after_raf_p99_ms": 39.29999999701977,
+          "pixel_sha256": "5a96afecc7c849f9e30f9c4dd3cde2060e04221ea8dc5438089259cf08688cfa"
+        },
+        {
+          "id": "repeat-1",
+          "before_gap_ms": 332.80000001192093,
+          "after_gap_ms": 86.19999998807907,
+          "before_settle_ms": 198.70000000298023,
+          "after_settle_ms": 115.20000000298023,
+          "before_raf_p99_ms": 19.900000005960464,
+          "after_raf_p99_ms": 19.5,
+          "pixel_sha256": "5a96afecc7c849f9e30f9c4dd3cde2060e04221ea8dc5438089259cf08688cfa"
+        },
+        {
+          "id": "repeat-2",
+          "before_gap_ms": 200.79999999701977,
+          "after_gap_ms": 68.20000000298023,
+          "before_settle_ms": 198.59999999403954,
+          "after_settle_ms": 130.40000000596046,
+          "before_raf_p99_ms": 21,
+          "after_raf_p99_ms": 19.099999994039536,
+          "pixel_sha256": "5a96afecc7c849f9e30f9c4dd3cde2060e04221ea8dc5438089259cf08688cfa"
+        }
+      ]
+    }
+  ],
+  "timing_on_corroboration": {
+    "maximum_per_opportunity_gpu_contours": 128,
+    "total_gpu_contours": 13267,
+    "coarse_masks": 45,
+    "after_freeze_exact_attempts": 1
+  },
+  "all_final_pixels_match_baseline_and_on_off": true,
+  "all_semantic_selection_operation_camera_checks": true,
+  "all_fence_timeouts_zero": true,
+  "findings": [
+    "Synthetic input, not physical trackpad/display latency.",
+    "A roughly 200ms initial submission gap remains after CDP thaw; canonical convergence is no longer held behind coarse coverage.",
+    "One OFF interrupted-selection phase contains a117ms long task /130.8ms RAF interval (ON cold peak38.2ms); all raw tails are retained.",
+    "Existing native/full-GPU failures and missing tsc are listed in checks.json and regression-comparison.json."
+  ],
+  "baseline_binding": "baseline-artifact-binding.json",
+  "intermediate_regression": "intermediate-27f4a3fc/"
+}

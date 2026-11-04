@@ -1,0 +1,98 @@
+import gzip, hashlib, json, shutil, statistics, subprocess
+from pathlib import Path
+
+root = Path.cwd()
+out = root / 'verification/evidence/performance/g5-navigation-continuity'
+source = json.loads((out / 'source-identity.json').read_text())
+revision = source['commit']
+sha = lambda b: hashlib.sha256(b).hexdigest()
+samplers = ['navigation_sampling.html', 'navigation_lifecycle.mjs', 'navigation_metrics.mjs', 'browser_metrics.mjs']
+cases = {}
+for name in ['baseline-selected', 'baseline-unselected', 'candidate-off-selected', 'candidate-off-unselected', 'candidate-on-selected']:
+    folder = 'final-' if name.startswith('baseline') else 'settle-'
+    src = root / 'out/g5-continuity' / (folder + name)
+    d = json.loads((src / 'summary.json').read_text())
+    assert d['status'] == 'MEASURED' and d['sourceStable'] and d['artifactStable'], name
+    for n in samplers:
+        key = 'verification/runners/g5/' + n
+        assert d['sourceBefore']['files'][key] == source['files'][key], (name, n)
+    if name.startswith('candidate'):
+        assert d['sourceBefore']['tree_sha256'] == source['tree_sha256']
+        build = d['results'][0]['setup']['build']
+        assert build['sourceRevision'] == revision and build['dirty'] is False, build
+    dst = out / name
+    dst.mkdir(exist_ok=True)
+    for n in ['wheel.json.gz', 'wheel.console.json.gz', 'sha256.json']:
+        shutil.copy2(src / n, dst / n)
+    (dst / 'summary.json.gz').write_bytes(gzip.compress((src / 'summary.json').read_bytes(), mtime=0))
+    r = d['results'][0]
+    assert all(r['checks'].values()), (name, r['checks'])
+    assert all(p['summary']['maximum_fence_timeout'] == 0 for p in r['phases'])
+    cases[name] = d
+
+def phases(name):
+    return cases[name]['results'][0]['phases']
+
+def phase_map(name):
+    return {p['id']: p for p in phases(name)}
+
+comparisons = []
+for selected in ['selected', 'unselected']:
+    before_name, after_name = 'baseline-' + selected, 'candidate-off-' + selected
+    before, after = phase_map(before_name), phase_map(after_name)
+    assert {p['pixels']['sha256'] for p in before.values()} == {p['pixels']['sha256'] for p in after.values()}
+    repeat_before = [p['summary']['input_display_submission_gap_ms']['max'] for k, p in before.items() if k.startswith('repeat')]
+    repeat_after = [p['summary']['input_display_submission_gap_ms']['max'] for k, p in after.items() if k.startswith('repeat')]
+    b, a = statistics.median(repeat_before), statistics.median(repeat_after)
+    assert a < b * .8, (selected, 'repeat improvement', b, a)
+    row = {'selection': selected, 'before_case': before_name, 'after_case': after_name,
+           'repeat_gap_maxima_ms': {'before': repeat_before, 'after': repeat_after},
+           'median_repeat_gap_ms': {'before': b, 'after': a, 'reduction_fraction': 1-a/b},
+           'phases': []}
+    for k in before.keys() & after.keys():
+        x, y = before[k], after[k]
+        row['phases'].append({'id': k, 'before_gap_ms': x['summary']['input_display_submission_gap_ms']['max'],
+            'after_gap_ms': y['summary']['input_display_submission_gap_ms']['max'],
+            'before_settle_ms': x['summary']['settle_ms'], 'after_settle_ms': y['summary']['settle_ms'],
+            'before_raf_p99_ms': x['summary']['raf_ms']['p99'], 'after_raf_p99_ms': y['summary']['raf_ms']['p99'],
+            'pixel_sha256': y['pixels']['sha256']})
+    row['phases'].sort(key=lambda r:r['id'])
+    assert after['after-idle']['summary']['input_display_submission_gap_ms']['max'] < before['after-idle']['summary']['input_display_submission_gap_ms']['max']
+    assert after['after-freeze']['summary']['settle_ms'] <= before['after-freeze']['summary']['settle_ms'] * 1.15
+    comparisons.append(row)
+
+assert {p['pixels']['sha256'] for p in phases('candidate-on-selected')} == {p['pixels']['sha256'] for p in phases('candidate-off-selected')}
+raw = json.loads(gzip.decompress((out/'candidate-on-selected/wheel.json.gz').read_bytes()))
+nav = [r['value'] for r in raw['rows'] if r['kind']=='navigation']
+assert nav and max(r['gpu_contours'] for r in nav)<=128
+assert sum(r['gpu_contours'] for r in nav)>0 and sum(r['coarse_masks'] for r in nav)>0
+gpu = {'maximum_per_opportunity_gpu_contours':max(r['gpu_contours'] for r in nav),
+       'total_gpu_contours':sum(r['gpu_contours'] for r in nav), 'coarse_masks':sum(r['coarse_masks'] for r in nav),
+       'after_freeze_exact_attempts':phase_map('candidate-on-selected')['after-freeze']['summary']['exactAttempts']}
+result = {'classification':'PASS_WITH_FINDINGS','official_gate_pass_claimed':False,
+          'code_revision':revision,'source_tree_sha256':source['tree_sha256'],
+          'comparison_metric':'Median of per-phase maximum input color-submission gaps; all maxima preserved.',
+          'cases':comparisons,'timing_on_corroboration':gpu,
+          'all_final_pixels_match_baseline_and_on_off':True,
+          'all_semantic_selection_operation_camera_checks':True,'all_fence_timeouts_zero':True,
+          'findings':['Synthetic input, not physical trackpad/display latency.',
+          'A roughly 200ms initial submission gap remains after CDP thaw; canonical convergence is no longer held behind coarse coverage.',
+          'One OFF interrupted-selection phase contains a117ms long task /130.8ms RAF interval (ON cold peak38.2ms); all raw tails are retained.',
+          'Existing native/full-GPU failures and missing tsc are listed in checks.json and regression-comparison.json.'],
+          'baseline_binding':'baseline-artifact-binding.json','intermediate_regression':'intermediate-27f4a3fc/'}
+(out/'comparison.json').write_text(json.dumps(result,indent=2))
+installs = {}
+for label, prefix in [('timing-off','out/g5-continuity-install'),('timing-on','out/g5-continuity-on-install')]:
+    p = root/prefix
+    files = {str(f.relative_to(p)):sha(f.read_bytes()) for f in sorted(p.rglob('*')) if f.is_file()}
+    assert not any(f.endswith(('.a','.h','.hpp','.cpp')) or f.startswith(('include/','lib/')) or 'probe' in f for f in files)
+    installs[label]={'path':prefix,'files':files,'public_install_only':True}
+(out/'consumer-install.json').write_text(json.dumps(installs,indent=2))
+facts = json.loads((out/'build-facts.json').read_text())
+facts.update(code_revision=revision,source_tree_sha256=source['tree_sha256'])
+facts['gpu_component_binding']={'built_at_revision':'27f4a3fc7f993e4e1b7abd7805b1957ee10c660f',
+    'note':'All renderer sources/tests and GPU runner unchanged in the subsequent Runtime quiet-settle fix.'}
+subprocess.run(['git','diff','--exit-code','27f4a3fc',revision,'--','runtime/render','verification/runners/g5/native','verification/runners/g5/prepared_gpu_probe.mjs'],check=True)
+(out/'build-facts.json').write_text(json.dumps(facts,indent=2))
+shutil.copy2(root/'out/g5-continuity/settle-matrix-status.json',out/'matrix-status.json')
+print(json.dumps(result,indent=2))

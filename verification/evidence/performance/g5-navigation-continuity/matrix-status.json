@@ -1,0 +1,44 @@
+[
+  {
+    "case": "candidate-off-selected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-continuity/settle-candidate-off-selected",
+      "120000",
+      "6"
+    ],
+    "selected": true,
+    "exit_code": 0,
+    "seconds": 147.65799975395203
+  },
+  {
+    "case": "candidate-off-unselected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-continuity/settle-candidate-off-unselected",
+      "60000",
+      "3"
+    ],
+    "selected": false,
+    "exit_code": 0,
+    "seconds": 81.44398093223572
+  },
+  {
+    "case": "candidate-on-selected",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-on-install/js",
+      "out/g5-continuity/settle-candidate-on-selected",
+      "1000",
+      "3"
+    ],
+    "selected": true,
+    "exit_code": 0,
+    "seconds": 23.74633812904358
+  }
+]
