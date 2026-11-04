@@ -1,0 +1,219 @@
+name: Axiom React Native SDK release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Exact source ref to build without publishing'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiom-rn-sdk-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SDK_VERSION: 0.3.7
+  AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    outputs:
+      revision: ${{ steps.identity.outputs.revision }}
+      version: ${{ steps.identity.outputs.version }}
+      publish: ${{ steps.identity.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
+          fetch-depth: 0
+          persist-credentials: false
+      - id: identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          revision=$(git rev-parse HEAD)
+          version=$(python3 -c 'import json; print(json.load(open("sdk/version.json"))["version"])')
+          test "$version" = "$SDK_VERSION"
+          if [[ "$GITHUB_EVENT_NAME" == push && "$GITHUB_REF_TYPE" == tag ]]; then
+            test "$GITHUB_REF_NAME" = "v$version"
+            publish=true
+          else
+            publish=false
+          fi
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "publish=$publish" >> "$GITHUB_OUTPUT"
+          git diff --check
+          python3 -m unittest discover -s tools/release/tests -v
+
+  native:
+    needs: preflight
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos
+            runner: macos-15
+            target: macos-arm64
+          - platform: ios
+            runner: macos-15
+            target: ios-arm64
+          - platform: ios-simulator
+            runner: macos-15
+            target: ios-simulator-arm64
+          - platform: android
+            runner: ubuntu-24.04
+            target: android-arm64-v8a
+          - platform: android-x86_64
+            runner: ubuntu-24.04
+            target: android-x86_64
+          - platform: windows
+            runner: windows-2025
+            target: windows-x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preflight.outputs.revision }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: matrix.platform == 'windows'
+        with:
+          arch: x64
+          toolset: '14.51'
+      - name: Install build tools
+        shell: bash
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
+      - name: Configure Android toolchain
+        if: startsWith(matrix.target, 'android-')
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "ndk;27.2.12479018" "platforms;android-35" "platform-tools"
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - name: Build locked native Runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/release/build_native_sdk.py \
+            --target '${{ matrix.target }}' \
+            --build "out/rn-native-${{ matrix.target }}" \
+            --output "out/rn-install-${{ matrix.target }}" \
+            --ndk "${ANDROID_NDK_HOME:-}"
+      - name: Upload native install
+        uses: actions/upload-artifact@v4
+        with:
+          name: rn-native-${{ matrix.target }}
+          path: out/rn-install-${{ matrix.target }}
+          if-no-files-found: error
+          retention-days: 30
+
+  package:
+    needs: [preflight, native]
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preflight.outputs.revision }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rn-native-*
+          path: out/native
+      - name: Stage and verify RN packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          REVISION='${{ needs.preflight.outputs.revision }}'
+          python tools/release/native_package.py --common \
+            --output out/rn-common --revision "$REVISION"
+          python tools/release/native_package.py --platform macos \
+            --install macos-arm64=out/native/rn-native-macos-arm64 \
+            --output out/rn-macos --revision "$REVISION"
+          python tools/release/native_package.py --platform ios \
+            --install ios-arm64=out/native/rn-native-ios-arm64 \
+            --install ios-simulator-arm64=out/native/rn-native-ios-simulator-arm64 \
+            --output out/rn-ios --revision "$REVISION"
+          python tools/release/native_package.py --platform android \
+            --install android-arm64-v8a=out/native/rn-native-android-arm64-v8a \
+            --install android-x86_64=out/native/rn-native-android-x86_64 \
+            --output out/rn-android --revision "$REVISION"
+          python tools/release/native_package.py --platform windows \
+            --install windows-x64=out/native/rn-native-windows-x64 \
+            --output out/rn-windows --revision "$REVISION"
+          mkdir -p out/rn-tarballs
+          for package in ./out/rn-common ./out/rn-macos ./out/rn-ios ./out/rn-android ./out/rn-windows; do
+            npm pack "$package" --pack-destination out/rn-tarballs
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rn-sdk-packages
+          path: |
+            out/rn-common
+            out/rn-macos
+            out/rn-ios
+            out/rn-android
+            out/rn-windows
+            out/rn-tarballs
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    if: needs.preflight.outputs.publish == 'true'
+    needs: [preflight, package]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.preflight.outputs.revision }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'http://npm.nearhub.cc/'
+          scope: '@mostorm'
+          always-auth: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: rn-sdk-packages
+          path: out/rn-sdk
+      - name: Publish five packages to the restricted registry
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.AXIOM_NPM_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NODE_AUTH_TOKEN"
+          npm whoami --registry=http://npm.nearhub.cc/
+          for package in ./out/rn-sdk/rn-common ./out/rn-sdk/rn-macos ./out/rn-sdk/rn-ios ./out/rn-sdk/rn-android ./out/rn-sdk/rn-windows; do
+            npm publish "$package" --ignore-scripts --access restricted --tag latest --registry=http://npm.nearhub.cc/
+          done

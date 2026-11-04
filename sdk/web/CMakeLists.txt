@@ -23,13 +23,15 @@ target_link_options(axiom_js_runtime PRIVATE
   "-sEXPORTED_FUNCTIONS=['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free']"
   "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16','HEAPU8']"
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf@/axiom-font.otf\""
-  "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported@/fonts\"")
+  "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/catalog.json@/fonts/catalog.json\""
+  "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/Excalifont@/fonts/Excalifont\"")
 set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/internal")
 add_custom_command(TARGET axiom_js_runtime POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
 file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/axiom.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/axiom.d.mts"
+  "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.d.mts"
   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
 file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/internal" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/api" DESTINATION js)
@@ -50,7 +52,7 @@ configure_file("${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/LICENSE.MIT" "${CMAKE_
 foreach(name LICENSE.txt NOTICE.txt)
   configure_file("${PROJECT_SOURCE_DIR}/assets/fonts/noto-sans-cjk-sc/${name}" "${CMAKE_CURRENT_BINARY_DIR}/licenses/noto-cjk-${name}" COPYONLY)
 endforeach()
-file(GLOB_RECURSE _js_font_files "${PROJECT_SOURCE_DIR}/assets/fonts/imported/*")
+file(GLOB_RECURSE _js_font_files "${PROJECT_SOURCE_DIR}/assets/fonts/imported/Excalifont/*")
 foreach(file IN LISTS _js_font_files)
   get_filename_component(name "${file}" NAME)
   string(TOLOWER "${name}" lower_name)

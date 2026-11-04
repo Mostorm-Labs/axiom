@@ -9,7 +9,7 @@ const raw=(command,args={},bytes)=>new Promise(resolve=>{waiting.push(r=>{if(r.b
 const request=async(...args)=>{const r=await raw(...args);assert(r.ok,JSON.stringify(r));return r;};
 try{
  await request('open',{documentId:'a'.repeat(32),builtinFonts:true});
- const c=createTransportController({owner:'real-session',version:'0.2.0',request:raw,subscribe(){return ()=>{};},close:()=>request('close')});
+ const c=createTransportController({owner:'real-session',version:'0.3.0',request:raw,subscribe(){return ()=>{};},close:()=>request('close')});
  assert.equal((await c.readState()).documentId,'a'.repeat(32));
  await c.selectBrush('crayon-wax-v1',3);assert.equal((await c.readBrushConfig()).family,4);
  await c.selectTool('partialEraser');assert.equal((await c.readState()).eraserMode,2);

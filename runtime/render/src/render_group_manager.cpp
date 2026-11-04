@@ -20,7 +20,7 @@ RenderGroupManager::Update RenderGroupManager::update(std::span<const ReferenceT
                 old.resourceEpoch!=resourceEpoch||a.directDependencies!=b.directDependencies,
                 old.source.geometryChunked!=source.geometryChunked ||
                     old.source.geometryChunkIndices!=source.geometryChunkIndices};
-            if(change.content||change.transform||change.clip||change.effect||change.order||change.resource||a.worldBounds!=b.worldBounds){
+            if(change.content||change.transform||change.clip||change.effect||change.order||change.resource||change.geometry||a.worldBounds!=b.worldBounds){
                 result.contributions.push_back({id,VisualContribution{a.worldBounds,old.source.contributesPixels,false},VisualContribution{b.worldBounds,source.contributesPixels,false}});
                 old.group.apply(change);old.source=source;
             }

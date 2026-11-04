@@ -154,6 +154,21 @@ class CiTriggerBoundaryTest(unittest.TestCase):
                          'sdk-consumer-regressions.xml'):
             self.assertIn(required, builder)
 
+    def test_react_native_release_reuses_product_release_record(self):
+        workflow = (WORKFLOWS / "rn-sdk-release.yml").read_text(encoding="utf-8")
+        self.assertIn("npm publish", workflow)
+        self.assertNotIn("gh release create", workflow)
+
+    def test_react_native_android_and_web_probe_use_hosted_runner_contracts(self):
+        rn = (WORKFLOWS / "rn-sdk-release.yml").read_text(encoding="utf-8")
+        self.assertIn('"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"', rn)
+        self.assertNotIn("sdkmanager --licenses", rn)
+        probe = (ROOT / "tools/release/chrome_probe.mjs").read_text(encoding="utf-8")
+        self.assertIn("AbortSignal.timeout(60000)", probe)
+        self.assertIn("diagnostics()", probe)
+        browser = (ROOT / "verification/sdk_js/verify_browser.mjs").read_text(encoding="utf-8")
+        self.assertIn("method==='Page.navigate'?120000:90000", browser)
+
 
 if __name__ == "__main__":
     unittest.main()

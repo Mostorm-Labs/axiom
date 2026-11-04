@@ -88,7 +88,7 @@ try {
     await delay(50);
   }
   const demoPixel = () => evaluate(`(()=>{const input=document.querySelector('#canvas canvas');const c=document.createElement('canvas');c.width=input.width;c.height=input.height;const ctx=c.getContext('2d');ctx.drawImage(input,0,0);return Array.from(ctx.getImageData(12,12,1,1).data);})()`);
-  observation.checks.demoDefaultTool=await evaluate("Array.from(document.querySelectorAll('button')).find(button=>button.textContent==='Ink')?.getAttribute('aria-pressed')==='true'");
+  observation.checks.demoDefaultTool=await evaluate("document.querySelector('button[data-tool=\\\"tool:0\\\"]')?.getAttribute('aria-pressed')==='true'");
   let beforeDraft;
   for(let n=0;n<100;++n){beforeDraft=await demoPixel();if(beforeDraft[3]===255)break;await delay(25);}
   await evaluate(`(()=>{for(const [id,value] of [['background-mode','grid'],['background-color','#00ff00'],['background-pattern-color','#ff0000']]){const input=document.getElementById(id);input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));}})()`);

@@ -54,6 +54,13 @@ void revisions(){
     (void)manager.update({&value,1},clip,2);rev=manager.find(value.record.objectId)->revisions;
     require(rev.geometry==initial.geometry+1&&rev.content==initial.content,
             "geometry selection conflated with content");
+    value.geometryChunkIndices={2};
+    const auto changedGeometry=manager.update({&value,1},clip,2);
+    rev=manager.find(value.record.objectId)->revisions;
+    require(rev.geometry==initial.geometry+2&&rev.content==initial.content&&
+            !changedGeometry.contributions.empty(),"geometry-only selection reused stale raster");
+    require(manager.update({&value,1},clip,2).contributions.empty(),
+            "unchanged geometry selection repeatedly invalidated raster");
     value.record.properties.entries.push_back({3U,.5F});(void)manager.update({&value,1},clip,2);rev=manager.find(value.record.objectId)->revisions;
     require(rev.effect==initial.effect+1&&rev.content==initial.content,"effect revision not independent");
     auto other=value;other.record.objectId=ObjectId::fromUint64(2);

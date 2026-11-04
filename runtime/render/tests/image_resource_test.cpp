@@ -124,6 +124,7 @@ int main(int argc, char** argv) {
     };
     const auto cold = render(image), warm = render(image);
     assert(cold == warm && resolver.decodeCount() == 2);
+    assert(resolver.imageBuildCount() == 1);
     const std::array<std::uint8_t,4> red{255,0,0,255}, blue{0,0,255,255}, clear{};
     assert(pixel(cold,4,4) == red && pixel(cold,28,4) == blue);
     image.content_mode = semantic::ImageContentMode::kFit;
@@ -142,6 +143,47 @@ int main(int argc, char** argv) {
     assert(std::all_of(corrupt.rgba.begin(),corrupt.rgba.end(),[](auto c){return c==0;}));
     resources.publish(image.resource_id.value,bytes);
     assert(render(image).rgba == cropped.rgba);
+
+    // Navigation tiles must use the same image resolver as the exact path.
+    // This currently fails because the tile renderer only receives text
+    // resources and silently skips ImageReferenceCommand.
+    const auto navigationResource = foundation::ObjectId::fromUint64(43);
+    resources.publish(navigationResource, bytes);
+    auto navigationImage = image;
+    navigationImage.resource_id.value = navigationResource;
+    auto navigationRecord = record;
+    navigationRecord.content = navigationImage;
+    ReferenceTraversalEntry navigationEntry{
+        navigationRecord, true, ImageReferenceCommand{navigationImage}};
+    SkiaRenderer navigation(&resolver);
+    NavigationSourceQuery navigationQuery =
+        [&](const foundation::WorldRect&, std::vector<ReferenceTraversalEntry>& entries) {
+            entries = {navigationEntry};
+            return true;
+        };
+    const auto beforeNavigationDecodes = resolver.decodeCount();
+    bool pending = true;
+    for (unsigned attempt = 0; attempt < 128 && pending; ++attempt) {
+        const auto result = navigation.renderNavigation(
+            provider, {1.0F, -1.0F, 0.0F}, frame, navigationQuery);
+        assert(result.code == BackendSubmissionCode::kAccepted);
+        pending = navigation.navigationWork().pending;
+    }
+    assert(!pending);
+    assert(resolver.decodeCount() == beforeNavigationDecodes + 1);
+    const auto beforeRevisionRefresh = resolver.decodeCount();
+    resources.publish(navigationResource, {1, 2, 3});
+    navigation.setImageResolver(&resolver);
+    pending = true;
+    for (unsigned attempt = 0; attempt < 128 && pending; ++attempt) {
+        const auto result = navigation.renderNavigation(
+            provider, {1.0F, -1.0F, 0.0F}, frame, navigationQuery);
+        assert(result.code == BackendSubmissionCode::kAccepted);
+        pending = navigation.navigationWork().pending;
+    }
+    assert(!pending);
+    assert(resolver.decodeCount() == beforeRevisionRefresh + 1);
+
     assert(generation.current() == beforeGeneration && clock.lastCommittedOrdinal() == beforeOrdinal);
     assert(objects.allObjects() == beforeObjects && ledger.find(operation.id).has_value());
     if(argc == 2) {

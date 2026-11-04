@@ -6,10 +6,24 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-from tools.release.preview_package import package_tree, verify_release
+from tools.release.preview_package import copy_published_imported_fonts, package_tree, verify_release
 
 
 class PreviewPackageTest(unittest.TestCase):
+    def test_preview_font_copy_is_allowlisted(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / 'imported'
+            (source / 'Excalifont').mkdir(parents=True)
+            (source / 'catalog.json').write_text('{"fonts": [{"family": "Excalifont"}]}')
+            (source / 'Excalifont/Excalifont-Regular.ttf').write_bytes(b'font')
+            (source / 'Excalifont/OFL.txt').write_text('license')
+            (source / 'Excalifont/README.md').write_text('readme')
+            destination = root / 'fonts'
+            copy_published_imported_fonts(source, destination)
+            self.assertEqual({p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_file()}, {
+                'catalog.json', 'Excalifont/Excalifont-Regular.ttf', 'Excalifont/OFL.txt', 'Excalifont/README.md'})
+
     def test_manifest_and_archive_preserve_exact_assets(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

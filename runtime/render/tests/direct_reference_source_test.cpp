@@ -491,6 +491,65 @@ void shapeLabelChangesCanonicalReferenceBytes() {
     std::cout << "PASS Shape label changes canonical reference bytes\n";
 }
 
+void navigationUsesGeometryChunkHints() {
+    RuntimeScene scene;
+    canvas::RuntimeSceneProjection projection;
+    projection.generation = SemanticGeneration{7};
+    RuntimeSceneRecord record;
+    record.objectId = ObjectId::fromUint64(9900U);
+    record.kind = ObjectKind::kVectorStroke;
+    record.kindVersion = 3U;
+    canvas::semantic::CompactStrokeContent content;
+    for (std::size_t i = 0; i < 600U; ++i)
+        content.stroke.knots.push_back({static_cast<double>(i), 10.0, 32768U});
+    record.content = content;
+    record.geometryChunks = {
+        {0U, 0U, 256U, WorldRect{0.0F, 0.0F, 255.0F, 20.0F}, "a"},
+        {1U, 256U, 256U, WorldRect{256.0F, 0.0F, 511.0F, 20.0F}, "b"},
+        {2U, 512U, 88U, WorldRect{512.0F, 0.0F, 600.0F, 20.0F}, "c"},
+    };
+    record.geometryBounds = record.worldBounds = WorldRect{0.0F, 0.0F, 600.0F, 20.0F};
+    record.visualBounds = record.worldBounds;
+    projection.records.push_back(record);
+    canvas::IncrementalRuntimeTestAccess::install(scene, std::move(projection));
+    auto input = frame(WorldPoint{64.0F, 10.0F}, WorldRect{0.0F, 0.0F, 120.0F, 40.0F});
+    VisibilityResult visibility{.sceneGeneration = SemanticGeneration{7},
+                                .sceneReadToken = SceneRevision{7},
+                                .queryWorldRect = input.worldViewport,
+                                .candidatesExamined = 1,
+                                .visibleRecords = 1,
+                                .backToFront = {record.objectId}};
+    const auto canonical = DirectReferenceSource::build(input, visibility, scene);
+    assert(canonical.hasValue());
+    assert(!canonical.value().entries.front().navigationChunkSpan.has_value());
+    const auto navigation = DirectReferenceSource::buildNavigation(input, visibility, scene);
+    assert(navigation.hasValue());
+    assert(navigation.value().visibleRecords == 1U);
+    const auto span = navigation.value().entries.front().navigationChunkSpan;
+    assert(span.has_value() && span->pointOffset == 0U && span->pointCount == 256U);
+    visibility.chunkSelections = {{record.objectId, {0U}, false}};
+    const auto localizedCanonical = DirectReferenceSource::build(input, visibility, scene);
+    assert(localizedCanonical.hasValue());
+    assert(localizedCanonical.value().canonicalBytes == canonical.value().canonicalBytes);
+    assert(localizedCanonical.value().digest == canonical.value().digest);
+    assert(localizedCanonical.value().entries.front().geometryChunked);
+    assert(!localizedCanonical.value().entries.front().navigationChunkSpan);
+    const auto localizedNavigation = DirectReferenceSource::buildNavigation(input, visibility, scene);
+    assert(localizedNavigation.hasValue());
+    assert(localizedNavigation.value().entries.front().geometryChunkIndices == std::vector<std::uint32_t>{0U});
+    assert(localizedNavigation.value().entries.front().navigationChunkSpan == span);
+    const auto farInput = frame(WorldPoint{750.0F, 750.0F}, WorldRect{700.0F, 700.0F, 800.0F, 800.0F});
+    const VisibilityResult farVisibility{.sceneGeneration = SemanticGeneration{7},
+                                         .sceneReadToken = SceneRevision{7},
+                                         .queryWorldRect = farInput.worldViewport,
+                                         .candidatesExamined = 1,
+                                         .visibleRecords = 1,
+                                         .backToFront = {record.objectId}};
+    const auto empty = DirectReferenceSource::buildNavigation(farInput, farVisibility, scene);
+    assert(empty.hasValue() && empty.value().entries.empty() && empty.value().visibleRecords == 0U);
+    std::cout << "PASS navigation GeometryChunk hints\n";
+}
+
 } // namespace
 
 int main() {
@@ -499,5 +558,6 @@ int main() {
     replayIsByteAndDigestStable();
     visibleDrivenLocality();
     shapeLabelChangesCanonicalReferenceBytes();
+    navigationUsesGeometryChunkHints();
     return 0;
 }

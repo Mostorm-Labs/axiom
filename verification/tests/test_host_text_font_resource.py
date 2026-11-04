@@ -73,10 +73,14 @@ class HostTextFontResource(unittest.TestCase):
 
 
 class ImportedFontCatalog(unittest.TestCase):
+    def test_only_excalifont_is_kept_in_imported_resource_root(self):
+        root = ROOT / "assets/fonts/imported"
+        self.assertEqual({p.name for p in root.iterdir()}, {"Excalifont", "catalog.json"})
+
     def test_catalog_bytes_licenses_and_ids_are_exact(self):
         root = ROOT / "assets/fonts/imported"
         catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(catalog["fonts"]), 11)
+        self.assertEqual([entry["family"] for entry in catalog["fonts"]], ["Excalifont"])
         identities = set()
         families = set()
         for entry in catalog["fonts"]:

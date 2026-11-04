@@ -483,21 +483,21 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if(shouldCanonical && !forceCanonical && !editingTransient)
     out.navigationPending=runtime_->serviceNavigationPresentation(
         std::chrono::steady_clock::now(),out.navigationPresented);
-  if (shouldCanonical && !out.navigationPending && !editingTransient) {
+  // Selection chrome is a canonical overlay, but the first contact of a
+  // possible pinch is still under AutoIntent arbitration. Do not spend this
+  // frame opportunity on a full scene render before the second contact can
+  // claim the viewport gesture; the eventual single-pointer Up still
+  // submits the selection frame normally.
+  const bool awaitingViewportClaim = runtime_->selectionOverlay() != nullptr &&
+      runtime_->pendingViewportGesture();
+  if (shouldCanonical && !out.navigationPending && !editingTransient &&
+      !awaitingViewportClaim) {
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
     out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);
     if (!out.canonicalRequested && !runtime_->canonicalPresentationRetryable()) return false;
   }
   if (!captureCanonicalWork()) return false;
-  // Navigation feedback may reuse the most recently submitted canonical
-  // frame as a disposable visual source while its platform receipt is still
-  // pending. Do not expose that same canonical work to the platform fence a
-  // second time; the original work remains retained in RuntimeCompositionCore
-  // and will be completed by receivePlatformPresented().
-  if (out.navigationPending || out.navigationPresented) {
-    out.canonicalWork.reset();
-  }
   out.previewActive = runtime_->previewActive();
   out.previewDirty = runtime_->previewRenderState().dirty;
   if (out.previewActive && out.previewDirty && !pendingPreviewCapture_.has_value()) {
@@ -527,6 +527,14 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   out.previewRevision = runtime_->previewRenderState().contentRevision;
   out.canonicalFrame = runtime_->lastSubmittedCanonicalFrame();
   out.canonicalWork = lastSubmittedCanonicalWork();
+  // Navigation feedback may reuse the most recently submitted canonical
+  // frame as a disposable visual source while its platform receipt is still
+  // pending. Do not expose that same canonical work to the platform fence a
+  // second time; the original work remains retained in RuntimeCompositionCore
+  // and will be completed by receivePlatformPresented().
+  if (out.navigationPending || out.navigationPresented) {
+    out.canonicalWork.reset();
+  }
   out.needsPaint = out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();

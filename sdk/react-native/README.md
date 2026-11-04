@@ -1,4 +1,4 @@
-# @mostorm/axiom-react-native (0.2.0 development package)
+# @mostorm/axiom-react-native (0.3.7 package)
 
 This package exposes the shared async Controller and Fabric `AxiomCanvasView`
 contract for the React Native development lanes below. The same TypeScript calls are used on
@@ -13,7 +13,13 @@ validation. No POC05 state or renderer is used as a product owner.
 
 ## Development build
 
-Build a matching native install with `tools/release/build_native_sdk.py`, then stage the RN consumer with `tools/release/native_package.py`. The package includes only the public C header, finished platform library/framework, deterministic assets and licenses; it does not include Runtime or Skia archives.
+Build a matching native install with `tools/release/build_native_sdk.py`, then stage the RN consumer with `tools/release/native_package.py`. Publish one shared TypeScript package, `@mostorm/axiom-react-native`, and one platform package per target: `@mostorm/axiom-react-native-windows`, `-android`, `-ios`, and `-macos`. The platform package includes its adapter sources plus the pure Runtime named `axiom` (`axiom.dll`, `libaxiom.so`, `axiom.xcframework`, or `axiom.framework`); the shared package has no native binaries.
+
+Windows has two required runtime layers: RNW builds the adapter as
+`MostormAxiom.dll`, while the package carries the pure Runtime `axiom.dll` and
+`axiom.lib`. Android similarly uses the JNI adapter
+`libaxiom_react_native_android.so` with the pure `libaxiom.so`. The adapter and
+Runtime are different binaries and are never substituted for one another.
 
 The Windows development lane uses React Native 0.84.1, React 19.2.3 and RN Windows
 0.84.0, selected by the user on 2026-11-02. Existing Apple/Android evidence remains
@@ -61,7 +67,7 @@ macOS arm64/macOS 15, Windows x64. Android x86_64 has a build entry but is not
 verified in this checkpoint. Other ABIs are not advertised as supported.
 
 For Apple, staging automatically assembles device+simulator into
-`native/apple/AxiomNative.xcframework`; supply both installs. Assets ship as a
+`native/apple/axiom.xcframework`; supply both installs. Assets ship as a
 complete `AxiomAssets.bundle` to preserve font subdirectories. Set the consumer
 Podfile deployment target to at least iOS 17. Staging rejects dirty source,
 foreign revision/version/resources and modified native bytes. Each install must
@@ -73,11 +79,14 @@ Example (run at repository root after committing the source):
 python3 tools/release/build_native_sdk.py --target macos-arm64 --build out/rn-sdk-macos --output out/rn-final/macos --offline
 python3 tools/release/build_native_sdk.py --target ios-arm64 --build out/rn-sdk-ios-device --output out/rn-final/ios --offline
 python3 tools/release/build_native_sdk.py --target ios-simulator-arm64 --build out/rn-sdk-ios-simulator --output out/rn-final/simulator --offline
-python3 tools/release/native_package.py --install macos-arm64=out/rn-final/macos --install ios-arm64=out/rn-final/ios --install ios-simulator-arm64=out/rn-final/simulator --output out/rn-final/package --revision "$(git rev-parse HEAD)"
+python3 tools/release/native_package.py --common --output out/rn-final/common --revision "$(git rev-parse HEAD)"
+python3 tools/release/native_package.py --platform macos --install macos-arm64=out/rn-final/macos --output out/rn-final/macos-package --revision "$(git rev-parse HEAD)"
+python3 tools/release/native_package.py --platform ios --install ios-arm64=out/rn-final/ios --install ios-simulator-arm64=out/rn-final/simulator --output out/rn-final/ios-package --revision "$(git rev-parse HEAD)"
 ```
 
 Android additionally needs the accepted NDK 27.2.12479018 (`--ndk <path>`).
-Install the staged package using `npm install <absolute-package-path>`; source
+Install the common package and exactly one platform package using
+`npm install <absolute-package-path>`; source
 `sdk/react-native` intentionally contains no native binaries and is not a
 self-contained consumer package.
 

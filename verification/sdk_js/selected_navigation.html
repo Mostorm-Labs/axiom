@@ -1,0 +1,83 @@
+<!doctype html><meta charset="utf-8"><title>Selected image wheel navigation regression</title>
+<style>body{margin:0}#mount{width:800px;height:500px}</style>
+<div id="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const errors=[],results=[],samples=[],scenarios=[],bindings=new WeakMap(),originals=new Map();
+let sdk,frames=0,active=false,draws=0,fences=0,polls=0,maxWait=0;
+const proto=WebGL2RenderingContext.prototype;
+const wrap=(name,fn)=>{originals.set(name,proto[name]);proto[name]=fn(proto[name]);};
+wrap('bindFramebuffer',raw=>function(target,fb){if(target===this.FRAMEBUFFER||target===this.DRAW_FRAMEBUFFER)bindings.set(this,fb);return raw.call(this,target,fb);});
+for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced'])
+  wrap(name,raw=>function(...args){if(active&&!bindings.get(this))++draws;return raw.apply(this,args);});
+wrap('fenceSync',raw=>function(...args){if(active)++fences;return raw.apply(this,args);});
+wrap('clientWaitSync',raw=>function(...args){if(active){++polls;maxWait=Math.max(maxWait,args[2]);}return raw.apply(this,args);});
+const raf=()=>new Promise(requestAnimationFrame);
+const until=async(fn,label)=>{for(let i=0;i<600;++i){if(fn())return;await raf();}throw Error(label);};
+const check=(value,label)=>{if(!value)throw Error(label);results.push(label);};
+const pointer=(type,x,y)=>sdk.canvas.dispatchEvent(new PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:x,clientY:y,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));
+const settle=async(prior)=>{await until(()=>frames>prior,'exact settle receipt');for(let i=0;i<10;++i)await raf();};
+try{
+  sdk=await createRuntime({mount:document.getElementById('mount'),builtinFonts:false,permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:()=>++frames});
+  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+  sdk.data.attach({capacity:64});await sdk.selectBrush('round-handdrawn',4);
+  for(let line=0;line<2;++line){
+    const prior=frames;
+    for(let i=0;i<512;++i)pointer(i===0?'pointerdown':i===511?'pointerup':'pointermove',40+i*1.4,150+line*130+Math.sin(i*.055)*80);
+    await settle(prior);
+  }
+  await sdk.selectShape('rectangle');
+  let prior=frames;pointer('pointerdown',70,50);pointer('pointerup',210,120);await settle(prior);
+  const bitmap=document.createElement('canvas');bitmap.width=2048;bitmap.height=1024;
+  const ctx=bitmap.getContext('2d'),gradient=ctx.createLinearGradient(0,0,2048,1024);
+  gradient.addColorStop(0,'#345eb8');gradient.addColorStop(1,'#f19d42');ctx.fillStyle=gradient;ctx.fillRect(0,0,2048,1024);
+  const blob=await new Promise(resolve=>bitmap.toBlob(resolve,'image/png'));
+  prior=frames;await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png');await settle(prior);
+  const imageId=sdk.readSelectedImage().objectId;
+  prior=frames;await sdk.transformSelection([1,0,0,1,200,400]);await settle(prior);
+  const imageBounds=sdk.readSelection().bounds;
+  check(sdk.readSelectedImage().available,'image imported and selected through root SDK');
+  for(let cycle=0;cycle<3;++cycle){
+    for(const selected of [true,false]){
+      if(!selected){
+        prior=frames;pointer('pointerdown',790,490);pointer('pointerup',790,490);await settle(prior);
+        check(sdk.readState().selected.length===0,`cycle ${cycle}: selection cleared`);
+      } else {
+        if(sdk.readState().primary!==imageId){
+          const c=sdk.readState().camera;prior=frames;
+          // An uncovered point in the image; ink is intentionally topmost
+          // and can be hit instead of the image at its center.
+          const x=(imageBounds[0]+.8*(imageBounds[2]-imageBounds[0]))*c.scale+c.x;
+          const y=(imageBounds[1]+.1*(imageBounds[3]-imageBounds[1]))*c.scale+c.y;
+          pointer('pointerdown',x,y);pointer('pointerup',x,y);
+          await settle(prior);
+        }
+        check(sdk.readState().primary===imageId,`cycle ${cycle}: image remains selected`);
+      }
+      const before=sdk.readState(),startFrames=frames,record=[];active=true;
+      for(let i=0;i<36;++i){
+        const tick=performance.now(),count=draws;
+        const pan=i>=24;
+        sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
+          deltaX:pan?(i%2?3:-3):0,deltaY:pan?(i%2?2:-2):(i<12?-2:2),bubbles:true,cancelable:true}));
+        await raf();const row={cycle,selected,index:i,duration:performance.now()-tick,draws:draws-count};record.push(row);samples.push(row);
+      }
+      active=false;
+      const after=sdk.readState(),updated=record.filter(s=>s.draws>0).length;
+      check(frames===startFrames,`cycle ${cycle}/${selected}: navigation has no canonical receipt`);
+      check(updated>=30,`cycle ${cycle}/${selected}: display follows wheel input`);
+      check(after.generation===before.generation&&after.primary===before.primary&&after.objects===before.objects,`cycle ${cycle}/${selected}: selection and canonical document preserved`);
+      const settledAt=performance.now();await until(()=>frames>startFrames,'navigation exact settle receipt');
+      const settleMilliseconds=performance.now()-settledAt;
+      for(let i=0;i<10;++i)await raf();
+      const sorted=record.map(r=>r.duration).sort((a,b)=>a-b);
+      scenarios.push({cycle,selected,updated,samples:record.length,rafP50:sorted[17],rafP95:sorted[34],rafMax:sorted.at(-1),settleMilliseconds});
+    }
+  }
+  check(maxWait===0,'wheel input never blocks on GPU completion');check(!errors.length,'no rendering errors');
+  for(let packet;(packet=sdk.data.readNext());)sdk.data.release(packet);
+  await sdk.close();
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,samples,scenarios,fences,polls,maxWait,errors});
+}catch(e){active=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(e),results,samples,scenarios,fences,polls,maxWait,errors});}
+finally{for(const [name,raw]of originals)proto[name]=raw;}
+</script>

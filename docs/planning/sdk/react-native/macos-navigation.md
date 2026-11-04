@@ -1,4 +1,4 @@
-# macOS native viewport input (RN 0.2.0 development)
+# macOS native viewport input (RN 0.3.0)
 
 Execution anchor: `Mostorm-Labs/axiom@39028aca9692de5b9c41c2c409700f05ee4cc48d`
 on `codex/react-native-sdk`. The user authorized AppKit pinch/scroll adaptation

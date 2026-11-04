@@ -9,6 +9,20 @@ int main() {
   ViewportInteractionController controller;
   const canvas::input::PointerKey a{1, 1, 1};
   const canvas::input::PointerKey b{1, 2, 1};
+  // Waiting for a nonzero pinch baseline must preserve a committed camera.
+  assert(controller.setCamera(2.0F, 10.0F, -5.0F));
+  assert(controller.updateGesture({1, 1, 5.0F, 5.0F, 0.0F, false, a},
+                                  {1, 1, 5.0F, 5.0F, 0.0F, false, b}));
+  assert(controller.state().scale == 2.0F);
+  assert(controller.state().translationX == 10.0F);
+  assert(controller.state().translationY == -5.0F);
+  assert(controller.updateGesture({2, 2, 0.0F, 0.0F, 0.0F, false, a},
+                                  {2, 2, 20.0F, 0.0F, 0.0F, false, b}));
+  assert(controller.state().scale == 2.0F);
+  assert(controller.state().translationX == 10.0F);
+  assert(controller.state().translationY == -5.0F);
+  controller.endGesture();
+  controller.reset();
   assert(controller.updateGesture({1, 1, 0.0F, 0.0F, 0.0F, false, a},
                                   {1, 1, 20.0F, 0.0F, 0.0F, false, b}));
   assert(controller.state().scale == 1.0F);

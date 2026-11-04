@@ -19,7 +19,7 @@ class NpmPublicationTest(unittest.TestCase):
         package = json.loads((REPO / 'sdk/web/package.json').read_text())
         self.assertEqual(package['name'], '@mostorm/axiom')
         self.assertIs(package.get('private'), False)
-        self.assertEqual(package['publishConfig'], {'registry': REGISTRY, 'tag': 'latest'})
+        self.assertEqual(package['publishConfig'], {'access': 'restricted', 'registry': REGISTRY, 'tag': 'latest'})
         self.assertIn('manifest.json', package['files'])
         self.assertEqual(package['version'], json.loads((REPO / 'sdk/version.json').read_text())['version'])
         wrapper = (REPO / 'sdk/web/axiom.mjs').read_text()

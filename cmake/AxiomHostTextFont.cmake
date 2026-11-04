@@ -54,7 +54,11 @@ function(axiom_package_host_text_font target)
   if(NOT TARGET axiom_host_text_font_assets)
     set(destination "${CMAKE_CURRENT_BINARY_DIR}")
     add_custom_target(axiom_host_text_font_assets
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${AXIOM_HOST_FONT_CATALOG_ROOT}" "${destination}/fonts"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${destination}/fonts/Excalifont"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_CATALOG_ROOT}/catalog.json" "${destination}/fonts/catalog.json"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_CATALOG_ROOT}/Excalifont/Excalifont-Regular.ttf" "${destination}/fonts/Excalifont/Excalifont-Regular.ttf"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_CATALOG_ROOT}/Excalifont/OFL.txt" "${destination}/fonts/Excalifont/OFL.txt"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_CATALOG_ROOT}/Excalifont/README.md" "${destination}/fonts/Excalifont/README.md"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_PATH}" "${destination}/axiom-font.otf"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_ROOT}/LICENSE.txt" "${destination}/axiom-font.LICENSE.txt"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${AXIOM_HOST_FONT_ROOT}/NOTICE.txt" "${destination}/axiom-font.NOTICE.txt")

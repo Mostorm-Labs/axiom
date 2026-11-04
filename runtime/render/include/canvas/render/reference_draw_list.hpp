@@ -92,6 +92,14 @@ struct CompactStrokeReferenceCommand final {
     semantic::CompactStrokeContent content;
     bool operator==(const CompactStrokeReferenceCommand&) const=default;
 };
+// Navigation-only locality hint. Canonical reference plans deliberately do
+// not carry this field: it is an optimization hint for disposable world
+// tiles, never a second geometry authority.
+struct NavigationChunkSpan final {
+    std::uint32_t pointOffset = 0;
+    std::uint32_t pointCount = 0;
+    bool operator==(const NavigationChunkSpan&) const = default;
+};
 using ReferenceCommand = std::variant<
     ShapeReferenceCommand,
     ImageReferenceCommand,
@@ -110,10 +118,11 @@ struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;
     bool contributesPixels = true;
     ReferenceCommand command;
-    // Optional locality metadata. Current renderers conservatively consume
-    // the complete object until chunk raster parity is proven.
-    std::vector<std::uint32_t> geometryChunkIndices;
+    // Derived locality hints; never included in canonical reference bytes.
+    // Direct chunk ranges and disposable navigation spans have separate consumers.
+    std::vector<std::uint32_t> geometryChunkIndices{};
     bool geometryChunked = false;
+    std::optional<NavigationChunkSpan> navigationChunkSpan = std::nullopt;
 
     bool operator==(const ReferenceTraversalEntry&) const = default;
 };

@@ -518,10 +518,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             if (images == nullptr) return;
             const auto decoded = images->resolve(command.content.resource_id);
             if (decoded->state != ImageResourceState::kReady) return;
-            const auto info = SkImageInfo::Make(decoded->width, decoded->height,
-                kRGBA_8888_SkColorType, kPremul_SkAlphaType, SkColorSpace::MakeSRGB());
-            const auto image = SkImages::RasterFromData(info,
-                SkData::MakeWithCopy(decoded->rgba.data(), decoded->rgba.size()), info.minRowBytes());
+            const auto image = images->resolveSkImage(command.content.resource_id);
             if (!image) return;
             if (command.showCropSource) {
                 const auto fullSource = SkRect::MakeWH(static_cast<float>(decoded->width),
@@ -1033,7 +1030,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     canvas.restore();
 }
 
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets, ImageResourceResolver* images, SkiaTextResources* textResources) {
     std::optional<internal::CompactStrokeRange> range;
     if (entry.geometryChunked) {
         if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -1061,7 +1058,7 @@ void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraver
             }
         }
     }
-    drawCommand(canvas,entry,nullptr,nullptr,true,false,coverage,grid,work,compatibleCoverage,targets,
+    drawCommand(canvas,entry,images,textResources,true,false,coverage,grid,work,compatibleCoverage,targets,
                 range ? &*range : nullptr);
     drawEraseMasksToSkCanvas(canvas,entry);
 }

@@ -43,7 +43,9 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
     # lightweight core setup; it is not bundled into the Runtime SDK.
     shutil.copytree(repo/'.deps/nlohmann-json/single_include/nlohmann', source/'json/nlohmann')
     shutil.copyfile(repo/'assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf', source/'axiom-font.otf')
-    shutil.copytree(repo/'assets/fonts/imported', source/'fonts')
+    source.joinpath('fonts').mkdir(parents=True, exist_ok=True)
+    shutil.copy2(repo/'assets/fonts/imported/catalog.json', source/'fonts/catalog.json')
+    shutil.copytree(repo/'assets/fonts/imported/Excalifont', source/'fonts/Excalifont')
     # Copy and validate the declared locked package outside every checkout.
     skia = root/'skia'
     shutil.copytree(a.skia_root.resolve(), skia)

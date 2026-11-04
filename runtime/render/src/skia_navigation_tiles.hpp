@@ -4,6 +4,8 @@
 #include "canvas/ink/compact_contour.hpp"
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
+#include "canvas/render/skia_text_resources.hpp"
+#include "canvas/render/image_resource.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
@@ -11,6 +13,7 @@
 #include "include/core/SkImage.h"
 #include <map>
 #include <atomic>
+#include <unordered_map>
 
 class SkCanvas;
 namespace canvas::render::internal {
@@ -21,7 +24,9 @@ class SkiaNavigationTiles final {
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
-        const std::function<bool()>& retainedFeedback={});
+        const std::function<bool()>& retainedFeedback={}, SkiaTextResources* textResources=nullptr,
+        ImageResourceResolver* images=nullptr,
+        const std::function<void(SkCanvas&)>& drawOverlay={});
  private:
     struct Sources {std::uint64_t scene=0;std::vector<ReferenceTraversalEntry> entries;resources::ResourceLease lease;};
     struct Tile {
@@ -35,14 +40,23 @@ class SkiaNavigationTiles final {
         std::shared_ptr<const Sources> sources;
         sk_sp<SkSurface> surface,coverage;
         std::size_t source=0,knot=0;
+        bool sourceInitialized=false;
         double distance=0,totalDistance=0;
         std::optional<ink::CompactContourCompiler> contour;
+        std::shared_ptr<const std::vector<double>> prefixDistances;
         std::uint64_t id=0,steps=0;
         bool prewarm=false;
         resources::ResourceLease lease;
     };
     std::map<TileKey,Tile> tiles_;
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
+    struct PrefixEntry final {
+        std::uint64_t scene = 0;
+        std::string digest;
+        std::shared_ptr<const std::vector<double>> distances;
+        std::shared_ptr<const ink::CompactContour> contour;
+    };
+    std::unordered_map<foundation::ObjectId, PrefixEntry, foundation::ObjectIdHash> prefixes_;
     std::unique_ptr<Job> job_;
     TileGrid grid_{256};
     scheduling::RuntimeScheduler scheduler_{4};

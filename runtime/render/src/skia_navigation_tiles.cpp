@@ -41,19 +41,41 @@ bool supported(const ReferenceTraversalEntry& e){
     if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity;
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
     if(v&&v->content.stroke.snapshot.material_mode==1)return identity;
-    return std::holds_alternative<ShapeReferenceCommand>(e.command);
+    return std::holds_alternative<ShapeReferenceCommand>(e.command) ||
+        std::holds_alternative<ImageReferenceCommand>(e.command) ||
+        std::holds_alternative<StickyReferenceCommand>(e.command) ||
+        std::holds_alternative<TableReferenceCommand>(e.command) ||
+        std::holds_alternative<RichTextReferenceCommand>(e.command);
 }
 
-void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+std::pair<std::size_t, std::size_t> compactRange(const ReferenceTraversalEntry& entry) {
+    const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+    if (compact == nullptr || !entry.navigationChunkSpan) return {0, compact == nullptr ? 0U : compact->content.stroke.knots.size()};
+    const auto& knots = compact->content.stroke.knots;
+    // Contour v4 carries paired anchors across the complete stroke. Until a
+    // chunk-local contour oracle exists, keep it on the complete-object path.
+    if (compact->content.stroke.config.algorithmVersion == 4U)
+        return {0, knots.size()};
+    const auto begin = std::min<std::size_t>(entry.navigationChunkSpan->pointOffset, knots.size());
+    const auto end = std::min<std::size_t>(begin + entry.navigationChunkSpan->pointCount, knots.size());
+    if (end <= begin) return {0, 0};
+    // Keep the next neighbor on the right. The material helpers themselves
+    // read the preceding knot when needed, while the distance seed below
+    // preserves the full-stroke arc-length phase.
+    return {begin, std::min(knots.size(), end + 1)};
+}
+
+void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
+                         SkiaTextResources* textResources, ImageResourceResolver* images){
     const auto& t=entry.record.transform;
     const bool identity=t.a==1.0&&t.b==0.0&&t.c==0.0&&t.d==1.0&&t.tx==0.0&&t.ty==0.0;
-    if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry);return;}
+    if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources);return;}
     canvas.save();
     canvas.concat(SkMatrix::MakeAll(static_cast<SkScalar>(t.a),static_cast<SkScalar>(t.c),
                                     static_cast<SkScalar>(t.tx),static_cast<SkScalar>(t.b),
                                     static_cast<SkScalar>(t.d),static_cast<SkScalar>(t.ty),
                                     0.0F,0.0F,1.0F));
-    drawValidatedIsolatedEntryToSkCanvas(canvas,entry);
+    drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources);
     canvas.restore();
 }
 }
@@ -104,7 +126,8 @@ void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patche
 BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& frame,const NavigationSourceQuery& query,
     std::uint64_t resourceEpoch,const RenderCacheOptions& options,
-    std::shared_ptr<resources::ResourceBudgetManager> budget,bool allowPrewarm,const std::function<bool()>& retainedFeedback){
+    std::shared_ptr<resources::ResourceBudgetManager> budget,bool allowPrewarm,const std::function<bool()>& retainedFeedback, SkiaTextResources* textResources, ImageResourceResolver* images,
+    const std::function<void(SkCanvas&)>& drawOverlay){
     const auto started=std::chrono::steady_clock::now();
     const auto before=work;
     struct Timing {
@@ -133,7 +156,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         return BackendSubmissionResult::retry("world navigation ineligible");
     if(provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
-        cancel();tiles_.clear();sources_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();dirty_=true;level_.reset();
+        cancel();tiles_.clear();sources_.clear();prefixes_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();dirty_=true;level_.reset();
         provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     const auto scene=frame.sceneReadToken.value();
@@ -154,7 +177,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     if(keys.empty()||parents.empty()||keys.size()+parents.size()>maximumTiles)return BackendSubmissionResult::retry("world navigation residency cannot converge");
     if(level_&&*level_!=level)++work.levelChanges;
     level_=level;work.selectedLevel=level;
-    const auto required=[&](TileKey key){return std::find(keys.begin(),keys.end(),key)!=keys.end()||std::find(parents.begin(),parents.end(),key)!=parents.end();};
+    // Keep one world-tile ring around the visible demand.  This is residency
+    // protection only: composition still uses `keys`, so overscan never
+    // exposes pixels outside the requested viewport or qualifies a frame.
+    const auto tileWorld = std::ldexp(256.0, -level);
+    const auto overscan = expanded(visible, tileWorld);
+    const auto overscanKeys = grid_.coverage(overscan, level, 256);
+    const auto required=[&](TileKey key){
+        return std::find(keys.begin(),keys.end(),key)!=keys.end() ||
+            std::find(parents.begin(),parents.end(),key)!=parents.end() ||
+            std::find(overscanKeys.begin(),overscanKeys.end(),key)!=overscanKeys.end();
+    };
     if(job_&&!required(job_->key)&&(!job_->prewarm||demandChanged))cancel();
     auto acquired=provider.acquire();
     if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return BackendSubmissionResult::retry("world navigation target unavailable");
@@ -169,7 +202,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     work.coverageComplete=coverage(keys,scene,patches);
     // Feedback goes out before a single new Scene query or allocation.
     if(dirty_&&work.coverageComplete){
-        compose(*target,patches,camera,frame);provider.release();release.active=false;
+        compose(*target,patches,camera,frame);
+        if(drawOverlay)drawOverlay(*target);
+        provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
         work.presented=true;dirty_=false;++work.feedbackFirst;
     }else if(dirty_&&retainedFeedback){
@@ -197,6 +232,29 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const bool ok=query(expanded(grid_.bounds(key),std::ldexp(double(gutter),-key.scale)),sources);
         work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
         if(!ok||std::any_of(sources.begin(),sources.end(),[](const auto& e){return !supported(e);}))return false;
+        for (const auto& entry : sources) {
+            const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+            if (compact == nullptr) continue;
+            const auto& stroke = compact->content.stroke;
+            const auto digest = entry.record.referenceGeometryDigest;
+            auto& cached = prefixes_[entry.record.objectId];
+            if (cached.scene != scene || cached.digest != digest || !cached.distances ||
+                cached.distances->size() != stroke.knots.size() + 1U) {
+                auto distances = std::make_shared<std::vector<double>>(stroke.knots.size() + 1U, 0.0);
+                for (std::size_t i = 2; i < distances->size(); ++i) {
+                    (*distances)[i] = (*distances)[i - 1] +
+                        std::hypot(stroke.knots[i - 1].x - stroke.knots[i - 2].x,
+                                   stroke.knots[i - 1].y - stroke.knots[i - 2].y);
+                }
+                std::shared_ptr<const ink::CompactContour> contour;
+                if (stroke.config.algorithmVersion == 4U) {
+                    contour = std::make_shared<const ink::CompactContour>(
+                        ink::compileCompactContour(stroke.config, stroke.knots));
+                }
+                cached = PrefixEntry{scene, digest, std::move(distances), std::move(contour)};
+                work.prefixScanKnots += stroke.knots.size();
+            }
+        }
         std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> ids;
         for(const auto& entry:sources)if(entry.record.objectId.isZero()||!ids.insert(entry.record.objectId).second)return false;
         ReferenceDrawList validation{.frame=frame,.entries={},.canonicalBytes={},.digest={}};
@@ -280,28 +338,51 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             tiles_.emplace(job.key,Tile{std::move(job.sources),std::move(image),tick_,scene,std::move(job.lease)});
             work.retainedBytes+=tileBytes*3;job_.reset();dirty_=true;++work.tilesBuilt;++steps;continue;
         }
-        const auto& entry=job.sources->entries[job.source];submitted=true;
+    const auto& entry=job.sources->entries[job.source];submitted=true;
         if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command)){
             const auto& stroke=c->content.stroke;auto* draw=job.coverage->getCanvas();
-            if(job.knot==0){
-                job.distance=0;job.totalDistance=ink::compactLength(stroke.knots);
-                if(stroke.config.algorithmVersion==4)job.contour.emplace(stroke.config);else job.contour.reset();
+            if(!job.sourceInitialized){
+                const auto range = compactRange(entry);
+                if (range.second <= range.first) { ++job.source; continue; }
+                job.knot = range.first;
+                // The range renderer backs up one shared neighbor before
+                // drawing a chunk, so the distance is the length through the
+                // knot immediately before the requested span.
+                const auto prefix = prefixes_.find(entry.record.objectId);
+                if (prefix != prefixes_.end()) job.prefixDistances = prefix->second.distances;
+                job.distance = job.prefixDistances && job.knot < job.prefixDistances->size()
+                    ? (*job.prefixDistances)[job.knot] : ink::compactLength(std::span<const foundation::InkKnot>(
+                        stroke.knots.data(), job.knot));
+                job.totalDistance = job.prefixDistances && !job.prefixDistances->empty()
+                    ? job.prefixDistances->back() : ink::compactLength(stroke.knots);
+                if (stroke.config.algorithmVersion==4 && prefix != prefixes_.end() && prefix->second.contour) {
+                    job.contour.reset();
+                } else if(stroke.config.algorithmVersion==4) {
+                    job.contour.emplace(stroke.config);
+                } else job.contour.reset();
                 draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+                job.sourceInitialized = true;
             }
-            const auto end=std::min(job.knot+32,stroke.knots.size());
-            if(job.contour){
+            const auto range = compactRange(entry);
+            std::size_t end=std::min(job.knot+32,range.second);
+            const auto cachedContour = prefixes_.find(entry.record.objectId);
+            if(stroke.config.algorithmVersion==4 && cachedContour != prefixes_.end() && cachedContour->second.contour){
+                drawCompactContourCoverageToSkCanvas(*draw,stroke.config,*cachedContour->second.contour);
+                end = range.second;
+            } else if(job.contour){
                 ink::CompactContour contours;job.contour->append({stroke.knots.data()+job.knot,end-job.knot},job.totalDistance,contours);
                 if(end==stroke.knots.size())job.contour->finish(job.totalDistance,contours);
                 drawCompactContourCoverageToSkCanvas(*draw,stroke.config,contours);
             }else drawCompactCoverageRangeToSkCanvas(*draw,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance,stroke.seed);
-            for(std::size_t i=std::max(std::size_t(1),job.knot);i<end;++i)job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,stroke.knots[i].y-stroke.knots[i-1].y);
+            job.distance = job.prefixDistances && end < job.prefixDistances->size()
+                ? (*job.prefixDistances)[end] : job.distance;
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
-            if(job.knot<stroke.knots.size())continue;
+            if(job.knot<range.second)continue;
             compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             if (!entry.record.eraseMasks.empty())
                 drawEraseMasksToSkCanvas(*job.surface->getCanvas(), entry);
-        }else drawNavigationEntry(*job.surface->getCanvas(),entry);
-        ++job.source;job.knot=0;++work.sourceSteps;
+        }else drawNavigationEntry(*job.surface->getCanvas(),entry,textResources,images);
+        ++job.source;job.knot=0;job.sourceInitialized=false;++work.sourceSteps;
     }
     if(context&&submitted){
         auto completion=std::make_shared<Completion>();
@@ -318,7 +399,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // one feedback present per call; new refinements wait for the next frame.
     patches.clear();work.coverageComplete=coverage(keys,scene,patches);
     if(dirty_&&work.coverageComplete&&!work.presented){
-        compose(*target,patches,camera,frame);provider.release();release.active=false;
+        compose(*target,patches,camera,frame);
+        if(drawOverlay)drawOverlay(*target);
+        provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
         work.presented=true;dirty_=false;
     }

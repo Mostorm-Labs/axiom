@@ -11,6 +11,39 @@
 namespace canvas::render {
 namespace {
 
+bool chunkIntersects(const foundation::WorldRect& bounds,
+                     const foundation::WorldRect& region, float margin = 0.0F) noexcept {
+    return bounds.isFiniteAndOrdered() && region.isFiniteAndOrdered() &&
+        bounds.right + margin > region.left && bounds.left - margin < region.right &&
+        bounds.bottom + margin > region.top && bounds.top - margin < region.bottom;
+}
+
+std::optional<NavigationChunkSpan> navigationSpan(
+    const RuntimeSceneRecord& record, const ReferenceCommand& command,
+    const foundation::WorldRect& region) {
+    const bool chunked = std::holds_alternative<CompactStrokeReferenceCommand>(command) ||
+        std::holds_alternative<BrushStrokeReferenceCommand>(command);
+    if (!chunked || record.geometryChunks.empty()) return std::nullopt;
+    float margin = 2.0F;
+    if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&command))
+        margin = std::max(2.0F, static_cast<float>(compact->content.stroke.config.size));
+    else if (const auto* vector = std::get_if<BrushStrokeReferenceCommand>(&command))
+        margin = std::max(2.0F, static_cast<float>(vector->content.stroke.snapshot.vector.size));
+    std::optional<NavigationChunkSpan> result;
+    for (const auto& chunk : record.geometryChunks) {
+        if (!chunkIntersects(chunk.bounds, region, margin)) continue;
+        if (!result) {
+            result = NavigationChunkSpan{chunk.pointOffset, chunk.pointCount};
+        } else {
+            const auto begin = std::min(result->pointOffset, chunk.pointOffset);
+            const auto end = std::max(result->pointOffset + result->pointCount,
+                                      chunk.pointOffset + chunk.pointCount);
+            result = NavigationChunkSpan{begin, end - begin};
+        }
+    }
+    return result;
+}
+
 class CanonicalWriter final {
   public:
     void byte(std::uint8_t value) { bytes_.push_back(value); }
@@ -540,10 +573,18 @@ static foundation::Result<ReferenceDrawList> buildSources(
         }
         auto command = commandFor(*record);
         if (!command) return foundation::Result<ReferenceDrawList>::failure(command.error());
+        const auto span = canonical ? std::nullopt
+                                    : navigationSpan(*record, command.value(), visibility.queryWorldRect);
+        if (!canonical && (std::holds_alternative<CompactStrokeReferenceCommand>(command.value()) ||
+                           std::holds_alternative<BrushStrokeReferenceCommand>(command.value())) &&
+            record->geometryChunks.size() > 0U && !span) {
+            continue;
+        }
         ReferenceTraversalEntry entry{
             .record = *record,
             .contributesPixels = record->kind != semantic::ObjectKind::kGroup,
             .command = std::move(command.value()),
+            .navigationChunkSpan = span,
         };
         const auto selected = std::find_if(visibility.chunkSelections.begin(),
             visibility.chunkSelections.end(), [id](const auto& value) { return value.objectId == id; });
@@ -555,6 +596,7 @@ static foundation::Result<ReferenceDrawList> buildSources(
         list.entries.push_back(std::move(entry));
     }
     AXIOM_FRAME_TIMING_END(entriesTiming);
+    if (!canonical) list.visibleRecords = list.entries.size();
     if(canonical){
       AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
       list.canonicalBytes = canonicalBytes(list);

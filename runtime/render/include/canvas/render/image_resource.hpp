@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+template <typename T> class sk_sp;
+class SkImage;
 namespace canvas::render {
 enum class ImageResourceState { kMissing, kReady, kDecodeFailed };
 struct DecodedImage final {
@@ -21,12 +23,14 @@ struct DecodedImage final {
 };
 class ImageResourceResolver final {
   public:
-    explicit ImageResourceResolver(const runtime::ResourceProvider& provider) : provider_(provider) {}
+    explicit ImageResourceResolver(const runtime::ResourceProvider& provider);
+    ~ImageResourceResolver();
     [[nodiscard]] std::shared_ptr<const DecodedImage> resolve(semantic::ResourceId id);
-    [[nodiscard]] std::uint64_t decodeCount() const { return decodes_; }
+    [[nodiscard]] sk_sp<SkImage> resolveSkImage(semantic::ResourceId id);
+    [[nodiscard]] std::uint64_t decodeCount() const;
+    [[nodiscard]] std::uint64_t imageBuildCount() const;
   private:
-    const runtime::ResourceProvider& provider_;
-    std::map<foundation::ObjectId, std::shared_ptr<const DecodedImage>> decoded_;
-    std::uint64_t decodes_ = 0;
+    struct Impl;
+    std::unique_ptr<Impl> impl_;
 };
 } // namespace canvas::render
