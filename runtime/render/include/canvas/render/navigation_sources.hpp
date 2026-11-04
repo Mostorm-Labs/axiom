@@ -15,6 +15,8 @@ struct NavigationWork final {
     std::uint64_t feedbackFirst=0,budgetYields=0,gpuThrottles=0,prewarmTiles=0,levelChanges=0;
     std::uint64_t queryNanoseconds=0,initializationNanoseconds=0,opportunityNanoseconds=0,overBudget=0;
     std::uint64_t prefixScanKnots=0;
+    // Populated only in the opt-in diagnostic build.
+    std::uint64_t overlayNanoseconds=0;
     std::int32_t selectedLevel=0;
 };
 }

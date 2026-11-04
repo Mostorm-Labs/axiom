@@ -266,7 +266,16 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     canvas->scale(ratio,ratio);
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
     canvas->restore();
-    if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(*canvas,current.metrics,*selectionOverlay);
+    if(selectionOverlay){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        const auto started=std::chrono::steady_clock::now();
+#endif
+        internal::drawEditingOverlayToSkCanvas(*canvas,current.metrics,*selectionOverlay);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        if(navigationTiles_)navigationTiles_->work.overlayNanoseconds+=
+            std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+#endif
+    }
     provider.release();
     return provider.present();
 }
@@ -293,7 +302,16 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         cache->feedbackCamera=camera;return true;
     };
     const auto drawOverlay=[&](SkCanvas& canvas){
-        if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(canvas,current.metrics,*selectionOverlay);
+        if(selectionOverlay){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            const auto started=std::chrono::steady_clock::now();
+#endif
+            internal::drawEditingOverlayToSkCanvas(canvas,current.metrics,*selectionOverlay);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            navigationTiles_->work.overlayNanoseconds+=
+                std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+#endif
+        }
     };
     try{
         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);

@@ -138,14 +138,19 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             work.opportunityNanoseconds+=elapsed;
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
-            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":1,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"presented\":%s,\"coverage\":%s}\n",
+            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":2,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,\"presented\":%s,\"coverage\":%s}\n",
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
                 static_cast<unsigned long long>(work.queryNanoseconds-before.queryNanoseconds),static_cast<unsigned long long>(work.initializationNanoseconds-before.initializationNanoseconds),
                 static_cast<unsigned long long>(work.queries-before.queries),static_cast<unsigned long long>(work.initializations-before.initializations),
                 static_cast<unsigned long long>(work.knotSteps-before.knotSteps),static_cast<unsigned long long>(work.cancelledJobs-before.cancelledJobs),
                 static_cast<unsigned long long>(work.discardedKnotSteps-before.discardedKnotSteps),static_cast<unsigned long long>(work.gpuThrottles-before.gpuThrottles),
-                static_cast<unsigned long long>(work.prewarmTiles-before.prewarmTiles),work.presented?"true":"false",work.coverageComplete?"true":"false");
+                static_cast<unsigned long long>(work.prewarmTiles-before.prewarmTiles),
+                static_cast<unsigned long long>(work.tilesBuilt-before.tilesBuilt),
+                static_cast<unsigned long long>(work.fallbackUses-before.fallbackUses),
+                static_cast<unsigned long long>(work.prefixScanKnots-before.prefixScanKnots),
+                static_cast<unsigned long long>(work.overlayNanoseconds-before.overlayNanoseconds),
+                work.presented?"true":"false",work.coverageComplete?"true":"false");
 #endif
         }
     } timing{work,before,started,frame,camera,options};

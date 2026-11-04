@@ -1,0 +1,114 @@
+<!doctype html><meta charset="utf-8"><title>G5 cold/warm root SDK consumer</title>
+<style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
+<script type="module">
+import {createRuntime} from '/axiom.mjs';
+const errors=[],frames=[],bindings=new WeakMap();
+let sdk,active=null,sequence=0;
+const raf=()=>new Promise(requestAnimationFrame);
+const until=async(fn,label)=>{for(let i=0;i<1800;++i){if(fn())return;await raf();}throw Error(label);};
+const proto=WebGL2RenderingContext.prototype;
+const bind=proto.bindFramebuffer;
+proto.bindFramebuffer=function(target,fb){if(target===this.FRAMEBUFFER||target===this.DRAW_FRAMEBUFFER)bindings.set(this,fb);return bind.call(this,target,fb);};
+for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced']){
+  const raw=proto[name];proto[name]=function(...args){
+    if(active&&!bindings.get(this)){++active.draws;active.displayTimes.push(performance.now());}
+    return raw.apply(this,args);
+  };
+}
+for(const name of ['fenceSync','clientWaitSync']){
+  const raw=proto[name];proto[name]=function(...args){
+    const started=performance.now(),result=raw.apply(this,args);
+    if(active)active.fences.push({name,at:started,duration:performance.now()-started,timeout:name==='clientWaitSync'?args[2]:null,status:name==='clientWaitSync'?result:null});
+    return result;
+  };
+}
+new PerformanceObserver(list=>{if(active)active.longTasks.push(...list.getEntries().map(e=>({start:e.startTime,duration:e.duration})));}).observe({type:'longtask',buffered:false});
+const mark=(kind,id)=>console.info('G5_SAMPLE_MARK '+JSON.stringify({kind,id,at:performance.now()}));
+function pointer(type,x,y){
+  const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent(type,{pointerId:1,pointerType:'mouse',
+    clientX:r.left+x,clientY:r.top+y,button:type==='pointermove'?-1:0,buttons:type==='pointerup'?0:1,
+    pressure:type==='pointerup'?0:.5,bubbles:true,cancelable:true});
+  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});sdk.canvas.dispatchEvent(e);
+}
+async function settle(prior){await until(()=>frames.length>prior,'canonical receipt did not arrive');for(let i=0;i<10;++i)await raf();}
+async function click(x,y){const n=frames.length;pointer('pointerdown',x,y);pointer('pointerup',x,y);await settle(n);}
+async function pixels(){
+  const c=sdk.canvas,g=c.getContext('webgl2'),previous=g.getParameter(g.FRAMEBUFFER_BINDING);
+  const bytes=new Uint8Array(c.width*c.height*4);g.bindFramebuffer(g.FRAMEBUFFER,null);
+  g.readPixels(0,0,c.width,c.height,g.RGBA,g.UNSIGNED_BYTE,bytes);g.bindFramebuffer(g.FRAMEBUFFER,previous);
+  const hash=await crypto.subtle.digest('SHA-256',bytes),ext=g.getExtension('WEBGL_debug_renderer_info');
+  return {sha256:Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join(''),
+    width:c.width,height:c.height,renderer:ext?g.getParameter(ext.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)};
+}
+async function phase(id){
+  const before=sdk.readState(),prior=frames.length;
+  const value={id,samples:[],displayTimes:[],draws:0,fences:[],longTasks:[],before};
+  mark('begin',id);active=value;value.started=performance.now();
+  await raf();let previous=performance.now();
+  for(let i=0;i<72;++i){
+    const beforeDraws=value.draws,tick=performance.now(),pan=i>=36;
+    sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
+      deltaX:pan?(i<54?-8:8):0,deltaY:pan?(i<54?-4:4):(i<18?-2:2),bubbles:true,cancelable:true}));
+    const dispatchMs=performance.now()-tick,rafTimestamp=await raf(),now=performance.now();
+    value.samples.push({index:i,at:now,rafTimestamp,interval:now-previous,dispatchMs,draws:value.draws-beforeDraws});previous=now;
+  }
+  value.inputEnded=performance.now();value.framesDuringInput=frames.length-prior;
+  mark('input-ended',id);
+  value.afterInput=sdk.readState();
+  // Exact settle remains observable even if a slow input loop allowed one earlier.
+  await until(()=>frames.length>prior,'navigation exact settle timeout');
+  value.settleMilliseconds=frames.at(-1).at-value.inputEnded;
+  for(let i=0;i<12;++i)await raf();
+  value.ended=performance.now();active=null;mark('end',id);
+  value.longTasks=value.longTasks.filter(t=>t.start>=value.started&&t.start<value.ended);
+  value.after=sdk.readState();value.receipts=frames.slice(prior);
+  value.checks={documentUnchanged:before.generation===value.after.generation&&before.objects===value.after.objects,
+    selectionUnchanged:JSON.stringify(before.selected)===JSON.stringify(value.after.selected),
+    operationUnchanged:JSON.stringify(before.lastCommit)===JSON.stringify(value.after.lastCommit),
+    noCanonicalReceiptDuringInput:value.framesDuringInput===0,
+    cameraReturned:Math.abs(before.camera.scale-value.after.camera.scale)<.0001&&Math.abs(before.camera.x-value.after.camera.x)<.01&&Math.abs(before.camera.y-value.after.camera.y)<.01};
+  value.pixels=await pixels();return value;
+}
+window.probe={
+  async setup(workload,selected){
+    const started=performance.now();
+    sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',
+      permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:frame=>frames.push({at:performance.now(),...frame})});
+    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+    sdk.data.attach({capacity:64});await sdk.selectBrush('round-handdrawn',4);
+    for(let line=0;line<2;++line){
+      const prior=frames.length;
+      for(let i=0;i<2048;++i)pointer(i===0?'pointerdown':i===2047?'pointerup':'pointermove',40+i*1.5,
+        90+line*310+Math.sin(i*.035)*42);
+      await settle(prior);
+    }
+    let target=null;const prior=frames.length;
+    if(workload==='image'){
+      const c=document.createElement('canvas');c.width=2048;c.height=1024;
+      const ctx=c.getContext('2d'),gradient=ctx.createLinearGradient(0,0,c.width,c.height);
+      gradient.addColorStop(0,'#345eb8');gradient.addColorStop(1,'#f19d42');ctx.fillStyle=gradient;ctx.fillRect(0,0,c.width,c.height);
+      const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+      target=(await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png')).objectId;
+      await sdk.transformSelection([1,0,0,1,200,170]);
+    }else if(workload==='table'){
+      target=(await sdk.table.create({rows:3,columns:3,x:220,y:160})).objectId;
+      const t=sdk.table.read(target);await sdk.table.edit({objectId:target,rowId:t.rows[0].id,columnId:t.columns[0].id});
+      await sdk.text.replace('G5 Table 0123456789');await sdk.text.finish();
+    }else if(workload==='sticky'){
+      target=(await sdk.createSticky({size:180,x:250,y:160})).objectId;
+      await sdk.text.edit(target);await sdk.text.replace('G5 Sticky\nCold / warm navigation');await sdk.text.finish();
+    }else if(workload!=='long-line')throw Error('unknown workload');
+    if(target)await settle(prior);
+    await sdk.selectTool('select');
+    if(selected){
+      if(workload==='long-line'){await click(40,90);target=sdk.readState().primary;}
+      else if(sdk.readState().primary!==target)await click(workload==='sticky'?300:260,200);
+      if(!sdk.readState().selected.length||sdk.readState().primary!==target)throw Error('fixture target not selected');
+    }else{await click(790,490);if(sdk.readState().selected.length)throw Error('fixture selection not cleared');}
+    for(let i=0;i<12;++i)await raf();
+    return {workload,selected,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+  },
+  async run(){const cold=await phase('cold'),warm=await phase('warm');return {cold,warm,errors};},
+  async close(){for(let p;(p=sdk.data.readNext());)sdk.data.release(p);await sdk.close();return {closed:!document.querySelector('#mount canvas'),errors};}
+};
+</script>

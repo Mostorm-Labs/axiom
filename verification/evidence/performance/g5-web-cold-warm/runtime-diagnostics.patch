@@ -1,0 +1,79 @@
+diff --git a/runtime/render/include/canvas/render/navigation_sources.hpp b/runtime/render/include/canvas/render/navigation_sources.hpp
+index 207ce7df..6cd256f9 100644
+--- a/runtime/render/include/canvas/render/navigation_sources.hpp
++++ b/runtime/render/include/canvas/render/navigation_sources.hpp
+@@ -15,6 +15,8 @@ struct NavigationWork final {
+     std::uint64_t feedbackFirst=0,budgetYields=0,gpuThrottles=0,prewarmTiles=0,levelChanges=0;
+     std::uint64_t queryNanoseconds=0,initializationNanoseconds=0,opportunityNanoseconds=0,overBudget=0;
+     std::uint64_t prefixScanKnots=0;
++    // Populated only in the opt-in diagnostic build.
++    std::uint64_t overlayNanoseconds=0;
+     std::int32_t selectedLevel=0;
+ };
+ }
+diff --git a/runtime/render/src/skia_navigation_tiles.cpp b/runtime/render/src/skia_navigation_tiles.cpp
+index d1b6d70c..d73fa159 100644
+--- a/runtime/render/src/skia_navigation_tiles.cpp
++++ b/runtime/render/src/skia_navigation_tiles.cpp
+@@ -138,14 +138,19 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+             work.opportunityNanoseconds+=elapsed;
+             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+-            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":1,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"presented\":%s,\"coverage\":%s}\n",
++            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":2,\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,\"presented\":%s,\"coverage\":%s}\n",
+                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
+                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
+                 static_cast<unsigned long long>(work.queryNanoseconds-before.queryNanoseconds),static_cast<unsigned long long>(work.initializationNanoseconds-before.initializationNanoseconds),
+                 static_cast<unsigned long long>(work.queries-before.queries),static_cast<unsigned long long>(work.initializations-before.initializations),
+                 static_cast<unsigned long long>(work.knotSteps-before.knotSteps),static_cast<unsigned long long>(work.cancelledJobs-before.cancelledJobs),
+                 static_cast<unsigned long long>(work.discardedKnotSteps-before.discardedKnotSteps),static_cast<unsigned long long>(work.gpuThrottles-before.gpuThrottles),
+-                static_cast<unsigned long long>(work.prewarmTiles-before.prewarmTiles),work.presented?"true":"false",work.coverageComplete?"true":"false");
++                static_cast<unsigned long long>(work.prewarmTiles-before.prewarmTiles),
++                static_cast<unsigned long long>(work.tilesBuilt-before.tilesBuilt),
++                static_cast<unsigned long long>(work.fallbackUses-before.fallbackUses),
++                static_cast<unsigned long long>(work.prefixScanKnots-before.prefixScanKnots),
++                static_cast<unsigned long long>(work.overlayNanoseconds-before.overlayNanoseconds),
++                work.presented?"true":"false",work.coverageComplete?"true":"false");
+ #endif
+         }
+     } timing{work,before,started,frame,camera,options};
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 94a2df03..7c4b0a1f 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -266,7 +266,16 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+     canvas->scale(ratio,ratio);
+     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
+     canvas->restore();
+-    if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(*canvas,current.metrics,*selectionOverlay);
++    if(selectionOverlay){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++        const auto started=std::chrono::steady_clock::now();
++#endif
++        internal::drawEditingOverlayToSkCanvas(*canvas,current.metrics,*selectionOverlay);
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++        if(navigationTiles_)navigationTiles_->work.overlayNanoseconds+=
++            std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
++#endif
++    }
+     provider.release();
+     return provider.present();
+ }
+@@ -293,7 +302,16 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+         cache->feedbackCamera=camera;return true;
+     };
+     const auto drawOverlay=[&](SkCanvas& canvas){
+-        if(selectionOverlay)internal::drawEditingOverlayToSkCanvas(canvas,current.metrics,*selectionOverlay);
++        if(selectionOverlay){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++            const auto started=std::chrono::steady_clock::now();
++#endif
++            internal::drawEditingOverlayToSkCanvas(canvas,current.metrics,*selectionOverlay);
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++            navigationTiles_->work.overlayNanoseconds+=
++                std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
++#endif
++        }
+     };
+     try{
+         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);
