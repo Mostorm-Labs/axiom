@@ -171,13 +171,114 @@ void checkExactCachePressure(TestSurface& target,TestSurface& reference){
         if(result.code==BackendSubmissionCode::kAccepted)break;
         require(result.code==BackendSubmissionCode::kRetry&&i<128,"pressure exact did not converge");
     }
-    require(cached.navigationWork().evictions>evictions&&cached.navigationWork().retainedBytes==0,
-            "rebuildable navigation residency starved exact headroom");
+    require(cached.navigationWork().evictions==evictions&&cached.navigationWork().retainedBytes>0,
+            "exact preparation discarded useful navigation tiles without actual admission pressure");
     require(direct.renderFrame(reference,exact).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"pressure eviction changed exact pixels");
     const auto presents=target.presentCount();
     require(navigate(cached,target,{1,16,0},exact.frame,query,false,nullptr,
             NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
             target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
+}
+void checkNavigationSharpOverlap(TestSurface& target,TestSurface& reference){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<56;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(91000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,1,96};
+        o.transform.tx=16+i*4;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    const auto frame=plan(910,entries);SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;options.navigationMaxQueries=4;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"sharp overlap source");
+    require(direct.renderFrame(reference,plan(911,entries,1,{1,0,0,1,8,0})).code==BackendSubmissionCode::kAccepted,"sharp overlap reference");
+    const auto expected=pixels(reference);NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned i=0;i<256;++i){
+        require(navigate(cached,target,{1,8,0},frame.frame,query,false,nullptr,
+                NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted,"sharp overlap navigation");
+        if(cached.navigationWork().presented)require(pixels(target)==expected,"coarse coverage replaced sharper retained content during pan");
+        if(!cached.navigationWork().pending)break;
+        require(i<255,"sharp overlap refinement did not converge");
+    }
+    require(cached.submissionCount()==1,"navigation quality emitted a canonical submission");
+}
+// A populated frontier cannot be certified by empty-background proof. Every
+// submitted overlap retains its original sharp pixels while cold cells fill.
+void checkNavigationColdFrontier(TestSurface& target,TestSurface& reference){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<68;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(92000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,1,96};
+        o.transform.tx=16+i*4;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    const auto frame=plan(920,entries);SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;cached.setRenderCacheOptions(options);
+    RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"cold frontier source");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    unsigned presents=0;double previousLow=1;
+    const auto run=[&](CanonicalViewportTransform camera,bool compareOverlap){
+        require(direct.renderFrame(reference,plan(921,entries,1,{camera.scale,0,0,camera.scale,camera.translationX,camera.translationY})).code==BackendSubmissionCode::kAccepted,"cold reference");
+        const auto expected=pixels(reference);previousLow=1;
+        for(unsigned i=0;;++i){
+            const auto result=navigate(cached,target,camera,frame.frame,query,false,nullptr,
+                NavigationBackgroundQuery{[](const foundation::WorldRect&){return false;}});
+            require(result.code==BackendSubmissionCode::kAccepted,"cold frontier navigation");
+            const auto work=cached.navigationWork();
+            if(work.presented){++presents;require(work.coverageComplete,"partial cold viewport was presented");
+                require(work.lowResolutionFraction<=previousLow+1e-6,"fixed-camera refinement regressed resolution");
+                previousLow=work.lowResolutionFraction;
+                if(compareOverlap){const auto actual=pixels(target);
+                    for(unsigned y=0;y<128;++y)for(unsigned x=0;x<220;++x)for(unsigned c=0;c<4;++c)
+                        require(actual[(y*256+x)*4+c]==expected[(y*256+x)*4+c],"cold frontier replaced sharp overlap");}
+            }
+            if(!work.pending)break;require(i<2048,"cold/zoom refinement did not converge");
+        }
+        require(cached.navigationWork().maximumUpscale<=1.25&&cached.navigationWork().lowResolutionFraction==0,
+                "cold/zoom navigation never recovered adequate resolution");
+        if(camera.scale==1)require(pixels(target)==expected,"refined integer-pan pixels differ from Direct");
+        // Downsampling an existing high-density source can differ by one AA
+        // quantization unit. Canonical equality is required after exact render,
+        // not falsely attributed to a resampled navigation image.
+        const auto canonical=plan(922,entries,1,{camera.scale,0,0,camera.scale,camera.translationX,camera.translationY});
+        SkiaRenderer exact;require(exact.renderFrame(target,canonical).code==BackendSubmissionCode::kAccepted&&pixels(target)==expected,
+            "post-navigation canonical pixels differ from Direct");
+    };
+    run({1,-32,0},true);
+    run({2,-64,0},false); // cross the density level; no nearest/snap workaround
+    run({.5F,-16,0},false);
+    require(presents>2&&cached.navigationWork().levelChanges>=2&&cached.submissionCount()==1,
+            "cold/zoom oracle missed levels or emitted canonical submission");
+}
+void checkNavigationRefinementProgress(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<56;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(93000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,2,96};
+        o.transform.tx=240+i*5;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    SkiaRenderer cached;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    cached.setRenderCacheOptions(options);const auto frame=plan(930,entries);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,-250,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"refinement source");
+        // One parent is complete; an applicable detail cell has real progress.
+        if(cached.navigationWork().tilesBuilt==1&&cached.navigationWork().sourceSteps>=66)break;
+        require(i<512,"detail job never started");
+    }
+    const auto before=cached.navigationWork();
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,-258,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier interruption");
+        if(!cached.navigationWork().pending)break;require(i<2048,"suspended detail failed to converge");
+    }
+    const auto after=cached.navigationWork();
+    require(after.suspendedRefinements>before.suspendedRefinements&&after.resumedRefinements>before.resumedRefinements,
+            "cold frontier discarded instead of suspending applicable fine progress");
+    require(after.cancelledJobs==before.cancelledJobs&&after.lowResolutionFraction==0,
+            "frontier cancelled applicable detail or left persistent resolution debt");
+    require(cached.submissionCount()==0,"derived refinement manufactured canonical receipt");
 }
 void checkAffineStrokes(TestSurface& target,TestSurface& reference){
     const semantic::Transform2D transforms[]={{1,0,0,1,12,8},{.9,.15,-.1,.8,10,5},{1.1,0,0,.75,-5,4}};
@@ -305,6 +406,15 @@ int main(int argc,char** argv) {
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"background reference");
             checkRetainedBackground(provider,reference);return finishNative(0);
         }
+        if(argc>1&&std::string_view(argv[1])=="--cold-quality-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"cold quality reference");
+            checkNavigationColdFrontier(provider,reference);return finishNative(0);
+        }
+        if(argc>1&&std::string_view(argv[1])=="--quality-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"quality reference");
+            checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);
+            checkNavigationRefinementProgress(provider);checkExactCachePressure(provider,reference);return finishNative(0);
+        }
         if(argc>1&&std::string_view(argv[1])=="--affine-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine reference surface");
             checkRetainedBackground(provider,reference);
@@ -340,6 +450,8 @@ int main(int argc,char** argv) {
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
         checkRetainedBackground(provider,reference);
+        checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);
+        checkNavigationRefinementProgress(provider);
         checkExactCachePressure(provider,reference);
         checkAffineStrokes(provider,reference);
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);

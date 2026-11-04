@@ -7,6 +7,33 @@ export function postInputReceiptWait(receipts, inputEnded) {
   const times=receipts.map(r=>r.at).filter(t=>Number.isFinite(t)&&t>=inputEnded);
   return times.length?Math.min(...times)-inputEnded:null;
 }
+// Source texel density, not an optical metric or physical display latency.
+// Only actual presented planes qualify; failed/unpresented calls may carry old
+// gauges. Time integration stops at the last observed presentation, never at an
+// invented recovery or at the end of an unrelated canonical frame.
+export function summarizeQuality(rows) {
+  const shown=rows.filter(r=>r.presented===true);
+  if(!shown.length||shown.some(r=>r.version<3||!/^\d+$/.test(r.start_ns??'')||
+    !['maximum_upscale','low_resolution_fraction','retained_fraction'].every(k=>Number.isFinite(r[k]))))return null;
+  const origin=BigInt(shown[0].start_ns);
+  const times=shown.map(r=>Number(BigInt(r.start_ns)-origin)/1e6);
+  if(times.some((t,i)=>i&&t<times[i-1]))return null;
+  let weighted=0,began=null;const recovery=[];
+  shown.forEach((r,i)=>{
+    if(i)weighted+=shown[i-1].low_resolution_fraction*(times[i]-times[i-1]);
+    if(r.low_resolution_fraction>0){if(began===null)began=times[i];}
+    else if(began!==null){recovery.push(times[i]-began);began=null;}
+  });
+  const duration=times.at(-1);
+  return {thresholdDevicePixelsPerTexel:1.25,presentations:shown.length,
+    maximumUpscale:Math.max(...shown.map(r=>r.maximum_upscale)),
+    lowResolutionAreaFraction:statistics(shown.map(r=>r.low_resolution_fraction)),
+    retainedAreaFraction:statistics(shown.map(r=>r.retained_fraction)),
+    observedMilliseconds:duration,timeWeightedLowResolutionFraction:duration>0?weighted/duration:null,
+    timeToAdequateMs:statistics(recovery),unrecoveredEpisodes:began===null?0:1,
+    rightCensoredMilliseconds:began===null?null:duration-began,
+    suspended:total(rows.map(r=>r.suspended??0)),resumed:total(rows.map(r=>r.resumed??0))};
+}
 export function summarizePhase(phase, navigationRows, frameRows) {
   const gaps=phase.displayTimes.slice(1).map((t,i)=>t-phase.displayTimes[i]);
   const inputTimes=phase.displayTimes.filter(t=>t>=phase.started&&t<=phase.inputEnded);
@@ -16,6 +43,7 @@ export function summarizePhase(phase, navigationRows, frameRows) {
       .map(key=>[key,total(navigationRows.map(row=>row[key]??0))])) : null;
   if(nav){
     nav.calls=navigationRows.length;
+    nav.quality=summarizeQuality(navigationRows);
     nav.cpu_ms=times(navigationRows.map(row=>row.elapsed_ns/1e6));
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));
     nav.overlay_cpu_ms=times(navigationRows.map(row=>row.overlay_ns/1e6));

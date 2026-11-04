@@ -63,3 +63,25 @@ test('GPU admission deltas remain separate from CPU and unknown old counters', (
   assert.deepEqual(value.navigation.gpuAdmission,{contourPrimitives:96,coarseMasks:3});
   assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0}],[]).navigation.gpuAdmission,null);
 });
+
+test('presented source quality uses gauges and observed time, including unrecovered debt', () => {
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const row=(ms,low,up,retained=0,presented=true)=>({elapsed_ns:0,overlay_ns:0,
+    version:3,start_ns:String(BigInt(ms)*1000000n),presented,low_resolution_fraction:low,
+    maximum_upscale:up,retained_fraction:retained,suspended:1,resumed:0});
+  const value=summarizePhase(phase,[row(0,1,4),row(5,0,1,1,false),row(10,.2,2,.8),row(30,0,1,1),row(40,.5,3,.5)],[]).navigation.quality;
+  assert.equal(value.presentations,4);
+  assert.equal(value.maximumUpscale,4);
+  assert.equal(value.lowResolutionAreaFraction.max,1);
+  assert.ok(Math.abs(value.timeWeightedLowResolutionFraction-14/40)<1e-12);
+  assert.equal(value.timeToAdequateMs.max,30);
+  assert.equal(value.unrecoveredEpisodes,1);
+  assert.equal(value.suspended,5);
+});
+
+test('old or incomplete source quality diagnostics remain unavailable', () => {
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  for(const rows of [[{elapsed_ns:0,overlay_ns:0,presented:true}],
+    [{elapsed_ns:0,overlay_ns:0,version:3,presented:false}]])
+    assert.equal(summarizePhase(phase,rows,[]).navigation.quality,null);
+});

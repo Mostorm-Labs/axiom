@@ -12,6 +12,7 @@ import {summarizePhase} from './navigation_metrics.mjs';
 const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const idleMs=Number(process.argv[4]??60000),cycles=Number(process.argv[5]??6);
 const selected=process.env.AXIOM_NAV_SELECTED!=='0',modes=(process.env.AXIOM_NAV_MODES??'wheel,touch').split(',');
+const zoomDelta=Number(process.env.AXIOM_NAV_ZOOM_DELTA??2),qualityEvery=Number(process.env.AXIOM_NAV_QUALITY_EVERY??0),panStep=Number(process.env.AXIOM_NAV_PAN_STEP??8);
 const fixtureOptions=JSON.parse(process.env.AXIOM_NAV_OPTIONS??'{}'),panOnly=process.env.AXIOM_NAV_PAN_ONLY!=='0';
 if(!modes.length||modes.some(m=>!['wheel','touch'].includes(m)))throw Error('invalid modes');
 if(!Number.isSafeInteger(idleMs)||idleMs<0||!Number.isSafeInteger(cycles)||cycles<1)throw Error('invalid duration/cycles');
@@ -66,11 +67,12 @@ try{
       await page.goto(`http://127.0.0.1:${server.address().port}/navigation_sampling.html`);
       record.setup=await page.evaluate(({options,selected})=>probe.setup('mixed',selected,'round-handdrawn',4,options),{options:record.options,selected});
       const measure=async(id,interrupt=false)=>{
-        const options={mode,burst:mode==='wheel'?4:1,panOnly};
+        const options={mode,burst:mode==='wheel'?4:1,panOnly,zoomDelta,qualityEvery,panStep};
         const raw=await page.evaluate(({id,options,interrupt})=>interrupt?probe.interruptSelection(options):probe.measure(id,options),{id,options,interrupt});
         const phaseRows=rows.filter(r=>r.phase===raw.id);
         record.phases.push({id:raw.id,raw,summary:summarizePhase(raw,phaseRows.filter(r=>r.kind==='navigation').map(r=>r.value),phaseRows.filter(r=>r.kind==='frame').map(r=>r.value))});
         console.log(JSON.stringify({mode,id:raw.id,summary:record.phases.at(-1).summary}));
+        if(qualityEvery)await page.screenshot({path:path.join(output,mode+'-'+raw.id+'.png')});
       };
       if(selected)await measure('interrupted-selection',true);
       for(let i=0;i<cycles;++i)await measure('repeat-'+i);
@@ -102,7 +104,7 @@ try{
   if(browser)await browser.close();await new Promise(r=>server.close(r));await fs.rm(temp,{recursive:true,force:true});
   const after=identity(),sourceStable=before.tree_sha256===after.tree_sha256&&before.commit===after.commit,artifactStable=JSON.stringify(artifacts)===JSON.stringify(await hashes(sdk));
   const summary={schema:'g5-web-navigation-lifecycle-v1',status:sourceStable&&artifactStable&&results.length===modes.length&&results.every(r=>r.status==='MEASURED')?'MEASURED':'BLOCKED_EVIDENCE',
-    sourceBefore:before,sourceAfter:after,sourceStable,artifactStable,artifacts,browserVersion:browser?.version(),idleMs,cycles,selected,modes,
+    sourceBefore:before,sourceAfter:after,sourceStable,artifactStable,artifacts,browserVersion:browser?.version(),idleMs,cycles,selected,modes,zoomDelta,qualityEvery,panStep,intrusiveOptical:qualityEvery>0,
     scope:'Synthetic root SDK input; real Chrome WebGL2; callback wrappers forward calls. UI cost covers public readbacks, not full Demo DOM. CDP frozen/active is not physical sleep, GPU eviction or OS backgrounding. Post-input onFrame is coarse completion, not camera-qualified receipt. No physical input-to-photon or long-term leak claim.',
     results:results.map(({phases,rows,uiReadTimes,...r})=>({...r,uiReadMaxMs:Math.max(...(uiReadTimes??[])),phases:phases.map(p=>({id:p.id,summary:p.summary,checks:p.raw.checks,pixels:p.raw.pixels}))}))};
   await fs.writeFile(path.join(output,'summary.json'),JSON.stringify(summary,null,2));

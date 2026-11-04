@@ -25,5 +25,8 @@ struct NavigationWork final {
     std::uint64_t gpuContourPrimitives=0,coarseMaskStarts=0;
     std::size_t preparedGeometryBytes=0;
     std::int32_t selectedLevel=0;
+    // Gauges for the last presented navigation plane, not canonical quality.
+    double maximumUpscale=0,lowResolutionFraction=0,retainedFraction=0;
+    std::uint64_t suspendedRefinements=0,resumedRefinements=0;
 };
 }

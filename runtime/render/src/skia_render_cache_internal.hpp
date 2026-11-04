@@ -15,6 +15,7 @@ namespace canvas::render::internal {
 class SkiaRenderCache final {
   public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
+    std::function<void(std::size_t)> reclaimRecorded;
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};

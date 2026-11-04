@@ -185,13 +185,12 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
         const auto beforePreparation=cache->work.rasterizedGroups;
         try{
-            // World feedback pixels/sources are rebuildable. Keep the retained
-            // complete image for interrupted navigation, but give exact work
-            // room for its bounded contour records instead of retaining tiles
-            // until optional admission repeatedly fails at the soft cap.
-            const auto headroom=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes);
-            if(navigationTiles_&&resourceBudget_->used()>renderCacheOptions_.maxBytes-headroom)
-                navigationTiles_->releaseForExact();
+            // Reclaim only after an actual optional-record admission failure.
+            // The pending job owns a weak navigation reference, not this renderer.
+            const auto navigation=std::weak_ptr<internal::SkiaNavigationTiles>(navigationTiles_);
+            cache->reclaimRecorded=[navigation,budget=resourceBudget_,limit=renderCacheOptions_.maxBytes](std::size_t bytes){
+                if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes);
+            };
             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
         }
         catch(const std::bad_alloc&){cache->clear();}
@@ -296,16 +295,25 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
-    std::optional<BackendSubmissionResult> feedbackFailure;
     auto options=renderCacheOptions_;
-    const auto retained=[&]()->bool{
-        const auto cache=navigationCache_;if(!cache||!cache->frame)return false;
-        const auto& old=cache->transform;const auto previous=cache->feedbackCamera;
-        const bool changed=!previous||previous->scale!=camera.scale||
-            previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
+    internal::RetainedNavigationSource retained;
+    const auto cache=navigationCache_;
+    if(cache&&cache->image&&cache->frame&&cache->provider==&provider&&
+       cache->frame->viewId==current.viewId&&cache->frame->sceneGeneration==current.sceneGeneration&&
+       cache->frame->sceneReadToken==current.sceneReadToken&&cache->frame->metrics==current.metrics&&
+       cache->frame->metricsGeneration==current.metricsGeneration&&cache->frame->surfaceGeneration==current.surfaceGeneration&&
+       cache->frame->viewportClip==current.viewportClip&&cache->transform.a>0&&std::isfinite(cache->transform.a)&&
+       cache->transform.d==cache->transform.a&&cache->transform.b==0&&cache->transform.c==0){
+        const auto& old=cache->transform;
+        retained.bounds={float(-old.tx/old.a),float(-old.ty/old.a),
+            float((cache->frame->metrics.logicalWidth-old.tx)/old.a),float((cache->frame->metrics.logicalHeight-old.ty)/old.a)};
+        retained.density=old.a*std::min(current.metrics.physicalWidth/current.metrics.logicalWidth,
+            current.metrics.physicalHeight/current.metrics.logicalHeight);
+        retained.extend=[&,cache]{
+            const auto& old=cache->transform;
         const double ratio=camera.scale/old.a;
         const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
-        if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||!std::isfinite(ratio)||ratio<=0||
+        if(!std::isfinite(ratio)||ratio<=0||
            !std::isfinite(x)||!std::isfinite(y))return false;
         const double width=current.metrics.logicalWidth,height=current.metrics.logicalHeight;
         const double right=x+cache->frame->metrics.logicalWidth*ratio,bottom=y+cache->frame->metrics.logicalHeight*ratio;
@@ -331,10 +339,21 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
                 if(!empty){cache->backgroundProofRejected=true;return false;}
             }
         }
-        const auto feedback=renderNavigation(provider,camera,current,selectionOverlay);
-        if(feedback.code!=BackendSubmissionCode::kAccepted){feedbackFailure=feedback;return false;}
-        cache->feedbackCamera=camera;return true;
-    };
+            return true;
+        };
+        retained.draw=[cache,camera,current](SkCanvas& canvas,const foundation::WorldRect& area){
+            const auto& old=cache->transform;const float ratio=float(camera.scale/old.a);
+            const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
+            const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
+            canvas.save();canvas.resetMatrix();
+            canvas.clipRect(SkRect::MakeLTRB(float((area.left*camera.scale+camera.translationX)*sx),
+                float((area.top*camera.scale+camera.translationY)*sy),float((area.right*camera.scale+camera.translationX)*sx),
+                float((area.bottom*camera.scale+camera.translationY)*sy)));
+            canvas.drawColor(cache->background,SkBlendMode::kSrc);
+            canvas.translate(float((camera.translationX-ratio*old.tx)*sx),float((camera.translationY-ratio*old.ty)*sy));
+            canvas.scale(ratio,ratio);canvas.drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));canvas.restore();
+        };
+    }
     const auto drawOverlay=[&](SkCanvas& canvas){
         if(selectionOverlay){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
@@ -348,8 +367,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         }
     };
     try{
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);
-        if(feedbackFailure){navigationTiles_.reset();return *feedbackFailure;}
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay);
         if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}

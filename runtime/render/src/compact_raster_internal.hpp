@@ -8,6 +8,7 @@
 #include "include/core/SkRect.h"
 #include "include/core/SkRegion.h"
 #include <array>
+#include <functional>
 
 namespace canvas::render::internal {
 // Render-owner temporary resources only. Eight slots cover GPU/CPU full/edge
@@ -31,7 +32,8 @@ class CompactStrokeRasterJob final {
     CompactStrokeRasterJob(SkCanvas&,const foundation::InkBrushConfig&,
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
         std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
-        std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes);
+        std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
+        std::function<void(std::size_t)> reclaim={});
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
  private:
@@ -55,6 +57,7 @@ class CompactStrokeRasterJob final {
     SkRect recordBounds_{};
     std::size_t recordLimit_=0,recordBytes_=0;
     bool recordComplete_=false;
+    std::function<void(std::size_t)> reclaim_;
     void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&);
     void abandonRecords() noexcept;
 };

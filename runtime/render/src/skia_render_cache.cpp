@@ -290,7 +290,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
             auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
-                std::min(options.maxEntryBytes,options.maxBytes));
+                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded);
             target->restore();
             pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
             ++work.misses;

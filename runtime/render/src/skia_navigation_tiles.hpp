@@ -18,15 +18,23 @@
 
 class SkCanvas;
 namespace canvas::render::internal {
+// Invocation-scoped display source, validated by the renderer against the full
+// frame/provider stamp. Outside bounds requires a Runtime background proof.
+struct RetainedNavigationSource final {
+    foundation::WorldRect bounds{};
+    double density=0;
+    std::function<bool()> extend;
+    std::function<void(SkCanvas&,const foundation::WorldRect&)> draw;
+};
 class SkiaNavigationTiles final {
  public:
     NavigationWork work;
     void cancelWork(){cancel();work.pending=false;work.presented=false;}
-    void releaseForExact(){cancelWork();work.evictions+=tiles_.size();tiles_.clear();sources_.clear();work.retainedBytes=0;work.coverageComplete=false;dirty_=true;}
+    void reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t limit,std::size_t requested);
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
-        const std::function<bool()>& retainedFeedback={}, SkiaTextResources* textResources=nullptr,
+        const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
         const std::function<void(SkCanvas&)>& drawOverlay={});
  private:
@@ -60,6 +68,7 @@ class SkiaNavigationTiles final {
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
     PreparedGeometryCache geometry_;
     std::unique_ptr<Job> job_;
+    std::unique_ptr<Job> refinement_;
     TileGrid grid_{256};
     scheduling::RuntimeScheduler scheduler_{4};
     const void* provider_=nullptr;
@@ -72,9 +81,12 @@ class SkiaNavigationTiles final {
     std::size_t warmed_=0;
     struct Completion {std::atomic<bool> done=false;};
     std::vector<std::shared_ptr<Completion>> gpuBatches_;
-    struct Patch {TileKey source;foundation::WorldRect area;};
-    bool coverage(std::span<const TileKey>,std::uint64_t scene,std::vector<Patch>&);
-    void compose(SkCanvas&,std::span<const Patch>,const CanonicalViewportTransform&,const FrameState&);
+    struct Patch {TileKey source;foundation::WorldRect area;double density=0;bool retained=false;};
+    bool coverage(const foundation::WorldRect&,std::uint64_t scene,std::vector<Patch>&,
+        const RetainedNavigationSource*,std::vector<foundation::WorldRect>* missing=nullptr);
+    void compose(SkCanvas&,std::span<const Patch>,const CanonicalViewportTransform&,const FrameState&,
+        const RetainedNavigationSource*);
     void cancel();
+    void cancelJob(std::unique_ptr<Job>&);
 };
 }

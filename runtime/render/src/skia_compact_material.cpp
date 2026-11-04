@@ -348,8 +348,8 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
-    std::size_t maxRecordedBytes)
-    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()){
+    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim)
+    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
     support_=SkRect::MakeEmpty();
@@ -370,7 +370,8 @@ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation
             recordBounds_.outset(float(margin),float(margin));
             const auto bytes=count*sizeof(ContourRecord);
             if(recordBounds_.isFinite()&&std::isfinite(margin)){
-                const auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);
+                auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);
+                if(!token&&reclaim_){reclaim_(bytes);token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);}
                 if(token){
                     recordBudget_=budget;recordLimit_=maxRecordedBytes;recordBytes_=bytes;
                     recordStorageLease_=resources::ResourceLease(budget,*token);
@@ -450,6 +451,7 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
     if(remaining<4096||count>(remaining-4096)/4096){abandonRecords();return;}
     const auto estimate=4096+count*4096;
     auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);
+    if(!token&&reclaim_){reclaim_(estimate);token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);}
     if(!token){abandonRecords();return;}
     resources::ResourceLease lease(recordBudget_,*token);
     try{

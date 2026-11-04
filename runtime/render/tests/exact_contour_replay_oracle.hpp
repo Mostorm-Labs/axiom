@@ -48,6 +48,30 @@ inline void requireExactContourReplay(SkSurface& root){
         check(got==want,"exact contour replay changed Direct pixels");
         targets.clear();check(budget->used()==0,"exact replay retained budget after teardown");
     }
+    // A genuine, dispensable surface owns the soft budget at first admission.
+    // Reclamation runs only after reserve fails; denial without it is covered
+    // above. The callback releases no canonical state or in-flight draw target.
+    {
+        auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        std::vector<foundation::InkKnot> knots;for(unsigned i=0;i<1024;++i)knots.push_back({i*.49,190.+std::sin(i*.04)*160,32768});
+        auto actual=root.makeSurface(info),oracle=root.makeSurface(info),dispensable=root.makeSurface(info);
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{2U*1024U*1024U,4U*1024U*1024U});
+        const auto token=budget->reserve(resources::ResourceClass::kTile,2U*1024U*1024U,true);
+        check(token.has_value(),"reclamation fixture reservation");resources::ResourceLease lease(budget,*token);
+        CompactCoverageTargets targets;targets.budget=budget;CompactRasterWork work;unsigned reclaimed=0;
+        actual->getCanvas()->clear(SK_ColorTRANSPARENT);oracle->getCanvas()->clear(SK_ColorTRANSPARENT);
+        {CompactStrokeRasterJob job(*actual->getCanvas(),config,knots,nullptr,true,budget,RenderCacheOptions{}.maxEntryBytes,
+            [&](std::size_t requested){check(budget->used()>2U*1024U*1024U-requested,"unnecessary exact reclamation");
+                ++reclaimed;dispensable.reset();lease.reset();});
+            for(unsigned i=0;!job.step(*actual->getCanvas(),config,knots,42,targets,true,&work);++i)check(i<10000,"reclaimed exact did not converge");}
+        check(reclaimed==1&&work.contourRecordReplays>0&&work.compiledContourKnots==knots.size(),
+            "actual admission pressure did not reclaim and reuse exact records");
+        std::vector<std::uint8_t> got(info.computeMinByteSize()),want(got.size());
+        check(actual->readPixels(info,got.data(),info.minRowBytes(),0,0),"reclaimed exact readback");
+        drawCompactStrokeToSkCanvas(*oracle->getCanvas(),config,knots,42);
+        check(oracle->readPixels(info,want.data(),info.minRowBytes(),0,0)&&got==want,"reclamation changed canonical pixels");
+        targets.clear();check(budget->used()==0,"reclaimed exact leaked lease");
+    }
     auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
     std::vector<foundation::InkKnot> knots;for(unsigned i=0;i<1024;++i)knots.push_back({double(i)/2,190.,32768});
     auto surface=root.makeSurface(info);auto budget=std::make_shared<resources::ResourceBudgetManager>();
