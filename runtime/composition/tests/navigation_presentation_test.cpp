@@ -9,6 +9,9 @@ public:
  void bounded(){navigationExactPreparation_=true;}
  void ordinary(){navigationExactPreparation_=false;}
  bool attempt(std::uint64_t id){return presentCanonicalFrame(id,0,false);}
+ void slowCoverage(){render::RenderCacheOptions options;options.navigationMaxSteps=1;
+   options.navigationMaxQueries=1;skiaRenderer_.setRenderCacheOptions(options);}
+ void normalCoverage(){skiaRenderer_.setRenderCacheOptions({});}
 };
 void retainedDemand(){
  DemandRuntime r;require(r.bindSurface(256,128)&&r.registerInputSource(7,"exact-demand")&&r.selectBrushProfile("round-handdrawn",4),"demand setup");
@@ -302,7 +305,7 @@ int main(){
  retainedDemand();
  deferredShapeDrag();
  drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);handPanUsesNavigationFeedback();selectPinchUsesNavigationFeedback();selectedWheelNavigationUsesFeedback();
- interaction::CanvasEditingRuntime r;
+ DemandRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"navigation"),"prepare");
  require(r.selectBrushProfile("round-handdrawn",1),"compact brush");
  r.setPlatformPresentationDeferred(true);
@@ -325,6 +328,17 @@ int main(){
  require(r.setViewportZoomAt(1.1F,100,60),"zoom");
  const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
  bool presented=false;
+ // Incomplete disposable feedback must not gate canonical settlement after
+ // the existing quiet interval. Sustained input still owns navigation first.
+ r.slowCoverage();
+ require(r.serviceNavigationPresentation(start,presented)&&!presented,"slow coverage fixture");
+ require(r.serviceNavigationPresentation(start+std::chrono::milliseconds(99),presented)&&!presented,
+         "active navigation released exact before quiet interval");
+ require(!r.serviceNavigationPresentation(start+std::chrono::milliseconds(100),presented),
+         "incomplete coarse coverage held canonical settle after quiet interval");
+ require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty()&&
+         r.semanticGeneration()==generation&&r.sceneRevision()==scene,"settle fallback fabricated canonical receipt");
+ r.normalCoverage();require(r.setViewportZoomAt(1.2F,100,60),"fresh navigation camera");
  require(r.serviceNavigationPresentation(start,presented),"navigation work missing");
  unsigned coldSteps=0;
  while(!presented){

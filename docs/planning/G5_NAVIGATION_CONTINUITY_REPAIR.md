@@ -15,6 +15,10 @@ Execution closure:
 - Prioritize bounded complete coarse viewport coverage before fine tiles. Keep
   useful coarse coverage resident while it supplies feedback. Prewarm/fine jobs
   must yield priority when a new visible coverage frontier is missing.
+- After the existing 100ms navigation quiet interval, release incomplete
+  disposable coverage to cooperative exact preparation. Coarse cache misses
+  cannot gate canonical convergence. Sustained navigation and claimed touch
+  gestures retain the existing feedback path and receipt rules.
 - Reconcile the v4 prepared-geometry admission bound for long strokes using a
   budgeted staging pass of the pinned contour compiler, then actual contour
   counts for path admission. Keep per-entry/global limits, leases and denial

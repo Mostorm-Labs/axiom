@@ -4354,8 +4354,11 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
   }
   if(!navigationActive_)return false;
-  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100) &&
-     skiaRenderer_.navigationWork().coverageComplete){
+  // Once navigation is quiet, exact preparation owns convergence. A missing
+  // disposable coarse tile must not hold a warm canonical target behind dozens
+  // of feedback opportunities. Exact preparation remains cooperative and no
+  // incomplete feedback pixels or canonical receipts are published here.
+  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100)){
       skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;navigationExactPreparation_=true;return false;
   }
