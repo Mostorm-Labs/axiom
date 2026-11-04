@@ -28,7 +28,7 @@ struct VisibilityResult final {
     std::vector<foundation::ObjectId> backToFront;
     // Render-owned locality metadata. Object order remains canonical; chunk
     // selections only narrow optional geometry work and may fall back.
-    std::vector<VisibilityChunkSelection> chunkSelections;
+    std::vector<VisibilityChunkSelection> chunkSelections{};
 };
 
 } // namespace canvas::render
