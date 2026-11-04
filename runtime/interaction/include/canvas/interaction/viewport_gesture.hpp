@@ -21,7 +21,11 @@ class TwoFingerViewportGesture final {
     const float dx = second.x - first.x;
     const float dy = second.y - first.y;
     const float distance = std::sqrt(dx * dx + dy * dy);
-    if (distance <= 0.0F) return false;
+    if (!std::isfinite(distance)) return false;
+    // Distinct contacts may overlap at the start or during a pinch. Keep the
+    // last valid transform and wait for separation before establishing a
+    // baseline; a temporarily unsolvable scale is not rejected input.
+    if (distance == 0.0F) return true;
     if (!active_) {
       baselineDistance_ = distance;
       baselineCenterX_ = (first.x + second.x) * 0.5F;
