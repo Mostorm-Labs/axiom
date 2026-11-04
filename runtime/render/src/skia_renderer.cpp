@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
+#include <chrono>
 
 #include <cmath>
 #include <algorithm>
@@ -31,6 +32,7 @@ struct SkiaRenderer::NavigationCache final {
     resources::ResourceLease lease;
     SkColor background=SK_ColorWHITE;
     std::optional<CanonicalViewportTransform> feedbackCamera;
+    bool backgroundProofRejected=false;
 };
 struct SkiaRenderer::CompactCache final {
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
@@ -281,11 +283,12 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
 }
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
-    const EditingOverlay* selectionOverlay){
+    const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     std::optional<BackendSubmissionResult> feedbackFailure;
+    auto options=renderCacheOptions_;
     const auto retained=[&]()->bool{
         const auto cache=navigationCache_;if(!cache||!cache->frame)return false;
         const auto& old=cache->transform;const auto previous=cache->feedbackCamera;
@@ -293,10 +296,32 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
             previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
         const double ratio=camera.scale/old.a;
         const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
-        // Complete current viewport only. A cold zoom-out never uses cropped pixels.
-        if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||x>0||y>0||
-           x+cache->frame->metrics.logicalWidth*ratio<current.metrics.logicalWidth||
-           y+cache->frame->metrics.logicalHeight*ratio<current.metrics.logicalHeight)return false;
+        if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||!std::isfinite(ratio)||ratio<=0||
+           !std::isfinite(x)||!std::isfinite(y))return false;
+        const double width=current.metrics.logicalWidth,height=current.metrics.logicalHeight;
+        const double right=x+cache->frame->metrics.logicalWidth*ratio,bottom=y+cache->frame->metrics.logicalHeight*ratio;
+        if(x>0||y>0||right<width||bottom<height){
+            if(!backgroundOnly||cache->backgroundProofRejected)return false;
+            // Exact retained pixels plus Scene-proven plain background cover
+            // the entire demand. Unknown exposure never certifies feedback.
+            const auto left=std::clamp(x,0.,width),top=std::clamp(y,0.,height);
+            const auto r=std::clamp(right,0.,width),b=std::clamp(bottom,0.,height);
+            std::vector<foundation::WorldRect> exposed;
+            const auto add=[&](double l,double t,double r,double b){if(r>l&&b>t)exposed.push_back({float(l),float(t),float(r),float(b)});};
+            if(r<=left||b<=top)add(0,0,width,height);
+            else{add(0,0,left,height);add(r,0,width,height);add(left,0,r,top);add(left,b,r,height);}
+            if(exposed.size()>options.navigationMaxQueries)return false;
+            const double pad=2*width/current.metrics.physicalWidth;
+            for(const auto& e:exposed){
+                const foundation::WorldRect world{float((e.left-pad-camera.translationX)/camera.scale),
+                    float((e.top-pad-camera.translationY)/camera.scale),float((e.right+pad-camera.translationX)/camera.scale),
+                    float((e.bottom+pad-camera.translationY)/camera.scale)};
+                --options.navigationMaxQueries;++navigationTiles_->work.queries;
+                const auto started=std::chrono::steady_clock::now();const bool empty=backgroundOnly(world);
+                navigationTiles_->work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+                if(!empty){cache->backgroundProofRejected=true;return false;}
+            }
+        }
         const auto feedback=renderNavigation(provider,camera,current,selectionOverlay);
         if(feedback.code!=BackendSubmissionCode::kAccepted){feedbackFailure=feedback;return false;}
         cache->feedbackCamera=camera;return true;
@@ -314,7 +339,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         }
     };
     try{
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained,&textResources_,images_,drawOverlay);
         if(feedbackFailure){navigationTiles_.reset();return *feedbackFailure;}
         if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
         return result;

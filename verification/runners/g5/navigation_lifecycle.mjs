@@ -12,6 +12,7 @@ import {summarizePhase} from './navigation_metrics.mjs';
 const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const idleMs=Number(process.argv[4]??60000),cycles=Number(process.argv[5]??6);
 const selected=process.env.AXIOM_NAV_SELECTED!=='0',modes=(process.env.AXIOM_NAV_MODES??'wheel,touch').split(',');
+const fixtureOptions=JSON.parse(process.env.AXIOM_NAV_OPTIONS??'{}'),panOnly=process.env.AXIOM_NAV_PAN_ONLY!=='0';
 if(!modes.length||modes.some(m=>!['wheel','touch'].includes(m)))throw Error('invalid modes');
 if(!Number.isSafeInteger(idleMs)||idleMs<0||!Number.isSafeInteger(cycles)||cycles<1)throw Error('invalid duration/cycles');
 const hash=b=>createHash('sha256').update(b).digest('hex');
@@ -60,12 +61,12 @@ try{
       for(const [prefix,kind] of [['AXIOM_NAVIGATION_TIMING ','navigation'],['AXIOM_FRAME_TIMING ','frame']])if(text.startsWith(prefix)){rows.push({phase:current,segment,kind,value:JSON.parse(text.slice(prefix.length))});break;}
     });
     page.on('pageerror',e=>exceptions.push(String(e)));
-    const record={mode,selected,options:{width:636,height:914,points:mode==='wheel'?4096:16384,lines:mode==='wheel'?6:2,span:570,lineSpacing:65,uiReads:true},phases:[]};
+    const record={mode,selected,panOnly,options:{width:636,height:914,points:mode==='wheel'?4096:16384,lines:mode==='wheel'?6:2,span:570,lineSpacing:65,uiReads:true,...fixtureOptions},phases:[]};
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/navigation_sampling.html`);
       record.setup=await page.evaluate(({options,selected})=>probe.setup('mixed',selected,'round-handdrawn',4,options),{options:record.options,selected});
       const measure=async(id,interrupt=false)=>{
-        const options={mode,burst:mode==='wheel'?4:1,panOnly:true};
+        const options={mode,burst:mode==='wheel'?4:1,panOnly};
         const raw=await page.evaluate(({id,options,interrupt})=>interrupt?probe.interruptSelection(options):probe.measure(id,options),{id,options,interrupt});
         const phaseRows=rows.filter(r=>r.phase===raw.id);
         record.phases.push({id:raw.id,raw,summary:summarizePhase(raw,phaseRows.filter(r=>r.kind==='navigation').map(r=>r.value),phaseRows.filter(r=>r.kind==='frame').map(r=>r.value))});

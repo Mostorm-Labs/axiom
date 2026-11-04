@@ -189,11 +189,13 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     if(!admissionReady_){
         AXIOM_FRAME_TIMING_SCOPE(scanTiming,prepare_scan);
         std::uint64_t bytes=0;std::size_t admitted=0;
+        const bool isolatedInk=requiresInkIsolation(plan);
         for(const auto& entry:plan.referenceDrawList.entries){
             const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
-            const auto& t=entry.record.transform;
-            if(!compact||!entry.contributesPixels||!entry.record.eraseMasks.empty()||
-               t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0){
+            // entryMatrix already contains the object affine. A moved stroke
+            // needs the same bounded preparation as identity ink; routing it
+            // Direct makes every camera update synchronously raster it again.
+            if(!compact||!entry.contributesPixels||!entry.record.eraseMasks.empty()){
                 admissions_.insert_or_assign(entry.record.objectId,Admission{{},AdmissionKind::kDirect});
                 AXIOM_FRAME_TIMING_ADD(prepare_direct,1);
                 ++work.preparationDirectEntries;continue;
@@ -214,6 +216,14 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             if(!crop.intersect(canvas.getDeviceClipBounds())){
                 admissions_.insert_or_assign(entry.record.objectId,Admission{SkIRect::MakeEmpty(),AdmissionKind::kEmpty});
                 continue;
+            }
+            const auto& t=entry.record.transform;
+            if(!isolatedInk&&(t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
+                // Direct transformed ink-only material blends onto the actual
+                // backdrop. A transparent per-object cache adds a quantization
+                // pass. Stream into the bounded full-frame composite instead.
+                admissions_.insert_or_assign(entry.record.objectId,Admission{crop,AdmissionKind::kComposite});
+                streamFrame_=true;continue;
             }
             const auto allocation=std::uint64_t(crop.width())*crop.height()*4;
             if(allocation>options.maxEntryBytes||allocation>options.maxBytes||bytes>options.maxBytes-allocation||admitted>=options.maxEntries){
@@ -248,6 +258,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(admission==admissions_.end())return Preparation::kFallback;
         if(admission->second.kind==AdmissionKind::kEmpty){captureRunEntry(plan,preparationCursor_,nullptr);continue;}
         const bool raster=admission->second.kind==AdmissionKind::kRaster;
+        const bool directComposite=admission->second.kind==AdmissionKind::kComposite;
         const bool streamedCompact=streamFrame_&&!raster&&!admission->second.crop.isEmpty();
         if(!raster&&!streamedCompact){
             if(streamFrame_){
@@ -272,9 +283,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         }
         if(exhausted())return yield();
         if(!pending_){
-            if(!ensureScratch(canvas))return Preparation::kFallback;
+            if(!directComposite&&!ensureScratch(canvas))return Preparation::kFallback;
             const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
-            auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
+            auto* target=(directComposite?composite_:scratch_)->getCanvas();
+            if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
             auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget);
@@ -285,7 +297,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
             pending_.reset();return Preparation::kFallback;
         }
-        auto* target=scratch_->getCanvas();const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+        auto* target=(directComposite?composite_:scratch_)->getCanvas();const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
         bool complete=false;
         do{
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
@@ -297,6 +309,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             if(!complete&&exhausted())return yield();
         }while(!complete);
         const auto crop=pending_->crop;pending_.reset();
+        if(directComposite){++work.rasterizedGroups;++built;continue;}
         const bool stored=raster&&store(canvas,entry,validity,crop,false,true);
         // Consume the already materialized source; never run coverage again to
         // warm a retained layer. Its device grid and shader origin stay intact.

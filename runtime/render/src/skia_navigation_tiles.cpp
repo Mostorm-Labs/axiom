@@ -25,8 +25,7 @@ bool supported(const ReferenceTraversalEntry& e){
     const auto& t=e.record.transform;
     // Tile sources are rendered in world space.  The shared draw helper
     // applies the record transform below for ordinary shapes.  Stroke
-    // coverage jobs still bake their geometry directly into the tile and
-    // therefore retain the identity-transform requirement.
+    // coverage jobs use the same object affine when building their masks.
     if(!std::isfinite(t.a)||!std::isfinite(t.b)||!std::isfinite(t.c)||
        !std::isfinite(t.d)||!std::isfinite(t.tx)||!std::isfinite(t.ty))return false;
     // Erase masks are object-local render effects. They are safe in a world
@@ -38,7 +37,9 @@ bool supported(const ReferenceTraversalEntry& e){
        !std::holds_alternative<CompactStrokeReferenceCommand>(e.command) &&
        !std::holds_alternative<BrushStrokeReferenceCommand>(e.command))return false;
     const bool identity=t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
-    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity;
+    // Nonidentity erased ink retains its existing fail-closed fallback until
+    // its isolated-mask realization is qualified. Plain affine ink is safe.
+    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity||e.record.eraseMasks.empty();
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
     if(v&&v->content.stroke.snapshot.material_mode==1)return identity;
     return std::holds_alternative<ShapeReferenceCommand>(e.command) ||
@@ -378,6 +379,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 if (range.second <= range.first) { ++job.source; continue; }
                 job.knot = range.first;
                 draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+                const auto& t=entry.record.transform;
+                draw->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
                 // The range renderer backs up one shared neighbor before
                 // drawing a chunk, so the distance is the length through the
                 // knot immediately before the requested span.
@@ -420,9 +423,13 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                                          stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<range.second)continue;
-            compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
+            auto* material=job.surface->getCanvas();material->save();
+            const auto& t=entry.record.transform;
+            material->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
+            compositeCompactCoverageToSkCanvas(*material,*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             if (!entry.record.eraseMasks.empty())
-                drawEraseMasksToSkCanvas(*job.surface->getCanvas(), entry);
+                drawEraseMasksToSkCanvas(*material, entry);
+            material->restore();
         }else{
             const auto& geometry=job.sources->geometry[job.source];
             const auto* path=geometry?geometry->vectorPath():nullptr;

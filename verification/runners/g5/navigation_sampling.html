@@ -100,11 +100,26 @@ window.probe={
       }:undefined});
     sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
     sdk.data.attach({capacity:64});const brushSelection=await sdk.selectBrush(profile,revision);
+    if(options.brush)await sdk.setBrushConfig({...sdk.readBrushConfig(),...options.brush});
+    if(options.drawZoom){const prior=frames.length;await sdk.zoomAt(318,457,options.drawZoom);await settle(prior);}
     for(let line=0;line<lines;++line){
       const prior=frames.length;
-      for(let i=0;i<points;++i)pointer(i===0?'pointerdown':i===points-1?'pointerup':'pointermove',40+i*(options.span?options.span/points:1.5),
-        90+line*(options.lineSpacing??310)+Math.sin(i*.035)*42);
+      for(let i=0;i<points;++i){
+        const t=i*.017;
+        pointer(i===0?'pointerdown':i===points-1?'pointerup':'pointermove',
+          options.scribble?300+Math.sin(t)*220+Math.sin(t*.37)*60:40+i*(options.span?options.span/points:1.5),
+          options.scribble?350+Math.sin(t*.73)*180:90+line*(options.lineSpacing??310)+Math.sin(i*.035)*42);
+      }
       await settle(prior);
+    }
+    if(options.transformedStroke){
+      await sdk.selectTool('select');await click(options.scribble?300:40,options.scribble?350:90);
+      if(!sdk.readState().selected.length)throw Error('stroke transform fixture target missing');
+      const prior=frames.length;await sdk.transformSelection([1,0,0,1,12,8]);await settle(prior);
+    }
+    for(let i=0;i<(options.shapes??0);++i){
+      await sdk.selectShape(i%2?'ellipse':'rectangle');
+      const prior=frames.length;pointer('pointerdown',100+i*60,220+i*30);pointer('pointerup',270+i*60,340+i*30);await settle(prior);
     }
     let target=null;const prior=frames.length;
     if(workload==='image'||workload==='mixed'){
@@ -131,6 +146,7 @@ window.probe={
       else if(sdk.readState().primary!==target)await click(workload==='sticky'?300:260,200);
       if(!sdk.readState().selected.length||sdk.readState().primary!==target)throw Error('fixture target not selected');
     }else{await click(790,490);if(sdk.readState().selected.length)throw Error('fixture selection not cleared');}
+    if(options.zoom){const prior=frames.length;await sdk.zoomAt(318,457,options.zoom);await settle(prior);}
     for(let i=0;i<12;++i)await raf();
     window.probe.uiReadTimes=uiReadTimes;
     return {workload,selected,profile,revision,options,brushSelection,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};

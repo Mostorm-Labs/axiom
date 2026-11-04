@@ -63,6 +63,8 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 // Validated subranges share the exact traversal/isolation mapping with Direct.
 // Used only for bounded offscreen composition, never partial target publication.
 void drawReferenceBackgroundToSkCanvas(SkCanvas&,const FramePlan&);
+// Shared destination/isolation policy for exact drawing and cooperative work.
+bool requiresInkIsolation(const FramePlan&);
 void drawValidatedReferenceRangeToSkCanvas(SkCanvas&,const FramePlan&,
     std::size_t begin,std::size_t end,ImageResourceResolver*,SkiaTextResources*,
     bool includeInk=true,SkiaRenderCache* cache=nullptr,const CompactDeviceGrid* grid=nullptr);

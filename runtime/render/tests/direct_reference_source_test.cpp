@@ -547,6 +547,21 @@ void navigationUsesGeometryChunkHints() {
                                          .backToFront = {record.objectId}};
     const auto empty = DirectReferenceSource::buildNavigation(farInput, farVisibility, scene);
     assert(empty.hasValue() && empty.value().entries.empty() && empty.value().visibleRecords == 0U);
+    // GeometryChunk bounds are object-local; query bounds are world-space.
+    // These distant transforms must retain the first chunk, not drop the ink.
+    for(const auto transform: {canvas::semantic::Transform2D{1,0,0,1,1000,200},
+                              canvas::semantic::Transform2D{0,1,-1,0,1000,200},
+                              canvas::semantic::Transform2D{2,.2,.1,.7,1000,200}}){
+        record.transform=transform;
+        canvas::RuntimeSceneProjection movedProjection;movedProjection.generation=SemanticGeneration{7};
+        movedProjection.records.push_back(record);
+        canvas::IncrementalRuntimeTestAccess::install(scene,std::move(movedProjection));
+        auto movedInput=frame(WorldPoint{1050,220},WorldRect{970,200,1120,250});
+        auto movedVisibility=visibility;movedVisibility.queryWorldRect=movedInput.worldViewport;movedVisibility.chunkSelections.clear();
+        const auto moved=DirectReferenceSource::buildNavigation(movedInput,movedVisibility,scene);
+        assert(moved.hasValue()&&moved.value().entries.size()==1U);
+        assert(moved.value().entries.front().navigationChunkSpan==span);
+    }
     std::cout << "PASS navigation GeometryChunk hints\n";
 }
 

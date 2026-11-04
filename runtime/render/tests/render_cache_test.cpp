@@ -116,6 +116,100 @@ class FailingPresent final : public SkiaSurfaceProvider {
     std::uint64_t presentCount()const noexcept override{return raster.presentCount();}
 };
 }
+void checkRetainedBackground(TestSurface& target,TestSurface& reference){
+    auto entry=stroke(82001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+    c.stroke.knots={{80,60,32768},{150,70,32768}};entry.record.content=c;
+    entry.record.worldBounds={32,12,198,118};const auto frame=plan(820,{entry});
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"background proof source");
+    NavigationSourceQuery sources=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    unsigned proofs=0;NavigationBackgroundQuery background=[&](const foundation::WorldRect& region){++proofs;return !region.intersects(entry.record.worldBounds);};
+    const auto presents=target.presentCount();
+    require(navigate(cached,target,{1,8,4},frame.frame,sources,false,nullptr,background).code==BackendSubmissionCode::kAccepted&&
+            target.presentCount()==presents+1&&cached.navigationWork().presented,
+            "known-empty exposed border held navigation behind tile preparation");
+    require(proofs>0&&proofs<=4&&cached.submissionCount()==1,"background proof exceeded query cap or emitted canonical receipt");
+    const auto feedback=pixels(target);
+    require(direct.renderFrame(reference,plan(821,{entry},1,{1,0,0,1,8,4})).code==BackendSubmissionCode::kAccepted&&feedback==pixels(reference),
+            "empty-border reprojection changed translated pixels");
+    const auto zoomPresents=target.presentCount(),zoomQueries=cached.navigationWork().queries;
+    require(navigate(cached,target,{.9F,12.8F,6.4F},frame.frame,sources,false,nullptr,background).code==BackendSubmissionCode::kAccepted&&
+            target.presentCount()==zoomPresents+1&&cached.navigationWork().queries-zoomQueries<=4,
+            "four empty zoom-out borders lost immediate complete feedback or exceeded query cap");
+    SkiaRenderer guarded;options.navigationMaxQueries=1;guarded.setRenderCacheOptions(options);
+    require(guarded.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"negative background source");
+    unsigned failures=0;NavigationBackgroundQuery unknown=[&](const foundation::WorldRect&){++failures;return false;};
+    const auto before=target.presentCount();
+    for(unsigned i=0;;++i){const auto queries=guarded.navigationWork().queries;
+        require(navigate(guarded,target,{1,8,0},frame.frame,sources,false,nullptr,unknown).code==BackendSubmissionCode::kAccepted,"unknown exposure fallback");
+        require(guarded.navigationWork().queries-queries<=1,"background proof bypassed shared query budget");
+        if(i==0)require(target.presentCount()==before,"unknown exposure falsely certified complete viewport");
+        if(!guarded.navigationWork().pending)break;require(i<127,"failed background proof starved tile convergence");
+    }
+    require(failures==1,"failed exposure proof repeated and starved coverage");
+}
+void checkAffineStrokes(TestSurface& target,TestSurface& reference){
+    const semantic::Transform2D transforms[]={{1,0,0,1,12,8},{.9,.15,-.1,.8,10,5},{1.1,0,0,.75,-5,4}};
+    for(const auto& transform:transforms)for(bool mixed:{false,true}){
+        auto entry=stroke(81001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({20.+i*.75,55.+std::sin(i*.17)*18,32768});
+        entry.record.content=c;entry.record.transform=transform;entry.record.worldBounds={0,0,256,128};
+        auto entries=std::vector{entry};
+        if(mixed){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(81002);o.kind=semantic::ObjectKind::kShape;o.kind_version=1;
+            o.content=semantic::ShapeContent{1,100,80};o.transform.tx=70;o.transform.ty=20;
+            const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+            entries.insert(entries.begin(),{projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});}
+        const auto frame=plan(810,entries);SkiaRenderer cached,direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+        RenderPreparationBudget budget;budget.maxCoverageSteps=1;budget.maxGroups=1;budget.maxMicroseconds=1000000;
+        const auto presents=target.presentCount();
+        require(cached.renderFrame(target,frame,nullptr,&budget).code==BackendSubmissionCode::kRetry&&target.presentCount()==presents,
+                "transformed stroke bypassed cooperative preparation");
+        unsigned attempts=0;BackendSubmissionResult r;
+        do{r=cached.renderFrame(target,frame,nullptr,&budget);require(++attempts<128,"affine preparation did not converge");}while(r.code==BackendSubmissionCode::kRetry);
+        require(r.code==BackendSubmissionCode::kAccepted,"affine prepared frame rejected");
+        const auto actual=pixels(target);
+        require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted,"affine direct frame");
+        const auto expected=pixels(reference);
+        if(actual!=expected){unsigned n=0,max=0;for(std::size_t i=0;i<actual.size();++i){if(actual[i]!=expected[i]&&n<4)std::cerr<<"pixel "<<(i/4)%256<<','<<(i/4)/256<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';n+=actual[i]!=expected[i];max=std::max(max,unsigned(std::abs(int(actual[i])-int(expected[i]))));}std::cerr<<"affine mixed="<<mixed<<" a="<<transform.a<<" b="<<transform.b<<" tx="<<transform.tx<<" differences="<<n<<" max="<<max<<'\n';}
+        require(actual==expected,"affine cached/direct pixels differ");
+        const auto rasterized=cached.renderCacheWork().rasterizedGroups;
+        require(rasterized==1+std::uint64_t(mixed)&&cached.renderCacheWork().directGroups==std::uint64_t(mixed),"affine stroke still drew synchronously after preparation");
+        require(cached.renderFrame(target,plan(811,entries),nullptr,&budget).code==BackendSubmissionCode::kAccepted&&
+                cached.renderCacheWork().rasterizedGroups==rasterized+std::uint64_t(mixed)&&pixels(target)==actual,"affine warm raster not retained");
+        SkiaRenderer nav;RenderCacheOptions options;options.navigationMicroseconds=1000000;nav.setRenderCacheOptions(options);
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+        for(unsigned n=0;;++n){
+            require(navigate(nav,target,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"transformed stroke disabled navigation coverage");
+            if(!nav.navigationWork().pending)break;require(n<127,"affine navigation stalled");
+        }
+        require(nav.navigationWork().coverageComplete&&nav.navigationWork().contourPrimitivesDrawn>0&&nav.submissionCount()==0,
+                "affine navigation missing geometry or manufactured canonical receipt");
+        const auto feedback=pixels(target);
+        auto geometryOracle=actual;
+#if defined(G5_TEST_WEBGL)
+        // Navigation deliberately uses Ganesh coverage, whereas canonical v4
+        // retains pinned CPU AA. Compare its geometry with an independent full
+        // Ganesh contour stream, not a CPU/GPU edge-color equality assumption.
+        auto background=entries;background.pop_back();
+        require(direct.renderFrame(reference,plan(812,background)).code==BackendSubmissionCode::kAccepted,"affine geometry oracle background");
+        const auto acquired=reference.acquire();auto* draw=acquired.frame.surface->getCanvas();
+        auto coverage=draw->makeSurface(SkImageInfo::MakeN32Premul(256,128));
+        require(bool(coverage),"affine GPU geometry oracle target");
+        const auto matrix=SkMatrix::MakeAll(float(transform.a),float(transform.c),float(transform.tx),float(transform.b),float(transform.d),float(transform.ty),0,0,1);
+        coverage->getCanvas()->clear(SK_ColorBLACK);coverage->getCanvas()->setMatrix(matrix);
+        internal::drawCompactContourCoverageToSkCanvas(*coverage->getCanvas(),c.stroke.config,ink::compileCompactContour(c.stroke.config,c.stroke.knots));
+        draw->save();draw->concat(matrix);
+        internal::compositeCompactCoverageToSkCanvas(*draw,*coverage->makeImageSnapshot(),c.stroke.config,c.stroke.seed);
+        draw->restore();reference.release();geometryOracle=pixels(reference);
+#endif
+        unsigned error=0;
+        for(std::size_t i=0;i<feedback.size();++i)error=std::max(error,unsigned(std::abs(int(feedback[i])-int(geometryOracle[i]))));
+        if(error>3)std::cerr<<"nav error="<<error<<" mixed="<<mixed<<" a="<<transform.a<<" b="<<transform.b<<" tx="<<transform.tx<<'\n';
+        require(error<=3,"affine navigation did not match canonical geometry");
+    }
+}
 #if defined(G5_TEST_WEBGL)
 void checkGpuContours(TestSurface& provider){
     const auto acquired=provider.acquire();auto* canvas=acquired.frame.surface->getCanvas();
@@ -171,6 +265,15 @@ int main(int argc,char** argv) {
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         SkiaRenderer renderer;
+        if(argc>1&&std::string_view(argv[1])=="--background-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"background reference");
+            checkRetainedBackground(provider,reference);return finishNative(0);
+        }
+        if(argc>1&&std::string_view(argv[1])=="--affine-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine reference surface");
+            checkRetainedBackground(provider,reference);
+        checkAffineStrokes(provider,reference);return finishNative(0);
+        }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--contour-only"){checkGpuContours(provider);return finishNative(0);}
         {
@@ -199,6 +302,7 @@ int main(int argc,char** argv) {
 #endif
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
+        checkAffineStrokes(provider,reference);
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         auto compare=[&](const FramePlan& frame){
             const auto rendered=renderer.renderFrame(provider,frame);

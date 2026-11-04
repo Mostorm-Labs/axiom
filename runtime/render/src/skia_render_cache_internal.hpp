@@ -58,7 +58,7 @@ class SkiaRenderCache final {
     CompactCoverageTargets coverageTargets_;
     struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
     std::unique_ptr<Pending> pending_;
-    enum class AdmissionKind {kRaster,kEmpty,kDirect};
+    enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
     struct Admission {SkIRect crop;AdmissionKind kind=AdmissionKind::kRaster;};
     std::unordered_map<foundation::ObjectId,Admission,foundation::ObjectIdHash> admissions_;
     bool admissionReady_=false,streamFrame_=false,compositeReady_=false;

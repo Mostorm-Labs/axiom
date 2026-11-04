@@ -1,5 +1,6 @@
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/direct_reference_source.hpp"
+#include "affine_bounds.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <bit>
@@ -31,7 +32,9 @@ std::optional<NavigationChunkSpan> navigationSpan(
         margin = std::max(2.0F, static_cast<float>(vector->content.stroke.snapshot.vector.size));
     std::optional<NavigationChunkSpan> result;
     for (const auto& chunk : record.geometryChunks) {
-        if (!chunkIntersects(chunk.bounds, region, margin)) continue;
+        if (!chunkIntersects(internal::transformedBounds(chunk.bounds,record.transform), region,
+                margin*static_cast<float>(std::max(std::abs(record.transform.a)+std::abs(record.transform.c),
+                                                   std::abs(record.transform.b)+std::abs(record.transform.d))))) continue;
         if (!result) {
             result = NavigationChunkSpan{chunk.pointOffset, chunk.pointCount};
         } else {

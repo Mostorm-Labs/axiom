@@ -4387,8 +4387,17 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       if(!sources)return false;
       entries=std::move(sources.value().entries);return true;
   };
+  // Prove exposed strips using the authoritative Scene object query, not
+  // optional geometry chunks or the set of commands a renderer can consume.
+  const render::NavigationBackgroundQuery backgroundOnly=[&](const foundation::WorldRect& region){
+      const render::FrameState queryFrame{exact->viewId,exact->camera,region,exact->metrics,
+          exact->sceneGeneration,exact->sceneReadToken,exact->surfaceGeneration,exact->metricsGeneration,
+          exact->frameId,exact->viewportClip};
+      const auto visibility=render::VisibilityResolver::resolve(queryFrame,*runtimeSceneHost_);
+      return visibility&&visibility.value().backToFront.empty();
+  };
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
-      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm,selectionOverlay());
+      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm,selectionOverlay(),backgroundOnly);
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
   return true;

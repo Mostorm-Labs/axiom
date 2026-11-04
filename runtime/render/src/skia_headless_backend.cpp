@@ -898,6 +898,11 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 
 namespace internal {
 
+bool requiresInkIsolation(const FramePlan& plan) {
+    return plan.transparentBackground || plan.background != foundation::DocumentBackground{} ||
+        std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),isDrawableNonInkReferenceEntry);
+}
+
 void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas, entry);
 }
@@ -1007,9 +1012,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
-        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
-        isDrawableNonInkReferenceEntry);
+    const bool hasDrawableNonInk = internal::requiresInkIsolation(plan);
     for (std::size_t index=begin;index<end;++index) {
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
@@ -1071,9 +1074,7 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
-        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
-        isDrawableNonInkReferenceEntry);
+    const bool hasDrawableNonInk = internal::requiresInkIsolation(plan);
     for (std::size_t index=0;index<plan.referenceDrawList.entries.size();++index) {
         if(approximateRetainedRuns&&cache&&cache->compositeRetainedRun(canvas,plan,index,true))continue;
         const auto& entry=plan.referenceDrawList.entries[index];
@@ -1152,9 +1153,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     scaleToDevice(*canvas, plan.frame.metrics);
     canvas->clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
-        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
-        isDrawableNonInkReferenceEntry);
+    const bool hasDrawableNonInk = internal::requiresInkIsolation(plan);
     std::vector<semantic::ObjectKind> kinds;
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {

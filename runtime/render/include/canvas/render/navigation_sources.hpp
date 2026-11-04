@@ -7,6 +7,9 @@ namespace canvas::render {
 // request an expanded world region, never inspect or mutate the document.
 using NavigationSourceQuery = std::function<bool(
     const foundation::WorldRect&, std::vector<ReferenceTraversalEntry>&)>;
+// True only when the stamped Scene query proves no object overlaps this region.
+// Uncertain/failed queries return false. Never inferred from render chunk hints.
+using NavigationBackgroundQuery = std::function<bool(const foundation::WorldRect&)>;
 struct NavigationWork final {
     bool pending=false, presented=false, coverageComplete=false;
     std::uint64_t tilesBuilt=0, knotSteps=0, sourceSteps=0, fallbackUses=0, evictions=0;
