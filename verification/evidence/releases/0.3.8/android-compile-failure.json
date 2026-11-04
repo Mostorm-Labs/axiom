@@ -1,0 +1,10 @@
+{
+  "source_revision": "b7e513ced64a31c3e0c05a000b6103460d120892",
+  "run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41797201692",
+  "job": "https://github.com/Mostorm-Labs/axiom/actions/runs/41797201692/job/126464073600",
+  "target": "android-x86_64",
+  "compiler": "Android NDK 27.2.12479018 Clang",
+  "failed_source": "runtime/render/src/visibility_resolver.cpp:34",
+  "diagnostic": "missing field 'chunkSelections' initializer [-Werror,-Wmissing-field-initializers]",
+  "resolution": "Give the optional render-owned vector its explicit empty default; no API/ABI/format change. Preserve v0.3.8 and publish a new numeric candidate."
+}
