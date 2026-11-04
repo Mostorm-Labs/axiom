@@ -1,0 +1,134 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "official_gate_pass_claimed": false,
+  "code_revision": "31e88f2b94d9027f1614be64f37882dc058bca2e",
+  "source_tree_sha256": "ee1608d43b5022f7feb5508949a96aa8865543392be6f5dc1cb84c0300f5f8c5",
+  "primary": "Untransformed brush settings observed in live user page; mixed pan/zoom; matching phase pixels, not a claim of exporting the exact live document.",
+  "comparisons": [
+    {
+      "before": "before-off",
+      "after": "after-off",
+      "object_count": 7,
+      "rows": [
+        {
+          "phase": "repeat-0",
+          "before_gap_ms": 118,
+          "after_gap_ms": 18.700000002980232,
+          "before_raf_p99_ms": 29.100000008940697,
+          "after_raf_p99_ms": 29.5,
+          "before_settle_ms": 397.70000000298023,
+          "after_settle_ms": 414.19999998807907,
+          "pixel_sha256": "e53af2020fbefac5a4c2eb5f61773c393783c945d5e172d284740455d5e720d0",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        },
+        {
+          "phase": "repeat-1",
+          "before_gap_ms": 102.8999999910593,
+          "after_gap_ms": 24,
+          "before_raf_p99_ms": 19.599999994039536,
+          "after_raf_p99_ms": 18.599999994039536,
+          "before_settle_ms": 332.09999999403954,
+          "after_settle_ms": 416.6000000089407,
+          "pixel_sha256": "2980c805e38844d5f36cd10dccb4cfd1e7e430c3572155997bc4eace09c26c35",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        },
+        {
+          "phase": "repeat-2",
+          "before_gap_ms": 32.29999999701977,
+          "after_gap_ms": 18.299999997019768,
+          "before_raf_p99_ms": 26,
+          "after_raf_p99_ms": 26.099999994039536,
+          "before_settle_ms": 415.20000000298023,
+          "after_settle_ms": 382.09999999403954,
+          "pixel_sha256": "4ae76bcf5538cd847545347dc1aaa133d939a8148c662239764874dcc0b82163",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        },
+        {
+          "phase": "after-idle",
+          "before_gap_ms": 102.09999999403954,
+          "after_gap_ms": 18.5,
+          "before_raf_p99_ms": 20,
+          "after_raf_p99_ms": 19.799999997019768,
+          "before_settle_ms": 365.5,
+          "after_settle_ms": 415.20000000298023,
+          "pixel_sha256": "12770c209759bc5ece8cf680b8207195fccfc8b9d60f642f8037dee0bc1edf26",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        },
+        {
+          "phase": "after-freeze",
+          "before_gap_ms": 156.70000000298023,
+          "after_gap_ms": 18.700000002980232,
+          "before_raf_p99_ms": 21,
+          "after_raf_p99_ms": 20.700000002980232,
+          "before_settle_ms": 1093.4000000059605,
+          "after_settle_ms": 1048.7000000029802,
+          "pixel_sha256": "700738bd0eeee264c9526e97d473850397e778f53a8910405878f57570220388",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        }
+      ]
+    },
+    {
+      "before": "before-nine",
+      "after": "after-nine",
+      "object_count": 9,
+      "rows": [
+        {
+          "phase": "repeat-0",
+          "before_gap_ms": 619.1999999880791,
+          "after_gap_ms": 18.600000008940697,
+          "before_raf_p99_ms": 21.700000002980232,
+          "after_raf_p99_ms": 19,
+          "before_settle_ms": 865.9000000059605,
+          "after_settle_ms": 863.5,
+          "pixel_sha256": "7885ed21b7cdd089ef5b9b47cb1bc712e82ed9b9aae18a1b3898e718dee80737",
+          "after_updated_inputs": 72,
+          "after_input_count": 72
+        },
+        {
+          "phase": "repeat-1",
+          "before_gap_ms": 283.90000000596046,
+          "after_gap_ms": 34.5,
+          "before_raf_p99_ms": 19,
+          "after_raf_p99_ms": 19,
+          "before_settle_ms": 896.7999999970198,
+          "after_settle_ms": 828.8999999910593,
+          "pixel_sha256": "8b03b7f6d1c253c24b7df3cec226f33f18c3266e1bf887d6cbc3538b782408ee",
+          "after_updated_inputs": 71,
+          "after_input_count": 72
+        },
+        {
+          "phase": "after-idle",
+          "before_gap_ms": 284.20000000298023,
+          "after_gap_ms": 34.79999999701977,
+          "before_raf_p99_ms": 18.599999994039536,
+          "after_raf_p99_ms": 18.900000005960464,
+          "before_settle_ms": 929.2000000029802,
+          "after_settle_ms": 848.0999999940395,
+          "pixel_sha256": "f9661a926f446d54762a0ce667ced839322c21ca7e96829a518394004f80e20f",
+          "after_updated_inputs": 71,
+          "after_input_count": 72
+        },
+        {
+          "phase": "after-freeze",
+          "before_gap_ms": 282.09999999403954,
+          "after_gap_ms": 32.900000005960464,
+          "before_raf_p99_ms": 25.799999997019768,
+          "after_raf_p99_ms": 21.100000008940697,
+          "before_settle_ms": 2994.8999999910593,
+          "after_settle_ms": 2730.2000000029802,
+          "pixel_sha256": "2935faeae8651bde4f6e8ef64bf8e644567e9e19f15981efc6261ffb2365c384",
+          "after_updated_inputs": 71,
+          "after_input_count": 72
+        }
+      ]
+    }
+  ],
+  "canonical_settle_finding": "9-object after-off settle ~0.8s, CDP-thaw ~2.7s remains; disposable reprojection is not canonical completion.",
+  "secondary_affine_case": "after-affine/ and prototype-transformed/; user explicitly reported no transformed stroke.",
+  "physical_limit": "Synthetic wheel input on real WebGL2; actual IAB checks corroborate the host; physical trackpad display latency unmeasured."
+}

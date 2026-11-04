@@ -272,7 +272,7 @@ int main(int argc,char** argv) {
         if(argc>1&&std::string_view(argv[1])=="--affine-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine reference surface");
             checkRetainedBackground(provider,reference);
-        checkAffineStrokes(provider,reference);return finishNative(0);
+            checkAffineStrokes(provider,reference);return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--contour-only"){checkGpuContours(provider);return finishNative(0);}
@@ -302,6 +302,7 @@ int main(int argc,char** argv) {
 #endif
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
+        checkRetainedBackground(provider,reference);
         checkAffineStrokes(provider,reference);
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         auto compare=[&](const FramePlan& frame){

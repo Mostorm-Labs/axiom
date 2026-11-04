@@ -1,0 +1,127 @@
+[
+  {
+    "name": "before-off",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-mixed-followup/final-before-off",
+      "1000",
+      "3"
+    ],
+    "options": {
+      "shapes": 2,
+      "lines": 1,
+      "points": 8192,
+      "scribble": true,
+      "zoom": 0.57,
+      "drawZoom": 0.57,
+      "brush": {
+        "thinning": 0.99,
+        "streamline": 0.13,
+        "smoothing": 0.61
+      }
+    },
+    "exit": 0,
+    "seconds": 21.780187129974365
+  },
+  {
+    "name": "after-off",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-mixed-install/js",
+      "out/g5-mixed-followup/final-after-off",
+      "60000",
+      "3"
+    ],
+    "options": {
+      "shapes": 2,
+      "lines": 1,
+      "points": 8192,
+      "scribble": true,
+      "zoom": 0.57,
+      "drawZoom": 0.57,
+      "brush": {
+        "thinning": 0.99,
+        "streamline": 0.13,
+        "smoothing": 0.61
+      }
+    },
+    "exit": 0,
+    "seconds": 80.69549202919006
+  },
+  {
+    "name": "before-nine",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-continuity-install/js",
+      "out/g5-mixed-followup/final-before-nine",
+      "1000",
+      "2"
+    ],
+    "options": {
+      "shapes": 2,
+      "lines": 3,
+      "points": 8192,
+      "scribble": true,
+      "zoom": 0.57,
+      "drawZoom": 0.57,
+      "brush": {
+        "thinning": 0.99,
+        "streamline": 0.13,
+        "smoothing": 0.61
+      }
+    },
+    "exit": 0,
+    "seconds": 26.597808837890625
+  },
+  {
+    "name": "after-nine",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-mixed-install/js",
+      "out/g5-mixed-followup/final-after-nine",
+      "1000",
+      "2"
+    ],
+    "options": {
+      "shapes": 2,
+      "lines": 3,
+      "points": 8192,
+      "scribble": true,
+      "zoom": 0.57,
+      "drawZoom": 0.57,
+      "brush": {
+        "thinning": 0.99,
+        "streamline": 0.13,
+        "smoothing": 0.61
+      }
+    },
+    "exit": 0,
+    "seconds": 25.79497194290161
+  },
+  {
+    "name": "after-affine",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-mixed-prototype/js",
+      "out/g5-mixed-followup/final-after-affine",
+      "1000",
+      "2"
+    ],
+    "options": {
+      "shapes": 2,
+      "lines": 1,
+      "points": 8192,
+      "scribble": true,
+      "zoom": 0.57,
+      "transformedStroke": true
+    },
+    "exit": 0,
+    "seconds": 20.563509941101074
+  }
+]

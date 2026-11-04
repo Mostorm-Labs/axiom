@@ -1,0 +1,26 @@
+{
+  "sdk_source_revision": "31e88f2b94d9027f1614be64f37882dc058bca2e",
+  "sdk_source_dirty": false,
+  "sdk_version": "0.3.7",
+  "build_type": "Release",
+  "frame_timing_default": "OFF",
+  "dependency_locks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "accepted_prebuilt_consumer_paths": {
+    "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+    "CANVAS_SKIA_SDK_ROOT": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+    "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b"
+  },
+  "third_party_rebuilt": false,
+  "public_api_changed": false,
+  "installed_sha256": "consumer-install.json",
+  "test_only_followup": {
+    "base_revision": "31e88f2b94d9027f1614be64f37882dc058bca2e",
+    "file": "runtime/render/tests/render_cache_test.cpp",
+    "sha256": "e3e44edc844bcda345c9b985b9570d50187cff7e5a87b5f782b577cb1e60c983",
+    "change": "Run existing retained-background cases in common CI suite; indentation fix. No production code delta.",
+    "verified_log": "final-ci-cache-test.log.gz"
+  }
+}

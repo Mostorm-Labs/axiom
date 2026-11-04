@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "out/host",
+      "-j3",
+      "--",
+      "-k",
+      "0"
+    ],
+    "exit_code": 1,
+    "seconds": 125.92592811584473,
+    "log": "out/g5-mixed-final-full-build.log"
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/host",
+      "-j3",
+      "--output-on-failure"
+    ],
+    "exit_code": 8,
+    "seconds": 257.76818919181824,
+    "log": "out/g5-mixed-final-full-ctest.log"
+  }
+]
