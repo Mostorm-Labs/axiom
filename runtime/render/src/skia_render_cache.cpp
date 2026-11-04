@@ -18,6 +18,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     const auto& f=plan.frame;
     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
+    SourceRetentions candidateSources;resources::ResourceLease candidateMetadata;
     const auto retain=[&]()->bool{
         SourceRetentions holds;std::size_t bytes=0;
         for(const auto& source:plan.referenceDrawList.entries){
@@ -28,7 +29,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
         bytes+=holds.capacity()*sizeof(SourceRetentions::value_type);
         const auto token=budget?budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
         if(!token)return false;
-        groupMetadataLease_=resources::ResourceLease(budget,*token);groupSourceLeases_=std::move(holds);return true;
+        candidateMetadata=resources::ResourceLease(budget,*token);candidateSources=std::move(holds);return true;
     };
     sourceAdmission_=retain();
     if(!sourceAdmission_){
@@ -53,6 +54,9 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
     AXIOM_FRAME_TIMING_END(groupTiming);
+    // Keep prior source leases until every retained group has rebound. Both
+    // generations remain charged throughout this owner-thread transaction.
+    groupSourceLeases_=std::move(candidateSources);groupMetadataLease_=std::move(candidateMetadata);
     if(changed||preparationBackground_!=plan.background||preparationTransparent_!=plan.transparentBackground||
        preparationIsolate_!=plan.isolateEraseMasks){runs_.clear();work.retainedRunBytes=0;}
     const auto runCount=runs_.size();
