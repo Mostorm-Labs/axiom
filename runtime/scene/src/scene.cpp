@@ -9,6 +9,8 @@
 #include "canvas/scene/geometry_chunk.hpp"
 
 #include <algorithm>
+#include <chrono>
+#include <cstdio>
 #include <cassert>
 #include <cmath>
 #include <limits>
@@ -17,6 +19,12 @@
 #include <utility>
 
 namespace canvas {
+namespace {
+struct ScenePreparationTimer {
+    std::uint64_t& total;std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();
+    ~ScenePreparationTimer(){total+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();}
+};
+}
 RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
     semantic::SemanticGeneration generation, text::RichTextLayoutService* textService, bool deferRoutes) {
@@ -302,6 +310,7 @@ foundation::Result<RuntimeSceneProjection> RuntimeScene::replace(
 
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     const semantic::SemanticReadView& post_state) const {
+    ScenePreparationTimer timing{_work.preparationNanoseconds};
     try {
         if (_fullProjectionAuthority) {
             auto compiled = internal::materializeFullScene(post_state, _textLayoutService, deferConnectorRoutes_);
@@ -316,6 +325,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
                     std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
                     std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
             }
+            reusePayloads(projection);
             PreparedPublication result{std::move(projection)};
             result.fullProjectionAuthority = true;
             return foundation::Result<PreparedPublication>::success(std::move(result));
@@ -329,7 +339,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             }
         }
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{projectRuntimeScene(source, post_state.generation(), _textLayoutService, deferConnectorRoutes_)});
+            [&]{auto projection=projectRuntimeScene(source,post_state.generation(),_textLayoutService,deferConnectorRoutes_);reusePayloads(projection);return PreparedPublication{std::move(projection)};}());
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -337,12 +347,25 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     }
 }
 
+void RuntimeScene::reusePayloads(RuntimeSceneProjection& projection) const {
+    for(auto& record:projection.records){
+        const auto* previous=find(record.objectId);
+        if(previous){
+            if(previous->content==record.content){if(previous->content.shared()!=record.content.shared())++_work.payloadReuses;record.content=previous->content;}
+            if(previous->geometryChunks==record.geometryChunks)record.geometryChunks=previous->geometryChunks;
+            if(previous->geometryIndex&&previous->geometryIndex->matches(record))record.geometryIndex=previous->geometryIndex;
+        }
+        if(!record.geometryIndex||!record.geometryIndex->matches(record)){record.geometryIndex=scene::buildGeometryChunkIndex(record);_work.indexBuilds+=bool(record.geometryIndex);}
+    }
+}
+
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     RuntimeSceneProjection projection) const {
+    ScenePreparationTimer timing{_work.preparationNanoseconds};
     try {
         std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> seen;
         seen.reserve(projection.records.size());
-        for (const auto& record : projection.records) {
+        for (const auto& record : std::as_const(projection.records)) {
             if (record.objectId.isZero() || !isSupportedRuntimeKind(record.kind)) {
                 return foundation::Result<PreparedPublication>::failure(
                     makeError(foundation::ErrorCode::kInvalidRecord,
@@ -355,7 +378,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             }
         }
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{std::move(projection)});
+            [&]{reusePayloads(projection);return PreparedPublication{std::move(projection)};}());
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -366,6 +389,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncremental(
     const semantic::SemanticReadView& post_state,
     const semantic::ChangeSet& changes) const {
+    ScenePreparationTimer timing{_work.preparationNanoseconds};
     if (changes.beforeGeneration() != _projection.generation ||
         changes.afterGeneration() != post_state.generation()) {
         return foundation::Result<PreparedPublication>::failure(
@@ -442,6 +466,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
         } else {
             patch = projectRuntimeScene(changed, post_state.generation(), _textLayoutService, deferConnectorRoutes_);
         }
+        reusePayloads(patch);
         RuntimeSceneProjection next = _projection;
         next.generation = post_state.generation();
         bool reorder = !removed.empty();
@@ -457,7 +482,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 previous = record;
             }
         }
-        if (!removed.empty()) std::erase_if(next.records, [&](const auto& r) { return removed.contains(r.objectId); });
+        if (!removed.empty()) next.records.erase(std::remove_if(next.records.begin(),next.records.end(),[&](const auto& r){return removed.contains(r.objectId);}),next.records.end());
         if (reorder) std::sort(next.records.begin(), next.records.end(), [](const auto& a, const auto& b) {
             if (a.placement.order_key != b.placement.order_key)
                 return a.placement.order_key < b.placement.order_key;
@@ -476,12 +501,26 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
 }
 
 void RuntimeScene::publish(PreparedPublication publication) noexcept {
+    const auto start=std::chrono::steady_clock::now();
+    _work.metadataRowsCopied+=publication.projection.records.copiedElements();
     _stableProjection = std::move(_projection);
     _stableLookup = std::move(_lookup);
     _projection = std::move(publication.projection);
     _lookup = std::move(publication.lookup);
     _flatIndependent = publication.flatIndependent;
     _fullProjectionAuthority = publication.fullProjectionAuthority;
+    ++_work.publications;
+    _work.publicationNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    std::fprintf(stderr,"AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"%llu\",\"prepare_ns\":%llu,\"publish_ns\":%llu,\"metadata_rows_copied\":%llu,\"payload_reuses\":%llu,\"index_builds\":%llu}\n",
+        static_cast<unsigned long long>(_projection.generation.value()),
+        static_cast<unsigned long long>(_work.preparationNanoseconds-_reportedWork.preparationNanoseconds),
+        static_cast<unsigned long long>(_work.publicationNanoseconds-_reportedWork.publicationNanoseconds),
+        static_cast<unsigned long long>(_work.metadataRowsCopied-_reportedWork.metadataRowsCopied),
+        static_cast<unsigned long long>(_work.payloadReuses-_reportedWork.payloadReuses),
+        static_cast<unsigned long long>(_work.indexBuilds-_reportedWork.indexBuilds));
+#endif
+    _reportedWork=_work;
 }
 
 foundation::Result<RuntimeSceneProjection> RuntimeScene::apply(
@@ -775,7 +814,7 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
     SceneRecordStore::PreparedUpdate preparedRecords = std::move(recordsResult.value());
 
     try {
-        std::vector<SceneRecord> stagedRecords;
+        scene::SharedVector<SceneRecord> stagedRecords;
         bool reusedPublishedSnapshot = false;
         if (_publishedSnapshotValid) {
             stagedRecords = _publishedRecords;

@@ -220,7 +220,7 @@ std::optional<interaction::SubmitResult> CanvasEditingRuntime::tryCommitSectionD
             }
             const double x=(inverse.a*editingDropWorld_.x+inverse.c*editingDropWorld_.y)+inverse.tx;
             const double y=(inverse.b*editingDropWorld_.x+inverse.d*editingDropWorld_.y)+inverse.ty;
-            const auto& b=std::get<SectionContent>(it->content).boundary;
+            const auto& b=std::get<SectionContent>(it->content.get()).boundary;
             if(x>=b.x&&x<=b.x+b.width&&y>=b.y&&y<=b.y+b.height){destination=it->objectId;break;}
         }
         if(destination==source->placement.parent_id)return std::nullopt;

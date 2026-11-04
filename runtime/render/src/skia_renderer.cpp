@@ -170,6 +170,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
         if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+        renderCache_->sourcePool=sourceRetention_;
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
         AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
@@ -294,6 +296,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+    if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     auto options=renderCacheOptions_;
     internal::RetainedNavigationSource retained;
@@ -367,7 +370,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         }
     };
     try{
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_);
         if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
@@ -377,7 +380,7 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
     return navigationTiles_?navigationTiles_->work:NavigationWork{};
 }
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
-    clearRenderCache();resourceBudget_.reset();renderCacheOptions_=options;
+    clearRenderCache();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
 }
 void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
@@ -406,6 +409,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
         if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+        renderCache_->sourcePool=sourceRetention_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();

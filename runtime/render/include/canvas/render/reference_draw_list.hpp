@@ -24,51 +24,51 @@ struct WorldToViewAffine final {
 };
 
 struct ShapeReferenceCommand final {
-    semantic::ShapeContent content;
+    scene::ImmutableValue<semantic::ShapeContent> content;
     std::shared_ptr<const text::TextLayoutSnapshot> labelLayout = nullptr;
     // Per-frame editor affordance; canonical Scene never owns selection state.
     bool showExpandButton = false;
     bool operator==(const ShapeReferenceCommand&) const = default;
 };
 struct ImageReferenceCommand final {
-    semantic::ImageContent content;
+    scene::ImmutableValue<semantic::ImageContent> content;
     // Per-frame Crop affordance. DirectReferenceSource leaves this disabled.
     bool showCropSource = false;
     bool operator==(const ImageReferenceCommand&) const = default;
 };
 struct VectorPathReferenceCommand final {
-    semantic::VectorPathContent content;
+    scene::ImmutableValue<semantic::VectorPathContent> content;
     bool operator==(const VectorPathReferenceCommand&) const = default;
 };
 struct RichTextReferenceCommand final {
-    semantic::RichTextContent content;
+    scene::ImmutableValue<semantic::RichTextContent> content;
     std::shared_ptr<const text::TextLayoutSnapshot> layout;
     bool showExpandButton = false;
     bool suppressBorder = false;
     bool operator==(const RichTextReferenceCommand&) const = default;
 };
 struct VectorStrokeReferenceCommand final {
-    semantic::VectorStrokeContent content;
+    scene::ImmutableValue<semantic::VectorStrokeContent> content;
     bool operator==(const VectorStrokeReferenceCommand&) const = default;
 };
 struct DabStrokeReferenceCommand final {
-    semantic::DabStrokeContent content;
+    scene::ImmutableValue<semantic::DabStrokeContent> content;
     bool operator==(const DabStrokeReferenceCommand&) const = default;
 };
 struct BrushStrokeReferenceCommand final {
-    semantic::BrushStrokeContent content;
+    scene::ImmutableValue<semantic::BrushStrokeContent> content;
     bool operator==(const BrushStrokeReferenceCommand&) const = default;
 };
 struct DabBrushStrokeReferenceCommand final {
-    semantic::DabBrushStrokeContent content;
+    scene::ImmutableValue<semantic::DabBrushStrokeContent> content;
     bool operator==(const DabBrushStrokeReferenceCommand&) const = default;
 };
 struct ConnectorReferenceCommand final {
-    semantic::ConnectorContent content;
+    scene::ImmutableValue<semantic::ConnectorContent> content;
     bool operator==(const ConnectorReferenceCommand&) const = default;
 };
 struct StickyReferenceCommand final {
-    semantic::StickyContent content;
+    scene::ImmutableValue<semantic::StickyContent> content;
     std::shared_ptr<const text::TextLayoutSnapshot> labelLayout = nullptr;
     bool showExpandButton = false;
     bool operator==(const StickyReferenceCommand&) const = default;
@@ -77,19 +77,19 @@ struct GroupReferenceCommand final {
     bool operator==(const GroupReferenceCommand&) const = default;
 };
 struct SectionReferenceCommand final {
-    semantic::SectionContent content;
+    scene::ImmutableValue<semantic::SectionContent> content;
     std::shared_ptr<const text::TextLayoutSnapshot> titleLayout = nullptr;
     bool operator==(const SectionReferenceCommand&) const = default;
 };
 
 struct TableReferenceCommand final {
-    semantic::TableContent content;
+    scene::ImmutableValue<semantic::TableContent> content;
     std::shared_ptr<const text::TextLayoutSnapshot> layout;
     std::optional<std::size_t> activeCell = std::nullopt;
     bool operator==(const TableReferenceCommand&) const = default;
 };
 struct CompactStrokeReferenceCommand final {
-    semantic::CompactStrokeContent content;
+    scene::ImmutableValue<semantic::CompactStrokeContent> content;
     bool operator==(const CompactStrokeReferenceCommand&) const=default;
 };
 // Navigation-only locality hint. Canonical reference plans deliberately do
@@ -132,6 +132,8 @@ struct ReferenceTraversalDiagnostics final {
     std::uint64_t runtimeSceneFindLookups = 0;
     std::uint64_t runtimeSceneRecordIterations = 0;
     std::uint64_t semanticObjectIterations = 0;
+    std::uint64_t chunkCandidatesExamined=0,chunkIndexNodesVisited=0,chunkIndexFallbacks=0;
+    std::uint64_t payloadCopyBytes=0,payloadAliases=0;
 
     bool operator==(const ReferenceTraversalDiagnostics&) const = default;
 };

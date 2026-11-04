@@ -469,8 +469,8 @@ void orthogonalConnectorUsesDeterministicElbow() {
     const FrameState frame = fixtureFrame(FrameId{916});
     ReferenceTraversalEntry entry = connectorEntry();
     auto command = std::get<ConnectorReferenceCommand>(entry.command);
-    command.content.end.value = canvas::semantic::FreePointEndpoint{{96.0, 64.0}};
-    command.content.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+    command.content.update([](auto& content){content.end.value = canvas::semantic::FreePointEndpoint{{96.0, 64.0}};});
+    command.content.update([](auto& content){content.routing = canvas::semantic::ConnectorRouting::kOrthogonal;});
     entry.record.content = command.content;
     entry.command = command;
     entry.record.visualBounds = WorldRect{72.0F, 46.0F, 98.0F, 66.0F};
@@ -573,8 +573,8 @@ void deterministicRejectionsPreservePriorObservation() {
     ReferenceDrawList attachedConnectorList = list;
     auto attachedConnector = std::get<ConnectorReferenceCommand>(
         attachedConnectorList.entries[6].command);
-    attachedConnector.content.start.value = canvas::semantic::AttachedEndpoint{
-        ObjectId::fromUint64(501U), canvas::semantic::AutoPerimeterAnchor{}};
+    attachedConnector.content.update([](auto& content){content.start.value = canvas::semantic::AttachedEndpoint{
+        ObjectId::fromUint64(501U), canvas::semantic::AutoPerimeterAnchor{}};});
     attachedConnectorList.entries[6].command = attachedConnector;
     const FramePlan attachedConnectorPlan{frame, attachedConnectorList};
     assert(backend.submit(attachedConnectorPlan).code == BackendSubmissionCode::kRejected);
@@ -585,10 +585,12 @@ void deterministicRejectionsPreservePriorObservation() {
     ReferenceDrawList fractionalDabList = list;
     auto fractionalDab = std::get<DabStrokeReferenceCommand>(
         fractionalDabList.entries[5].command);
+    fractionalDab.content.update([](auto& content){
     auto* dabData = std::get_if<canvas::semantic::DabStrokeData>(
-        &fractionalDab.content.stroke.data);
+        &content.stroke.data);
     assert(dabData != nullptr);
     dabData->dabs[0].center.x = 52.5;
+    });
     fractionalDabList.entries[5].command = fractionalDab;
     const FramePlan fractionalDabPlan{frame, fractionalDabList};
     assert(backend.submit(fractionalDabPlan).code == BackendSubmissionCode::kRejected);
@@ -621,8 +623,8 @@ void productionRendererAcceptsFractionalConnectorEndpoints() {
     const FrameState frame = fixtureFrame(FrameId{924});
     auto entry = connectorEntry();
     auto connector = std::get<ConnectorReferenceCommand>(entry.command);
-    connector.content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.0}};
-    connector.content.end.value = canvas::semantic::FreePointEndpoint{{96.25, 48.0}};
+    connector.content.update([](auto& content){content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.0}};});
+    connector.content.update([](auto& content){content.end.value = canvas::semantic::FreePointEndpoint{{96.25, 48.0}};});
     entry.command = connector;
     entry.record.content = connector.content;
     entry.record.visualBounds = WorldRect{72.25F, 46.0F, 96.25F, 50.0F};
@@ -678,8 +680,8 @@ void productionConnectorUsesAntialiasedEdges() {
     FrameState frame = fixtureFrame(FrameId{925});
     auto entry = connectorEntry();
     auto connector = std::get<ConnectorReferenceCommand>(entry.command);
-    connector.content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.25}};
-    connector.content.end.value = canvas::semantic::FreePointEndpoint{{112.25, 72.25}};
+    connector.content.update([](auto& content){content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.25}};});
+    connector.content.update([](auto& content){content.end.value = canvas::semantic::FreePointEndpoint{{112.25, 72.25}};});
     entry.command = connector;
     entry.record.content = connector.content;
     entry.record.visualBounds = WorldRect{70.0F, 46.0F, 115.0F, 75.0F};
@@ -718,7 +720,7 @@ void fc01TriangleAndConnectorStyleProbes() {
         {0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,0,1,1},8}}}};
     ReferenceDrawList list{.frame=frame,.queryWorldRect=frame.worldViewport,
         .candidatesExamined=1,.visibleRecords=1,.worldToView={},.viewportClip=frame.worldViewport,
-        .entries={{triangle,true,ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(triangle.content)}},},
+        .entries={{triangle,true,ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(triangle.content.get())}},},
         .diagnostics={},.canonicalBytes={},.digest={}};
     SkiaHeadlessBackend backend({256,256});
     assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
@@ -741,7 +743,7 @@ void fc01TriangleAndConnectorStyleProbes() {
     assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
     assert(pixel(*backend.observation(),84,48)==(Rgba{0,0,0,0}));
     auto arrow=connector;
-    auto content=std::get<ConnectorReferenceCommand>(arrow.command).content;
+    auto content=std::get<ConnectorReferenceCommand>(arrow.command).content.get();
     content.start.value=canvas::semantic::FreePointEndpoint{{40,100}};
     content.end.value=canvas::semantic::FreePointEndpoint{{140,100}};
     arrow.command=ConnectorReferenceCommand{content};arrow.record.content=content;
@@ -759,7 +761,7 @@ void fc01TriangleAndConnectorStyleProbes() {
 void pendingConnectorKeepsSolidStyleAndFailureStaysDistinct() {
     const auto frame=fixtureFrame();
     auto entry=connectorEntry();
-    auto content=std::get<ConnectorReferenceCommand>(entry.command).content;
+    auto content=std::get<ConnectorReferenceCommand>(entry.command).content.get();
     content.start.value=canvas::semantic::FreePointEndpoint{{40,100}};
     content.end.value=canvas::semantic::FreePointEndpoint{{220,100}};
     entry.command=ConnectorReferenceCommand{content};entry.record.content=content;
@@ -798,7 +800,7 @@ void ellipseUsesLocalOvalGeometryAfterTransform() {
     ReferenceDrawList list{.frame=frame,.queryWorldRect=frame.worldViewport,
         .candidatesExamined=1,.visibleRecords=1,.worldToView={},.viewportClip=frame.worldViewport,
         .entries={{ellipse,true,ShapeReferenceCommand{
-            std::get<canvas::semantic::ShapeContent>(ellipse.content)}}},
+            std::get<canvas::semantic::ShapeContent>(ellipse.content.get())}}},
         .diagnostics={},.canonicalBytes={},.digest={}};
     SkiaHeadlessBackend backend({256,256});
     assert(backend.submit({frame,list}).code == BackendSubmissionCode::kAccepted);

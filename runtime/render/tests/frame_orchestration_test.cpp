@@ -136,20 +136,20 @@ ReferenceDrawList distinguishableDrawList(const FrameState& frame) {
     case ObjectKind::kTable:
         throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape:
-            command = ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(record.content)};
+            command = ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(record.content.get())};
             break;
-        case ObjectKind::kImage: command = ImageReferenceCommand{std::get<ImageContent>(record.content)}; break;
-        case ObjectKind::kVectorPath: command = VectorPathReferenceCommand{std::get<VectorPathContent>(record.content)}; break;
+        case ObjectKind::kImage: command = ImageReferenceCommand{std::get<ImageContent>(record.content.get())}; break;
+        case ObjectKind::kVectorPath: command = VectorPathReferenceCommand{std::get<VectorPathContent>(record.content.get())}; break;
         case ObjectKind::kRichText:
             command = RichTextReferenceCommand{
-                .content = std::get<RichTextContent>(record.content),
+                .content = std::get<RichTextContent>(record.content.get()),
                 .layout = nullptr,
             };
             break;
-        case ObjectKind::kVectorStroke: command = VectorStrokeReferenceCommand{std::get<VectorStrokeContent>(record.content)}; break;
-        case ObjectKind::kDabStroke: command = DabStrokeReferenceCommand{std::get<DabStrokeContent>(record.content)}; break;
-        case ObjectKind::kConnector: command = ConnectorReferenceCommand{std::get<ConnectorContent>(record.content)}; break;
-        case ObjectKind::kSticky: command = StickyReferenceCommand{std::get<StickyContent>(record.content)}; break;
+        case ObjectKind::kVectorStroke: command = VectorStrokeReferenceCommand{std::get<VectorStrokeContent>(record.content.get())}; break;
+        case ObjectKind::kDabStroke: command = DabStrokeReferenceCommand{std::get<DabStrokeContent>(record.content.get())}; break;
+        case ObjectKind::kConnector: command = ConnectorReferenceCommand{std::get<ConnectorContent>(record.content.get())}; break;
+        case ObjectKind::kSticky: command = StickyReferenceCommand{std::get<StickyContent>(record.content.get())}; break;
         case ObjectKind::kGroup: command = GroupReferenceCommand{}; break;
         }
         entries.push_back(ReferenceTraversalEntry{.record = std::move(record),
@@ -197,7 +197,7 @@ void assertCompleteNineKindPlan(const FramePlan& plan) {
         assert(entry.record.properties.entries.front().field_id == 0x10U);
         assert(std::get<float>(entry.record.properties.entries.front().value) ==
                static_cast<float>(71U + index));
-        assert(entry.record.content.index() == index);
+        assert(entry.record.content.get().index() == index);
         assert(entry.record.eraseMasks.size() == 1U);
         assert(entry.record.eraseMasks.front().id == ObjectId::fromUint64(9071U + index));
         assert(entry.record.geometryBounds.left == static_cast<float>(1U + index * 13U));
@@ -216,35 +216,35 @@ void assertCompleteNineKindPlan(const FramePlan& plan) {
         throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape:
             assert(std::get<ShapeReferenceCommand>(entry.command).content ==
-                   std::get<canvas::semantic::ShapeContent>(entry.record.content));
+                   std::get<canvas::semantic::ShapeContent>(entry.record.content.get()));
             break;
         case ObjectKind::kImage:
             assert(std::get<ImageReferenceCommand>(entry.command).content ==
-                   std::get<ImageContent>(entry.record.content));
+                   std::get<ImageContent>(entry.record.content.get()));
             break;
         case ObjectKind::kVectorPath:
             assert(std::get<VectorPathReferenceCommand>(entry.command).content ==
-                   std::get<VectorPathContent>(entry.record.content));
+                   std::get<VectorPathContent>(entry.record.content.get()));
             break;
         case ObjectKind::kRichText:
             assert(std::get<RichTextReferenceCommand>(entry.command).content ==
-                   std::get<RichTextContent>(entry.record.content));
+                   std::get<RichTextContent>(entry.record.content.get()));
             break;
         case ObjectKind::kVectorStroke:
             assert(std::get<VectorStrokeReferenceCommand>(entry.command).content ==
-                   std::get<VectorStrokeContent>(entry.record.content));
+                   std::get<VectorStrokeContent>(entry.record.content.get()));
             break;
         case ObjectKind::kDabStroke:
             assert(std::get<DabStrokeReferenceCommand>(entry.command).content ==
-                   std::get<DabStrokeContent>(entry.record.content));
+                   std::get<DabStrokeContent>(entry.record.content.get()));
             break;
         case ObjectKind::kConnector:
             assert(std::get<ConnectorReferenceCommand>(entry.command).content ==
-                   std::get<ConnectorContent>(entry.record.content));
+                   std::get<ConnectorContent>(entry.record.content.get()));
             break;
         case ObjectKind::kSticky:
             assert(std::get<StickyReferenceCommand>(entry.command).content ==
-                   std::get<StickyContent>(entry.record.content));
+                   std::get<StickyContent>(entry.record.content.get()));
             break;
         case ObjectKind::kGroup:
             assert(std::holds_alternative<GroupReferenceCommand>(entry.command));

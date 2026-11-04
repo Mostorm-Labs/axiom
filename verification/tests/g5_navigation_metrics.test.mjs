@@ -85,3 +85,13 @@ test('old or incomplete source quality diagnostics remain unavailable', () => {
     [{elapsed_ns:0,overlay_ns:0,version:3,presented:false}]])
     assert.equal(summarizePhase(phase,rows,[]).navigation.quality,null);
 });
+
+test('shared-source gauges and query deltas stay distinct from historical missing rows',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const row={version:4,elapsed_ns:0,overlay_ns:0,chunk_candidates:8,index_nodes:11,index_fallbacks:0,
+    source_copy_bytes:0,source_aliases:2,source_queries_observed:1,source_bytes:4096,source_hits:3};
+  const v=summarizePhase(phase,[row,{...row,index_nodes:15,source_bytes:2048,source_hits:4}],[]).navigation.sharedSources;
+  assert.equal(v.chunkCandidates,16);assert.equal(v.indexNodes,26);assert.equal(v.payloadCopyBytes,0);
+  assert.equal(v.peakRetainedBytes,4096);assert.equal(v.hits,7);
+  assert.equal(summarizePhase(phase,[{version:3,elapsed_ns:0,overlay_ns:0}],[]).navigation.sharedSources,null);
+});

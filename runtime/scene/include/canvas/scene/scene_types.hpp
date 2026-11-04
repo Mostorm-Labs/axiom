@@ -10,6 +10,7 @@
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/scene/derived_geometry.hpp"
+#include "canvas/scene/shared_scene_value.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -18,7 +19,10 @@
 #include <span>
 #include <string>
 #include <utility>
+#include <tuple>
 #include <vector>
+
+namespace canvas::scene { class GeometryChunkIndex; }
 
 namespace canvas::text { struct TextLayoutSnapshot; class RichTextLayoutService; }
 
@@ -80,7 +84,7 @@ struct RuntimeSceneRecord final {
     semantic::Placement placement{};
     semantic::Transform2D transform{};
     semantic::PropertyBag properties{};
-    semantic::ObjectContent content{};
+    scene::ImmutableValue<semantic::ObjectContent> content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
     scene::DerivedGeometry derivedGeometry{};
     foundation::WorldRect geometryBounds{};
@@ -88,16 +92,23 @@ struct RuntimeSceneRecord final {
     foundation::WorldRect worldBounds{};
     std::string referenceGeometryDigest{};
     std::vector<semantic::ObjectId> directDependencies{};
-    std::vector<GeometryChunk> geometryChunks{};
+    scene::SharedVector<GeometryChunk> geometryChunks{};
     std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
     std::uint64_t hierarchyOrder = 0;
 
-    bool operator==(const RuntimeSceneRecord&) const = default;
+    // Disposable index metadata never participates in semantic/projection equality.
+    std::shared_ptr<const scene::GeometryChunkIndex> geometryIndex{};
+    bool operator==(const RuntimeSceneRecord& b) const {
+        return std::tie(objectId,kind,kindVersion,placement,transform,properties,content,eraseMasks,derivedGeometry,
+            geometryBounds,visualBounds,worldBounds,referenceGeometryDigest,directDependencies,geometryChunks,textLayout,hierarchyOrder)==
+            std::tie(b.objectId,b.kind,b.kindVersion,b.placement,b.transform,b.properties,b.content,b.eraseMasks,b.derivedGeometry,
+            b.geometryBounds,b.visualBounds,b.worldBounds,b.referenceGeometryDigest,b.directDependencies,b.geometryChunks,b.textLayout,b.hierarchyOrder);
+    }
 };
 
 struct RuntimeSceneProjection final {
     semantic::SemanticGeneration generation{};
-    std::vector<RuntimeSceneRecord> records;
+    scene::SharedVector<RuntimeSceneRecord> records;
 
     [[nodiscard]] const RuntimeSceneRecord* find(semantic::ObjectId id) const noexcept {
         const auto it = std::find_if(records.begin(), records.end(),
@@ -111,9 +122,13 @@ struct RuntimeSceneProjection final {
 // Renderer-neutral RuntimeScene facade. This declaration intentionally lives
 // with the logical scene types, so consumers of this projection do not need to
 // include the RF-01 render-participant interface.
+struct RuntimeScenePublicationWork final {
+    std::uint64_t preparationNanoseconds=0,publicationNanoseconds=0,publications=0,metadataRowsCopied=0,payloadReuses=0,indexBuilds=0;
+};
 class RuntimeScene final {
   public:
     RuntimeScene() = default;
+    RuntimeScenePublicationWork publicationWork()const noexcept{return _work;}
     void setTextLayoutService(text::RichTextLayoutService* service) noexcept { _textLayoutService = service; }
     void setDeferredConnectorRouting(bool defer) noexcept { deferConnectorRoutes_ = defer; }
 
@@ -122,10 +137,9 @@ class RuntimeScene final {
                    ? _publicationGate->previousGeneration
                    : _projection.generation;
     }
-    [[nodiscard]] std::span<const RuntimeSceneRecord> records() const noexcept {
+    [[nodiscard]] scene::SharedVectorView<RuntimeSceneRecord> records() const noexcept {
         return (_publicationGate != nullptr && _publicationGate->transactionActive)
-                   ? std::span<const RuntimeSceneRecord>(_stableProjection.records)
-                   : std::span<const RuntimeSceneRecord>(_projection.records);
+            ? _stableProjection.records.read() : _projection.records.read();
     }
     [[nodiscard]] const RuntimeSceneRecord* find(semantic::ObjectId id,
                                                 std::uint64_t* comparedIds = nullptr) const noexcept {
@@ -154,12 +168,13 @@ class RuntimeScene final {
         bool flatIndependent = true;
         bool localized = false;
         bool fullProjectionAuthority = false;
-        std::vector<RuntimeSceneRecord> changedRecords;
+        scene::SharedVector<RuntimeSceneRecord> changedRecords;
         explicit PreparedPublication(RuntimeSceneProjection value) : projection(std::move(value)) {
-            lookup.reserve(projection.records.size());
-            for (std::size_t i = 0; i < projection.records.size(); ++i) {
-                lookup.emplace_back(projection.records[i].objectId, i);
-                const auto& r = projection.records[i];
+            const auto& records=std::as_const(projection.records);
+            lookup.reserve(records.size());
+            for (std::size_t i = 0; i < records.size(); ++i) {
+                lookup.emplace_back(records[i].objectId, i);
+                const auto& r = records[i];
                 flatIndependent = flatIndependent && !r.placement.parent_id &&
                     r.kind != semantic::ObjectKind::kConnector &&
                     r.kind != semantic::ObjectKind::kGroup &&
@@ -181,11 +196,14 @@ class RuntimeScene final {
         const semantic::ChangeSet& changes) const;
     foundation::Result<PreparedPublication> prepare(
         RuntimeSceneProjection projection) const;
+    void reusePayloads(RuntimeSceneProjection&) const;
     void publish(PreparedPublication publication) noexcept;
     void corruptForTest() noexcept {
         _projection.generation = semantic::SemanticGeneration(0);
     }
 
+    mutable RuntimeScenePublicationWork _work;
+    RuntimeScenePublicationWork _reportedWork;
     RuntimeSceneProjection _projection;
     RuntimeSceneProjection _stableProjection;
     LookupIndex _lookup;

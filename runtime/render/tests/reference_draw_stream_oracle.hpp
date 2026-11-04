@@ -21,10 +21,11 @@ inline void requireReferenceDrawStream(){
         void onDrawPath(const SkPath& p,const SkPaint& paint)override{calls.push_back({p,{},getTotalMatrix(),paint,false});}
         void onDrawOval(const SkRect& r,const SkPaint& paint)override{calls.push_back({{},r,getTotalMatrix(),paint,true});}
     };
-    ReferenceTraversalEntry entry;entry.record.objectId=foundation::ObjectId::fromUint64(31);entry.command=CompactStrokeReferenceCommand{};auto& s=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    ReferenceTraversalEntry entry;entry.record.objectId=foundation::ObjectId::fromUint64(31);entry.command=CompactStrokeReferenceCommand{};semantic::CompactStrokeContent builder;auto& s=builder.stroke;
     s.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
     s.config.startTaper=45;s.config.endTaper=70;s.knots.clear();
     for(unsigned i=0;i<2048;++i)s.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     PreparedGeometryCache cache;auto budget=std::make_shared<resources::ResourceBudgetManager>();
     const auto prepared=cache.get(entry,RenderCacheOptions{},budget);check(bool(prepared),"draw stream admission");
     Recorder actual,oracle;for(auto* canvas:{&actual,&oracle}){canvas->translate(2048,2048);canvas->scale(1.2F,.9F);}

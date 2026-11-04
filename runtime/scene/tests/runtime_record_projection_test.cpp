@@ -173,38 +173,38 @@ int main() {
         assert(mask != nullptr);
         assert(mask->segments.size() == 1);
     }
-    [[maybe_unused]] const auto& shape = std::get<canvas::semantic::ShapeContent>(projection.records[0].content);
+    [[maybe_unused]] const auto& shape = std::get<canvas::semantic::ShapeContent>(projection.records[0].content.get());
     assert(shape.shape_kind == 11U && shape.width == 12.5 && shape.height == 13.5);
-    [[maybe_unused]] const auto& image = std::get<canvas::semantic::ImageContent>(projection.records[1].content);
+    [[maybe_unused]] const auto& image = std::get<canvas::semantic::ImageContent>(projection.records[1].content.get());
     assert(image.resource_id.value == ObjectId::fromUint64(99));
     assert(image.intrinsic_width == 20.0 && image.intrinsic_height == 30.0);
     assert(image.content_mode == canvas::semantic::ImageContentMode::kFit);
     assert(image.width == 40.0 && image.height == 50.0);
     [[maybe_unused]] const auto& path =
-        std::get<canvas::semantic::VectorPathContent>(projection.records[2].content);
+        std::get<canvas::semantic::VectorPathContent>(projection.records[2].content.get());
     assert(path.geometry.fill_rule == canvas::semantic::FillRule::kEvenOdd);
     assert(path.geometry.commands.size() == 3);
-    [[maybe_unused]] const auto& rich = std::get<canvas::semantic::RichTextContent>(projection.records[3].content);
+    [[maybe_unused]] const auto& rich = std::get<canvas::semantic::RichTextContent>(projection.records[3].content.get());
     assert(rich.document.paragraphs.size() == 1);
     assert(rich.document.paragraphs[0].runs[0].text == "typed rich text");
     [[maybe_unused]] const auto& vector_stroke =
-        std::get<canvas::semantic::VectorStrokeContent>(projection.records[4].content);
+        std::get<canvas::semantic::VectorStrokeContent>(projection.records[4].content.get());
     assert(vector_stroke.stroke.brush.brush_family_id == 42);
     assert(std::get<canvas::semantic::VectorStrokeData>(vector_stroke.stroke.data).samples.size() ==
            1);
     [[maybe_unused]] const auto& dab_stroke =
-        std::get<canvas::semantic::DabStrokeContent>(projection.records[5].content);
+        std::get<canvas::semantic::DabStrokeContent>(projection.records[5].content.get());
     assert(dab_stroke.stroke.brush.brush_family_id == 43);
     assert(std::get<canvas::semantic::DabStrokeData>(dab_stroke.stroke.data).dabs.size() == 1);
     [[maybe_unused]] const auto& connector =
-        std::get<canvas::semantic::ConnectorContent>(projection.records[6].content);
+        std::get<canvas::semantic::ConnectorContent>(projection.records[6].content.get());
     assert(connector.routing == canvas::semantic::ConnectorRouting::kOrthogonal);
     assert(std::get<canvas::semantic::FreePointEndpoint>(connector.start.value).point.x == 10.0);
     assert(std::get<canvas::semantic::AttachedEndpoint>(connector.end.value)
                .target_object_id == ObjectId::fromUint64(1));
-    [[maybe_unused]] const auto& sticky = std::get<canvas::semantic::StickyContent>(projection.records[7].content);
+    [[maybe_unused]] const auto& sticky = std::get<canvas::semantic::StickyContent>(projection.records[7].content.get());
     assert(sticky.width == 60.0 && sticky.height == 70.0);
-    assert(std::holds_alternative<canvas::semantic::GroupContent>(projection.records[8].content));
+    assert(std::holds_alternative<canvas::semantic::GroupContent>(projection.records[8].content.get()));
 
     canvas::semantic::ReferenceObjectStore store;
     for ([[maybe_unused]] const auto& value : source) {

@@ -171,6 +171,22 @@ window.probe={
     window.probe.uiReadTimes=uiReadTimes;
     return {workload,selected,profile,revision,options,brushSelection,target,selectedKind:sdk.readSelection().kind,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
   },
+  // Root SDK edit -> canonical publication witness, distinct from camera-only input.
+  async commitStroke(index){
+    await sdk.selectTool('ink');const before=sdk.readState(),prior=frames.length;
+    const started=performance.now();mark('begin','edit-'+index);
+    for(let i=0;i<256;++i)pointer(i===0?'pointerdown':i===255?'pointerup':'pointermove',
+      55+i*1.5,110+index*10+Math.sin(i*.06)*32);
+    const dispatched=performance.now(),afterDispatch=sdk.readState();
+    await settle(prior);const ended=performance.now(),after=sdk.readState();mark('end','edit-'+index);
+    return {index,started,dispatched,ended,dispatchMs:dispatched-started,completeMs:ended-started,
+      before,afterDispatch,after,receipts:frames.slice(prior),pixels:await pixels(),
+      checks:{objectAdded:after.objects===before.objects+1,
+        generationAdvanced:BigInt(after.generation)>BigInt(before.generation),
+        operationChanged:before.lastCommit.operationId!==after.lastCommit.operationId,
+        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,
+        frameObserved:frames.length>prior}};
+  },
   async measure(id,options){return phase(id,options);},
   async interruptSelection(options){
     const rect=sdk.canvas.getBoundingClientRect();await click(rect.width-16,rect.height-24);

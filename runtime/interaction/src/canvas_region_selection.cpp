@@ -220,7 +220,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
             !textWritable(r.objectId)||resolveSelectionRoot(r.objectId).isZero())continue;
         if(r.placement.parent_id)if(const auto* parent=semanticObjects_.find(*r.placement.parent_id);
             parent&&parent->kind==semantic::ObjectKind::kSticky)continue;
-        const auto* text=std::get_if<semantic::RichTextContent>(&r.content);if(!text){result.status=Status::kFailed;return result;}
+        const auto* text=std::get_if<semantic::RichTextContent>(&r.content.get());if(!text){result.status=Status::kFailed;return result;}
         const bool hasText=std::any_of(text->document.paragraphs.begin(),text->document.paragraphs.end(),[](const auto& paragraph){
             return std::any_of(paragraph.runs.begin(),paragraph.runs.end(),[](const auto& run){return !run.text.empty();});
         });

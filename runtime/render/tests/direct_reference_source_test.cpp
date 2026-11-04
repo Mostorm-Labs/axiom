@@ -305,35 +305,35 @@ void emitsNineKindsInVisibilityOrder() {
         throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape:
             assert(std::get<canvas::render::ShapeReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::ShapeContent>(expected->content));
+                   std::get<canvas::semantic::ShapeContent>(expected->content.get()));
             break;
         case ObjectKind::kImage:
             assert(std::get<canvas::render::ImageReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::ImageContent>(expected->content));
+                   std::get<canvas::semantic::ImageContent>(expected->content.get()));
             break;
         case ObjectKind::kVectorPath:
             assert(std::get<canvas::render::VectorPathReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::VectorPathContent>(expected->content));
+                   std::get<canvas::semantic::VectorPathContent>(expected->content.get()));
             break;
         case ObjectKind::kRichText:
             assert(std::get<canvas::render::RichTextReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::RichTextContent>(expected->content));
+                   std::get<canvas::semantic::RichTextContent>(expected->content.get()));
             break;
         case ObjectKind::kVectorStroke:
             assert(std::get<canvas::render::VectorStrokeReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::VectorStrokeContent>(expected->content));
+                   std::get<canvas::semantic::VectorStrokeContent>(expected->content.get()));
             break;
         case ObjectKind::kDabStroke:
             assert(std::get<canvas::render::DabStrokeReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::DabStrokeContent>(expected->content));
+                   std::get<canvas::semantic::DabStrokeContent>(expected->content.get()));
             break;
         case ObjectKind::kConnector:
             assert(std::get<canvas::render::ConnectorReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::ConnectorContent>(expected->content));
+                   std::get<canvas::semantic::ConnectorContent>(expected->content.get()));
             break;
         case ObjectKind::kSticky:
             assert(std::get<canvas::render::StickyReferenceCommand>(list.entries[i].command).content ==
-                   std::get<canvas::semantic::StickyContent>(expected->content));
+                   std::get<canvas::semantic::StickyContent>(expected->content.get()));
             break;
         case ObjectKind::kGroup:
             assert(std::holds_alternative<canvas::render::GroupReferenceCommand>(list.entries[i].command));

@@ -37,9 +37,10 @@ void localContourParity(){
     std::uint64_t totalDrawn=0,totalAvailable=0;
     for(unsigned variant=0;variant<6;++variant){
         auto entry=compact(variant);
-        auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+        auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& stroke=builder.stroke;
         if(variant==4)stroke.knots={{40,60,32768}};
         if(variant==5)stroke.knots={{-40,70,32768},{180,70,45000},{20,70,16000},{220,45,33000}};
+        std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
         const auto prepared=cache.get(entry,options,budget);require(bool(prepared),"contour admission");
         for(unsigned view=0;view<5;++view){
             auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
@@ -90,9 +91,10 @@ void vectorPathParity(){
     }
 }
 void smallCapAtLargeOrigin(){
-    auto entry=compact();auto& s=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    auto entry=compact();auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& s=builder.stroke;
     s.config.size=.02;s.knots={{1000000.,1000000.,32768}};
     PreparedGeometryCache cache;auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     auto prepared=cache.get(entry,RenderCacheOptions{},budget);require(bool(prepared),"large-origin cap admission");
     auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
     auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
@@ -125,7 +127,7 @@ void sharingAndLifetime(){
     PreparedGeometryCache constrained;
     require(!constrained.get(entry,options,denied)&&constrained.statistics().denied==1&&denied->used()==0,"denial retained unaccounted geometry");
     auto recovered=constrained.get(entry,options,budget);require(bool(recovered),"budget recovery");
-    auto changed=entry;std::get<CompactStrokeReferenceCommand>(changed.command).content.stroke.knots[300].y+=80;
+    auto changed=entry;std::get<CompactStrokeReferenceCommand>(changed.command).content.update([](auto& c){c.stroke.knots[300].y+=80;});
     auto latest=constrained.get(changed,options,budget);
     require(latest&&latest!=recovered&&constrained.statistics().builds==2,"content change reused stale geometry");
     constrained.clear();recovered.reset();latest.reset();replacement.reset();cache.clear();require(budget->used()==0,"geometry cleanup leaked reservation");
@@ -140,12 +142,13 @@ void budgetOwnerChange(){
     first.reset();cache.clear();require(owner->used()==0,"old budget owner leaked after replacement");
 }
 void stagingAdmission(){
-    auto entry=compact();auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    auto entry=compact();auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& stroke=builder.stroke;
     stroke.config.smoothing=.5;stroke.config.startTaper=40;stroke.config.endTaper=60;
     stroke.knots.clear();
     for(unsigned i=0;i<16384;++i)stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
     PreparedGeometryCache cache;RenderCacheOptions options;
     auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     auto acquired=cache.get(entry,options,budget);
     require(acquired&&budget->used(resources::ResourceClass::kScratch)==0,
             "long contour staging not admitted or temporary lease retained");
@@ -153,6 +156,7 @@ void stagingAdmission(){
             "long contour resident lease does not match bounded storage");
     cache.clear();acquired.reset();require(budget->used()==0,"long contour staging leaked");
     stroke.config.smoothing=0;stroke.knots.resize(512);
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     PreparedGeometryCache constrained;options.maxEntryBytes=256*1024;
     require(!constrained.get(entry,options,budget)&&budget->used()==0,
             "denied path admission leaked its successful staging lease");

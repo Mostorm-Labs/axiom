@@ -43,6 +43,11 @@ export function summarizePhase(phase, navigationRows, frameRows) {
       .map(key=>[key,total(navigationRows.map(row=>row[key]??0))])) : null;
   if(nav){
     nav.calls=navigationRows.length;
+    nav.sharedSources=navigationRows.every(r=>r.version>=4&&Number.isFinite(r.source_bytes))?{
+      chunkCandidates:total(navigationRows.map(r=>r.chunk_candidates)),indexNodes:total(navigationRows.map(r=>r.index_nodes)),
+      fallbacks:total(navigationRows.map(r=>r.index_fallbacks)),payloadCopyBytes:total(navigationRows.map(r=>r.source_copy_bytes)),
+      aliases:total(navigationRows.map(r=>r.source_aliases)),queriesObserved:total(navigationRows.map(r=>r.source_queries_observed)),
+      peakRetainedBytes:Math.max(...navigationRows.map(r=>r.source_bytes)),hits:total(navigationRows.map(r=>r.source_hits))}:null;
     nav.quality=summarizeQuality(navigationRows);
     nav.cpu_ms=times(navigationRows.map(row=>row.elapsed_ns/1e6));
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));

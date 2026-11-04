@@ -118,8 +118,8 @@ class FailingPresent final : public SkiaSurfaceProvider {
 };
 }
 void checkRetainedBackground(TestSurface& target,TestSurface& reference){
-    auto entry=stroke(82001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
-    c.stroke.knots={{80,60,32768},{150,70,32768}};entry.record.content=c;
+    auto entry=stroke(82001);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    c.stroke.knots={{80,60,32768},{150,70,32768}};std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
     entry.record.worldBounds={32,12,198,118};const auto frame=plan(820,{entry});
     SkiaRenderer cached,direct;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
     cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
@@ -283,10 +283,10 @@ void checkNavigationRefinementProgress(TestSurface& target){
 void checkAffineStrokes(TestSurface& target,TestSurface& reference){
     const semantic::Transform2D transforms[]={{1,0,0,1,12,8},{.9,.15,-.1,.8,10,5},{1.1,0,0,.75,-5,4}};
     for(const auto& transform:transforms)for(bool mixed:{false,true}){
-        auto entry=stroke(81001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        auto entry=stroke(81001);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
         c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({20.+i*.75,55.+std::sin(i*.17)*18,32768});
-        entry.record.content=c;entry.record.transform=transform;entry.record.worldBounds={0,0,256,128};
+        std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;entry.record.transform=transform;entry.record.worldBounds={0,0,256,128};
         auto entries=std::vector{entry};
         if(mixed){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(81002);o.kind=semantic::ObjectKind::kShape;o.kind_version=1;
             o.content=semantic::ShapeContent{1,100,80};o.transform.tx=70;o.transform.ty=20;
@@ -350,7 +350,7 @@ void checkGpuContours(TestSurface& provider){
     internal::PreparedGeometryCache geometry;
     auto geometryBudget=std::make_shared<resources::ResourceBudgetManager>();
     for(const auto profile:{"round-handdrawn","marker-compact-v1"}){
-        auto entry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        auto entry=stroke(889);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
         content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
         for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
@@ -427,11 +427,11 @@ int main(int argc,char** argv) {
             SkiaRenderer nav;RenderCacheOptions options;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
             options.navigationMaxGpuContourPrimitives=64;nav.setRenderCacheOptions(options);
-            auto entry=stroke(884);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=stroke(884);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             c.stroke.config.smoothing=0;c.stroke.knots.clear();
             for(unsigned i=0;i<1024;++i)c.stroke.knots.push_back({30.+i*.17,64.+std::sin(i*.2)*20,32768});
-            entry.record.content=c;entry.record.worldBounds={0,0,256,128};const auto frame=plan(584,{entry});
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;entry.record.worldBounds={0,0,256,128};const auto frame=plan(584,{entry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
             for(unsigned i=0;;++i){
                 const auto before=nav.navigationWork().gpuContourPrimitives;
@@ -557,7 +557,7 @@ int main(int argc,char** argv) {
             require(retained.renderCacheWork().retainedRunBuilds==builds&&retained.renderCacheWork().retainedRunHits>=6,"transform rebuilt static front/back runs");
             // Content, order, camera, target and resource changes must never
             // reuse old pixels, including remove/readd with a repeated ID.
-            auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content.get();
             sources[0].record.eraseMasks={{ObjectId::fromUint64(31002),mask}};
             content.stroke.knots[1].y=95;sources[0].command=CompactStrokeReferenceCommand{content};sources[0].record.content=content;
             warm(plan(570,sources));std::swap(sources[0],sources[4]);warm(plan(571,sources));
@@ -611,7 +611,7 @@ int main(int argc,char** argv) {
                 RenderCacheOptions options;options.maxEntries=1;
                 if(oversized)options.maxEntryBytes=6000;
                 limited.setRenderCacheOptions(options);
-                auto large=stroke(9710);auto content=std::get<CompactStrokeReferenceCommand>(large.command).content;
+                auto large=stroke(9710);auto content=std::get<CompactStrokeReferenceCommand>(large.command).content.get();
                 content.stroke.config.size=100;large.command=CompactStrokeReferenceCommand{content};large.record.content=content;
                 auto small=stroke(9711);content=std::get<CompactStrokeReferenceCommand>(small.command).content;
                 content.stroke.knots={{20,95,32768},{35,95,32768}};small.command=CompactStrokeReferenceCommand{content};small.record.content=content;
@@ -636,7 +636,7 @@ int main(int argc,char** argv) {
                 auto erased=a;erased.record.objectId=ObjectId::fromUint64(9713);semantic::FilledPathMask erase;
                 erase.path.commands={semantic::MoveTo{{40,0}},semantic::LineTo{{60,0}},semantic::LineTo{{60,128}},semantic::LineTo{{40,128}},semantic::ClosePath{}};
                 erased.record.eraseMasks={{ObjectId::fromUint64(9712),erase}};erased.record.transform.tx=3;
-                auto changed=b;auto material=std::get<CompactStrokeReferenceCommand>(changed.command).content;
+                auto changed=b;auto material=std::get<CompactStrokeReferenceCommand>(changed.command).content.get();
                 material.stroke.config.opacity=.3;changed.command=CompactStrokeReferenceCommand{material};changed.record.content=material;
                 foundation::DocumentBackground backdrop;backdrop.color={.2F,.4F,.6F,1.F};
                 auto replacement=plan(573,{changed,shape,erased,a},1,{1.1,0,0,1.1,-2,-1},{0,0,256,128},backdrop,true);
@@ -691,12 +691,12 @@ int main(int argc,char** argv) {
             for(const auto profile:{"round-handdrawn","marker-compact-v1","crayon-wax-v1","chalk-compact-v1","watercolor-lite-v1"}){
                 const auto revision=(std::string_view(profile)=="round-handdrawn"||std::string_view(profile)=="marker-compact-v1")?4:3;
                 auto entry=stroke(885);
-                auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+                auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
                 content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
                 content.stroke.config.size=18;content.stroke.config.opacity=.55;content.stroke.seed=19377;
                 content.stroke.knots.clear();
                 for(unsigned k=0;k<100;++k)content.stroke.knots.push_back({15.+k*2.1,64.+std::sin(k*.16)*23,static_cast<std::uint16_t>(18000+k*300)});
-                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+                entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
                 SkiaRenderer cached,oracle;oracle.setRenderCacheOptions(disabled);
                 auto frame=plan(590,{entry});RenderPreparationBudget budget;budget.maxCoverageSteps=1;
                 BackendSubmissionResult result;unsigned slices=0;
@@ -807,11 +807,11 @@ int main(int argc,char** argv) {
         require(renderer.renderCacheWork().tileHits>0,"tile source not used");
         compare(plan(502,{tileStroke},1,{1.2,0,0,1.2,-6.3,-2.8}));
         for(const unsigned material:{1U,2U})for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
-            auto entry=tileStroke;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=tileStroke;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config.family=family;content.stroke.config.materialVersion=material;
             content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
             content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-            entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             compare(plan(510,{entry}));compare(plan(511,{entry}));
         }
         compare(plan(512,{tileStroke,stroke(9,55)}));compare(plan(513,{stroke(9,55)}));
@@ -825,9 +825,9 @@ int main(int argc,char** argv) {
         const auto a=stroke(1);
 #if defined(G5_TEST_WEBGL)
         if(gpuCandidate){
-            auto tuned=a;auto& c=std::get<CompactStrokeReferenceCommand>(tuned.command).content;
+            auto tuned=a;auto c=std::get<CompactStrokeReferenceCommand>(tuned.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
-            tuned.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(tuned.command).content=c;tuned.record.content=c;
             compare(plan(590,{tuned}));
             require(renderer.renderCacheWork().gpuCoverageTiles>0,"candidate did not execute GPU coverage");
             std::cout<<"candidate GPU coverage tiles="<<renderer.renderCacheWork().gpuCoverageTiles<<'\n';
@@ -838,12 +838,12 @@ int main(int argc,char** argv) {
         // An explicit single-step budget below still protects cancellation.
         {
             auto longContour=stroke(887);
-            auto& content=std::get<CompactStrokeReferenceCommand>(longContour.command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(longContour.command).content.get();
             content.stroke.config.version=2;content.stroke.config.algorithmVersion=4;content.stroke.config.signalVersion=3;
             content.stroke.knots.clear();
             for(unsigned i=0;i<4096;++i)
                 content.stroke.knots.push_back({20.+i*.05,45.+std::sin(i*.02)*12,32768});
-            longContour.record.content=content;
+            std::get<CompactStrokeReferenceCommand>(longContour.command).content=content;longContour.record.content=content;
             renderer.clearRenderCache();
             RenderPreparationBudget available;available.maxMicroseconds=1000000;
             const auto demand=plan(588,{longContour});
@@ -861,11 +861,11 @@ int main(int argc,char** argv) {
             // A long smoothed contour fits the unchanged per-entry budget;
             // knot-count-only worst-case path admission used to deny it and
             // replay all knots for every world tile instead of sharing paths.
-            auto longEntry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            auto longEntry=stroke(889);auto content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();
             content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             content.stroke.knots.clear();
             for(unsigned i=0;i<16384;++i)content.stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
-            longEntry.record.content=content;longEntry.record.worldBounds={0,0,660,128};
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=content;longEntry.record.content=content;longEntry.record.worldBounds={0,0,660,128};
             SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=8;options.navigationMicroseconds=1000000;
             nav.setRenderCacheOptions(options);const auto frame=plan(589,{longEntry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={longEntry};return true;};
@@ -877,11 +877,11 @@ int main(int argc,char** argv) {
         // Denied prepared geometry must resume the pinned scalar evaluator,
         // including the full-stroke distance/taper phase after each checkpoint.
         {
-            auto entry=stroke(886);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=stroke(886);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             content.stroke.config.smoothing=0;content.stroke.knots.clear();
             for(unsigned i=0;i<512;++i)content.stroke.knots.push_back({20.+i*.4,64.+std::sin(i*.15)*20,32768});
-            entry.record.content=content;entry.record.worldBounds={0,0,256,128};
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;entry.record.worldBounds={0,0,256,128};
             SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
             nav.setRenderCacheOptions(options);const auto frame=plan(586,{entry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
@@ -894,11 +894,11 @@ int main(int argc,char** argv) {
                     "prepared contour bypassed bounded primitive checkpoints");
         }
         {
-            auto denied=stroke(888);auto& s=std::get<CompactStrokeReferenceCommand>(denied.command).content.stroke;
+            auto denied=stroke(888);auto sBuilder=std::get<CompactStrokeReferenceCommand>(denied.command).content.get();auto& s=sBuilder.stroke;
             s.config.version=2;s.config.algorithmVersion=3;s.config.signalVersion=2;
             s.config.startTaper=80;s.config.endTaper=90;s.knots.clear();
             for(unsigned i=0;i<20000;++i)s.knots.push_back({-20.+i*.05,64.+std::sin(i*.001)*12,32768});
-            denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
+            std::get<CompactStrokeReferenceCommand>(denied.command).content=sBuilder;denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
             SkiaRenderer navigation;RenderCacheOptions options;options.maxEntryBytes=260*260*4*3;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
             navigation.setRenderCacheOptions(options);const auto frame=plan(587,{denied});
@@ -939,12 +939,12 @@ int main(int argc,char** argv) {
         }
         {
             auto longStroke=stroke(91);
-            auto& content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content.get();
             content.stroke.config.version=2;content.stroke.config.algorithmVersion=3;content.stroke.config.signalVersion=2;
             content.stroke.config.startTaper=25;content.stroke.config.endTaper=35;
             content.stroke.knots.clear();
             for(unsigned i=0;i<240;++i)content.stroke.knots.push_back({20.+i*.85,40.+std::sin(i*.06)*15,static_cast<std::uint16_t>(12000+i*170)});
-            longStroke.record.content=content;
+            std::get<CompactStrokeReferenceCommand>(longStroke.command).content=content;longStroke.record.content=content;
             renderer.clearRenderCache();
             const auto previous=pixels(provider);const auto presents=provider.presentCount();
             const auto stepsBefore=renderer.renderCacheWork().preparationCoverageSteps;
@@ -968,8 +968,8 @@ int main(int argc,char** argv) {
             renderer.clearRenderCache();
             require(renderer.renderFrame(provider,demand,nullptr,&bounded).code==BackendSubmissionCode::kRetry,"content replacement setup");
             auto edited=longStroke;
-            auto& editedContent=std::get<CompactStrokeReferenceCommand>(edited.command).content;
-            editedContent.stroke.knots[100].y+=35;edited.record.content=editedContent;
+            auto editedContent=std::get<CompactStrokeReferenceCommand>(edited.command).content.get();
+            editedContent.stroke.knots[100].y+=35;std::get<CompactStrokeReferenceCommand>(edited.command).content=editedContent;edited.record.content=editedContent;
             const auto editedDemand=plan(596,{edited},1,{1.2,0,0,1.2,-6.3,-2.8});
             retries=0;
             do{result=renderer.renderFrame(provider,editedDemand,nullptr,&bounded);require(++retries<200,"changed source never converges");}
@@ -1039,7 +1039,7 @@ int main(int argc,char** argv) {
         require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted&&
                 pixels(provider)==pixels(reference),"capacity fallback differs from Direct");
         {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
-        auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.stroke.config.size=-1;
+        auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.update([](auto& c){c.stroke.config.size=-1;});
         const auto invalidBefore=pixels(provider);const auto invalidPresents=provider.presentCount();
         require(renderer.renderFrame(provider,plan(603,malformed),nullptr,&slice).code==BackendSubmissionCode::kRejected,
                 "invalid geometry admitted by preparation");
@@ -1047,11 +1047,11 @@ int main(int argc,char** argv) {
                 "invalid preparation changed presented target");
         for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
             renderer.clearRenderCache();auto varied=sources;
-            for(auto& entry:varied){auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            for(auto& entry:varied){auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
                 content.stroke.config.family=family;content.stroke.config.materialVersion=material;
                 content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
                 content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+                entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             }
             const auto frame=plan(604,varied,1,{1.2,0,0,1.2,-6.3,-2.8});
             for(unsigned i=0;i<4;++i)
@@ -1077,8 +1077,8 @@ int main(int argc,char** argv) {
         // old view deliberately does not contain this stroke's full extent.
         {
             SkiaRenderer worldRenderer;
-            auto wide=stroke(901);auto& wideStroke=std::get<CompactStrokeReferenceCommand>(wide.command).content.stroke;
-            wideStroke.knots={{-240,50,32768},{500,50,32768}};wide.record.content=std::get<CompactStrokeReferenceCommand>(wide.command).content;
+            auto wide=stroke(901);auto wideStrokeBuilder=std::get<CompactStrokeReferenceCommand>(wide.command).content.get();auto& wideStroke=wideStrokeBuilder.stroke;
+            wideStroke.knots={{-240,50,32768},{500,50,32768}};std::get<CompactStrokeReferenceCommand>(wide.command).content=wideStrokeBuilder;wide.record.content=std::get<CompactStrokeReferenceCommand>(wide.command).content;
             wide.record.worldBounds={-260,30,520,70};
             auto exactFrame=plan(700,{wide});
             require(worldRenderer.renderFrame(provider,exactFrame).code==BackendSubmissionCode::kAccepted,"world exact setup");
@@ -1107,9 +1107,9 @@ int main(int argc,char** argv) {
             // placement transform that canonical rendering applies.
             SkiaRenderer mixedRenderer;
             auto longEntry = stroke(902);
-            auto& longStroke = std::get<CompactStrokeReferenceCommand>(longEntry.command).content.stroke;
+            auto longStrokeBuilder=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();auto& longStroke=longStrokeBuilder.stroke;
             longStroke.knots = {{-120, 58, 32768}, {420, 58, 32768}};
-            longEntry.record.content = std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=longStrokeBuilder;longEntry.record.content = std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
             longEntry.record.worldBounds = {-140, 38, 440, 78};
             semantic::ObjectRecord shapeObject;
             shapeObject.id = ObjectId::fromUint64(903);
@@ -1220,10 +1220,10 @@ int main(int argc,char** argv) {
         {
             TestSurface longSurface;require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"long target");
             SkiaRenderer nav;RenderCacheOptions bounded;bounded.navigationMaxSteps=8;nav.setRenderCacheOptions(bounded);
-            auto longEntry=stroke(910);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            auto longEntry=stroke(910);auto content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();
             content.stroke.knots.clear();
             for(unsigned k=0;k<4096;++k)content.stroke.knots.push_back({-100.+k*.1,64,32768});
-            longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=content;longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
             auto current=plan(710,{longEntry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={longEntry};return true;};
             require(navigate(nav,longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
@@ -1290,8 +1290,8 @@ int main(int argc,char** argv) {
                     "parent scale switch");
             require(nav.navigationWork().fallbackUses>fallbackBefore,"ready parent coverage not selected");
             // Changed sources in the same world cells invalidate retained pixels.
-            auto& config=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke.config;
-            config.color={1,0,0,1};entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto configBuilder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& config=configBuilder.stroke.config;
+            config.color={1,0,0,1};std::get<CompactStrokeReferenceCommand>(entry.command).content=configBuilder;entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
             auto next=plan(731,{entry});
             for(unsigned n=0;n<128;++n){
                 require(navigate(nav,provider,{1,0,0},next.frame,query).code==BackendSubmissionCode::kAccepted,"new content nav");
@@ -1465,11 +1465,11 @@ int main(int argc,char** argv) {
         compare(plan(13,{a,b}));require(renderer.renderCacheWork().retainedBytes==0,"budget exceeded");
         {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
-            auto entry=a;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=a;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config.family=family;content.stroke.config.materialVersion=material;
             content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
             content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-            entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             for(const auto& transform:std::vector<WorldToViewAffine>{{},{.8,.3,-.2,.9,40,10},{-1,0,0,1,256,0},{2,0,0,2,-100,-40}}){
                 compare(plan(20,{entry},1,transform));compare(plan(21,{entry},1,transform));
             }
@@ -1480,13 +1480,13 @@ int main(int argc,char** argv) {
         for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker})
         for(const bool caps:{false,true}){
             auto entry=stroke(101);
-            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
             c.stroke.config.family=family;c.stroke.config.startCap=caps;c.stroke.config.endCap=caps;
             c.stroke.config.startTaper=caps?40:0;c.stroke.config.endTaper=caps?70:0;
             c.stroke.knots.clear();
             for(unsigned i=0;i<40;++i)c.stroke.knots.push_back({18.+i*5,55.+std::sin(i*.7)*14,static_cast<std::uint16_t>(7000+i*1300)});
-            entry.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
             for(const auto transform:std::vector<WorldToViewAffine>{{1.2,0,0,1.2,-6.3,-2.8},{.8,.3,-.2,.9,40,10}}){
                 compare(plan(211,{entry},1,transform));
                 compare(plan(212,{entry},1,transform,{0,0,128,64},{},false,2));
@@ -1505,7 +1505,7 @@ int main(int argc,char** argv) {
         // must stay exactly equal; legacy and tiny/thin paths may fall back.
         for(unsigned sample=0;sample<48;++sample){
             auto entry=stroke(121);
-            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
             c.stroke.config.family=sample%2?foundation::InkFamily::kMarker:foundation::InkFamily::kRound;
             c.stroke.config.materialVersion=2;c.stroke.config.materialResourceId=foundation::kInkMaterialV2ResourceId;
@@ -1517,7 +1517,7 @@ int main(int argc,char** argv) {
             c.stroke.config.markerAngle=std::fmod(sample*.23,6.283185307179586);c.stroke.config.markerFlatness=sample%3==0?.08:.4;
             c.stroke.knots.clear();
             for(unsigned k=0;k<45;++k)c.stroke.knots.push_back({128.+90*std::sin(k*.42),64.+45*std::cos(k*.57),static_cast<std::uint16_t>((sample*421+k*1621)%65536)});
-            entry.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
             const auto transform=sample%3==0?WorldToViewAffine{1.31,.2,-.17,.81,-4.73,8.42}:
                 sample%3==1?WorldToViewAffine{-1.1,0,0,.8,260.3,12.7}:WorldToViewAffine{.7,0,0,1.3,11.73,-4.28};
             compare(plan(230+sample,{entry},1,transform,{0,0,256,128},{},sample%2==0));
@@ -1529,7 +1529,7 @@ int main(int argc,char** argv) {
             }
         }
         auto changed=a;auto& command=std::get<CompactStrokeReferenceCommand>(changed.command);
-        command.content.stroke.knots[1].y+=15;changed.record.content=command.content;
+        command.content.update([](auto& c){c.stroke.knots[1].y+=15;});changed.record.content=command.content;
         compare(plan(22,{changed}));
         renderer.clearRenderCache();require(renderer.renderCacheWork().retainedBytes==0,"clear retained bytes");
         require(provider.lose().code==BackendSubmissionCode::kAccepted,"lost");
@@ -1542,7 +1542,7 @@ int main(int argc,char** argv) {
         renderer.setImageResolver(nullptr);compare(plan(26,{a},provider.generation()));
         require(renderer.renderCacheWork().rasterizedGroups==beforeResource+1,"resource reset reused stale cache");
         auto huge=a;auto& hugeCommand=std::get<CompactStrokeReferenceCommand>(huge.command);
-        hugeCommand.content.stroke.knots={{-1e7,40,32768},{1e7,40,32768}};huge.record.content=hugeCommand.content;
+        hugeCommand.content.update([](auto& c){c.stroke.knots={{-1e7,40,32768},{1e7,40,32768}};});huge.record.content=hugeCommand.content;
         RenderCacheOptions small;small.maxEntryBytes=16;renderer.setRenderCacheOptions(small);
         compare(plan(27,{huge},provider.generation()));require(renderer.renderCacheWork().retainedBytes==0,"huge group requires giant texture");
         FailingPresent failed;require(failed.resize(256,128).code==BackendSubmissionCode::kAccepted,"failing target");

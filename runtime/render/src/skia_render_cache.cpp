@@ -13,9 +13,34 @@
 #include <chrono>
 
 namespace canvas::render::internal {
-void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& surface,std::uint64_t resourceEpoch,foundation::ObjectId activeSource){
     const auto& f=plan.frame;
+    const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
+    if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
+    const auto retain=[&]()->bool{
+        SourceRetentions holds;std::size_t bytes=0;
+        for(const auto& source:plan.referenceDrawList.entries){
+            auto retained=sourcePool->get(source,budget,true);if(!retained)return false;
+            holds.insert(holds.end(),retained->begin(),retained->end());
+            bytes+=sizeof(ReferenceTraversalEntry)+sourceMetadataBytes(source)+128;
+        }
+        bytes+=holds.capacity()*sizeof(SourceRetentions::value_type);
+        const auto token=budget?budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
+        if(!token)return false;
+        groupMetadataLease_=resources::ResourceLease(budget,*token);groupSourceLeases_=std::move(holds);return true;
+    };
+    sourceAdmission_=retain();
+    if(!sourceAdmission_){
+        clear();sourceAdmission_=retain();
+        if(!sourceAdmission_){
+            // No unbudgeted source snapshots survive a failed admission. The
+            // caller still owns this plan and executes permanent complete Direct.
+            damage={beforeRevision,f.sceneReadToken,true,FullRedrawReason::kUnknownExtent,{},0,0,0};
+            target_=target;surface_=&surface;frame_=std::make_unique<FrameState>(f);
+            transform_=plan.referenceDrawList.worldToView;++targetEpoch_;return;
+        }
+    }
     const bool targetChanged=!frame_||target_!=target||surface_!=&surface||frame_->viewId!=f.viewId||
         frame_->surfaceGeneration!=f.surfaceGeneration||frame_->metrics!=f.metrics||
         frame_->metricsGeneration!=f.metricsGeneration;
@@ -83,7 +108,7 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
     const RenderGroup& group,const SkRect& support){
     // V3 AA width depends on the actual device matrix. A picture recorded at
     // identity cannot be used as a camera-independent exact coverage source.
-    if(std::get<CompactStrokeReferenceCommand>(source.command).content.stroke.config.algorithmVersion==3)return nullptr;
+    if(std::get<CompactStrokeReferenceCommand>(source.command).content.get().stroke.config.algorithmVersion==3)return nullptr;
     AXIOM_FRAME_TIMING_SCOPE(coverageTiming,coverage_record);
     const auto& r=group.revisions;
     auto found=coverage_.find(source.record.objectId);
@@ -94,7 +119,7 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
         }
         work.coverageBytes-=found->second.bytes;coverage_.erase(found);
     }
-    const auto& stroke=std::get<CompactStrokeReferenceCommand>(source.command).content.stroke;
+    const auto& stroke=std::get<CompactStrokeReferenceCommand>(source.command).content.get().stroke;
     // Admission bounds shader/recording construction before allocating it.
     const auto estimate=stroke.knots.size()*1024ULL+4096;
     if(estimate>options.maxEntryBytes || estimate>options.maxBytes || !support.isFinite())return nullptr;
@@ -182,6 +207,7 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
 }
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text){
+    if(!sourceAdmission_)return Preparation::kFallback;
     if(!options.enabled||options.tileCandidate||!slice.maxGroups||!slice.maxMicroseconds||!slice.maxCoverageSteps||
        !options.maxEntries)return Preparation::kFallback;
     // Admission is reused only while begin() has verified all group revisions,
@@ -201,9 +227,9 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 ++work.preparationDirectEntries;continue;
             }
             SkRect support=SkRect::MakeEmpty();
-            AXIOM_FRAME_TIMING_ADD(prepare_knots,compact->content.stroke.knots.size());
-            for(const auto& k:compact->content.stroke.knots){
-                const auto radius=ink::compactRadius(compact->content.stroke.config,k.pressure);
+            AXIOM_FRAME_TIMING_ADD(prepare_knots,compact->content.get().stroke.knots.size());
+            for(const auto& k:compact->content.get().stroke.knots){
+                const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
                 support.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
             }
             auto device=entryMatrix(canvas,plan,entry).mapRect(support);device.outset(2,2);
@@ -288,7 +314,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             auto* target=(directComposite?composite_:scratch_)->getCanvas();
             if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
-            const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+            const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
             auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
                 std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded);
             target->restore();
@@ -298,7 +324,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
             pending_.reset();return Preparation::kFallback;
         }
-        auto* target=(directComposite?composite_:scratch_)->getCanvas();const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+        auto* target=(directComposite?composite_:scratch_)->getCanvas();const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
         bool complete=false;
         do{
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
@@ -478,6 +504,7 @@ void SkiaRenderCache::noteCoverage(const CompactRasterWork& rasterWork){
 }
 bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite){
     AXIOM_FRAME_TIMING_SCOPE(drawTiming,cache_draw);
+    if(!sourceAdmission_)return false;
     // A synchronous draw may overwrite the scratch used by suspended work.
     // Its next cooperative demand must start from a fresh offscreen target.
     if(pending_||composite_)resetPreparation();
@@ -514,7 +541,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     SkMatrix object;object.setAll(static_cast<float>(r.a),static_cast<float>(r.c),static_cast<float>(r.tx),static_cast<float>(r.b),static_cast<float>(r.d),static_cast<float>(r.ty),0,0,1);
     const auto matrix=SkMatrix::Concat(canvas.getTotalMatrix(),SkMatrix::Concat(world,object));
     SkRect support=SkRect::MakeEmpty();
-    for(const auto& k:compact->content.stroke.knots){const auto radius=ink::compactRadius(compact->content.stroke.config,k.pressure);
+    for(const auto& k:compact->content.get().stroke.knots){const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
         support.join(SkRect::MakeLTRB(static_cast<float>(k.x-radius),static_cast<float>(k.y-radius),static_cast<float>(k.x+radius),static_cast<float>(k.y+radius)));}
     const auto commands=coverage(source,*group,support);
     support=matrix.mapRect(support);support.outset(2,2);

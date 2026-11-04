@@ -36,13 +36,14 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={});
  private:
     struct Sources {
         std::uint64_t scene=0;
         std::vector<ReferenceTraversalEntry> entries;
         std::vector<std::shared_ptr<const PreparedNavigationGeometry>> geometry;
         resources::ResourceLease lease;
+        SourceRetentions sourceLeases;
     };
     struct Tile {
         std::shared_ptr<const Sources> sources;
@@ -71,6 +72,7 @@ class SkiaNavigationTiles final {
     std::unique_ptr<Job> refinement_;
     TileGrid grid_{256};
     scheduling::RuntimeScheduler scheduler_{4};
+    std::weak_ptr<resources::ResourceBudgetManager> budgetOwner_;
     const void* provider_=nullptr;
     std::uint64_t surface_=0,resource_=0,serial_=0,tick_=0;
     std::unique_ptr<FrameState> last_;

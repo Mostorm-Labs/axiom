@@ -1,5 +1,6 @@
 #include "canvas/render/visibility_resolver.hpp"
 #include "affine_bounds.hpp"
+#include "chunk_query.hpp"
 
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/scene_types.hpp"
@@ -46,11 +47,10 @@ VisibilityResolver::resolve(const FrameState& frameState, const Scene& scene,
         const auto* record = runtimeScene.find(objectId);
         if (record == nullptr || record->geometryChunks.empty()) continue;
         VisibilityChunkSelection selection{.objectId = objectId, .chunkIndices = {}, .fullObject = false};
-        for (const auto& chunk : record->geometryChunks) {
-            if (internal::transformedBounds(chunk.bounds, record->transform).intersects(frameState.worldViewport))
-                selection.chunkIndices.push_back(chunk.index);
-        }
-        if (selection.chunkIndices.empty()) {
+        internal::ChunkQueryWork work;
+        internal::queryChunks(*record,frameState.worldViewport,0,work,[&](const auto& chunk){selection.chunkIndices.push_back(chunk.index);});
+        result.chunkCandidatesExamined+=work.candidates;result.chunkIndexNodesVisited+=work.nodes;result.chunkIndexFallbacks+=work.fallbacks;
+        if (work.fullObject || selection.chunkIndices.empty()) {
             // The object itself is visible through conservative bounds, but
             // chunk metadata may be local/incomplete. Keep the full object.
             selection.fullObject = true;

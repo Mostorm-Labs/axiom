@@ -13,6 +13,8 @@ const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const idleMs=Number(process.argv[4]??60000),cycles=Number(process.argv[5]??6);
 const selected=process.env.AXIOM_NAV_SELECTED!=='0',modes=(process.env.AXIOM_NAV_MODES??'wheel,touch').split(',');
 const zoomDelta=Number(process.env.AXIOM_NAV_ZOOM_DELTA??2),qualityEvery=Number(process.env.AXIOM_NAV_QUALITY_EVERY??0),panStep=Number(process.env.AXIOM_NAV_PAN_STEP??8);
+const editSamples=Number(process.env.AXIOM_NAV_EDIT_SAMPLES??0);
+if(!Number.isSafeInteger(editSamples)||editSamples<0||editSamples>8)throw Error('invalid edit samples');
 const fixtureOptions=JSON.parse(process.env.AXIOM_NAV_OPTIONS??'{}'),panOnly=process.env.AXIOM_NAV_PAN_ONLY!=='0';
 if(!modes.length||modes.some(m=>!['wheel','touch'].includes(m)))throw Error('invalid modes');
 if(!Number.isSafeInteger(idleMs)||idleMs<0||!Number.isSafeInteger(cycles)||cycles<1)throw Error('invalid duration/cycles');
@@ -59,13 +61,14 @@ try{
     page.setDefaultTimeout(180000);
     page.on('console',m=>{const text=m.text();logs.push({type:m.type(),text});
       if(text.startsWith('G5_SAMPLE_MARK ')){const mark=JSON.parse(text.slice(15));current=mark.kind==='end'?null:mark.id;segment=mark.kind==='begin'?'input':'settle';return;}
-      for(const [prefix,kind] of [['AXIOM_NAVIGATION_TIMING ','navigation'],['AXIOM_FRAME_TIMING ','frame']])if(text.startsWith(prefix)){rows.push({phase:current,segment,kind,value:JSON.parse(text.slice(prefix.length))});break;}
+      for(const [prefix,kind] of [['AXIOM_NAVIGATION_TIMING ','navigation'],['AXIOM_FRAME_TIMING ','frame'],['AXIOM_SCENE_TIMING ','scene']])if(text.startsWith(prefix)){rows.push({phase:current,segment,kind,value:JSON.parse(text.slice(prefix.length))});break;}
     });
     page.on('pageerror',e=>exceptions.push(String(e)));
     const record={mode,selected,panOnly,options:{width:636,height:914,points:mode==='wheel'?4096:16384,lines:mode==='wheel'?6:2,span:570,lineSpacing:65,uiReads:true,...fixtureOptions},phases:[]};
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/navigation_sampling.html`);
       record.setup=await page.evaluate(({options,selected})=>probe.setup('mixed',selected,'round-handdrawn',4,options),{options:record.options,selected});
+      record.edits=[];for(let i=0;i<editSamples;++i)record.edits.push(await page.evaluate(i=>probe.commitStroke(i),i));
       const measure=async(id,interrupt=false)=>{
         const options={mode,burst:mode==='wheel'?4:1,panOnly,zoomDelta,qualityEvery,panStep};
         const raw=await page.evaluate(({id,options,interrupt})=>interrupt?probe.interruptSelection(options):probe.measure(id,options),{id,options,interrupt});
@@ -78,6 +81,7 @@ try{
       for(let i=0;i<cycles;++i)await measure('repeat-'+i);
       const cdp=await context.newCDPSession(page);await cdp.send('Performance.enable');
       const snapshot=async()=>({browser:await cdp.send('Performance.getMetrics'),page:await page.evaluate(()=>({at:performance.now(),stats:structuredClone(lifecycleStats),visibility:document.visibilityState}))});
+      record.sceneRows=rows.filter(r=>r.kind==='scene').map(r=>({phase:r.phase,value:r.value}));
       record.idleBefore=await snapshot();
       // Idle has no sampler RAF/timer in the page; observe SDK activity itself.
       await page.waitForTimeout(idleMs);record.idleAfter=await snapshot();
@@ -88,6 +92,7 @@ try{
       record.lifecycle=await snapshot();record.uiReadTimes=await page.evaluate(()=>probe.uiReadTimes);
       record.close=await page.evaluate(()=>probe.close());
       record.checks={closed:record.close.closed,noErrors:!record.setup.errors.length&&!record.close.errors.length&&!exceptions.length,
+        editsCommitted:record.edits.every(e=>Object.values(e.checks).every(Boolean)),
         idleRafStopped:record.idleBefore.page.stats.callbacks===record.idleAfter.page.stats.callbacks,
         idleDrawStopped:record.idleBefore.page.stats.draws===record.idleAfter.page.stats.draws,
         semanticAndCamera:record.phases.every(p=>['documentUnchanged','selectionUnchanged','operationUnchanged','cameraReturned'].every(k=>p.raw.checks[k])),
@@ -104,7 +109,7 @@ try{
   if(browser)await browser.close();await new Promise(r=>server.close(r));await fs.rm(temp,{recursive:true,force:true});
   const after=identity(),sourceStable=before.tree_sha256===after.tree_sha256&&before.commit===after.commit,artifactStable=JSON.stringify(artifacts)===JSON.stringify(await hashes(sdk));
   const summary={schema:'g5-web-navigation-lifecycle-v1',status:sourceStable&&artifactStable&&results.length===modes.length&&results.every(r=>r.status==='MEASURED')?'MEASURED':'BLOCKED_EVIDENCE',
-    sourceBefore:before,sourceAfter:after,sourceStable,artifactStable,artifacts,browserVersion:browser?.version(),idleMs,cycles,selected,modes,zoomDelta,qualityEvery,panStep,intrusiveOptical:qualityEvery>0,
+    sourceBefore:before,sourceAfter:after,sourceStable,artifactStable,artifacts,browserVersion:browser?.version(),idleMs,cycles,editSamples,selected,modes,zoomDelta,qualityEvery,panStep,intrusiveOptical:qualityEvery>0,
     scope:'Synthetic root SDK input; real Chrome WebGL2; callback wrappers forward calls. UI cost covers public readbacks, not full Demo DOM. CDP frozen/active is not physical sleep, GPU eviction or OS backgrounding. Post-input onFrame is coarse completion, not camera-qualified receipt. No physical input-to-photon or long-term leak claim.',
     results:results.map(({phases,rows,uiReadTimes,...r})=>({...r,uiReadMaxMs:Math.max(...(uiReadTimes??[])),phases:phases.map(p=>({id:p.id,summary:p.summary,checks:p.raw.checks,pixels:p.raw.pixels}))}))};
   await fs.writeFile(path.join(output,'summary.json'),JSON.stringify(summary,null,2));

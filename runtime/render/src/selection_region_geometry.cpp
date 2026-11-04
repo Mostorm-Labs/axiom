@@ -34,17 +34,17 @@ bool fillVisible(const RuntimeSceneRecord& r) {
 Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations) {
     switch(r.kind) {
     case semantic::ObjectKind::kVectorPath: {
-        const auto* c=std::get_if<semantic::VectorPathContent>(&r.content);if(!c)return Hit::kInvalid;
+        const auto* c=std::get_if<semantic::VectorPathContent>(&r.content.get());if(!c)return Hit::kInvalid;
         const auto body=internal::semanticPath(c->geometry);
         if(fillVisible(r))path=body;
         for(const auto& e:r.properties.entries)if(e.field_id==0x101U)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value))if(const auto* s=std::get_if<semantic::SolidStroke>(v);s&&s->color.a>0&&s->width>0)if(!unite(path,skpathutils::FillPathWithPaint(body,internal::geometryStrokePaint(*s))))return Hit::kInvalid;
         break;
     }
     case semantic::ObjectKind::kVectorStroke: {
-        if(const auto* c=std::get_if<semantic::BrushStrokeContent>(&r.content)) {
+        if(const auto* c=std::get_if<semantic::BrushStrokeContent>(&r.content.get())) {
             if(c->stroke.snapshot.paint.alpha*c->stroke.snapshot.paint.opacity>0)
                 path=buildVectorBrushOutlineSkPath(c->stroke.vector_output.outline,c->stroke.vector_output.fill_rule,c->stroke.vector_output.closed);
-        } else if(const auto* compact=std::get_if<semantic::CompactStrokeContent>(&r.content)) {
+        } else if(const auto* compact=std::get_if<semantic::CompactStrokeContent>(&r.content.get())) {
             const auto& s=compact->stroke;const auto& config=s.config;
             if(!semantic::validCompactStroke(s))return Hit::kInvalid;
             if(config.family!=foundation::InkFamily::kRound&&config.family!=foundation::InkFamily::kMarker)return Hit::kUnsupported;
@@ -61,7 +61,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
                 if(config.family==foundation::InkFamily::kMarker){matrix.preRotate(f(config.markerAngle*57.29577951308232));matrix.preScale(1,f(config.markerFlatness));}
                 decorations.push_back(p.makeTransform(matrix));
             }
-        } else if(const auto* legacy=std::get_if<semantic::VectorStrokeContent>(&r.content)) {
+        } else if(const auto* legacy=std::get_if<semantic::VectorStrokeContent>(&r.content.get())) {
             const auto* data=std::get_if<semantic::VectorStrokeData>(&legacy->stroke.data);if(!data)return Hit::kInvalid;
             if(legacy->stroke.brush.opacity*legacy->stroke.brush.color.a<=0)break;
             for(std::size_t i=1;i<data->samples.size();++i) {
@@ -74,11 +74,11 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
     }
     case semantic::ObjectKind::kDabStroke: {
         const semantic::DabStrokeData* data=nullptr;bool disk=false;double alpha=0;
-        if(const auto* c=std::get_if<semantic::DabBrushStrokeContent>(&r.content)) {
+        if(const auto* c=std::get_if<semantic::DabBrushStrokeContent>(&r.content.get())) {
             // Textured chalk/membrane alpha coverage is not a disk oracle.
             if(c->stroke.snapshot.material_mode!=1||c->stroke.snapshot.package_revision>=3)return Hit::kUnsupported;
             data=&c->stroke.dab_output;disk=true;alpha=c->stroke.snapshot.paint.alpha*c->stroke.snapshot.paint.opacity;
-        } else if(const auto* legacy=std::get_if<semantic::DabStrokeContent>(&r.content)) {
+        } else if(const auto* legacy=std::get_if<semantic::DabStrokeContent>(&r.content.get())) {
             data=std::get_if<semantic::DabStrokeData>(&legacy->stroke.data);alpha=legacy->stroke.brush.opacity*legacy->stroke.brush.color.a;
         }
         if(!data)return Hit::kInvalid;if(alpha<=0)break;
@@ -113,7 +113,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         break;
     }
     case semantic::ObjectKind::kTable: {
-        const auto* t=std::get_if<semantic::TableContent>(&r.content);if(!t)return Hit::kInvalid;
+        const auto* t=std::get_if<semantic::TableContent>(&r.content.get());if(!t)return Hit::kInvalid;
         for(std::size_t i=0;i<t->cells.size();++i){const auto area=semantic::tableCellRect(*t,i);const auto cell=rectangle(area[0],area[1],area[2]-area[0],area[3]-area[1]);
             if(t->cells[i].fill.a>0&&!unite(path,cell))return Hit::kInvalid;
             if(r.textLayout&&i<r.textLayout->tableCells.size())if(const auto& layout=r.textLayout->tableCells[i])for(const auto& line:layout->lines)if(line.utf8End>line.utf8Start){const auto& b=line.bounds;const auto text=rectangle(area[0]+6+b.left,area[1]+6+b.top,b.right-b.left,b.bottom-b.top);const auto clipped=Op(text,cell,kIntersect_SkPathOp);if(!clipped||!unite(path,*clipped))return Hit::kInvalid;}
@@ -122,14 +122,14 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         break;
     }
     case semantic::ObjectKind::kSection: {
-        const auto* c=std::get_if<semantic::SectionContent>(&r.content);if(!c)return Hit::kInvalid;
+        const auto* c=std::get_if<semantic::SectionContent>(&r.content.get());if(!c)return Hit::kInvalid;
         // Keep the established whole-boundary acquisition area. Membership and
         // header semantics still use the stable authored rectangle.
         path=rectangle(c->boundary.x,c->boundary.y,c->boundary.width,c->boundary.height);
         break;
     }
     case semantic::ObjectKind::kImage: {
-        const auto* c=std::get_if<semantic::ImageContent>(&r.content);if(!c)return Hit::kInvalid;
+        const auto* c=std::get_if<semantic::ImageContent>(&r.content.get());if(!c)return Hit::kInvalid;
         if(c->content_mode==semantic::ImageContentMode::kFit) {
             if(c->intrinsic_width<=0||c->intrinsic_height<=0)return Hit::kUnsupported;
             const auto source=c->source_rect.value_or(semantic::NormalizedRect{0,0,1,1});
@@ -141,7 +141,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
     }
     case semantic::ObjectKind::kRichText: {
         if(!r.textLayout||!r.textLayout->diagnostics.empty())return Hit::kUnsupported;
-        if(r.textLayout->lines.empty())if(const auto* text=std::get_if<semantic::RichTextContent>(&r.content))
+        if(r.textLayout->lines.empty())if(const auto* text=std::get_if<semantic::RichTextContent>(&r.content.get()))
             for(const auto& paragraph:text->document.paragraphs)for(const auto& run:paragraph.runs)
                 if(!run.text.empty())return Hit::kUnsupported;
         for(const auto& line:r.textLayout->lines)if(line.utf8End>line.utf8Start) {
@@ -150,7 +150,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         break;
     }
     case semantic::ObjectKind::kShape: {
-        const auto* c=std::get_if<semantic::ShapeContent>(&r.content);if(!c)return Hit::kInvalid;
+        const auto* c=std::get_if<semantic::ShapeContent>(&r.content.get());if(!c)return Hit::kInvalid;
         SkPathBuilder b;
         if(c->shape_kind==1)b.addRect(rect(0,0,c->width,c->height));
         else if(c->shape_kind==2)b.addOval(rect(0,0,c->width,c->height));
@@ -191,7 +191,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
     }
     if(const auto sketch=scene::sketchGeometry(r.content,r.properties,std::get_if<scene::ConnectorGeometry>(&r.derivedGeometry))) {
         double width=r.kind==semantic::ObjectKind::kConnector?4:r.kind==semantic::ObjectKind::kSection?1:0;
-        if(const auto* table=std::get_if<semantic::TableContent>(&r.content))width=table->grid.color.a>0?table->grid.width:0;
+        if(const auto* table=std::get_if<semantic::TableContent>(&r.content.get()))width=table->grid.color.a>0?table->grid.width:0;
         for(const auto& e:r.properties.entries)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value)){if(const auto* s=std::get_if<semantic::SolidStroke>(v))width=s->color.a>0?s->width:0;else width=0;}
         // The visible set is a union, but acquisition need not first Boolean-union
         // a complex random outline with its body. Skia PathOps can reject that

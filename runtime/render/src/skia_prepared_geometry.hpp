@@ -3,6 +3,7 @@
 #include "canvas/render/render_cache.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/ink/compact_contour.hpp"
+#include "source_retention.hpp"
 #include "include/core/SkPath.h"
 #include <unordered_map>
 
@@ -34,6 +35,7 @@ class PreparedNavigationGeometry final {
     std::vector<SkPath> ribbons_;
     std::vector<ink::ContourCap> caps_;
     std::vector<Group> ribbonGroups_,capGroups_;
+    SourceRetentions sourceLeases_;
     resources::ResourceLease lease_;
     std::shared_ptr<PreparedGeometryUsage> usage_;
     std::size_t bytes_=0;
@@ -45,12 +47,18 @@ class PreparedGeometryCache final {
     std::shared_ptr<const PreparedNavigationGeometry> get(const ReferenceTraversalEntry&,
         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
     void clear()noexcept{entries_.clear();}
-    PreparedGeometryStatistics statistics()const noexcept{auto s=work_;s.residentBytes=usage_->bytes;return s;}
+    PreparedGeometryStatistics statistics()const noexcept{auto s=work_;s.residentBytes=usage_->bytes+retention_->statistics().bytes;return s;}
+    void setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(retention_!=pool){clear();retention_=std::move(pool);}}
+    std::size_t preparedBytes()const noexcept{return usage_->bytes;}
+    const SourceRetentionUsage& sourceStatistics()const noexcept{return retention_->statistics();}
+    std::optional<SourceRetentions> retainSource(const ReferenceTraversalEntry& e,
+        const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){return retention_->get(e,budget,critical);}
  private:
     struct Entry {std::shared_ptr<const PreparedNavigationGeometry> geometry;std::uint64_t used=0;};
     std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash> entries_;
     std::shared_ptr<PreparedGeometryUsage> usage_=std::make_shared<PreparedGeometryUsage>();
     std::weak_ptr<resources::ResourceBudgetManager> owner_;
+    std::shared_ptr<SourceRetentionPool> retention_=std::make_shared<SourceRetentionPool>();
     PreparedGeometryStatistics work_;
     std::uint64_t tick_=0;
     bool evictUnused();

@@ -10,20 +10,6 @@
 
 namespace canvas::render::internal {
 namespace {
-std::size_t payloadBytes(const ReferenceCommand& source){
-    if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source))
-        return compact->content.stroke.knots.size()*sizeof(foundation::InkKnot);
-    if(const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&source)){
-        const auto& s=vector->content.stroke;
-        std::size_t bytes=s.confirmed_samples.size()*sizeof(semantic::BrushConfirmedSample)+
-            s.vector_output.outline.size()*sizeof(semantic::Vec2)+
-            s.snapshot.stages.size()*sizeof(semantic::BrushStageBinding)+
-            s.snapshot.resources.size()*sizeof(semantic::BrushResourceBinding);
-        for(const auto& resource:s.snapshot.resources)bytes+=resource.content_sha256.size()+1;
-        return bytes;
-    }
-    return 0;
-}
 SkRect capBounds(const ink::ContourCap& cap){
     // The draw uses a float center/radius. Bound that exact representation,
     // rounding outward: double bounds cast to float may collapse a tiny cap
@@ -36,8 +22,8 @@ SkRect capBounds(const ink::ContourCap& cap){
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
 void PreparedNavigationGeometry::build(ink::CompactContour* staged){
-    if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source_)){
-        const auto& s=compact->content.stroke;
+    if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&std::as_const(source_))){
+        const auto& s=compact->content.get().stroke;
         distances_.resize(s.knots.size()+1,0);
         for(std::size_t i=2;i<distances_.size();++i)
             distances_[i]=distances_[i-1]+std::hypot(s.knots[i-1].x-s.knots[i-2].x,s.knots[i-1].y-s.knots[i-2].y);
@@ -64,13 +50,13 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
         };
         ribbonGroups_=groups(ribbons_.size(),[&](auto i){return ribbons_[i].getBounds();});
         capGroups_=groups(caps_.size(),[&](auto i){return capBounds(caps_[i]);});
-    }else if(const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&source_)){
-        const auto& output=vector->content.stroke.vector_output;
+    }else if(const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&std::as_const(source_))){
+        const auto& output=vector->content.get().stroke.vector_output;
         vector_=buildVectorBrushOutlineSkPath(std::span(output.outline),output.fill_rule,output.closed);
     }
 }
 std::size_t PreparedNavigationGeometry::footprint()const{
-    std::size_t bytes=sizeof(*this)+payloadBytes(source_)+512+distances_.capacity()*sizeof(double)+
+    std::size_t bytes=sizeof(*this)+512+distances_.capacity()*sizeof(double)+
         ribbons_.capacity()*sizeof(SkPath)+caps_.capacity()*sizeof(ink::ContourCap)+
         (ribbonGroups_.capacity()+capGroups_.capacity())*sizeof(Group);
     for(const auto& path:ribbons_)bytes+=path.approximateBytesUsed();
@@ -79,7 +65,7 @@ std::size_t PreparedNavigationGeometry::footprint()const{
 PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count)const{
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
-    const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.stroke.config;
+    const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
     auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
     bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
     if(cull){
@@ -131,25 +117,29 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     const std::shared_ptr<resources::ResourceBudgetManager>& budget){
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
     const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&entry.command);
-    if(!compact&&(!vector||vector->content.stroke.snapshot.material_mode!=1))return {};
+    if(!compact&&(!vector||vector->content.get().stroke.snapshot.material_mode!=1))return {};
     const auto denied=[&]()->std::shared_ptr<const PreparedNavigationGeometry>{++work_.denied;return {};};
     if(!budget||!limits.maxEntries||!limits.maxBytes||!limits.maxEntryBytes)return denied();
     if(owner_.lock()!=budget){clear();owner_=budget;}
+    auto retained=retainSource(entry,budget,false);if(!retained)return denied();
+    std::size_t sourceBytes=0;for(const auto& lease:*retained)sourceBytes+=lease->bytes;
     auto found=entries_.find(entry.record.objectId);
     if(found!=entries_.end()){
         if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;return found->second.geometry;}
         entries_.erase(found);
     }
     while(entries_.size()>=limits.maxEntries)if(!evictUnused())return denied();
-    const auto count=compact?compact->content.stroke.knots.size():vector->content.stroke.vector_output.outline.size();
+    const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
     const std::size_t unit=compact?16:64;
-    const auto cap=std::min(limits.maxBytes,limits.maxEntryBytes);
-    const auto base=sizeof(PreparedNavigationGeometry)+payloadBytes(entry.command)+65536;
+    const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
+    if(sourceBytes>=entryCap)return denied();
+    const auto cap=entryCap-sourceBytes;
+    const auto base=sizeof(PreparedNavigationGeometry)+65536;
     if(base>cap||count>(cap-base)/unit)return denied();
     auto estimate=base+count*unit;
     ink::CompactContour staged;
     resources::ResourceLease stagingLease;
-    const bool contour=compact&&compact->content.stroke.config.algorithmVersion==4;
+    const bool contour=compact&&compact->content.get().stroke.config.algorithmVersion==4;
     if(contour){
         // The pinned compiler emits at most one anchor/cap per knot, plus
         // sixteen global taper cuts and two finish patches. Admit its exact
@@ -164,7 +154,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         if(!token)return denied();stagingLease=resources::ResourceLease(budget,*token);
         try{
             staged.patches.reserve(count+extra);staged.caps.reserve(count+extra);
-            const auto& stroke=compact->content.stroke;
+            const auto& stroke=compact->content.get().stroke;
             ink::CompactContourCompiler compiler(stroke.config);
             const auto total=ink::compactLength(stroke.knots);
             compiler.append(stroke.knots,total,staged);compiler.finish(total,staged);
@@ -182,7 +172,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     if(!token)return denied();
     resources::ResourceLease admission(budget,*token);
     try{
-        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->build(contour?&staged:nullptr);
+        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->sourceLeases_=std::move(*retained);candidate->build(contour?&staged:nullptr);
         const auto bytes=candidate->footprint();if(bytes>estimate)return denied();
         // Owner-thread transaction: shrink the admitted peak to live storage.
         admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);if(!token)return denied();

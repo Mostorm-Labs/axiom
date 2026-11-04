@@ -1,6 +1,8 @@
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "affine_bounds.hpp"
+#include "chunk_query.hpp"
+#include "source_retention.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <bit>
@@ -12,29 +14,21 @@
 namespace canvas::render {
 namespace {
 
-bool chunkIntersects(const foundation::WorldRect& bounds,
-                     const foundation::WorldRect& region, float margin = 0.0F) noexcept {
-    return bounds.isFiniteAndOrdered() && region.isFiniteAndOrdered() &&
-        bounds.right + margin > region.left && bounds.left - margin < region.right &&
-        bounds.bottom + margin > region.top && bounds.top - margin < region.bottom;
-}
-
 std::optional<NavigationChunkSpan> navigationSpan(
     const RuntimeSceneRecord& record, const ReferenceCommand& command,
-    const foundation::WorldRect& region) {
+    const foundation::WorldRect& region, ReferenceTraversalDiagnostics& diagnostics,bool& fullObject) {
     const bool chunked = std::holds_alternative<CompactStrokeReferenceCommand>(command) ||
         std::holds_alternative<BrushStrokeReferenceCommand>(command);
     if (!chunked || record.geometryChunks.empty()) return std::nullopt;
     float margin = 2.0F;
     if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&command))
-        margin = std::max(2.0F, static_cast<float>(compact->content.stroke.config.size));
+        margin = std::max(2.0F, static_cast<float>(compact->content.get().stroke.config.size));
     else if (const auto* vector = std::get_if<BrushStrokeReferenceCommand>(&command))
-        margin = std::max(2.0F, static_cast<float>(vector->content.stroke.snapshot.vector.size));
+        margin = std::max(2.0F, static_cast<float>(vector->content.get().stroke.snapshot.vector.size));
     std::optional<NavigationChunkSpan> result;
-    for (const auto& chunk : record.geometryChunks) {
-        if (!chunkIntersects(internal::transformedBounds(chunk.bounds,record.transform), region,
-                margin*static_cast<float>(std::max(std::abs(record.transform.a)+std::abs(record.transform.c),
-                                                   std::abs(record.transform.b)+std::abs(record.transform.d))))) continue;
+    internal::ChunkQueryWork work;
+    internal::queryChunks(record,region,margin*static_cast<float>(std::max(std::abs(record.transform.a)+std::abs(record.transform.c),
+        std::abs(record.transform.b)+std::abs(record.transform.d))),work,[&](const auto& chunk){
         if (!result) {
             result = NavigationChunkSpan{chunk.pointOffset, chunk.pointCount};
         } else {
@@ -43,8 +37,10 @@ std::optional<NavigationChunkSpan> navigationSpan(
                                       chunk.pointOffset + chunk.pointCount);
             result = NavigationChunkSpan{begin, end - begin};
         }
-    }
-    return result;
+    });
+    diagnostics.chunkCandidatesExamined+=work.candidates;diagnostics.chunkIndexNodesVisited+=work.nodes;diagnostics.chunkIndexFallbacks+=work.fallbacks;
+    fullObject=work.fullObject;
+    return fullObject?std::nullopt:result;
 }
 
 class CanonicalWriter final {
@@ -461,66 +457,66 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
     };
     switch (record.kind) {
     case semantic::ObjectKind::kShape:
-        if (const auto* value = std::get_if<semantic::ShapeContent>(&record.content))
+        if (std::holds_alternative<semantic::ShapeContent>(record.content.get()))
             return foundation::Result<ReferenceCommand>::success(
-                ShapeReferenceCommand{*value, record.textLayout});
+                ShapeReferenceCommand{scene::ImmutableValue<semantic::ShapeContent>::alias(record.content), record.textLayout});
         break;
     case semantic::ObjectKind::kImage:
-        if (const auto* value = std::get_if<semantic::ImageContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(ImageReferenceCommand{*value});
+        if (std::holds_alternative<semantic::ImageContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(ImageReferenceCommand{scene::ImmutableValue<semantic::ImageContent>::alias(record.content)});
         break;
     case semantic::ObjectKind::kVectorPath:
-        if (const auto* value = std::get_if<semantic::VectorPathContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(VectorPathReferenceCommand{*value});
+        if (std::holds_alternative<semantic::VectorPathContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(VectorPathReferenceCommand{scene::ImmutableValue<semantic::VectorPathContent>::alias(record.content)});
         break;
     case semantic::ObjectKind::kRichText:
-        if (const auto* value = std::get_if<semantic::RichTextContent>(&record.content))
+        if (std::holds_alternative<semantic::RichTextContent>(record.content.get()))
             return foundation::Result<ReferenceCommand>::success(
-                RichTextReferenceCommand{*value, record.textLayout, false,
+                RichTextReferenceCommand{scene::ImmutableValue<semantic::RichTextContent>::alias(record.content), record.textLayout, false,
                                          record.placement.parent_id.has_value()});
         break;
     case semantic::ObjectKind::kVectorStroke:
         if(record.kindVersion==3U){
-            if(const auto* value=std::get_if<semantic::CompactStrokeContent>(&record.content))
-                return foundation::Result<ReferenceCommand>::success(CompactStrokeReferenceCommand{*value});
+            if(std::holds_alternative<semantic::CompactStrokeContent>(record.content.get()))
+                return foundation::Result<ReferenceCommand>::success(CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)});
             break;
         }
         if (record.kindVersion == 2U) {
-            if (const auto* value = std::get_if<semantic::BrushStrokeContent>(&record.content))
-                return foundation::Result<ReferenceCommand>::success(BrushStrokeReferenceCommand{*value});
+            if (std::holds_alternative<semantic::BrushStrokeContent>(record.content.get()))
+                return foundation::Result<ReferenceCommand>::success(BrushStrokeReferenceCommand{scene::ImmutableValue<semantic::BrushStrokeContent>::alias(record.content)});
             break;
         }
-        if (const auto* value = std::get_if<semantic::VectorStrokeContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(VectorStrokeReferenceCommand{*value});
+        if (std::holds_alternative<semantic::VectorStrokeContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(VectorStrokeReferenceCommand{scene::ImmutableValue<semantic::VectorStrokeContent>::alias(record.content)});
         break;
     case semantic::ObjectKind::kDabStroke:
         if (record.kindVersion == 2U) {
-            if (const auto* value = std::get_if<semantic::DabBrushStrokeContent>(&record.content))
-                return foundation::Result<ReferenceCommand>::success(DabBrushStrokeReferenceCommand{*value});
+            if (std::holds_alternative<semantic::DabBrushStrokeContent>(record.content.get()))
+                return foundation::Result<ReferenceCommand>::success(DabBrushStrokeReferenceCommand{scene::ImmutableValue<semantic::DabBrushStrokeContent>::alias(record.content)});
             break;
         }
-        if (const auto* value = std::get_if<semantic::DabStrokeContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(DabStrokeReferenceCommand{*value});
+        if (std::holds_alternative<semantic::DabStrokeContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(DabStrokeReferenceCommand{scene::ImmutableValue<semantic::DabStrokeContent>::alias(record.content)});
         break;
     case semantic::ObjectKind::kConnector:
-        if (const auto* value = std::get_if<semantic::ConnectorContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(ConnectorReferenceCommand{*value});
+        if (std::holds_alternative<semantic::ConnectorContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(ConnectorReferenceCommand{scene::ImmutableValue<semantic::ConnectorContent>::alias(record.content)});
         break;
     case semantic::ObjectKind::kSticky:
-        if (const auto* value = std::get_if<semantic::StickyContent>(&record.content))
+        if (std::holds_alternative<semantic::StickyContent>(record.content.get()))
             return foundation::Result<ReferenceCommand>::success(
-                StickyReferenceCommand{*value, record.textLayout, false});
+                StickyReferenceCommand{scene::ImmutableValue<semantic::StickyContent>::alias(record.content), record.textLayout, false});
         break;
     case semantic::ObjectKind::kGroup:
-        if (std::holds_alternative<semantic::GroupContent>(record.content))
+        if (std::holds_alternative<semantic::GroupContent>(record.content.get()))
             return foundation::Result<ReferenceCommand>::success(GroupReferenceCommand{});
         break;
     case semantic::ObjectKind::kTable:
-        if(const auto* value=std::get_if<semantic::TableContent>(&record.content))return foundation::Result<ReferenceCommand>::success(TableReferenceCommand{*value,record.textLayout});
+        if(std::holds_alternative<semantic::TableContent>(record.content.get()))return foundation::Result<ReferenceCommand>::success(TableReferenceCommand{scene::ImmutableValue<semantic::TableContent>::alias(record.content),record.textLayout});
         break;
     case semantic::ObjectKind::kSection:
-        if (const auto* value=std::get_if<semantic::SectionContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(SectionReferenceCommand{*value,record.textLayout});
+        if (std::holds_alternative<semantic::SectionContent>(record.content.get()))
+            return foundation::Result<ReferenceCommand>::success(SectionReferenceCommand{scene::ImmutableValue<semantic::SectionContent>::alias(record.content),record.textLayout});
         break;
     }
     return mismatch();
@@ -564,6 +560,9 @@ static foundation::Result<ReferenceDrawList> buildSources(
     AXIOM_FRAME_TIMING_ADD(candidates,visibility.candidatesExamined);
     AXIOM_FRAME_TIMING_ADD(sources,visibility.backToFront.size());
     AXIOM_FRAME_TIMING_SCOPE(entriesTiming,reference_entries);
+    list.diagnostics.chunkCandidatesExamined=visibility.chunkCandidatesExamined;
+    list.diagnostics.chunkIndexNodesVisited=visibility.chunkIndexNodesVisited;
+    list.diagnostics.chunkIndexFallbacks=visibility.chunkIndexFallbacks;
     list.entries.reserve(visibility.backToFront.size());
     for (const foundation::ObjectId id : visibility.backToFront) {
         ++list.diagnostics.visibleIdsProcessed;
@@ -576,11 +575,12 @@ static foundation::Result<ReferenceDrawList> buildSources(
         }
         auto command = commandFor(*record);
         if (!command) return foundation::Result<ReferenceDrawList>::failure(command.error());
+        bool fullObject=false;
         const auto span = canonical ? std::nullopt
-                                    : navigationSpan(*record, command.value(), visibility.queryWorldRect);
+                                    : navigationSpan(*record, command.value(), visibility.queryWorldRect,list.diagnostics,fullObject);
         if (!canonical && (std::holds_alternative<CompactStrokeReferenceCommand>(command.value()) ||
                            std::holds_alternative<BrushStrokeReferenceCommand>(command.value())) &&
-            record->geometryChunks.size() > 0U && !span) {
+            record->geometryChunks.size() > 0U && !span && !fullObject) {
             continue;
         }
         ReferenceTraversalEntry entry{
@@ -596,6 +596,14 @@ static foundation::Result<ReferenceDrawList> buildSources(
             entry.geometryChunkIndices = selected->chunkIndices;
             entry.geometryChunked = true;
         }
+        const auto owner=record->content.shared();
+        const auto account=[&](const auto& content){
+            const auto shared=content.shared();
+            if(!owner.owner_before(shared)&&!shared.owner_before(owner))++list.diagnostics.payloadAliases;
+            else list.diagnostics.payloadCopyBytes+=internal::sourceContentBytes(content.get());
+        };
+        account(std::as_const(entry.record.content));
+        std::visit([&](const auto& command){if constexpr(requires{command.content;})account(command.content);},std::as_const(entry.command));
         list.entries.push_back(std::move(entry));
     }
     AXIOM_FRAME_TIMING_END(entriesTiming);
