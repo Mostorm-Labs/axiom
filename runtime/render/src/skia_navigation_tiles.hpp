@@ -22,6 +22,7 @@ class SkiaNavigationTiles final {
  public:
     NavigationWork work;
     void cancelWork(){cancel();work.pending=false;work.presented=false;}
+    void releaseForExact(){cancelWork();work.evictions+=tiles_.size();tiles_.clear();sources_.clear();work.retainedBytes=0;work.coverageComplete=false;dirty_=true;}
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,

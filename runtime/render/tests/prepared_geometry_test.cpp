@@ -1,4 +1,5 @@
 #include "../src/skia_prepared_geometry.hpp"
+#include "exact_contour_replay_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
@@ -158,5 +159,6 @@ void stagingAdmission(){
     options.maxEntryBytes=8*1024*1024;
     require(bool(constrained.get(entry,options,budget)),"denied staging did not recover with an adequate budget");
 }
+
 }
-int main(){localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}
+int main(){try{auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requireExactContourReplay(*root);localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}

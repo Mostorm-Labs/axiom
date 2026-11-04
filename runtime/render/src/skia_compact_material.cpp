@@ -7,6 +7,7 @@
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPicture.h"
+#include "include/core/SkPictureRecorder.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkRuntimeEffect.h"
@@ -346,7 +347,8 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
     return target;
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
-    std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget)
+    std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
+    std::size_t maxRecordedBytes)
     :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
@@ -356,6 +358,27 @@ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation
     support_=matrix_.mapRect(support_);support_.outset(2,2);
     canCull_=!matrix_.hasPerspective()&&support_.isFinite();
     totalDistance_=ink::compactLength(knots);
+    // Record only the pinned v4 helper, incrementally while its first device
+    // tile is compiled. Later tiles replay identical commands on their original
+    // CPU grids. No full-history preparation is added to a frame opportunity.
+    if(config.algorithmVersion==4&&budget&&!done_&&!matrix_.hasPerspective()){
+        SkMatrix inverse;const auto count=knots.size()/32+(knots.size()%32!=0);
+        if(matrix_.invert(&inverse)&&count<=maxRecordedBytes/sizeof(ContourRecord)){
+            recordBounds_=inverse.mapRect(SkRect::Make(deviceClip_));
+            const auto margin=2*std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),
+                                       std::hypot(inverse.getSkewX(),inverse.getScaleY()));
+            recordBounds_.outset(float(margin),float(margin));
+            const auto bytes=count*sizeof(ContourRecord);
+            if(recordBounds_.isFinite()&&std::isfinite(margin)){
+                const auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);
+                if(token){
+                    recordBudget_=budget;recordLimit_=maxRecordedBytes;recordBytes_=bytes;
+                    recordStorageLease_=resources::ResourceLease(budget,*token);
+                    try{contourRecords_.reserve(count);}catch(const std::bad_alloc&){abandonRecords();}
+                }
+            }
+        }
+    }
     // A deliberately inscribed subset of saturated V3 coverage. This is a
     // work-culling region, never substitute brush geometry. The rest always
     // executes the pinned CPU evaluator, including caps and every AA edge.
@@ -412,6 +435,35 @@ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation
         interiorLease_=std::move(lease);
     }
 }
+void CompactStrokeRasterJob::abandonRecords() noexcept {
+    std::vector<ContourRecord>{}.swap(contourRecords_);recordStorageLease_.reset();
+    recordBudget_.reset();recordBytes_=0;recordLimit_=0;recordComplete_=false;
+}
+void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
+    if(!recordBudget_)return;
+    if(contour.patches.size()<2&&contour.caps.empty()){contourRecords_.push_back({});return;}
+    // Reserve a conservative recording peak before constructing Skia commands;
+    // shrink to the measured record afterwards. Denial discards this optional
+    // optimization, leaving the first-tile compiler and exact fallback intact.
+    const auto count=contour.patches.size()+contour.caps.size();
+    const auto remaining=recordLimit_-recordBytes_;
+    if(remaining<4096||count>(remaining-4096)/4096){abandonRecords();return;}
+    const auto estimate=4096+count*4096;
+    auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);
+    if(!token){abandonRecords();return;}
+    resources::ResourceLease lease(recordBudget_,*token);
+    try{
+        SkPictureRecorder recorder;auto* target=recorder.beginRecording(recordBounds_);
+        drawCompactContourCoverageToSkCanvas(*target,config,contour);
+        auto picture=recorder.finishRecordingAsPicture();
+        const auto bytes=picture?picture->approximateBytesUsed():0;
+        if(!picture||bytes>estimate){abandonRecords();return;}
+        lease.reset();token=recordBudget_->reserve(resources::ResourceClass::kRecorded,bytes,false);
+        if(!token){abandonRecords();return;}
+        lease=resources::ResourceLease(recordBudget_,*token);
+        contourRecords_.push_back({std::move(picture),std::move(lease)});recordBytes_+=bytes;
+    }catch(const std::bad_alloc&){abandonRecords();}
+}
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
     bool compatible,CompactRasterWork* work){
@@ -452,7 +504,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             AXIOM_FRAME_TIMING_ADD(cpu_edge_pixels,remainder);
         }
         knot_=0;distance_=0;
-        if(config.algorithmVersion==4)contour_.emplace(config);else contour_.reset();
+        if(config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
     }
     {
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
@@ -467,17 +519,24 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             target->resetMatrix();target->clipRegion(tileInterior_,SkClipOp::kDifference);
             target->translate(float(-x_),float(-y_));target->concat(matrix_);
         }
-        if(contour_){
+        if(recordComplete_){
+            const auto& record=contourRecords_[knot_/32];
+            if(record.picture)target->drawPicture(record.picture);
+            if(work)++work->contourRecordReplays;
+        }else if(contour_){
+            if(work)work->compiledContourKnots+=end-knot_;
             ink::CompactContour emitted;contour_->append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
             if(end==knots.size())contour_->finish(totalDistance_,emitted);
             drawCompactContourCoverageToSkCanvas(*target,config,emitted);
+            recordContour(config,emitted);
         }else drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,distance_,totalDistance_,seed);
         target->restore();
-        for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
+        if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
             distance_+=std::hypot(knots[i].x-knots[i-1].x,knots[i].y-knots[i-1].y);
         knot_=end;
     }
     if(knot_<knots.size())return false;
+    if(recordBudget_)recordComplete_=true;
     if(hybrid_){
         AXIOM_FRAME_TIMING_SCOPE(edgeUploadTiming,material_submit);
         auto image=correction_->makeImageSnapshot();if(!image)throw std::bad_alloc();

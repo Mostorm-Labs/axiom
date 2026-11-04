@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
+#include "exact_contour_replay_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
@@ -149,6 +150,35 @@ void checkRetainedBackground(TestSurface& target,TestSurface& reference){
     }
     require(failures==1,"failed exposure proof repeated and starved coverage");
 }
+void checkExactCachePressure(TestSurface& target,TestSurface& reference){
+    auto entry=stroke(8391);const auto frame=plan(839,{entry});
+    SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.maxBytes=4*1024*1024;options.maxEntryBytes=options.maxBytes;
+    options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"pressure source frame");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,8,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"pressure navigation");
+        if(!cached.navigationWork().pending)break;
+        require(i<128,"pressure navigation did not converge");
+    }
+    require(cached.navigationWork().retainedBytes>0,"pressure test did not retain world tiles");
+    const auto evictions=cached.navigationWork().evictions;
+    const auto exact=plan(840,{entry},1,{1,0,0,1,8,0});RenderPreparationBudget budget;
+    for(unsigned i=0;;++i){
+        const auto result=cached.renderFrame(target,exact,nullptr,&budget);
+        if(result.code==BackendSubmissionCode::kAccepted)break;
+        require(result.code==BackendSubmissionCode::kRetry&&i<128,"pressure exact did not converge");
+    }
+    require(cached.navigationWork().evictions>evictions&&cached.navigationWork().retainedBytes==0,
+            "rebuildable navigation residency starved exact headroom");
+    require(direct.renderFrame(reference,exact).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"pressure eviction changed exact pixels");
+    const auto presents=target.presentCount();
+    require(navigate(cached,target,{1,16,0},exact.frame,query,false,nullptr,
+            NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
+            target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
+}
 void checkAffineStrokes(TestSurface& target,TestSurface& reference){
     const semantic::Transform2D transforms[]={{1,0,0,1,12,8},{.9,.15,-.1,.8,10,5},{1.1,0,0,.75,-5,4}};
     for(const auto& transform:transforms)for(bool mixed:{false,true}){
@@ -264,6 +294,12 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
+            const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"exact replay acquire");
+            testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
+        }
+#endif
         SkiaRenderer renderer;
         if(argc>1&&std::string_view(argv[1])=="--background-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"background reference");
@@ -272,6 +308,7 @@ int main(int argc,char** argv) {
         if(argc>1&&std::string_view(argv[1])=="--affine-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine reference surface");
             checkRetainedBackground(provider,reference);
+            checkExactCachePressure(provider,reference);
             checkAffineStrokes(provider,reference);return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
@@ -303,6 +340,7 @@ int main(int argc,char** argv) {
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
         checkRetainedBackground(provider,reference);
+        checkExactCachePressure(provider,reference);
         checkAffineStrokes(provider,reference);
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         auto compare=[&](const FramePlan& frame){

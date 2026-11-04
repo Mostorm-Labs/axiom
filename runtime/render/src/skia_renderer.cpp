@@ -184,7 +184,16 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
         auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
         const auto beforePreparation=cache->work.rasterizedGroups;
-        try{AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);}
+        try{
+            // World feedback pixels/sources are rebuildable. Keep the retained
+            // complete image for interrupted navigation, but give exact work
+            // room for its bounded contour records instead of retaining tiles
+            // until optional admission repeatedly fails at the soft cap.
+            const auto headroom=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes);
+            if(navigationTiles_&&resourceBudget_->used()>renderCacheOptions_.maxBytes-headroom)
+                navigationTiles_->releaseForExact();
+            AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
+        }
         catch(const std::bad_alloc&){cache->clear();}
         target->restore();
         rasterizations_+=cache->work.rasterizedGroups-beforePreparation;

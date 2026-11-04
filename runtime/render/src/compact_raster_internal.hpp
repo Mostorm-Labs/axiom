@@ -1,6 +1,8 @@
 #pragma once
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
+#include "canvas/render/render_cache.hpp"
+#include "include/core/SkPicture.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
@@ -28,7 +30,8 @@ class CompactStrokeRasterJob final {
  public:
     CompactStrokeRasterJob(SkCanvas&,const foundation::InkBrushConfig&,
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
-        std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr);
+        std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
+        std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes);
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
  private:
@@ -45,5 +48,14 @@ class CompactStrokeRasterJob final {
     double distance_=0,totalDistance_=0;
     std::optional<ink::CompactContourCompiler> contour_;
     sk_sp<SkSurface> tile_;
+    struct ContourRecord {sk_sp<SkPicture> picture;resources::ResourceLease lease;};
+    std::vector<ContourRecord> contourRecords_;
+    std::shared_ptr<resources::ResourceBudgetManager> recordBudget_;
+    resources::ResourceLease recordStorageLease_;
+    SkRect recordBounds_{};
+    std::size_t recordLimit_=0,recordBytes_=0;
+    bool recordComplete_=false;
+    void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&);
+    void abandonRecords() noexcept;
 };
 }
