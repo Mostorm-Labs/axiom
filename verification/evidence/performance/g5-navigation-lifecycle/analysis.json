@@ -1,0 +1,642 @@
+{
+  "kind": "investigation-only; render stutter is not fixed",
+  "runs": {
+    "off": {
+      "source_tree_sha256": "68a58fbc044ea0dc0ae72722047e3c342d2525075f24c93eec86e97395d8f208",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "idle_ms": 60000,
+      "records": [
+        {
+          "mode": "wheel",
+          "selected": true,
+          "objects": 10,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "interrupted-selection",
+              "raf_max_ms": 42.29999999701977,
+              "submission_gap_max_ms": 327.59999999403954,
+              "updated_inputs": 49,
+              "post_input_completion_ms": 232.70000000298023,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 21.299999997019768,
+              "submission_gap_max_ms": 267,
+              "updated_inputs": 53,
+              "post_input_completion_ms": 332.8999999910593,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 21.700000002980232,
+              "submission_gap_max_ms": 201.29999999701977,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 181.79999999701977,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 19,
+              "submission_gap_max_ms": 199.5,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 180.6000000089407,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-3",
+              "raf_max_ms": 19.900000005960464,
+              "submission_gap_max_ms": 200.5,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 182.70000000298023,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-4",
+              "raf_max_ms": 19.399999991059303,
+              "submission_gap_max_ms": 200.09999999403954,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 180.70000000298023,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-5",
+              "raf_max_ms": 20.399999991059303,
+              "submission_gap_max_ms": 199.90000000596046,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 183.09999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 21.299999997019768,
+              "submission_gap_max_ms": 200.69999998807907,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 180.59999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 26.5,
+              "submission_gap_max_ms": 199.5,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 294.70000000298023,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            }
+          ]
+        },
+        {
+          "mode": "touch",
+          "selected": true,
+          "objects": 6,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "interrupted-selection",
+              "raf_max_ms": 37.400000005960464,
+              "submission_gap_max_ms": 520.1000000089407,
+              "updated_inputs": 21,
+              "post_input_completion_ms": 132.09999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 19.599999994039536,
+              "submission_gap_max_ms": 28.599999994039536,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 112.79999999701977,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 19.400000005960464,
+              "submission_gap_max_ms": 20.30000001192093,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 114.09999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 19.5,
+              "submission_gap_max_ms": 20.700000002980232,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 116.8999999910593,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-3",
+              "raf_max_ms": 18.900000005960464,
+              "submission_gap_max_ms": 31,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 116.79999999701977,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-4",
+              "raf_max_ms": 19.399999991059303,
+              "submission_gap_max_ms": 27.900000005960464,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 131.59999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "repeat-5",
+              "raf_max_ms": 18.600000008940697,
+              "submission_gap_max_ms": 22.099999994039536,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 112.90000000596046,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 18.899999991059303,
+              "submission_gap_max_ms": 20.400000005960464,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 115.09999999403954,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 21.399999991059303,
+              "submission_gap_max_ms": 25.799999997019768,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 128.20000000298023,
+              "navigation_calls": null,
+              "not_presented_calls": null,
+              "incomplete_coverage_calls": null
+            }
+          ]
+        }
+      ]
+    },
+    "on": {
+      "source_tree_sha256": "07b602ef95838125d0fac1e53da8b0bbb60f417a1f2388cd2d5299e964b2815d",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "idle_ms": 1000,
+      "records": [
+        {
+          "mode": "wheel",
+          "selected": true,
+          "objects": 10,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "interrupted-selection",
+              "raf_max_ms": 38.400000005960464,
+              "submission_gap_max_ms": 326.30000001192093,
+              "updated_inputs": 49,
+              "post_input_completion_ms": 215,
+              "navigation_calls": 72,
+              "not_presented_calls": 23,
+              "incomplete_coverage_calls": 24
+            },
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 20.299999997019768,
+              "submission_gap_max_ms": 334.6000000089407,
+              "updated_inputs": 52,
+              "post_input_completion_ms": 181.5,
+              "navigation_calls": 72,
+              "not_presented_calls": 20,
+              "incomplete_coverage_calls": 21
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 20.899999991059303,
+              "submission_gap_max_ms": 133.20000000298023,
+              "updated_inputs": 61,
+              "post_input_completion_ms": 314.5,
+              "navigation_calls": 72,
+              "not_presented_calls": 11,
+              "incomplete_coverage_calls": 12
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 21.899999991059303,
+              "submission_gap_max_ms": 133,
+              "updated_inputs": 61,
+              "post_input_completion_ms": 312.5,
+              "navigation_calls": 72,
+              "not_presented_calls": 11,
+              "incomplete_coverage_calls": 12
+            },
+            {
+              "id": "repeat-3",
+              "raf_max_ms": 19.700000002980232,
+              "submission_gap_max_ms": 201.40000000596046,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 180.29999999701977,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "repeat-4",
+              "raf_max_ms": 19.799999997019768,
+              "submission_gap_max_ms": 199.20000000298023,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 181.5,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "repeat-5",
+              "raf_max_ms": 20.200000002980232,
+              "submission_gap_max_ms": 198.20000000298023,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 182.20000000298023,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 20,
+              "submission_gap_max_ms": 198.20000000298023,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 181.79999999701977,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 21.700000002980232,
+              "submission_gap_max_ms": 199.59999999403954,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 231.09999999403954,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            }
+          ]
+        },
+        {
+          "mode": "touch",
+          "selected": true,
+          "objects": 6,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "interrupted-selection",
+              "raf_max_ms": 37.099999994039536,
+              "submission_gap_max_ms": 522.1000000089407,
+              "updated_inputs": 20,
+              "post_input_completion_ms": 130.70000000298023,
+              "navigation_calls": 73,
+              "not_presented_calls": 52,
+              "incomplete_coverage_calls": 53
+            },
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 19.299999997019768,
+              "submission_gap_max_ms": 28.899999991059303,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 113.8999999910593,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 18.600000008940697,
+              "submission_gap_max_ms": 27.5,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 113.59999999403954,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 18.5,
+              "submission_gap_max_ms": 18.5,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 114.70000000298023,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "repeat-3",
+              "raf_max_ms": 19.19999998807907,
+              "submission_gap_max_ms": 18.900000005960464,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 130.69999998807907,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "repeat-4",
+              "raf_max_ms": 18.799999997019768,
+              "submission_gap_max_ms": 28.100000008940697,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 131.90000000596046,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "repeat-5",
+              "raf_max_ms": 19.400000005960464,
+              "submission_gap_max_ms": 24,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 116.20000000298023,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 20.200000002980232,
+              "submission_gap_max_ms": 19.30000001192093,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 114.90000000596046,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 38.6000000089407,
+              "submission_gap_max_ms": 37.1000000089407,
+              "updated_inputs": 72,
+              "post_input_completion_ms": 126.29999999701977,
+              "navigation_calls": 73,
+              "not_presented_calls": 1,
+              "incomplete_coverage_calls": 0
+            }
+          ]
+        }
+      ]
+    },
+    "selected-control": {
+      "source_tree_sha256": "3a924d66e2ad358a9a20e48a40b5bfb8415fc3678bc6d560b4fdc4f7077c1383",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "idle_ms": 0,
+      "records": [
+        {
+          "mode": "wheel",
+          "selected": true,
+          "objects": 10,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "interrupted-selection",
+              "raf_max_ms": 40,
+              "submission_gap_max_ms": 327,
+              "updated_inputs": 49,
+              "post_input_completion_ms": 216.29999999701977,
+              "navigation_calls": 72,
+              "not_presented_calls": 23,
+              "incomplete_coverage_calls": 24
+            },
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 20.100000008940697,
+              "submission_gap_max_ms": 265.6000000089407,
+              "updated_inputs": 53,
+              "post_input_completion_ms": 313,
+              "navigation_calls": 72,
+              "not_presented_calls": 19,
+              "incomplete_coverage_calls": 20
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 20,
+              "submission_gap_max_ms": 333.70000000298023,
+              "updated_inputs": 52,
+              "post_input_completion_ms": 181.1000000089407,
+              "navigation_calls": 72,
+              "not_presented_calls": 20,
+              "incomplete_coverage_calls": 21
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 19.5,
+              "submission_gap_max_ms": 198.70000000298023,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 182.8999999910593,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 20.400000005960464,
+              "submission_gap_max_ms": 200.90000000596046,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 181.5,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 23.5,
+              "submission_gap_max_ms": 199.59999999403954,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 230.90000000596046,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            }
+          ]
+        }
+      ]
+    },
+    "unselected-control": {
+      "source_tree_sha256": "3a924d66e2ad358a9a20e48a40b5bfb8415fc3678bc6d560b4fdc4f7077c1383",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "idle_ms": 0,
+      "records": [
+        {
+          "mode": "wheel",
+          "selected": false,
+          "objects": 10,
+          "checks": {
+            "closed": true,
+            "noErrors": true,
+            "idleRafStopped": true,
+            "idleDrawStopped": true,
+            "semanticAndCamera": true,
+            "receiptAfterInput": true,
+            "nonblockingFences": true
+          },
+          "unique_final_pixel_hashes": 1,
+          "idle_raf_delta": 0,
+          "idle_draw_delta": 0,
+          "phases": [
+            {
+              "id": "repeat-0",
+              "raf_max_ms": 39.900000005960464,
+              "submission_gap_max_ms": 320.5,
+              "updated_inputs": 49,
+              "post_input_completion_ms": 214.70000000298023,
+              "navigation_calls": 72,
+              "not_presented_calls": 23,
+              "incomplete_coverage_calls": 24
+            },
+            {
+              "id": "repeat-1",
+              "raf_max_ms": 20.5,
+              "submission_gap_max_ms": 267.40000000596046,
+              "updated_inputs": 53,
+              "post_input_completion_ms": 314.29999999701977,
+              "navigation_calls": 72,
+              "not_presented_calls": 19,
+              "incomplete_coverage_calls": 20
+            },
+            {
+              "id": "repeat-2",
+              "raf_max_ms": 20.099999994039536,
+              "submission_gap_max_ms": 333.1000000089407,
+              "updated_inputs": 52,
+              "post_input_completion_ms": 181.79999999701977,
+              "navigation_calls": 72,
+              "not_presented_calls": 20,
+              "incomplete_coverage_calls": 21
+            },
+            {
+              "id": "after-idle",
+              "raf_max_ms": 20,
+              "submission_gap_max_ms": 198.1000000089407,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 181.69999998807907,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            },
+            {
+              "id": "after-freeze",
+              "raf_max_ms": 22.900000005960464,
+              "submission_gap_max_ms": 198.3999999910593,
+              "updated_inputs": 60,
+              "post_input_completion_ms": 196.09999999403954,
+              "navigation_calls": 72,
+              "not_presented_calls": 12,
+              "incomplete_coverage_calls": 13
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "default_sdk_matches_prepared_geometry_evidence": true,
+  "prior_build_only_files_excluded_from_consumer_install": [
+    "CMakeFiles/axiom_js_runtime.dir/CXX.dd",
+    "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json",
+    "CMakeFiles/axiom_js_runtime.dir/CXXModules.json",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap",
+    "cmake_install.cmake",
+    "internal/axiom.data",
+    "internal/axiom.wasm",
+    "libaxiom_web_runtime_adapter.a"
+  ]
+}

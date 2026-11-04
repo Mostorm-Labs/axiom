@@ -47,3 +47,11 @@ test('prepared geometry deltas are summed while resident bytes are a peak gauge'
   assert.equal(value.navigation.prepared.contourDrawn,5);
   assert.equal(value.navigation.prepared.vectorUses,1);
 });
+
+test('an interrupted selection receipt cannot qualify navigation settlement', () => {
+  const phase={started:10,inputEnded:100,samples:[],displayTimes:[],fences:[],longTasks:[],
+    settleMilliseconds:-50,receipts:[{at:50}]};
+  assert.equal(summarizePhase(phase,[],[]).settle_ms,null);
+  phase.receipts.push({at:145},{at:160});
+  assert.equal(summarizePhase(phase,[],[]).settle_ms,45);
+});

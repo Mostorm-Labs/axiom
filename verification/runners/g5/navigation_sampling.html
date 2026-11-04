@@ -2,6 +2,7 @@
 <style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
 <script type="module">
 import {createRuntime} from '/axiom.mjs';
+import {postInputReceiptWait} from '/navigation_metrics.mjs';
 const errors=[],frames=[],bindings=new WeakMap();
 let sdk,active=null,sequence=0;
 const raf=()=>new Promise(requestAnimationFrame);
@@ -11,7 +12,7 @@ const bind=proto.bindFramebuffer;
 proto.bindFramebuffer=function(target,fb){if(target===this.FRAMEBUFFER||target===this.DRAW_FRAMEBUFFER)bindings.set(this,fb);return bind.call(this,target,fb);};
 for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced']){
   const raw=proto[name];proto[name]=function(...args){
-    if(active&&!bindings.get(this)){++active.draws;active.displayTimes.push(performance.now());}
+    if(active&&this.canvas===sdk?.canvas&&!bindings.get(this)){++active.draws;active.displayTimes.push(performance.now());}
     return raw.apply(this,args);
   };
 }
@@ -40,24 +41,35 @@ async function pixels(){
   return {sha256:Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join(''),
     width:c.width,height:c.height,renderer:ext?g.getParameter(ext.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)};
 }
-async function phase(id){
+function touch(type,id,x,y){
+  const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent(type,{pointerId:id,pointerType:'touch',
+    clientX:r.left+x,clientY:r.top+y,buttons:type==='pointerup'?0:1,pressure:.5,width:12,height:12,bubbles:true,cancelable:true});
+  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});sdk.canvas.dispatchEvent(e);
+}
+async function phase(id,{mode='wheel',burst=1,panOnly=false}={}){
   const before=sdk.readState(),prior=frames.length;
   const value={id,samples:[],displayTimes:[],draws:0,fences:[],longTasks:[],before};
   mark('begin',id);active=value;value.started=performance.now();
+  value.contactDispatch=[];
+  const contact=(...args)=>{const start=performance.now();touch(...args);value.contactDispatch.push({type:args[0],ms:performance.now()-start});};
+  if(mode==='touch'){contact('pointerdown',2,40,90);await raf();contact('pointerdown',3,120,90);}
   await raf();let previous=performance.now();
   for(let i=0;i<72;++i){
-    const beforeDraws=value.draws,tick=performance.now(),pan=i>=36;
-    sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
-      deltaX:pan?(i<54?-8:8):0,deltaY:pan?(i<54?-4:4):(i<18?-2:2),bubbles:true,cancelable:true}));
+    const beforeDraws=value.draws,tick=performance.now(),pan=panOnly||i>=36;
+    if(mode==='touch'){
+      const dx=(i<36?i+1:71-i)*4;contact('pointermove',2,40+dx,90);contact('pointermove',3,120+dx,90);
+    }else for(let b=0;b<burst;++b)sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
+      deltaX:pan?(i<(panOnly?36:54)?-8:8):0,deltaY:pan?(i<(panOnly?36:54)?-4:4):(i<18?-2:2),bubbles:true,cancelable:true}));
     const dispatchMs=performance.now()-tick,rafTimestamp=await raf(),now=performance.now();
     value.samples.push({index:i,at:now,rafTimestamp,interval:now-previous,dispatchMs,draws:value.draws-beforeDraws});previous=now;
   }
+  if(mode==='touch'){contact('pointerup',2,40,90);contact('pointerup',3,120,90);}
   value.inputEnded=performance.now();value.framesDuringInput=frames.length-prior;
   mark('input-ended',id);
   value.afterInput=sdk.readState();
   // Exact settle remains observable even if a slow input loop allowed one earlier.
-  await until(()=>frames.length>prior,'navigation exact settle timeout');
-  value.settleMilliseconds=frames.at(-1).at-value.inputEnded;
+  await until(()=>postInputReceiptWait(frames.slice(prior),value.inputEnded)!==null,'post-input canonical completion timeout');
+  value.settleMilliseconds=postInputReceiptWait(frames.slice(prior),value.inputEnded);
   for(let i=0;i<12;++i)await raf();
   value.ended=performance.now();active=null;mark('end',id);
   value.longTasks=value.longTasks.filter(t=>t.start>=value.started&&t.start<value.ended);
@@ -70,43 +82,61 @@ async function phase(id){
   value.pixels=await pixels();return value;
 }
 window.probe={
-  async setup(workload,selected,profile='round-handdrawn',revision=4){
+  async setup(workload,selected,profile='round-handdrawn',revision=4,options={}){
     const started=performance.now();
+    const mount=document.getElementById('mount');
+    if(options.width)mount.style.width=options.width+'px';if(options.height)mount.style.height=options.height+'px';
+    const points=options.points??2048,lines=options.lines??2;
+    const uiReadTimes=[];
     sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',
-      permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:frame=>frames.push({at:performance.now(),...frame})});
+      permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:frame=>frames.push({at:performance.now(),...frame}),
+      onChange:options.uiReads?()=>{if(!sdk)return;const start=performance.now();
+        sdk.readState();sdk.readSelection();sdk.text.read();sdk.readSelectedImage();sdk.readCrop();sdk.table.read();
+        if(sdk.readState().selected.length)sdk.appearance.read();else sdk.appearance.readDefaults();sdk.readBackground();
+        uiReadTimes.push(performance.now()-start);
+      }:undefined});
     sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
     sdk.data.attach({capacity:64});const brushSelection=await sdk.selectBrush(profile,revision);
-    for(let line=0;line<2;++line){
+    for(let line=0;line<lines;++line){
       const prior=frames.length;
-      for(let i=0;i<2048;++i)pointer(i===0?'pointerdown':i===2047?'pointerup':'pointermove',40+i*1.5,
-        90+line*310+Math.sin(i*.035)*42);
+      for(let i=0;i<points;++i)pointer(i===0?'pointerdown':i===points-1?'pointerup':'pointermove',40+i*(options.span?options.span/points:1.5),
+        90+line*(options.lineSpacing??310)+Math.sin(i*.035)*42);
       await settle(prior);
     }
     let target=null;const prior=frames.length;
-    if(workload==='image'){
+    if(workload==='image'||workload==='mixed'){
       const c=document.createElement('canvas');c.width=2048;c.height=1024;
       const ctx=c.getContext('2d'),gradient=ctx.createLinearGradient(0,0,c.width,c.height);
       gradient.addColorStop(0,'#345eb8');gradient.addColorStop(1,'#f19d42');ctx.fillStyle=gradient;ctx.fillRect(0,0,c.width,c.height);
       const blob=await new Promise(r=>c.toBlob(r,'image/png'));
       target=(await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png')).objectId;
       await sdk.transformSelection([1,0,0,1,200,170]);
-    }else if(workload==='table'){
+    }
+    if(workload==='table'||workload==='mixed'){
       target=(await sdk.table.create({rows:3,columns:3,x:220,y:160})).objectId;
       const t=sdk.table.read(target);await sdk.table.edit({objectId:target,rowId:t.rows[0].id,columnId:t.columns[0].id});
       await sdk.text.replace('G5 Table 0123456789');await sdk.text.finish();
-    }else if(workload==='sticky'){
-      target=(await sdk.createSticky({size:180,x:250,y:160})).objectId;
+    }
+    if(workload==='sticky'||workload==='mixed'){
+      target=(await sdk.createSticky({size:180,x:250,y:workload==='mixed'?600:160})).objectId;
       await sdk.text.edit(target);await sdk.text.replace('G5 Sticky\nCold / warm navigation');await sdk.text.finish();
-    }else if(workload!=='long-line')throw Error('unknown workload');
+    }else if(!['long-line','image','table','mixed'].includes(workload))throw Error('unknown workload');
     if(target)await settle(prior);
     await sdk.selectTool('select');
     if(selected){
-      if(workload==='long-line'){await click(40,90);target=sdk.readState().primary;}
+      if(workload==='long-line'||workload==='mixed'){await click(40,90);target=sdk.readState().primary;}
       else if(sdk.readState().primary!==target)await click(workload==='sticky'?300:260,200);
       if(!sdk.readState().selected.length||sdk.readState().primary!==target)throw Error('fixture target not selected');
     }else{await click(790,490);if(sdk.readState().selected.length)throw Error('fixture selection not cleared');}
     for(let i=0;i<12;++i)await raf();
-    return {workload,selected,profile,revision,brushSelection,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+    window.probe.uiReadTimes=uiReadTimes;
+    return {workload,selected,profile,revision,options,brushSelection,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+  },
+  async measure(id,options){return phase(id,options);},
+  async interruptSelection(options){
+    const rect=sdk.canvas.getBoundingClientRect();await click(rect.width-16,rect.height-24);
+    pointer('pointerdown',40,90);pointer('pointerup',40,90);
+    return phase('interrupted-selection',options);
   },
   async run(){const cold=await phase('cold'),warm=await phase('warm');return {cold,warm,errors};},
   async close(){for(let p;(p=sdk.data.readNext());)sdk.data.release(p);await sdk.close();return {closed:!document.querySelector('#mount canvas'),errors};}

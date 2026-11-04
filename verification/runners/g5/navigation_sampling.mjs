@@ -29,6 +29,9 @@ await fs.cp(sdk,consumer,{recursive:true});
 if(JSON.stringify(await hashes(consumer))!==JSON.stringify(artifactsBefore))throw Error('consumer copy mismatch');
 const server=http.createServer(async(req,res)=>{try{
   const pathname=new URL(req.url,'http://localhost').pathname;
+  if(['/navigation_metrics.mjs','/browser_metrics.mjs'].includes(pathname)){
+    res.setHeader('Content-Type','text/javascript');res.end(await fs.readFile(new URL('.'+pathname,import.meta.url)));return;
+  }
   const file=path.resolve(consumer,'.'+pathname);if(!file.startsWith(consumer+path.sep))throw Error('path');
   res.setHeader('Content-Type',pathname==='/sample.html'?'text/html':file.endsWith('.wasm')?'application/wasm':file.endsWith('.mjs')?'text/javascript':'application/octet-stream');
   res.end(pathname==='/sample.html'?html:await fs.readFile(file));

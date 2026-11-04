@@ -1,6 +1,12 @@
 import {statistics} from './browser_metrics.mjs';
 const total=values=>values.reduce((a,b)=>a+b,0);
 const times=values=>({...statistics(values),total:total(values)});
+// A coarse SDK completion after input, not proof of that camera pose: the
+// public onFrame receipt deliberately does not expose a camera/work identity.
+export function postInputReceiptWait(receipts, inputEnded) {
+  const times=receipts.map(r=>r.at).filter(t=>Number.isFinite(t)&&t>=inputEnded);
+  return times.length?Math.min(...times)-inputEnded:null;
+}
 export function summarizePhase(phase, navigationRows, frameRows) {
   const gaps=phase.displayTimes.slice(1).map((t,i)=>t-phase.displayTimes[i]);
   const inputTimes=phase.displayTimes.filter(t=>t>=phase.started&&t<=phase.inputEnded);
@@ -37,7 +43,7 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     inputCount:phase.samples.length,
     input_dispatch_ms:statistics(phase.samples.map(row=>row.dispatchMs).filter(Number.isFinite)),
     canonicalReceiptsDuringInput:phase.framesDuringInput??null,
-    settle_ms:phase.settleMilliseconds??null,
+    settle_ms:phase.receipts?postInputReceiptWait(phase.receipts,phase.inputEnded):phase.settleMilliseconds??null,
     navigation:nav, exactAttempts:frameRows.length, exactStages:stageTotals,
     client_wait_cpu_ms:times(phase.fences.filter(row=>row.name==='clientWaitSync').map(row=>row.duration)),
     maximum_fence_timeout:Math.max(0,...phase.fences.map(row=>row.timeout??0)),
