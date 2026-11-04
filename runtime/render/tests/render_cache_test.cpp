@@ -488,6 +488,30 @@ int main(int argc,char** argv) {
             std::cout<<"candidate GPU coverage tiles="<<renderer.renderCacheWork().gpuCoverageTiles<<'\n';
         }
 #endif
+        // Cheap checkpoints should consume the available owner time instead
+        // of imposing an extra display frame after only 2048 input knots.
+        // An explicit single-step budget below still protects cancellation.
+        {
+            auto longContour=stroke(887);
+            auto& content=std::get<CompactStrokeReferenceCommand>(longContour.command).content;
+            content.stroke.config.version=2;content.stroke.config.algorithmVersion=4;content.stroke.config.signalVersion=3;
+            content.stroke.knots.clear();
+            for(unsigned i=0;i<4096;++i)
+                content.stroke.knots.push_back({20.+i*.05,45.+std::sin(i*.02)*12,32768});
+            longContour.record.content=content;
+            renderer.clearRenderCache();
+            RenderPreparationBudget available;available.maxMicroseconds=1000000;
+            const auto demand=plan(588,{longContour});
+            const auto steps=renderer.renderCacheWork().preparationCoverageSteps;
+            const auto progress=renderer.renderFrame(provider,demand,nullptr,&available);
+            require(progress.code!=BackendSubmissionCode::kRejected,"progress fixture is invalid");
+            require(progress.code==BackendSubmissionCode::kAccepted,
+                    "cheap exact checkpoints yielded with owner time still available");
+            require(renderer.renderCacheWork().preparationCoverageSteps>steps+64,
+                    "progress guard did not exercise the former 64-step ceiling");
+            require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"larger checkpoint allowance changed exact contour pixels");
+        }
         // One long source must yield within the stroke; no intermediate target
         // pixels or receipt may escape, including on camera supersession.
         {

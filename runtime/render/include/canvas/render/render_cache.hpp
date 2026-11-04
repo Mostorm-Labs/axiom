@@ -28,7 +28,10 @@ struct RenderCacheOptions final {
 struct RenderPreparationBudget final {
     std::size_t maxGroups=2;
     std::uint64_t maxMicroseconds=8000;
-    std::size_t maxCoverageSteps=64;
+    // Checkpoints cover only 32 knots. A small fixed ceiling forced cheap
+    // work into dozens of RAFs before the time allowance was exhausted.
+    // Retain a finite safety ceiling; callers may still request one-step work.
+    std::size_t maxCoverageSteps=4096;
 };
 struct RenderCacheWork final {
     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
