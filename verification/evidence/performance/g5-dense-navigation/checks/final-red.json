@@ -1,0 +1,18 @@
+{
+  "test_sha256": "e8a8d496c1e22497e003ed27d939ae19588aaed09797f9cd299a2d4a1c3dfbd3",
+  "old_source": "85f01aba",
+  "old_source_sha256": {
+    "runtime/render/src/skia_navigation_tiles.cpp": "f515bf51eaaeb6958be85d4a2e093eef5fbe5154957a5313ce6a24b564d2233e",
+    "runtime/render/src/skia_navigation_tiles.hpp": "b2dd952be7b2da4a17724112edb64cd7a4789788ca5c0cbaf6f6210b9b6ed9e6",
+    "runtime/render/src/skia_prepared_geometry.cpp": "5afa9e147a27be93f5d588fb65a27a2f5ae0894c48f48fa789b9acf99499b5ee",
+    "runtime/render/src/skia_prepared_geometry.hpp": "2a97c762303b118c2ae409fffaca6e61bc760267574ccfe82b7f77e5a7e6b330"
+  },
+  "dense": {
+    "exit": -6,
+    "log": "libc++abi: terminating due to uncaught exception of type std::runtime_error: tiny content frontier waited for unrelated dense cell interior\n"
+  },
+  "coarse": {
+    "exit": -6,
+    "log": "libc++abi: terminating due to uncaught exception of type std::runtime_error: pan changed coarse level solely at a grid boundary\n"
+  }
+}
