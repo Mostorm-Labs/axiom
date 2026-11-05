@@ -31,7 +31,8 @@ class SkiaNavigationTiles final {
  public:
     NavigationWork work;
     void cancelWork(){cancel();work.pending=false;work.presented=false;}
-    void reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t limit,std::size_t requested);
+    void reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t limit,std::size_t requested,
+        const FrameState&,const SkiaSurfaceProvider*,std::uint64_t resourceEpoch);
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
@@ -53,6 +54,7 @@ class SkiaNavigationTiles final {
         std::vector<std::shared_ptr<const PreparedNavigationGeometry>> geometry;
         resources::ResourceLease lease;
         SourceRetentions sourceLeases;
+        std::size_t admittedBytes=0;
     };
     struct Tile {
         std::shared_ptr<const Sources> sources;
@@ -76,6 +78,7 @@ class SkiaNavigationTiles final {
         resources::ResourceLease lease;
         ValidRegions valid;
     };
+    bool usefulFallback(TileKey,const Tile&,const foundation::WorldRect&,int level,std::uint64_t scene)const;
     static constexpr std::size_t tileMetadataBytes=sizeof(Tile)+sizeof(Job);
     std::map<TileKey,Tile> tiles_;
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
@@ -88,6 +91,7 @@ class SkiaNavigationTiles final {
     const void* provider_=nullptr;
     std::uint64_t surface_=0,resource_=0,serial_=0,tick_=0;
     std::unique_ptr<FrameState> last_;
+    std::optional<foundation::WorldRect> fallbackFocus_;
     CanonicalViewportTransform camera_{};
     std::uint64_t scene_=0;
     bool dirty_=true;

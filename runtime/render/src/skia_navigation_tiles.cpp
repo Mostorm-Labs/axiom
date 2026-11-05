@@ -111,21 +111,57 @@ void SkiaNavigationTiles::cancelJob(std::unique_ptr<Job>& job){
     job.reset();
 }
 void SkiaNavigationTiles::cancel(){cancelJob(job_);cancelJob(refinement_);}
+bool SkiaNavigationTiles::usefulFallback(TileKey key,const Tile& tile,
+    const foundation::WorldRect& focus,int level,std::uint64_t scene)const{
+    const auto span=std::ldexp(256.,-key.scale);
+    if(!tile.image||tile.checkedScene!=scene||key.scale>=level||
+       span<std::max(focus.right-focus.left,focus.bottom-focus.top))return false;
+    const auto near=expanded(focus,span);
+    for(std::size_t i=0;i<tile.valid.count;++i){const auto& r=tile.valid.areas[i];
+        if(intersects(r,near)&&!(r.left>=focus.left&&r.right<=focus.right&&r.top>=focus.top&&r.bottom<=focus.bottom))return true;
+    }
+    return false;
+}
 void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    std::size_t limit,std::size_t requested){
-    if(!budget||requested>limit||budget->used()<=limit-requested)return;
+    std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch){
+    if(!budget||budgetOwner_.lock()!=budget||requested>limit||budget->used()<=limit-requested)return;
+    // Optional picture recording cannot reclaim mandatory canonical buffers.
+    // If those alone exceed its soft limit, throwing away completed navigation
+    // regions still cannot admit the picture. Keep that reusable coverage and
+    // let the existing checkpoint fallback complete exact preparation instead.
+    // Bound everything this owner could release, including Recorded metadata.
+    // Shared source lists/payloads may still be pinned by other consumers;
+    // counting aliases again overestimates reclaimability, so skipping is safe.
+    const auto used=budget->used();std::size_t reclaimable=0;
+    const auto add=[&](std::size_t bytes){reclaimable+=std::min(bytes,used-reclaimable);};
+    add(work.retainedBytes);add(geometry_.preparedBytes());add(geometry_.sourceStatistics().bytes);
+    for(const auto& [key,source]:sources_){(void)key;add(source->admittedBytes);}
+    for(const auto& [key,tile]:tiles_){(void)key;add(tile.sources->admittedBytes);}
+    for(const auto* job:{job_.get(),refinement_.get()})if(job){
+        add(tileBytes*3+tileMetadataBytes);add(job->sources->admittedBytes);
+    }
+    if(used-reclaimable>limit-requested){++work.skippedReclaims;return;}
     cancelWork();
     for(auto it=sources_.begin();it!=sources_.end();)if(!tiles_.contains(it->first))it=sources_.erase(it);else ++it;
     foundation::WorldRect visible{};
     if(last_&&camera_.scale>0)visible={-camera_.translationX/camera_.scale,-camera_.translationY/camera_.scale,
         (last_->metrics.logicalWidth-camera_.translationX)/camera_.scale,(last_->metrics.logicalHeight-camera_.translationY)/camera_.scale};
+    const auto focus=fallbackFocus_.value_or(visible);
+    const bool sameTarget=provider_==provider&&resource_==resourceEpoch&&last_&&last_->viewId==frame.viewId&&last_->metrics==frame.metrics&&
+        last_->metricsGeneration==frame.metricsGeneration&&last_->surfaceGeneration==frame.surfaceGeneration&&
+        last_->sceneGeneration==frame.sceneGeneration&&last_->sceneReadToken==frame.sceneReadToken&&last_->viewportClip==frame.viewportClip;
     while(budget->used()>limit-requested&&!tiles_.empty()){
-        auto victim=tiles_.begin();
-        for(auto it=std::next(tiles_.begin());it!=tiles_.end();++it){
+        auto victim=tiles_.end();
+        for(auto it=tiles_.begin();it!=tiles_.end();++it){
+            if(sameTarget&&usefulFallback(it->first,it->second,focus,level_.value_or(it->first.scale),scene_))continue;
+            if(victim==tiles_.end()){victim=it;continue;}
             const bool a=intersects(grid_.bounds(it->first),visible),b=intersects(grid_.bounds(victim->first),visible);
             if((!a&&b)||(a==b&&(it->first.scale<victim->first.scale||
                 (it->first.scale==victim->first.scale&&it->second.used<victim->second.used))))victim=it;
         }
+        // Optional picture recording yields to already completed frontier work.
+        // The canonical checkpoint path remains available at the same budget.
+        if(victim==tiles_.end())break;
         const auto key=victim->first;work.retainedBytes-=(tileBytes*3+tileMetadataBytes);tiles_.erase(victim);sources_.erase(key);
         ++work.evictions;work.coverageComplete=false;dirty_=true;
     }
@@ -210,7 +246,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
-                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"alpha_masks\":%llu,\"region_compactions\":%llu,\"partition_ns\":%llu,\"contour_ns\":%llu,\"material_ns\":%llu,\"other_draw_ns\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu}\n",
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"alpha_masks\":%llu,\"region_compactions\":%llu,\"reclaim_skips_total\":%llu,\"tile_evictions\":%llu,\"partition_ns\":%llu,\"contour_ns\":%llu,\"material_ns\":%llu,\"other_draw_ns\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu}\n",
                 static_cast<unsigned long long>(std::chrono::duration_cast<std::chrono::nanoseconds>(started.time_since_epoch()).count()),
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
@@ -234,6 +270,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.coarseMaskStarts-before.coarseMaskStarts),
                 static_cast<unsigned long long>(work.alphaMaskStarts-before.alphaMaskStarts),
                 static_cast<unsigned long long>(work.regionCompactions-before.regionCompactions),
+                static_cast<unsigned long long>(work.skippedReclaims),
+                static_cast<unsigned long long>(work.evictions-before.evictions),
                 static_cast<unsigned long long>(work.partitionNanoseconds-before.partitionNanoseconds),
                 static_cast<unsigned long long>(work.contourNanoseconds-before.contourNanoseconds),
                 static_cast<unsigned long long>(work.materialNanoseconds-before.materialNanoseconds),
@@ -259,7 +297,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         return BackendSubmissionResult::retry("world navigation ineligible");
     if(budgetOwner_.lock()!=budget||provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
-        cancel();tiles_.clear();sources_.clear();geometry_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();dirty_=true;level_.reset();
+        cancel();tiles_.clear();sources_.clear();geometry_.clear();gpuBatches_.clear();work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
         budgetOwner_=budget;provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     const auto scene=frame.sceneReadToken.value();
@@ -275,6 +313,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     if(level_&&scale>=std::ldexp(.85,*level_-1)&&scale<=std::ldexp(1.15,*level_))level=*level_;
     const foundation::WorldRect visible{-camera.translationX/camera.scale,-camera.translationY/camera.scale,
         (frame.metrics.logicalWidth-camera.translationX)/camera.scale,(frame.metrics.logicalHeight-camera.translationY)/camera.scale};
+    const auto focus=retainedSource&&retainedSource->draw&&retainedSource->bounds.isFiniteAndOrdered()
+        ?retainedSource->bounds:visible;
     std::optional<foundation::WorldRect> previousVisible;
     if(last_&&scene_==scene&&camera_.scale>0)
         previousVisible=foundation::WorldRect{-camera_.translationX/camera_.scale,-camera_.translationY/camera_.scale,
@@ -390,7 +430,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command))
                     work.prefixScanKnots+=compact->content.get().stroke.knots.size();
         }
-        std::size_t bytes=(sizeof(ReferenceTraversalEntry)+sizeof(std::shared_ptr<const PreparedNavigationGeometry>))*sources.size();
+        std::size_t bytes=sizeof(Sources)+(sizeof(ReferenceTraversalEntry)+sizeof(std::shared_ptr<const PreparedNavigationGeometry>))*sources.size();
         for(const auto& entry:sources)bytes+=sourceMetadataBytes(entry);
         bytes+=sourceLeases.capacity()*sizeof(SourceRetentions::value_type);
         auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
@@ -399,7 +439,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         }
         if(!token){deferred=true;return false;}
         if(sources_.size()>=options.maxEntries)sources_.erase(sources_.begin());
-        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),std::move(geometry),resources::ResourceLease(budget,*token),std::move(sourceLeases)});
+        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),std::move(geometry),resources::ResourceLease(budget,*token),std::move(sourceLeases),bytes});
         sources_.insert_or_assign(key,source);desired.emplace(key,std::move(source));return true;
     };
     // Revalidate only possible visible fallback cells, at the same query budget.
@@ -411,10 +451,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     }
     const bool gpuBlocked=context&&gpuBatches_.size()>=2;
     if(gpuBlocked)++work.gpuThrottles;
-    const auto protectedTile=[&](TileKey key){return required(key)||std::any_of(patches.begin(),patches.end(),[&](const auto& p){return !p.retained&&p.source==key;});};
-    const auto evict=[&]()->bool{
+    const auto protectedTile=[&](TileKey key){return
+        std::find(keys.begin(),keys.end(),key)!=keys.end()||std::find(parents.begin(),parents.end(),key)!=parents.end()||
+        std::any_of(patches.begin(),patches.end(),[&](const auto& p){return !p.retained&&p.source==key;});};
+    const auto evict=[&](bool optional)->bool{
         auto victim=tiles_.end();
-        for(auto it=tiles_.begin();it!=tiles_.end();++it)if(!protectedTile(it->first)&&(victim==tiles_.end()||it->second.used<victim->second.used))victim=it;
+        const auto rank=[&](const auto& row){return usefulFallback(row.first,row.second,focus,level,scene)?2:
+            std::find(overscanKeys.begin(),overscanKeys.end(),row.first)!=overscanKeys.end()?1:0;};
+        for(auto it=tiles_.begin();it!=tiles_.end();++it)if(!protectedTile(it->first)&&(!optional||rank(*it)<2)&&
+            (victim==tiles_.end()||rank(*it)<rank(*victim)||(rank(*it)==rank(*victim)&&it->second.used<victim->second.used)))victim=it;
         if(victim==tiles_.end())return false;
         work.retainedBytes-=(tileBytes*3+tileMetadataBytes);tiles_.erase(victim);++work.evictions;return true;
     };
@@ -459,10 +504,10 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(tileBytes>options.maxEntryBytes||(tileBytes*3+tileMetadataBytes)>options.maxBytes)return BackendSubmissionResult::retry("world navigation tile budget");
             if(refinement_&&work.retainedBytes+2*(tileBytes*3+tileMetadataBytes)>options.maxBytes)cancelJob(refinement_);
             const auto stagingBytes=(tileBytes*3+tileMetadataBytes)*(refinement_?2:1);
-            while((work.retainedBytes+stagingBytes>options.maxBytes||tiles_.size()>=options.maxEntries)&&evict()){}
+            while((work.retainedBytes+stagingBytes>options.maxBytes||tiles_.size()>=options.maxEntries)&&evict(prewarm)){}
             if(work.retainedBytes+stagingBytes>options.maxBytes||tiles_.size()>=options.maxEntries){deferred=true;break;}
             auto token=budget->reserve(resources::ResourceClass::kTile,(tileBytes*3+tileMetadataBytes),true);
-            while(!token&&evict())token=budget->reserve(resources::ResourceClass::kTile,(tileBytes*3+tileMetadataBytes),true);
+            while(!token&&evict(prewarm))token=budget->reserve(resources::ResourceClass::kTile,(tileBytes*3+tileMetadataBytes),true);
             if(!token){deferred=true;break;}
             const auto initStart=std::chrono::steady_clock::now();
             auto job=std::make_unique<Job>();job->key=*next;job->sources=desired.at(*next);job->prewarm=prewarm;
@@ -707,7 +752,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // needs its own owner opportunity. Do not report convergence before that
     // sharper plane has actually reached present.
     work.pending|=dirty_;
-    last_=std::make_unique<FrameState>(frame);camera_=camera;scene_=scene;
+    last_=std::make_unique<FrameState>(frame);fallbackFocus_=focus;camera_=camera;scene_=scene;
     return BackendSubmissionResult::accepted();
 }
 }

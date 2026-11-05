@@ -190,8 +190,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             // Reclaim only after an actual optional-record admission failure.
             // The pending job owns a weak navigation reference, not this renderer.
             const auto navigation=std::weak_ptr<internal::SkiaNavigationTiles>(navigationTiles_);
-            cache->reclaimRecorded=[navigation,budget=resourceBudget_,limit=renderCacheOptions_.maxBytes](std::size_t bytes){
-                if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes);
+            cache->reclaimRecorded=[navigation,budget=resourceBudget_,limit=renderCacheOptions_.maxBytes,frame=plan.frame,providerIdentity=&provider,resource=resourceEpoch_](std::size_t bytes){
+                if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes,frame,providerIdentity,resource);
             };
             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
         }

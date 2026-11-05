@@ -1,6 +1,7 @@
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
+#include "../src/skia_navigation_tiles.hpp"
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -180,6 +181,77 @@ void checkExactCachePressure(TestSurface& target,TestSurface& reference){
     require(navigate(cached,target,{1,16,0},exact.frame,query,false,nullptr,
             NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
             target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
+}
+void checkCoverageReclaimFeasibility(TestSurface& target){
+    constexpr std::size_t mib=1024*1024;
+    auto entry=stroke(8392);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};
+    const auto frame=plan(8392,{entry});
+    for(auto pressureClass:{resources::ResourceClass::kRecorded,resources::ResourceClass::kScratch})for(bool feasible:{false,true}){
+        internal::SkiaNavigationTiles nav;
+        RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntryBytes=options.maxBytes;
+        options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+        for(unsigned i=0;;++i){
+            require(nav.render(target,{1,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"coverage reclaim setup");
+            if(!nav.work.pending)break;require(i<256,"coverage reclaim setup stalled");
+        }
+        const auto retained=nav.work.retainedBytes;const auto evictions=nav.work.evictions;
+        require(retained>0,"coverage reclaim fixture retained no work");
+        const auto pressure=budget->reserve(pressureClass,(feasible?3:4)*mib,true);
+        require(bool(pressure),"coverage pressure fixture reservation");
+        resources::ResourceLease lease(budget,*pressure);
+        nav.reclaimForExact(budget,4*mib,4096,frame.frame,&target,1);
+        if(feasible){
+            require(nav.work.evictions>evictions&&budget->used()<=4*mib-4096,"feasible exact admission was starved by coverage retention");
+            const auto admitted=budget->reserve(resources::ResourceClass::kRecorded,4096,false);
+            require(bool(admitted),"necessary reclaim did not admit optional recording");
+            budget->release(*admitted);
+            const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
+            options.navigationMaxSteps=1;
+            require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+                "optional recording discarded the completed frontier needed by the next camera demand");
+            require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"feasible reclaim forced a completed frontier to be rebuilt");
+        }else{
+            require(nav.work.evictions==evictions&&nav.work.retainedBytes==retained,"impossible optional admission discarded reusable coverage");
+            const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
+            require(masks>0,"reclaim reuse fixture never built coarse coverage");
+            options.navigationMaxSteps=1;
+            require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+                "next camera demand could not present preserved complete coverage");
+            require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"next camera demand repeated completed coarse coverage");
+        }
+        const auto foreign=std::make_shared<resources::ResourceBudgetManager>();
+        const auto foreignToken=foreign->reserve(resources::ResourceClass::kScratch,4*mib,true);
+        require(bool(foreignToken),"foreign reclaim fixture reservation");
+        resources::ResourceLease foreignLease(foreign,*foreignToken);
+        const auto beforeForeign=nav.work.retainedBytes;const auto evictedBeforeForeign=nav.work.evictions;
+        nav.reclaimForExact(foreign,4*mib,4096,frame.frame,&target,1);
+        require(nav.work.retainedBytes==beforeForeign&&nav.work.evictions==evictedBeforeForeign,"foreign budget discarded completed coverage");
+    }
+    // A bounded cache can contain the old coarse frontier, its parent and the
+    // current sharp cell. Optional prewarm must not trade the frontier away.
+    internal::SkiaNavigationTiles nav;
+    RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntries=3;
+    options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    for(auto camera:{CanonicalViewportTransform{1,0,0},CanonicalViewportTransform{2,0,0}}){
+        for(unsigned i=0;;++i){
+            require(nav.render(target,camera,frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"prewarm reuse setup");
+            if(!nav.work.pending)break;require(i<256,"prewarm reuse setup stalled");
+        }
+    }
+    for(unsigned i=0;;++i){
+        require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,true).code==BackendSubmissionCode::kAccepted,"prewarm reuse admission");
+        if(!nav.work.pending)break;require(i<256,"prewarm reuse did not yield");
+    }
+    const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;options.navigationMaxSteps=1;
+    require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+        "optional prewarm evicted reusable frontier coverage");
+    require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"prewarm forced frontier replay");
 }
 void checkNavigationSharpOverlap(TestSurface& target,TestSurface& reference){
     std::vector<ReferenceTraversalEntry> entries;
@@ -559,9 +631,10 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc>1&&std::string_view(argv[1])=="--coverage-reuse-only"){checkCoverageReclaimFeasibility(provider);return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
-            checkCoarseCameraStability();checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);if(argc>1)return finishNative(0);
+            checkCoarseCameraStability();checkCoverageReclaimFeasibility(provider);checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);if(argc>1)return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
