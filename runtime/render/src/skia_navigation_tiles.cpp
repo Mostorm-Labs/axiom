@@ -240,7 +240,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const auto u=b->snapshot(resources::ResourceClass::kNavigationTile);w.retainedBytes=u.used;w.stagingBytes=u.staging;w.pendingReleaseBytes=u.pendingRelease;}}} usage{work,budget};
     if(sourcePool)geometry_.setRetentionPool(std::move(sourcePool));
     const auto started=std::chrono::steady_clock::now();
-    const auto before=work;
+    const auto workBefore=work;
     struct Timing {
         NavigationWork& work;const NavigationWork before;std::chrono::steady_clock::time_point started;
         const FrameState& frame;const CanonicalViewportTransform& camera;const RenderCacheOptions& options;
@@ -298,7 +298,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(budget?budget->snapshot(resources::ResourceClass::kNavigationTile).pendingRelease:0));
 #endif
         }
-    } timing{work,before,started,frame,camera,options,geometry_,budget};
+    } timing{work,workBefore,started,frame,camera,options,geometry_,budget};
     work.presented=false;work.pending=false;work.coverageComplete=false;
     if(!query||!options.enabled||!budget||!std::isfinite(camera.scale)||camera.scale<=0||
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||
@@ -704,14 +704,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             const auto range = compactRange(entry);
             std::size_t end=std::min(job.knot+32,range.second);
             if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
-                const bool gpu=context&&!job.cpuCoverage;
-                const auto count=gpu?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
+                const bool gpuCoverage=context&&!job.cpuCoverage;
+                const auto count=gpuCoverage?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
                 const auto demand=SkRect::Make(job.surface->getCanvas()->getDeviceClipBounds());
                 job.primitive=job.geometry->nextVisiblePrimitive(*draw,job.primitive,&demand);
                 const auto drawn=job.geometry->drawContour(*draw,job.primitive,count,&demand);
                 work.contourPrimitivesTested+=drawn.primitivesTested;
                 work.contourPrimitivesDrawn+=drawn.primitivesDrawn;
-                if(gpu){work.gpuContourPrimitives+=drawn.primitivesDrawn;gpuPrimitives+=drawn.primitivesDrawn;}
+                if(gpuCoverage){work.gpuContourPrimitives+=drawn.primitivesDrawn;gpuPrimitives+=drawn.primitivesDrawn;}
                 job.primitive=std::min(job.primitive+count,job.geometry->primitiveCount());
                 if(job.primitive<job.geometry->primitiveCount()){++steps;continue;}
                 end = range.second;

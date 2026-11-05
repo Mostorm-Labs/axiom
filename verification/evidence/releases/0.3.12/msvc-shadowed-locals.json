@@ -1,0 +1,42 @@
+{
+  "candidate_source": "3f9cbe987998010114dda05b382456dc43abfaee",
+  "candidate_tag_object": "48591d270e07e7da48a0d4bab313d091c8d3686f",
+  "sdk_version": "0.3.12",
+  "failure": {
+    "compiler": "MSVC /W4 /WX",
+    "error": "C2220",
+    "warning": "C4456",
+    "source": "runtime/render/src/skia_navigation_tiles.cpp",
+    "locations": {
+      "before": [
+        521,
+        528
+      ],
+      "before_outer": 243,
+      "gpu": 707,
+      "gpu_outer": 372
+    },
+    "job_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/42037684068/job/127280100969"
+  },
+  "fix": "Rename the outer work snapshot to workBefore and inner coverage flag to gpuCoverage; no arithmetic, control flow, quotas or interfaces change.",
+  "local_oracle": {
+    "translation_unit": "runtime/render/src/skia_navigation_tiles.cpp",
+    "extra_flags": [
+      "-fsyntax-only",
+      "-Wshadow",
+      "-Werror=shadow"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "red_sha256": "fc6c1d93958cb6fd14ddb26ae537d283704331256a65a4858da010fa8a8242eb",
+    "green_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope": "Host Clang diagnostic reproduction; fresh MSVC/consumer verification still required."
+  },
+  "publication_guard": {
+    "github_release": "not found",
+    "sdk_run": "42037683852 completed cancelled; publish/publish-npm cancelled",
+    "rn_run": "42037684068 failed; package/publish skipped",
+    "npm": "No publication job executed for this owned candidate."
+  },
+  "tag_policy": "Exact old-ref lease for this task-owned unpublished candidate, preserve old source/evidence, then both full release workflows. No published tag/asset rewrite."
+}

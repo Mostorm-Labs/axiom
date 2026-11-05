@@ -48,3 +48,15 @@ No full-suite, physical platform, 100K/1M, G5 or Gate/P34 acceptance is inferred
 Hosted publication must verify the exact release source, Web/Windows consumer
 archives and demos, all six RN native targets and all six npm packages before
 completion is reported. Existing published versions/tags/assets remain immutable.
+
+The first unpublished candidate at `3f9cbe987998010114dda05b382456dc43abfaee`
+failed MSVC /W4 /WX on three shadowed navigation-tile locals. Only identifiers
+were renamed: the work snapshot to workBefore and inner coverage flag to
+gpuCoverage. Host production-source -Wshadow -Werror=shadow fails before and
+passes afterward; warnings, quotas and behavior are unchanged. Modified production
+translation units are additionally checked before the new hosted verification.
+Original runs stopped without executing publication jobs and no Release existed.
+Exact source, tag identity and diagnostics are retained in
+verification/evidence/releases/0.3.12/msvc-shadowed-locals.json. Update only this
+owned unpublished candidate with an exact old-ref lease and rerun both complete
+release workflows. Keep every published version unchanged.
