@@ -729,6 +729,12 @@ void checkOversizedCanonical(TestSurface& target) {
     const auto stable=pixels(target);const auto count=target.presentCount();
     require(impossible.renderFrame(target,demand,nullptr,&slice).code==BackendSubmissionCode::kRejected&&
         pixels(target)==stable&&target.presentCount()==count,"impossible work buffers escaped admission");
+    // Non-isolated transformed ink writes into the composite directly. It
+    // still needs a coverage tile even though it does not need full scratch.
+    auto transformed=entry;transformed.record.transform.tx=2;
+    SkiaRenderer compositeOnly;options.sharedMaxBytes=128*1024;compositeOnly.setRenderCacheOptions(options);
+    require(compositeOnly.renderFrame(target,plan(9822,{transformed}),nullptr,&slice).code==BackendSubmissionCode::kRejected&&
+        pixels(target)==stable&&target.presentCount()==count,"composite-only coverage cannot fit but retries forever");
 
     // Inject real shared quota pressure, then retire it. No allocator mock:
     // the production cache must keep offscreen progress and resume admission.

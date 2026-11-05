@@ -288,13 +288,16 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         return !a.second.crop.isEmpty()&&a.second.kind!=AdmissionKind::kComposite;
     });
     const auto buffers=std::size_t(streamFrame_)+std::size_t(needsScratch);
+    const bool needsCoverage=std::any_of(admissions_.begin(),admissions_.end(),[](const auto& a){
+        return !a.second.crop.isEmpty();
+    });
     const auto coverageBytes=std::size_t(std::min(256,surface_->width()))*std::min(256,surface_->height())*4;
     const bool hybrid=options.gpuCoverageCandidate&&canvas.recordingContext()&&
         std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){
             const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);
             return c&&c->content.get().stroke.config.algorithmVersion==3;
         });
-    const auto coverageReserve=needsScratch?coverageBytes*(hybrid?2:1):0;
+    const auto coverageReserve=needsCoverage?coverageBytes*(hybrid?2:1):0;
     if(coverageReserve>options.sharedMaxBytes||
         (buffers&&frameBytes>(options.sharedMaxBytes-coverageReserve)/buffers))return Preparation::kRejected;
     if(streamFrame_&&!ensureComposite(canvas,plan))return allocationFailure_;
