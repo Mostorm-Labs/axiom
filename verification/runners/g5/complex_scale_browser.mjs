@@ -9,22 +9,27 @@ if(!['transform','erase','text','table','resource','scale'].includes(kind)||![1,
 const hash=b=>createHash('sha256').update(b).digest('hex');
 async function hashes(root){const result={};for(const name of (await fs.readdir(root,{recursive:true})).sort()){const p=path.join(root,name);if((await fs.stat(p)).isFile())result[name]=hash(await fs.readFile(p));}return result;}
 const identity=()=>JSON.parse(execFileSync('python3',['-c','import json;from verification.tools.g5_preflight import source_identity,ROOT;print(json.dumps(source_identity(ROOT)))'],{encoding:'utf8',maxBuffer:8*1024*1024}));
-const emit=value=>console.log(JSON.stringify(value));
+let progressStage='initializing';
+const emit=value=>{if(value.stage)progressStage=value.stage;console.log(JSON.stringify(value));};
 await fs.mkdir(output,{recursive:true});const source=identity(),artifacts=await hashes(sdk),temp=await fs.mkdtemp(path.join(os.tmpdir(),'axiom-g5-complex-'));
-const result={stage:'browser_begin',status:'partial',scope:'root-sdk',kind,dpr,sourceBefore:source,artifacts,rows:[],errors:[],phases:[]};
-emit({stage:'browser_begin',kind,dpr});let chrome,browser,context,server,phase=null;
+const result={stage:'browser_begin',status:'partial',scope:'root-sdk',kind,dpr,sourceBefore:source,artifacts,rows:[],errors:[],phases:[],browserEvents:[],consoleErrors:[]};
+emit({stage:'browser_begin',kind,dpr});let chrome,browser,context,server,chromeLog,phase=null,closing=false;
 const requireDiagnostics=diagnosticsArg!=='default';
 const fixture=kind==='scale'?JSON.parse(await fs.readFile(fixtureArg,'utf8')):null;
 try{
  const chromeProfile=path.join(temp,'profile');await fs.mkdir(chromeProfile);
- chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+chromeProfile,'about:blank'],{stdio:'ignore'});
+ chromeLog=await fs.open(path.join(output,'chrome.stderr.log'),'w');
+ chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',['--headless=new','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+chromeProfile,'about:blank'],{stdio:['ignore',chromeLog.fd,chromeLog.fd]});
+ chrome.on('exit',(code,signal)=>{result.chromeExit={code,signal,stage:progressStage,duringCleanup:closing};});
  let port;for(let i=0;i<450&&!port;++i){try{port=(await fs.readFile(path.join(chromeProfile,'DevToolsActivePort'),'utf8')).split('\n')[0];}catch{}if(!port)await new Promise(r=>setTimeout(r,100));}if(!port)throw Error('Chrome startup');
  browser=await chromium.connectOverCDP('http://127.0.0.1:'+port);result.browser=browser.version();
+ browser.on('disconnected',()=>result.browserEvents.push({event:'disconnected',stage:progressStage,duringCleanup:closing}));
  context=await browser.newContext({viewport:{width:900,height:650},deviceScaleFactor:dpr});
  await context.addInitScript(()=>{let n=1;crypto.randomUUID=()=>('00000000-0000-4000-8000-'+(n++).toString(16).padStart(12,'0'));});
  const page=await context.newPage();page.setDefaultTimeout(60000);
+ for(const event of ['crash','close'])page.on(event,()=>result.browserEvents.push({event,stage:progressStage,duringCleanup:closing}));
  page.on('pageerror',e=>result.errors.push(String(e)));page.on('console',m=>{
-  const text=m.text();if(text.startsWith('G5_SAMPLE_MARK ')){const v=JSON.parse(text.slice(15));phase=v.kind==='end'?null:v.id;}
+  const text=m.text();if(m.type()==='error')result.consoleErrors.push({stage:progressStage,text});if(text.startsWith('G5_SAMPLE_MARK ')){const v=JSON.parse(text.slice(15));phase=v.kind==='end'?null:v.id;}
   for(const [prefix,kind] of [['AXIOM_NAVIGATION_TIMING ','navigation'],['AXIOM_FRAME_TIMING ','frame'],['AXIOM_SCENE_TIMING ','scene']])if(text.startsWith(prefix))result.rows.push({phase,kind,value:JSON.parse(text.slice(prefix.length))});
  });
  const local=['navigation_sampling.html','navigation_metrics.mjs','browser_metrics.mjs','editing_actions.mjs'];
@@ -75,7 +80,8 @@ try{
  if(result.assessment.classification!=='MEASURED')result.status='failed';result.stage='browser_complete';
 }catch(e){result.stage='browser_error';result.status='failed';result.error=String(e.stack||e);}
 finally{
- if(context)await context.close().catch(()=>{});if(browser)await browser.close().catch(()=>{});if(chrome)chrome.kill('SIGTERM');if(server)await new Promise(r=>server.close(r));
+ closing=true;
+ if(context)await context.close().catch(()=>{});if(browser)await browser.close().catch(()=>{});if(chrome&&chrome.exitCode===null){chrome.kill('SIGTERM');await Promise.race([new Promise(r=>chrome.once('exit',r)),new Promise(r=>setTimeout(r,500))]);}if(chromeLog)await chromeLog.close();if(server)await new Promise(r=>server.close(r));
  result.sourceAfter=identity();result.sourceStable=result.sourceAfter.tree_sha256===source.tree_sha256&&result.sourceAfter.commit===source.commit;
  result.artifactStable=JSON.stringify(artifacts)===JSON.stringify(await hashes(sdk));if(!result.sourceStable||!result.artifactStable)result.status='failed';
  await fs.writeFile(path.join(output,'observation.json.gz'),gzipSync(JSON.stringify(result)));await fs.rm(temp,{recursive:true,force:true,maxRetries:6,retryDelay:100});
