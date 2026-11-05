@@ -181,7 +181,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
+        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
     if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;
@@ -447,7 +447,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
+        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
     if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;

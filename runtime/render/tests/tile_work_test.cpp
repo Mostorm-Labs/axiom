@@ -110,6 +110,25 @@ template<class Manager,class Lease>void selectiveGpuUse(){
   require(b->endGpuEpoch(*epoch)&&b->completeGpuEpoch(*epoch)&&b->used()==0,"sampled retirement leaked");
  }else require(false,"GPU uses cannot distinguish sampled images from eviction candidates");
 }
+template<class Queue>void canonicalSnapshotBudget(){
+ constexpr auto allocations=[] {
+  if constexpr(requires{Queue::canonicalAllocations;})return Queue::canonicalAllocations;
+  else return resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile);
+ }();
+ constexpr auto existing=[] {
+  if constexpr(requires{Queue::canonicalReads;})return Queue::canonicalReads;
+  else return allocations;
+ }();
+ auto b=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{100,120});
+ auto prior=b->reserve(resources::ResourceClass::kNavigation,60,true);require(bool(prior),"prior snapshot admission");
+ resources::ResourceLease oldSnapshot(b,*prior);
+ auto epoch=b->beginGpuEpoch(allocations,existing);require(bool(epoch),"canonical write epoch");
+ oldSnapshot.reset();require(b->used()==0,"canonical work pinned an unread prior navigation snapshot");
+ auto next=b->reserve(resources::ResourceClass::kNavigation,80,true);require(bool(next),"unused prior snapshot blocked new capture");
+ resources::ResourceLease newSnapshot(b,*next);newSnapshot.reset();
+ require(b->used()==80,"new snapshot write released before GPU completion");
+ require(b->endGpuEpoch(*epoch)&&b->completeGpuEpoch(*epoch)&&b->used()==0,"new snapshot completion leaked quota");
+}
 void completionOwnership(){
 #if defined(HAS_RETIREMENT_QUEUE)
  struct Service final:render::GpuCompletionService {
@@ -201,6 +220,7 @@ int main(){
  budget.release(*a);require(budget.used()==0,"reservation leaked");
  retirementBudget();
  completionOwnership();
+ canonicalSnapshotBudget<render::internal::GpuResourceRetirement>();
  selectiveGpuUse<resources::ResourceBudgetManager,resources::ResourceLease>();
  gpuEpochBudget<resources::ResourceBudgetManager,resources::ResourceLease>();
  std::cout<<"tile local validity, dirty-lazy work, scheduler dependency and budget guards\n";

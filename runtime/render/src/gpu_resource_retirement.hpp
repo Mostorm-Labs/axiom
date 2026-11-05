@@ -7,6 +7,12 @@ namespace canvas::render::internal {
 // GPU callbacks retain only quota/state, never provider, renderer or Runtime.
 class GpuResourceRetirement final {
  public:
+  // Canonical drawing can CREATE a new retained snapshot,but does not sample
+  // the prior navigation image. Only navigation read scopes extend that use.
+  static constexpr auto canonicalAllocations=resources::kPixelResourceClasses&
+      ~resources::resourceClassMask(resources::ResourceClass::kNavigationTile);
+  static constexpr auto canonicalReads=canonicalAllocations&
+      ~resources::resourceClassMask(resources::ResourceClass::kNavigation);
   struct Ticket final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<const GpuCompletionState> state;
