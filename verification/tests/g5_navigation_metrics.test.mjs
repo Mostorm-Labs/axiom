@@ -2,6 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {summarizePhase} from '../runners/g5/navigation_metrics.mjs';
 
+test('exact coverage metadata and replay counts are separate and missing counters stay unknown',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const counts={compiled_contour_knots:32,record_candidates:7,record_replays:2,record_rejected:19,record_groups:3,record_selection_yields:1,checkpoint_replays:3,checkpoint_replay_knots:96,scalar_coverage_tiles:12};
+  assert.deepEqual(summarizePhase(phase,[],[{stages:{},counts},{stages:{},counts}]).exactCoverageWork,
+    {compiled_contour_knots:64,record_candidates:14,record_replays:4,record_rejected:38,record_groups:6,record_selection_yields:2,checkpoint_replays:6,checkpoint_replay_knots:192,scalar_coverage_tiles:24});
+  assert.equal(summarizePhase(phase,[],[]).exactCoverageWork,null);
+  assert.equal(summarizePhase(phase,[],[{stages:{},counts:{}}]).exactCoverageWork,null);
+});
+
 // Dropping the slow frame or adding cumulative counts instead of per-call
 // deltas must change these hand-derived expected values.
 test('navigation summary retains tails and sums diagnostic deltas', () => {
@@ -94,4 +103,24 @@ test('shared-source gauges and query deltas stay distinct from historical missin
   assert.equal(v.chunkCandidates,16);assert.equal(v.indexNodes,26);assert.equal(v.payloadCopyBytes,0);
   assert.equal(v.peakRetainedBytes,4096);assert.equal(v.hits,7);
   assert.equal(summarizePhase(phase,[{version:3,elapsed_ns:0,overlay_ns:0}],[]).navigation.sharedSources,null);
+});
+
+test('coarse CPU mask encoding counts stay distinct from GPU work and old missing observations',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const rows=[{elapsed_ns:0,overlay_ns:0,coarse_masks:3,alpha_masks:2},{elapsed_ns:0,overlay_ns:0,coarse_masks:2,alpha_masks:2}];
+  assert.deepEqual(summarizePhase(phase,rows,[]).navigation.maskEncoding,{alphaStarts:4,n32Starts:1});
+  assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0,coarse_masks:2}],[]).navigation.maskEncoding,null);
+  assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0,coarse_masks:2,alpha_masks:3}],[]).navigation.maskEncoding,null);
+});
+
+test('navigation components and region compactions preserve old unknown diagnostics',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const value=summarizePhase(phase,[
+    {elapsed_ns:0,overlay_ns:0,partition_ns:1000000,contour_ns:3000000,material_ns:5000000,other_draw_ns:7000000,region_compactions:2},
+    {elapsed_ns:0,overlay_ns:0,partition_ns:2000000,contour_ns:4000000,material_ns:6000000,other_draw_ns:8000000,region_compactions:3}
+  ],[]).navigation;
+  assert.deepEqual(value.componentsMs,{partition:3,contour:7,material:11,otherDraw:15});
+  assert.equal(value.regionCompactions,5);
+  const old=summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0}],[]).navigation;
+  assert.equal(old.componentsMs,null);assert.equal(old.regionCompactions,null);
 });

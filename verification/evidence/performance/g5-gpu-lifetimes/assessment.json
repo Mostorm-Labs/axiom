@@ -1,0 +1,89 @@
+{
+  "no_repeatable_navigation_regression": true,
+  "claim_scope": "Protected navigation continuity and numerical SLOs in this engineering corpus; not statistical equivalence or formal qualification.",
+  "basis": "OFF recovery median improves,reverse-order recovery remains near one RAF,and ordinary repeat-1 zoom gaps decrease in OFF. There is no reproduced extended submission blackout. Warm median changes are explicitly retained,not asserted to improve.",
+  "main_matrix": {
+    "off": {
+      "before": {
+        "warm_gap_median_ms": 22.00000001490116,
+        "recovery_gap_median_ms": 23.899999991059303
+      },
+      "after": {
+        "warm_gap_median_ms": 22.75,
+        "recovery_gap_median_ms": 19.549999997019768
+      }
+    },
+    "on": {
+      "before": {
+        "warm_gap_median_ms": 28.94999998807907,
+        "recovery_gap_median_ms": 18.5
+      },
+      "after": {
+        "warm_gap_median_ms": 29.049999997019768,
+        "recovery_gap_median_ms": 20.349999994039536
+      }
+    }
+  },
+  "reverse_order": {
+    "before": [
+      {
+        "phase": "interrupted-selection",
+        "gap_ms": 103,
+        "wait_ms": 231.5
+      },
+      {
+        "phase": "repeat-0",
+        "gap_ms": 18.599999994039536,
+        "wait_ms": 232.19999998807907
+      },
+      {
+        "phase": "repeat-1",
+        "gap_ms": 18.69999998807907,
+        "wait_ms": 233.7999999821186
+      },
+      {
+        "phase": "after-idle",
+        "gap_ms": 18.69999998807907,
+        "wait_ms": 248.2999999821186
+      },
+      {
+        "phase": "after-freeze",
+        "gap_ms": 18.600000023841858,
+        "wait_ms": 694.3999999761581
+      }
+    ],
+    "after": [
+      {
+        "phase": "interrupted-selection",
+        "gap_ms": 101.10000002384186,
+        "wait_ms": 231
+      },
+      {
+        "phase": "repeat-0",
+        "gap_ms": 20.599999994039536,
+        "wait_ms": 249
+      },
+      {
+        "phase": "repeat-1",
+        "gap_ms": 18.5,
+        "wait_ms": 249.2000000178814
+      },
+      {
+        "phase": "after-idle",
+        "gap_ms": 17.19999998807907,
+        "wait_ms": 231.90000000596046
+      },
+      {
+        "phase": "after-freeze",
+        "gap_ms": 18.099999994039536,
+        "wait_ms": 776.5
+      }
+    ]
+  },
+  "small_warm_wait_finding_open": true,
+  "small_warm_wait_finding": "Warm gap medians OFF22.00->22.75ms and ON28.95->29.05ms. First selected/interrupted warm samples vary; do not claim a universal latency improvement. Independent readmask controls include both33ms and18.4ms for the old implementation.",
+  "cold_exact_finding_open": true,
+  "cold_exact_finding": "Reverse DPR2 cold exact wait694.4->776.5ms;DPR4 cold wait7226.2->7300.3ms. These are unresolved tails,not an environment excuse or a formal scale acceptance.",
+  "quality_finding_open": true,
+  "quality_finding": "DPR2 warm low-density source proxy rises0.6904->0.7108;DPR3 is nearly flat;DPR4 improves0.9853->0.9734 but stays predominantly coarse. Differing presented-pose sets are not a matched optical oracle."
+}

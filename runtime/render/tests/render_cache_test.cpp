@@ -1,10 +1,13 @@
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
+#include "../src/skia_navigation_tiles.hpp"
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
 #include "exact_contour_replay_oracle.hpp"
+#include "navigation_alpha_mask_oracle.hpp"
+#include "exact_contour_locality_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
@@ -33,7 +36,11 @@ class TestSurface final : public SkiaSurfaceProvider {
     std::unique_ptr<WebGlSurfaceProvider> provider_;
     std::uint64_t generation_=0,presents_=0;
     bool lost_=false;
+    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE nativeContext_=0;
   public:
+    void forgetAppContextForTest(){if(nativeContext_)emscripten_webgl_destroy_context(nativeContext_);nativeContext_=0;}
+    bool completionSupported=true;
+    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return completionSupported&&provider_?provider_->gpuCompletionService():nullptr;}
     RenderTargetInfo describe()const noexcept override{return provider_->describe();}
     SkiaSurfaceAcquireResult acquire()noexcept override{
         if(lost_)return SkiaSurfaceAcquireResult::rejected(SkiaSurfaceAcquireCode::kLost,"lost");
@@ -50,7 +57,7 @@ class TestSurface final : public SkiaSurfaceProvider {
             a.majorVersion=2;a.alpha=true;a.antialias=false;a.depth=false;a.stencil=true;a.premultipliedAlpha=true;a.preserveDrawingBuffer=true;
             const auto context=emscripten_webgl_create_context(selector.c_str(),&a);
             if(context<=0||emscripten_webgl_make_context_current(context)!=EMSCRIPTEN_RESULT_SUCCESS)return BackendSubmissionResult::rejected("GPU test context");
-            provider_=WebGlSurfaceProvider::fromCurrentContext(width,height);
+            nativeContext_=context;provider_=WebGlSurfaceProvider::fromCurrentContext(width,height);
         }
         ++generation_;lost_=false;return provider_&&provider_->ready()?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("GPU test provider");}
     BackendSubmissionResult readbackRgba(std::span<std::uint8_t> data)noexcept override{
@@ -104,6 +111,7 @@ BackendSubmissionResult navigate(SkiaRenderer& renderer, SkiaSurfaceProvider& pr
 class FailingPresent final : public SkiaSurfaceProvider {
   public:
     TestSurface raster;bool fail=true;
+    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return raster.gpuCompletionService();}
     RenderTargetInfo describe()const noexcept override{return raster.describe();}
     SkiaSurfaceAcquireResult acquire()noexcept override{return raster.acquire();}
     void release()noexcept override{raster.release();}
@@ -178,6 +186,123 @@ void checkExactCachePressure(TestSurface& target,TestSurface& reference){
     require(navigate(cached,target,{1,16,0},exact.frame,query,false,nullptr,
             NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
             target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
+}
+void checkCompletionProviderLifetime(TestSurface& target){
+#if defined(G5_TEST_WEBGL)
+    SkiaRenderer renderer;auto owned=std::make_unique<TestSurface>();
+    require(owned->resize(256,128).code==BackendSubmissionCode::kAccepted,"retired context setup");
+    std::weak_ptr<GpuCompletionService> context=owned->gpuCompletionService();
+    require(!context.expired()&&renderer.renderFrame(*owned,plan(8391,{stroke(8391)})).code==BackendSubmissionCode::kAccepted,"retired context frame");
+    renderer.clearRenderCache();owned.reset();
+    require(!context.expired(),"provider destruction abandoned unfinished tracked context");
+    for(unsigned i=0;i<128&&!context.expired();++i){emscripten_sleep(1);renderer.serviceResourceRetirements();}
+    require(context.expired(),"replaced provider completion context leaked");
+    target.completionSupported=false;SkiaRenderer unsupported;
+    require(unsupported.renderFrame(target,plan(8391,{stroke(8391)})).code==BackendSubmissionCode::kAccepted,"unsupported provider lost Direct fallback");
+    require(unsupported.renderCacheWork().retainedBytes==0,"unsupported GPU completion admitted optional cache");
+    const auto frame=plan(8391,{stroke(8391)});
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=frame.referenceDrawList.entries;return true;};
+    require(unsupported.renderNavigation(target,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kRetry,"unsupported provider accepted unsafe navigation cache");
+    target.completionSupported=true;
+    auto missing=std::make_unique<TestSurface>();require(missing->resize(256,128).code==BackendSubmissionCode::kAccepted,"missing context setup");
+    auto abandoned=missing->gpuCompletionService();missing->forgetAppContextForTest();abandoned->service();
+    require(abandoned->state()->abandoned.load()&&!abandoned->state()->physicalLost.load(),"deleted app handle masqueraded as physical GPU completion");
+#else
+    (void)target;
+#endif
+}
+void checkCoverageReclaimFeasibility(TestSurface& target){
+    checkCompletionProviderLifetime(target);
+    constexpr std::size_t mib=1024*1024;
+    auto entry=stroke(8392);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};
+    const auto frame=plan(8392,{entry});
+    for(auto pressureClass:{resources::ResourceClass::kRecorded,resources::ResourceClass::kScratch})for(bool feasible:{false,true}){
+        internal::SkiaNavigationTiles nav;
+        auto retirement=std::make_shared<internal::GpuResourceRetirement>();
+        RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntryBytes=options.maxBytes;
+        options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+        for(unsigned i=0;;++i){
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{1,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"coverage reclaim setup");
+            if(!nav.work.pending)break;require(i<256,"coverage reclaim setup stalled");
+        }
+        (void)pixels(target);retirement->service(); // private oracle drain, never production wait
+#if defined(G5_TEST_WEBGL)
+        for(unsigned i=0;i<128&&budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();}
+#endif
+        const auto usage=budget->snapshot(resources::ResourceClass::kNavigationTile);
+        require(usage.staging==0&&usage.pendingRelease==0,"completed navigation retained transient staging charge");
+        nav.work.retainedBytes=usage.used;
+        const auto retained=nav.work.retainedBytes;const auto evictions=nav.work.evictions;
+        require(retained>0,"coverage reclaim fixture retained no work");
+        const auto pressure=budget->reserve(pressureClass,(feasible?4*mib+4096-budget->used():4*mib),true);
+        require(bool(pressure),"coverage pressure fixture reservation");
+        resources::ResourceLease lease(budget,*pressure);
+        nav.reclaimForExact(budget,4*mib,4096,frame.frame,&target,1);
+        if(feasible){
+            require(nav.work.evictions>evictions&&budget->used()<=4*mib-4096,"feasible exact admission was starved by coverage retention");
+            const auto admitted=budget->reserve(resources::ResourceClass::kRecorded,4096,false);
+            require(bool(admitted),"necessary reclaim did not admit optional recording");
+            budget->release(*admitted);
+            const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
+            options.navigationMaxSteps=1;
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+                "optional recording discarded the completed frontier needed by the next camera demand");
+            require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"feasible reclaim forced a completed frontier to be rebuilt");
+        }else{
+            require(nav.work.evictions==evictions&&nav.work.retainedBytes==retained,"impossible optional admission discarded reusable coverage");
+            const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
+            require(masks>0,"reclaim reuse fixture never built coarse coverage");
+            options.navigationMaxSteps=1;
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+                "next camera demand could not present preserved complete coverage");
+            require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"next camera demand repeated completed coarse coverage");
+        }
+        const auto foreign=std::make_shared<resources::ResourceBudgetManager>();
+        const auto foreignToken=foreign->reserve(resources::ResourceClass::kScratch,4*mib,true);
+        require(bool(foreignToken),"foreign reclaim fixture reservation");
+        resources::ResourceLease foreignLease(foreign,*foreignToken);
+        const auto beforeForeign=nav.work.retainedBytes;const auto evictedBeforeForeign=nav.work.evictions;
+        nav.reclaimForExact(foreign,4*mib,4096,frame.frame,&target,1);
+        require(nav.work.retainedBytes==beforeForeign&&nav.work.evictions==evictedBeforeForeign,"foreign budget discarded completed coverage");
+    }
+    // A bounded cache can contain the old coarse frontier, its parent and the
+    // current sharp cell. Optional prewarm must not trade the frontier away.
+    internal::SkiaNavigationTiles nav;
+        auto retirement=std::make_shared<internal::GpuResourceRetirement>();
+    RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntries=3;
+    options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    for(auto camera:{CanonicalViewportTransform{1,0,0},CanonicalViewportTransform{2,0,0}}){
+        for(unsigned i=0;;++i){
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,camera,frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"prewarm reuse setup");
+            if(!nav.work.pending)break;require(i<256,"prewarm reuse setup stalled");
+        }
+    }
+    for(unsigned i=0;;++i){
+        require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,true,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"prewarm reuse admission");
+        if(!nav.work.pending)break;require(i<256,"prewarm reuse did not yield");
+    }
+    const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;options.navigationMaxSteps=1;
+    require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+        "optional prewarm evicted reusable frontier coverage");
+    require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"prewarm forced frontier replay");
 }
 void checkNavigationSharpOverlap(TestSurface& target,TestSurface& reference){
     std::vector<ReferenceTraversalEntry> entries;
@@ -442,13 +567,13 @@ void checkCoarseCameraStability(){
         if(prior)require(span==prior,"pan changed coarse level solely at a grid boundary");prior=span;
     }
 }
-void checkDenseFrontier(TestSurface& target){
+void checkDenseFrontier(TestSurface& target,bool offscreen=false){
     std::vector<ReferenceTraversalEntry> entries;
     for(unsigned line=0;line<5;++line){
         auto entry=stroke(89000+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
         c.stroke.knots.clear();
-        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({110.+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({(offscreen?370.:110.)+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
         entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
     }
     auto crossing=stroke(89010);auto c=std::get<CompactStrokeReferenceCommand>(crossing.command).content.get();
@@ -471,6 +596,8 @@ void checkDenseFrontier(TestSurface& target){
         if(nav.navigationWork().presented){first=i;break;}
     }
     require(first>0,"tiny content frontier waited for unrelated dense cell interior");
+    require(nav.navigationWork().coarseMaskStarts>0,"frontier fixture did not execute coarse CPU coverage");
+    require(nav.navigationWork().alphaMaskStarts>0,"coarse frontier did not reuse qualified A8 coverage");
     require(nav.submissionCount()==1,"frontier forged canonical receipt");
     std::cout<<"dense frontier first feedback opportunity="<<first<<'\n';
     // Cold full-region rendering is an independent pixel oracle: it cannot
@@ -478,7 +605,10 @@ void checkDenseFrontier(TestSurface& target){
     for(const auto [dx,dy]:std::vector<std::pair<int,int>>{{4,0},{8,0},{16,4},{40,12}}){
         if(dx!=4)for(unsigned i=0;;++i){
             require(navigate(nav,target,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier extension rejected");
-            if(nav.navigationWork().presented)break;require(i<32,"frontier extension stalled");
+            if(nav.navigationWork().presented)break;
+            // The heavy variant brings its coils into view on the later pan;
+            // unlike first feedback, that geometry must actually be drawn.
+            require(i<(offscreen?4096U:32U),"frontier extension stalled");
         }
         TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier reference surface");
         SkiaRenderer reference;auto referenceOptions=options;referenceOptions.navigationMaxSteps=1;reference.setRenderCacheOptions(referenceOptions);
@@ -503,6 +633,47 @@ void checkDenseFrontier(TestSurface& target){
     require(reference.renderFrame(exact,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(exact),"frontier changed exact canonical pixels");
 }
 
+void checkFrontierRegionCompaction(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned line=0;line<5;++line){
+        auto entry=stroke(89200+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;c.stroke.config.smoothing=0;c.stroke.knots.clear();
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({490.+std::sin(i*.017)*8.,64.+std::sin(i*.013+line)*12.,32768});
+        entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
+    }
+    auto visible=stroke(89210);auto content=std::get<CompactStrokeReferenceCommand>(visible.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots={{200,40,32768},{350,90,32768}};visible.record.content=content;visible.command=CompactStrokeReferenceCommand{content};entries.push_back(visible);
+    auto corner=stroke(89211);auto mark=std::get<CompactStrokeReferenceCommand>(corner.command).content.get();
+    mark.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    mark.stroke.knots={{320,230,32768},{340,230,32768}};corner.record.content=mark;corner.command=CompactStrokeReferenceCommand{mark};entries.push_back(corner);
+    const auto frame=plan(8920,entries);SkiaRenderer nav;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;options.navigationMaxGpuContourPrimitives=32;nav.setRenderCacheOptions(options);
+    for(unsigned i=0;;++i){auto r=nav.renderFrame(target,frame);if(r.code==BackendSubmissionCode::kAccepted)break;require(r.code==BackendSubmissionCode::kRetry&&i<256,"compaction canonical setup");}
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned step=1;step<=25;++step){
+        for(unsigned i=0;;++i){
+            require(navigate(nav,target,{1,float(-4*int(step)),float(2*int(step))},frame.frame,query).code==BackendSubmissionCode::kAccepted,"compaction navigation rejected");
+            if(nav.navigationWork().presented)break;
+            require(i<32,"small frontier compaction waited for unrelated full-cell ink");
+        }
+        const auto image=pixels(target);const auto sample=((56+2*step)*256+(248-4*step))*4;
+        require(image[sample]<250,"compaction published a blank visible stroke");
+        require(nav.navigationWork().retainedBytes<=options.maxBytes,"compaction escaped resource budget");
+    }
+    require(nav.navigationWork().regionCompactions>0,"compaction fixture never exhausted region metadata");
+    // This zoom lies wholly inside the compacted rectangle but reaches a
+    // previously unknown inside corner. A metadata-only union would be blank.
+    require(navigate(nav,target,{4,-1136,-856},frame.frame,query).code==BackendSubmissionCode::kAccepted&&nav.navigationWork().presented,
+        "compacted corner was not complete coverage");
+    require(pixels(target)[(64*256+184)*4]<250,"compaction advertised an unpainted inside corner");
+    const auto final=plan(8920,entries,1,{1,0,0,1,-100,50});
+    require(nav.renderFrame(target,final).code==BackendSubmissionCode::kAccepted,"compaction final canonical");
+    TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"compaction reference surface");SkiaRenderer reference;
+    RenderCacheOptions direct;direct.enabled=false;reference.setRenderCacheOptions(direct);
+    require(reference.renderFrame(full,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(full),"compaction changed final Direct pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -511,14 +682,15 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
-        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--coverage-reuse-only"){checkCoverageReclaimFeasibility(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
-            checkCoarseCameraStability();checkDenseFrontier(provider);if(argc>1)return finishNative(0);
+            checkCoarseCameraStability();checkCoverageReclaimFeasibility(provider);checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);if(argc>1)return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
             const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"exact replay acquire");
-            testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
+            testing::requireExactContourLocality(*acquired.frame.surface);testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
         }
 #endif
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--replay-only")){
@@ -547,7 +719,9 @@ int main(int argc,char** argv) {
             checkAffineStrokes(provider,reference);return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
-        if(argc>1&&std::string_view(argv[1])=="--contour-only"){checkGpuContours(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--contour-only"){
+            const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"alpha oracle acquire");
+            testing::requirePreparedAlphaMaskParity(*a.frame.surface);provider.release();checkGpuContours(provider);return finishNative(0);}
         {
             SkiaRenderer nav;RenderCacheOptions options;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;

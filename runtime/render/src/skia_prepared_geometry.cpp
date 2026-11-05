@@ -10,41 +10,6 @@
 
 namespace canvas::render::internal {
 namespace {
-SkRect capBounds(const ink::ContourCap& cap){
-    // The draw uses a float center/radius. Bound that exact representation,
-    // rounding outward: double bounds cast to float may collapse a tiny cap
-    // at a large world origin even though a zoomed Skia circle is visible.
-    const auto x=float(cap.x),y=float(cap.y),r=float(cap.radius);
-    const auto inf=std::numeric_limits<float>::infinity();
-    return SkRect::MakeLTRB(std::nextafter(x-r,-inf),std::nextafter(y-r,-inf),
-                           std::nextafter(x+r,inf),std::nextafter(y+r,inf));
-}
-std::optional<SkRect> contourClip(SkCanvas& canvas,const SkRect* deviceDemand=nullptr){
-    auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
-    bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
-    // Selection demand must not change Skia's raster clip: analytic AA of a
-    // clipped curve can differ from full-cell rasterization even away from the
-    // clip edge. Cull complete paths, then raster them on the original grid.
-    if(cull&&deviceDemand){
-        const auto demand=inverse.mapRect(*deviceDemand);
-        if(!demand.isFinite())cull=false;
-        else if(!clip.intersect(demand))clip=SkRect::MakeEmpty();
-    }
-    if(cull){
-        const auto& matrix=canvas.getTotalMatrix();
-        const auto scale=std::max(std::hypot(matrix.getScaleX(),matrix.getSkewY()),
-                                  std::hypot(matrix.getSkewX(),matrix.getScaleY()));
-        const auto origin=std::max({std::abs(clip.left()),std::abs(clip.top()),
-                                    std::abs(clip.right()),std::abs(clip.bottom())});
-        // Use the existing coverage numeric domain for culling hints. Extreme
-        // origins/scales still reuse the paths, with complete Direct drawing.
-        if(origin>65536||scale<1./64||scale>64||!std::isfinite(scale))cull=false;
-        const auto margin=2*std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),
-                                    std::hypot(inverse.getSkewX(),inverse.getScaleY()));
-        cull=cull&&std::isfinite(margin);if(cull)clip.outset(float(margin),float(margin));
-    }
-    return cull?std::optional<SkRect>(clip):std::nullopt;
-}
 bool visibleContour(const std::optional<SkRect>& clip,const SkRect& b){
     return !clip||b.isEmpty()||!b.isFinite()||SkRect::Intersects(*clip,b);
 }
@@ -84,7 +49,7 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
             }return result;
         };
         ribbonGroups_=groups(ribbons_.size(),[&](auto i){return ribbons_[i].getBounds();});
-        capGroups_=groups(caps_.size(),[&](auto i){return capBounds(caps_[i]);});
+        capGroups_=groups(caps_.size(),[&](auto i){return compactContourCapBounds(caps_[i]);});
     }else if(const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&std::as_const(source_))){
         const auto& output=vector->content.get().stroke.vector_output;
         vector_=buildVectorBrushOutlineSkPath(std::span(output.outline),output.fill_rule,output.closed);
@@ -106,14 +71,14 @@ void PreparedNavigationGeometry::buildReplay(){
             const auto m=std::numeric_limits<float>::max();bounds=SkRect::MakeLTRB(-m,-m,m,m);
         }else bounds.join(b);};
         for(std::size_t i=0;i+1<replayOutput_.patches.size();++i)join(compactContourRibbon(std::span(replayOutput_.patches).subspan(i,2)).getBounds());
-        for(const auto& cap:replayOutput_.caps)join(capBounds(cap));
+        for(const auto& cap:replayOutput_.caps)join(compactContourCapBounds(cap));
         const auto emitted=(replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1)+replayOutput_.caps.size();
         replay_.push_back({std::move(checkpoint),first,count,primitive,primitive+emitted,bounds});primitive+=emitted;
     }
     replayOutput_.patches.clear();replayOutput_.caps.clear();
 }
 std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
-    first=std::min(first,primitiveCount());const auto clip=contourClip(canvas,deviceDemand);
+    first=std::min(first,primitiveCount());const auto clip=compactContourCullBounds(canvas,deviceDemand);
     if(!clip)return first;
     if(!replay_.empty()){
         for(const auto& block:replay_)if(block.last>first&&visibleContour(clip,block.bounds))return std::max(first,block.first);
@@ -136,9 +101,9 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
-    const auto clip=contourClip(canvas,deviceDemand);
+    const auto clip=compactContourCullBounds(canvas,deviceDemand);
     const auto visible=[&](const SkRect& b){return visibleContour(clip,b);};
-    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
+    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(canvas.imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
     if(!replay_.empty()){
         const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
         for(const auto& block:replay_){
@@ -154,7 +119,7 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
                     auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(local,2));
                     if(visible(path.getBounds())){canvas.drawPath(path,paint);++work.primitivesDrawn;}
                 }else{const auto& cap=replayOutput_.caps[local-ribbons];
-                    if(visible(capBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
+                    if(visible(compactContourCapBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
             }
         }
         return work;
@@ -173,7 +138,7 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
         const auto& group=capGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
         for(auto i=std::max(group.begin,capFirst);i<std::min(group.end,capLast);++i){++work.primitivesTested;const auto& cap=caps_[i];
-            if(!visible(capBounds(cap)))continue;
+            if(!visible(compactContourCapBounds(cap)))continue;
             drawCap(canvas,config,cap,paint);++work.primitivesDrawn;
         }
     }

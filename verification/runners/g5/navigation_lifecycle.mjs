@@ -14,6 +14,8 @@ const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const idleMs=Number(process.argv[4]??60000),cycles=Number(process.argv[5]??6);
 const selected=process.env.AXIOM_NAV_SELECTED!=='0',modes=(process.env.AXIOM_NAV_MODES??'wheel,touch').split(',');
 const zoomDelta=Number(process.env.AXIOM_NAV_ZOOM_DELTA??2),qualityEvery=Number(process.env.AXIOM_NAV_QUALITY_EVERY??0),panStep=Number(process.env.AXIOM_NAV_PAN_STEP??8);
+const dpr=Number(process.env.AXIOM_NAV_DPR??2);
+if(!Number.isFinite(dpr)||dpr<1||dpr>4)throw Error('invalid DPR');
 const editSamples=Number(process.env.AXIOM_NAV_EDIT_SAMPLES??0);
 if(!Number.isSafeInteger(editSamples)||editSamples<0||editSamples>8)throw Error('invalid edit samples');
 const fixtureOptions=JSON.parse(process.env.AXIOM_NAV_OPTIONS??'{}'),panOnly=process.env.AXIOM_NAV_PAN_ONLY!=='0';
@@ -44,7 +46,7 @@ const results=[];let browser;
 try{
   browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
   for(const mode of modes){
-    const context=await browser.newContext({viewport:{width:900,height:1050},deviceScaleFactor:2});
+    const context=await browser.newContext({viewport:{width:900,height:1050},deviceScaleFactor:dpr});
     await context.addInitScript(()=>{
       let uuid=1;crypto.randomUUID=()=>('00000000-0000-4000-8000-'+(uuid++).toString(16).padStart(12,'0'));
       const stats=window.lifecycleStats={requests:0,callbacks:0,callbackMs:0,maxCallbackMs:0,draws:0,events:[]};
@@ -113,7 +115,8 @@ try{
         receiptAfterInput:record.phases.every(p=>p.summary.settle_ms!==null&&p.summary.settle_ms>=0),
         nonblockingFences:record.phases.every(p=>p.summary.maximum_fence_timeout===0)};
       record.status=Object.values(record.checks).every(Boolean)?'MEASURED':'BLOCKED_EVIDENCE';
-    }catch(error){record.error=String(error);record.status='BLOCKED_EVIDENCE';}
+    }catch(error){record.error=String(error);record.status='BLOCKED_EVIDENCE';
+      record.failure=await page.evaluate(()=>probe.failureState()).catch(error=>({diagnosticError:String(error)}));}
     record.exceptions=exceptions;record.rows=rows;results.push(record);
     await fs.writeFile(path.join(output,mode+'.json.gz'),gzipSync(JSON.stringify(record)));
     await fs.writeFile(path.join(output,mode+'.console.json.gz'),gzipSync(JSON.stringify(logs)));

@@ -3,6 +3,7 @@
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/render_cache.hpp"
 #include "include/core/SkPicture.h"
+#include "include/core/SkBlendMode.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
@@ -17,10 +18,10 @@ namespace canvas::render::internal {
 class CompactCoverageTargets final {
  public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
-    sk_sp<SkSurface> acquire(SkCanvas&,int width,int height,bool compatible,CompactRasterWork*);
+    sk_sp<SkSurface> acquire(SkCanvas&,int width,int height,bool compatible,CompactRasterWork*,bool scalar=false);
     void clear() noexcept {for(auto& slot:slots_)slot=Slot{};}
  private:
-    struct Slot {sk_sp<SkSurface> surface;resources::ResourceLease lease;bool compatible=false;std::uint64_t used=0;};
+    struct Slot {sk_sp<SkSurface> surface;resources::ResourceLease lease;bool compatible=false,scalar=false;std::uint64_t used=0;};
     std::array<Slot,8> slots_{};
     std::uint64_t tick_=0;
 };
@@ -50,15 +51,25 @@ class CompactStrokeRasterJob final {
     double distance_=0,totalDistance_=0;
     std::optional<ink::CompactContourCompiler> contour_;
     sk_sp<SkSurface> tile_;
-    struct ContourRecord {sk_sp<SkPicture> picture;resources::ResourceLease lease;};
+    struct ContourRecord {
+        sk_sp<SkPicture> picture;resources::ResourceLease lease;SkRect bounds{};
+        std::optional<ink::CompactContourCompiler> checkpoint;
+        bool empty=true;
+    };
+    struct RecordGroup {SkRect bounds{};std::size_t end=0;};
+    static constexpr std::size_t recordsPerGroup=16,selectionChecksPerStep=32;
     std::vector<ContourRecord> contourRecords_;
+    std::vector<RecordGroup> recordGroups_;
     std::shared_ptr<resources::ResourceBudgetManager> recordBudget_;
     resources::ResourceLease recordStorageLease_;
     SkRect recordBounds_{};
-    std::size_t recordLimit_=0,recordBytes_=0;
-    bool recordComplete_=false;
+    std::size_t recordLimit_=0,recordBytes_=0,recordStorageBytes_=0;
+    bool recordComplete_=false,picturesEnabled_=false;
+    SkBlendMode contourBlend_=SkBlendMode::kLighten;
     std::function<void(std::size_t)> reclaim_;
-    void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&);
+    void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&,ink::CompactContourCompiler);
+    void appendRecord(ContourRecord);
     void abandonRecords() noexcept;
+    void abandonPictures() noexcept;
 };
 }

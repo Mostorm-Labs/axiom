@@ -1,0 +1,985 @@
+{
+  "status": "BLOCKED_PERFORMANCE",
+  "scope": "Restore navigation continuity slice; no formal Gate/G5/P34/platform PASS",
+  "implementation_revision": "0a1bd10338dc2ebda5d34691352b3d99278b0dd3",
+  "baseline_revision": "1a39d1a0de65d7f22270c771160ae96b246d062c",
+  "source_anchor": "2790f27ba95afd718f5c828dfd789a577b07ff9c",
+  "task_package": {
+    "path": "docs/planning/G5_RESTORE_NAVIGATION_CONTINUITY.md",
+    "sha256": "f429994b2f4c48551dcd84866b07705665c258b85ebd9983b1465e5bb9eb8393"
+  },
+  "official_gate_pass_claimed": false,
+  "correctness_checks": true,
+  "matrix_performance_target_met": false,
+  "performance": {
+    "off": {
+      "restored_gap_ms": {
+        "before": 219.45000000298023,
+        "after": 184.25,
+        "before_samples": [
+          219.10000002384186,
+          219.7999999821186
+        ],
+        "after_samples": [
+          185.89999997615814,
+          182.60000002384186
+        ]
+      },
+      "foreground_idle_gap_ms": {
+        "before": 101.3500000089407,
+        "after": 101.30000001192093,
+        "before_samples": [
+          101.40000000596046,
+          101.30000001192093
+        ],
+        "after_samples": [
+          100.90000000596046,
+          101.7000000178814
+        ]
+      },
+      "warm_gap_ms": {
+        "before": 101.29999999701977,
+        "after": 101.20000000298023,
+        "before_samples": [
+          101.30000001192093,
+          101.2999999821186,
+          118.2000000178814,
+          100.90000000596046
+        ],
+        "after_samples": [
+          101.90000000596046,
+          101.2999999821186,
+          101.10000002384186,
+          101.10000002384186
+        ]
+      },
+      "warm_exact_wait_median_ms": 248.3999999910593,
+      "warm_exact_coverage_median_ms": null,
+      "restore_150ms_and_60percent": false,
+      "canonical_300ms_guard": true,
+      "warm_no_regression_guard": true
+    },
+    "on": {
+      "restored_gap_ms": {
+        "before": 228.29999999701977,
+        "after": 192.65000000596046,
+        "before_samples": [
+          237.59999999403954,
+          219
+        ],
+        "after_samples": [
+          182.90000000596046,
+          202.40000000596046
+        ]
+      },
+      "foreground_idle_gap_ms": {
+        "before": 101.24999998509884,
+        "after": 101.34999999403954,
+        "before_samples": [
+          101.2999999821186,
+          101.19999998807907
+        ],
+        "after_samples": [
+          101.09999999403954,
+          101.59999999403954
+        ]
+      },
+      "warm_gap_ms": {
+        "before": 101.25,
+        "after": 101.30000001192093,
+        "before_samples": [
+          100.40000000596046,
+          101.19999998807907,
+          118.19999998807907,
+          101.30000001192093
+        ],
+        "after_samples": [
+          100.90000000596046,
+          101.30000001192093,
+          101.30000001192093,
+          101.30000001192093
+        ]
+      },
+      "warm_exact_wait_median_ms": 247.8500000089407,
+      "warm_exact_coverage_median_ms": 57.1,
+      "canonical_80ms_guard": true,
+      "canonical_300ms_guard": true,
+      "warm_no_regression_guard": false
+    }
+  },
+  "reverse_order_recheck": [
+    {
+      "side": "after",
+      "phases": [
+        {
+          "id": "interrupted-selection",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 25.80000001192093,
+              "p99": 82.59999999403954,
+              "max": 82.59999999403954,
+              "mean": 18.049999999917215
+            },
+            "display_submission_gap_ms": {
+              "count": 1684,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.900000005960464,
+              "max": 201.2999999821186,
+              "mean": 0.9006532066437524
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1642,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.900000005960464,
+              "max": 101.69999998807907,
+              "mean": 0.8023751522533495
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.7000000178813934,
+              "p95": 1.100000023841858,
+              "p99": 1.2999999821186066,
+              "max": 1.2999999821186066,
+              "mean": 0.7916666658388244
+            },
+            "canonicalReceiptsDuringInput": 1,
+            "settle_ms": 230.90000000596046,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 144,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0,
+              "max": 0.09999999403953552,
+              "mean": 0.00069444440305233,
+              "total": 0.09999999403953552
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 61,
+            "longTasks": [
+              {
+                "start": 5744.300000011921,
+                "duration": 69
+              },
+              {
+                "start": 5813.800000011921,
+                "duration": 52
+              }
+            ],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": false,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "2e6e5d5c04ca7648c13ddaa012e080b33ff2adcdb318ed5cad97dd73e692f63b",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "repeat-0",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.600000023841858,
+              "p95": 17.80000001192093,
+              "p99": 18.599999994039536,
+              "max": 18.599999994039536,
+              "mean": 16.679166666749452
+            },
+            "display_submission_gap_ms": {
+              "count": 1668,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 203.90000000596046,
+              "mean": 0.8411270983213429
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1626,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 101.2000000178814,
+              "mean": 0.7469864698610329
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.800000011920929,
+              "p95": 1.0999999940395355,
+              "p99": 1.5,
+              "max": 1.5,
+              "mean": 0.7972222231328487
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 232,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 125,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.09999999403953552,
+              "max": 0.09999999403953552,
+              "mean": 0.0015999999046325685,
+              "total": 0.19999998807907104
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "770eb0c86446176e9b32bc638f86c505f8bc1f6a6a22ce7ae08ef0015df0bfd2",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "repeat-1",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 17.69999998807907,
+              "p99": 18.5,
+              "max": 18.5,
+              "mean": 16.53888888905446
+            },
+            "display_submission_gap_ms": {
+              "count": 1672,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 204.7000000178814,
+              "mean": 0.8397129186602871
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1630,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 101.39999997615814,
+              "mean": 0.7305521472465772
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.5999999940395355,
+              "p95": 1.100000023841858,
+              "p99": 1.199999988079071,
+              "max": 1.199999988079071,
+              "mean": 0.7513888879782624
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 233,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 122,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.09999999403953552,
+              "max": 0.10000002384185791,
+              "mean": 0.0024590164911551552,
+              "total": 0.30000001192092896
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "7ccbc463db72a5fd639e69ecfdce27e888a4eb933d24b8bfe340f5eafa483823",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "after-idle",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 17.599999994039536,
+              "p99": 18.30000001192093,
+              "max": 18.30000001192093,
+              "mean": 16.691666666832234
+            },
+            "display_submission_gap_ms": {
+              "count": 1670,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 200.59999999403954,
+              "mean": 0.8388622754348253
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1628,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.80000001192093,
+              "max": 100.2999999821186,
+              "mean": 0.7383906633870022
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.7000000178813934,
+              "p95": 1.0999999940395355,
+              "p99": 1.100000023841858,
+              "max": 1.100000023841858,
+              "mean": 0.7513888896339469
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 231.80000001192093,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 122,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.09999999403953552,
+              "max": 0.10000002384185791,
+              "mean": 0.0024590164911551552,
+              "total": 0.30000001192092896
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "b4ceb4b8a744c387ab6ccf7957f3f502c81fa48e90e06e4e7acba9e5bd65cb6e",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "after-freeze",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.799999982118607,
+              "p95": 19.099999994039536,
+              "p99": 19.599999994039536,
+              "max": 19.599999994039536,
+              "mean": 16.570833333250548
+            },
+            "display_submission_gap_ms": {
+              "count": 1371,
+              "p50": 0,
+              "p95": 0.10000002384185791,
+              "p99": 17,
+              "max": 692.4000000059605,
+              "mean": 1.3910284463851492
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1285,
+              "p50": 0,
+              "p95": 0.10000002384185791,
+              "p99": 17,
+              "max": 186.19999998807907,
+              "mean": 0.9286381323049968
+            },
+            "updatedInputs": 59,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 3.5,
+              "p95": 5.9000000059604645,
+              "p99": 6.399999976158142,
+              "max": 6.399999976158142,
+              "mean": 3.9749999998344316
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 727.0999999940395,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 162,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 0.09999999403953552,
+              "max": 0.09999999403953552,
+              "mean": 0.006172839138242934,
+              "total": 0.9999999403953552
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 66,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "8984e716aad871b1fd93f1dcc59ffdca12f25e6fd49699e7535596c013824589",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        }
+      ]
+    },
+    {
+      "side": "before",
+      "phases": [
+        {
+          "id": "interrupted-selection",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 25.30000001192093,
+              "p99": 83.80000001192093,
+              "max": 83.80000001192093,
+              "mean": 18.05138888872332
+            },
+            "display_submission_gap_ms": {
+              "count": 1609,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 17,
+              "max": 200.69999998807907,
+              "mean": 0.9423244251013543
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1567,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 17,
+              "max": 118,
+              "mean": 0.8408423739591828
+            },
+            "updatedInputs": 66,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.699999988079071,
+              "p95": 1.100000023841858,
+              "p99": 1.2999999821186066,
+              "max": 1.2999999821186066,
+              "mean": 0.7749999997516474
+            },
+            "canonicalReceiptsDuringInput": 1,
+            "settle_ms": 231.30000001192093,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 152,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.09999999403953552,
+              "max": 0.10000002384185791,
+              "mean": 0.002631578986582003,
+              "total": 0.4000000059604645
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 61,
+            "longTasks": [
+              {
+                "start": 5748.800000011921,
+                "duration": 69
+              },
+              {
+                "start": 5818.300000011921,
+                "duration": 53
+              }
+            ],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": false,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "2e6e5d5c04ca7648c13ddaa012e080b33ff2adcdb318ed5cad97dd73e692f63b",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "repeat-0",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 18.099999994039536,
+              "p99": 33.5,
+              "max": 33.5,
+              "mean": 16.529166666583883
+            },
+            "display_submission_gap_ms": {
+              "count": 1668,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 17.099999994039536,
+              "max": 190.7999999821186,
+              "mean": 0.8337529975947716
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1626,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 17,
+              "max": 100.59999999403954,
+              "mean": 0.7319188191845262
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.6000000238418579,
+              "p95": 1,
+              "p99": 1.199999988079071,
+              "max": 1.199999988079071,
+              "mean": 0.7374999995032946
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 230.69999998807907,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 138,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0,
+              "max": 0,
+              "mean": 0,
+              "total": 0
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "770eb0c86446176e9b32bc638f86c505f8bc1f6a6a22ce7ae08ef0015df0bfd2",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "repeat-1",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.599999994039536,
+              "p95": 17.80000001192093,
+              "p99": 19.400000005960464,
+              "max": 19.400000005960464,
+              "mean": 16.573611110862757
+            },
+            "display_submission_gap_ms": {
+              "count": 1672,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.900000005960464,
+              "max": 217.80000001192093,
+              "mean": 0.8475478468863873
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1630,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.900000005960464,
+              "max": 101.09999999403954,
+              "mean": 0.732085889559582
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.699999988079071,
+              "p95": 1,
+              "p99": 1.0999999940395355,
+              "max": 1.0999999940395355,
+              "mean": 0.7333333334989018
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 247.80000001192093,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 128,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0,
+              "max": 0,
+              "mean": 0,
+              "total": 0
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "7ccbc463db72a5fd639e69ecfdce27e888a4eb933d24b8bfe340f5eafa483823",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "after-idle",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.600000023841858,
+              "p95": 17.799999982118607,
+              "p99": 18.700000017881393,
+              "max": 18.700000017881393,
+              "mean": 16.57638888888889
+            },
+            "display_submission_gap_ms": {
+              "count": 1670,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 17,
+              "max": 216.80000001192093,
+              "mean": 0.8486227544838797
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1628,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 16.900000005960464,
+              "max": 101.19999998807907,
+              "mean": 0.7332309582236358
+            },
+            "updatedInputs": 67,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 0.699999988079071,
+              "p95": 1,
+              "p99": 1.2000000178813934,
+              "max": 1.2000000178813934,
+              "mean": 0.7388888895511627
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 248.90000000596046,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 130,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0,
+              "max": 0.09999999403953552,
+              "mean": 0.0007692307233810424,
+              "total": 0.09999999403953552
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 60,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "b4ceb4b8a744c387ab6ccf7957f3f502c81fa48e90e06e4e7acba9e5bd65cb6e",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        },
+        {
+          "id": "after-freeze",
+          "summary": {
+            "raf_ms": {
+              "count": 72,
+              "p50": 16.69999998807907,
+              "p95": 19.5,
+              "p99": 21.700000017881393,
+              "max": 21.700000017881393,
+              "mean": 16.759722222470575
+            },
+            "display_submission_gap_ms": {
+              "count": 1352,
+              "p50": 0,
+              "p95": 0.10000002384185791,
+              "p99": 17,
+              "max": 658,
+              "mean": 1.375
+            },
+            "input_display_submission_gap_ms": {
+              "count": 1303,
+              "p50": 0,
+              "p95": 0.19999998807907104,
+              "p99": 17,
+              "max": 203,
+              "mean": 0.9263238679969301
+            },
+            "updatedInputs": 59,
+            "inputCount": 72,
+            "input_dispatch_ms": {
+              "count": 72,
+              "p50": 3.199999988079071,
+              "p95": 5.899999976158142,
+              "p99": 6.299999982118607,
+              "max": 6.299999982118607,
+              "mean": 3.4527777768671513
+            },
+            "canonicalReceiptsDuringInput": 0,
+            "settle_ms": 677.1999999880791,
+            "navigation": null,
+            "exactAttempts": 0,
+            "exactStages": {},
+            "exactCoverageWork": null,
+            "client_wait_cpu_ms": {
+              "count": 178,
+              "p50": 0,
+              "p95": 0.09999999403953552,
+              "p99": 0.10000002384185791,
+              "max": 0.19999998807907104,
+              "mean": 0.007303370686059588,
+              "total": 1.2999999821186066
+            },
+            "maximum_fence_timeout": 0,
+            "fenceCalls": 65,
+            "longTasks": [],
+            "gpu_execution_ms": {
+              "value": null,
+              "reason": "CPU GL calls and polling do not measure GPU execution."
+            },
+            "input_to_photon_ms": {
+              "value": null,
+              "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+            }
+          },
+          "checks": {
+            "documentUnchanged": true,
+            "selectionUnchanged": true,
+            "operationUnchanged": true,
+            "noCanonicalReceiptDuringInput": true,
+            "cameraReturned": true
+          },
+          "pixels": {
+            "sha256": "8984e716aad871b1fd93f1dcc59ffdca12f25e6fd49699e7535596c013824589",
+            "width": 1272,
+            "height": 1846,
+            "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+          }
+        }
+      ]
+    }
+  ],
+  "reverse_order_restore_guard": false,
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "baseline_failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": [],
+    "resolved_failures": []
+  },
+  "gpu_modes": [
+    {
+      "mode": "frontier",
+      "status": "PASS"
+    },
+    {
+      "mode": "quality",
+      "status": "PASS"
+    },
+    {
+      "mode": "affine",
+      "status": "PASS"
+    },
+    {
+      "mode": "background",
+      "status": "PASS"
+    },
+    {
+      "mode": "contour",
+      "status": "PASS"
+    },
+    {
+      "mode": "replay",
+      "status": "PASS"
+    },
+    {
+      "mode": "exact-replay",
+      "status": "PASS"
+    }
+  ],
+  "node_tests": 28,
+  "boundary_contracts": 118,
+  "remaining_work": [
+    "GPU resident versus staging lifetime separation remains dependent work; not implemented in this slice.",
+    "Complex editing and100K/1M formal qualification remain pending.",
+    "Five pre-existing native failures and physical platform evidence are not resolved by Web results."
+  ],
+  "demo": {
+    "url": "http://127.0.0.1:4222/example.html",
+    "prefilled": "http://127.0.0.1:4222/mixed-navigation.html?dense=1",
+    "artifact": "out/g5-restore-final-off/js",
+    "preserved4219_4220_4221": true
+  },
+  "measurement_limits": "Synthetic Mac Chrome WebGL2 color submission timing, not GPU execution or physical input-to-photon; CDP freeze is not device sleep. Public frame receipt is coarse completion; exact camera/scene/surface stamps remain in ON native traces."
+}

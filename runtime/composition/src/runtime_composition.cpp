@@ -472,6 +472,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
+  runtime_->serviceResourceRetirements();
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();

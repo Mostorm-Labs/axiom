@@ -48,6 +48,12 @@ export function summarizePhase(phase, navigationRows, frameRows) {
       fallbacks:total(navigationRows.map(r=>r.index_fallbacks)),payloadCopyBytes:total(navigationRows.map(r=>r.source_copy_bytes)),
       aliases:total(navigationRows.map(r=>r.source_aliases)),queriesObserved:total(navigationRows.map(r=>r.source_queries_observed)),
       peakRetainedBytes:Math.max(...navigationRows.map(r=>r.source_bytes)),hits:total(navigationRows.map(r=>r.source_hits))}:null;
+    nav.maskEncoding=navigationRows.every(r=>Number.isSafeInteger(r.alpha_masks)&&r.alpha_masks>=0&&Number.isSafeInteger(r.coarse_masks)&&r.alpha_masks<=r.coarse_masks)
+      ?{alphaStarts:total(navigationRows.map(r=>r.alpha_masks)),n32Starts:total(navigationRows.map(r=>r.coarse_masks-r.alpha_masks))}:null;
+    const components={partition:'partition_ns',contour:'contour_ns',material:'material_ns',otherDraw:'other_draw_ns'};
+    nav.componentsMs=navigationRows.every(r=>Object.values(components).every(k=>Number.isSafeInteger(r[k])&&r[k]>=0))
+      ?Object.fromEntries(Object.entries(components).map(([key,field])=>[key,total(navigationRows.map(r=>r[field]))/1e6])):null;
+    nav.regionCompactions=navigationRows.every(r=>Number.isSafeInteger(r.region_compactions)&&r.region_compactions>=0)?total(navigationRows.map(r=>r.region_compactions)):null;
     nav.quality=summarizeQuality(navigationRows);
     nav.cpu_ms=times(navigationRows.map(row=>row.elapsed_ns/1e6));
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));
@@ -72,6 +78,9 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     const t=stageTotals[name]??={inclusive_ms:0,exclusive_ms:0,calls:0};
     t.inclusive_ms+=stage.inclusive_ns/1e6;t.exclusive_ms+=stage.exclusive_ns/1e6;t.calls+=stage.calls;
   }
+  const exactKeys=['compiled_contour_knots','record_candidates','record_replays','record_rejected','record_groups','record_selection_yields','checkpoint_replays','checkpoint_replay_knots','scalar_coverage_tiles'];
+  const exactCoverageWork=frameRows.length&&frameRows.every(r=>exactKeys.every(k=>Number.isSafeInteger(r.counts?.[k])&&r.counts[k]>=0))
+    ?Object.fromEntries(exactKeys.map(k=>[k,total(frameRows.map(r=>r.counts[k]))])):null;
   return {
     raf_ms:statistics(phase.samples.map(row=>row.interval)),
     display_submission_gap_ms:statistics(gaps),
@@ -81,7 +90,7 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     input_dispatch_ms:statistics(phase.samples.map(row=>row.dispatchMs).filter(Number.isFinite)),
     canonicalReceiptsDuringInput:phase.framesDuringInput??null,
     settle_ms:phase.receipts?postInputReceiptWait(phase.receipts,phase.inputEnded):phase.settleMilliseconds??null,
-    navigation:nav, exactAttempts:frameRows.length, exactStages:stageTotals,
+    navigation:nav, exactAttempts:frameRows.length, exactStages:stageTotals,exactCoverageWork,
     client_wait_cpu_ms:times(phase.fences.filter(row=>row.name==='clientWaitSync').map(row=>row.duration)),
     maximum_fence_timeout:Math.max(0,...phase.fences.map(row=>row.timeout??0)),
     fenceCalls:phase.fences.filter(row=>row.name==='fenceSync').length,
