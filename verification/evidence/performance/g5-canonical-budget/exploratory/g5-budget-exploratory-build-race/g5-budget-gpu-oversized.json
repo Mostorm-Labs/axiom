@@ -1,0 +1,25 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "46955a2b754f20d652b61e0ff73f082ffe9b081c0078a5a58bd86abcf79b51fb",
+    "g5_render_cache_gpu.wasm": "11e285aa9ab267df1f7c5f6c2f86c4432fc6affbbf5cac8a2519f0e76602cf2b"
+  },
+  "probeArgument": "--oversized-only",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [],
+    "errors": [
+      "wasm streaming compile failed: TypeError: WebAssembly.instantiate(): Import #0 \"env\": module is not an object or function",
+      "falling back to ArrayBuffer instantiation",
+      "failed to asynchronously prepare wasm: TypeError: WebAssembly.instantiate(): Import #0 \"env\": module is not an object or function",
+      "TypeError: WebAssembly.instantiate(): Import #0 \"env\": module is not an object or function",
+      "Aborted(TypeError: WebAssembly.instantiate(): Import #0 \"env\": module is not an object or function)",
+      "RuntimeError: Aborted(TypeError: WebAssembly.instantiate(): Import #0 \"env\": module is not an object or function). Build with -sASSERTIONS for more info."
+    ],
+    "code": 1
+  },
+  "status": "FAIL"
+}

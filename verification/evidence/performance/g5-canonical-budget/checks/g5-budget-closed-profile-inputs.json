@@ -1,0 +1,22 @@
+{
+  "source_revision": "90ef6b691e7d980ea8ed59195b5311eb7e3da4d9",
+  "baseline_source": "10f3ecd86f60f3dfffb407644af3921817dfcc58",
+  "profiles": [
+    {
+      "id": "baseline",
+      "cache_mib": 32,
+      "shared_hard_mib": 96
+    },
+    {
+      "id": "default",
+      "cache_mib": 32,
+      "shared_hard_mib": 96
+    },
+    {
+      "id": "expanded",
+      "cache_mib": 64,
+      "shared_hard_mib": 192
+    }
+  ],
+  "note": "Expanded is experimental;source defaults remain32/96. RSS is not GPU residency."
+}
