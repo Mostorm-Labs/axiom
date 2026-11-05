@@ -849,6 +849,34 @@ void checkObsoleteExactNavigation(){
     require(read(target)==read(reference),"obsolete exact recovery changed canonical pixels");
 }
 
+void checkCriticalFrontierReplay(TestSurface& provider){
+    auto entry=stroke(9873);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots.clear();for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({20.+i*.1,64.+std::sin(i*.01)*30,32768});
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};
+    RenderCacheOptions options;options.maxBytes=1024*1024;options.maxEntryBytes=1024*1024;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{options.maxBytes,8*1024*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kCanonicalFrame,2*1024*1024,true);require(bool(token),"frontier pressure setup");
+    resources::ResourceLease pressure(budget,*token);internal::PreparedGeometryCache cache;
+    auto source=cache.retainSource(entry,budget,true);require(bool(source),"frontier source retention");
+    require(!cache.get(entry,options,budget),"background geometry escaped occupied soft limit");
+    auto prepared=cache.get(entry,options,budget,true);
+    require(bool(prepared)&&prepared->isContour(),"critical small source lost bounded replay under soft staging pressure");
+    require(budget->used()<=8*1024*1024,"frontier replay escaped hard capacity");
+    const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"frontier replay target");
+    auto actual=a.frame.surface->makeSurface(a.frame.surface->imageInfo());auto expected=a.frame.surface->makeSurface(a.frame.surface->imageInfo());
+    require(actual&&expected,"frontier replay oracle surfaces");
+    for(auto* s:{actual.get(),expected.get()}){s->getCanvas()->clear(SK_ColorTRANSPARENT);s->getCanvas()->translate(-5,3);}
+    prepared->drawContour(*actual->getCanvas());
+    internal::drawCompactContourCoverageToSkCanvas(*expected->getCanvas(),content.stroke.config,ink::compileCompactContour(content.stroke.config,content.stroke.knots));
+    const auto read=[](SkSurface& s){const auto info=s.imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(s.readPixels(info,bytes.data(),info.minRowBytes(),0,0),"frontier replay readback");return bytes;};
+    require(read(*actual)==read(*expected),"critical frontier replay changed full-history contour pixels");provider.release();
+    auto denied=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
+    require(!cache.get(entry,options,denied,true)&&denied->used()==0,"critical frontier escaped hard denial");
+    cache.clear();prepared.reset();source.reset();pressure.reset();require(budget->used()==0,"critical frontier leaked source/replay admission");
+}
+
 void checkSharedCanonicalNavigation(TestSurface&) {
     TestSurface target,reference;
     require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
@@ -979,8 +1007,9 @@ int main(int argc,char** argv) {
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
-            checkResidentNavigationDensity();checkObsoleteExactNavigation();checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
+            checkResidentNavigationDensity();checkObsoleteExactNavigation();checkCriticalFrontierReplay(provider);checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
         }
+        if(argc>1&&std::string_view(argv[1])=="--detail-frontier-only"){checkCriticalFrontierReplay(provider);return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--detail-obsolete-only"){checkObsoleteExactNavigation();return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--detail-residency-only"){checkResidentNavigationDensity();return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--detail-share-only"){checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);return finishNative(0);}
