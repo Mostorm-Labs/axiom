@@ -179,42 +179,40 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     ink::CompactContour staged;
     resources::ResourceLease stagingLease;
     const bool contour=compact&&compact->content.get().stroke.config.algorithmVersion==4;
-    constexpr auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
-    const auto replay=[&]()->std::shared_ptr<const PreparedNavigationGeometry>{
-        // Drop staged expanded data before admitting the bounded checkpoint
-        // form. Optional callers still obey the existing soft limit.
-        staged=ink::CompactContour{};stagingLease.reset();
-        constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
-        const auto blocks=(count+block-1)/block;
-        const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
-        const auto unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
-        if(scratch>cap-base||blocks>(cap-base-scratch)/unit)return denied();
-        const auto replayEstimate=base+scratch+blocks*unit;
-        auto token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
-        while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
-        if(!token)return denied();resources::ResourceLease admission(budget,*token);
-        try{
-            auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;
-            candidate->sourceLeases_=std::move(*retained);candidate->buildReplay();
-            const auto bytes=candidate->footprint();if(bytes>replayEstimate)return denied();
-            admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
-            candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
-            candidate->usage_=usage_;usage_->bytes+=bytes;
-            entries_.insert_or_assign(entry.record.objectId,Entry{candidate,++tick_});++work_.builds;return candidate;
-        }catch(const std::bad_alloc&){return denied();}
-    };
     if(contour){
         // The pinned compiler emits at most one anchor/cap per knot, plus
         // sixteen global taper cuts and two finish patches. Admit its exact
         // temporary capacity before compiling, then admit paths from actual
         // anchors rather than assuming 2KiB of paths for every input knot.
         constexpr auto extra=18U;
+        const auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
         if(count>std::numeric_limits<std::size_t>::max()-extra)return denied();
-        if(count+extra>(cap-base)/stagingUnit)return replay();
+        if(count+extra>(cap-base)/stagingUnit){
+            // Source-bound evaluator snapshots replace expanded paths only;
+            // no new Brush geometry or larger entry/global budget is admitted.
+            constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
+            const auto blocks=(count+block-1)/block;
+            const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
+            const auto unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+            if(scratch>cap-base||blocks>(cap-base-scratch)/unit)return denied();
+            const auto replayEstimate=base+scratch+blocks*unit;
+            auto token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+            while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+            if(!token)return denied();resources::ResourceLease admission(budget,*token);
+            try{
+                auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;
+                candidate->sourceLeases_=std::move(*retained);candidate->buildReplay();
+                const auto bytes=candidate->footprint();if(bytes>replayEstimate)return denied();
+                admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
+                candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
+                candidate->usage_=usage_;usage_->bytes+=bytes;
+                entries_.insert_or_assign(entry.record.objectId,Entry{candidate,++tick_});++work_.builds;return candidate;
+            }catch(const std::bad_alloc&){return denied();}
+        }
         const auto stagingBytes=base+(count+extra)*stagingUnit;
         auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
         while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
-        if(!token)return criticalReplay?replay():denied();stagingLease=resources::ResourceLease(budget,*token);
+        if(!token)return denied();stagingLease=resources::ResourceLease(budget,*token);
         try{
             staged.patches.reserve(count+extra);staged.caps.reserve(count+extra);
             const auto& stroke=compact->content.get().stroke;
@@ -232,7 +230,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     }
     auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
     while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
-    if(!token)return contour&&criticalReplay?replay():denied();
+    if(!token)return denied();
     resources::ResourceLease admission(budget,*token);
     try{
         auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->sourceLeases_=std::move(*retained);candidate->build(contour?&staged:nullptr);
