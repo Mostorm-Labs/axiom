@@ -48,3 +48,14 @@ attempts did not reach package publication after hosted macOS runner acquisition
 failed. This version uses an independent exact-source hosted release run for all
 six native targets and the Web/Windows consumer archives, then npm publication.
 Report actual hosted build/publication results separately from local checks.
+
+The first unpublished candidate at `7a8f9259a66ace130242ec398ff56b8d7c99f66d`
+failed MSVC /W4 /WX because a replay-byte-estimate local shadowed an outer local.
+Only that inner identifier and its uses were renamed to replayUnit. The unchanged
+production translation unit fails with Clang -Wshadow -Werror=shadow before this
+fix and passes afterward; native/Web regression is rebuilt. Warnings stay enabled.
+Both original workflows stopped without any publication job executing and no
+GitHub Release exists for the candidate. Its exact source, old tag object and
+diagnostics are retained in verification/evidence/releases/0.3.11/msvc-shadowed-local.json.
+This owned unpublished tag may be updated only with its exact old-object lease,
+followed by both full release workflows. Published versions remain untouched.
