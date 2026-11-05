@@ -1,0 +1,80 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "private material layer isolation and byte qualifier",
+        "SkiaRenderCache overflow admission/prepare integration",
+        "bounded transient-layer accounting and fail-closed resume",
+        "preserve current exact publication and navigation ownership"
+      ],
+      "scope": [
+        "runtime/render/src/compact_raster_internal.hpp",
+        "runtime/render/src/skia_compact_material.cpp",
+        "runtime/render/src/skia_render_cache.cpp",
+        "runtime/render/src/skia_render_cache_internal.hpp",
+        "runtime/render/include/canvas/render/render_cache.hpp",
+        "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+        "runtime/render/tests",
+        "verification/runners/g5/prepared_gpu_probe.mjs",
+        "verification/evidence/performance/g5-material-tile"
+      ],
+      "forbidden_changes": [
+        "Brush geometry/schema/semantic/Skia locks",
+        "new public SDK API/version",
+        "dependency rebuild",
+        "coverage raster scissor/grid/AA/order changes",
+        "budget or CPU/GPU quota increases",
+        "A2 resurrection",
+        "partial/fake canonical receipts",
+        "overwrite existing demos/artifacts/evidence"
+      ]
+    },
+    "tests": {
+      "required": [
+        "capacity",
+        "parity",
+        "lifetime",
+        "regression",
+        "performance"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing CI"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "capacity",
+        "parity",
+        "lifetime",
+        "regression",
+        "performance"
+      ],
+      "corroborative": [
+        "local process RSS and source-density proxy are not unique GPU memory or optical blur/input-to-photon"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all frozen obligations satisfied",
+        "exact source/evidence committed and pushed",
+        "new matching root SDK Demo",
+        "READY_FOR_CONTROL_REVIEW only"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

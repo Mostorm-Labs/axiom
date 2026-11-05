@@ -1,0 +1,51 @@
+{
+  "obligations": [
+    {
+      "id": "capacity",
+      "requirement": "Qualified isolated canonical drawing must complete with one ordered composite plus bounded material/coverage,not a second framebuffer scratch.",
+      "oracle": "1024x768 mixed shape and v4 strokes under5MiB;old owner rejects,optimized owner presents exact Direct pixels;no partial present on yields.",
+      "acceptance": "No rejection or full scratch for qualified case;strict pixels;finite completion.",
+      "evidence_required": "RED native, GREEN native and actual Chrome/WebGL2 logs"
+    },
+    {
+      "id": "parity",
+      "requirement": "Preserve two-stage material premultiplication/quantization and all original coverage coordinates.",
+      "oracle": "Mixed overlapping ink;fractional affine,rotation/reflection,large origin,non-grid/fractional clip,pressure/caps;CPU/GPU Direct and independent full-frame isolation oracles;null/sRGB positive,linear/opaque/non-v4/mask qualifier fallback.",
+      "acceptance": "Zero changed canonical bytes;no tolerance changes;unqualified command mapping unchanged.",
+      "evidence_required": "Frozen fixture description,private GPU modes,exact output hashes/counts"
+    },
+    {
+      "id": "lifetime",
+      "requirement": "Transient material layers cannot be uncharged while queued GPU work still reads them;admission/failure/cancel cannot publish partial content.",
+      "oracle": "Actual shared-manager soft/hard denial and resume;CPU NoPixels save-layer failure;GPU epoch retirement after test-only real completion;stale/cancel/present-failure and retained-sharp-frame integration.",
+      "acceptance": "Deny before draw;retry retains ready coverage;no duplicate alpha;no leak/early reuse;only completed current frames present.",
+      "evidence_required": "Budget usage/retirement and provider logs"
+    },
+    {
+      "id": "regression",
+      "requirement": "No new semantic/render/SDK failures.",
+      "oracle": "112 selected native tests vs exact five known failures;9 existing real GPU modes plus material mode;31Node and118boundary contracts;installed normal root SDK package and Demo.",
+      "acceptance": "No new native failures;all GPU/Node/boundary/package/root checks pass.",
+      "evidence_required": "Exact source/artifacts and logs"
+    },
+    {
+      "id": "performance",
+      "requirement": "Improve default DPR4 cold completion while preserving retained navigation quality/continuity.",
+      "oracle": "Before7299f68 installed root SDK vs candidate;existing22 paired DPR2/3/4 ON/OFF mixed-corpus workers,60s foreground idle and5s CDP freeze.",
+      "acceptance": "DPR4 cold wait<=85% paired baseline;low-density time fraction<=baseline+0.02;candidate input submission maxgap<=150ms;identical final pixels/state/receipts. Existing G5/P34 conclusions remain unchanged.",
+      "evidence_required": "Bounded180s/3GiB workers,raw traces,deterministic verifier,SHA256"
+    }
+  ],
+  "baseline_failed_tests": [
+    "canvas_rf01_full_rebuild",
+    "canvas_fc02_shape_label_scene",
+    "G3HeadlessCanvasDemo",
+    "FC00XRuntimeComposition",
+    "SketchSemantic"
+  ],
+  "baseline_artifact_paths": {
+    "on": "out/g5-detail-retained-on/js",
+    "off": "out/g5-detail-retained-off/js"
+  },
+  "baseline_source_revision": "7299f6874be4947af219354dfa06bc6729a7b380"
+}

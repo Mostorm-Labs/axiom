@@ -1,0 +1,12 @@
+{
+  "directory": "verification/evidence/performance/g5-material-tile",
+  "blocking_obligations": [
+    "capacity",
+    "parity",
+    "lifetime",
+    "regression",
+    "performance"
+  ],
+  "bindings": "exact package/input/source/artifact hashes;RED/GREEN logs;raw worker traces;actual GPU retirement;native baseline comparison;classification",
+  "return": "READY_FOR_CONTROL_REVIEW or exact terminal blocker;never official Gate PASS"
+}

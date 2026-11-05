@@ -1,0 +1,32 @@
+{
+  "status": "current",
+  "repository": "https://github.com/Mostorm-Labs/axiom",
+  "revision": "aabf06154cdbeb81cc46fb60d00c39d4a09b233b",
+  "inputs": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "verification/evidence/performance/g5-navigation-detail/result.json": "9c38e4a8f2314492029ee61b163c24ce29172ef9086a2369046988b2773682a7",
+    "verification/evidence/performance/g5-navigation-detail/retained-candidate.json": "38620f6d0a9de009c4241a34df29b0df7eebf244e9b9f02cab1823d21a783d6f",
+    "verification/evidence/performance/g5-navigation-detail/next-step-review.md": "82b89a1e9891b4cae43575fce754b90dabf213a1c88d4176548b11b1e319df4e"
+  },
+  "authorization": "User:continue bounded material-tile review/implementation after the prior architecture discussion.",
+  "statements": [
+    "Existing Render owner and Direct pixel mapping are authoritative;no semantic decision is changed.",
+    "Qualified overflow v4 solid ink uses integer device-clipped Skia material layers,without changing coverage grid/matrix/AA/order/shader inputs.",
+    "Qualifier:isolated scene ink,no erase masks,algorithm4,material<3,8-bit RGBA/BGRA premul,sRGB or untagged target,affine;entry capacity>=conservative258x258x8 layer charge.",
+    "Other sources keep the cooperative full-scratch or existing direct-composite path.",
+    "Every layer is a single-use transaction;reserve before saveLayer,explicit clip at identity,keep original global shader matrix,restore before advancing,release through actual GPU epoch.",
+    "32/96MiB,8MiB entry,8ms exact and existing CPU/GPU quotas remain unchanged.",
+    "The withdrawn A2 frontier-replay extension stays withdrawn."
+  ],
+  "skia_source": {
+    "commit": "b6d106297ff9ef2ff8094033695d045e87775581",
+    "source_url": "https://raw.githubusercontent.com/google/skia/b6d106297ff9ef2ff8094033695d045e87775581/src/core/SkCanvas.cpp",
+    "sha256": "8525dcfdbc72006d1020270d3d64dc7ea4777f4d00720bddd3083f88ceac71cd",
+    "local_sha256": "8525dcfdbc72006d1020270d3d64dc7ea4777f4d00720bddd3083f88ceac71cd",
+    "matches_local_archive": true
+  }
+}
