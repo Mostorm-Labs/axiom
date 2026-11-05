@@ -41,7 +41,6 @@ struct CompactRasterWork final {
     std::uint64_t contourRecordCandidates=0,contourRecordsRejected=0,contourRecordGroups=0,contourSelectionYields=0;
     std::uint64_t contourCheckpointReplays=0,checkpointReplayKnots=0;
     std::uint64_t scalarCoverageTiles=0;
-    std::uint64_t materialIsolationTiles=0;std::size_t materialIsolationPeakBytes=0,materialIsolationReservedBytes=0;
 };
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 std::span<const foundation::InkKnot>,std::uint64_t seed=0,

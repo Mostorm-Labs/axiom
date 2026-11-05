@@ -218,25 +218,12 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             cache->reclaimRecorded=[navigation,budget=resourceBudget_,limit=renderCacheOptions_.maxBytes,frame=plan.frame,providerIdentity=&provider,resource=resourceEpoch_](std::size_t bytes){
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes,frame,providerIdentity,resource);
             };
-            cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t required,std::size_t preferred){
-                // Yield for already-retiring quota before discarding a sharp
-                // source. Released material layers remain charged until the
-                // actual GPU callback;resetting a live image cannot speed it up.
-                const auto canResume=[&](std::size_t bytes){
-                    const auto cap=renderCacheOptions_.sharedMaxBytes,used=resourceBudget_->used();
-                    if(bytes>cap)return false;
-                    if(used<=cap-bytes)return true;
-                    const auto needed=used-(cap-bytes);std::size_t retiring=0;
-                    for(unsigned i=0;i<static_cast<unsigned>(resources::ResourceClass::kCount);++i)
-                        retiring+=resourceBudget_->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
-                    return retiring>=needed;
-                };
-                if(canResume(preferred))return;
-                // Preserve useful frontier cells;disposable tiles/prewarm yield
-                // to mandatory work before the qualified whole-frame source.
+            cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t bytes){
+                // Reclaim optional resources only on actual critical admission
+                // pressure. Their unfinished GPU reads remain charged.
+                navigationCache_.reset();
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(resourceBudget_,
-                    renderCacheOptions_.sharedMaxBytes,preferred,frame,providerIdentity,resourceEpoch_,false,true);
-                if(!canResume(required))navigationCache_.reset();
+                    renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
             };
             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
         }

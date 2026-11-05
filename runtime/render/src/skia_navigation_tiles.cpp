@@ -124,17 +124,8 @@ bool SkiaNavigationTiles::usefulFallback(TileKey key,const Tile& tile,
     return false;
 }
 void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch,bool mandatory,bool pendingHeadroom){
-    if(!budget||budgetOwner_.lock()!=budget||requested>limit)return;
-    // Selection may consider already-released GPU bytes to avoid evicting a
-    // single tile on every RAF. This never admits resources or completes epochs.
-    const auto charged=[&]{
-        const auto used=budget->used();std::size_t pending=0;
-        if(pendingHeadroom)for(unsigned i=0;i<static_cast<unsigned>(resources::ResourceClass::kCount);++i)
-            pending+=budget->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
-        return used-std::min(used,pending);
-    };
-    if(charged()<=limit-requested)return;
+    std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch,bool mandatory){
+    if(!budget||budgetOwner_.lock()!=budget||requested>limit||budget->used()<=limit-requested)return;
     // Optional picture recording cannot reclaim mandatory canonical buffers.
     // If those alone exceed its soft limit, throwing away completed navigation
     // regions still cannot admit the picture. Keep that reusable coverage and
@@ -142,7 +133,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     // Bound everything this owner could release, including Recorded metadata.
     // Shared source lists/payloads may still be pinned by other consumers;
     // counting aliases again overestimates reclaimability, so skipping is safe.
-    const auto used=charged();std::size_t reclaimable=0;
+    const auto used=budget->used();std::size_t reclaimable=0;
     const auto add=[&](std::size_t bytes){reclaimable+=std::min(bytes,used-reclaimable);};
     add(work.retainedBytes);add(geometry_.preparedBytes());add(geometry_.sourceStatistics().bytes);
     for(const auto& [key,source]:sources_){(void)key;add(source->admittedBytes);}
@@ -160,7 +151,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     const bool sameTarget=provider_==provider&&resource_==resourceEpoch&&last_&&last_->viewId==frame.viewId&&last_->metrics==frame.metrics&&
         last_->metricsGeneration==frame.metricsGeneration&&last_->surfaceGeneration==frame.surfaceGeneration&&
         last_->sceneGeneration==frame.sceneGeneration&&last_->sceneReadToken==frame.sceneReadToken&&last_->viewportClip==frame.viewportClip;
-    while(charged()>limit-requested&&!tiles_.empty()){
+    while(budget->used()>limit-requested&&!tiles_.empty()){
         auto victim=tiles_.end();
         for(auto it=tiles_.begin();it!=tiles_.end();++it){
             if(!mandatory&&sameTarget&&usefulFallback(it->first,it->second,focus,level_.value_or(it->first.scale),scene_))continue;
@@ -172,9 +163,9 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
         // Optional picture recording yields to already completed frontier work.
         // The canonical checkpoint path remains available at the same budget.
         if(victim==tiles_.end())break;
-        const auto before=charged();const auto key=victim->first;tiles_.erase(victim);sources_.erase(key);
+        const auto before=budget->used();const auto key=victim->first;tiles_.erase(victim);sources_.erase(key);
         ++work.evictions;work.coverageComplete=false;dirty_=true;
-        work.retainedBytes=budget->used(resources::ResourceClass::kNavigationTile);if(charged()>=before)break;
+        work.retainedBytes=budget->used(resources::ResourceClass::kNavigationTile);if(budget->used()>=before)break;
     }
 }
 bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uint64_t scene,

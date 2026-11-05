@@ -25,9 +25,7 @@ class SkiaRenderCache final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
     std::function<void(std::size_t)> reclaimRecorded;
-    // Required minimum and preferred streaming headroom. Only the minimum may
-    // displace the qualified sharp frame; preferred bytes are not a new pool.
-    std::function<void(std::size_t,std::size_t)> reclaimPreparation;
+    std::function<void(std::size_t)> reclaimPreparation;
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
@@ -79,7 +77,7 @@ class SkiaRenderCache final {
     CompactCoverageTargets coverageTargets_;
     struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
     std::unique_ptr<Pending> pending_;
-    enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite,kMaterialTile};
+    enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
     struct Admission {SkIRect crop;AdmissionKind kind=AdmissionKind::kRaster;};
     std::unordered_map<foundation::ObjectId,Admission,foundation::ObjectIdHash> admissions_;
     bool admissionReady_=false,streamFrame_=false,compositeReady_=false;

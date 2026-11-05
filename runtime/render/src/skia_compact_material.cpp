@@ -4,8 +4,6 @@
 #include "compact_raster_internal.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "include/core/SkCanvas.h"
-#include "include/core/SkColorSpace.h"
-#include "include/gpu/ganesh/GrRecordingContext.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPicture.h"
@@ -369,16 +367,10 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
     if(work){++work->allocatedTiles;work->allocatedPixels+=bytes/4;}
     return target;
 }
-bool supportsIsolatedMaterialTiles(const SkCanvas& canvas,const foundation::InkBrushConfig& config)noexcept{
-    const auto info=canvas.imageInfo();auto* context=canvas.recordingContext();
-    return context&&!context->abandoned()&&config.algorithmVersion==4&&config.materialVersion<3&&info.alphaType()==kPremul_SkAlphaType&&
-        (info.colorType()==kRGBA_8888_SkColorType||info.colorType()==kBGRA_8888_SkColorType)&&
-        (!info.colorSpace()||info.colorSpace()->isSRGB());
-}
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
-    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,bool isolatedMaterialTiles)
-    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),isolatedMaterialTiles_(isolatedMaterialTiles),reclaim_(std::move(reclaim)){
+    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay)
+    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
     support_=SkRect::MakeEmpty();
@@ -525,9 +517,8 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
     bool compatible,CompactRasterWork* work){
-    resourcePending_=false;pendingResourceBytes_=0;
+    resourcePending_=false;
     if(done_)return true;
-    if(isolatedMaterialTiles_&&!supportsIsolatedMaterialTiles(canvas,config)){resourcePending_=true;pendingResourceBytes_=kMaterialTileReservation;return false;}
     if(!tile_){
         // Empty tiles do no shader work; preserve the Direct grid anchor.
         while(y_<clip_.bottom()){
@@ -543,7 +534,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         // Legacy coverage is a continuous gradient throughout its body;
         // its exact GPU execution is unqualified and stays CPU-backed.
         tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
-        if(!tile_){resourcePending_=true;pendingResourceBytes_=std::size_t(w)*h*4;return false;}
+        if(!tile_){resourcePending_=true;return false;}
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
         if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;
             if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)++work->scalarCoverageTiles;}
@@ -558,7 +549,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         target->translate(float(-x_),float(-y_));target->concat(matrix_);
         if(hybrid_){
             correction_=targets.acquire(canvas,w,h,false,work);
-            if(!correction_){tile_.reset();resourcePending_=true;pendingResourceBytes_=std::size_t(w)*h*4;return false;}
+            if(!correction_){tile_.reset();resourcePending_=true;return false;}
             auto* cpu=correction_->getCanvas();cpu->resetMatrix();cpu->clear(SK_ColorBLACK);
             // Saturation encodes .045 to the exact pinned N32 value (11/255).
             AXIOM_FRAME_TIMING_SCOPE(interiorTiming,gpu_coverage_submit);
@@ -660,32 +651,12 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     {
         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
         auto image=tile_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
+        canvas.save();canvas.resetMatrix();
         auto shaded=SkIRect::MakeXYWH(x_,y_,tile_->width(),tile_->height());
         if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
-        if(!shaded.isEmpty()){
-            resources::ResourceLease materialLease;
-            if(isolatedMaterialTiles_){
-                const auto bytes=std::size_t(tile_->width()+2)*(tile_->height()+2)*8;
-                auto token=targets.budget?targets.budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
-                if(!token){resourcePending_=true;pendingResourceBytes_=bytes;return false;}
-                materialLease=resources::ResourceLease(targets.budget,*token);
-                if(work)work->materialIsolationReservedBytes+=bytes;
-            }
-            SkAutoCanvasRestore restore(&canvas,true);canvas.resetMatrix();canvas.clipIRect(shaded);
-            if(isolatedMaterialTiles_){
-                // Bounds alone are a hint. The integer clip bounds allocation;
-                // Skia's layer origin keeps the original global shader matrix.
-                auto* context=canvas.recordingContext();canvas.saveLayer(nullptr,nullptr);
-                const bool ready=context&&canvas.recordingContext()==context&&!context->abandoned();
-                if(!ready){resourcePending_=true;pendingResourceBytes_=kMaterialTileReservation;return false;}
-            }
-            canvas.setMatrix(matrix_);
-            compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);
-            if(isolatedMaterialTiles_)canvas.restore();
-            if(work){work->compositedPixels+=std::uint64_t(shaded.width())*shaded.height();
-                if(isolatedMaterialTiles_){++work->materialIsolationTiles;work->materialIsolationPeakBytes=std::max(work->materialIsolationPeakBytes,
-                    std::size_t(tile_->width()+2)*(tile_->height()+2)*8);}}
-        }
+        canvas.clipIRect(shaded);canvas.setMatrix(matrix_);
+        if(work)work->compositedPixels+=std::uint64_t(shaded.width())*shaded.height();
+        compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);canvas.restore();
     }
     tile_.reset();x_+=256;if(x_>=clip_.right()){x_=clip_.left();y_+=256;}
     done_=y_>=clip_.bottom();return done_;
