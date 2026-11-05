@@ -2,6 +2,7 @@
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "../src/skia_navigation_tiles.hpp"
+#include "../src/skia_render_cache_internal.hpp"
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -703,6 +704,32 @@ void checkOversizedCanonical(TestSurface& target) {
     }
     require(result.code==BackendSubmissionCode::kAccepted&&target.presentCount()==presents+1,"oversized canonical receipt");
     require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"oversized preparation changed Direct pixels");
+    // A structurally impossible pair must fail explicitly, without touching
+    // the presented target, retrying forever, or accepting a Direct frame.
+    SkiaRenderer impossible;options.sharedMaxBytes=192*1024;impossible.setRenderCacheOptions(options);
+    const auto stable=pixels(target);const auto count=target.presentCount();
+    require(impossible.renderFrame(target,demand,nullptr,&slice).code==BackendSubmissionCode::kRejected&&
+        pixels(target)==stable&&target.presentCount()==count,"impossible work buffers escaped admission");
+
+    // Inject real shared quota pressure, then retire it. No allocator mock:
+    // the production cache must keep offscreen progress and resume admission.
+    internal::SkiaRenderCache cache;options.sharedMaxBytes=600*1024;cache.options=options;
+    cache.budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,600*1024});
+    const auto token=cache.budget->reserve(resources::ResourceClass::kScratch,400*1024,true);
+    require(bool(token),"quota pressure setup");resources::ResourceLease held(cache.budget,*token);
+    const auto acquired=target.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"quota target");
+    cache.begin(demand,&target,*acquired.frame.surface,0);
+    auto preparation=cache.prepare(*acquired.frame.surface->getCanvas(),demand,slice,nullptr,nullptr);
+    require(preparation==internal::SkiaRenderCache::Preparation::kResourcePending&&
+        cache.work.preparationCoverageSteps==0,"denied scratch escaped into synchronous work");
+    require(!cache.compositePreparedFrame(*acquired.frame.surface->getCanvas()),"denied scratch qualified incomplete pixels");
+    held.reset();unsigned resumed=0;
+    do{preparation=cache.prepare(*acquired.frame.surface->getCanvas(),demand,slice,nullptr,nullptr);
+        require(++resumed<1024,"retired quota did not resume work");}
+    while(preparation==internal::SkiaRenderCache::Preparation::kPending);
+    require(preparation==internal::SkiaRenderCache::Preparation::kReady&&
+        cache.compositePreparedFrame(*acquired.frame.surface->getCanvas()),"retired quota failed canonical preparation");
+    target.release();require(pixels(target)==pixels(reference),"quota recovery changed exact pixels");
 }
 
 int main(int argc,char** argv) {

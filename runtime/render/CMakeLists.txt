@@ -21,6 +21,22 @@ add_library(canvas_runtime_render STATIC
     src/preview_surface.cpp)
 target_link_libraries(canvas_runtime_render PUBLIC canvas_runtime_scheduling canvas_runtime_resources)
 
+# Private source-build comparison profiles. These do not add a consumer API or
+# alter the installed JS/DLL contract. Keep the accepted default at32/96MiB.
+set(AXIOM_RENDER_CACHE_MIB "32" CACHE STRING "Optional derived render cache MiB")
+set(AXIOM_RENDER_SHARED_MIB "96" CACHE STRING "Shared derived resource hard cap MiB")
+foreach(_budget AXIOM_RENDER_CACHE_MIB AXIOM_RENDER_SHARED_MIB)
+    if(NOT "${${_budget}}" MATCHES "^[1-9][0-9]*$" OR ${${_budget}} GREATER 4096)
+        message(FATAL_ERROR "${_budget} must be an integer from1 to4096")
+    endif()
+endforeach()
+if(AXIOM_RENDER_CACHE_MIB GREATER AXIOM_RENDER_SHARED_MIB)
+    message(FATAL_ERROR "Optional render capacity cannot exceed the shared hard cap")
+endif()
+target_compile_definitions(canvas_runtime_render PRIVATE
+    AXIOM_RENDER_CACHE_MIB=${AXIOM_RENDER_CACHE_MIB}
+    AXIOM_RENDER_SHARED_MIB=${AXIOM_RENDER_SHARED_MIB})
+
 if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
                    CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)

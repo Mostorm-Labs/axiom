@@ -25,6 +25,10 @@
 #include <type_traits>
 
 namespace canvas::render {
+SkiaRenderer::SkiaRenderer(){
+    renderCacheOptions_.maxBytes=std::size_t(AXIOM_RENDER_CACHE_MIB)*1024*1024;
+    renderCacheOptions_.sharedMaxBytes=std::size_t(AXIOM_RENDER_SHARED_MIB)*1024*1024;
+}
 SkiaRenderer::~SkiaRenderer(){
     // Seal quota before old contexts can abandon their completion callbacks.
     if(resourceBudget_)resourceBudget_->close();
@@ -176,7 +180,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
-            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
@@ -188,7 +192,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if(!cachedGpuSafe)clearRenderCache();
     if(cachedGpuSafe)try {
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
-            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         renderCache_->sourcePool=sourceRetention_;
@@ -213,12 +217,23 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             cache->reclaimRecorded=[navigation,budget=resourceBudget_,limit=renderCacheOptions_.maxBytes,frame=plan.frame,providerIdentity=&provider,resource=resourceEpoch_](std::size_t bytes){
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes,frame,providerIdentity,resource);
             };
+            cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t bytes){
+                // Reclaim optional resources only on actual critical admission
+                // pressure. Their unfinished GPU reads remain charged.
+                navigationCache_.reset();
+                if(const auto tiles=navigation.lock())tiles->reclaimForExact(resourceBudget_,
+                    renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
+            };
             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
         }
-        catch(const std::bad_alloc&){cache->clear();}
+        catch(const std::bad_alloc&){cache->clear();prepared=internal::SkiaRenderCache::Preparation::kResourcePending;}
         target->restore();
         rasterizations_+=cache->work.rasterizedGroups-beforePreparation;
-        if(prepared==internal::SkiaRenderCache::Preparation::kPending){
+        if(prepared==internal::SkiaRenderCache::Preparation::kRejected){
+            provider.release();return BackendSubmissionResult::rejected("canonical work buffers exceed shared resource capacity");
+        }
+        if(prepared==internal::SkiaRenderCache::Preparation::kPending ||
+           prepared==internal::SkiaRenderCache::Preparation::kResourcePending){
             provider.release();return BackendSubmissionResult::retry("exact cache preparation pending");
         }
     }
@@ -326,7 +341,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
     serviceResourceRetirements();
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
-        resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+        resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
     if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     // Exact scratch/coverage targets cannot help navigation. Release them only
@@ -442,7 +457,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
-            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
@@ -454,7 +469,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if(!cachedGpuSafe)clearRenderCache();
     if(cachedGpuSafe)try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
-            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         renderCache_->sourcePool=sourceRetention_;

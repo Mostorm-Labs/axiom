@@ -29,13 +29,13 @@ struct CanonicalViewportTransform;
 // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.
 class SkiaRenderer final {
   public:
-    SkiaRenderer() = default;
+    SkiaRenderer();
     ~SkiaRenderer();
     SkiaRenderer(const SkiaRenderer&)=delete;
     SkiaRenderer& operator=(const SkiaRenderer&)=delete;
     // Private/source owner opportunity only; no GPU handle or consumer API.
     void serviceResourceRetirements()noexcept;
-    explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
+    explicit SkiaRenderer(ImageResourceResolver* images) : SkiaRenderer() { images_ = images; }
     void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,

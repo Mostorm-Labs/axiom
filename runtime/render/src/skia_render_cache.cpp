@@ -215,7 +215,7 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
 }
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text){
-    if(!sourceAdmission_)return Preparation::kFallback;
+    if(!sourceAdmission_)return Preparation::kResourcePending;
     if(!options.enabled||options.tileCandidate||!slice.maxGroups||!slice.maxMicroseconds||!slice.maxCoverageSteps||
        !options.maxEntries)return Preparation::kFallback;
     // Admission is reused only while begin() has verified all group revisions,
@@ -279,7 +279,17 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         admissionReady_=true;
     }
     planRuns(canvas,plan);
-    if(streamFrame_&&!ensureComposite(canvas,plan))return Preparation::kFallback;
+    // A streamed frame needs both an ordered destination and an isolated ink
+    // target. Optional cache capacity is not the admission cap for this work.
+    // Reject structurally impossible requests instead of retrying forever or
+    // escaping into an unbounded synchronous renderer.
+    const auto frameBytes=std::size_t(surface_->width())*surface_->height()*4;
+    const bool needsScratch=std::any_of(admissions_.begin(),admissions_.end(),[](const auto& a){
+        return !a.second.crop.isEmpty()&&a.second.kind!=AdmissionKind::kComposite;
+    });
+    const auto buffers=std::size_t(streamFrame_)+std::size_t(needsScratch);
+    if(buffers&&frameBytes>options.sharedMaxBytes/buffers)return Preparation::kRejected;
+    if(streamFrame_&&!ensureComposite(canvas,plan))return allocationFailure_;
     if(compositeReady_)return Preparation::kReady;
     ++work.preparationSlices;
     const auto start=std::chrono::steady_clock::now();std::size_t built=0,steps=0;
@@ -317,7 +327,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         }
         if(exhausted())return yield();
         if(!pending_){
-            if(!directComposite&&!ensureScratch(canvas))return Preparation::kFallback;
+            if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
             const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
             auto* target=(directComposite?composite_:scratch_)->getCanvas();
             if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
@@ -458,14 +468,32 @@ void SkiaRenderCache::resetPreparation(){
 }
 bool SkiaRenderCache::ensureComposite(SkCanvas& canvas,const FramePlan& plan){
     if(composite_)return true;
+    if(!acquireWorkSurface(canvas,composite_,compositeLease_,true))return false;
+    drawReferenceBackgroundToSkCanvas(*composite_->getCanvas(),plan);return true;
+}
+bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& target,
+    resources::ResourceLease& targetLease,bool mandatory){
+    if(target)return true;
     const auto info=surface_->imageInfo();const auto bytes=std::size_t(info.width())*info.height()*4;
-    if(bytes>options.maxBytes)return false;
+    allocationFailure_=Preparation::kResourcePending;
+    if(bytes>(mandatory?options.sharedMaxBytes:options.maxBytes)){
+        allocationFailure_=Preparation::kRejected;return false;
+    }
     auto token=budget?budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
+    if(budget&&!token&&mandatory){
+        // Completed prefix pixels are already in composite_; optional resident
+        // sources can be rebuilt. Never drop the active raster job or its grid.
+        entries_.clear();coverage_.clear();runs_.clear();
+        work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+        if(reclaimPreparation)reclaimPreparation(bytes);
+        token=budget->reserve(resources::ResourceClass::kScratch,bytes,true);
+    }
     if(budget&&!token)return false;
     resources::ResourceLease lease(budget,token.value_or(0));
-    composite_=canvas.makeSurface(info);if(!composite_)return false;
-    compositeLease_=std::move(lease);++work.scratchAllocations;
-    drawReferenceBackgroundToSkCanvas(*composite_->getCanvas(),plan);return true;
+    auto candidate=canvas.makeSurface(info);
+    if(!candidate){allocationFailure_=Preparation::kRejected;return false;}
+    target=std::move(candidate);targetLease=std::move(lease);++work.scratchAllocations;
+    return true;
 }
 void SkiaRenderCache::flushPreparation(){
     // Submit bounded offscreen work without presenting or a CPU fence. Leaving
@@ -486,16 +514,9 @@ SkMatrix SkiaRenderCache::entryMatrix(SkCanvas& canvas,const FramePlan& plan,con
     SkMatrix object;object.setAll(float(r.a),float(r.c),float(r.tx),float(r.b),float(r.d),float(r.ty),0,0,1);
     return SkMatrix::Concat(canvas.getTotalMatrix(),SkMatrix::Concat(world,object));
 }
-bool SkiaRenderCache::ensureScratch(SkCanvas& canvas){
+bool SkiaRenderCache::ensureScratch(SkCanvas& canvas,bool mandatory){
     const auto info=surface_->imageInfo();const auto bytes=std::size_t(info.width())*info.height()*4;
-    if(bytes>options.maxBytes)return false;
-    if(!scratch_){
-        auto reserved=budget?budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
-        if(budget&&!reserved)return false;
-        resources::ResourceLease lease(budget,reserved.value_or(0));
-        scratch_=canvas.makeSurface(info);if(!scratch_)return false;
-        scratchLease_=std::move(lease);++work.scratchAllocations;
-    }
+    if(!acquireWorkSurface(canvas,scratch_,scratchLease_,mandatory))return false;
     work.scratchPeakBytes=std::max(work.scratchPeakBytes,bytes);return true;
 }
 void SkiaRenderCache::configureScratch(SkCanvas& target,const FramePlan& plan,const SkMatrix& matrix){

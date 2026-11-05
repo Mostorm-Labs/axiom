@@ -33,7 +33,7 @@ class SkiaNavigationTiles final {
     NavigationWork work;
     void cancelWork(){cancel();work.pending=false;work.presented=false;}
     void reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t limit,std::size_t requested,
-        const FrameState&,const SkiaSurfaceProvider*,std::uint64_t resourceEpoch);
+        const FrameState&,const SkiaSurfaceProvider*,std::uint64_t resourceEpoch,bool mandatory=false);
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,

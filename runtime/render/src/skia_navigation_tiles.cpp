@@ -124,7 +124,7 @@ bool SkiaNavigationTiles::usefulFallback(TileKey key,const Tile& tile,
     return false;
 }
 void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch){
+    std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch,bool mandatory){
     if(!budget||budgetOwner_.lock()!=budget||requested>limit||budget->used()<=limit-requested)return;
     // Optional picture recording cannot reclaim mandatory canonical buffers.
     // If those alone exceed its soft limit, throwing away completed navigation
@@ -154,7 +154,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     while(budget->used()>limit-requested&&!tiles_.empty()){
         auto victim=tiles_.end();
         for(auto it=tiles_.begin();it!=tiles_.end();++it){
-            if(sameTarget&&usefulFallback(it->first,it->second,focus,level_.value_or(it->first.scale),scene_))continue;
+            if(!mandatory&&sameTarget&&usefulFallback(it->first,it->second,focus,level_.value_or(it->first.scale),scene_))continue;
             if(victim==tiles_.end()){victim=it;continue;}
             const bool a=intersects(grid_.bounds(it->first),visible),b=intersects(grid_.bounds(victim->first),visible);
             if((!a&&b)||(a==b&&(it->first.scale<victim->first.scale||
