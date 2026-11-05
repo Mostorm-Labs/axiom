@@ -1,0 +1,84 @@
+{
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "sourceRevision": "1e6b5f5764c4585c61d658d6d628ba699a1e0d91",
+  "baselineRevision": "7299f6874be4947af219354dfa06bc6729a7b380",
+  "measurementBindingsAndPixels": true,
+  "regression": true,
+  "guards": {
+    "cold15Percent": false,
+    "clarityNoRegression2Points": false,
+    "navigation150Ms": false
+  },
+  "dpr4Cold": {
+    "phase": "after-freeze",
+    "sameFinalPixels": true,
+    "beforeWaitMs": 1460.5,
+    "afterWaitMs": 1380.0999999940395,
+    "beforeGapMs": 78.69999998807907,
+    "afterGapMs": 56.30000001192093,
+    "beforeLowDensity": 0.6427075490714285,
+    "afterLowDensity": 0.7338301561143735
+  },
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "baseline_failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": [],
+    "resolved_failures": []
+  },
+  "gpuModes": [
+    "material",
+    "detail",
+    "oversized",
+    "frontier",
+    "quality",
+    "affine",
+    "background",
+    "contour",
+    "replay",
+    "exact-replay"
+  ],
+  "boundedBrowserRuns": 22,
+  "budgetMiB": [
+    32,
+    96
+  ],
+  "officialGatePassClaimed": false,
+  "measuredDemo": "http://127.0.0.1:4237/example.html",
+  "scope": "Local Chrome synthetic root SDK navigation and native/private GPU conformance. Not physical sleep/input-to-photon,unique GPU memory,all-platform evidence or100K/1M qualification.",
+  "withdrawnExperiment": true,
+  "activeCandidate": {
+    "activeSourceRevision": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+    "codeEquivalentRevision": "7299f6874be4947af219354dfa06bc6729a7b380",
+    "withdrawnRevision": "1e6b5f5764c4585c61d658d6d628ba699a1e0d91",
+    "earlierRejectedRevision": "4a09233437cd88b92bd5c22f121e6d36bf99aed6",
+    "checkedPaths": [
+      "runtime",
+      "sdk",
+      "apps",
+      "debug_ui",
+      "verification/runners",
+      "verification/tests",
+      "tools",
+      "CMakeLists.txt"
+    ],
+    "codeDiff": [],
+    "reason": "Frozen paired DPR4 cold15%,clarity and150ms guards failed. Preserve functional experiments and exact evidence;restore retained path without increasing budgets.",
+    "demo": "http://127.0.0.1:4238/example.html"
+  },
+  "activePerformanceAcceptance": "NOT_ACCEPTED"
+}
