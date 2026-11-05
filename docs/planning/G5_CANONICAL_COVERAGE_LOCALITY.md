@@ -102,3 +102,32 @@ If the paired final matrix still fails the frozen warm performance thresholds,
 classify this slice BLOCKED_PERFORMANCE with useful correctness/locality work
 and a precise bottleneck; do not relabel the threshold, expand budgets or claim
 that canonical exact rendering latency is closed.
+
+Second bounded experiment, before production changes: the accepted native Skia
+SDK supports a drawable R8 CPU target. Test whether v4's white-on-opaque-black
+coverage may use only its red channel, consumed by the unchanged material .r
+shader. This is a private coverage-target format choice, not a Brush algorithm,
+provider format, GPU staging or budget-limit change. Reserve the existing4B/px
+conservatively. Other algorithms and the independent Direct oracle stay N32.
+Unsupported scalar targets must fall back to N32. Require an explicit scalar-tile
+work oracle, complete Direct pixel equality on native/real Chrome, every expanded
+fallback/lifetime oracle, and the same frozen Web performance targets. Reject the
+experiment on any pixel difference; do not introduce a tolerance.
+
+R8 passed strict native/Chrome pixels and reduced warm CPU coverage~318->269ms,
+but still missed the frozen target. Before the next experiment: test Skia's A8
+coverage path for v4-only white-on-black masks. A8 starts transparent, stores
+coverage in alpha with SrcOver, and the vector material reads alpha rather than
+red. Every primitive/order/grid and paint material stays fixed. Independent N32
+Direct byte equality (no tolerance) must prove the representation/blend
+substitution; unsupported masks/material combinations keep N32. This is a
+candidate realization, not a Brush/semantic or AA contract change. Retain R8's
+source/trace separately and reject A8 on any native/Chrome pixel mismatch.
+
+A8 candidate passed native and Chrome exact Direct byte parity. Same diagnostic
+warm case:~56ms CPU coverage/~248ms completion wait, versus~328ms/~798ms baseline;
+restore~829ms in this exploratory run. Final acceptance still requires the full
+paired clean-source ON/OFF matrix, full regression and declared density/receipt
+checks. Target-format fallback discards only incompatible pictures, retains
+checkpoints, and the target pool distinguishes scalar/N32 masks. No threshold,
+time/byte/GPU limit or public SDK contract was relaxed.

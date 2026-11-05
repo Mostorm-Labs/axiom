@@ -72,7 +72,7 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     const t=stageTotals[name]??={inclusive_ms:0,exclusive_ms:0,calls:0};
     t.inclusive_ms+=stage.inclusive_ns/1e6;t.exclusive_ms+=stage.exclusive_ns/1e6;t.calls+=stage.calls;
   }
-  const exactKeys=['compiled_contour_knots','record_candidates','record_replays','record_rejected','record_groups','record_selection_yields','checkpoint_replays','checkpoint_replay_knots'];
+  const exactKeys=['compiled_contour_knots','record_candidates','record_replays','record_rejected','record_groups','record_selection_yields','checkpoint_replays','checkpoint_replay_knots','scalar_coverage_tiles'];
   const exactCoverageWork=frameRows.length&&frameRows.every(r=>exactKeys.every(k=>Number.isSafeInteger(r.counts?.[k])&&r.counts[k]>=0))
     ?Object.fromEntries(exactKeys.map(k=>[k,total(frameRows.map(r=>r.counts[k]))])):null;
   return {

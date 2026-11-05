@@ -47,14 +47,22 @@ const sk_sp<SkRuntimeEffect>& materialEffect(){
         return result.effect;
     }();return effect;
 }
-const sk_sp<SkRuntimeEffect>& vectorMaterialEffect(){
+const sk_sp<SkRuntimeEffect>& vectorMaterialEffect(bool alphaCoverage=false){
     static const auto effect=[] {
         auto result=SkRuntimeEffect::MakeForShader(SkString(R"sksl(
             uniform shader coverage; uniform float4 paint;
             half4 main(float2 p){half a=half(coverage.eval(p).r*paint.a);return half4(half3(paint.rgb)*a,a);}
         )sksl"));
         if(!result.effect)throw std::runtime_error(result.errorText.c_str());return result.effect;
-    }();return effect;
+    }();
+    if(!alphaCoverage)return effect;
+    static const auto alpha=[] {
+        auto result=SkRuntimeEffect::MakeForShader(SkString(R"sksl(
+            uniform shader coverage; uniform float4 paint;
+            half4 main(float2 p){half a=half(coverage.eval(p).a*paint.a);return half4(half3(paint.rgb)*a,a);}
+        )sksl"));
+        if(!result.effect)throw std::runtime_error(result.errorText.c_str());return result.effect;
+    }();return alpha;
 }
 const sk_sp<SkRuntimeEffect>& crayonCoverageEffect(){
     static const auto effect=[] {
@@ -118,8 +126,9 @@ const sk_sp<SkRuntimeEffect>& materialV2Effect(){
 }
 }
 
-void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
-    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);
+namespace {
+void drawContourCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour,SkBlendMode blend){
+    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(blend);
     paint.setColor(SK_ColorWHITE);
     // Each adjacent pair is one overlapping ribbon. The compiler carries the
     // preceding patch across chunk boundaries, so every pair is rasterized
@@ -131,6 +140,10 @@ void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::Ink
     for(const auto& cap:contour.caps){canvas.save();canvas.translate(static_cast<SkScalar>(cap.x),static_cast<SkScalar>(cap.y));
         if(config.family==foundation::InkFamily::kMarker){canvas.rotate(static_cast<SkScalar>(config.markerAngle*57.29577951308232));canvas.scale(1,static_cast<SkScalar>(config.markerFlatness));}
         canvas.drawCircle(0,0,static_cast<SkScalar>(cap.radius),paint);canvas.restore();}
+}
+}
+void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
+    drawContourCoverage(canvas,config,contour,SkBlendMode::kLighten);
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed,
@@ -220,7 +233,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
     SkMatrix local;
     if(!canvas.getTotalMatrix().invert(&local))return;
     local.preTranslate(float(deviceX),float(deviceY));
-    SkRuntimeShaderBuilder builder(config.materialVersion==4?dryWetEffect(true):config.materialVersion==3?crayonMaterialEffect():config.algorithmVersion==4?vectorMaterialEffect():config.materialVersion==2?materialV2Effect():materialEffect());
+    SkRuntimeShaderBuilder builder(config.materialVersion==4?dryWetEffect(true):config.materialVersion==3?crayonMaterialEffect():config.algorithmVersion==4?vectorMaterialEffect(image.colorType()==kAlpha_8_SkColorType):config.materialVersion==2?materialV2Effect():materialEffect());
     builder.child("coverage")=image.makeShader(SkSamplingOptions(SkFilterMode::kLinear),local);
     builder.uniform("paint")=SkV4{float(config.color[0]),float(config.color[1]),float(config.color[2]),float(config.color[3]*config.opacity)};
     if(config.materialVersion==4){
@@ -329,8 +342,8 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     }
 }
 
-sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bool compatible,CompactRasterWork* work){
-    for(auto& slot:slots_)if(slot.surface&&slot.compatible==compatible&&slot.surface->width()==w&&slot.surface->height()==h){
+sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bool compatible,CompactRasterWork* work,bool scalar){
+    for(auto& slot:slots_)if(slot.surface&&slot.scalar==scalar&&slot.compatible==compatible&&slot.surface->width()==w&&slot.surface->height()==h){
         slot.used=++tick_;if(work)++work->targetReuses;return slot.surface;
     }
     auto& slot=*std::min_element(slots_.begin(),slots_.end(),[](const auto& a,const auto& b){return a.used<b.used;});
@@ -341,9 +354,12 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
     resources::ResourceLease lease(budget,token.value_or(0));
     const auto info=SkImageInfo::MakeN32Premul(w,h);
     auto target=compatible?canvas.makeSurface(info):nullptr;
+    // v4 white coverage may use A8; Direct remains the independent N32
+    // oracle. Retain the conservative N32 reservation and unsupported fallback.
+    if(!target&&scalar)target=SkSurfaces::Raster(SkImageInfo::MakeA8(w,h));
     if(!target)target=SkSurfaces::Raster(info);
     if(!target)return nullptr;
-    slot.surface=target;slot.lease=std::move(lease);slot.compatible=compatible;slot.used=++tick_;
+    slot.surface=target;slot.lease=std::move(lease);slot.compatible=compatible;slot.scalar=scalar;slot.used=++tick_;
     if(work){++work->allocatedTiles;work->allocatedPixels+=bytes/4;}
     return target;
 }
@@ -476,7 +492,7 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
                 try{
                     auto hierarchy=SkRTreeFactory{}();
                     SkPictureRecorder recorder;auto* target=recorder.beginRecording(recordBounds_,hierarchy);
-                    drawCompactContourCoverageToSkCanvas(*target,config,contour);
+                    drawContourCoverage(*target,config,contour,contourBlend_);
                     auto picture=recorder.finishRecordingAsPicture();
                     // Conservatively include BBH storage even on SDK builds
                     // whose approximate picture footprint already includes it.
@@ -511,12 +527,19 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         tileInterior_.translate(-x_,-y_);
         // Legacy coverage is a continuous gradient throughout its body;
         // its exact GPU execution is unqualified and stays CPU-backed.
-        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work);
+        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
         if(!tile_)throw std::bad_alloc();
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
-        if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;}
+        if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;
+            if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)++work->scalarCoverageTiles;}
+        if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)AXIOM_FRAME_TIMING_ADD(scalar_coverage_tiles,1);
         AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
-        auto* target=tile_->getCanvas();target->resetMatrix();target->clear(SK_ColorBLACK);
+        const auto blend=tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten;
+        // A target-format fallback must not replay pictures recorded with a
+        // different coverage encoding. The exact checkpoints remain valid.
+        if(recordComplete_&&blend!=contourBlend_)abandonPictures();
+        contourBlend_=blend;
+        auto* target=tile_->getCanvas();target->resetMatrix();target->clear(tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
         target->translate(float(-x_),float(-y_));target->concat(matrix_);
         if(hybrid_){
             correction_=targets.acquire(canvas,w,h,false,work);if(!correction_)throw std::bad_alloc();
@@ -585,7 +608,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
                     compiler.append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
                     if(end==knots.size())compiler.finish(totalDistance_,emitted);}
                 {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
-                    drawCompactContourCoverageToSkCanvas(*target,config,emitted);}
+                    drawContourCoverage(*target,config,emitted,contourBlend_);}
                 if(work){++work->contourCheckpointReplays;work->checkpointReplayKnots+=end-knot_;work->compiledContourKnots+=end-knot_;}
                 AXIOM_FRAME_TIMING_ADD(checkpoint_replays,1);AXIOM_FRAME_TIMING_ADD(checkpoint_replay_knots,end-knot_);
                 AXIOM_FRAME_TIMING_ADD(compiled_contour_knots,end-knot_);
@@ -599,7 +622,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
                 contour_->append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
                 if(end==knots.size())contour_->finish(totalDistance_,emitted);}
             {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
-                drawCompactContourCoverageToSkCanvas(*target,config,emitted);}
+                drawContourCoverage(*target,config,emitted,contourBlend_);}
             if(checkpoint)recordContour(config,emitted,std::move(*checkpoint));
         }else drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,distance_,totalDistance_,seed);
         target->restore();

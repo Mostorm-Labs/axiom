@@ -10,6 +10,10 @@ namespace canvas::render::testing {
 inline void requireExactContourLocality(SkSurface& root){
     using namespace internal;
     const auto check=[](bool ok,const char* message){if(!ok)throw std::runtime_error(message);};
+    {CompactCoverageTargets pool;auto mask=pool.acquire(*root.getCanvas(),16,16,false,nullptr,true);
+        check(mask&&mask->imageInfo().colorType()==kAlpha_8_SkColorType,"v4 scalar mask did not use Skia A8 coverage");
+        auto rgba=pool.acquire(*root.getCanvas(),16,16,false,nullptr);
+        check(rgba&&rgba!=mask&&rgba->imageInfo().colorType()==kN32_SkColorType,"scalar mask escaped its v4 target pool key");}
     for(unsigned admission=0;admission<3;++admission){
     const bool softDenied=admission==1,hardDenied=admission==2;
     auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
@@ -44,6 +48,7 @@ inline void requireExactContourLocality(SkSurface& root){
         check(target->readPixels(info,pixels[mode].data(),info.minRowBytes(),0,0),"local exact readback");
         targets.clear();check(budget->used()==0,"local exact coverage target retirement");
     }
+    check(work[0].scalarCoverageTiles>0,"v4 exact coverage did not use scalar Skia mask targets");
     check(pixels[0]==pixels[1],"local exact differs from independent no-record compiler pixels");
     if(!softDenied&&!hardDenied)check(work[0].compiledContourKnots==knots.size(),"local exact recompiled the same source history");
     if(softDenied)check(work[0].contourRecordReplays==0&&work[0].contourCheckpointReplays>0,"soft denial did not preserve checkpoint locality");
