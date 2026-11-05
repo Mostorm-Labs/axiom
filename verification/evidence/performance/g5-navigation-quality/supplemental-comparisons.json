@@ -1,0 +1,2981 @@
+{
+  "user-recheck": [
+    {
+      "id": "repeat-0",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.599999994039536,
+          "p95": 18.600000008940697,
+          "p99": 30.900000005960464,
+          "max": 30.900000005960464,
+          "mean": 16.49444444456862
+        },
+        "display_submission_gap_ms": {
+          "count": 490,
+          "p50": 0,
+          "p95": 17.200000002980232,
+          "p99": 18.599999994039536,
+          "max": 282,
+          "mean": 3.1314285714407357
+        },
+        "input_display_submission_gap_ms": {
+          "count": 431,
+          "p50": 0,
+          "p95": 17.200000002980232,
+          "p99": 18.400000005960464,
+          "max": 18.69999998807907,
+          "mean": 2.755684454763295
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1,
+          "p95": 1.5,
+          "p99": 1.7999999970197678,
+          "max": 1.7999999970197678,
+          "mean": 1.0472222220980458
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 365.69999998807907,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 154,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.10000000894069672,
+          "mean": 0.0012987013180534562,
+          "total": 0.20000000298023224
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 77,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.599999994039536,
+          "p95": 19,
+          "p99": 39.400000005960464,
+          "max": 39.400000005960464,
+          "mean": 16.458333333333332
+        },
+        "display_submission_gap_ms": {
+          "count": 628,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 18,
+          "max": 400.90000000596046,
+          "mean": 2.5194267515971025
+        },
+        "input_display_submission_gap_ms": {
+          "count": 622,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17.900000005960464,
+          "max": 27.30000001192093,
+          "mean": 1.905144694533762
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2999999970197678,
+          "p95": 1.9000000059604645,
+          "p99": 2,
+          "max": 2,
+          "mean": 1.2805555549760659
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 415.5,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 36,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.00277777761220932,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 16,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "repeat-1",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.599999994039536,
+          "p95": 18.899999991059303,
+          "p99": 21.100000008940697,
+          "max": 21.100000008940697,
+          "mean": 16.637500000082785
+        },
+        "display_submission_gap_ms": {
+          "count": 436,
+          "p50": 0,
+          "p95": 17.400000005960464,
+          "p99": 18.5,
+          "max": 268.59999999403954,
+          "mean": 3.5600917431261014
+        },
+        "input_display_submission_gap_ms": {
+          "count": 367,
+          "p50": 0,
+          "p95": 17.400000005960464,
+          "p99": 18.400000005960464,
+          "max": 19.100000008940697,
+          "mean": 3.2643051771117166
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2000000029802322,
+          "p95": 1.6000000089406967,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322,
+          "mean": 1.2499999995860789
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 382.09999999403954,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 168,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.10000000894069672,
+          "mean": 0.003571428447252228,
+          "total": 0.5999999791383743
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 79,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.299999997019768,
+          "p99": 18.900000005960464,
+          "max": 18.900000005960464,
+          "mean": 16.605555555472773
+        },
+        "display_submission_gap_ms": {
+          "count": 1193,
+          "p50": 0,
+          "p95": 15.799999997019768,
+          "p99": 17.5,
+          "max": 384.29999999701977,
+          "mean": 1.313998323549069
+        },
+        "input_display_submission_gap_ms": {
+          "count": 1187,
+          "p50": 0,
+          "p95": 15.700000002980232,
+          "p99": 17.30000001192093,
+          "max": 18.299999997019768,
+          "mean": 1.0073294018433692
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.5,
+          "p95": 2,
+          "p99": 2.5,
+          "max": 2.5,
+          "mean": 1.469444444610013
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 397.70000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 35,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 18,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "repeat-2",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.5,
+          "p95": 19,
+          "p99": 19.700000002980232,
+          "max": 19.700000002980232,
+          "mean": 16.626388888806105
+        },
+        "display_submission_gap_ms": {
+          "count": 490,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.5,
+          "max": 232.40000000596046,
+          "mean": 3.093877551020408
+        },
+        "input_display_submission_gap_ms": {
+          "count": 416,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.299999997019768,
+          "max": 18.599999994039536,
+          "mean": 2.877884615391779
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.0999999940395355,
+          "p95": 1.5,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322,
+          "mean": 1.098611109993524
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 349.20000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 162,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.0030864199370513727,
+          "total": 0.5000000298023224
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 79,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.799999997019768,
+          "p95": 18.299999997019768,
+          "p99": 18.700000002980232,
+          "max": 18.700000002980232,
+          "mean": 16.550000000124175
+        },
+        "display_submission_gap_ms": {
+          "count": 1382,
+          "p50": 0,
+          "p95": 14.700000002980232,
+          "p99": 17.5,
+          "max": 299.1000000089407,
+          "mean": 1.0725759768537777
+        },
+        "input_display_submission_gap_ms": {
+          "count": 1376,
+          "p50": 0,
+          "p95": 14.700000002980232,
+          "p99": 17.400000005960464,
+          "max": 18.5,
+          "mean": 0.8660610465137938
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2999999970197678,
+          "p95": 1.9000000059604645,
+          "p99": 2.0999999940395355,
+          "max": 2.0999999940395355,
+          "mean": 1.3527777772396803
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 315.59999999403954,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 29,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.0034482756565357075,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 15,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "after-idle",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.899999991059303,
+          "p95": 18.700000002980232,
+          "p99": 20.200000002980232,
+          "max": 20.200000002980232,
+          "mean": 16.69861111106972
+        },
+        "display_submission_gap_ms": {
+          "count": 455,
+          "p50": 0,
+          "p95": 17.5,
+          "p99": 18.400000005960464,
+          "max": 237.59999999403954,
+          "mean": 3.2736263736263735
+        },
+        "input_display_submission_gap_ms": {
+          "count": 400,
+          "p50": 0,
+          "p95": 17.69999998807907,
+          "p99": 18.400000005960464,
+          "max": 29.5,
+          "mean": 3.0409999999776485
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2000000029802322,
+          "p95": 1.6000000089406967,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322,
+          "mean": 1.1694444444858365
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 313.5,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 164,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.10000000894069672,
+          "mean": 0.000609756152077419,
+          "total": 0.10000000894069672
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 18.400000005960464,
+          "p99": 19.299999997019768,
+          "max": 19.299999997019768,
+          "mean": 16.543055555472773
+        },
+        "display_submission_gap_ms": {
+          "count": 1382,
+          "p50": 0,
+          "p95": 14.600000008940697,
+          "p99": 17.299999997019768,
+          "max": 387.40000000596046,
+          "mean": 1.1362518089811295
+        },
+        "input_display_submission_gap_ms": {
+          "count": 1376,
+          "p50": 0,
+          "p95": 14.600000008940697,
+          "p99": 17.299999997019768,
+          "max": 18.5,
+          "mean": 0.8657703488350434
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.4000000059604645,
+          "p95": 2.1000000089406967,
+          "p99": 2.2000000029802322,
+          "max": 2.2000000029802322,
+          "mean": 1.537499999627471
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 398.09999999403954,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 29,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 15,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "after-freeze",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 20.100000008940697,
+          "p99": 21.899999991059303,
+          "max": 21.899999991059303,
+          "mean": 16.713888888764714
+        },
+        "display_submission_gap_ms": {
+          "count": 162,
+          "p50": 0.20000000298023224,
+          "p95": 18.299999997019768,
+          "p99": 32.30000001192093,
+          "max": 956.1999999880791,
+          "mean": 13.19999999994481
+        },
+        "input_display_submission_gap_ms": {
+          "count": 156,
+          "p50": 0.20000000298023224,
+          "p95": 18.299999997019768,
+          "p99": 20.099999994039536,
+          "max": 32.30000001192093,
+          "mean": 7.716666666647563
+        },
+        "updatedInputs": 71,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 3.2999999970197678,
+          "p95": 5.600000008940697,
+          "p99": 7.799999997019768,
+          "max": 7.799999997019768,
+          "mean": 3.468055554976066
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 981.1000000089407,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 156,
+          "p50": 0,
+          "p95": 0.09999999403953552,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.008333333409749545,
+          "total": 1.300000011920929
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 19.5,
+          "p99": 32.5,
+          "max": 32.5,
+          "mean": 16.711111111152505
+        },
+        "display_submission_gap_ms": {
+          "count": 1342,
+          "p50": 0,
+          "p95": 14.600000008940697,
+          "p99": 17.400000005960464,
+          "max": 989,
+          "mean": 1.6202682563382715
+        },
+        "input_display_submission_gap_ms": {
+          "count": 1336,
+          "p50": 0,
+          "p95": 14.799999997019768,
+          "p99": 17.399999991059303,
+          "max": 24.700000002980232,
+          "mean": 0.9009730538944463
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 3.0999999940395355,
+          "p95": 5,
+          "p99": 11,
+          "max": 11,
+          "mean": 3.3305555565489664
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 1014.2999999970198,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 37,
+          "p50": 0,
+          "p95": 0.10000000894069672,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.0135135139162476,
+          "total": 0.5000000149011612
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 16,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    }
+  ],
+  "user-optical": [
+    {
+      "id": "repeat-0",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 17.900000005960464,
+          "p99": 39.79999999701977,
+          "max": 39.79999999701977,
+          "mean": 16.67083333329194
+        },
+        "display_submission_gap_ms": {
+          "count": 558,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 16.799999997019768,
+          "max": 240.19999998807907,
+          "mean": 2.7007168458781363
+        },
+        "input_display_submission_gap_ms": {
+          "count": 507,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 16.799999997019768,
+          "max": 26.200000002980232,
+          "mean": 2.367652859942918
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7999999970197678,
+          "p95": 1.2000000029802322,
+          "p99": 1.300000011920929,
+          "max": 1.300000011920929,
+          "mean": 0.781944445023934
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 332.20000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 160,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.09999999403953552,
+          "mean": 0.000624999962747097,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.299999997019768,
+          "p99": 18.799999997019768,
+          "max": 18.799999997019768,
+          "mean": 16.679166666749452
+        },
+        "display_submission_gap_ms": {
+          "count": 125,
+          "p50": 16.30000001192093,
+          "p95": 18.099999994039536,
+          "p99": 84.29999999701977,
+          "max": 205.40000000596046,
+          "mean": 11.784
+        },
+        "input_display_submission_gap_ms": {
+          "count": 112,
+          "p50": 16.5,
+          "p95": 18.099999994039536,
+          "p99": 18.399999991059303,
+          "max": 18.399999991059303,
+          "mean": 10.722321428624648
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.199999988079071,
+          "p95": 1.4000000059604645,
+          "p99": 1.5999999940395355,
+          "max": 1.5999999940395355,
+          "mean": 1.123611111400856
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 298.79999999701977,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 9,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 4,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.38358571767041,
+          "afterEdgeRms": 24.38358571767041,
+          "sameChecksum": true
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.53054287415956,
+          "afterEdgeRms": 24.53054287415956,
+          "sameChecksum": true
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.153031919180495,
+          "afterEdgeRms": 4.153031919180495,
+          "sameChecksum": true
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 25.90913989159782,
+          "afterEdgeRms": 25.90913989159782,
+          "sameChecksum": true
+        }
+      ]
+    },
+    {
+      "id": "repeat-1",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 17.900000005960464,
+          "p99": 20.099999994039536,
+          "max": 20.099999994039536,
+          "mean": 16.713888888971674
+        },
+        "display_submission_gap_ms": {
+          "count": 526,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 17.099999994039536,
+          "max": 33.599999994039536,
+          "mean": 2.4437262357244474
+        },
+        "input_display_submission_gap_ms": {
+          "count": 476,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 17,
+          "max": 21.700000002980232,
+          "mean": 2.5384453781449996
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.0999999940395355,
+          "p95": 1.4000000059604645,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322,
+          "mean": 1.0791666662941377
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 113.70000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 161,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.004968944173421919,
+          "total": 0.800000011920929
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.299999997019768,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.680555555555557
+        },
+        "display_submission_gap_ms": {
+          "count": 225,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.200000002980232,
+          "max": 103.09999999403954,
+          "mean": 5.716888888875643
+        },
+        "input_display_submission_gap_ms": {
+          "count": 219,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.200000002980232,
+          "max": 32.29999999701977,
+          "mean": 5.554794520547945
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2999999970197678,
+          "p95": 1.7000000029802322,
+          "p99": 1.9000000059604645,
+          "max": 1.9000000059604645,
+          "mean": 1.1569444433682494
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 117.59999999403954,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.38394537968398,
+          "afterEdgeRms": 24.202178470301664,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.52982617844593,
+          "afterEdgeRms": 24.52982617844593,
+          "sameChecksum": true
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.153031919180495,
+          "afterEdgeRms": 4.153031919180495,
+          "sameChecksum": true
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 25.909160683675502,
+          "afterEdgeRms": 25.909160683675502,
+          "sameChecksum": true
+        }
+      ]
+    },
+    {
+      "id": "after-idle",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18,
+          "p99": 18.80000001192093,
+          "max": 18.80000001192093,
+          "mean": 16.68194444456862
+        },
+        "display_submission_gap_ms": {
+          "count": 557,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 16.900000005960464,
+          "max": 19.700000002980232,
+          "mean": 2.310592459605027
+        },
+        "input_display_submission_gap_ms": {
+          "count": 506,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 16.799999997019768,
+          "max": 26.5,
+          "mean": 2.3930830039643487
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.9000000059604645,
+          "p95": 1.300000011920929,
+          "p99": 1.5999999940395355,
+          "max": 1.5999999940395355,
+          "mean": 0.9805555556797318
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 116.3999999910593,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 155,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.0032258064516129032,
+          "total": 0.5
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 18.299999997019768,
+          "p99": 19.100000008940697,
+          "max": 19.100000008940697,
+          "mean": 16.702777777694994
+        },
+        "display_submission_gap_ms": {
+          "count": 225,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.399999991059303,
+          "max": 120.09999999403954,
+          "mean": 5.7960000000397365
+        },
+        "input_display_submission_gap_ms": {
+          "count": 219,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.399999991059303,
+          "max": 21.19999998807907,
+          "mean": 5.5118721460915046
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2000000029802322,
+          "p95": 1.5,
+          "p99": 1.699999988079071,
+          "max": 1.699999988079071,
+          "mean": 1.1874999991721578
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 131.79999999701977,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0.10000000894069672,
+          "p95": 0.10000000894069672,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.10000000894069672,
+          "total": 0.10000000894069672
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.38394537968398,
+          "afterEdgeRms": 24.202178470301664,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.52982617844593,
+          "afterEdgeRms": 24.52982617844593,
+          "sameChecksum": true
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.153031919180495,
+          "afterEdgeRms": 4.153031919180495,
+          "sameChecksum": true
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 25.909160683675502,
+          "afterEdgeRms": 25.909160683675502,
+          "sameChecksum": true
+        }
+      ]
+    },
+    {
+      "id": "after-freeze",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.400000005960464,
+          "p95": 19.399999991059303,
+          "p99": 21.799999997019768,
+          "max": 21.799999997019768,
+          "mean": 16.651388888764714
+        },
+        "display_submission_gap_ms": {
+          "count": 410,
+          "p50": 0,
+          "p95": 16.899999991059303,
+          "p99": 17.900000005960464,
+          "max": 67.70000000298023,
+          "mean": 3.181463414648684
+        },
+        "input_display_submission_gap_ms": {
+          "count": 372,
+          "p50": 0,
+          "p95": 16.899999991059303,
+          "p99": 17.799999997019768,
+          "max": 21.099999994039536,
+          "mean": 3.225806451612903
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.0999999940395355,
+          "p95": 3.2000000029802322,
+          "p99": 3.8999999910593033,
+          "max": 3.8999999910593033,
+          "mean": 2.2791666661699614
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 130.40000000596046,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 158,
+          "p50": 0,
+          "p95": 0.09999999403953552,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.008860759437084198,
+          "total": 1.3999999910593033
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 77,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 19.099999994039536,
+          "p99": 110.90000000596046,
+          "max": 110.90000000596046,
+          "mean": 17.790277777860563
+        },
+        "display_submission_gap_ms": {
+          "count": 225,
+          "p50": 0.09999999403953552,
+          "p95": 17,
+          "p99": 23.69999998807907,
+          "max": 121.5,
+          "mean": 6.173777777751287
+        },
+        "input_display_submission_gap_ms": {
+          "count": 219,
+          "p50": 0.10000000894069672,
+          "p95": 17,
+          "p99": 18.200000002980232,
+          "max": 96.5,
+          "mean": 5.850228310515892
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.300000011920929,
+          "p95": 3.6000000089406967,
+          "p99": 4.0999999940395355,
+          "max": 4.0999999940395355,
+          "mean": 2.49444444436166
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 129.40000000596046,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0.09999999403953552,
+          "p95": 0.09999999403953552,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.09999999403953552,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [
+          {
+            "start": 14885.300000011921,
+            "duration": 100
+          }
+        ],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.38394537968398,
+          "afterEdgeRms": 24.202178470301664,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.52982617844593,
+          "afterEdgeRms": 24.52982617844593,
+          "sameChecksum": true
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 0,
+          "afterEdgeRms": 0,
+          "sameChecksum": true
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.153031919180495,
+          "afterEdgeRms": 4.153031919180495,
+          "sameChecksum": true
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 25.909160683675502,
+          "afterEdgeRms": 25.909160683675502,
+          "sameChecksum": true
+        }
+      ]
+    }
+  ],
+  "bounded-optical": [
+    {
+      "id": "repeat-0",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.599999994039536,
+          "p95": 20.5,
+          "p99": 30.599999994039536,
+          "max": 30.599999994039536,
+          "mean": 16.51111111106972
+        },
+        "display_submission_gap_ms": {
+          "count": 952,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 16.799999997019768,
+          "max": 253.59999999403954,
+          "mean": 1.6174369747867854
+        },
+        "input_display_submission_gap_ms": {
+          "count": 852,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 16.700000002980232,
+          "max": 18,
+          "mean": 1.3954225352182634
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7000000029802322,
+          "p95": 0.800000011920929,
+          "p99": 1.2999999970197678,
+          "max": 1.2999999970197678,
+          "mean": 0.6888888896339469
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 364.29999999701977,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 164,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.00121951212243336,
+          "total": 0.19999998807907104
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 17.399999991059303,
+          "p99": 18.19999998807907,
+          "max": 18.19999998807907,
+          "mean": 16.663888888847495
+        },
+        "display_submission_gap_ms": {
+          "count": 158,
+          "p50": 0.10000000894069672,
+          "p95": 17,
+          "p99": 84.1000000089407,
+          "max": 218.79999999701977,
+          "mean": 9.405696202493921
+        },
+        "input_display_submission_gap_ms": {
+          "count": 145,
+          "p50": 1.4000000059604645,
+          "p95": 16.799999997019768,
+          "p99": 17.099999994039536,
+          "max": 17.700000002980232,
+          "mean": 8.27517241383421
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.1000000089406967,
+          "p95": 1.5,
+          "p99": 1.8999999910593033,
+          "max": 1.8999999910593033,
+          "mean": 1.1527777775708172
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 315.5,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 11,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 4,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 23.397385387556795,
+          "afterEdgeRms": 23.397385387556795,
+          "sameChecksum": true
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.128861255054833,
+          "afterEdgeRms": 24.128861255054833,
+          "sameChecksum": true
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.600669055795835,
+          "afterEdgeRms": 26.038310028771296,
+          "sameChecksum": false
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.283685773779173,
+          "afterEdgeRms": 27.021446874601207,
+          "sameChecksum": false
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.316911840784891,
+          "afterEdgeRms": 26.741411170407666,
+          "sameChecksum": false
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.29701536217002,
+          "afterEdgeRms": 26.57549028762739,
+          "sameChecksum": false
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 8.88370419157452,
+          "afterEdgeRms": 26.764376653284657,
+          "sameChecksum": false
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 7.672856722892242,
+          "afterEdgeRms": 26.56159216057229,
+          "sameChecksum": false
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.1516981674464,
+          "afterEdgeRms": 26.618508425695524,
+          "sameChecksum": false
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.902584657002045,
+          "afterEdgeRms": 27.117719733595532,
+          "sameChecksum": false
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.338999890664574,
+          "afterEdgeRms": 25.073368037067183,
+          "sameChecksum": false
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.7789793670667455,
+          "afterEdgeRms": 23.836939526041032,
+          "sameChecksum": false
+        }
+      ]
+    },
+    {
+      "id": "repeat-1",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 17.599999994039536,
+          "p99": 18.899999991059303,
+          "max": 18.899999991059303,
+          "mean": 16.688888888806105
+        },
+        "display_submission_gap_ms": {
+          "count": 930,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 16.799999997019768,
+          "max": 33.599999994039536,
+          "mean": 1.3823655913914403
+        },
+        "input_display_submission_gap_ms": {
+          "count": 855,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 16.700000002980232,
+          "max": 18,
+          "mean": 1.4054970760268775
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7999999970197678,
+          "p95": 1.2000000029802322,
+          "p99": 1.300000011920929,
+          "max": 1.300000011920929,
+          "mean": 0.8361111109455427
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 115.5,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 157,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.0012738852743889877,
+          "total": 0.19999998807907104
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 17.899999991059303,
+          "p99": 18.599999994039536,
+          "max": 18.599999994039536,
+          "mean": 16.663888888847495
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 17.700000002980232,
+          "max": 107.1000000089407,
+          "mean": 2.521722113491271
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.700000002980232,
+          "p99": 17.700000002980232,
+          "max": 33.20000000298023,
+          "mean": 2.4083168316890697
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.0999999940395355,
+          "p95": 1.5,
+          "p99": 1.8999999910593033,
+          "max": 1.8999999910593033,
+          "mean": 1.093055555389987
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 118.20000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0.09999999403953552,
+          "p95": 0.09999999403953552,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.09999999403953552,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 23.397364545775417,
+          "afterEdgeRms": 23.226886593453788,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.12903584295867,
+          "afterEdgeRms": 23.958277120564915,
+          "sameChecksum": false
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.600669055795835,
+          "afterEdgeRms": 25.942702594613802,
+          "sameChecksum": false
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.283685773779173,
+          "afterEdgeRms": 26.96422673823016,
+          "sameChecksum": false
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.316911840784891,
+          "afterEdgeRms": 26.74149451891932,
+          "sameChecksum": false
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.29701536217002,
+          "afterEdgeRms": 26.575686077353225,
+          "sameChecksum": false
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 8.88370419157452,
+          "afterEdgeRms": 26.764591188793972,
+          "sameChecksum": false
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 7.672856722892242,
+          "afterEdgeRms": 26.561968276108235,
+          "sameChecksum": false
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.1516981674464,
+          "afterEdgeRms": 26.617061130390677,
+          "sameChecksum": false
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.902584657002045,
+          "afterEdgeRms": 27.043271510809355,
+          "sameChecksum": false
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.338999890664574,
+          "afterEdgeRms": 24.955204659215546,
+          "sameChecksum": false
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.7789793670667455,
+          "afterEdgeRms": 23.66961256822557,
+          "sameChecksum": false
+        }
+      ]
+    },
+    {
+      "id": "after-idle",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.799999997019768,
+          "p95": 17.80000001192093,
+          "p99": 19.100000008940697,
+          "max": 19.100000008940697,
+          "mean": 16.683333333374726
+        },
+        "display_submission_gap_ms": {
+          "count": 927,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.299999997019768,
+          "max": 34.3999999910593,
+          "mean": 1.3870550161780149
+        },
+        "input_display_submission_gap_ms": {
+          "count": 852,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 16.80000001192093,
+          "max": 25.599999994039536,
+          "mean": 1.420305164312253
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7999999970197678,
+          "p95": 1,
+          "p99": 1.0999999940395355,
+          "max": 1.0999999940395355,
+          "mean": 0.7972222225119671
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 116,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 160,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.600000008940697,
+          "p99": 19,
+          "max": 19,
+          "mean": 16.706944444527227
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 17.100000008940697,
+          "p99": 18.5,
+          "max": 103.29999999701977,
+          "mean": 2.52035225047174
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 17.100000008940697,
+          "p99": 18.5,
+          "max": 23.799999997019768,
+          "mean": 2.395049504950495
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1,
+          "p95": 1.300000011920929,
+          "p99": 1.5999999940395355,
+          "max": 1.5999999940395355,
+          "mean": 1.0458333330849807
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 114.79999999701977,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0.09999999403953552,
+          "p95": 0.09999999403953552,
+          "p99": 0.09999999403953552,
+          "max": 0.09999999403953552,
+          "mean": 0.09999999403953552,
+          "total": 0.09999999403953552
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 23.397364545775417,
+          "afterEdgeRms": 23.226886593453788,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.12903584295867,
+          "afterEdgeRms": 23.958277120564915,
+          "sameChecksum": false
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.600669055795835,
+          "afterEdgeRms": 25.942702594613802,
+          "sameChecksum": false
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.283685773779173,
+          "afterEdgeRms": 26.96422673823016,
+          "sameChecksum": false
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.316911840784891,
+          "afterEdgeRms": 26.74149451891932,
+          "sameChecksum": false
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.29701536217002,
+          "afterEdgeRms": 26.575686077353225,
+          "sameChecksum": false
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 8.88370419157452,
+          "afterEdgeRms": 26.764591188793972,
+          "sameChecksum": false
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 7.672856722892242,
+          "afterEdgeRms": 26.561968276108235,
+          "sameChecksum": false
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.1516981674464,
+          "afterEdgeRms": 26.617061130390677,
+          "sameChecksum": false
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 20.902584657002045,
+          "afterEdgeRms": 27.043271510809355,
+          "sameChecksum": false
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.338999890664574,
+          "afterEdgeRms": 24.955204659215546,
+          "sameChecksum": false
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.7789793670667455,
+          "afterEdgeRms": 23.66961256822557,
+          "sameChecksum": false
+        }
+      ]
+    },
+    {
+      "id": "after-freeze",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.599999994039536,
+          "p95": 21.700000002980232,
+          "p99": 27.69999998807907,
+          "max": 27.69999998807907,
+          "mean": 16.693055555638338
+        },
+        "display_submission_gap_ms": {
+          "count": 654,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 21,
+          "max": 51.099999994039536,
+          "mean": 1.9954128440366972
+        },
+        "input_display_submission_gap_ms": {
+          "count": 591,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 19.100000008940697,
+          "max": 26.899999991059303,
+          "mean": 2.0346869712351947
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.5,
+          "p95": 3.5,
+          "p99": 3.7000000029802322,
+          "max": 3.7000000029802322,
+          "mean": 2.480555556093653
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 129.20000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 219,
+          "p50": 0,
+          "p95": 0.09999999403953552,
+          "p99": 0.10000000894069672,
+          "max": 0.20000000298023224,
+          "mean": 0.007762557227317601,
+          "total": 1.7000000327825546
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 79,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.799999997019768,
+          "p99": 20.100000008940697,
+          "max": 20.100000008940697,
+          "mean": 16.605555555472773
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17.900000005960464,
+          "max": 120.79999999701977,
+          "mean": 2.5524461839472012
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17.900000005960464,
+          "max": 18.5,
+          "mean": 2.371287128712871
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.2000000029802322,
+          "p95": 3.3999999910593033,
+          "p99": 3.6000000089406967,
+          "max": 3.6000000089406967,
+          "mean": 2.379166666418314
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 133.40000000596046,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": [
+        {
+          "index": 0,
+          "sameCamera": true,
+          "beforeEdgeRms": 23.397364545775417,
+          "afterEdgeRms": 23.226886593453788,
+          "sameChecksum": false
+        },
+        {
+          "index": 6,
+          "sameCamera": true,
+          "beforeEdgeRms": 24.12903584295867,
+          "afterEdgeRms": 23.958277120564915,
+          "sameChecksum": false
+        },
+        {
+          "index": 12,
+          "sameCamera": true,
+          "beforeEdgeRms": 26.038402197350994,
+          "afterEdgeRms": 25.942702594613802,
+          "sameChecksum": false
+        },
+        {
+          "index": 18,
+          "sameCamera": true,
+          "beforeEdgeRms": 27.021461897612983,
+          "afterEdgeRms": 26.96422673823016,
+          "sameChecksum": false
+        },
+        {
+          "index": 24,
+          "sameCamera": true,
+          "beforeEdgeRms": 26.74149451891932,
+          "afterEdgeRms": 26.74149451891932,
+          "sameChecksum": true
+        },
+        {
+          "index": 30,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.29701536217002,
+          "afterEdgeRms": 26.575686077353225,
+          "sameChecksum": false
+        },
+        {
+          "index": 36,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.381700230735326,
+          "afterEdgeRms": 26.764591188793972,
+          "sameChecksum": false
+        },
+        {
+          "index": 42,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.294544692998602,
+          "afterEdgeRms": 26.561968276108235,
+          "sameChecksum": false
+        },
+        {
+          "index": 48,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.391782144507363,
+          "afterEdgeRms": 26.617061130390677,
+          "sameChecksum": false
+        },
+        {
+          "index": 54,
+          "sameCamera": true,
+          "beforeEdgeRms": 6.111405314516511,
+          "afterEdgeRms": 27.043271510809355,
+          "sameChecksum": false
+        },
+        {
+          "index": 60,
+          "sameCamera": true,
+          "beforeEdgeRms": 5.338999890664574,
+          "afterEdgeRms": 24.955204659215546,
+          "sameChecksum": false
+        },
+        {
+          "index": 66,
+          "sameCamera": true,
+          "beforeEdgeRms": 4.7789793670667455,
+          "afterEdgeRms": 23.66961256822557,
+          "sameChecksum": false
+        }
+      ]
+    }
+  ],
+  "bounded-latency": [
+    {
+      "id": "repeat-0",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 19.900000005960464,
+          "p99": 28,
+          "max": 28,
+          "mean": 16.495833333374726
+        },
+        "display_submission_gap_ms": {
+          "count": 952,
+          "p50": 0,
+          "p95": 16.5,
+          "p99": 18.099999994039536,
+          "max": 281.5,
+          "mean": 1.6468487394926679
+        },
+        "input_display_submission_gap_ms": {
+          "count": 852,
+          "p50": 0,
+          "p95": 16.5,
+          "p99": 18,
+          "max": 18.700000002980232,
+          "mean": 1.3941314554130528
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7000000029802322,
+          "p95": 0.8999999910593033,
+          "p99": 1.2999999970197678,
+          "max": 1.2999999970197678,
+          "mean": 0.6944444442374839
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 398,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 168,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.002380952416431336,
+          "total": 0.4000000059604645
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.200000002980232,
+          "p99": 18.299999997019768,
+          "max": 18.299999997019768,
+          "mean": 16.680555555555557
+        },
+        "display_submission_gap_ms": {
+          "count": 158,
+          "p50": 0.10000000894069672,
+          "p95": 17,
+          "p99": 86,
+          "max": 205.3999999910593,
+          "mean": 9.332278481012658
+        },
+        "input_display_submission_gap_ms": {
+          "count": 145,
+          "p50": 1,
+          "p95": 17,
+          "p99": 18.299999997019768,
+          "max": 18.299999997019768,
+          "mean": 8.282758620689656
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1,
+          "p95": 1.6000000089406967,
+          "p99": 1.7000000029802322,
+          "max": 1.7000000029802322,
+          "mean": 0.959722222139438
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 299.19999998807907,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 9,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 4,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "repeat-1",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.799999997019768,
+          "p95": 18.200000002980232,
+          "p99": 19,
+          "max": 19,
+          "mean": 16.479166666666668
+        },
+        "display_submission_gap_ms": {
+          "count": 927,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.900000005960464,
+          "max": 35.900000005960464,
+          "mean": 1.3865156418522329
+        },
+        "input_display_submission_gap_ms": {
+          "count": 852,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.900000005960464,
+          "max": 18.399999991059303,
+          "mean": 1.3927230046878398
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.7999999970197678,
+          "p95": 1.0999999940395355,
+          "p99": 1.2000000029802322,
+          "max": 1.2000000029802322,
+          "mean": 0.8416666661699613
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 116.80000001192093,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 160,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.09999999403953552,
+          "max": 0.10000000894069672,
+          "mean": 0.0031249999068677426,
+          "total": 0.4999999850988388
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 18.100000008940697,
+          "p99": 19,
+          "max": 19,
+          "mean": 16.556944444361662
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17.900000005960464,
+          "max": 104.20000000298023,
+          "mean": 2.519569471624266
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17.299999997019768,
+          "max": 18.799999997019768,
+          "mean": 2.360792079184315
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2999999970197678,
+          "p95": 1.699999988079071,
+          "p99": 1.9000000059604645,
+          "max": 1.9000000059604645,
+          "mean": 1.2500000008278422
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 118.30000001192093,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "repeat-2",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.400000005960464,
+          "p99": 19.700000002980232,
+          "max": 19.700000002980232,
+          "mean": 16.50555555543138
+        },
+        "display_submission_gap_ms": {
+          "count": 923,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.600000008940697,
+          "max": 35.29999999701977,
+          "mean": 1.4093174431170312
+        },
+        "input_display_submission_gap_ms": {
+          "count": 823,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.600000008940697,
+          "max": 18.100000008940697,
+          "mean": 1.4441069258809234
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.5999999940395355,
+          "p95": 1.0999999940395355,
+          "p99": 1.4000000059604645,
+          "max": 1.4000000059604645,
+          "mean": 0.683333332132962
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 131.70000000298023,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 163,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0.10000000894069672,
+          "max": 0.10000000894069672,
+          "mean": 0.0024539877666286164,
+          "total": 0.4000000059604645
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 79,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.661111111235286
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 17.799999997019768,
+          "max": 118.5,
+          "mean": 2.5520547945380443
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 17.100000008940697,
+          "max": 18.299999997019768,
+          "mean": 2.37544554457216
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2000000029802322,
+          "p95": 1.699999988079071,
+          "p99": 1.9000000059604645,
+          "max": 1.9000000059604645,
+          "mean": 1.2638888882680073
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 130.59999999403954,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "after-idle",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.200000002980232,
+          "p99": 18.400000005960464,
+          "max": 18.400000005960464,
+          "mean": 16.695833333250548
+        },
+        "display_submission_gap_ms": {
+          "count": 904,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.799999997019768,
+          "max": 35.599999994039536,
+          "mean": 1.4233407079678986
+        },
+        "input_display_submission_gap_ms": {
+          "count": 829,
+          "p50": 0,
+          "p95": 16.599999994039536,
+          "p99": 17.799999997019768,
+          "max": 27.600000008940697,
+          "mean": 1.4644149577804584
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 0.9000000059604645,
+          "p95": 1.2000000029802322,
+          "p99": 1.3999999910593033,
+          "max": 1.3999999910593033,
+          "mean": 0.9027777779847383
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 114.1000000089407,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 165,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0.10000000894069672,
+          "mean": 0.0006060606602466468,
+          "total": 0.10000000894069672
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.600000008940697,
+          "p95": 17.80000001192093,
+          "p99": 19.200000002980232,
+          "max": 19.200000002980232,
+          "mean": 16.550000000124175
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 17,
+          "max": 119.1000000089407,
+          "mean": 2.5520547945088836
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 16.899999991059303,
+          "max": 18.299999997019768,
+          "mean": 2.359801980203921
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 1.2999999970197678,
+          "p95": 1.7999999970197678,
+          "p99": 1.9000000059604645,
+          "max": 1.9000000059604645,
+          "mean": 1.316666666832235
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 130.8999999910593,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    },
+    {
+      "id": "after-freeze",
+      "pixelsEqual": true,
+      "before": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.700000002980232,
+          "p95": 18.900000005960464,
+          "p99": 19.80000001192093,
+          "max": 19.80000001192093,
+          "mean": 16.61388888893028
+        },
+        "display_submission_gap_ms": {
+          "count": 669,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 18.299999997019768,
+          "max": 51.70000000298023,
+          "mean": 1.9248131539655908
+        },
+        "input_display_submission_gap_ms": {
+          "count": 609,
+          "p50": 0,
+          "p95": 16.600000008940697,
+          "p99": 18.200000002980232,
+          "max": 18.599999994039536,
+          "mean": 1.9651888341494577
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.800000011920929,
+          "p95": 3.9000000059604645,
+          "p99": 4,
+          "max": 4,
+          "mean": 2.7402777781503067
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 113.79999999701977,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 210,
+          "p50": 0,
+          "p95": 0.09999999403953552,
+          "p99": 0.10000000894069672,
+          "max": 0.30000001192092896,
+          "mean": 0.007142857142857143,
+          "total": 1.5
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 78,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "after": {
+        "raf_ms": {
+          "count": 72,
+          "p50": 16.299999997019768,
+          "p95": 19,
+          "p99": 20.5,
+          "max": 20.5,
+          "mean": 16.55972222238779
+        },
+        "display_submission_gap_ms": {
+          "count": 511,
+          "p50": 0,
+          "p95": 16.899999991059303,
+          "p99": 17.30000001192093,
+          "max": 121.70000000298023,
+          "mean": 2.5547945205479454
+        },
+        "input_display_submission_gap_ms": {
+          "count": 505,
+          "p50": 0,
+          "p95": 16.799999997019768,
+          "p99": 17.200000002980232,
+          "max": 19,
+          "mean": 2.361980198043408
+        },
+        "updatedInputs": 72,
+        "inputCount": 72,
+        "input_dispatch_ms": {
+          "count": 72,
+          "p50": 2.2999999970197678,
+          "p95": 3.7000000029802322,
+          "p99": 4,
+          "max": 4,
+          "mean": 2.6277777774052486
+        },
+        "canonicalReceiptsDuringInput": 0,
+        "settle_ms": 130.3999999910593,
+        "navigation": null,
+        "exactAttempts": 0,
+        "exactStages": {},
+        "client_wait_cpu_ms": {
+          "count": 1,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0,
+          "mean": 0,
+          "total": 0
+        },
+        "maximum_fence_timeout": 0,
+        "fenceCalls": 1,
+        "longTasks": [],
+        "gpu_execution_ms": {
+          "value": null,
+          "reason": "CPU GL calls and polling do not measure GPU execution."
+        },
+        "input_to_photon_ms": {
+          "value": null,
+          "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+        }
+      },
+      "optical": []
+    }
+  ]
+}

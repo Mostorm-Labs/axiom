@@ -4370,7 +4370,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
   // Runtime owns the Scene query and ordered immutable commands. Render asks
   // for whole world tile regions, including its filter gutter.
   const render::NavigationSourceQuery query=[&](const foundation::WorldRect& region,
-      std::vector<render::ReferenceTraversalEntry>& entries){
+      std::vector<render::ReferenceTraversalEntry>& entries,render::NavigationSourceDiagnostics& diagnostics){
       const render::FrameState chunkFrame{
           exact->viewId, exact->camera, region, exact->metrics,
           exact->sceneGeneration, exact->sceneReadToken,
@@ -4385,6 +4385,9 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       // mutating canonical Scene state.
       auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
       if(!sources)return false;
+      const auto& work=sources.value().diagnostics;
+      diagnostics={work.chunkCandidatesExamined,work.chunkIndexNodesVisited,work.chunkIndexFallbacks,
+          work.payloadCopyBytes,work.payloadAliases,true};
       entries=std::move(sources.value().entries);return true;
   };
   // Prove exposed strips using the authoritative Scene object query, not
@@ -4570,7 +4573,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // it cannot drift or produce a second, misplaced button.
   if (textLayoutService_) {
     for (auto& parentEntry : references.value().entries) {
-      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content.get());
       if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
       const semantic::RichTextContent* richContent = nullptr;
       render::ReferenceTraversalEntry* childEntryPtr = nullptr;
@@ -4578,7 +4581,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
             !childEntry.record.placement.parent_id ||
             *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
-        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content.get());
         childEntryPtr = &childEntry;
         break;
       }
@@ -4606,7 +4609,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if (const auto* transform=transformOverrides_.find(entry.record.objectId)) {
       entry.record.transform=*transform;
       if (textLayoutService_) {
-        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content.get())) {
           const auto layout = textLayoutService_->resolveShape(
               entry.record.objectId, *shape, entry.record.transform,
               entry.record.objectId == selection_.primary());
@@ -4622,7 +4625,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   }
   if (textLayoutService_) {
     for (auto& parentEntry : references.value().entries) {
-      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content.get());
       if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
       const semantic::RichTextContent* richContent = nullptr;
       render::ReferenceTraversalEntry* childEntryPtr = nullptr;
@@ -4630,7 +4633,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
             !childEntry.record.placement.parent_id ||
             *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
-        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content.get());
         childEntryPtr = &childEntry;
         break;
       }
@@ -4660,7 +4663,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     const auto selected = std::find_if(references.value().entries.begin(), references.value().entries.end(),
         [&](const auto& entry) { return entry.record.objectId == placeholderTarget; });
     if (selected != references.value().entries.end()) {
-      const auto* shape = std::get_if<semantic::ShapeContent>(&selected->record.content);
+      const auto* shape = std::get_if<semantic::ShapeContent>(&selected->record.content.get());
       if (shape != nullptr) {
         const semantic::RichTextContent empty{};
         const auto& label = shape->label ? *shape->label : empty;
@@ -4671,7 +4674,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         references.value().canonicalBytes.clear();
         references.value().digest.clear();
       }
-      if (const auto* sticky = std::get_if<semantic::StickyContent>(&selected->record.content)) {
+      if (const auto* sticky = std::get_if<semantic::StickyContent>(&selected->record.content.get())) {
         const auto allObjects = semanticObjects_.allObjects();
         const bool hasChild = std::any_of(allObjects.begin(), allObjects.end(), [&](const auto& candidate) {
               return candidate.kind == semantic::ObjectKind::kRichText &&
@@ -4688,14 +4691,14 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       }
     }
   }
-  if(textLayoutService_)for(auto& entry:references.value().entries)if(auto* table=std::get_if<semantic::TableContent>(&entry.record.content)){
-    if(tableResize_&&entry.record.objectId==tableResize_->object){auto& axes=tableResize_->column.isZero()?table->rows:table->columns;const auto id=tableResize_->column.isZero()?tableResize_->row:tableResize_->column;for(auto& a:axes)if(a.id==id)a.size=tableResize_->preview;for(std::size_t i=0;i<table->cells.size();++i)table->cells[i].text.layout=semantic::RichTextLayout{table->columns[i%table->columns.size()].size-12};}
-    entry.record.textLayout=textLayoutService_->resolveTable(entry.record.objectId,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};
+  if(textLayoutService_)for(auto& entry:references.value().entries)if(auto* table=std::get_if<semantic::TableContent>(&entry.record.content.get())){
+    if(tableResize_&&entry.record.objectId==tableResize_->object){entry.record.content.update([&](auto& content){auto* editable=std::get_if<semantic::TableContent>(&content);auto& axes=tableResize_->column.isZero()?editable->rows:editable->columns;const auto id=tableResize_->column.isZero()?tableResize_->row:tableResize_->column;for(auto& a:axes)if(a.id==id)a.size=tableResize_->preview;for(std::size_t i=0;i<editable->cells.size();++i)editable->cells[i].text.layout=semantic::RichTextLayout{editable->columns[i%editable->columns.size()].size-12};});table=std::get_if<semantic::TableContent>(&entry.record.content.get());}
+    entry.record.textLayout=textLayoutService_->resolveTable(entry.record.objectId,*table);entry.command=render::TableReferenceCommand{scene::ImmutableValue<semantic::TableContent>::alias(entry.record.content),entry.record.textLayout};
   }
   for(auto& entry:references.value().entries)if(auto* command=std::get_if<render::TableReferenceCommand>(&entry.command);command&&selectedObjectCount()==1&&entry.record.objectId==selection_.primary())command->activeCell=semantic::tableCellIndex(command->content,tableRow_,tableColumn_);
   if (interaction_->textSession() && textLayoutService_) {
     if (const auto object = textPresentation()) {
-      if(const auto* table=std::get_if<semantic::TableContent>(&object->content))for(auto& entry:references.value().entries)if(entry.record.objectId==object->id){entry.record.content=*table;entry.record.textLayout=textLayoutService_->resolveTable(object->id,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};}
+      if(const auto* table=std::get_if<semantic::TableContent>(&object->content))for(auto& entry:references.value().entries)if(entry.record.objectId==object->id){entry.record.content=*table;entry.record.textLayout=textLayoutService_->resolveTable(object->id,*table);entry.command=render::TableReferenceCommand{scene::ImmutableValue<semantic::TableContent>::alias(entry.record.content),entry.record.textLayout};}
 
       const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
@@ -4787,13 +4790,13 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // frames have identical pixels and affordance hit geometry.
   if (textLayoutService_) {
     for (auto& parentEntry : references.value().entries) {
-      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content.get());
       if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
       for (auto& childEntry : references.value().entries) {
         if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
             !childEntry.record.placement.parent_id ||
             *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
-        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content.get());
         if (rich == nullptr) continue;
         const auto layout = textLayoutService_->resolveStickyLabel(
             childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);
@@ -5214,7 +5217,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     }
     if (transform || selected) {
       if (textLayoutService_) {
-        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content.get())) {
           const auto layout = textLayoutService_->resolveShape(
               entry.record.objectId, *shape, entry.record.transform, selected);
           entry.record.textLayout = layout;
@@ -5231,13 +5234,13 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // before the preview renderer consumes the plan.
   if (textLayoutService_) {
     for (auto& parentEntry : references.value().entries) {
-      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content.get());
       if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
       for (auto& childEntry : references.value().entries) {
         if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
             !childEntry.record.placement.parent_id ||
             *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
-        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content.get());
         if (rich == nullptr) continue;
         const auto layout = textLayoutService_->resolveStickyLabel(
             childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);

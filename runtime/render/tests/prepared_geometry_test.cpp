@@ -1,4 +1,5 @@
 #include "../src/skia_prepared_geometry.hpp"
+#include "exact_contour_replay_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
@@ -30,15 +31,73 @@ ReferenceTraversalEntry compact(unsigned variant=0){
     ReferenceTraversalEntry result;result.record.objectId=ObjectId::fromUint64(31);
     result.command=CompactStrokeReferenceCommand{content};result.record.content=content;return result;
 }
+void replayGeometryParity(){
+    PreparedGeometryCache cache;RenderCacheOptions options;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    for(unsigned variant=0;variant<2;++variant){
+        auto entry=compact(variant);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        auto& s=content.stroke;s.config.smoothing=.5;s.config.startTaper=35;s.config.endTaper=50;s.knots.clear();
+        for(unsigned i=0;i<100003;++i)s.knots.push_back({i*.5+(variant?30*std::sin(i*.02):0),64.+std::sin(i*.01)*20,32768});
+        if(variant)for(unsigned i=500;i<516;++i)s.knots[i]={i%2?110.:150.,64,32768};
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+        auto prepared=cache.get(entry,options,budget);
+        require(bool(prepared),"large v4 source denied compact local replay despite small checkpoint footprint");
+        auto shared=cache.get(entry,options,budget);require(shared==prepared,"replay source was not shared");shared.reset();
+        const auto full=ink::compileCompactContour(s.config,s.knots);
+        if(variant)require(!full.caps.empty(),"checkpoint reversal fixture emitted no corner caps");
+        require(prepared->primitiveCount()==full.patches.size()-1+full.caps.size(),"replay duplicated or lost boundary ribbons/caps");
+        for(unsigned view=0;view<4;++view){
+            auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
+            auto expected=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
+            for(auto* surface:{actual.get(),expected.get()}){
+                auto* c=surface->getCanvas();c->clear(SK_ColorBLACK);c->clipRect(SkRect::MakeLTRB(4,3,250,123));
+                if(view==1){c->translate(128,0);c->scale(-1,1);c->translate(-25000,0);}
+                if(view==2){c->skew(.2F,-.0001F);c->translate(-49800,0);}
+                if(view==3){SkMatrix matrix;matrix.setPerspX(.0001F);c->concat(matrix);}
+            }
+            const auto work=prepared->drawContour(*actual->getCanvas());
+            drawCompactContourCoverageToSkCanvas(*expected->getCanvas(),s.config,full);
+            require(pixels(actual)==pixels(expected),"checkpoint replay differs from full-history contour pixels");
+            if(view<3)require(work.primitivesTested*8<prepared->primitiveCount(),"checkpoint replay did not cull offscreen geometry");
+        }
+        cache.clear();require(budget->used()>0,"in-flight replay lost source lease");
+        prepared.reset();require(budget->used()==0,"replay geometry leaked its admitted storage");
+    }
+}
+
+void replayAdmission(){
+    auto entry=compact();auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.knots.clear();
+    for(unsigned i=0;i<100000;++i)content.stroke.knots.push_back({i*.5,64,32768});
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{3*1024*1024,5*1024*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kTile,1024*1024,true);require(bool(token),"replay pressure setup");
+    resources::ResourceLease pressure(budget,*token);PreparedGeometryCache cache;RenderCacheOptions options;
+    auto source=cache.retainSource(entry,budget,true);require(bool(source),"visible replay source admission");
+    require(!cache.get(entry,options,budget),"optional replay escaped soft limit");
+    auto visible=cache.get(entry,options,budget,true);require(bool(visible),"visible compact replay denied within hard limit");
+    require(budget->used()>3*1024*1024&&budget->used()<=5*1024*1024,"replay priority changed budget bounds");
+    auto changed=entry;changed.record.content.update([](auto& c){std::get<semantic::CompactStrokeContent>(c).stroke.knots[512].y+=30;});
+    changed.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(changed.record.content)};
+    auto tiny=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
+    require(!cache.get(changed,options,tiny,true)&&tiny->used()==0,"replay exceeded hard denial or crossed budget owner");
+    require(budget->used()>0,"replay lost in-flight old owner lease");
+    cache.clear();visible.reset();source.reset();pressure.reset();require(budget->used()==0,"replay lease retirement leaked");
+    auto owner=std::make_shared<resources::ResourceBudgetManager>();auto old=cache.get(entry,options,owner);
+    auto replacement=cache.get(changed,options,owner);require(old&&replacement&&old!=replacement,"replay reused stale immutable source content");
+    cache.clear();old.reset();replacement.reset();require(owner->used()==0,"changed replay retained unowned storage");
+}
+
 void localContourParity(){
     PreparedGeometryCache cache;RenderCacheOptions options;
     auto budget=std::make_shared<resources::ResourceBudgetManager>();
     std::uint64_t totalDrawn=0,totalAvailable=0;
     for(unsigned variant=0;variant<6;++variant){
         auto entry=compact(variant);
-        auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+        auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& stroke=builder.stroke;
         if(variant==4)stroke.knots={{40,60,32768}};
         if(variant==5)stroke.knots={{-40,70,32768},{180,70,45000},{20,70,16000},{220,45,33000}};
+        std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
         const auto prepared=cache.get(entry,options,budget);require(bool(prepared),"contour admission");
         for(unsigned view=0;view<5;++view){
             auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
@@ -89,9 +148,10 @@ void vectorPathParity(){
     }
 }
 void smallCapAtLargeOrigin(){
-    auto entry=compact();auto& s=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    auto entry=compact();auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& s=builder.stroke;
     s.config.size=.02;s.knots={{1000000.,1000000.,32768}};
     PreparedGeometryCache cache;auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     auto prepared=cache.get(entry,RenderCacheOptions{},budget);require(bool(prepared),"large-origin cap admission");
     auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
     auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
@@ -124,7 +184,7 @@ void sharingAndLifetime(){
     PreparedGeometryCache constrained;
     require(!constrained.get(entry,options,denied)&&constrained.statistics().denied==1&&denied->used()==0,"denial retained unaccounted geometry");
     auto recovered=constrained.get(entry,options,budget);require(bool(recovered),"budget recovery");
-    auto changed=entry;std::get<CompactStrokeReferenceCommand>(changed.command).content.stroke.knots[300].y+=80;
+    auto changed=entry;std::get<CompactStrokeReferenceCommand>(changed.command).content.update([](auto& c){c.stroke.knots[300].y+=80;});
     auto latest=constrained.get(changed,options,budget);
     require(latest&&latest!=recovered&&constrained.statistics().builds==2,"content change reused stale geometry");
     constrained.clear();recovered.reset();latest.reset();replacement.reset();cache.clear();require(budget->used()==0,"geometry cleanup leaked reservation");
@@ -139,12 +199,13 @@ void budgetOwnerChange(){
     first.reset();cache.clear();require(owner->used()==0,"old budget owner leaked after replacement");
 }
 void stagingAdmission(){
-    auto entry=compact();auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
+    auto entry=compact();auto builder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& stroke=builder.stroke;
     stroke.config.smoothing=.5;stroke.config.startTaper=40;stroke.config.endTaper=60;
     stroke.knots.clear();
     for(unsigned i=0;i<16384;++i)stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
     PreparedGeometryCache cache;RenderCacheOptions options;
     auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     auto acquired=cache.get(entry,options,budget);
     require(acquired&&budget->used(resources::ResourceClass::kScratch)==0,
             "long contour staging not admitted or temporary lease retained");
@@ -152,11 +213,13 @@ void stagingAdmission(){
             "long contour resident lease does not match bounded storage");
     cache.clear();acquired.reset();require(budget->used()==0,"long contour staging leaked");
     stroke.config.smoothing=0;stroke.knots.resize(512);
+    std::get<CompactStrokeReferenceCommand>(entry.command).content=builder;
     PreparedGeometryCache constrained;options.maxEntryBytes=256*1024;
     require(!constrained.get(entry,options,budget)&&budget->used()==0,
             "denied path admission leaked its successful staging lease");
     options.maxEntryBytes=8*1024*1024;
     require(bool(constrained.get(entry,options,budget)),"denied staging did not recover with an adequate budget");
 }
+
 }
-int main(){localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}
+int main(){try{auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}

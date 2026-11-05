@@ -423,15 +423,15 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
     const auto published=binding_._scene.read();
     for(auto& record:next.records) {
         const semantic::RichTextContent* textContent = nullptr;
-        const auto* section=std::get_if<semantic::SectionContent>(&record.content);
+        const auto* section=std::get_if<semantic::SectionContent>(&record.content.get());
         if (record.kind == semantic::ObjectKind::kRichText)
-            textContent = std::get_if<semantic::RichTextContent>(&record.content);
-        else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+            textContent = std::get_if<semantic::RichTextContent>(&record.content.get());
+        else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content.get());
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
-        const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+        const auto* shape = std::get_if<semantic::ShapeContent>(&record.content.get());
         if (textContent == nullptr && shape == nullptr && section == nullptr && record.kind!=semantic::ObjectKind::kTable) continue;
-        auto layout=std::holds_alternative<semantic::TableContent>(record.content) ? textLayoutService_->resolveTable(record.objectId,std::get<semantic::TableContent>(record.content)) : section ? textLayoutService_->resolveSectionTitle(record.objectId,*section)
+        auto layout=std::holds_alternative<semantic::TableContent>(record.content.get()) ? textLayoutService_->resolveTable(record.objectId,std::get<semantic::TableContent>(record.content.get())) : section ? textLayoutService_->resolveSectionTitle(record.objectId,*section)
                           : shape ? textLayoutService_->resolveShape(record.objectId, *shape, record.transform)
                           : textLayoutService_->resolve(record.objectId,*textContent);
         if(record.textLayout && record.textLayout->digest==layout->digest) continue;

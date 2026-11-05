@@ -20,7 +20,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;}
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -86,6 +86,7 @@ class SkiaRenderer final {
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
+    std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;

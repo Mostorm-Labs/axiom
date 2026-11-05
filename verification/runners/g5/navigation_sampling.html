@@ -2,9 +2,10 @@
 <style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
 <script type="module">
 import {createRuntime} from '/axiom.mjs';
+import {buildEditingScene,applyEditingAction} from '/editing_actions.mjs';
 import {postInputReceiptWait} from '/navigation_metrics.mjs';
 const errors=[],frames=[],bindings=new WeakMap();
-let sdk,active=null,sequence=0;
+let sdk,active=null,sequence=0,selectionPoint=[40,90],editingTargets;
 const raf=()=>new Promise(requestAnimationFrame);
 const until=async(fn,label)=>{for(let i=0;i<1800;++i){if(fn())return;await raf();}throw Error(label);};
 const proto=WebGL2RenderingContext.prototype;
@@ -44,14 +45,29 @@ async function pixels(){
   return {sha256:Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join(''),
     width:c.width,height:c.height,renderer:ext?g.getParameter(ext.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)};
 }
+// Intrusive optical corroboration is opt-in and never mixed with latency
+// evidence. Read the same physical ROI through the public canvas; no SDK debug
+// export, private HEAP access, or substitute canvas renderer is involved.
+function opticalRoi(){
+  const c=sdk.canvas,g=c.getContext('webgl2'),previous=g.getParameter(g.FRAMEBUFFER_BINDING);
+  const width=Math.min(256,c.width),height=Math.min(256,c.height),bytes=new Uint8Array(width*height*4);
+  g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.floor((c.width-width)/2),Math.floor((c.height-height)/2),width,height,g.RGBA,g.UNSIGNED_BYTE,bytes);
+  g.bindFramebuffer(g.FRAMEBUFFER,previous);
+  let gradient=0,n=0,checksum=2166136261;
+  for(let y=0;y<height;++y)for(let x=0;x<width;++x){const i=(y*width+x)*4;
+    for(let k=0;k<4;++k)checksum=Math.imul(checksum^bytes[i+k],16777619)>>>0;
+    if(x+1<width)for(let k=0;k<3;++k){gradient+=(bytes[i+k]-bytes[i+4+k])**2;++n;}
+    if(y+1<height)for(let k=0;k<3;++k){gradient+=(bytes[i+k]-bytes[i+width*4+k])**2;++n;}}
+  return {width,height,edgeRms:Math.sqrt(gradient/n),checksum,camera:sdk.readState().camera};
+}
 function touch(type,id,x,y){
   const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent(type,{pointerId:id,pointerType:'touch',
     clientX:r.left+x,clientY:r.top+y,buttons:type==='pointerup'?0:1,pressure:.5,width:12,height:12,bubbles:true,cancelable:true});
   Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});sdk.canvas.dispatchEvent(e);
 }
-async function phase(id,{mode='wheel',burst=1,panOnly=false}={}){
+async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityEvery=0,panStep=8}={}){
   const before=sdk.readState(),prior=frames.length;
-  const value={id,samples:[],displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],before};
+  const value={id,optical:[],samples:[],displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],before};
   mark('begin',id);active=value;value.started=performance.now();
   value.contactDispatch=[];
   const contact=(...args)=>{const start=performance.now();touch(...args);value.contactDispatch.push({type:args[0],ms:performance.now()-start});};
@@ -62,8 +78,9 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false}={}){
     if(mode==='touch'){
       const dx=(i<36?i+1:71-i)*4;contact('pointermove',2,40+dx,90);contact('pointermove',3,120+dx,90);
     }else for(let b=0;b<burst;++b)sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
-      deltaX:pan?(i<(panOnly?36:54)?-8:8):0,deltaY:pan?(i<(panOnly?36:54)?-4:4):(i<18?-2:2),bubbles:true,cancelable:true}));
+      deltaX:pan?(i<(panOnly?36:54)?-panStep:panStep):0,deltaY:pan?(i<(panOnly?36:54)?-panStep/2:panStep/2):(i<18?-zoomDelta:zoomDelta),bubbles:true,cancelable:true}));
     const dispatchMs=performance.now()-tick,rafTimestamp=await raf(),now=performance.now();
+    if(qualityEvery&&i%qualityEvery===0)value.optical.push({index:i,...opticalRoi()});
     value.samples.push({index:i,at:now,rafTimestamp,interval:now-previous,dispatchMs,draws:value.draws-beforeDraws});previous=now;
   }
   if(mode==='touch'){contact('pointerup',2,40,90);contact('pointerup',3,120,90);}
@@ -85,8 +102,44 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false}={}){
   value.pixels=await pixels();return value;
 }
 window.probe={
+  async setupEditing(){
+    const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
+    sdk=await createRuntime({mount,documentId:'99999999999999999999999999999999',permission:'localSingleUser',
+      onError:e=>errors.push(String(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
+    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+    editingTargets=await buildEditingScene(sdk,{pointer,settle,frames,click});
+    return {targets:editingTargets,build:sdk.readBuildInfo(),state:sdk.readState()};
+  },
+  async performEditing(kind){
+    const before=sdk.readState(),prior=frames.length;mark('begin','edit-'+kind);const at=performance.now();
+    const details=await applyEditingAction(sdk,editingTargets,kind,{pointer,click});
+    const admittedAt=performance.now(),generation=sdk.readState().generation;await until(()=>sdk.readState().lastCommit.presentedGeneration===generation,'edited generation not presented');await settle(prior);const after=sdk.readState();mark('end','edit-'+kind);
+    return {kind,before,after,details,dispatchMs:admittedAt-at,completeMs:performance.now()-at,receipts:frames.slice(prior),
+      checks:{generationAdvanced:BigInt(after.generation)>BigInt(before.generation),operationChanged:after.lastCommit.operationId!==before.lastCommit.operationId,
+        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,objectCountStable:before.objects===after.objects}};
+  },
+  async checkpoint(){
+    const state=sdk.readState(),at=performance.now();
+    const image=await sdk.exportImage({bounds:[0,0,800,500],padding:0,scale:1,format:'png',generation:state.generation});
+    const digest=await crypto.subtle.digest('SHA-256',image.bytes);
+    const snapshot=await sdk.captureSnapshot({generation:state.generation,documentRevision:state.generation,recoveryFrontier:[8,1,16,1,24,1]});
+    return {state,image:{sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),width:image.width,height:image.height},
+      snapshot:{...snapshot,bytes:Array.from(snapshot.bytes)},captureMs:performance.now()-at,resources:sdk.resources.list()};
+  },
+  async historyStep(action){const n=frames.length;const r=await sdk[action]();const g=sdk.readState().generation;await until(()=>sdk.readState().lastCommit.presentedGeneration===g,'history generation not presented');await settle(n);return {result:r,state:sdk.readState()};},
+  async setupScale(meta,bytes){
+    const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
+    const started=performance.now();sdk=await createRuntime({mount,documentId:meta.documentId,permission:'localSingleUser',
+      restore:{bytes:new Uint8Array(bytes),metadata:{documentRevision:meta.documentRevision,recoveryFrontier:meta.recoveryFrontier,checkpointDigest:meta.checkpointDigest,resourceBinding:meta.resourceBinding}},
+      onError:e=>errors.push(String(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
+    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;sdk.data.attach({capacity:64});
+    await until(()=>frames.length>0,'initial restored frame timeout');for(let i=0;i<4;++i)await raf();
+    return {loadMs:performance.now()-started,state:sdk.readState(),build:sdk.readBuildInfo(),pixels:await pixels()};
+  },
+  async scaleTransform(){await sdk.selectTool('select');await click(5,5);const before=sdk.readState();if(!before.selected.length)throw Error('scale target missing');const n=frames.length,at=performance.now();await sdk.transformSelection([1,0,0,1,8,4]);await settle(n);return {ms:performance.now()-at,before,after:sdk.readState()};},
+
   async setup(workload,selected,profile='round-handdrawn',revision=4,options={}){
-    const started=performance.now();
+    const started=performance.now();selectionPoint=options.scribble?[300,350]:[40,90];
     const mount=document.getElementById('mount');
     if(options.width)mount.style.width=options.width+'px';if(options.height)mount.style.height=options.height+'px';
     const points=options.points??2048,lines=options.lines??2;
@@ -102,16 +155,19 @@ window.probe={
     sdk.data.attach({capacity:64});const brushSelection=await sdk.selectBrush(profile,revision);
     if(options.brush)await sdk.setBrushConfig({...sdk.readBrushConfig(),...options.brush});
     if(options.drawZoom){const prior=frames.length;await sdk.zoomAt(318,457,options.drawZoom);await settle(prior);}
+    const drawLines=async()=>{
     for(let line=0;line<lines;++line){
       const prior=frames.length;
       for(let i=0;i<points;++i){
-        const t=i*.017;
+        const t=i*.017+line*(options.scribblePhase??0);
         pointer(i===0?'pointerdown':i===points-1?'pointerup':'pointermove',
           options.scribble?300+Math.sin(t)*220+Math.sin(t*.37)*60:40+i*(options.span?options.span/points:1.5),
           options.scribble?350+Math.sin(t*.73)*180:90+line*(options.lineSpacing??310)+Math.sin(i*.035)*42);
       }
       await settle(prior);
     }
+    };
+    if(!options.drawLast)await drawLines();
     if(options.transformedStroke){
       await sdk.selectTool('select');await click(options.scribble?300:40,options.scribble?350:90);
       if(!sdk.readState().selected.length)throw Error('stroke transform fixture target missing');
@@ -140,21 +196,38 @@ window.probe={
       await sdk.text.edit(target);await sdk.text.replace('G5 Sticky\nCold / warm navigation');await sdk.text.finish();
     }else if(!['long-line','image','table','mixed'].includes(workload))throw Error('unknown workload');
     if(target)await settle(prior);
+    if(options.drawLast){await sdk.selectTool('ink');await drawLines();}
     await sdk.selectTool('select');
     if(selected){
-      if(workload==='long-line'||workload==='mixed'){await click(40,90);target=sdk.readState().primary;}
+      if(workload==='long-line'||workload==='mixed'){await click(options.scribble?300:40,options.scribble?350:90);target=sdk.readState().primary;}
       else if(sdk.readState().primary!==target)await click(workload==='sticky'?300:260,200);
       if(!sdk.readState().selected.length||sdk.readState().primary!==target)throw Error('fixture target not selected');
     }else{await click(790,490);if(sdk.readState().selected.length)throw Error('fixture selection not cleared');}
     if(options.zoom){const prior=frames.length;await sdk.zoomAt(318,457,options.zoom);await settle(prior);}
     for(let i=0;i<12;++i)await raf();
     window.probe.uiReadTimes=uiReadTimes;
-    return {workload,selected,profile,revision,options,brushSelection,target,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+    return {workload,selected,profile,revision,options,brushSelection,target,selectedKind:sdk.readSelection().kind,setupMs:performance.now()-started,build:sdk.readBuildInfo(),state:sdk.readState(),initialPixels:await pixels(),errors};
+  },
+  // Root SDK edit -> canonical publication witness, distinct from camera-only input.
+  async commitStroke(index){
+    await sdk.selectTool('ink');const before=sdk.readState(),prior=frames.length;
+    const started=performance.now();mark('begin','edit-'+index);
+    for(let i=0;i<256;++i)pointer(i===0?'pointerdown':i===255?'pointerup':'pointermove',
+      55+i*1.5,110+index*10+Math.sin(i*.06)*32);
+    const dispatched=performance.now(),afterDispatch=sdk.readState();
+    await settle(prior);const ended=performance.now(),after=sdk.readState();mark('end','edit-'+index);
+    return {index,started,dispatched,ended,dispatchMs:dispatched-started,completeMs:ended-started,
+      before,afterDispatch,after,receipts:frames.slice(prior),pixels:await pixels(),
+      checks:{objectAdded:after.objects===before.objects+1,
+        generationAdvanced:BigInt(after.generation)>BigInt(before.generation),
+        operationChanged:before.lastCommit.operationId!==after.lastCommit.operationId,
+        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,
+        frameObserved:frames.length>prior}};
   },
   async measure(id,options){return phase(id,options);},
   async interruptSelection(options){
     const rect=sdk.canvas.getBoundingClientRect();await click(rect.width-16,rect.height-24);
-    pointer('pointerdown',40,90);pointer('pointerup',40,90);
+    pointer('pointerdown',...selectionPoint);pointer('pointerup',...selectionPoint);
     return phase('interrupted-selection',options);
   },
   async run(){const cold=await phase('cold'),warm=await phase('warm');return {cold,warm,errors};},

@@ -1,0 +1,28 @@
+[
+  {
+    "mode": "on",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-exact-final-on/js",
+      "out/g5-exact-final-on-sample",
+      "1000",
+      "2"
+    ],
+    "exit_code": 0,
+    "seconds": 26.054797792006866
+  },
+  {
+    "mode": "off",
+    "command": [
+      "node",
+      "verification/runners/g5/navigation_lifecycle.mjs",
+      "out/g5-exact-final-off/js",
+      "out/g5-exact-final-off-sample",
+      "60000",
+      "2"
+    ],
+    "exit_code": 0,
+    "seconds": 84.67988674998924
+  }
+]

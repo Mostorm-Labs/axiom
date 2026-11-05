@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import http from 'node:http';
+import {readFixtureModule} from './fixture_modules.mjs';
 const sdk=path.resolve(process.argv[2]),port=Number(process.argv[3]??4212);
 const fixture=await fs.readFile(new URL('./navigation_sampling.html',import.meta.url),'utf8');
 const controls=`<style>#mixed-controls{position:fixed;right:8px;top:8px;z-index:100;background:white;border:1px solid #bbb;padding:8px;font:12px sans-serif;max-width:280px}#mixed-result{white-space:pre-wrap}</style>
@@ -11,8 +12,11 @@ window.addEventListener('load',async()=>{
  const result=document.getElementById('mixed-result'),button=document.getElementById('mixed-run');
  try{
   const query=new URLSearchParams(location.search),moved=query.get('moved')==='1';
-  const lines=Number(query.get('lines')??1);if(!Number.isInteger(lines)||lines<1||lines>3)throw Error('lines must be1..3');
-  const setup=await probe.setup('mixed',false,'round-handdrawn',4,{width:636,height:914,shapes:2,lines,points:8192,scribble:true,zoom:.57,drawZoom:.57,transformedStroke:moved,uiReads:true,brush:{thinning:.99,streamline:.13,smoothing:.61}});
+  const dense=query.get('dense')==='1';
+  const lines=Number(query.get('lines')??(dense?5:1));if(!Number.isInteger(lines)||lines<1||lines>8)throw Error('lines must be1..8');
+  const options=dense?{width:636,height:923,shapes:2,lines,points:2048,scribble:true,scribblePhase:.63,zoom:1.59,drawLast:true,uiReads:true}:
+    {width:636,height:914,shapes:2,lines,points:8192,scribble:true,zoom:.57,drawZoom:.57,transformedStroke:moved,uiReads:true,brush:{thinning:.99,streamline:.13,smoothing:.61}};
+  const setup=await probe.setup('mixed',false,'round-handdrawn',4,options);
   result.textContent=setup.state.objects+' objects · Zoom '+setup.state.camera.scale.toFixed(2)+' · '+setup.build.sourceRevision.slice(0,8)+'\\n可直接使用触控板。'+(moved?'笔迹移动对照':'原位笔迹');button.disabled=false;
   button.onclick=async()=>{button.disabled=true;try{const p=await probe.measure('native-browser-mixed',{mode:'wheel',burst:4,panOnly:false});
     const gaps=p.displayTimes.filter(t=>t>=p.started&&t<=p.inputEnded);const bounded=[p.started,...gaps,p.inputEnded];
@@ -26,9 +30,10 @@ const types={'.html':'text/html','.mjs':'text/javascript','.wasm':'application/w
 const server=http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname==='/mixed-navigation.html'){res.setHeader('Content-Type','text/html');res.end(fixture+controls);return;}
- const fixtures=['navigation_metrics.mjs','browser_metrics.mjs'];
- const name=url.pathname.slice(1),file=fixtures.includes(name)?new URL('./'+name,import.meta.url):path.resolve(sdk,name);
- if(!fixtures.includes(name)&&!file.startsWith(sdk+path.sep))throw Error('path');
+ const module=await readFixtureModule(url.pathname);
+ if(module){res.setHeader('Content-Type','text/javascript');res.end(module);return;}
+ const name=url.pathname.slice(1),file=path.resolve(sdk,name);
+ if(!file.startsWith(sdk+path.sep))throw Error('path');
  res.setHeader('Content-Type',types[path.extname(name)]??'application/octet-stream');res.end(await fs.readFile(file));
 }catch{res.statusCode=404;res.end();}});
 server.listen(port,'127.0.0.1',()=>console.log('http://127.0.0.1:'+port+'/mixed-navigation.html'));

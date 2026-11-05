@@ -7,6 +7,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {summarizePhase} from './navigation_metrics.mjs';
+import {readFixtureModule} from './fixture_modules.mjs';
 const root=process.cwd(),sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const repeats=Number(process.argv[4]??3),workloads=(process.argv[5]??'long-line,image,table,sticky').split(',');
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -29,9 +30,8 @@ await fs.cp(sdk,consumer,{recursive:true});
 if(JSON.stringify(await hashes(consumer))!==JSON.stringify(artifactsBefore))throw Error('consumer copy mismatch');
 const server=http.createServer(async(req,res)=>{try{
   const pathname=new URL(req.url,'http://localhost').pathname;
-  if(['/navigation_metrics.mjs','/browser_metrics.mjs'].includes(pathname)){
-    res.setHeader('Content-Type','text/javascript');res.end(await fs.readFile(new URL('.'+pathname,import.meta.url)));return;
-  }
+  const module=await readFixtureModule(pathname);
+  if(module){res.setHeader('Content-Type','text/javascript');res.end(module);return;}
   const file=path.resolve(consumer,'.'+pathname);if(!file.startsWith(consumer+path.sep))throw Error('path');
   res.setHeader('Content-Type',pathname==='/sample.html'?'text/html':file.endsWith('.wasm')?'application/wasm':file.endsWith('.mjs')?'text/javascript':'application/octet-stream');
   res.end(pathname==='/sample.html'?html:await fs.readFile(file));
@@ -63,7 +63,7 @@ try{
       for(const phase of ['cold','warm'])record.summary[phase]=summarizePhase(record.raw[phase],rows.filter(r=>r.phase===phase&&r.kind==='navigation').map(r=>r.value),rows.filter(r=>r.phase===phase&&r.kind==='frame').map(r=>r.value));
       for(const phase of ['cold','warm'])record.summary[phase].inputNavigation=summarizePhase(record.raw[phase],rows.filter(r=>r.phase===phase&&r.segment==='input'&&r.kind==='navigation').map(r=>r.value),[]).navigation;
       record.close=await page.evaluate(()=>probe.close());
-      if(expectTiming&&!rows.some(r=>r.kind==='navigation'&&r.value.version===2))throw Error('navigation diagnostic records missing');
+      if(expectTiming&&!rows.some(r=>r.kind==='navigation'&&r.value.version>=3))throw Error('navigation diagnostic records missing');
       if(!expectTiming&&rows.length)throw Error('disabled build emitted diagnostics');
       if(record.raw.errors.length||exceptions.length||!record.close.closed||Object.values(record.raw.cold.checks).some(v=>!v)||Object.values(record.raw.warm.checks).some(v=>!v))throw Error('runtime/receipt/selection invariant failed');
       for(const row of rows.filter(r=>r.kind==='frame')){

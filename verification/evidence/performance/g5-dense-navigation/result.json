@@ -1,0 +1,92 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "scope": "dense mixed Web navigation coverage repair; no formal G5/P34/platform acceptance",
+  "implementation_revision": "32418c783170eea56a4131579fac627c003c91bb",
+  "baseline_sdk_revisions": [
+    "ed8df6af92b5107d955f10ae3985dfd67e5050a6"
+  ],
+  "official_gate_pass_claimed": false,
+  "measured": true,
+  "same_final_full_canvas_pixels": true,
+  "state_and_receipt_checks": true,
+  "provenance_checks": true,
+  "pan_reduction": {
+    "on": {
+      "before_median_ms": 269.69999998807907,
+      "after_median_ms": 20.599999994039536,
+      "ratio": 0.07638116423785714,
+      "task_half_reduction": true
+    },
+    "off": {
+      "before_median_ms": 268.70000000298023,
+      "after_median_ms": 22.799999997019768,
+      "ratio": 0.08485299589418269,
+      "task_half_reduction": true
+    }
+  },
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": []
+  },
+  "gpu": [
+    {
+      "mode": "frontier",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "quality",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "affine",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "background",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "contour",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "replay",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "exact-replay",
+      "exit": 0,
+      "status": "PASS"
+    }
+  ],
+  "node_tests": 25,
+  "boundary_contracts": 118,
+  "remaining_findings": [
+    "Zoom/pan combinations and resume still have nonzero submission tails; inspect comparison.json.",
+    "Conservative three-image resident tile reservation unchanged; high-DPR resolution/residency limit requires a separate completion-owned staging design.",
+    "Synthetic root SDK wheel input and real Chrome WebGL2, not physical Mac trackpad/input-to-photon or full Demo DOM cost.",
+    "Old nine-kind snapshot authority and other baseline native failures remain unchanged."
+  ],
+  "rejected_candidates": "exploratory/ includes unsuccessful prototypes; not acceptance evidence for the final implementation. Dirty prototype source hashes/artifacts are recorded but those source states were not committed.",
+  "demo": {
+    "port": 4219,
+    "path": "/example.html",
+    "prefilled": "/mixed-navigation.html?dense=1",
+    "artifact": "out/g5-dense-final-off/js",
+    "old4218_preserved": true
+  }
+}

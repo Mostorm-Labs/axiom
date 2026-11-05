@@ -22,8 +22,11 @@ RenderGroupManager::Update RenderGroupManager::update(std::span<const ReferenceT
                     old.source.geometryChunkIndices!=source.geometryChunkIndices};
             if(change.content||change.transform||change.clip||change.effect||change.order||change.resource||change.geometry||a.worldBounds!=b.worldBounds){
                 result.contributions.push_back({id,VisualContribution{a.worldBounds,old.source.contributesPixels,false},VisualContribution{b.worldBounds,source.contributesPixels,false}});
-                old.group.apply(change);old.source=source;
+                old.group.apply(change);
             }
+            // Rebind equal values too: the retained source must be the one
+            // whose immutable allocation is covered by this frame's leases.
+            old.source=source;
             old.ordinal=ordinal;old.resourceEpoch=resourceEpoch;
         }
         ++ordinal;

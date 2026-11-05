@@ -16,7 +16,7 @@ namespace canvas::scene {
 [[nodiscard]] bool inverseTransform(const semantic::Transform2D&,
                                     semantic::Transform2D&) noexcept;
 
-template<class Record> void projectGroupBounds(std::vector<Record>& records) {
+template<class Records> void projectGroupBounds(Records& records) {
     const bool hierarchical=std::any_of(records.begin(),records.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kSection||r.kind==semantic::ObjectKind::kGroup;});
     std::unordered_map<semantic::ObjectId,std::size_t,foundation::ObjectIdHash> indices;
     indices.reserve(records.size());

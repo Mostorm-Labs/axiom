@@ -1,0 +1,11 @@
+{
+  "classification": "development diagnostics, not acceptance proof",
+  "notes": [
+    "Initial region-only prototype did not satisfy the browser target; cold CPU spike125.3ms and resume gap404.8ms retained in exploratory/after.",
+    "Direct raster clipping caused AA pixel mismatch at dx4,x252,y45 (214 vs210) and was replaced by demand-only full-path culling.",
+    "An 8-step pixel oracle could include a completed finer source; final coarse pixel oracle uses1 owner step to isolate matching source density.",
+    "Bounding a diagonal union as one rectangle reintroduced dense interior work; explicit valid regions replace it.",
+    "Short-axis-only lead did not cover long-axis hole growth; origin-dependent coarse level changes were independently confirmed RED.",
+    "Conservative three-image reservation remains unchanged; it was identified as a separate capacity finding, not silently shrunk."
+  ]
+}

@@ -104,14 +104,14 @@ runtime::ImageExportResult CanvasEditingRuntime::exportImage(
     // overrides never enter this frame; Sticky owns its clipped child label.
     for (auto& entry : references.value().entries) {
       if (textLayoutService_) {
-        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content.get())) {
           entry.command = render::ShapeReferenceCommand{*shape,textLayoutService_->resolveShape(
               entry.record.objectId,*shape,entry.record.transform,false),false};
         }
-        if (const auto* sticky = std::get_if<semantic::StickyContent>(&entry.record.content)) {
+        if (const auto* sticky = std::get_if<semantic::StickyContent>(&entry.record.content.get())) {
           for (const auto& child : scene.records()) {
             if (!child.placement.parent_id || *child.placement.parent_id != entry.record.objectId) continue;
-            const auto* rich = std::get_if<semantic::RichTextContent>(&child.content);
+            const auto* rich = std::get_if<semantic::RichTextContent>(&child.content.get());
             if (!rich) continue;
             entry.command = render::StickyReferenceCommand{*sticky,textLayoutService_->resolveStickyLabel(
                 entry.record.objectId,*rich,*sticky,false,entry.record.transform),false};
@@ -129,18 +129,18 @@ runtime::ImageExportResult CanvasEditingRuntime::exportImage(
     };
     for (const auto& entry : references.value().entries) {
       if (const auto* image = std::get_if<render::ImageReferenceCommand>(&entry.command)) {
-        if (!imageResolver_ || imageResolver_->resolve(image->content.resource_id)->state != render::ImageResourceState::kReady)
+        if (!imageResolver_ || imageResolver_->resolve(image->content.get().resource_id)->state != render::ImageResourceState::kReady)
           return error(ImageExportStatus::kResourceUnavailable);
       }
       if(const auto* table=std::get_if<render::TableReferenceCommand>(&entry.command))if(!validLayout(table->layout))return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* rich = std::get_if<render::RichTextReferenceCommand>(&entry.command))
         if (!validLayout(rich->layout)) return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* shape = std::get_if<render::ShapeReferenceCommand>(&entry.command))
-        if (shape->content.label && !validLayout(shape->labelLayout)) return error(ImageExportStatus::kResourceUnavailable);
+        if (shape->content.get().label && !validLayout(shape->labelLayout)) return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* sticky = std::get_if<render::StickyReferenceCommand>(&entry.command))
         if (sticky->labelLayout && !validLayout(sticky->labelLayout)) return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* section = std::get_if<render::SectionReferenceCommand>(&entry.command))
-        if (!section->content.title.empty() && !validLayout(section->titleLayout)) return error(ImageExportStatus::kResourceUnavailable);
+        if (!section->content.get().title.empty() && !validLayout(section->titleLayout)) return error(ImageExportStatus::kResourceUnavailable);
     }
     references.value().canonicalBytes.clear();
     references.value().digest.clear();

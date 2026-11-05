@@ -1,0 +1,202 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "official_gate_pass_claimed": false,
+  "comparisons": [
+    {
+      "phase": "repeat-0",
+      "baseline-on": {
+        "settle_ms": 897.3000000119209,
+        "input_gap_ms": 17.600000008940697,
+        "raf_p99_ms": 18.700000002980232,
+        "attempts": 47,
+        "stages": {
+          "attempt": 389.8999999999999,
+          "reference_build": 3.1,
+          "cache_prepare": 372.8999999999999,
+          "cpu_coverage": 353.1
+        }
+      },
+      "baseline-off": {
+        "settle_ms": 880.7999999970198,
+        "input_gap_ms": 17.700000002980232,
+        "raf_p99_ms": 18.5,
+        "attempts": 0,
+        "stages": {}
+      },
+      "candidate-on": {
+        "settle_ms": 781.3999999910593,
+        "input_gap_ms": 17.700000002980232,
+        "raf_p99_ms": 21.299999997019768,
+        "attempts": 41,
+        "stages": {
+          "attempt": 339.8,
+          "reference_build": 2.8,
+          "cache_prepare": 324.7,
+          "cpu_coverage": 305.3999999999999
+        }
+      },
+      "candidate-off": {
+        "settle_ms": 730.8000000119209,
+        "input_gap_ms": 17.5,
+        "raf_p99_ms": 22.100000008940697,
+        "attempts": 0,
+        "stages": {}
+      },
+      "pixels": {
+        "sha256": "7885ed21b7cdd089ef5b9b47cb1bc712e82ed9b9aae18a1b3898e718dee80737",
+        "width": 1272,
+        "height": 1828,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      }
+    },
+    {
+      "phase": "repeat-1",
+      "baseline-on": {
+        "settle_ms": 897.3999999910593,
+        "input_gap_ms": 33.6000000089407,
+        "raf_p99_ms": 19.200000002980232,
+        "attempts": 48,
+        "stages": {
+          "attempt": 400.29999999999995,
+          "reference_build": 2.6,
+          "cache_prepare": 383.30000000000007,
+          "cpu_coverage": 364.4000000000001
+        }
+      },
+      "baseline-off": {
+        "settle_ms": 847.2000000029802,
+        "input_gap_ms": 33.900000005960464,
+        "raf_p99_ms": 19,
+        "attempts": 0,
+        "stages": {}
+      },
+      "candidate-on": {
+        "settle_ms": 747.4000000059605,
+        "input_gap_ms": 17.600000008940697,
+        "raf_p99_ms": 19.299999997019768,
+        "attempts": 39,
+        "stages": {
+          "attempt": 329.79999999999984,
+          "reference_build": 2.6,
+          "cache_prepare": 315.49999999999994,
+          "cpu_coverage": 299.79999999999995
+        }
+      },
+      "candidate-off": {
+        "settle_ms": 797.0999999940395,
+        "input_gap_ms": 25.799999997019768,
+        "raf_p99_ms": 19.80000001192093,
+        "attempts": 0,
+        "stages": {}
+      },
+      "pixels": {
+        "sha256": "8b03b7f6d1c253c24b7df3cec226f33f18c3266e1bf887d6cbc3538b782408ee",
+        "width": 1272,
+        "height": 1828,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      }
+    },
+    {
+      "phase": "after-idle",
+      "baseline-on": {
+        "settle_ms": 897.0999999940395,
+        "input_gap_ms": 33.6000000089407,
+        "raf_p99_ms": 18.5,
+        "attempts": 48,
+        "stages": {
+          "attempt": 399.9,
+          "reference_build": 3.5,
+          "cache_prepare": 381.90000000000003,
+          "cpu_coverage": 362.8999999999999
+        }
+      },
+      "baseline-off": {
+        "settle_ms": 913.6000000089407,
+        "input_gap_ms": 33.19999998807907,
+        "raf_p99_ms": 19.100000008940697,
+        "attempts": 0,
+        "stages": {}
+      },
+      "candidate-on": {
+        "settle_ms": 763.7999999970198,
+        "input_gap_ms": 17.399999991059303,
+        "raf_p99_ms": 18.200000002980232,
+        "attempts": 40,
+        "stages": {
+          "attempt": 332.3000000000001,
+          "reference_build": 2.8,
+          "cache_prepare": 317.2,
+          "cpu_coverage": 299.59999999999997
+        }
+      },
+      "candidate-off": {
+        "settle_ms": 747.8000000119209,
+        "input_gap_ms": 17.5,
+        "raf_p99_ms": 19.200000002980232,
+        "attempts": 0,
+        "stages": {}
+      },
+      "pixels": {
+        "sha256": "f9661a926f446d54762a0ce667ced839322c21ca7e96829a518394004f80e20f",
+        "width": 1272,
+        "height": 1828,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      }
+    },
+    {
+      "phase": "after-freeze",
+      "baseline-on": {
+        "settle_ms": 3128.9000000059605,
+        "input_gap_ms": 33.599999994039536,
+        "raf_p99_ms": 26.599999994039536,
+        "attempts": 181,
+        "stages": {
+          "attempt": 1853.9999999999989,
+          "reference_build": 3.1,
+          "cache_prepare": 1571.3000000000004,
+          "cpu_coverage": 1466.3999999999999
+        }
+      },
+      "baseline-off": {
+        "settle_ms": 3544.699999988079,
+        "input_gap_ms": 33.70000000298023,
+        "raf_p99_ms": 21.100000008940697,
+        "attempts": 0,
+        "stages": {}
+      },
+      "candidate-on": {
+        "settle_ms": 3328.7999999970198,
+        "input_gap_ms": 80.6000000089407,
+        "raf_p99_ms": 95.29999999701977,
+        "attempts": 191,
+        "stages": {
+          "attempt": 1949.0999999999992,
+          "reference_build": 5.8,
+          "cache_prepare": 1670.2999999999997,
+          "cpu_coverage": 1541.100000000001
+        }
+      },
+      "candidate-off": {
+        "settle_ms": 2912.9000000059605,
+        "input_gap_ms": 78.79999999701977,
+        "raf_p99_ms": 83.29999999701977,
+        "attempts": 0,
+        "stages": {}
+      },
+      "pixels": {
+        "sha256": "2935faeae8651bde4f6e8ef64bf8e644567e9e19f15981efc6261ffb2365c384",
+        "width": 1272,
+        "height": 1828,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      }
+    }
+  ],
+  "checks": "matching-phase ON/OFF before/after pixels; state/camera/receipt/fence checks pass",
+  "scope": "Synthetic root SDK wheel input on actual WebGL2; not physical latency or P34",
+  "idle_note": "baseline and ON diagnostic idle 1 second; OFF candidate idle 60 seconds corroborates recovery",
+  "findings": [
+    "Final thaw ON/OFF input long tasks ~79ms retained; not reproduced in profiled repeat, attribution unresolved.",
+    "Thaw exact settlement shows no consistent improvement across OFF/ON and profiled repeat.",
+    "Default repeated exact settle improves; physical latency is unmeasured."
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "g5-complex-scale-matrix-v1",
+  "engineering_only": true,
+  "sourceStable": true,
+  "rows": 49,
+  "measured": 37,
+  "blocked": [
+    {
+      "id": "objects-100000-sparse-fixture",
+      "reason": "rejected",
+      "stage": {
+        "semantic_error": 7,
+        "stage": "inspect",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-1000000-sparse-component",
+      "reason": "rss_limit",
+      "stage": {
+        "cache_used_bytes": null,
+        "checks": {
+          "linear_parity": true
+        },
+        "index_bytes": 168875640,
+        "load_ms": 8873.989375,
+        "objects": 1000000,
+        "points": 0,
+        "query_ms": 4.598417,
+        "scope": "scene-index",
+        "stage": "component_query",
+        "status": "completed",
+        "visible_objects": 400
+      }
+    },
+    {
+      "id": "objects-1000000-sparse-fixture",
+      "reason": "rss_limit",
+      "stage": {
+        "construct_ms": 871.269125,
+        "objects": 1000000,
+        "stage": "fixture_bind"
+      }
+    },
+    {
+      "id": "objects-100000-dense-fixture",
+      "reason": "rejected",
+      "stage": {
+        "semantic_error": 7,
+        "stage": "inspect",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-1000000-dense-component",
+      "reason": "rss_limit",
+      "stage": {
+        "cache_used_bytes": null,
+        "checks": {
+          "linear_parity": true
+        },
+        "index_bytes": 172780104,
+        "load_ms": 8774.723125,
+        "objects": 1000000,
+        "points": 0,
+        "query_ms": 12652.5275,
+        "scope": "scene-index",
+        "stage": "component_query",
+        "status": "completed",
+        "visible_objects": 1000000
+      }
+    },
+    {
+      "id": "objects-1000000-dense-fixture",
+      "reason": "rss_limit",
+      "stage": {
+        "construct_ms": 884.966667,
+        "objects": 1000000,
+        "stage": "fixture_bind"
+      }
+    },
+    {
+      "id": "points-1000000-sparse-fixture",
+      "reason": "rejected",
+      "stage": {
+        "objects": 1,
+        "points": 1000000,
+        "scope": "semantic-fixture",
+        "stage": "fixture_bind",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-100000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-1000000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-100000-dense-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-1000000-dense-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "points-1000000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    }
+  ],
+  "largestMeasuredRootTier": {
+    "objects-sparse": 10000,
+    "objects-dense": 10000,
+    "points-sparse": 100000
+  }
+}

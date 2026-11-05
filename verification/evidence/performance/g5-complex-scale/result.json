@@ -1,0 +1,162 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "scope": "G5 step4 engineering verification only",
+  "classification": "OBSERVED_WITH_BLOCKED_TIERS",
+  "official_gate_pass_claimed": false,
+  "implementation_refs": {
+    "4e22db5e": "4e22db5ec36bbfe9ce43e65fe9756305c347ea82",
+    "a4b0a459": "a4b0a4590773f86ae00026724cf5ccd2f4ea13a3",
+    "91da0bff": "91da0bff1829fe4611c078a6f0960775170debe3",
+    "de08a2b0": "de08a2b06f51994071ccd94eb66971371868279e"
+  },
+  "primary": {
+    "schema": "g5-complex-scale-matrix-v1",
+    "engineering_only": true,
+    "sourceStable": true,
+    "rows": 49,
+    "measured": 36,
+    "blocked": [
+      {
+        "id": "objects-100000-sparse-fixture",
+        "reason": "rejected",
+        "stage": {
+          "semantic_error": 7,
+          "stage": "inspect",
+          "status": "rejected"
+        }
+      },
+      {
+        "id": "objects-1000000-sparse-component",
+        "reason": "rss_limit",
+        "stage": {
+          "cache_used_bytes": null,
+          "checks": {
+            "linear_parity": true
+          },
+          "index_bytes": 168875640,
+          "load_ms": 8913.799416,
+          "objects": 1000000,
+          "points": 0,
+          "query_ms": 4.643625,
+          "scope": "scene-index",
+          "stage": "component_query",
+          "status": "completed",
+          "visible_objects": 400
+        }
+      },
+      {
+        "id": "objects-1000000-sparse-fixture",
+        "reason": "rss_limit",
+        "stage": {
+          "construct_ms": 898.430084,
+          "objects": 1000000,
+          "stage": "fixture_bind"
+        }
+      },
+      {
+        "id": "objects-100000-dense-fixture",
+        "reason": "rejected",
+        "stage": {
+          "semantic_error": 7,
+          "stage": "inspect",
+          "status": "rejected"
+        }
+      },
+      {
+        "id": "objects-1000000-dense-component",
+        "reason": "rss_limit",
+        "stage": {
+          "cache_used_bytes": null,
+          "checks": {
+            "linear_parity": true
+          },
+          "index_bytes": 172780104,
+          "load_ms": 9280.236167,
+          "objects": 1000000,
+          "points": 0,
+          "query_ms": 15015.756042,
+          "scope": "scene-index",
+          "stage": "component_query",
+          "status": "completed",
+          "visible_objects": 1000000
+        }
+      },
+      {
+        "id": "objects-1000000-dense-fixture",
+        "reason": "rss_limit",
+        "stage": {
+          "construct_ms": 1081.32475,
+          "objects": 1000000,
+          "stage": "fixture_bind"
+        }
+      },
+      {
+        "id": "points-1000000-sparse-component",
+        "reason": "rejected",
+        "stage": {
+          "objects": 1,
+          "points": 1000000,
+          "reason": "invalid_compact_stroke",
+          "scope": "point-projection",
+          "stage": "component_admission",
+          "status": "rejected"
+        }
+      },
+      {
+        "id": "points-1000000-sparse-fixture",
+        "reason": "rejected",
+        "stage": {
+          "objects": 1,
+          "points": 1000000,
+          "scope": "semantic-fixture",
+          "stage": "fixture_bind",
+          "status": "rejected"
+        }
+      },
+      {
+        "id": "objects-100000-sparse-sdk-dpr2",
+        "reason": "fixture_unavailable",
+        "stage": null
+      },
+      {
+        "id": "objects-1000000-sparse-sdk-dpr2",
+        "reason": "fixture_unavailable",
+        "stage": null
+      },
+      {
+        "id": "objects-100000-dense-sdk-dpr2",
+        "reason": "fixture_unavailable",
+        "stage": null
+      },
+      {
+        "id": "objects-1000000-dense-sdk-dpr2",
+        "reason": "fixture_unavailable",
+        "stage": null
+      },
+      {
+        "id": "points-1000000-sparse-sdk-dpr2",
+        "reason": "fixture_unavailable",
+        "stage": null
+      }
+    ],
+    "largestMeasuredRootTier": {
+      "objects-sparse": 10000,
+      "objects-dense": 10000,
+      "points-sparse": 100000
+    }
+  },
+  "document_total_points": {
+    "points": 1000000,
+    "objects": 10,
+    "completed_on_and_off": true,
+    "initial_target_close_unresolved": true
+  },
+  "pending": [
+    "large scene navigation submission waits",
+    "dense-object initial/exact convergence",
+    "large object snapshot authority/resource design",
+    "unreproduced initial browser target closure",
+    "existing regression failures"
+  ],
+  "demo4217_unchanged": true
+}

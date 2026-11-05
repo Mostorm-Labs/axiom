@@ -1,0 +1,42 @@
+{
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "anchor": "3906372c74ade39b85079c0394d17df4b3972b8d",
+  "implementation_commit": "a62a062c99d04c7ad8f5c55d34c8e1c0c740dd55",
+  "source_tree_sha256": "eae1d44e38fa9539f5420d58df7758e38ce3753a5fd53cfe98423e818b979430",
+  "commit_matches_verified_input_files": true,
+  "classification": "READY_FOR_CONTROL_REVIEW",
+  "official_gate_pass": false,
+  "physical_platform_pass": false,
+  "changes": [
+    "best valid texel density per disjoint navigation region",
+    "bounded fine-job suspension/resume and visible-debt priority",
+    "actual optional-record admission reclamation",
+    "source-quality and observed-recovery diagnostics"
+  ],
+  "checks": {
+    "focused_native": "5/5",
+    "focused_node": "16/16",
+    "runtime_boundary_contracts": 117,
+    "browser_paired_runs": "22 MEASURED; source/artifact stable; all paired final pixels match",
+    "real_webgl_modes": [
+      "quality",
+      "exact-replay",
+      "affine",
+      "background"
+    ],
+    "full_native": "1000/1066; exact same 66 baseline failures/not-built",
+    "full_node": "132/143; 11 unavailable compiled harness checks",
+    "full_gpu": "pre-existing denied geometry lost full-stroke distance phase failure"
+  },
+  "findings": [
+    "Large zoom still needs fresh fine content; nine-object zoom ROI unchanged before/after while retained source reaches4.22x.",
+    "Exact settle remains0.7\u20130.8s for nine objects and about2.4\u20132.8s after CDP freeze.",
+    "Ordinary exact timing fluctuations of+50\u201385ms are retained; no general exact-cost improvement claim.",
+    "Full workspace regression is not green; see failure inventory and raw logs."
+  ],
+  "sdk_version": "0.3.9",
+  "sdk_publication": false,
+  "demo": "http://127.0.0.1:4216/example.html",
+  "next_control_review": "review navigation quality/continuity evidence and remaining exact/zoom findings; no change to old Gate authority"
+}

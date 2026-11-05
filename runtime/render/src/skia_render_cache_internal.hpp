@@ -8,6 +8,7 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkPicture.h"
 #include "canvas/resources/resource_budget_manager.hpp"
+#include "source_retention.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include <unordered_map>
 
@@ -15,6 +16,8 @@ namespace canvas::render::internal {
 class SkiaRenderCache final {
   public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
+    std::shared_ptr<SourceRetentionPool> sourcePool;
+    std::function<void(std::size_t)> reclaimRecorded;
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
@@ -29,8 +32,13 @@ class SkiaRenderCache final {
     void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
+    // Navigation may reclaim idle exact work buffers, never an active raster job.
+    bool releaseIdleWorkBuffers()noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
+    SourceRetentions groupSourceLeases_;
+    resources::ResourceLease groupMetadataLease_;
+    bool sourceAdmission_=true;
     struct RunStamp {foundation::ObjectId id;RenderGroupRevisions revisions;bool operator==(const RunStamp&)const=default;};
     struct RetainedRun {
         std::size_t begin=0,end=0,next=0;

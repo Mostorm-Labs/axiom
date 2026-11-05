@@ -246,3 +246,16 @@ option(AXIOM_BUILD_FC08_VERIFICATION "Build isolated FC08 verification materiali
 if(AXIOM_BUILD_FC08_VERIFICATION)
   add_subdirectory(tests/fc08)
 endif()
+
+# Private engineering fixture/observer; never installed or exposed by the SDK.
+if(BUILD_TESTING AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND TARGET canvas_runtime_render)
+  add_executable(axiom_g5_scale_fixture verification/runners/g5/native/scale_fixture.cpp)
+  target_link_libraries(axiom_g5_scale_fixture PRIVATE canvas_runtime_render canvas_runtime_ink)
+  target_include_directories(axiom_g5_scale_fixture PRIVATE "${CMAKE_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+  target_compile_features(axiom_g5_scale_fixture PRIVATE cxx_std_20)
+  find_package(Python3 COMPONENTS Interpreter QUIET)
+  if(Python3_Interpreter_FOUND)
+    add_test(NAME G5ScaleFixtureContract COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_SOURCE_DIR}/verification/tests/test_g5_scale_fixture.py" "$<TARGET_FILE:axiom_g5_scale_fixture>")
+  endif()
+endif()

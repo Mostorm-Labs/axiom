@@ -36,7 +36,7 @@ void damage(){
 render::ReferenceTraversalEntry source(){
     render::ReferenceTraversalEntry value;value.record.objectId=ObjectId::fromUint64(1);
     value.record.kindVersion=1;value.record.worldBounds={0,0,20,20};value.record.content=semantic::ShapeContent{1,20,20};
-    value.command=render::ShapeReferenceCommand{std::get<semantic::ShapeContent>(value.record.content)};return value;
+    value.command=render::ShapeReferenceCommand{std::get<semantic::ShapeContent>(value.record.content.get())};return value;
 }
 void revisions(){
     render::RenderGroupManager manager;auto value=source();const WorldRect clip{0,0,100,100};

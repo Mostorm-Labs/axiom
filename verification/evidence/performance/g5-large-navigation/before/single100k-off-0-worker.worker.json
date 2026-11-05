@@ -1,0 +1,38 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/complex_scale_browser.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-step4-off/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-large-before/single100k-off-0",
+    "scale",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-step4-matrix/points-100000-sparse/fixture.json",
+    "2",
+    "default"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 5.9027890829893295,
+  "peak_process_family_rss_kib": 2216928,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "browser_complete",
+    "status": "completed",
+    "scope": "root-sdk",
+    "objects": 1,
+    "points": 100000,
+    "checks": {
+      "dpr": true,
+      "diagnostics": true,
+      "noErrors": true,
+      "closed": true,
+      "navigation": true,
+      "receipt": true,
+      "count": true,
+      "pointSource": true,
+      "transform": true
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

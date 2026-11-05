@@ -65,7 +65,7 @@ bool measured(const RuntimeSceneRecord& r) {
         (r.worldBounds.right <= r.worldBounds.left || r.worldBounds.bottom <= r.worldBounds.top))
         return false;
     if (r.kind == semantic::ObjectKind::kRichText) {
-        const auto& text = std::get<semantic::RichTextContent>(r.content);
+        const auto& text = std::get<semantic::RichTextContent>(r.content.get());
         const bool nonempty = std::any_of(
             text.document.paragraphs.begin(), text.document.paragraphs.end(), [](const auto& p) {
                 return std::any_of(p.runs.begin(), p.runs.end(), [](const auto& run) {

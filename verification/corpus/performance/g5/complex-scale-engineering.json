@@ -1,0 +1,20 @@
+{
+  "schema_version":"g5-complex-scale-engineering-v1",
+  "authority_role":"engineering_observation_only",
+  "anchor":"6cce9d93f8433d568f5383da3e65dd2608ed7cbe",
+  "object_tiers":[1000,10000,100000,1000000],
+  "point_tiers":[1000,10000,100000,1000000],
+  "object_distributions":["sparse","dense"],
+  "point_distribution":"sparse",
+  "point_definition":"stored compact knots; viewport centre oracle ignores erase coverage",
+  "viewport":{"width":800,"height":500},
+  "dpr_primary":2,
+  "dpr_baseline":[1,2],
+  "edit_cases":["transform","erase","text","table","resource"],
+  "brush":{"profile":"round-handdrawn","revision":4},
+  "seed":42,
+  "worker_limits":{"native_rss_mib":2048,"browser_family_rss_mib":3072,"timeout_seconds":180},
+  "threshold_policy":"no accepted product SLO or scale Gate threshold; cap/rejection/timeout stays BLOCKED_EVIDENCE",
+  "native_scope":"component Scene/index/query/update and point projection; never full SDK evidence",
+  "browser_scope":"matching installed root SDK restore/edit/render/navigation/export/history"
+}

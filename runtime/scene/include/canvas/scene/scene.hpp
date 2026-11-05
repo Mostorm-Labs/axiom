@@ -61,7 +61,11 @@ class SceneReadView final {
     SceneReadView(SceneRevision revision, std::span<const SceneRecord> records)
         : _revision(revision), _records(records) {}
 
+    SceneReadView(SceneRevision revision,scene::SharedVectorView<SceneRecord> records)
+        :_revision(revision),_owned(std::move(records)),_records(_owned.data(),_owned.size()){}
+
     SceneRevision _revision;
+    scene::SharedVectorView<SceneRecord> _owned;
     std::span<const SceneRecord> _records;
 };
 
@@ -82,10 +86,10 @@ class Scene final {
     }
     [[nodiscard]] SceneReadView read() const {
         if (_publicationGate != nullptr && _publicationGate->transactionActive) {
-            return SceneReadView(_publicationGate->previousRevision, _stablePublishedRecords);
+            return SceneReadView(_publicationGate->previousRevision, _stablePublishedRecords.read());
         }
-        return SceneReadView(_revision, _publishedSnapshotValid ? std::span<const SceneRecord>(_publishedRecords)
-                                                                  : _records.records());
+        if(_publishedSnapshotValid)return SceneReadView(_revision,_publishedRecords.read());
+        return SceneReadView(_revision,_records.records());
     }
 
     foundation::Result<SceneApplyReceipt> replace(CompiledSceneSnapshot snapshot);
@@ -139,7 +143,7 @@ class Scene final {
         std::unique_ptr<IPreparedRenderSceneUpdate> render;
         std::unique_ptr<IPreparedSpatialUpdate> spatial;
         PreparedDamage damage;
-        std::vector<SceneRecord> publishedRecords;
+        scene::SharedVector<SceneRecord> publishedRecords;
         WorldRect bounds;
         SceneInvalidationOutput invalidation;
         semantic::SemanticGeneration generation;
@@ -152,6 +156,7 @@ class Scene final {
 
     void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
     bool stagePublicationSnapshot(std::span<const SceneRecord> records);
+    bool stagePublicationSnapshot(scene::SharedVector<SceneRecord> records)noexcept{_stagedPublishedRecords=std::move(records);return true;}
     void publishStagedSnapshot() noexcept;
     void clearPendingPublication() noexcept {
         _stagedPublishedRecords.clear();
@@ -193,9 +198,9 @@ class Scene final {
     semantic::SemanticGeneration _publishedSemanticGeneration{};
     SceneCommitDiagnostics _commitDiagnostics;
     ScenePublicationGate* _publicationGate = nullptr;
-    std::vector<SceneRecord> _publishedRecords;
-    std::vector<SceneRecord> _stablePublishedRecords;
-    std::vector<SceneRecord> _stagedPublishedRecords;
+    scene::SharedVector<SceneRecord> _publishedRecords;
+    scene::SharedVector<SceneRecord> _stablePublishedRecords;
+    scene::SharedVector<SceneRecord> _stagedPublishedRecords;
     bool _publishedSnapshotValid = false;
     WorldRect _publishedBounds{};
     WorldRect _stablePublishedBounds{};

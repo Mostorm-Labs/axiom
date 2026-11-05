@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
+#include "exact_contour_replay_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
@@ -117,8 +118,8 @@ class FailingPresent final : public SkiaSurfaceProvider {
 };
 }
 void checkRetainedBackground(TestSurface& target,TestSurface& reference){
-    auto entry=stroke(82001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
-    c.stroke.knots={{80,60,32768},{150,70,32768}};entry.record.content=c;
+    auto entry=stroke(82001);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    c.stroke.knots={{80,60,32768},{150,70,32768}};std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
     entry.record.worldBounds={32,12,198,118};const auto frame=plan(820,{entry});
     SkiaRenderer cached,direct;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
     cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
@@ -149,13 +150,143 @@ void checkRetainedBackground(TestSurface& target,TestSurface& reference){
     }
     require(failures==1,"failed exposure proof repeated and starved coverage");
 }
+void checkExactCachePressure(TestSurface& target,TestSurface& reference){
+    auto entry=stroke(8391);const auto frame=plan(839,{entry});
+    SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.maxBytes=4*1024*1024;options.maxEntryBytes=options.maxBytes;
+    options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"pressure source frame");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,8,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"pressure navigation");
+        if(!cached.navigationWork().pending)break;
+        require(i<128,"pressure navigation did not converge");
+    }
+    require(cached.navigationWork().retainedBytes>0,"pressure test did not retain world tiles");
+    const auto evictions=cached.navigationWork().evictions;
+    const auto exact=plan(840,{entry},1,{1,0,0,1,8,0});RenderPreparationBudget budget;
+    for(unsigned i=0;;++i){
+        const auto result=cached.renderFrame(target,exact,nullptr,&budget);
+        if(result.code==BackendSubmissionCode::kAccepted)break;
+        require(result.code==BackendSubmissionCode::kRetry&&i<128,"pressure exact did not converge");
+    }
+    require(cached.navigationWork().evictions==evictions&&cached.navigationWork().retainedBytes>0,
+            "exact preparation discarded useful navigation tiles without actual admission pressure");
+    require(direct.renderFrame(reference,exact).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"pressure eviction changed exact pixels");
+    const auto presents=target.presentCount();
+    require(navigate(cached,target,{1,16,0},exact.frame,query,false,nullptr,
+            NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
+            target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
+}
+void checkNavigationSharpOverlap(TestSurface& target,TestSurface& reference){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<56;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(91000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,1,96};
+        o.transform.tx=16+i*4;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    const auto frame=plan(910,entries);SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;options.navigationMaxQueries=4;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"sharp overlap source");
+    require(direct.renderFrame(reference,plan(911,entries,1,{1,0,0,1,8,0})).code==BackendSubmissionCode::kAccepted,"sharp overlap reference");
+    const auto expected=pixels(reference);NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned i=0;i<256;++i){
+        require(navigate(cached,target,{1,8,0},frame.frame,query,false,nullptr,
+                NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted,"sharp overlap navigation");
+        if(cached.navigationWork().presented)require(pixels(target)==expected,"coarse coverage replaced sharper retained content during pan");
+        if(!cached.navigationWork().pending)break;
+        require(i<255,"sharp overlap refinement did not converge");
+    }
+    require(cached.submissionCount()==1,"navigation quality emitted a canonical submission");
+}
+// A populated frontier cannot be certified by empty-background proof. Every
+// submitted overlap retains its original sharp pixels while cold cells fill.
+void checkNavigationColdFrontier(TestSurface& target,TestSurface& reference){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<68;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(92000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,1,96};
+        o.transform.tx=16+i*4;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    const auto frame=plan(920,entries);SkiaRenderer cached,direct;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;cached.setRenderCacheOptions(options);
+    RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(cached.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted,"cold frontier source");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    unsigned presents=0;double previousLow=1;
+    const auto run=[&](CanonicalViewportTransform camera,bool compareOverlap){
+        require(direct.renderFrame(reference,plan(921,entries,1,{camera.scale,0,0,camera.scale,camera.translationX,camera.translationY})).code==BackendSubmissionCode::kAccepted,"cold reference");
+        const auto expected=pixels(reference);previousLow=1;
+        for(unsigned i=0;;++i){
+            const auto result=navigate(cached,target,camera,frame.frame,query,false,nullptr,
+                NavigationBackgroundQuery{[](const foundation::WorldRect&){return false;}});
+            require(result.code==BackendSubmissionCode::kAccepted,"cold frontier navigation");
+            const auto work=cached.navigationWork();
+            if(work.presented){++presents;require(work.coverageComplete,"partial cold viewport was presented");
+                require(work.lowResolutionFraction<=previousLow+1e-6,"fixed-camera refinement regressed resolution");
+                previousLow=work.lowResolutionFraction;
+                if(compareOverlap){const auto actual=pixels(target);
+                    for(unsigned y=0;y<128;++y)for(unsigned x=0;x<220;++x)for(unsigned c=0;c<4;++c)
+                        require(actual[(y*256+x)*4+c]==expected[(y*256+x)*4+c],"cold frontier replaced sharp overlap");}
+            }
+            if(!work.pending)break;require(i<2048,"cold/zoom refinement did not converge");
+        }
+        require(cached.navigationWork().maximumUpscale<=1.25&&cached.navigationWork().lowResolutionFraction==0,
+                "cold/zoom navigation never recovered adequate resolution");
+        if(camera.scale==1)require(pixels(target)==expected,"refined integer-pan pixels differ from Direct");
+        // Downsampling an existing high-density source can differ by one AA
+        // quantization unit. Canonical equality is required after exact render,
+        // not falsely attributed to a resampled navigation image.
+        const auto canonical=plan(922,entries,1,{camera.scale,0,0,camera.scale,camera.translationX,camera.translationY});
+        SkiaRenderer exact;require(exact.renderFrame(target,canonical).code==BackendSubmissionCode::kAccepted&&pixels(target)==expected,
+            "post-navigation canonical pixels differ from Direct");
+    };
+    run({1,-32,0},true);
+    run({2,-64,0},false); // cross the density level; no nearest/snap workaround
+    run({.5F,-16,0},false);
+    require(presents>2&&cached.navigationWork().levelChanges>=2&&cached.submissionCount()==1,
+            "cold/zoom oracle missed levels or emitted canonical submission");
+}
+void checkNavigationRefinementProgress(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned i=0;i<56;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(93000+i);
+        o.kind=semantic::ObjectKind::kShape;o.kind_version=1;o.content=semantic::ShapeContent{1,2,96};
+        o.transform.tx=240+i*5;o.transform.ty=16;
+        const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
+        entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});
+    }
+    SkiaRenderer cached;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    cached.setRenderCacheOptions(options);const auto frame=plan(930,entries);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,-250,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"refinement source");
+        // One parent is complete; an applicable detail cell has real progress.
+        if(cached.navigationWork().tilesBuilt==1&&cached.navigationWork().sourceSteps>=66)break;
+        require(i<512,"detail job never started");
+    }
+    const auto before=cached.navigationWork();
+    for(unsigned i=0;;++i){
+        require(navigate(cached,target,{1,-258,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier interruption");
+        if(!cached.navigationWork().pending)break;require(i<2048,"suspended detail failed to converge");
+    }
+    const auto after=cached.navigationWork();
+    require(after.suspendedRefinements>before.suspendedRefinements&&after.resumedRefinements>before.resumedRefinements,
+            "cold frontier discarded instead of suspending applicable fine progress");
+    require(after.cancelledJobs==before.cancelledJobs&&after.lowResolutionFraction==0,
+            "frontier cancelled applicable detail or left persistent resolution debt");
+    require(cached.submissionCount()==0,"derived refinement manufactured canonical receipt");
+}
 void checkAffineStrokes(TestSurface& target,TestSurface& reference){
     const semantic::Transform2D transforms[]={{1,0,0,1,12,8},{.9,.15,-.1,.8,10,5},{1.1,0,0,.75,-5,4}};
     for(const auto& transform:transforms)for(bool mixed:{false,true}){
-        auto entry=stroke(81001);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        auto entry=stroke(81001);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
         c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({20.+i*.75,55.+std::sin(i*.17)*18,32768});
-        entry.record.content=c;entry.record.transform=transform;entry.record.worldBounds={0,0,256,128};
+        std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;entry.record.transform=transform;entry.record.worldBounds={0,0,256,128};
         auto entries=std::vector{entry};
         if(mixed){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(81002);o.kind=semantic::ObjectKind::kShape;o.kind_version=1;
             o.content=semantic::ShapeContent{1,100,80};o.transform.tx=70;o.transform.ty=20;
@@ -219,10 +350,11 @@ void checkGpuContours(TestSurface& provider){
     internal::PreparedGeometryCache geometry;
     auto geometryBudget=std::make_shared<resources::ResourceBudgetManager>();
     for(const auto profile:{"round-handdrawn","marker-compact-v1"}){
-        auto entry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+        auto entry=stroke(889);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
         content.stroke.config.startTaper=45;content.stroke.config.endTaper=70;content.stroke.knots.clear();
         for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-350.+i*.8,140.+std::sin(i*.035)*65,static_cast<std::uint16_t>(14000+(i%300)*130)});
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
         const auto prepared=geometry.get(entry,RenderCacheOptions{},geometryBudget);
         require(prepared&&prepared->isContour(),"GPU contour admission");
         for(unsigned pose:{3U,4U,5U,0U,1U,2U}){
@@ -256,6 +388,121 @@ void checkGpuContours(TestSurface& provider){
     provider.release();
 }
 #endif
+std::vector<std::uint8_t> checkLargeReplayNavigation(TestSurface& target,bool legacy=false){
+    semantic::ObjectRecord object;object.id=ObjectId::fromUint64(88001);
+    object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
+    semantic::CompactStrokeContent content;
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.seed=42;
+    for(unsigned i=0;i<100000;++i)content.stroke.knots.push_back({i*.5,64.+std::sin(i*.01)*20,32768});
+    object.content=content;
+    const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+    ReferenceTraversalEntry entry{projected.records.front(),true,CompactStrokeReferenceCommand{content}};
+    const auto frame=plan(8801,{entry});
+    SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=8;
+    options.navigationMaxGpuContourPrimitives=32;options.navigationMicroseconds=1000000;
+    if(legacy)options.maxEntryBytes=300000;
+    nav.setRenderCacheOptions(options);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    unsigned firstFeedback=0;
+    for(unsigned tick=1;tick<=(legacy?4096U:12U);++tick){
+        const auto gpu=nav.navigationWork().gpuContourPrimitives;
+        require(navigate(nav,target,{1,-8,-4},frame.frame,query).code==BackendSubmissionCode::kAccepted,"large replay navigation rejected");
+        require(nav.navigationWork().gpuContourPrimitives-gpu<=32,"large replay bypassed GPU primitive quota");
+        if(nav.navigationWork().presented){firstFeedback=tick;break;}
+    }
+    require(firstFeedback>0,"offscreen v4 history starved complete feedback for12 owner opportunities");
+    for(unsigned i=0;nav.navigationWork().pending;++i){
+        require(i<(legacy?8192U:128U),"large replay refinement did not converge");
+        require(navigate(nav,target,{1,-8,-4},frame.frame,query).code==BackendSubmissionCode::kAccepted,"large replay refinement rejected");
+    }
+    require(nav.submissionCount()==0,"navigation manufactured canonical submission");
+    TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"large replay reference");
+    SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(direct.renderFrame(reference,plan(8801,{entry},1,{1,0,0,1,-8,-4})).code==BackendSubmissionCode::kAccepted,"large replay Direct rejected");
+    const auto feedback=pixels(target);
+    // Tile feedback has its existing raster sampling; canonical retirement
+    // still requires the exact frame, which is compared to Direct separately.
+    require(nav.renderFrame(target,plan(8801,{entry},1,{1,0,0,1,-8,-4})).code==BackendSubmissionCode::kAccepted,"large replay canonical frame rejected");
+    require(pixels(target)==pixels(reference),"large replay canonical frame changed exact pixels");
+    std::cout<<"large navigation legacy="<<legacy<<" first feedback opportunity="<<firstFeedback<<'\n';
+    return feedback;
+}
+
+void checkCoarseCameraStability(){
+    RasterSkiaSurfaceProvider target;
+    require(target.resize(1272,1846).code==BackendSubmissionCode::kAccepted,"portrait coarse surface");
+    FrameState frame{ViewId{1},{},{0,0,636,923},{636,923,1272,1846,2,1},
+        semantic::SemanticGeneration{8900},SceneRevision{8900},SurfaceGeneration{1},MetricsGeneration{1},FrameId{8900}};
+    double prior=0;
+    for(float x:{20.F,130.F}){
+        SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxQueries=1;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;nav.setRenderCacheOptions(options);
+        double span=0;NavigationSourceQuery query=[&](const foundation::WorldRect& bounds,std::vector<ReferenceTraversalEntry>& out){span=bounds.right-bounds.left;out.clear();return true;};
+        require(navigate(nav,target,{1.59F,-x*1.59F,-480*1.59F},frame,query).code==BackendSubmissionCode::kAccepted&&span>0,"portrait coarse query");
+        if(prior)require(span==prior,"pan changed coarse level solely at a grid boundary");prior=span;
+    }
+}
+void checkDenseFrontier(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned line=0;line<5;++line){
+        auto entry=stroke(89000+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        c.stroke.knots.clear();
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({110.+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
+        entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
+    }
+    auto crossing=stroke(89010);auto c=std::get<CompactStrokeReferenceCommand>(crossing.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.knots={{230,40,32768},{290,80,48000}};crossing.record.content=c;crossing.command=CompactStrokeReferenceCommand{c};entries.push_back(crossing);
+    const auto frame=plan(8901,entries);SkiaRenderer nav;
+    RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMaxGpuContourPrimitives=32;options.navigationMicroseconds=1000000;
+    nav.setRenderCacheOptions(options);
+    for(unsigned i=0;;++i){
+        const auto r=nav.renderFrame(target,frame);if(r.code==BackendSubmissionCode::kAccepted)break;
+        require(i<256&&r.code==BackendSubmissionCode::kRetry,"dense canonical setup");
+    }
+    const auto canonical=pixels(target);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    unsigned first=0;
+    for(unsigned i=1;i<=8;++i){
+        const auto gpu=nav.navigationWork().gpuContourPrimitives;
+        require(navigate(nav,target,{1,-4,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"dense frontier navigation");
+        require(nav.navigationWork().gpuContourPrimitives-gpu<=32,"frontier bypassed GPU quota");
+        if(nav.navigationWork().presented){first=i;break;}
+    }
+    require(first>0,"tiny content frontier waited for unrelated dense cell interior");
+    require(nav.submissionCount()==1,"frontier forged canonical receipt");
+    std::cout<<"dense frontier first feedback opportunity="<<first<<'\n';
+    // Cold full-region rendering is an independent pixel oracle: it cannot
+    // reuse partial frontier images or the retained canonical snapshot.
+    for(const auto [dx,dy]:std::vector<std::pair<int,int>>{{4,0},{8,0},{16,4},{40,12}}){
+        if(dx!=4)for(unsigned i=0;;++i){
+            require(navigate(nav,target,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier extension rejected");
+            if(nav.navigationWork().presented)break;require(i<32,"frontier extension stalled");
+        }
+        TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier reference surface");
+        SkiaRenderer reference;auto referenceOptions=options;referenceOptions.navigationMaxSteps=1;reference.setRenderCacheOptions(referenceOptions);
+        for(unsigned i=0;;++i){
+            require(navigate(reference,full,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"full-cell reference rejected");
+            if(reference.navigationWork().presented)break;require(i<4096,"full-cell reference stalled");
+        }
+        const auto actual=pixels(target),expected=pixels(full);
+        for(int y=0;y<128;++y)for(int x=0;x<256;++x)for(int channel=0;channel<4;++channel){
+            const auto at=(y*256+x)*4+channel;
+            if(x>=256-dx||y>=128-dy)
+                {if(actual[at]!=expected[at])std::cerr<<"frontier mismatch dx="<<dx<<" dy="<<dy<<" x="<<x<<" y="<<y<<" c="<<channel<<" actual="<<int(actual[at])<<" expected="<<int(expected[at])<<"\n";
+                require(actual[at]==expected[at],"partial/expanded cell changed frontier pixels or exposed unfinished content");}
+            else require(actual[at]==canonical[((y+dy)*256+x+dx)*4+channel],"coarse frontier replaced sharp retained overlap");
+        }
+        require(nav.navigationWork().retainedBytes<=options.maxBytes,"partial cells exceeded residency budget");
+    }
+    const auto final=plan(8901,entries,1,{1,0,0,1,-40,-12});
+    require(nav.renderFrame(target,final).code==BackendSubmissionCode::kAccepted,"frontier final canonical rejected");
+    TestSurface exact;require(exact.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier exact reference surface");
+    SkiaRenderer reference;RenderCacheOptions disabled;disabled.enabled=false;reference.setRenderCacheOptions(disabled);
+    require(reference.renderFrame(exact,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(exact),"frontier changed exact canonical pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -264,14 +511,39 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
+            checkCoarseCameraStability();checkDenseFrontier(provider);if(argc>1)return finishNative(0);
+        }
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
+            const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"exact replay acquire");
+            testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
+        }
+#endif
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--replay-only")){
+            const auto repaired=checkLargeReplayNavigation(provider);
+            require(repaired==checkLargeReplayNavigation(provider,true),"local replay changed complete navigation feedback pixels");
+            if(argc>1)return finishNative(0);
+        }
         SkiaRenderer renderer;
         if(argc>1&&std::string_view(argv[1])=="--background-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"background reference");
             checkRetainedBackground(provider,reference);return finishNative(0);
         }
+        if(argc>1&&std::string_view(argv[1])=="--cold-quality-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"cold quality reference");
+            checkNavigationColdFrontier(provider,reference);return finishNative(0);
+        }
+        if(argc>1&&std::string_view(argv[1])=="--quality-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"quality reference");
+            checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);
+            checkNavigationRefinementProgress(provider);checkExactCachePressure(provider,reference);return finishNative(0);
+        }
         if(argc>1&&std::string_view(argv[1])=="--affine-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine reference surface");
             checkRetainedBackground(provider,reference);
+            checkExactCachePressure(provider,reference);
             checkAffineStrokes(provider,reference);return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
@@ -280,11 +552,11 @@ int main(int argc,char** argv) {
             SkiaRenderer nav;RenderCacheOptions options;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
             options.navigationMaxGpuContourPrimitives=64;nav.setRenderCacheOptions(options);
-            auto entry=stroke(884);auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=stroke(884);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             c.stroke.config.smoothing=0;c.stroke.knots.clear();
             for(unsigned i=0;i<1024;++i)c.stroke.knots.push_back({30.+i*.17,64.+std::sin(i*.2)*20,32768});
-            entry.record.content=c;entry.record.worldBounds={0,0,256,128};const auto frame=plan(584,{entry});
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;entry.record.worldBounds={0,0,256,128};const auto frame=plan(584,{entry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
             for(unsigned i=0;;++i){
                 const auto before=nav.navigationWork().gpuContourPrimitives;
@@ -303,6 +575,9 @@ int main(int argc,char** argv) {
 
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
         checkRetainedBackground(provider,reference);
+        checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);
+        checkNavigationRefinementProgress(provider);
+        checkExactCachePressure(provider,reference);
         checkAffineStrokes(provider,reference);
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         auto compare=[&](const FramePlan& frame){
@@ -407,7 +682,7 @@ int main(int argc,char** argv) {
             require(retained.renderCacheWork().retainedRunBuilds==builds&&retained.renderCacheWork().retainedRunHits>=6,"transform rebuilt static front/back runs");
             // Content, order, camera, target and resource changes must never
             // reuse old pixels, including remove/readd with a repeated ID.
-            auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content.get();
             sources[0].record.eraseMasks={{ObjectId::fromUint64(31002),mask}};
             content.stroke.knots[1].y=95;sources[0].command=CompactStrokeReferenceCommand{content};sources[0].record.content=content;
             warm(plan(570,sources));std::swap(sources[0],sources[4]);warm(plan(571,sources));
@@ -461,7 +736,7 @@ int main(int argc,char** argv) {
                 RenderCacheOptions options;options.maxEntries=1;
                 if(oversized)options.maxEntryBytes=6000;
                 limited.setRenderCacheOptions(options);
-                auto large=stroke(9710);auto content=std::get<CompactStrokeReferenceCommand>(large.command).content;
+                auto large=stroke(9710);auto content=std::get<CompactStrokeReferenceCommand>(large.command).content.get();
                 content.stroke.config.size=100;large.command=CompactStrokeReferenceCommand{content};large.record.content=content;
                 auto small=stroke(9711);content=std::get<CompactStrokeReferenceCommand>(small.command).content;
                 content.stroke.knots={{20,95,32768},{35,95,32768}};small.command=CompactStrokeReferenceCommand{content};small.record.content=content;
@@ -486,7 +761,7 @@ int main(int argc,char** argv) {
                 auto erased=a;erased.record.objectId=ObjectId::fromUint64(9713);semantic::FilledPathMask erase;
                 erase.path.commands={semantic::MoveTo{{40,0}},semantic::LineTo{{60,0}},semantic::LineTo{{60,128}},semantic::LineTo{{40,128}},semantic::ClosePath{}};
                 erased.record.eraseMasks={{ObjectId::fromUint64(9712),erase}};erased.record.transform.tx=3;
-                auto changed=b;auto material=std::get<CompactStrokeReferenceCommand>(changed.command).content;
+                auto changed=b;auto material=std::get<CompactStrokeReferenceCommand>(changed.command).content.get();
                 material.stroke.config.opacity=.3;changed.command=CompactStrokeReferenceCommand{material};changed.record.content=material;
                 foundation::DocumentBackground backdrop;backdrop.color={.2F,.4F,.6F,1.F};
                 auto replacement=plan(573,{changed,shape,erased,a},1,{1.1,0,0,1.1,-2,-1},{0,0,256,128},backdrop,true);
@@ -541,12 +816,12 @@ int main(int argc,char** argv) {
             for(const auto profile:{"round-handdrawn","marker-compact-v1","crayon-wax-v1","chalk-compact-v1","watercolor-lite-v1"}){
                 const auto revision=(std::string_view(profile)=="round-handdrawn"||std::string_view(profile)=="marker-compact-v1")?4:3;
                 auto entry=stroke(885);
-                auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+                auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
                 content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
                 content.stroke.config.size=18;content.stroke.config.opacity=.55;content.stroke.seed=19377;
                 content.stroke.knots.clear();
                 for(unsigned k=0;k<100;++k)content.stroke.knots.push_back({15.+k*2.1,64.+std::sin(k*.16)*23,static_cast<std::uint16_t>(18000+k*300)});
-                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+                entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
                 SkiaRenderer cached,oracle;oracle.setRenderCacheOptions(disabled);
                 auto frame=plan(590,{entry});RenderPreparationBudget budget;budget.maxCoverageSteps=1;
                 BackendSubmissionResult result;unsigned slices=0;
@@ -657,11 +932,11 @@ int main(int argc,char** argv) {
         require(renderer.renderCacheWork().tileHits>0,"tile source not used");
         compare(plan(502,{tileStroke},1,{1.2,0,0,1.2,-6.3,-2.8}));
         for(const unsigned material:{1U,2U})for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
-            auto entry=tileStroke;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=tileStroke;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config.family=family;content.stroke.config.materialVersion=material;
             content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
             content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-            entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             compare(plan(510,{entry}));compare(plan(511,{entry}));
         }
         compare(plan(512,{tileStroke,stroke(9,55)}));compare(plan(513,{stroke(9,55)}));
@@ -675,9 +950,9 @@ int main(int argc,char** argv) {
         const auto a=stroke(1);
 #if defined(G5_TEST_WEBGL)
         if(gpuCandidate){
-            auto tuned=a;auto& c=std::get<CompactStrokeReferenceCommand>(tuned.command).content;
+            auto tuned=a;auto c=std::get<CompactStrokeReferenceCommand>(tuned.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
-            tuned.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(tuned.command).content=c;tuned.record.content=c;
             compare(plan(590,{tuned}));
             require(renderer.renderCacheWork().gpuCoverageTiles>0,"candidate did not execute GPU coverage");
             std::cout<<"candidate GPU coverage tiles="<<renderer.renderCacheWork().gpuCoverageTiles<<'\n';
@@ -688,12 +963,12 @@ int main(int argc,char** argv) {
         // An explicit single-step budget below still protects cancellation.
         {
             auto longContour=stroke(887);
-            auto& content=std::get<CompactStrokeReferenceCommand>(longContour.command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(longContour.command).content.get();
             content.stroke.config.version=2;content.stroke.config.algorithmVersion=4;content.stroke.config.signalVersion=3;
             content.stroke.knots.clear();
             for(unsigned i=0;i<4096;++i)
                 content.stroke.knots.push_back({20.+i*.05,45.+std::sin(i*.02)*12,32768});
-            longContour.record.content=content;
+            std::get<CompactStrokeReferenceCommand>(longContour.command).content=content;longContour.record.content=content;
             renderer.clearRenderCache();
             RenderPreparationBudget available;available.maxMicroseconds=1000000;
             const auto demand=plan(588,{longContour});
@@ -711,11 +986,11 @@ int main(int argc,char** argv) {
             // A long smoothed contour fits the unchanged per-entry budget;
             // knot-count-only worst-case path admission used to deny it and
             // replay all knots for every world tile instead of sharing paths.
-            auto longEntry=stroke(889);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            auto longEntry=stroke(889);auto content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();
             content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             content.stroke.knots.clear();
             for(unsigned i=0;i<16384;++i)content.stroke.knots.push_back({40.+i*.035,64.+std::sin(i*.035)*42,32768});
-            longEntry.record.content=content;longEntry.record.worldBounds={0,0,660,128};
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=content;longEntry.record.content=content;longEntry.record.worldBounds={0,0,660,128};
             SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=8;options.navigationMicroseconds=1000000;
             nav.setRenderCacheOptions(options);const auto frame=plan(589,{longEntry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={longEntry};return true;};
@@ -727,11 +1002,11 @@ int main(int argc,char** argv) {
         // Denied prepared geometry must resume the pinned scalar evaluator,
         // including the full-stroke distance/taper phase after each checkpoint.
         {
-            auto entry=stroke(886);auto& content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=stroke(886);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
             content.stroke.config.smoothing=0;content.stroke.knots.clear();
             for(unsigned i=0;i<512;++i)content.stroke.knots.push_back({20.+i*.4,64.+std::sin(i*.15)*20,32768});
-            entry.record.content=content;entry.record.worldBounds={0,0,256,128};
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;entry.record.worldBounds={0,0,256,128};
             SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
             nav.setRenderCacheOptions(options);const auto frame=plan(586,{entry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
@@ -744,11 +1019,11 @@ int main(int argc,char** argv) {
                     "prepared contour bypassed bounded primitive checkpoints");
         }
         {
-            auto denied=stroke(888);auto& s=std::get<CompactStrokeReferenceCommand>(denied.command).content.stroke;
+            auto denied=stroke(888);auto sBuilder=std::get<CompactStrokeReferenceCommand>(denied.command).content.get();auto& s=sBuilder.stroke;
             s.config.version=2;s.config.algorithmVersion=3;s.config.signalVersion=2;
             s.config.startTaper=80;s.config.endTaper=90;s.knots.clear();
             for(unsigned i=0;i<20000;++i)s.knots.push_back({-20.+i*.05,64.+std::sin(i*.001)*12,32768});
-            denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
+            std::get<CompactStrokeReferenceCommand>(denied.command).content=sBuilder;denied.record.content=std::get<CompactStrokeReferenceCommand>(denied.command).content;
             SkiaRenderer navigation;RenderCacheOptions options;options.maxEntryBytes=260*260*4*3;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;
             navigation.setRenderCacheOptions(options);const auto frame=plan(587,{denied});
@@ -789,12 +1064,12 @@ int main(int argc,char** argv) {
         }
         {
             auto longStroke=stroke(91);
-            auto& content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content;
+            auto content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content.get();
             content.stroke.config.version=2;content.stroke.config.algorithmVersion=3;content.stroke.config.signalVersion=2;
             content.stroke.config.startTaper=25;content.stroke.config.endTaper=35;
             content.stroke.knots.clear();
             for(unsigned i=0;i<240;++i)content.stroke.knots.push_back({20.+i*.85,40.+std::sin(i*.06)*15,static_cast<std::uint16_t>(12000+i*170)});
-            longStroke.record.content=content;
+            std::get<CompactStrokeReferenceCommand>(longStroke.command).content=content;longStroke.record.content=content;
             renderer.clearRenderCache();
             const auto previous=pixels(provider);const auto presents=provider.presentCount();
             const auto stepsBefore=renderer.renderCacheWork().preparationCoverageSteps;
@@ -818,8 +1093,8 @@ int main(int argc,char** argv) {
             renderer.clearRenderCache();
             require(renderer.renderFrame(provider,demand,nullptr,&bounded).code==BackendSubmissionCode::kRetry,"content replacement setup");
             auto edited=longStroke;
-            auto& editedContent=std::get<CompactStrokeReferenceCommand>(edited.command).content;
-            editedContent.stroke.knots[100].y+=35;edited.record.content=editedContent;
+            auto editedContent=std::get<CompactStrokeReferenceCommand>(edited.command).content.get();
+            editedContent.stroke.knots[100].y+=35;std::get<CompactStrokeReferenceCommand>(edited.command).content=editedContent;edited.record.content=editedContent;
             const auto editedDemand=plan(596,{edited},1,{1.2,0,0,1.2,-6.3,-2.8});
             retries=0;
             do{result=renderer.renderFrame(provider,editedDemand,nullptr,&bounded);require(++retries<200,"changed source never converges");}
@@ -889,7 +1164,7 @@ int main(int argc,char** argv) {
         require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted&&
                 pixels(provider)==pixels(reference),"capacity fallback differs from Direct");
         {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
-        auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.stroke.config.size=-1;
+        auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.update([](auto& c){c.stroke.config.size=-1;});
         const auto invalidBefore=pixels(provider);const auto invalidPresents=provider.presentCount();
         require(renderer.renderFrame(provider,plan(603,malformed),nullptr,&slice).code==BackendSubmissionCode::kRejected,
                 "invalid geometry admitted by preparation");
@@ -897,11 +1172,11 @@ int main(int argc,char** argv) {
                 "invalid preparation changed presented target");
         for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
             renderer.clearRenderCache();auto varied=sources;
-            for(auto& entry:varied){auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            for(auto& entry:varied){auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
                 content.stroke.config.family=family;content.stroke.config.materialVersion=material;
                 content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
                 content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+                entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             }
             const auto frame=plan(604,varied,1,{1.2,0,0,1.2,-6.3,-2.8});
             for(unsigned i=0;i<4;++i)
@@ -927,8 +1202,8 @@ int main(int argc,char** argv) {
         // old view deliberately does not contain this stroke's full extent.
         {
             SkiaRenderer worldRenderer;
-            auto wide=stroke(901);auto& wideStroke=std::get<CompactStrokeReferenceCommand>(wide.command).content.stroke;
-            wideStroke.knots={{-240,50,32768},{500,50,32768}};wide.record.content=std::get<CompactStrokeReferenceCommand>(wide.command).content;
+            auto wide=stroke(901);auto wideStrokeBuilder=std::get<CompactStrokeReferenceCommand>(wide.command).content.get();auto& wideStroke=wideStrokeBuilder.stroke;
+            wideStroke.knots={{-240,50,32768},{500,50,32768}};std::get<CompactStrokeReferenceCommand>(wide.command).content=wideStrokeBuilder;wide.record.content=std::get<CompactStrokeReferenceCommand>(wide.command).content;
             wide.record.worldBounds={-260,30,520,70};
             auto exactFrame=plan(700,{wide});
             require(worldRenderer.renderFrame(provider,exactFrame).code==BackendSubmissionCode::kAccepted,"world exact setup");
@@ -957,9 +1232,9 @@ int main(int argc,char** argv) {
             // placement transform that canonical rendering applies.
             SkiaRenderer mixedRenderer;
             auto longEntry = stroke(902);
-            auto& longStroke = std::get<CompactStrokeReferenceCommand>(longEntry.command).content.stroke;
+            auto longStrokeBuilder=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();auto& longStroke=longStrokeBuilder.stroke;
             longStroke.knots = {{-120, 58, 32768}, {420, 58, 32768}};
-            longEntry.record.content = std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=longStrokeBuilder;longEntry.record.content = std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
             longEntry.record.worldBounds = {-140, 38, 440, 78};
             semantic::ObjectRecord shapeObject;
             shapeObject.id = ObjectId::fromUint64(903);
@@ -1070,10 +1345,10 @@ int main(int argc,char** argv) {
         {
             TestSurface longSurface;require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"long target");
             SkiaRenderer nav;RenderCacheOptions bounded;bounded.navigationMaxSteps=8;nav.setRenderCacheOptions(bounded);
-            auto longEntry=stroke(910);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            auto longEntry=stroke(910);auto content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content.get();
             content.stroke.knots.clear();
             for(unsigned k=0;k<4096;++k)content.stroke.knots.push_back({-100.+k*.1,64,32768});
-            longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
+            std::get<CompactStrokeReferenceCommand>(longEntry.command).content=content;longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
             auto current=plan(710,{longEntry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={longEntry};return true;};
             require(navigate(nav,longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
@@ -1140,8 +1415,8 @@ int main(int argc,char** argv) {
                     "parent scale switch");
             require(nav.navigationWork().fallbackUses>fallbackBefore,"ready parent coverage not selected");
             // Changed sources in the same world cells invalidate retained pixels.
-            auto& config=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke.config;
-            config.color={1,0,0,1};entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto configBuilder=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();auto& config=configBuilder.stroke.config;
+            config.color={1,0,0,1};std::get<CompactStrokeReferenceCommand>(entry.command).content=configBuilder;entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
             auto next=plan(731,{entry});
             for(unsigned n=0;n<128;++n){
                 require(navigate(nav,provider,{1,0,0},next.frame,query).code==BackendSubmissionCode::kAccepted,"new content nav");
@@ -1315,11 +1590,11 @@ int main(int argc,char** argv) {
         compare(plan(13,{a,b}));require(renderer.renderCacheWork().retainedBytes==0,"budget exceeded");
         {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
-            auto entry=a;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto entry=a;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             content.stroke.config.family=family;content.stroke.config.materialVersion=material;
             content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
             content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
-            entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            entry.command=CompactStrokeReferenceCommand{content};std::get<CompactStrokeReferenceCommand>(entry.command).content=content;entry.record.content=content;
             for(const auto& transform:std::vector<WorldToViewAffine>{{},{.8,.3,-.2,.9,40,10},{-1,0,0,1,256,0},{2,0,0,2,-100,-40}}){
                 compare(plan(20,{entry},1,transform));compare(plan(21,{entry},1,transform));
             }
@@ -1330,13 +1605,13 @@ int main(int argc,char** argv) {
         for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker})
         for(const bool caps:{false,true}){
             auto entry=stroke(101);
-            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
             c.stroke.config.family=family;c.stroke.config.startCap=caps;c.stroke.config.endCap=caps;
             c.stroke.config.startTaper=caps?40:0;c.stroke.config.endTaper=caps?70:0;
             c.stroke.knots.clear();
             for(unsigned i=0;i<40;++i)c.stroke.knots.push_back({18.+i*5,55.+std::sin(i*.7)*14,static_cast<std::uint16_t>(7000+i*1300)});
-            entry.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
             for(const auto transform:std::vector<WorldToViewAffine>{{1.2,0,0,1.2,-6.3,-2.8},{.8,.3,-.2,.9,40,10}}){
                 compare(plan(211,{entry},1,transform));
                 compare(plan(212,{entry},1,transform,{0,0,128,64},{},false,2));
@@ -1355,7 +1630,7 @@ int main(int argc,char** argv) {
         // must stay exactly equal; legacy and tiny/thin paths may fall back.
         for(unsigned sample=0;sample<48;++sample){
             auto entry=stroke(121);
-            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
             c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
             c.stroke.config.family=sample%2?foundation::InkFamily::kMarker:foundation::InkFamily::kRound;
             c.stroke.config.materialVersion=2;c.stroke.config.materialResourceId=foundation::kInkMaterialV2ResourceId;
@@ -1367,7 +1642,7 @@ int main(int argc,char** argv) {
             c.stroke.config.markerAngle=std::fmod(sample*.23,6.283185307179586);c.stroke.config.markerFlatness=sample%3==0?.08:.4;
             c.stroke.knots.clear();
             for(unsigned k=0;k<45;++k)c.stroke.knots.push_back({128.+90*std::sin(k*.42),64.+45*std::cos(k*.57),static_cast<std::uint16_t>((sample*421+k*1621)%65536)});
-            entry.record.content=c;
+            std::get<CompactStrokeReferenceCommand>(entry.command).content=c;entry.record.content=c;
             const auto transform=sample%3==0?WorldToViewAffine{1.31,.2,-.17,.81,-4.73,8.42}:
                 sample%3==1?WorldToViewAffine{-1.1,0,0,.8,260.3,12.7}:WorldToViewAffine{.7,0,0,1.3,11.73,-4.28};
             compare(plan(230+sample,{entry},1,transform,{0,0,256,128},{},sample%2==0));
@@ -1379,7 +1654,7 @@ int main(int argc,char** argv) {
             }
         }
         auto changed=a;auto& command=std::get<CompactStrokeReferenceCommand>(changed.command);
-        command.content.stroke.knots[1].y+=15;changed.record.content=command.content;
+        command.content.update([](auto& c){c.stroke.knots[1].y+=15;});changed.record.content=command.content;
         compare(plan(22,{changed}));
         renderer.clearRenderCache();require(renderer.renderCacheWork().retainedBytes==0,"clear retained bytes");
         require(provider.lose().code==BackendSubmissionCode::kAccepted,"lost");
@@ -1392,7 +1667,7 @@ int main(int argc,char** argv) {
         renderer.setImageResolver(nullptr);compare(plan(26,{a},provider.generation()));
         require(renderer.renderCacheWork().rasterizedGroups==beforeResource+1,"resource reset reused stale cache");
         auto huge=a;auto& hugeCommand=std::get<CompactStrokeReferenceCommand>(huge.command);
-        hugeCommand.content.stroke.knots={{-1e7,40,32768},{1e7,40,32768}};huge.record.content=hugeCommand.content;
+        hugeCommand.content.update([](auto& c){c.stroke.knots={{-1e7,40,32768},{1e7,40,32768}};});huge.record.content=hugeCommand.content;
         RenderCacheOptions small;small.maxEntryBytes=16;renderer.setRenderCacheOptions(small);
         compare(plan(27,{huge},provider.generation()));require(renderer.renderCacheWork().retainedBytes==0,"huge group requires giant texture");
         FailingPresent failed;require(failed.resize(256,128).code==BackendSubmissionCode::kAccepted,"failing target");

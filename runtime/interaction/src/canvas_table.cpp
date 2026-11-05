@@ -92,7 +92,7 @@ bool CanvasEditingRuntime::tablePointer(const input::PointerKey& key,input::Poin
   }
   if(phase!=input::PointerPhase::kDown||!selectionMode_||selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint||selectedObjectCount()!=1||!textWritable(selection_.primary()))return false;
   runtime::TextIntent target;target.object=selection_.primary();target.viewX=x;target.viewY=y;if(!tableTargetAt(target))return false;
-  const auto* world=sceneCoordinator_->runtimeScene().find(target.object);const auto p=viewToContent(x,y);const auto local=localPoint(world->transform,p.first,p.second);const auto& t=std::get<semantic::TableContent>(world->content);const double tolerance=5/std::max(0.01F,viewportGesture().scale);
+  const auto* world=sceneCoordinator_->runtimeScene().find(target.object);const auto p=viewToContent(x,y);const auto local=localPoint(world->transform,p.first,p.second);const auto& t=std::get<semantic::TableContent>(world->content.get());const double tolerance=5/std::max(0.01F,viewportGesture().scale);
   double edge=0;for(const auto& col:t.columns){edge+=col.size;if(std::abs(local->first-edge)<tolerance){tableResize_=TableResize{key,target.object,{},col.id,local->first,col.size,col.size,semanticGeneration_.current().value()};return true;}}
   edge=0;for(const auto& row:t.rows){edge+=row.size;if(std::abs(local->second-edge)<tolerance){tableResize_=TableResize{key,target.object,row.id,{},local->second,row.size,row.size,semanticGeneration_.current().value()};return true;}}
   canonicalPresentationDirty_=true;return false;

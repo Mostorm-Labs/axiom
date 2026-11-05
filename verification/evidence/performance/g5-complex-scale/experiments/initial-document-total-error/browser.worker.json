@@ -1,0 +1,25 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/complex_scale_browser.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-step4-on/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-step4-point-total/sdk",
+    "scale",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-step4-point-total/fixture.json",
+    "2"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 5.323335374996532,
+  "peak_process_family_rss_kib": 2421200,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "browser_error",
+    "status": "failed",
+    "scope": "root-sdk",
+    "error": "page.evaluate: Target page, context or browser has been closed\n    at /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/complex_scale_browser.mjs:45:27"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

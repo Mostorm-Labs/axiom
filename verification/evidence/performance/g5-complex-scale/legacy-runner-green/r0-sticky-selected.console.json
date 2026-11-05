@@ -1,0 +1,1002 @@
+[
+  {
+    "phase": null,
+    "type": "warning",
+    "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled"
+  },
+  {
+    "phase": null,
+    "type": "warning",
+    "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled"
+  },
+  {
+    "phase": null,
+    "type": "warning",
+    "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled"
+  },
+  {
+    "phase": null,
+    "type": "warning",
+    "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=1 objects=0 scene_records=0"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"1\",\"semantic\":\"0\",\"scene\":\"0\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":611600000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":7200000,\"exclusive_ns\":1000000,\"calls\":1},\"visibility\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"reference_build\":{\"inclusive_ns\":1000000,\"exclusive_ns\":800000,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":4700000,\"exclusive_ns\":800000,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":800000,\"exclusive_ns\":800000,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"scene_draw\":{\"inclusive_ns\":800000,\"exclusive_ns\":800000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":500000,\"exclusive_ns\":500000,\"calls\":1},\"provider_present\":{\"inclusive_ns\":1500000,\"exclusive_ns\":1500000,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":286,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":0,\"coverage_tiles\":0,\"coverage_pixels\":0,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":0}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] finish begin pointer=1 objects=0 scene_gen=0"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"1\",\"prepare_ns\":1900000,\"publish_ns\":0,\"metadata_rows_copied\":0,\"payload_reuses\":0,\"index_builds\":1}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=2 objects=1 scene_records=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"2\",\"semantic\":\"1\",\"scene\":\"1\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":883600000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":29800000,\"exclusive_ns\":200000,\"calls\":1},\"visibility\":{\"inclusive_ns\":400000,\"exclusive_ns\":400000,\"calls\":1},\"reference_build\":{\"inclusive_ns\":400000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":28700000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":500000,\"exclusive_ns\":300000,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":28200000,\"exclusive_ns\":12400000,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":3700000,\"exclusive_ns\":3700000,\"calls\":64},\"material_submit\":{\"inclusive_ns\":12000000,\"exclusive_ns\":12000000,\"calls\":1}},\"counts\":{\"candidates\":1,\"sources\":1,\"encoded_bytes\":41663,\"plan_entries\":1,\"prepare_knots\":2044,\"built_groups\":0,\"coverage_tiles\":1,\"coverage_pixels\":65536,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":2044}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=3 objects=1 scene_records=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"3\",\"semantic\":\"1\",\"scene\":\"1\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":935800000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":8500000,\"exclusive_ns\":300000,\"calls\":1},\"render\":{\"inclusive_ns\":8200000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":100000,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8100000,\"exclusive_ns\":800000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":6400000,\"exclusive_ns\":6400000,\"calls\":451},\"material_submit\":{\"inclusive_ns\":900000,\"exclusive_ns\":900000,\"calls\":7}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":0,\"coverage_tiles\":8,\"coverage_pixels\":475136,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=4 objects=1 scene_records=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"4\",\"semantic\":\"1\",\"scene\":\"1\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":968900000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":5700000,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":5700000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":5100000,\"exclusive_ns\":3400000,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":900000,\"exclusive_ns\":900000,\"calls\":381},\"material_submit\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":6},\"raster_snapshot\":{\"inclusive_ns\":500000,\"exclusive_ns\":500000,\"calls\":1},\"scene_draw\":{\"inclusive_ns\":500000,\"exclusive_ns\":400000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"provider_present\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":5,\"coverage_pixels\":278528,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] finish begin pointer=2 objects=1 scene_gen=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"2\",\"prepare_ns\":200000,\"publish_ns\":0,\"metadata_rows_copied\":1,\"payload_reuses\":0,\"index_builds\":1}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=5 objects=2 scene_records=2"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"5\",\"semantic\":\"2\",\"scene\":\"2\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":1556600000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":8900000,\"exclusive_ns\":400000,\"calls\":1},\"visibility\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_build\":{\"inclusive_ns\":100000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":8400000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8400000,\"exclusive_ns\":1300000,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":6700000,\"exclusive_ns\":6700000,\"calls\":782},\"material_submit\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":12}},\"counts\":{\"candidates\":2,\"sources\":2,\"encoded_bytes\":83040,\"plan_entries\":2,\"prepare_knots\":4088,\"built_groups\":0,\"coverage_tiles\":13,\"coverage_pixels\":765952,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":4088}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=6 objects=2 scene_records=2"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"6\",\"semantic\":\"2\",\"scene\":\"2\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":1601500000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":1000000,\"exclusive_ns\":200000,\"calls\":1},\"render\":{\"inclusive_ns\":800000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":700000,\"exclusive_ns\":200000,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cpu_coverage\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":114},\"material_submit\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":2},\"raster_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"scene_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"provider_present\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":1,\"coverage_pixels\":14848,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"3\",\"prepare_ns\":200000,\"publish_ns\":0,\"metadata_rows_copied\":2,\"payload_reuses\":0,\"index_builds\":0}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"4\",\"prepare_ns\":0,\"publish_ns\":0,\"metadata_rows_copied\":0,\"payload_reuses\":3,\"index_builds\":0}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"5\",\"prepare_ns\":0,\"publish_ns\":0,\"metadata_rows_copied\":0,\"payload_reuses\":3,\"index_builds\":0}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=7 objects=4 scene_records=4"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"7\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":2068800000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":9900000,\"exclusive_ns\":100000,\"calls\":1},\"visibility\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"reference_build\":{\"inclusive_ns\":300000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":9100000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":100000,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":100000,\"exclusive_ns\":0,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":4},\"scene_draw\":{\"inclusive_ns\":4400000,\"exclusive_ns\":4400000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"provider_present\":{\"inclusive_ns\":4500000,\"exclusive_ns\":4500000,\"calls\":1}},\"counts\":{\"candidates\":4,\"sources\":4,\"encoded_bytes\":83847,\"plan_entries\":4,\"prepare_knots\":4088,\"built_groups\":0,\"coverage_tiles\":0,\"coverage_pixels\":0,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":2,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":4088}}"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "[axiom] present begin frame=8 objects=4 scene_records=4"
+  },
+  {
+    "phase": null,
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":false,\"view\":\"1\",\"frame\":\"8\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"1\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":2451500000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":6400000,\"exclusive_ns\":200000,\"calls\":1},\"visibility\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_build\":{\"inclusive_ns\":300000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":5800000,\"exclusive_ns\":900000,\"calls\":1},\"acquire\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"validation\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":100000,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":4},\"scene_draw\":{\"inclusive_ns\":200000,\"exclusive_ns\":100000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"provider_present\":{\"inclusive_ns\":4500000,\"exclusive_ns\":4500000,\"calls\":1}},\"counts\":{\"candidates\":4,\"sources\":4,\"encoded_bytes\":83847,\"plan_entries\":4,\"prepare_knots\":4088,\"built_groups\":0,\"coverage_tiles\":0,\"coverage_pixels\":0,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":2,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":4088}}"
+  },
+  {
+    "phase": null,
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"begin\",\"id\":\"cold\",\"at\":3230.7000000178814}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3286800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.020201,\"level\":1,\"elapsed_ns\":700000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.020201,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":40,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3318800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.040811,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.040811,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3353400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.061836,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.061836,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3384800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.083287,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.083287,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3418700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.105171,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.105171,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3452200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.127497,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.127497,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3486800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.150274,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.150274,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3518800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.173511,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.173511,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3551900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.197217,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.197217,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3586300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.221403,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.221403,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3618200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.246077,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.246077,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3653300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.271249,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.271249,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3685400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.296930,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.296930,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3720000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.323130,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.323130,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3753400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.349859,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.349859,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3784800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.377128,\"level\":1,\"elapsed_ns\":6200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.377128,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3820100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.404948,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.404948,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3851700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.433329,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.433329,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3886700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.404948,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.404948,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3919200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.377128,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.377128,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3951500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.349859,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.349859,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"3984900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.323130,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.323130,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4020200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.296930,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.296930,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4053400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.271249,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.271249,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4085400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.246077,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.246077,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4120100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.221403,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.221403,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4152000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.197217,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.197217,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4184800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.173511,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.173511,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4220100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.150274,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.150274,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4251700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.127497,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.127497,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4286700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.105171,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.105171,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4319100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.083287,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.083287,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4353400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.061836,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.061836,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4386600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.040811,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.040811,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4418800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.020201,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.020201,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4453400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4484800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4518300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4553300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4584800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4618900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4653300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4685500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4720000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4751500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4786600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":100000,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4820000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4853300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4886700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4918700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4953300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"4986700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5019800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5051500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5085200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5118200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5153200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5186700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":0,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5220000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5252100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5284900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5319500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5353400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5384900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5420000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5453400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5484800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5518300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5551600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5584900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5620000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5651600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":0,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9340083,\"budget_recorded_bytes\":106483,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"input-ended\",\"id\":\"cold\",\"at\":5652}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"5719900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":14500000,\"query_ns\":100000,\"initialization_ns\":100000,\"queries\":3,\"initialized\":1,\"knots\":2044,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":2044,\"overlay_ns\":0,\"prepared_builds\":1,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":34,\"contour_drawn\":7,\"vector_prepared\":0,\"gpu_contours\":7,\"coarse_masks\":0,\"presented\":false,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":16,\"index_nodes\":2,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":6,\"source_queries_observed\":1,\"source_bytes\":104051,\"source_hits\":12,\"budget_available\":true,\"budget_used_bytes\":10261690,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "[axiom] present begin frame=9 objects=4 scene_records=4"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"9\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"73\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":5753500000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":9000000,\"exclusive_ns\":200000,\"calls\":1},\"visibility\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_build\":{\"inclusive_ns\":300000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":8400000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8300000,\"exclusive_ns\":1200000,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":6600000,\"exclusive_ns\":6600000,\"calls\":540},\"material_submit\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":8}},\"counts\":{\"candidates\":4,\"sources\":4,\"encoded_bytes\":83847,\"plan_entries\":4,\"prepare_knots\":4088,\"built_groups\":0,\"coverage_tiles\":9,\"coverage_pixels\":540672,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":2,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":4088}}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "[axiom] present begin frame=10 objects=4 scene_records=4"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"10\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"73\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":5785300000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":8300000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":8200000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8200000,\"exclusive_ns\":1600000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":6400000,\"exclusive_ns\":6400000,\"calls\":1005},\"material_submit\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":16},\"raster_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":16,\"coverage_pixels\":925696,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "[axiom] present begin frame=11 objects=4 scene_records=4"
+  },
+  {
+    "phase": "cold",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"11\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"73\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":5819500000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":2700000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":2600000,\"exclusive_ns\":100000,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":2300000,\"exclusive_ns\":600000,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":4},\"cpu_coverage\":{\"inclusive_ns\":1600000,\"exclusive_ns\":1600000,\"calls\":247},\"material_submit\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":4},\"raster_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"scene_draw\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"provider_present\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":3,\"coverage_pixels\":133632,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": "cold",
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"end\",\"id\":\"cold\",\"at\":6251.5}"
+  },
+  {
+    "phase": null,
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"begin\",\"id\":\"warm\",\"at\":6258.300000011921}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6320000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.020201,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.020201,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":32,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6351500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.040811,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.040811,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6386700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.061836,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.061836,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6419300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.083287,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.083287,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6453300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.105171,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.105171,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6486700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.127497,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.127497,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6518700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.150274,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.150274,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6553300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.173511,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.173511,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6584800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.197217,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.197217,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6619900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.221403,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.221403,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6651500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.246077,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.246077,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6684900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.271249,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.271249,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6719900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.296930,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.296930,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6753400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.323130,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.323130,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6785400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.349859,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.349859,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6820000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.377128,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.377128,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6852500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.404948,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.404948,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6885300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.433329,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.433329,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6919400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.404948,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.404948,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6953300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.377128,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.377128,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"6984800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.349859,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.349859,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7020000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.323130,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.323130,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7052000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.296930,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.296930,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7085300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.271249,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.271249,\"low_resolution_fraction\":1.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7119800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.246077,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.246077,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7151500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.221403,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.221403,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7185300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.197217,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.197217,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7219900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.173511,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.173511,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7253300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.150274,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.150274,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7285300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.127497,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.127497,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7318100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.105171,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.105171,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7353200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.083287,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.083287,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7386600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.061836,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.061836,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7419900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.040811,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.040811,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7452000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.020201,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":0,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.020201,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7486700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7519200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7551400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7586600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7619900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7653200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7685400000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7719800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7751500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7784900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7818100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7852000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7886600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7919900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7951700000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"7984800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8020000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8051500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8086600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8119200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8153300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8185100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8218600000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8253300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8286300000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8319900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8353200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8386500000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8419800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":300000,\"query_ns\":100000,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8451900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8485000000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8519800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8553200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":1,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8585100000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8619900000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":100000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8653200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":100000,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8685200000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":200000,\"query_ns\":0,\"initialization_ns\":0,\"queries\":2,\"initialized\":0,\"knots\":0,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":0,\"built\":0,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":0,\"contour_drawn\":0,\"vector_prepared\":0,\"gpu_contours\":0,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":9450490,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":0}"
+  },
+  {
+    "phase": "warm",
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"input-ended\",\"id\":\"warm\",\"at\":8685.600000023842}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"8751800000\",\"scene\":\"5\",\"surface\":\"1\",\"scale\":1.000000,\"level\":0,\"elapsed_ns\":700000,\"query_ns\":0,\"initialization_ns\":200000,\"queries\":2,\"initialized\":1,\"knots\":2044,\"cancelled\":0,\"discarded_knots\":0,\"throttled\":0,\"prewarm\":1,\"built\":1,\"fallback\":0,\"prefix_knots\":0,\"overlay_ns\":0,\"prepared_builds\":0,\"prepared_hits\":0,\"prepared_denied\":0,\"prepared_bytes\":108975,\"contour_tested\":34,\"contour_drawn\":7,\"vector_prepared\":0,\"gpu_contours\":7,\"coarse_masks\":0,\"presented\":true,\"coverage\":true,\"maximum_upscale\":1.000000,\"low_resolution_fraction\":0.000000,\"retained_fraction\":1.000000,\"suspended\":0,\"resumed\":0,\"chunk_candidates\":0,\"index_nodes\":0,\"index_fallbacks\":0,\"source_copy_bytes\":0,\"source_aliases\":0,\"source_queries_observed\":0,\"source_bytes\":104051,\"source_hits\":0,\"budget_available\":true,\"budget_used_bytes\":10261690,\"budget_recorded_bytes\":216890,\"navigation_tile_bytes\":811200}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "[axiom] present begin frame=12 objects=4 scene_records=4"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"12\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"145\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":8785500000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":9200000,\"exclusive_ns\":400000,\"calls\":1},\"visibility\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_build\":{\"inclusive_ns\":300000,\"exclusive_ns\":0,\"calls\":1},\"reference_entries\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"reference_encode\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"reference_digest\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":1},\"presentation_adapt\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"frame_plan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"render\":{\"inclusive_ns\":8400000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8300000,\"exclusive_ns\":900000,\"calls\":1},\"prepare_scan\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":7100000,\"exclusive_ns\":7100000,\"calls\":400},\"material_submit\":{\"inclusive_ns\":300000,\"exclusive_ns\":300000,\"calls\":6}},\"counts\":{\"candidates\":4,\"sources\":4,\"encoded_bytes\":83847,\"plan_entries\":4,\"prepare_knots\":4088,\"built_groups\":0,\"coverage_tiles\":7,\"coverage_pixels\":409600,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":2,\"prepare_budget\":0,\"exact_demand_reuse\":0,\"source_points\":4088}}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "[axiom] present begin frame=13 objects=4 scene_records=4"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"13\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"145\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":8818100000,\"outcome\":\"retry\",\"stages\":{\"attempt\":{\"inclusive_ns\":8700000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":8600000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":8600000,\"exclusive_ns\":1600000,\"calls\":1},\"cpu_coverage\":{\"inclusive_ns\":6500000,\"exclusive_ns\":6500000,\"calls\":1145},\"material_submit\":{\"inclusive_ns\":500000,\"exclusive_ns\":500000,\"calls\":18},\"raster_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":18,\"coverage_pixels\":1056768,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "[axiom] present begin frame=14 objects=4 scene_records=4"
+  },
+  {
+    "phase": "warm",
+    "type": "error",
+    "text": "AXIOM_FRAME_TIMING {\"version\":1,\"settle\":true,\"view\":\"1\",\"frame\":\"14\",\"semantic\":\"5\",\"scene\":\"5\",\"camera\":\"145\",\"surface\":\"1\",\"metrics\":\"1\",\"start_ns\":8853200000,\"outcome\":\"accepted\",\"stages\":{\"attempt\":{\"inclusive_ns\":2600000,\"exclusive_ns\":100000,\"calls\":1},\"render\":{\"inclusive_ns\":2500000,\"exclusive_ns\":0,\"calls\":1},\"acquire\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"validation\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":2},\"cache_begin\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"group_update\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"damage\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"cache_prepare\":{\"inclusive_ns\":2200000,\"exclusive_ns\":300000,\"calls\":1},\"cache_draw\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":4},\"cpu_coverage\":{\"inclusive_ns\":1700000,\"exclusive_ns\":1700000,\"calls\":247},\"material_submit\":{\"inclusive_ns\":200000,\"exclusive_ns\":200000,\"calls\":4},\"raster_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"scene_draw\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1},\"navigation_snapshot\":{\"inclusive_ns\":0,\"exclusive_ns\":0,\"calls\":1},\"provider_present\":{\"inclusive_ns\":100000,\"exclusive_ns\":100000,\"calls\":1}},\"counts\":{\"candidates\":0,\"sources\":0,\"encoded_bytes\":0,\"plan_entries\":0,\"prepare_knots\":0,\"built_groups\":1,\"coverage_tiles\":3,\"coverage_pixels\":133632,\"gpu_interior_pixels\":0,\"cpu_edge_pixels\":0,\"prepare_direct\":0,\"prepare_budget\":0,\"exact_demand_reuse\":1,\"source_points\":0}}"
+  },
+  {
+    "phase": "warm",
+    "type": "info",
+    "text": "G5_SAMPLE_MARK {\"kind\":\"end\",\"id\":\"warm\",\"at\":9286.40000000596}"
+  }
+]

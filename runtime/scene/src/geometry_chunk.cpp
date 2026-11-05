@@ -2,6 +2,9 @@
 
 #include <algorithm>
 #include <cstring>
+#include <array>
+#include <numeric>
+#include <limits>
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
@@ -60,5 +63,49 @@ std::vector<GeometryChunk> buildGeometryChunks(const semantic::ObjectContent& co
         result.push_back(GeometryChunk{static_cast<std::uint32_t>(index), static_cast<std::uint32_t>(offset), static_cast<std::uint32_t>(end-offset), bounds, digest(std::span<const ChunkPoint>(source.data()+offset, end-offset))});
     }
     return result;
+}
+
+GeometryChunkIndex::GeometryChunkIndex(const RuntimeSceneRecord& r)
+    :object_(r.objectId),content_(r.content.shared()),table_(r.geometryChunks.identity()),chunks_(r.geometryChunks.read()){
+    order_.resize(chunks_.size());std::iota(order_.begin(),order_.end(),0U);
+    nodes_.reserve(chunks_.size()/2+1);if(!order_.empty())build(0,static_cast<std::uint32_t>(order_.size()));
+}
+bool GeometryChunkIndex::matches(const RuntimeSceneRecord& r)const noexcept{
+    const auto source=r.content.shared();
+    return object_==r.objectId&&table_==r.geometryChunks.identity()&&!content_.expired()&&
+        !content_.owner_before(source)&&!source.owner_before(content_);
+}
+std::uint32_t GeometryChunkIndex::build(std::uint32_t first,std::uint32_t last){
+    WorldRect bounds=chunks_[order_[first]].bounds;
+    for(auto i=first+1;i<last;++i)bounds=foundation::unionRects(bounds,chunks_[order_[i]].bounds);
+    const auto index=static_cast<std::uint32_t>(nodes_.size());nodes_.push_back({bounds,0,0,first,last-first});
+    if(last-first>8){
+        const bool x=double(bounds.right)-bounds.left>=double(bounds.bottom)-bounds.top;
+        const auto mid=first+(last-first)/2;
+        std::nth_element(order_.begin()+first,order_.begin()+mid,order_.begin()+last,[&](auto a,auto b){
+            const auto& p=chunks_[a].bounds;const auto& q=chunks_[b].bounds;
+            const auto u=x?double(p.left)+p.right:double(p.top)+p.bottom;
+            const auto v=x?double(q.left)+q.right:double(q.top)+q.bottom;
+            return u!=v?u<v:a<b;
+        });
+        const auto left=build(first,mid),right=build(mid,last);
+        nodes_[index].left=left;nodes_[index].right=right;nodes_[index].count=0;
+    }
+    return index;
+}
+std::vector<std::uint32_t> GeometryChunkIndex::query(WorldRect local,std::uint64_t& visited)const{
+    std::vector<std::uint32_t> result;if(nodes_.empty())return result;
+    std::array<std::uint32_t,64> stack{};std::size_t count=1;
+    while(count){const auto& node=nodes_[stack[--count]];++visited;
+        if(!node.bounds.intersects(local))continue;
+        if(node.count)result.insert(result.end(),order_.begin()+node.begin,order_.begin()+node.begin+node.count);
+        else{stack[count++]=node.left;stack[count++]=node.right;}
+    }
+    std::sort(result.begin(),result.end());return result;
+}
+std::shared_ptr<const GeometryChunkIndex> buildGeometryChunkIndex(const RuntimeSceneRecord& r){
+    if(r.geometryChunks.empty()||r.geometryChunks.size()>std::numeric_limits<std::uint32_t>::max()/2U||
+        !r.content.shared()||std::any_of(r.geometryChunks.begin(),r.geometryChunks.end(),[](const auto& c){return !c.bounds.isFiniteAndOrdered();}))return {};
+    return std::make_shared<const GeometryChunkIndex>(r);
 }
 } // namespace canvas::scene
