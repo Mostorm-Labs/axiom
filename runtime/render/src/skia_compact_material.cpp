@@ -8,6 +8,7 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkPicture.h"
 #include "include/core/SkPictureRecorder.h"
+#include "include/core/SkBBHFactory.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkRuntimeEffect.h"
@@ -363,19 +364,20 @@ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation
     // CPU grids. No full-history preparation is added to a frame opportunity.
     if(config.algorithmVersion==4&&budget&&!done_&&!matrix_.hasPerspective()){
         SkMatrix inverse;const auto count=knots.size()/32+(knots.size()%32!=0);
-        if(matrix_.invert(&inverse)&&count<=maxRecordedBytes/sizeof(ContourRecord)){
+        const auto groups=count/recordsPerGroup+(count%recordsPerGroup!=0);
+        const auto groupBytes=groups*sizeof(RecordGroup);
+        if(matrix_.invert(&inverse)&&groupBytes<=maxRecordedBytes&&count<=(maxRecordedBytes-groupBytes)/(sizeof(ContourRecord)+512)){
             recordBounds_=inverse.mapRect(SkRect::Make(deviceClip_));
             const auto margin=2*std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),
                                        std::hypot(inverse.getSkewX(),inverse.getScaleY()));
             recordBounds_.outset(float(margin),float(margin));
-            const auto bytes=count*sizeof(ContourRecord);
+            const auto bytes=count*(sizeof(ContourRecord)+512)+groupBytes;
             if(recordBounds_.isFinite()&&std::isfinite(margin)){
-                auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);
-                if(!token&&reclaim_){reclaim_(bytes);token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);}
+                auto token=budget->reserve(resources::ResourceClass::kScratch,bytes,true);
                 if(token){
-                    recordBudget_=budget;recordLimit_=maxRecordedBytes;recordBytes_=bytes;
+                    recordBudget_=budget;recordLimit_=maxRecordedBytes;recordBytes_=bytes;recordStorageBytes_=bytes;picturesEnabled_=true;
                     recordStorageLease_=resources::ResourceLease(budget,*token);
-                    try{contourRecords_.reserve(count);}catch(const std::bad_alloc&){abandonRecords();}
+                    try{contourRecords_.reserve(count);recordGroups_.reserve(groups);}catch(const std::bad_alloc&){abandonRecords();}
                 }
             }
         }
@@ -437,34 +439,59 @@ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation
     }
 }
 void CompactStrokeRasterJob::abandonRecords() noexcept {
-    std::vector<ContourRecord>{}.swap(contourRecords_);recordStorageLease_.reset();
-    recordBudget_.reset();recordBytes_=0;recordLimit_=0;recordComplete_=false;
+    std::vector<ContourRecord>{}.swap(contourRecords_);std::vector<RecordGroup>{}.swap(recordGroups_);recordStorageLease_.reset();
+    recordBudget_.reset();recordBytes_=0;recordStorageBytes_=0;recordLimit_=0;recordComplete_=false;picturesEnabled_=false;
 }
-void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
+void CompactStrokeRasterJob::appendRecord(ContourRecord record){
+    const auto index=contourRecords_.size();
+    if(index%recordsPerGroup==0)recordGroups_.push_back({SkRect::MakeEmpty(),index});
+    auto& group=recordGroups_.back();
+    if(!record.empty)group.bounds.join(record.bounds);
+    group.end=index+1;contourRecords_.push_back(std::move(record));
+}
+void CompactStrokeRasterJob::abandonPictures() noexcept {
+    for(auto& record:contourRecords_){record.picture.reset();record.lease.reset();}
+    recordBytes_=recordStorageBytes_;picturesEnabled_=false;
+}
+void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& config,const ink::CompactContour& contour,
+    ink::CompactContourCompiler checkpoint){
     if(!recordBudget_)return;
-    if(contour.patches.size()<2&&contour.caps.empty()){contourRecords_.push_back({});return;}
-    // Reserve a conservative recording peak before constructing Skia commands;
-    // shrink to the measured record afterwards. Denial discards this optional
-    // optimization, leaving the first-tile compiler and exact fallback intact.
-    const auto count=contour.patches.size()+contour.caps.size();
-    const auto remaining=recordLimit_-recordBytes_;
-    if(remaining<4096||count>(remaining-4096)/4096){abandonRecords();return;}
-    const auto estimate=4096+count*4096;
-    auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);
-    if(!token&&reclaim_){reclaim_(estimate);token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);}
-    if(!token){abandonRecords();return;}
-    resources::ResourceLease lease(recordBudget_,*token);
-    try{
-        SkPictureRecorder recorder;auto* target=recorder.beginRecording(recordBounds_);
-        drawCompactContourCoverageToSkCanvas(*target,config,contour);
-        auto picture=recorder.finishRecordingAsPicture();
-        const auto bytes=picture?picture->approximateBytesUsed():0;
-        if(!picture||bytes>estimate){abandonRecords();return;}
-        lease.reset();token=recordBudget_->reserve(resources::ResourceClass::kRecorded,bytes,false);
-        if(!token){abandonRecords();return;}
-        lease=resources::ResourceLease(recordBudget_,*token);
-        contourRecords_.push_back({std::move(picture),std::move(lease)});recordBytes_+=bytes;
-    }catch(const std::bad_alloc&){abandonRecords();}
+    AXIOM_FRAME_TIMING_SCOPE(recordTiming,contour_record);
+    if(contour.patches.size()<2&&contour.caps.empty()){appendRecord({});return;}
+    ContourRecord record;record.bounds=compactContourBounds(contour);record.checkpoint=std::move(checkpoint);record.empty=false;
+    // Job-owned checkpoints remain bounded scratch under the hard limit.
+    // Optional SkPictures/BBH stay soft-admitted. A picture denial must not
+    // throw away the tiny spatial index and restart history on every tile.
+    if(picturesEnabled_){
+        const auto count=contour.patches.size()+contour.caps.size();
+        const auto remaining=recordLimit_-recordBytes_;
+        if(remaining<4096||count>(remaining-4096)/4096)abandonPictures();
+        else{
+            const auto estimate=4096+count*4096;
+            auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);
+            if(!token&&reclaim_){reclaim_(estimate);token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);}
+            if(!token)abandonPictures();
+            else{
+                resources::ResourceLease lease(recordBudget_,*token);
+                try{
+                    auto hierarchy=SkRTreeFactory{}();
+                    SkPictureRecorder recorder;auto* target=recorder.beginRecording(recordBounds_,hierarchy);
+                    drawCompactContourCoverageToSkCanvas(*target,config,contour);
+                    auto picture=recorder.finishRecordingAsPicture();
+                    // Conservatively include BBH storage even on SDK builds
+                    // whose approximate picture footprint already includes it.
+                    const auto bytes=picture?picture->approximateBytesUsed()+(hierarchy?hierarchy->bytesUsed():0):0;
+                    if(!picture||bytes>estimate)abandonPictures();
+                    else{
+                        lease.reset();token=recordBudget_->reserve(resources::ResourceClass::kRecorded,bytes,false);
+                        if(!token)abandonPictures();
+                        else{record.picture=std::move(picture);record.lease=resources::ResourceLease(recordBudget_,*token);recordBytes_+=bytes;}
+                    }
+                }catch(const std::bad_alloc&){abandonPictures();}
+            }
+        }
+    }
+    appendRecord(std::move(record));
 }
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
@@ -508,7 +535,33 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         knot_=0;distance_=0;
         if(config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
     }
-    {
+    if(recordComplete_){
+        AXIOM_FRAME_TIMING_SCOPE(selectionTiming,coverage_select);
+        const auto clip=compactContourCullBounds(*tile_->getCanvas());
+        std::size_t checks=0;
+        while(knot_<knots.size()&&checks<selectionChecksPerStep){
+            const auto index=knot_/32;
+            if(index%recordsPerGroup==0){
+                ++checks;if(work)++work->contourRecordGroups;AXIOM_FRAME_TIMING_ADD(record_groups,1);
+                const auto& group=recordGroups_[index/recordsPerGroup];
+                if(group.bounds.isEmpty()||(clip&&group.bounds.isFinite()&&!SkRect::Intersects(*clip,group.bounds))){
+                    const auto skipped=group.end-index;
+                    if(work)work->contourRecordsRejected+=skipped;AXIOM_FRAME_TIMING_ADD(record_rejected,skipped);
+                    knot_=std::min(group.end*32,knots.size());continue;
+                }
+                if(checks==selectionChecksPerStep)break;
+            }
+            ++checks;if(work)++work->contourRecordCandidates;AXIOM_FRAME_TIMING_ADD(record_candidates,1);
+            const auto& record=contourRecords_[index];
+            if(!record.empty&&(!clip||!record.bounds.isFinite()||record.bounds.isEmpty()||SkRect::Intersects(*clip,record.bounds)))break;
+            if(work)++work->contourRecordsRejected;AXIOM_FRAME_TIMING_ADD(record_rejected,1);
+            knot_=std::min((index+1)*32,knots.size());
+        }
+        if(knot_<knots.size()&&checks==selectionChecksPerStep){
+            if(work)++work->contourSelectionYields;AXIOM_FRAME_TIMING_ADD(record_selection_yields,1);return false;
+        }
+    }
+    if(knot_<knots.size()){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
         foundation::internal::frame_timing::Scope coverageTiming{!hybrid_&&tile_->getCanvas()->recordingContext()
             ?foundation::internal::frame_timing::Stage::gpu_coverage_submit
@@ -522,15 +575,32 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             target->translate(float(-x_),float(-y_));target->concat(matrix_);
         }
         if(recordComplete_){
+            AXIOM_FRAME_TIMING_SCOPE(replayTiming,contour_replay);
             const auto& record=contourRecords_[knot_/32];
-            if(record.picture)target->drawPicture(record.picture);
-            if(work)++work->contourRecordReplays;
+            if(record.picture){
+                target->drawPicture(record.picture);if(work)++work->contourRecordReplays;AXIOM_FRAME_TIMING_ADD(record_replays,1);
+            }else if(record.checkpoint){
+                auto compiler=*record.checkpoint;ink::CompactContour emitted;
+                {AXIOM_FRAME_TIMING_SCOPE(compileTiming,contour_compile);
+                    compiler.append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
+                    if(end==knots.size())compiler.finish(totalDistance_,emitted);}
+                {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
+                    drawCompactContourCoverageToSkCanvas(*target,config,emitted);}
+                if(work){++work->contourCheckpointReplays;work->checkpointReplayKnots+=end-knot_;work->compiledContourKnots+=end-knot_;}
+                AXIOM_FRAME_TIMING_ADD(checkpoint_replays,1);AXIOM_FRAME_TIMING_ADD(checkpoint_replay_knots,end-knot_);
+                AXIOM_FRAME_TIMING_ADD(compiled_contour_knots,end-knot_);
+            }
         }else if(contour_){
             if(work)work->compiledContourKnots+=end-knot_;
-            ink::CompactContour emitted;contour_->append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
-            if(end==knots.size())contour_->finish(totalDistance_,emitted);
-            drawCompactContourCoverageToSkCanvas(*target,config,emitted);
-            recordContour(config,emitted);
+            AXIOM_FRAME_TIMING_ADD(compiled_contour_knots,end-knot_);
+            auto checkpoint=recordBudget_?std::optional<ink::CompactContourCompiler>(*contour_):std::nullopt;
+            ink::CompactContour emitted;
+            {AXIOM_FRAME_TIMING_SCOPE(compileTiming,contour_compile);
+                contour_->append(knots.subspan(knot_,end-knot_),totalDistance_,emitted);
+                if(end==knots.size())contour_->finish(totalDistance_,emitted);}
+            {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
+                drawCompactContourCoverageToSkCanvas(*target,config,emitted);}
+            if(checkpoint)recordContour(config,emitted,std::move(*checkpoint));
         }else drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,distance_,totalDistance_,seed);
         target->restore();
         if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)

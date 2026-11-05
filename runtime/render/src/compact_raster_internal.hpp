@@ -50,15 +50,24 @@ class CompactStrokeRasterJob final {
     double distance_=0,totalDistance_=0;
     std::optional<ink::CompactContourCompiler> contour_;
     sk_sp<SkSurface> tile_;
-    struct ContourRecord {sk_sp<SkPicture> picture;resources::ResourceLease lease;};
+    struct ContourRecord {
+        sk_sp<SkPicture> picture;resources::ResourceLease lease;SkRect bounds{};
+        std::optional<ink::CompactContourCompiler> checkpoint;
+        bool empty=true;
+    };
+    struct RecordGroup {SkRect bounds{};std::size_t end=0;};
+    static constexpr std::size_t recordsPerGroup=16,selectionChecksPerStep=32;
     std::vector<ContourRecord> contourRecords_;
+    std::vector<RecordGroup> recordGroups_;
     std::shared_ptr<resources::ResourceBudgetManager> recordBudget_;
     resources::ResourceLease recordStorageLease_;
     SkRect recordBounds_{};
-    std::size_t recordLimit_=0,recordBytes_=0;
-    bool recordComplete_=false;
+    std::size_t recordLimit_=0,recordBytes_=0,recordStorageBytes_=0;
+    bool recordComplete_=false,picturesEnabled_=false;
     std::function<void(std::size_t)> reclaim_;
-    void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&);
+    void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&,ink::CompactContourCompiler);
+    void appendRecord(ContourRecord);
     void abandonRecords() noexcept;
+    void abandonPictures() noexcept;
 };
 }

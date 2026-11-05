@@ -72,6 +72,9 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     const t=stageTotals[name]??={inclusive_ms:0,exclusive_ms:0,calls:0};
     t.inclusive_ms+=stage.inclusive_ns/1e6;t.exclusive_ms+=stage.exclusive_ns/1e6;t.calls+=stage.calls;
   }
+  const exactKeys=['compiled_contour_knots','record_candidates','record_replays','record_rejected','record_groups','record_selection_yields','checkpoint_replays','checkpoint_replay_knots'];
+  const exactCoverageWork=frameRows.length&&frameRows.every(r=>exactKeys.every(k=>Number.isSafeInteger(r.counts?.[k])&&r.counts[k]>=0))
+    ?Object.fromEntries(exactKeys.map(k=>[k,total(frameRows.map(r=>r.counts[k]))])):null;
   return {
     raf_ms:statistics(phase.samples.map(row=>row.interval)),
     display_submission_gap_ms:statistics(gaps),
@@ -81,7 +84,7 @@ export function summarizePhase(phase, navigationRows, frameRows) {
     input_dispatch_ms:statistics(phase.samples.map(row=>row.dispatchMs).filter(Number.isFinite)),
     canonicalReceiptsDuringInput:phase.framesDuringInput??null,
     settle_ms:phase.receipts?postInputReceiptWait(phase.receipts,phase.inputEnded):phase.settleMilliseconds??null,
-    navigation:nav, exactAttempts:frameRows.length, exactStages:stageTotals,
+    navigation:nav, exactAttempts:frameRows.length, exactStages:stageTotals,exactCoverageWork,
     client_wait_cpu_ms:times(phase.fences.filter(row=>row.name==='clientWaitSync').map(row=>row.duration)),
     maximum_fence_timeout:Math.max(0,...phase.fences.map(row=>row.timeout??0)),
     fenceCalls:phase.fences.filter(row=>row.name==='fenceSync').length,

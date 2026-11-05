@@ -1,5 +1,6 @@
 #include "../src/skia_prepared_geometry.hpp"
 #include "exact_contour_replay_oracle.hpp"
+#include "exact_contour_locality_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
@@ -222,4 +223,4 @@ void stagingAdmission(){
 }
 
 }
-int main(){try{auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}
+int main(){try{auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requireExactContourLocality(*root);testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}

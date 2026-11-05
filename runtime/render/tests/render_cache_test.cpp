@@ -5,6 +5,7 @@
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
 #include "exact_contour_replay_oracle.hpp"
+#include "exact_contour_locality_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
@@ -518,7 +519,7 @@ int main(int argc,char** argv) {
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
             const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"exact replay acquire");
-            testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
+            testing::requireExactContourLocality(*acquired.frame.surface);testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
         }
 #endif
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--replay-only")){

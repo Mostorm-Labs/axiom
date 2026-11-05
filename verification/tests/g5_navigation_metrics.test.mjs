@@ -2,6 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {summarizePhase} from '../runners/g5/navigation_metrics.mjs';
 
+test('exact coverage metadata and replay counts are separate and missing counters stay unknown',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const counts={compiled_contour_knots:32,record_candidates:7,record_replays:2,record_rejected:19,record_groups:3,record_selection_yields:1,checkpoint_replays:3,checkpoint_replay_knots:96};
+  assert.deepEqual(summarizePhase(phase,[],[{stages:{},counts},{stages:{},counts}]).exactCoverageWork,
+    {compiled_contour_knots:64,record_candidates:14,record_replays:4,record_rejected:38,record_groups:6,record_selection_yields:2,checkpoint_replays:6,checkpoint_replay_knots:192});
+  assert.equal(summarizePhase(phase,[],[]).exactCoverageWork,null);
+  assert.equal(summarizePhase(phase,[],[{stages:{},counts:{}}]).exactCoverageWork,null);
+});
+
 // Dropping the slow frame or adding cumulative counts instead of per-call
 // deltas must change these hand-derived expected values.
 test('navigation summary retains tails and sums diagnostic deltas', () => {
