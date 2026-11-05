@@ -23,11 +23,20 @@ class PreparedNavigationGeometry final {
     const SkPath* vectorPath()const noexcept{return vector_?&*vector_:nullptr;}
     bool isContour()const noexcept{return contour_;}
     std::span<const double> distances()const noexcept{return distances_;}
-    std::size_t primitiveCount()const noexcept{return ribbons_.size()+caps_.size();}
+    std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replay_.back().last;}
+    double totalDistance()const noexcept{return distances_.empty()?replayDistance_:distances_.back();}
+    std::size_t nextVisiblePrimitive(SkCanvas&,std::size_t first)const;
     PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0})const;
  private:
     friend class PreparedGeometryCache;
     struct Group {SkRect bounds;std::size_t begin=0,end=0;};
+    struct ReplayBlock {ink::CompactContourCompiler compiler;std::size_t knot=0,count=0,first=0,last=0;SkRect bounds;};
+    static constexpr std::size_t replayBlockKnots=256,replayBlockExtras=32;
+    std::vector<ReplayBlock> replay_;
+    // Owner-thread draw scratch; source/checkpoint geometry stays immutable.
+    // 16 taper cuts, carried patch and finish fit within32 extra slots.
+    mutable ink::CompactContour replayOutput_;
+    double replayDistance_=0;
     ReferenceCommand source_;
     bool contour_=false;
     std::vector<double> distances_;
@@ -40,12 +49,13 @@ class PreparedNavigationGeometry final {
     std::shared_ptr<PreparedGeometryUsage> usage_;
     std::size_t bytes_=0;
     void build(ink::CompactContour* staged=nullptr);
+    void buildReplay();
     std::size_t footprint()const;
 };
 class PreparedGeometryCache final {
  public:
     std::shared_ptr<const PreparedNavigationGeometry> get(const ReferenceTraversalEntry&,
-        const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
+        const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,bool criticalReplay=false);
     void clear()noexcept{entries_.clear();}
     PreparedGeometryStatistics statistics()const noexcept{auto s=work_;s.residentBytes=usage_->bytes+retention_->statistics().bytes;return s;}
     void setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(retention_!=pool){clear();retention_=std::move(pool);}}

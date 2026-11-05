@@ -19,6 +19,33 @@ SkRect capBounds(const ink::ContourCap& cap){
     return SkRect::MakeLTRB(std::nextafter(x-r,-inf),std::nextafter(y-r,-inf),
                            std::nextafter(x+r,inf),std::nextafter(y+r,inf));
 }
+std::optional<SkRect> contourClip(SkCanvas& canvas){
+    auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
+    bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
+    if(cull){
+        const auto& matrix=canvas.getTotalMatrix();
+        const auto scale=std::max(std::hypot(matrix.getScaleX(),matrix.getSkewY()),
+                                  std::hypot(matrix.getSkewX(),matrix.getScaleY()));
+        const auto origin=std::max({std::abs(clip.left()),std::abs(clip.top()),
+                                    std::abs(clip.right()),std::abs(clip.bottom())});
+        // Use the existing coverage numeric domain for culling hints. Extreme
+        // origins/scales still reuse the paths, with complete Direct drawing.
+        if(origin>65536||scale<1./64||scale>64||!std::isfinite(scale))cull=false;
+        const auto margin=2*std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),
+                                    std::hypot(inverse.getSkewX(),inverse.getScaleY()));
+        cull=cull&&std::isfinite(margin);if(cull)clip.outset(float(margin),float(margin));
+    }
+    return cull?std::optional<SkRect>(clip):std::nullopt;
+}
+bool visibleContour(const std::optional<SkRect>& clip,const SkRect& b){
+    return !clip||b.isEmpty()||!b.isFinite()||SkRect::Intersects(*clip,b);
+}
+void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::ContourCap& cap,const SkPaint& paint){
+    canvas.save();canvas.translate(float(cap.x),float(cap.y));
+    if(config.family==foundation::InkFamily::kMarker){canvas.rotate(float(config.markerAngle*57.29577951308232));canvas.scale(1,float(config.markerFlatness));}
+    canvas.drawCircle(0,0,float(cap.radius),paint);canvas.restore();
+}
+
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
 void PreparedNavigationGeometry::build(ink::CompactContour* staged){
@@ -55,34 +82,75 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
         vector_=buildVectorBrushOutlineSkPath(std::span(output.outline),output.fill_rule,output.closed);
     }
 }
+void PreparedNavigationGeometry::buildReplay(){
+    const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
+    contour_=true;replayDistance_=ink::compactLength(stroke.knots);
+    replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
+    replayOutput_.patches.reserve(replayBlockKnots+replayBlockExtras);replayOutput_.caps.reserve(replayBlockKnots+replayBlockExtras);
+    ink::CompactContourCompiler compiler(stroke.config);std::size_t primitive=0;
+    for(std::size_t first=0;first<stroke.knots.size();first+=replayBlockKnots){
+        const auto count=std::min(replayBlockKnots,stroke.knots.size()-first);
+        auto checkpoint=compiler;replayOutput_.patches.clear();replayOutput_.caps.clear();
+        compiler.append({stroke.knots.data()+first,count},replayDistance_,replayOutput_);
+        if(first+count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+        auto bounds=SkRect::MakeEmpty();
+        const auto join=[&](SkRect b){if(b.isEmpty()||!b.isFinite()){
+            const auto m=std::numeric_limits<float>::max();bounds=SkRect::MakeLTRB(-m,-m,m,m);
+        }else bounds.join(b);};
+        for(std::size_t i=0;i+1<replayOutput_.patches.size();++i)join(compactContourRibbon(std::span(replayOutput_.patches).subspan(i,2)).getBounds());
+        for(const auto& cap:replayOutput_.caps)join(capBounds(cap));
+        const auto emitted=(replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1)+replayOutput_.caps.size();
+        replay_.push_back({std::move(checkpoint),first,count,primitive,primitive+emitted,bounds});primitive+=emitted;
+    }
+    replayOutput_.patches.clear();replayOutput_.caps.clear();
+}
+std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first)const{
+    first=std::min(first,primitiveCount());const auto clip=contourClip(canvas);
+    if(!clip)return first;
+    if(!replay_.empty()){
+        for(const auto& block:replay_)if(block.last>first&&visibleContour(clip,block.bounds))return std::max(first,block.first);
+    }else{
+        for(const auto& group:ribbonGroups_)if(group.end>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin);
+        for(const auto& group:capGroups_)if(group.end+ribbons_.size()>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin+ribbons_.size());
+    }
+    return primitiveCount();
+}
 std::size_t PreparedNavigationGeometry::footprint()const{
     std::size_t bytes=sizeof(*this)+512+distances_.capacity()*sizeof(double)+
         ribbons_.capacity()*sizeof(SkPath)+caps_.capacity()*sizeof(ink::ContourCap)+
         (ribbonGroups_.capacity()+capGroups_.capacity())*sizeof(Group);
     for(const auto& path:ribbons_)bytes+=path.approximateBytesUsed();
-    if(vector_)bytes+=vector_->approximateBytesUsed();return bytes;
+    if(vector_)bytes+=vector_->approximateBytesUsed();
+    bytes+=replay_.capacity()*(sizeof(ReplayBlock)+512)+replayOutput_.patches.capacity()*sizeof(ink::ContourPatch)+replayOutput_.caps.capacity()*sizeof(ink::ContourCap);
+    return bytes;
 }
 PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count)const{
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
-    auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
-    bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
-    if(cull){
-        const auto& matrix=canvas.getTotalMatrix();
-        const auto scale=std::max(std::hypot(matrix.getScaleX(),matrix.getSkewY()),
-                                  std::hypot(matrix.getSkewX(),matrix.getScaleY()));
-        const auto origin=std::max({std::abs(clip.left()),std::abs(clip.top()),
-                                    std::abs(clip.right()),std::abs(clip.bottom())});
-        // Use the existing coverage numeric domain for culling hints. Extreme
-        // origins/scales still reuse the paths, with complete Direct drawing.
-        if(origin>65536||scale<1./64||scale>64||!std::isfinite(scale))cull=false;
-        const auto margin=2*std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),
-                                    std::hypot(inverse.getSkewX(),inverse.getScaleY()));
-        cull=cull&&std::isfinite(margin);if(cull)clip.outset(float(margin),float(margin));
-    }
-    const auto visible=[&](const SkRect& bounds){return !cull||bounds.isEmpty()||!bounds.isFinite()||SkRect::Intersects(clip,bounds);};
+    const auto clip=contourClip(canvas);
+    const auto visible=[&](const SkRect& b){return visibleContour(clip,b);};
     SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
+    if(!replay_.empty()){
+        const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
+        for(const auto& block:replay_){
+            if(block.last<=first)continue;if(block.first>=last)break;
+            ++work.chunksVisited;if(!visible(block.bounds))continue;
+            replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
+            compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
+            if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+            const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
+            for(auto i=std::max(first,block.first);i<std::min(last,block.last);++i){
+                ++work.primitivesTested;const auto local=i-block.first;
+                if(local<ribbons){
+                    auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(local,2));
+                    if(visible(path.getBounds())){canvas.drawPath(path,paint);++work.primitivesDrawn;}
+                }else{const auto& cap=replayOutput_.caps[local-ribbons];
+                    if(visible(capBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
+            }
+        }
+        return work;
+    }
     for(auto g=first/32;g<ribbonGroups_.size()&&ribbonGroups_[g].begin<last;++g){
         const auto& group=ribbonGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
@@ -98,9 +166,7 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
         ++work.chunksVisited;if(!visible(group.bounds))continue;
         for(auto i=std::max(group.begin,capFirst);i<std::min(group.end,capLast);++i){++work.primitivesTested;const auto& cap=caps_[i];
             if(!visible(capBounds(cap)))continue;
-            canvas.save();canvas.translate(float(cap.x),float(cap.y));
-            if(config.family==foundation::InkFamily::kMarker){canvas.rotate(float(config.markerAngle*57.29577951308232));canvas.scale(1,float(config.markerFlatness));}
-            canvas.drawCircle(0,0,float(cap.radius),paint);canvas.restore();++work.primitivesDrawn;
+            drawCap(canvas,config,cap,paint);++work.primitivesDrawn;
         }
     }
     return work;
@@ -114,7 +180,7 @@ bool PreparedGeometryCache::evictUnused(){
 }
 std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     const ReferenceTraversalEntry& entry,const RenderCacheOptions& limits,
-    const std::shared_ptr<resources::ResourceBudgetManager>& budget){
+    const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool criticalReplay){
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
     const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&entry.command);
     if(!compact&&(!vector||vector->content.get().stroke.snapshot.material_mode!=1))return {};
@@ -147,7 +213,29 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         // anchors rather than assuming 2KiB of paths for every input knot.
         constexpr auto extra=18U;
         const auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
-        if(count>std::numeric_limits<std::size_t>::max()-extra||count+extra>(cap-base)/stagingUnit)return denied();
+        if(count>std::numeric_limits<std::size_t>::max()-extra)return denied();
+        if(count+extra>(cap-base)/stagingUnit){
+            // Source-bound evaluator snapshots replace expanded paths only;
+            // no new Brush geometry or larger entry/global budget is admitted.
+            constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
+            const auto blocks=(count+block-1)/block;
+            const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
+            const auto unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+            if(scratch>cap-base||blocks>(cap-base-scratch)/unit)return denied();
+            const auto replayEstimate=base+scratch+blocks*unit;
+            auto token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+            while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+            if(!token)return denied();resources::ResourceLease admission(budget,*token);
+            try{
+                auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;
+                candidate->sourceLeases_=std::move(*retained);candidate->buildReplay();
+                const auto bytes=candidate->footprint();if(bytes>replayEstimate)return denied();
+                admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
+                candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
+                candidate->usage_=usage_;usage_->bytes+=bytes;
+                entries_.insert_or_assign(entry.record.objectId,Entry{candidate,++tick_});++work_.builds;return candidate;
+            }catch(const std::bad_alloc&){return denied();}
+        }
         const auto stagingBytes=base+(count+extra)*stagingUnit;
         auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
         while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);

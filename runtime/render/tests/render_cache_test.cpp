@@ -388,6 +388,47 @@ void checkGpuContours(TestSurface& provider){
     provider.release();
 }
 #endif
+std::vector<std::uint8_t> checkLargeReplayNavigation(TestSurface& target,bool legacy=false){
+    semantic::ObjectRecord object;object.id=ObjectId::fromUint64(88001);
+    object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
+    semantic::CompactStrokeContent content;
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.seed=42;
+    for(unsigned i=0;i<100000;++i)content.stroke.knots.push_back({i*.5,64.+std::sin(i*.01)*20,32768});
+    object.content=content;
+    const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+    ReferenceTraversalEntry entry{projected.records.front(),true,CompactStrokeReferenceCommand{content}};
+    const auto frame=plan(8801,{entry});
+    SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=8;
+    options.navigationMaxGpuContourPrimitives=32;options.navigationMicroseconds=1000000;
+    if(legacy)options.maxEntryBytes=300000;
+    nav.setRenderCacheOptions(options);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    unsigned firstFeedback=0;
+    for(unsigned tick=1;tick<=(legacy?4096U:12U);++tick){
+        const auto gpu=nav.navigationWork().gpuContourPrimitives;
+        require(navigate(nav,target,{1,-8,-4},frame.frame,query).code==BackendSubmissionCode::kAccepted,"large replay navigation rejected");
+        require(nav.navigationWork().gpuContourPrimitives-gpu<=32,"large replay bypassed GPU primitive quota");
+        if(nav.navigationWork().presented){firstFeedback=tick;break;}
+    }
+    require(firstFeedback>0,"offscreen v4 history starved complete feedback for12 owner opportunities");
+    for(unsigned i=0;nav.navigationWork().pending;++i){
+        require(i<(legacy?8192U:128U),"large replay refinement did not converge");
+        require(navigate(nav,target,{1,-8,-4},frame.frame,query).code==BackendSubmissionCode::kAccepted,"large replay refinement rejected");
+    }
+    require(nav.submissionCount()==0,"navigation manufactured canonical submission");
+    TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"large replay reference");
+    SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    require(direct.renderFrame(reference,plan(8801,{entry},1,{1,0,0,1,-8,-4})).code==BackendSubmissionCode::kAccepted,"large replay Direct rejected");
+    const auto feedback=pixels(target);
+    // Tile feedback has its existing raster sampling; canonical retirement
+    // still requires the exact frame, which is compared to Direct separately.
+    require(nav.renderFrame(target,plan(8801,{entry},1,{1,0,0,1,-8,-4})).code==BackendSubmissionCode::kAccepted,"large replay canonical frame rejected");
+    require(pixels(target)==pixels(reference),"large replay canonical frame changed exact pixels");
+    std::cout<<"large navigation legacy="<<legacy<<" first feedback opportunity="<<firstFeedback<<'\n';
+    return feedback;
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -402,6 +443,11 @@ int main(int argc,char** argv) {
             testing::requireExactContourReplay(*acquired.frame.surface);provider.release();return finishNative(0);
         }
 #endif
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--replay-only")){
+            const auto repaired=checkLargeReplayNavigation(provider);
+            require(repaired==checkLargeReplayNavigation(provider,true),"local replay changed complete navigation feedback pixels");
+            if(argc>1)return finishNative(0);
+        }
         SkiaRenderer renderer;
         if(argc>1&&std::string_view(argv[1])=="--background-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"background reference");

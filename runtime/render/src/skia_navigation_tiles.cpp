@@ -337,7 +337,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             auto retained=geometry_.retainSource(entry,budget,true);if(!retained){deferred=true;return false;}
             sourceLeases.insert(sourceLeases.end(),retained->begin(),retained->end());
             const auto before=geometry_.statistics();
-            geometry.push_back(geometry_.get(entry,options,budget));
+            geometry.push_back(geometry_.get(entry,options,budget,!work.coverageComplete&&key.scale<level));
             const auto after=geometry_.statistics();
             work.preparedGeometryBuilds+=after.builds-before.builds;
             work.preparedGeometryHits+=after.hits-before.hits;
@@ -474,7 +474,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 job.distance = job.knot < distances.size()
                     ? distances[job.knot] : ink::compactLength(std::span<const foundation::InkKnot>(
                         stroke.knots.data(), job.knot));
-                job.totalDistance = !distances.empty()?distances.back():ink::compactLength(stroke.knots);
+                job.totalDistance = job.geometry?job.geometry->totalDistance():ink::compactLength(stroke.knots);
                 if(!job.geometry)work.prefixScanKnots+=stroke.knots.size();
                 if (stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()) {
                     job.contour.reset();
@@ -488,6 +488,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
                 const bool gpu=context&&!job.cpuCoverage;
                 const auto count=gpu?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
+                job.primitive=job.geometry->nextVisiblePrimitive(*draw,job.primitive);
                 const auto drawn=job.geometry->drawContour(*draw,job.primitive,count);
                 work.contourPrimitivesTested+=drawn.primitivesTested;
                 work.contourPrimitivesDrawn+=drawn.primitivesDrawn;
@@ -501,7 +502,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 drawCompactContourCoverageToSkCanvas(*draw,stroke.config,contours);
             }else drawCompactCoverageRangeToSkCanvas(*draw,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance,stroke.seed);
             const auto distances=job.geometry?job.geometry->distances():std::span<const double>{};
-            if(end<distances.size())job.distance=distances[end];
+            if(stroke.config.algorithmVersion==4&&job.geometry&&job.geometry->isContour())job.distance=job.totalDistance;
+            else if(end<distances.size())job.distance=distances[end];
             else for(auto i=std::max(std::size_t(1),job.knot);i<end;++i)
                 job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,
                                          stroke.knots[i].y-stroke.knots[i-1].y);
