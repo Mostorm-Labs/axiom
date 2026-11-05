@@ -369,8 +369,8 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
-    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim)
-    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),reclaim_(std::move(reclaim)){
+    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay)
+    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
     support_=SkRect::MakeEmpty();
@@ -480,16 +480,17 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
     if(contour.patches.size()<2&&contour.caps.empty()){appendRecord({});return;}
     ContourRecord record;record.bounds=compactContourBounds(contour);record.checkpoint=std::move(checkpoint);record.empty=false;
     // Job-owned checkpoints remain bounded scratch under the hard limit.
-    // Optional SkPictures/BBH stay soft-admitted. A picture denial must not
-    // throw away the tiny spatial index and restart history on every tile.
+    // Canonical job-owned replay can use bounded free hard headroom while its
+    // mandatory pixel targets occupy the soft budget. It never evicts navigation
+    // to admit pictures. Other callers retain the legacy soft-admitted policy.
     if(picturesEnabled_){
         const auto count=contour.patches.size()+contour.caps.size();
         const auto remaining=recordLimit_-recordBytes_;
         if(remaining<4096||count>(remaining-4096)/4096)abandonPictures();
         else{
             const auto estimate=4096+count*4096;
-            auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);
-            if(!token&&reclaim_){reclaim_(estimate);token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);}
+            auto token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,canonicalReplay_);
+            if(!token&&!canonicalReplay_&&reclaim_){reclaim_(estimate);token=recordBudget_->reserve(resources::ResourceClass::kRecorded,estimate,false);}
             if(!token)abandonPictures();
             else{
                 resources::ResourceLease lease(recordBudget_,*token);
@@ -503,7 +504,7 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
                     const auto bytes=picture?picture->approximateBytesUsed()+(hierarchy?hierarchy->bytesUsed():0):0;
                     if(!picture||bytes>estimate)abandonPictures();
                     else{
-                        lease.reset();token=recordBudget_->reserve(resources::ResourceClass::kRecorded,bytes,false);
+                        lease.reset();token=recordBudget_->reserve(resources::ResourceClass::kRecorded,bytes,canonicalReplay_);
                         if(!token)abandonPictures();
                         else{record.picture=std::move(picture);record.lease=resources::ResourceLease(recordBudget_,*token);recordBytes_+=bytes;}
                     }

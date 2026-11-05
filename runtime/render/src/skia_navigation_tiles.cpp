@@ -370,7 +370,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     auto* target=acquired.frame.surface->getCanvas();++tick_;
     auto* context=GrAsDirectContext(target->recordingContext());
     SkiaGpuLifetime gpu(*gpuRetirements_,budget,provider,context,resources::kPixelResourceClasses,
-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
+        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile)&
+        ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame));
     if(!gpu.ready())return BackendSubmissionResult::retry("world navigation completion unavailable");
     RetainedNavigationSource retainedValue=retainedSource?*retainedSource:RetainedNavigationSource{};
     const RetainedNavigationSource* retained=retainedSource?&retainedValue:nullptr;

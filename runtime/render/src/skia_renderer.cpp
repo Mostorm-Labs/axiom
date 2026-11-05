@@ -42,6 +42,7 @@ struct SkiaRenderer::NavigationCache final {
     std::unique_ptr<FrameState> frame;
     WorldToViewAffine transform;
     resources::ResourceLease lease;
+    std::shared_ptr<const internal::PreparedFrameImage> prepared;
     SkColor background=SK_ColorWHITE;
     std::optional<CanonicalViewportTransform> feedbackCamera;
     bool backgroundProofRejected=false;
@@ -247,17 +248,19 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,navigation_snapshot);
         try {
             const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
-            if(cachedGpuSafe && resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && (!selectionOverlay || (!selectionOverlay->creationPreview() && !selectionOverlay->textCaret)) &&
+            if(cachedGpuSafe && resourceBudget_ && renderCacheOptions_.enabled && (!selectionOverlay || (!selectionOverlay->creationPreview() && !selectionOverlay->textCaret)) &&
                plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
                 navigationCache_.reset();
-                const auto reservation=resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true);
+                const auto shared=(preparation&&cache)?cache->completedFrame():nullptr;
+                const auto reservation=!shared&&bytes<=renderCacheOptions_.maxBytes
+                    ?resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true):std::optional<std::uint64_t>{};
                 // This retained navigation snapshot is optional. Denial must
                 // not throw out the already drawn canonical frame/receipt.
                 // In particular,WASM consumers need an explicit branch here.
-                if(reservation){
-                    resources::ResourceLease lease(resourceBudget_,*reservation);
-                    auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);
-                    candidate->provider=&provider;candidate->image=acquired.frame.surface->makeImageSnapshot();
+                if(shared||reservation){
+                    resources::ResourceLease lease(resourceBudget_,reservation.value_or(0));
+                    auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);candidate->prepared=shared;
+                    candidate->provider=&provider;candidate->image=shared?shared->image:acquired.frame.surface->makeImageSnapshot();
                     candidate->frame=std::make_unique<FrameState>(plan.frame);
                     candidate->transform=plan.referenceDrawList.worldToView;
                     const auto& color=plan.background.color;
@@ -307,7 +310,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     }
     if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,
-        GrAsDirectContext(acquired.frame.surface->recordingContext()));
+        GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
+        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame));
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::retry("navigation completion unavailable");}
     gpu.touch();
     const auto& old=cache->transform;
@@ -321,6 +325,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
     canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
     canvas->scale(ratio,ratio);
+    if(cache->prepared)cache->prepared->markGpuUse();
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
     canvas->restore();
     if(selectionOverlay){
@@ -394,6 +399,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
             return true;
         };
         retained.draw=[cache,camera,current](SkCanvas& canvas,const foundation::WorldRect& area){
+            if(cache->prepared)cache->prepared->markGpuUse();
             const auto& old=cache->transform;const float ratio=float(camera.scale/old.a);
             const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
             const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;

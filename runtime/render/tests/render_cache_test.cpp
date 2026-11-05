@@ -3,6 +3,8 @@
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "../src/skia_navigation_tiles.hpp"
 #include "../src/skia_render_cache_internal.hpp"
+#include "include/core/SkCanvas.h"
+#include <type_traits>
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -757,6 +759,127 @@ void checkOversizedCanonical(TestSurface& target) {
     target.release();require(pixels(target)==pixels(reference),"quota recovery changed exact pixels");
 }
 
+void checkSharedCanonicalNavigation(TestSurface&) {
+    TestSurface target,reference;
+    require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
+    const auto makePlan=[](std::uint64_t id,std::vector<ReferenceTraversalEntry> entries,WorldToViewAffine transform=WorldToViewAffine{}){
+        FrameState f{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,256},
+            {512,256,2048,1024,4,4},semantic::SemanticGeneration{id},SceneRevision{id},SurfaceGeneration{1},MetricsGeneration{1},FrameId{id}};
+        ReferenceDrawList list{f};list.viewportClip={0,0,512,256};list.worldToView=transform;list.entries=std::move(entries);
+        return FramePlan{f,std::move(list)};
+    };
+    const auto read=[](TestSurface& surface){
+        const auto a=surface.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"shared frame readback acquire");
+        const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"shared frame readback");surface.release();return bytes;
+    };
+    // The required fine/coarse tile set fits,but the8MiB frame cannot be
+    // duplicated into the4MiB optional cache:the real DPR4 gate relationship.
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;options.maxEntryBytes=16*1024;
+    options.navigationMaxSteps=1;options.navigationMaxQueries=4;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    const auto entry=stroke(9861);const auto frame=makePlan(9861,{entry});RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+    unsigned attempts=0;BackendSubmissionResult result;
+    do{result=cached.renderFrame(target,frame,nullptr,&slice);require(++attempts<128,"shared frame setup convergence");}
+    while(result.code==BackendSubmissionCode::kRetry);
+    require(result.code==BackendSubmissionCode::kAccepted,"shared canonical frame setup");
+    require(cached.renderCacheWork().preparationBudgetEntries>0,"share fixture did not create a streamed composite");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    NavigationBackgroundQuery empty=[](const foundation::WorldRect&){return true;};
+    const auto presents=target.presentCount();
+    require(navigate(cached,target,{1,4,0},frame.frame,query,false,nullptr,empty).code==BackendSubmissionCode::kAccepted&&
+        target.presentCount()==presents+1,"completed canonical pixels were lost at optional snapshot capacity");
+    require(direct.renderFrame(reference,makePlan(9862,{entry},{1,0,0,1,4,0})).code==BackendSubmissionCode::kAccepted&&
+        read(target)==read(reference),"shared sharp overlap changed Direct pixels");
+    const auto count=target.presentCount();const auto changed=makePlan(9863,{entry});
+    (void)navigate(cached,target,{1,4,0},changed.frame,query,false,nullptr,empty);
+    require(target.presentCount()==count,"shared frame crossed semantic/scene binding");
+}
+void checkSharedFrameAccounting(TestSurface& target){
+    for(bool sampled:{false,true}){
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,8*1024*1024});
+        internal::SkiaRenderCache cache;cache.budget=budget;cache.options.maxBytes=64*1024;cache.options.maxEntryBytes=16*1024;
+        const auto frame=plan(9864,{stroke(9864)});RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+        const auto write=budget->beginGpuEpoch(internal::GpuResourceRetirement::canonicalAllocations,
+            internal::GpuResourceRetirement::canonicalReads);require(bool(write),"shared frame write epoch");
+        const auto a=target.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"shared frame accounting acquire");
+        cache.begin(frame,&target,*a.frame.surface,0);internal::SkiaRenderCache::Preparation result;
+        unsigned attempts=0;
+        do{result=cache.prepare(*a.frame.surface->getCanvas(),frame,slice,nullptr,nullptr);require(++attempts<128,"shared accounting convergence");}
+        while(result==internal::SkiaRenderCache::Preparation::kPending);
+        require(result==internal::SkiaRenderCache::Preparation::kReady&&cache.compositePreparedFrame(*a.frame.surface->getCanvas()),"shared accounting completion");
+        target.release();(void)pixels(target); // Test-only real GPU completion before retiring the write epoch.
+        require(budget->endGpuEpoch(*write)&&budget->completeGpuEpoch(*write),"shared write retirement");
+        auto first=cache.completedFrame(),alias=first;require(bool(first),"completed immutable image");
+        cache.clear();first.reset();
+        require(budget->used(resources::ResourceClass::kCanonicalFrame)==128*1024,"aliases duplicated or lost the one pixel charge");
+        const auto epoch=budget->beginGpuEpoch(internal::GpuResourceRetirement::canonicalAllocations,
+            internal::GpuResourceRetirement::canonicalReads);require(bool(epoch),"shared read epoch");
+        if(sampled){alias->markGpuUse();const auto draw=target.acquire();require(draw.code==SkiaSurfaceAcquireCode::kAcquired,"shared sample acquire");
+            draw.frame.surface->getCanvas()->drawImage(alias->image,0,0);target.release();}
+        alias.reset();require(budget->used(resources::ResourceClass::kCanonicalFrame)==(sampled?128*1024:0),
+            "shared frame lifetime did not distinguish actual reads from unused retention");
+        require(budget->endGpuEpoch(*epoch),"shared read scope end");
+        if(sampled)(void)pixels(target);
+        require(budget->completeGpuEpoch(*epoch)&&budget->used()==0,"shared frame read retirement leaked");
+    }
+}
+template<class Job>
+std::unique_ptr<Job> canonicalReplayJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+    std::span<const foundation::InkKnot> knots,std::shared_ptr<resources::ResourceBudgetManager> budget){
+    using Reclaim=std::function<void(std::size_t)>;
+    // The frozen RED oracle remains runnable against the old constructor.
+    if constexpr(std::is_constructible_v<Job,SkCanvas&,const foundation::InkBrushConfig&,
+        std::span<const foundation::InkKnot>,const internal::CompactDeviceGrid*,bool,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t,Reclaim,bool>)
+        return std::make_unique<Job>(canvas,config,knots,nullptr,true,budget,8*1024*1024,Reclaim{},true);
+    else return std::make_unique<Job>(canvas,config,knots,nullptr,true,budget);
+}
+void checkCanonicalReplayHeadroom(TestSurface& provider){
+    const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"critical replay root");
+    const auto info=acquired.frame.surface->imageInfo().makeWH(512,384);
+    auto actual=acquired.frame.surface->makeSurface(info),oracle=acquired.frame.surface->makeSurface(info);
+    require(actual&&oracle,"critical replay targets");actual->getCanvas()->clear(SK_ColorTRANSPARENT);oracle->getCanvas()->clear(SK_ColorTRANSPARENT);
+    auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    std::vector<foundation::InkKnot> knots;for(unsigned i=0;i<1024;++i)knots.push_back({5.+i*.49,190.+std::sin(i*.04)*160,32768});
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,16*1024*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kScratch,2*1024*1024,true);require(bool(token),"critical replay occupied soft quota");
+    resources::ResourceLease occupied(budget,*token);internal::CompactCoverageTargets targets;targets.budget=budget;
+    internal::CompactRasterWork work;
+    {
+        auto job=canonicalReplayJob<internal::CompactStrokeRasterJob>(*actual->getCanvas(),config,knots,budget);
+        for(unsigned i=0;!job->step(*actual->getCanvas(),config,knots,42,targets,true,&work);++i)
+            require(i<10000,"critical replay convergence");
+        require(work.compiledContourKnots==knots.size()&&work.contourRecordReplays>0,
+            "canonical replay recompiled contour despite bounded hard headroom");
+        require(budget->used(resources::ResourceClass::kRecorded)<=8*1024*1024&&budget->used()<=16*1024*1024,"critical replay exceeded admission caps");
+    }
+    std::vector<std::uint8_t> got(info.computeMinByteSize()),want(got.size());
+    require(actual->readPixels(info,got.data(),info.minRowBytes(),0,0),"critical replay readback");
+    internal::drawCompactStrokeToSkCanvas(*oracle->getCanvas(),config,knots,42);
+    require(oracle->readPixels(info,want.data(),info.minRowBytes(),0,0)&&got==want,"critical replay changed pinned Direct pixels");
+    targets.clear();occupied.reset();require(budget->used()==0,"critical replay lease leaked");provider.release();
+    // Denial part-way through an admitted canonical stream must preserve the
+    // complete checkpoint index and exact fallback,without reclaiming navigation.
+    const auto again=provider.acquire();require(again.code==SkiaSurfaceAcquireCode::kAcquired,"critical fallback root");
+    auto denied=again.frame.surface->makeSurface(info);require(bool(denied),"critical fallback target");denied->getCanvas()->clear(SK_ColorTRANSPARENT);
+    auto limited=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,4*1024*1024});
+    internal::CompactCoverageTargets limitedTargets;limitedTargets.budget=limited;internal::CompactRasterWork fallback;
+    {
+        auto job=canonicalReplayJob<internal::CompactStrokeRasterJob>(*denied->getCanvas(),config,knots,limited);
+        require(!job->step(*denied->getCanvas(),config,knots,42,limitedTargets,true,&fallback)&&
+            limited->used(resources::ResourceClass::kRecorded)>0,"canonical partial denial did not admit first record");
+        const auto pressure=limited->reserve(resources::ResourceClass::kScratch,4*1024*1024-limited->used()-132*1024,true);
+        require(bool(pressure),"canonical partial hard pressure");resources::ResourceLease pressureLease(limited,*pressure);
+        for(unsigned i=0;!job->step(*denied->getCanvas(),config,knots,42,limitedTargets,true,&fallback);++i)
+            require(i<10000&&!job->resourcePending(),"canonical partial denial lost bounded checkpoint fallback");
+        require(fallback.contourRecordReplays==0&&fallback.checkpointReplayKnots>0,"canonical hard denial did not use exact checkpoints");
+    }
+    std::vector<std::uint8_t> fallbackPixels(want.size());
+    require(denied->readPixels(info,fallbackPixels.data(),info.minRowBytes(),0,0)&&fallbackPixels==want,"canonical hard denial changed Direct pixels");
+    limitedTargets.clear();require(limited->used()==0,"canonical hard fallback leaked quota");provider.release();
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -765,6 +888,11 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
+            checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
+        }
+        if(argc>1&&std::string_view(argv[1])=="--detail-share-only"){checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--detail-replay-only"){checkCanonicalReplayHeadroom(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--oversized-only")){
             checkOversizedCanonical(provider);if(argc>1)return finishNative(0);
         }

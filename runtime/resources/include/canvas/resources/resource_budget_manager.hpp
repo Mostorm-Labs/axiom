@@ -11,7 +11,7 @@
 #include <unordered_map>
 
 namespace canvas::resources {
-enum class ResourceClass { kRecorded, kRaster, kScratch, kNavigation, kTile, kPromotion, kNavigationTile, kCount };
+enum class ResourceClass { kRecorded, kRaster, kScratch, kNavigation, kTile, kPromotion, kNavigationTile, kCanonicalFrame, kCount };
 using ResourceClassMask = std::uint32_t;
 constexpr ResourceClassMask resourceClassMask(ResourceClass kind) noexcept {
   return ResourceClassMask{1} << static_cast<unsigned>(kind);
@@ -19,7 +19,7 @@ constexpr ResourceClassMask resourceClassMask(ResourceClass kind) noexcept {
 constexpr ResourceClassMask kPixelResourceClasses = resourceClassMask(ResourceClass::kRaster) |
     resourceClassMask(ResourceClass::kScratch) | resourceClassMask(ResourceClass::kNavigation) |
     resourceClassMask(ResourceClass::kTile) | resourceClassMask(ResourceClass::kPromotion) |
-    resourceClassMask(ResourceClass::kNavigationTile);
+    resourceClassMask(ResourceClass::kNavigationTile) | resourceClassMask(ResourceClass::kCanonicalFrame);
 struct BudgetLimits { std::size_t soft=64U*1024U*1024U,hard=96U*1024U*1024U; };
 struct ResourceBudgetUsage { std::size_t used=0,staging=0,pendingRelease=0; };
 // Derived resources only. Canonical storage cannot be admitted or evicted here.

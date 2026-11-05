@@ -12,7 +12,8 @@ class GpuResourceRetirement final {
   static constexpr auto canonicalAllocations=resources::kPixelResourceClasses&
       ~resources::resourceClassMask(resources::ResourceClass::kNavigationTile);
   static constexpr auto canonicalReads=canonicalAllocations&
-      ~resources::resourceClassMask(resources::ResourceClass::kNavigation);
+      ~resources::resourceClassMask(resources::ResourceClass::kNavigation)&
+      ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame);
   struct Ticket final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<const GpuCompletionState> state;
