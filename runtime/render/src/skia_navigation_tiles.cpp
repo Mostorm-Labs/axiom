@@ -172,7 +172,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     struct Timing {
         NavigationWork& work;const NavigationWork before;std::chrono::steady_clock::time_point started;
         const FrameState& frame;const CanonicalViewportTransform& camera;const RenderCacheOptions& options;
-        PreparedGeometryCache& geometry;
+        PreparedGeometryCache& geometry;const std::shared_ptr<resources::ResourceBudgetManager>& budget;
         ~Timing(){
             work.preparedGeometryBytes=geometry.preparedBytes();
             work.sourcePayloadBytes=geometry.sourceStatistics().bytes;work.sourcePayloadHits=geometry.sourceStatistics().hits;
@@ -180,8 +180,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             work.opportunityNanoseconds+=elapsed;
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
-            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":4,\"start_ns\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
-                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu}\n",
+            std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu}\n",
                 static_cast<unsigned long long>(std::chrono::duration_cast<std::chrono::nanoseconds>(started.time_since_epoch()).count()),
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
@@ -210,10 +210,13 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.chunkCandidates-before.chunkCandidates),static_cast<unsigned long long>(work.indexNodes-before.indexNodes),
                 static_cast<unsigned long long>(work.indexFallbacks-before.indexFallbacks),static_cast<unsigned long long>(work.payloadCopyBytes-before.payloadCopyBytes),
                 static_cast<unsigned long long>(work.payloadAliases-before.payloadAliases),static_cast<unsigned long long>(work.observedSourceQueries-before.observedSourceQueries),
-                static_cast<unsigned long long>(work.sourcePayloadBytes),static_cast<unsigned long long>(work.sourcePayloadHits-before.sourcePayloadHits));
+                static_cast<unsigned long long>(work.sourcePayloadBytes),static_cast<unsigned long long>(work.sourcePayloadHits-before.sourcePayloadHits),
+                budget?"true":"false",static_cast<unsigned long long>(budget?budget->used():0),
+                static_cast<unsigned long long>(budget?budget->used(resources::ResourceClass::kRecorded):0),
+                static_cast<unsigned long long>(work.retainedBytes));
 #endif
         }
-    } timing{work,before,started,frame,camera,options,geometry_};
+    } timing{work,before,started,frame,camera,options,geometry_,budget};
     work.presented=false;work.pending=false;work.coverageComplete=false;
     if(!query||!options.enabled||!budget||!std::isfinite(camera.scale)||camera.scale<=0||
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||

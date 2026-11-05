@@ -26,7 +26,7 @@ const types={'.html':'text/html','.mjs':'text/javascript','.wasm':'application/w
 const server=http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname==='/mixed-navigation.html'){res.setHeader('Content-Type','text/html');res.end(fixture+controls);return;}
- const fixtures=['navigation_metrics.mjs','browser_metrics.mjs'];
+ const fixtures=['navigation_metrics.mjs','browser_metrics.mjs','editing_actions.mjs'];
  const name=url.pathname.slice(1),file=fixtures.includes(name)?new URL('./'+name,import.meta.url):path.resolve(sdk,name);
  if(!fixtures.includes(name)&&!file.startsWith(sdk+path.sep))throw Error('path');
  res.setHeader('Content-Type',types[path.extname(name)]??'application/octet-stream');res.end(await fs.readFile(file));

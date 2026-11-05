@@ -2,9 +2,10 @@
 <style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
 <script type="module">
 import {createRuntime} from '/axiom.mjs';
+import {buildEditingScene,applyEditingAction} from '/editing_actions.mjs';
 import {postInputReceiptWait} from '/navigation_metrics.mjs';
 const errors=[],frames=[],bindings=new WeakMap();
-let sdk,active=null,sequence=0,selectionPoint=[40,90];
+let sdk,active=null,sequence=0,selectionPoint=[40,90],editingTargets;
 const raf=()=>new Promise(requestAnimationFrame);
 const until=async(fn,label)=>{for(let i=0;i<1800;++i){if(fn())return;await raf();}throw Error(label);};
 const proto=WebGL2RenderingContext.prototype;
@@ -101,6 +102,42 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
   value.pixels=await pixels();return value;
 }
 window.probe={
+  async setupEditing(){
+    const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
+    sdk=await createRuntime({mount,documentId:'99999999999999999999999999999999',permission:'localSingleUser',
+      onError:e=>errors.push(String(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
+    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+    editingTargets=await buildEditingScene(sdk,{pointer,settle,frames,click});
+    return {targets:editingTargets,build:sdk.readBuildInfo(),state:sdk.readState()};
+  },
+  async performEditing(kind){
+    const before=sdk.readState(),prior=frames.length;mark('begin','edit-'+kind);const at=performance.now();
+    const details=await applyEditingAction(sdk,editingTargets,kind,{pointer,click});
+    const admittedAt=performance.now(),generation=sdk.readState().generation;await until(()=>sdk.readState().lastCommit.presentedGeneration===generation,'edited generation not presented');await settle(prior);const after=sdk.readState();mark('end','edit-'+kind);
+    return {kind,before,after,details,dispatchMs:admittedAt-at,completeMs:performance.now()-at,receipts:frames.slice(prior),
+      checks:{generationAdvanced:BigInt(after.generation)>BigInt(before.generation),operationChanged:after.lastCommit.operationId!==before.lastCommit.operationId,
+        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,objectCountStable:before.objects===after.objects}};
+  },
+  async checkpoint(){
+    const state=sdk.readState(),at=performance.now();
+    const image=await sdk.exportImage({bounds:[0,0,800,500],padding:0,scale:1,format:'png',generation:state.generation});
+    const digest=await crypto.subtle.digest('SHA-256',image.bytes);
+    const snapshot=await sdk.captureSnapshot({generation:state.generation,documentRevision:state.generation,recoveryFrontier:[8,1,16,1,24,1]});
+    return {state,image:{sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),width:image.width,height:image.height},
+      snapshot:{...snapshot,bytes:Array.from(snapshot.bytes)},captureMs:performance.now()-at,resources:sdk.resources.list()};
+  },
+  async historyStep(action){const n=frames.length;const r=await sdk[action]();const g=sdk.readState().generation;await until(()=>sdk.readState().lastCommit.presentedGeneration===g,'history generation not presented');await settle(n);return {result:r,state:sdk.readState()};},
+  async setupScale(meta,bytes){
+    const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
+    const started=performance.now();sdk=await createRuntime({mount,documentId:meta.documentId,permission:'localSingleUser',
+      restore:{bytes:new Uint8Array(bytes),metadata:{documentRevision:meta.documentRevision,recoveryFrontier:meta.recoveryFrontier,checkpointDigest:meta.checkpointDigest,resourceBinding:meta.resourceBinding}},
+      onError:e=>errors.push(String(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
+    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;sdk.data.attach({capacity:64});
+    await until(()=>frames.length>0,'initial restored frame timeout');for(let i=0;i<4;++i)await raf();
+    return {loadMs:performance.now()-started,state:sdk.readState(),build:sdk.readBuildInfo(),pixels:await pixels()};
+  },
+  async scaleTransform(){await sdk.selectTool('select');await click(5,5);const before=sdk.readState();if(!before.selected.length)throw Error('scale target missing');const n=frames.length,at=performance.now();await sdk.transformSelection([1,0,0,1,8,4]);await settle(n);return {ms:performance.now()-at,before,after:sdk.readState()};},
+
   async setup(workload,selected,profile='round-handdrawn',revision=4,options={}){
     const started=performance.now();selectionPoint=options.scribble?[300,350]:[40,90];
     const mount=document.getElementById('mount');

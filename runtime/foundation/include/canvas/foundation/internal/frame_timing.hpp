@@ -25,11 +25,11 @@ inline constexpr const char* names[]{
 };
 enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
     prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels,
-    prepare_direct, prepare_budget, exact_demand_reuse, count };
+    prepare_direct, prepare_budget, exact_demand_reuse, source_points, count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
-    "prepare_direct","prepare_budget","exact_demand_reuse"};
+    "prepare_direct","prepare_budget","exact_demand_reuse","source_points"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;

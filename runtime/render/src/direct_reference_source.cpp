@@ -604,6 +604,12 @@ static foundation::Result<ReferenceDrawList> buildSources(
         };
         account(std::as_const(entry.record.content));
         std::visit([&](const auto& command){if constexpr(requires{command.content;})account(command.content);},std::as_const(entry.command));
+        AXIOM_FRAME_TIMING_ADD(source_points, std::visit([](const auto& content)->std::uint64_t{
+            if constexpr(requires{content.stroke.knots;})return content.stroke.knots.size();
+            if constexpr(requires{content.stroke.vector_output.outline;})return content.stroke.vector_output.outline.size();
+            if constexpr(requires{content.stroke.data;})if(const auto* data=std::get_if<semantic::VectorStrokeData>(&content.stroke.data))return data->samples.size();
+            return 0;
+        },entry.record.content.get()));
         list.entries.push_back(std::move(entry));
     }
     AXIOM_FRAME_TIMING_END(entriesTiming);

@@ -30,7 +30,7 @@ const before=identity(),artifacts=await hashes(sdk),temp=await fs.mkdtemp(path.j
 await fs.cp(sdk,temp,{recursive:true});
 const server=http.createServer(async(req,res)=>{try{
   const pathname=new URL(req.url,'http://local').pathname;
-  const fixture=['/navigation_sampling.html','/navigation_metrics.mjs','/browser_metrics.mjs'].includes(pathname);
+  const fixture=['/navigation_sampling.html','/navigation_metrics.mjs','/browser_metrics.mjs','/editing_actions.mjs'].includes(pathname);
   const file=fixture?new URL('.'+pathname,import.meta.url):path.resolve(temp,'.'+pathname);
   if(!fixture&&!file.startsWith(temp+path.sep))throw Error('path');
   res.setHeader('Content-Type',pathname.endsWith('.html')?'text/html':pathname.endsWith('.mjs')?'text/javascript':pathname.endsWith('.wasm')?'application/wasm':'application/octet-stream');
