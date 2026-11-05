@@ -674,6 +674,37 @@ void checkFrontierRegionCompaction(TestSurface& target){
     require(reference.renderFrame(full,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(full),"compaction changed final Direct pixels");
 }
 
+// Catch the oversized full-frame gate escaping cooperative preparation into
+// synchronous Direct. The small target reproduces the DPR4 ratio without a
+// slow performance threshold or a huge test allocation.
+void checkOversizedCanonical(TestSurface& target) {
+    TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oversized oracle surface");
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=64*1024;options.maxEntryBytes=16*1024;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    auto entry=stroke(9821);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots.clear();
+    for(unsigned i=0;i<160;++i)content.stroke.knots.push_back({20.+i*1.2,50.+std::sin(i*.1)*30,32768});
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};
+    const auto demand=plan(9821,{entry},1,{1.1,0,0,1.1,-3.5,-2.5});
+    const auto before=pixels(target);const auto presents=target.presentCount();
+    RenderPreparationBudget slice;slice.maxCoverageSteps=1;slice.maxGroups=1;
+    auto result=cached.renderFrame(target,demand,nullptr,&slice);
+    require(result.code==BackendSubmissionCode::kRetry,"oversized canonical escaped to synchronous full-frame Direct");
+    require(target.presentCount()==presents&&pixels(target)==before,"oversized preparation published partial pixels");
+    require(cached.renderCacheWork().preparationCoverageSteps==1,"oversized preparation ignored one-step limit");
+    unsigned attempts=0;
+    while(result.code==BackendSubmissionCode::kRetry){
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        result=cached.renderFrame(target,demand,nullptr,&slice);
+        require(++attempts<1024,"oversized preparation did not converge");
+    }
+    require(result.code==BackendSubmissionCode::kAccepted&&target.presentCount()==presents+1,"oversized canonical receipt");
+    require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"oversized preparation changed Direct pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -682,6 +713,9 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--oversized-only")){
+            checkOversizedCanonical(provider);if(argc>1)return finishNative(0);
+        }
         if(argc>1&&std::string_view(argv[1])=="--coverage-reuse-only"){checkCoverageReclaimFeasibility(provider);return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){

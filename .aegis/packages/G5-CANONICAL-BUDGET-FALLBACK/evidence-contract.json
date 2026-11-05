@@ -1,0 +1,10 @@
+{
+  "directory": "verification/evidence/performance/g5-canonical-budget",
+  "bindings": "exact source revision,package input hashes,matching installed JS/WASM/resources,worker caps and cleanup,raw traces,deterministic SHA256 manifest",
+  "blocking_obligations": [
+    "bounded",
+    "regression",
+    "budget-comparison"
+  ],
+  "return": "READY_FOR_CONTROL_REVIEW with findings,not official Gate PASS"
+}
