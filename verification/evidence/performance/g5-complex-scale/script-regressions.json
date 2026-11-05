@@ -1,0 +1,47 @@
+{
+  "node": {
+    "tests": 152,
+    "pass": 141,
+    "failed_names": [
+      "verification/tests/android_evidence.test.mjs",
+      "verification/tests/apple_evidence.test.mjs",
+      "GT-G0-15 WORKTREE Evidence has five profiles, PG groups and complete manifest hashes",
+      "all 56 vectors execute on both boundaries",
+      "mutation guard duplicate-completion",
+      "mutation guard stale-epoch",
+      "mutation guard lease-leak",
+      "mutation guard fault-transition",
+      "mutation guard late-fence",
+      "mutation guard transport-drop",
+      "mutation guard boundary-equivalence"
+    ],
+    "new_failures": []
+  },
+  "python312": {
+    "tests": 205,
+    "failures": 4,
+    "skips": 2,
+    "failed_names": [
+      "test_web_collects_platform_composition (test_fc02_host_contract.FC02HostBoundary.test_web_collects_platform_composition)",
+      "test_every_descriptor_change_maps_to_a_closed_machine_projection_defect (test_g1_02r_descriptor_refreeze.G102RDescriptorRefreezeTest.test_every_descriptor_change_maps_to_a_closed_machine_projection_defect)",
+      "test_leaf_fixture_differential_compares_wire_and_semantic_projection (test_g1_02r_semantic_differential.G102RSemanticDifferentialTest.test_leaf_fixture_differential_compares_wire_and_semantic_projection)",
+      "test_object_record_leaf_values_are_typed_and_not_opaque_blobs (test_semantic_public_boundary.SemanticPublicBoundaryTest.test_object_record_leaf_values_are_typed_and_not_opaque_blobs)"
+    ],
+    "baseline_reproduced": true
+  },
+  "workspace": {
+    "exit": 127,
+    "missing_tsc_workspaces": [
+      "@axiom/platform-conformance-cli@0.1.0",
+      "@axiom/platform-harness-android@0.1.0",
+      "@axiom/platform-harness-apple@0.1.0",
+      "@axiom/platform-harness-protocol@0.1.0",
+      "@axiom/platform-harness-runner@0.1.0",
+      "@axiom/platform-harness-scripted-adapter@0.1.0",
+      "@axiom/platform-harness-transport@0.1.0",
+      "@axiom/platform-harness-web@0.1.0",
+      "@axiom/semantic-conformance-cli@0.1.0"
+    ]
+  },
+  "runtime_boundary_contracts": 118
+}

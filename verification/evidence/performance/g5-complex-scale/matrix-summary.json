@@ -1,0 +1,136 @@
+{
+  "schema": "g5-complex-scale-matrix-v1",
+  "engineering_only": true,
+  "sourceStable": true,
+  "rows": 49,
+  "measured": 36,
+  "blocked": [
+    {
+      "id": "objects-100000-sparse-fixture",
+      "reason": "rejected",
+      "stage": {
+        "semantic_error": 7,
+        "stage": "inspect",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-1000000-sparse-component",
+      "reason": "rss_limit",
+      "stage": {
+        "cache_used_bytes": null,
+        "checks": {
+          "linear_parity": true
+        },
+        "index_bytes": 168875640,
+        "load_ms": 8913.799416,
+        "objects": 1000000,
+        "points": 0,
+        "query_ms": 4.643625,
+        "scope": "scene-index",
+        "stage": "component_query",
+        "status": "completed",
+        "visible_objects": 400
+      }
+    },
+    {
+      "id": "objects-1000000-sparse-fixture",
+      "reason": "rss_limit",
+      "stage": {
+        "construct_ms": 898.430084,
+        "objects": 1000000,
+        "stage": "fixture_bind"
+      }
+    },
+    {
+      "id": "objects-100000-dense-fixture",
+      "reason": "rejected",
+      "stage": {
+        "semantic_error": 7,
+        "stage": "inspect",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-1000000-dense-component",
+      "reason": "rss_limit",
+      "stage": {
+        "cache_used_bytes": null,
+        "checks": {
+          "linear_parity": true
+        },
+        "index_bytes": 172780104,
+        "load_ms": 9280.236167,
+        "objects": 1000000,
+        "points": 0,
+        "query_ms": 15015.756042,
+        "scope": "scene-index",
+        "stage": "component_query",
+        "status": "completed",
+        "visible_objects": 1000000
+      }
+    },
+    {
+      "id": "objects-1000000-dense-fixture",
+      "reason": "rss_limit",
+      "stage": {
+        "construct_ms": 1081.32475,
+        "objects": 1000000,
+        "stage": "fixture_bind"
+      }
+    },
+    {
+      "id": "points-1000000-sparse-component",
+      "reason": "rejected",
+      "stage": {
+        "objects": 1,
+        "points": 1000000,
+        "reason": "invalid_compact_stroke",
+        "scope": "point-projection",
+        "stage": "component_admission",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "points-1000000-sparse-fixture",
+      "reason": "rejected",
+      "stage": {
+        "objects": 1,
+        "points": 1000000,
+        "scope": "semantic-fixture",
+        "stage": "fixture_bind",
+        "status": "rejected"
+      }
+    },
+    {
+      "id": "objects-100000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-1000000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-100000-dense-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "objects-1000000-dense-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    },
+    {
+      "id": "points-1000000-sparse-sdk-dpr2",
+      "reason": "fixture_unavailable",
+      "stage": null
+    }
+  ],
+  "largestMeasuredRootTier": {
+    "objects-sparse": 10000,
+    "objects-dense": 10000,
+    "points-sparse": 100000
+  }
+}

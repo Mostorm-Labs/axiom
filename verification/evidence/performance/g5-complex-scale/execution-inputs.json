@@ -1,0 +1,37 @@
+{
+  "primary_execution_revision": "a4b0a4590773f86ae00026724cf5ccd2f4ea13a3",
+  "native_full_regression_revision": "4e22db5e",
+  "supplemental_execution_revision": "de08a2b06f51994071ccd94eb66971371868279e",
+  "profile_sha256": "a288596c1725adc2ffcf21c38c844bb4a61c4f7edfc846c2e602dfba4ee8bcb7",
+  "primary_package_sha256": "2ef7cdadbd584db566ba659a7fd195dda8f6c638d690275ef75aef4c791950c4",
+  "amended_package_sha256": "3467a7e5f9abd82c82f50fc0b2274cb8bdf0bb74abca66da914ff1efea4da3b1",
+  "primary_binary_sha256": "d4fb95b8231d82c29917b48e410246f07f2a1fb50e5507d872e3e04086a57097",
+  "document_total_binary_sha256": "4f9f8f08e1a39825205dcf1d3f633f4071f8b13e92d973dfa53d2c9a837a3781",
+  "runtime_sdk_schema_unchanged_after_primary": true,
+  "build_configs": {
+    "host": {
+      "AXIOM_ENABLE_FRAME_TIMING:BOOL": "OFF",
+      "AXIOM_INSTALL_DEVELOPER_COMPONENTS:BOOL": "OFF",
+      "AXIOM_PROTOC:FILEPATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "CANVAS_SKIA_SDK_ROOT:UNINITIALIZED": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release",
+      "CMAKE_BUILD_TYPE:STRING": "Debug",
+      "CMAKE_PREFIX_PATH:UNINITIALIZED": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4"
+    },
+    "web-sampling": {
+      "AXIOM_ENABLE_FRAME_TIMING:BOOL": "ON",
+      "AXIOM_INSTALL_DEVELOPER_COMPONENTS:BOOL": "OFF",
+      "AXIOM_PROTOC:FILEPATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "CANVAS_SKIA_SDK_ROOT:UNINITIALIZED": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+      "CMAKE_BUILD_TYPE:STRING": "Release",
+      "CMAKE_PREFIX_PATH:UNINITIALIZED": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b"
+    },
+    "web-sampling-off": {
+      "AXIOM_ENABLE_FRAME_TIMING:BOOL": "OFF",
+      "AXIOM_INSTALL_DEVELOPER_COMPONENTS:BOOL": "OFF",
+      "AXIOM_PROTOC:FILEPATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "CANVAS_SKIA_SDK_ROOT:UNINITIALIZED": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release",
+      "CMAKE_BUILD_TYPE:STRING": "Release",
+      "CMAKE_PREFIX_PATH:UNINITIALIZED": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b"
+    }
+  }
+}
