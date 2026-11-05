@@ -18,6 +18,10 @@ class Fixture(unittest.TestCase):
    self.assertEqual(r['visible_objects'],visible);self.assertTrue(r['checks']['linear_parity']);self.assertEqual(r['objects'],64)
   r=self.command('component','points',2048,'sparse')
   self.assertEqual(r['points'],2048);self.assertEqual(r['visible_points'],1600);self.assertTrue(r['checks']['linear_parity'])
+ def test_component_rejects_points_outside_the_accepted_compact_contract(self):
+  r=self.command('component','points',262145,'sparse')
+  self.assertEqual(r['status'],'rejected');self.assertEqual(r['scope'],'point-projection')
+  self.assertEqual(r['reason'],'invalid_compact_stroke');self.assertEqual(r['points'],262145)
  def test_corrupt_snapshot_is_not_reported_as_a_completed_fixture(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'bad.axsnap';p.write_bytes(b'bad')

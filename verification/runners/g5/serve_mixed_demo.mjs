@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import http from 'node:http';
+import {readFixtureModule} from './fixture_modules.mjs';
 const sdk=path.resolve(process.argv[2]),port=Number(process.argv[3]??4212);
 const fixture=await fs.readFile(new URL('./navigation_sampling.html',import.meta.url),'utf8');
 const controls=`<style>#mixed-controls{position:fixed;right:8px;top:8px;z-index:100;background:white;border:1px solid #bbb;padding:8px;font:12px sans-serif;max-width:280px}#mixed-result{white-space:pre-wrap}</style>
@@ -26,9 +27,10 @@ const types={'.html':'text/html','.mjs':'text/javascript','.wasm':'application/w
 const server=http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  if(url.pathname==='/mixed-navigation.html'){res.setHeader('Content-Type','text/html');res.end(fixture+controls);return;}
- const fixtures=['navigation_metrics.mjs','browser_metrics.mjs','editing_actions.mjs'];
- const name=url.pathname.slice(1),file=fixtures.includes(name)?new URL('./'+name,import.meta.url):path.resolve(sdk,name);
- if(!fixtures.includes(name)&&!file.startsWith(sdk+path.sep))throw Error('path');
+ const module=await readFixtureModule(url.pathname);
+ if(module){res.setHeader('Content-Type','text/javascript');res.end(module);return;}
+ const name=url.pathname.slice(1),file=path.resolve(sdk,name);
+ if(!file.startsWith(sdk+path.sep))throw Error('path');
  res.setHeader('Content-Type',types[path.extname(name)]??'application/octet-stream');res.end(await fs.readFile(file));
 }catch{res.statusCode=404;res.end();}});
 server.listen(port,'127.0.0.1',()=>console.log('http://127.0.0.1:'+port+'/mixed-navigation.html'));

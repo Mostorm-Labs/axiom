@@ -80,7 +80,11 @@ void fixture(const std::string& axis,std::size_t count,const std::string& layout
 void component(const std::string& axis,std::size_t count,const std::string& layout){
  const WorldRect region{0,0,800,500};emit({{"stage","component_begin"},{"axis",axis},{"requested",count}});auto start=Clock::now();
  if(axis=="points"){
-  auto o=stroke(count);auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});auto& r=projection.records.front();r.geometryIndex=scene::buildGeometryChunkIndex(r);
+  auto o=stroke(count);
+  if(!semantic::validCompactStroke(std::get<semantic::CompactStrokeContent>(o.content).stroke)){
+   emit({{"stage","component_admission"},{"status","rejected"},{"scope","point-projection"},{"objects",1},{"points",count},{"reason","invalid_compact_stroke"}});return;
+  }
+  auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});auto& r=projection.records.front();r.geometryIndex=scene::buildGeometryChunkIndex(r);
   const auto projectMs=ms(start);start=Clock::now();render::internal::ChunkQueryWork work;std::vector<std::uint32_t> actual,expected;
   render::internal::queryChunks(r,region,0,work,[&](const auto& c){actual.push_back(c.index);});const auto queryMs=ms(start);
   for(const auto& c:std::as_const(r.geometryChunks)){const auto& b=c.bounds;if(b.right>region.left&&b.left<region.right&&b.bottom>region.top&&b.top<region.bottom)expected.push_back(c.index);}
