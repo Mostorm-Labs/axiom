@@ -1,4 +1,4 @@
-export const SDK_VERSION: '0.3.11';
+export const SDK_VERSION: '0.3.12';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
@@ -74,7 +74,7 @@ interface ControlMethods {
   readVectorPath(objectId?:Id128):VectorPathSnapshot;
   table:TableAPI;
   appearance:AppearanceAPI;
-  readonly version:'0.3.11';
+  readonly version:'0.3.12';
   readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
