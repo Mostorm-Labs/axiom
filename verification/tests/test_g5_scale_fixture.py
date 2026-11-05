@@ -22,6 +22,14 @@ class Fixture(unittest.TestCase):
   r=self.command('component','points',262145,'sparse')
   self.assertEqual(r['status'],'rejected');self.assertEqual(r['scope'],'point-projection')
   self.assertEqual(r['reason'],'invalid_compact_stroke');self.assertEqual(r['points'],262145)
+ def test_document_total_can_exceed_single_stroke_limit(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'multiple.axsnap'
+   r=self.command('fixture','points',262145,'sparse',p,100000)
+   self.assertEqual(r['status'],'completed');self.assertEqual(r['objects'],3)
+   self.assertEqual(r['points'],262145);self.assertEqual(r['visible_points'],4800)
+   decoded=self.command('inspect',p);self.assertEqual(decoded['points'],262145)
+   self.assertEqual(decoded['objects'],3)
  def test_corrupt_snapshot_is_not_reported_as_a_completed_fixture(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'bad.axsnap';p.write_bytes(b'bad')

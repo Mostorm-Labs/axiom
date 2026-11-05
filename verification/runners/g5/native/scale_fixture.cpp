@@ -31,10 +31,10 @@ semantic::ObjectRecord object(std::size_t i,const std::string& layout){
  semantic::ObjectRecord o;o.id=foundation::ObjectId::fromUint64(i+1);o.kind=semantic::ObjectKind::kShape;o.kind_version=1;
  std::vector<std::uint8_t> key(8);for(unsigned k=0;k<8;++k)key[k]=std::uint8_t((i+1)>>(56-k*8));key.push_back(0x80);o.placement.order_key=semantic::OrderKey(std::move(key));o.content=semantic::ShapeContent{1,12,12};const auto b=bounds(i,layout);o.transform.tx=b.left;o.transform.ty=b.top;return o;
 }
-semantic::ObjectRecord stroke(std::size_t count){
- auto o=object(0,"sparse");o.kind=semantic::ObjectKind::kVectorStroke;o.kind_version=3;o.transform={};
+semantic::ObjectRecord stroke(std::size_t count,std::size_t ordinal=0){
+ auto o=object(ordinal,"sparse");o.kind=semantic::ObjectKind::kVectorStroke;o.kind_version=3;o.transform={};
  semantic::CompactStrokeRecord s;s.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;s.seed=42;s.knots.reserve(count);
- for(std::size_t i=0;i<count;++i)s.knots.push_back({i*.5,100.+std::sin(double(i)*.01)*20,32768});
+ for(std::size_t i=0;i<count;++i)s.knots.push_back({i*.5,100.+ordinal*30.+std::sin(double(i)*.01)*20,32768});
  o.content=semantic::CompactStrokeContent{std::move(s)};return o;
 }
 std::size_t pointCount(const semantic::ObjectContent& v){return std::visit([](const auto& c)->std::size_t{
@@ -62,10 +62,10 @@ Json inspect(const std::vector<std::uint8_t>& bytes){
  return {{"stage","inspect"},{"status","completed"},{"scope","semantic-fixture"},{"documentId",hex(s.document_id.value().bytes)},{"objects",s.objects.size()},{"points",points},
   {"visible_points",visible?Json(*visible):Json(nullptr)},{"documentDigest",hex(s.document_digest)},{"checkpointDigest",s.checkpoint_digest},{"documentRevision",std::to_string(s.document_revision)},{"recoveryFrontier",s.recovery_frontier},{"resourceBinding","1"}};
 }
-void fixture(const std::string& axis,std::size_t count,const std::string& layout,const std::filesystem::path& file){
+void fixture(const std::string& axis,std::size_t count,const std::string& layout,const std::filesystem::path& file,std::size_t pointsPerStroke){
  semantic::SemanticSnapshot s;s.document_id=semantic::DocumentId(foundation::ObjectId::fromUint64(0x9999));s.schema_version=3;s.manifest_present=true;s.manifest.manifest_revision=1;s.document_revision=1;s.digest_algorithm=1;s.recovery_frontier={8,1,16,1,24,1};
  emit({{"stage","fixture_begin"},{"axis",axis},{"requested",count}});auto start=Clock::now();
- if(axis=="points")s.objects.push_back(stroke(count));else{s.objects.reserve(count);for(std::size_t i=0;i<count;++i){s.objects.push_back(object(i,layout));if(i%250000==249999)emit({{"stage","fixture_construct"},{"objects_constructed",i+1}});}}
+ if(axis=="points"){for(std::size_t offset=0,ordinal=0;offset<count;++ordinal){const auto n=std::min(pointsPerStroke,count-offset);s.objects.push_back(stroke(n,ordinal));offset+=n;}}else{s.objects.reserve(count);for(std::size_t i=0;i<count;++i){s.objects.push_back(object(i,layout));if(i%250000==249999)emit({{"stage","fixture_construct"},{"objects_constructed",i+1}});}}
  const auto construct=ms(start);emit({{"stage","fixture_bind"},{"objects",s.objects.size()},{"construct_ms",construct}});start=Clock::now();
  if(!semantic::SnapshotCodec::populateRequirements(s)||!semantic::SnapshotCodec::bindDigests(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1)){
   emit({{"stage","fixture_bind"},{"status","rejected"},{"scope","semantic-fixture"},{"objects",s.objects.size()},{"points",axis=="points"?count:0}});return;}
@@ -73,8 +73,7 @@ void fixture(const std::string& axis,std::size_t count,const std::string& layout
  if(!encoded.ok()){emit({{"stage","fixture_encode"},{"status","rejected"},{"semantic_error",int(encoded.error)}});return;}
  auto result=inspect(encoded.bytes);if(result["status"]!="completed"){emit(std::move(result));return;}
  std::filesystem::create_directories(file.parent_path());auto temp=file;temp+=".tmp";{std::ofstream f(temp,std::ios::binary);f.write(reinterpret_cast<const char*>(encoded.bytes.data()),std::streamsize(encoded.bytes.size()));if(!f)throw std::runtime_error("fixture write");}std::filesystem::rename(temp,file);
- result["visible_points"]=axis=="points"?std::min<std::size_t>(count,1600):0;
- std::size_t visibleObjects=0;if(axis=="points")visibleObjects=1;else for(std::size_t i=0;i<count;++i){const auto b=bounds(i,layout);if(b.right>0&&b.left<800&&b.bottom>0&&b.top<500)++visibleObjects;}result["visible_objects"]=visibleObjects;
+ std::size_t visibleObjects=0;if(axis=="points"){for(const auto& o:s.objects)if(std::ranges::any_of(std::get<semantic::CompactStrokeContent>(o.content).stroke.knots,[](const auto& p){return p.x>=0&&p.x<800&&p.y>=0&&p.y<500;}))++visibleObjects;}else for(std::size_t i=0;i<count;++i){const auto b=bounds(i,layout);if(b.right>0&&b.left<800&&b.bottom>0&&b.top<500)++visibleObjects;}result["visible_objects"]=visibleObjects;
  result["stage"]="fixture_complete";result["snapshot_bytes"]=encoded.bytes.size();result["construct_ms"]=construct;result["bind_ms"]=bind;result["encode_decode_write_ms"]=ms(start);result["checks"]={{"roundtrip",true}};emit(std::move(result));
 }
 void component(const std::string& axis,std::size_t count,const std::string& layout){
@@ -110,8 +109,8 @@ void component(const std::string& axis,std::size_t count,const std::string& layo
 }
 int main(int argc,char** argv){try{
  if(argc==3&&std::string(argv[1])=="inspect"){std::ifstream in(argv[2],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(in),{}};emit(inspect(bytes));return 0;}
- if(argc<5)throw std::runtime_error("usage: fixture|component objects|points count sparse|dense [snapshot-path]");
+ if(argc<5)throw std::runtime_error("usage: fixture|component objects|points count sparse|dense [snapshot-path [points-per-stroke]]");
  const std::string mode=argv[1],axis=argv[2],layout=argv[4];const auto count=std::stoull(argv[3]);
  if(!count||count>1000000||(axis!="objects"&&axis!="points")||(layout!="sparse"&&layout!="dense"))throw std::runtime_error("invalid profile");
- if(mode=="component")component(axis,count,layout);else if(mode=="fixture"&&argc==6)fixture(axis,count,layout,argv[5]);else throw std::runtime_error("invalid mode");
+ if(mode=="component")component(axis,count,layout);else if(mode=="fixture"&&(argc==6||(argc==7&&axis=="points"))){const auto perStroke=argc==7?std::stoull(argv[6]):count;if(!perStroke)throw std::runtime_error("invalid points per stroke");fixture(axis,count,layout,argv[5],perStroke);}else throw std::runtime_error("invalid mode");
 }catch(const std::exception& e){emit({{"stage","exception"},{"status","failed"},{"error",e.what()}});return 2;}}

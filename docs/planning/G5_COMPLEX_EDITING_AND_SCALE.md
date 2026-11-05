@@ -73,3 +73,16 @@ EXECUTION_CLOSURE_CONTRACT:
 - terminal_blockers: repository/source divergence, unavailable locked artifacts,
   authority contradiction, unresolvable new correctness failure, or inability to
   record/contain workers safely. Do not stop at just a plan or an unrun harness.
+
+P31 clarification — document-total points:
+The primary point probe keeps its single-stroke scope and accepted compact-stroke
+admission check. A rejection at 1M single-stroke knots is not a document-total
+limit. Also run an explicit 1M-total fixture with ten individually valid100K-knot
+strokes (fixed seed42, y offsets30 per stroke), using the same public SDK, bounds,
+DPR2 and worker caps. Preserve both scopes and exact fixture/compiler/SDK revisions;
+never relabel the single-stroke result or change its semantic limit. The additional
+profile is document-point-total.json; validate its actual canonical count with the
+pinned codec and independent point-centre inspector. Its SDK may remain the frozen
+a4b0a459 artifact: the supplemental change is verification-only and must prove that
+runtime/sdk/schema source inputs are identical. Record both native fixture and
+root SDK outcomes, including any cap/rejection, before engineering closure.
