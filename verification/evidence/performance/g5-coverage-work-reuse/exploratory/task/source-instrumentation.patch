@@ -1,0 +1,63 @@
+diff --git a/runtime/render/src/skia_navigation_tiles.cpp b/runtime/render/src/skia_navigation_tiles.cpp
+index d93b1a86..7430804b 100644
+--- a/runtime/render/src/skia_navigation_tiles.cpp
++++ b/runtime/render/src/skia_navigation_tiles.cpp
+@@ -107,6 +107,10 @@ bool SkiaNavigationTiles::ValidRegions::add(foundation::WorldRect r){
+     areas[count++]=r;return true;
+ }
+ void SkiaNavigationTiles::cancelJob(std::unique_ptr<Job>& job){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    if(job)std::fprintf(stderr,"AXIOM_NAVIGATION_TASK {\"action\":\"cancel\",\"id\":%llu,\"x\":%lld,\"y\":%lld,\"scale\":%d,\"source\":%zu,\"primitive\":%zu,\"steps\":%llu}\n",
++        static_cast<unsigned long long>(job->id),static_cast<long long>(job->key.x),static_cast<long long>(job->key.y),job->key.scale,job->source,job->primitive,static_cast<unsigned long long>(job->steps));
++#endif
+     if(job){(void)scheduler_.cancel(job->id,1);++work.cancelledJobs;work.discardedKnotSteps+=job->steps;}
+     job.reset();
+ }
+@@ -126,7 +130,12 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
+             if((!a&&b)||(a==b&&(it->first.scale<victim->first.scale||
+                 (it->first.scale==victim->first.scale&&it->second.used<victim->second.used))))victim=it;
+         }
+-        const auto key=victim->first;work.retainedBytes-=(tileBytes*3+tileMetadataBytes);tiles_.erase(victim);sources_.erase(key);
++        const auto key=victim->first;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++        std::fprintf(stderr,"AXIOM_NAVIGATION_TASK {\"action\":\"reclaim\",\"x\":%lld,\"y\":%lld,\"scale\":%d,\"regions\":%zu,\"used\":%zu,\"limit\":%zu,\"requested\":%zu}\n",
++            static_cast<long long>(key.x),static_cast<long long>(key.y),key.scale,victim->second.valid.count,budget->used(),limit,requested);
++#endif
++        work.retainedBytes-=(tileBytes*3+tileMetadataBytes);tiles_.erase(victim);sources_.erase(key);
+         ++work.evictions;work.coverageComplete=false;dirty_=true;
+     }
+ }
+@@ -416,6 +425,10 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+         auto victim=tiles_.end();
+         for(auto it=tiles_.begin();it!=tiles_.end();++it)if(!protectedTile(it->first)&&(victim==tiles_.end()||it->second.used<victim->second.used))victim=it;
+         if(victim==tiles_.end())return false;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++        std::fprintf(stderr,"AXIOM_NAVIGATION_TASK {\"action\":\"evict\",\"x\":%lld,\"y\":%lld,\"scale\":%d,\"regions\":%zu,\"resident\":%zu}\n",
++            static_cast<long long>(victim->first.x),static_cast<long long>(victim->first.y),victim->first.scale,victim->second.valid.count,work.retainedBytes);
++#endif
+         work.retainedBytes-=(tileBytes*3+tileMetadataBytes);tiles_.erase(victim);++work.evictions;return true;
+     };
+     const auto needsFine=[&](TileKey key){
+@@ -581,6 +594,11 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+             material->clear(SK_ColorTRANSPARENT);
+             job->surface->getCanvas()->translate(gutter-b.left*s,gutter-b.top*s);job->surface->getCanvas()->scale(s,s);
+             job->id=++serial_;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++            std::fprintf(stderr,"AXIOM_NAVIGATION_TASK {\"action\":\"begin\",\"id\":%llu,\"x\":%lld,\"y\":%lld,\"scale\":%d,\"scene\":%llu,\"reused\":%s,\"sources\":%zu,\"left\":%.3f,\"top\":%.3f,\"right\":%.3f,\"bottom\":%.3f}\n",
++                static_cast<unsigned long long>(job->id),static_cast<long long>(next->x),static_cast<long long>(next->y),next->scale,static_cast<unsigned long long>(scene),reusable?"true":"false",job->sources->entries.size(),
++                double(demand.left),double(demand.top),double(demand.right),double(demand.bottom));
++#endif
+             if(!scheduler_.submit({job->id,1,prewarm?scheduling::WorkPriority::kPrefetch:scheduling::WorkPriority::kVisible,0,{},(tileBytes*3+tileMetadataBytes)})||!scheduler_.take())return BackendSubmissionResult::retry("world navigation admission failed");
+             job_=std::move(job);++initializations;++work.initializations;
+             work.initializationNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-initStart).count();
+@@ -589,6 +607,10 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+         }
+         auto& job=*job_;
+         if(job.source>=job.sources->entries.size()){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++            std::fprintf(stderr,"AXIOM_NAVIGATION_TASK {\"action\":\"complete\",\"id\":%llu,\"x\":%lld,\"y\":%lld,\"scale\":%d,\"regions\":%zu}\n",
++                static_cast<unsigned long long>(job.id),static_cast<long long>(job.key.x),static_cast<long long>(job.key.y),job.key.scale,job.valid.count);
++#endif
+             auto image=job.surface->makeImageSnapshot();if(!image)return BackendSubmissionResult::retry("world navigation snapshot failed");
+             (void)scheduler_.finish(job.id,1);
+             if(job.prewarm){++warmed_;++work.prewarmTiles;}
