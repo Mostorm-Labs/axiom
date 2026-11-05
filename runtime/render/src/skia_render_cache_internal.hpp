@@ -25,7 +25,9 @@ class SkiaRenderCache final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
     std::function<void(std::size_t)> reclaimRecorded;
-    std::function<void(std::size_t)> reclaimPreparation;
+    // Required minimum and preferred streaming headroom. Only the minimum may
+    // displace the qualified sharp frame; preferred bytes are not a new pool.
+    std::function<void(std::size_t,std::size_t)> reclaimPreparation;
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};

@@ -383,7 +383,9 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 std::fprintf(stderr,"AXIOM_RENDER_RESOURCE_RETRY {\"stage\":\"coverage\",\"used_bytes\":%llu,\"hard_bytes\":%llu}\n",
                     static_cast<unsigned long long>(budget?budget->used():0),static_cast<unsigned long long>(options.sharedMaxBytes));
 #endif
-                if(reclaimPreparation)reclaimPreparation(std::max(coverageBytes*(hybrid?2:1),pending_->raster->pendingResourceBytes()));
+                const auto required=std::max(coverageBytes*(hybrid?2:1),pending_->raster->pendingResourceBytes());
+                if(reclaimPreparation)reclaimPreparation(required,isolatedMaterial?
+                    std::max(required,std::min(options.maxEntryBytes,options.sharedMaxBytes)):required);
                 flushPreparation();++work.preparationYields;return Preparation::kResourcePending;
             }
             if(!complete&&exhausted())return yield();
@@ -512,7 +514,7 @@ bool SkiaRenderCache::finishComposite(){
     const auto bytes=sizeof(PreparedFrameImage)+128;
     auto token=budget?budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
     if(budget&&!token){
-        if(reclaimPreparation)reclaimPreparation(bytes);
+        if(reclaimPreparation)reclaimPreparation(bytes,bytes);
         return false;
     }
     resources::ResourceLease metadata(budget,token.value_or(0));
@@ -535,7 +537,7 @@ bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& targ
         // sources can be rebuilt. Never drop the active raster job or its grid.
         entries_.clear();coverage_.clear();runs_.clear();
         work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
-        if(reclaimPreparation)reclaimPreparation(bytes);
+        if(reclaimPreparation)reclaimPreparation(bytes,bytes);
         token=budget->reserve(kind,bytes,true);
     }
     if(budget&&!token)return false;
