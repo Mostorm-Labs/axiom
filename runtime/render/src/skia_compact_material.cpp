@@ -638,7 +638,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     }
     if(knot_<knots.size())return false;
     if(recordBudget_)recordComplete_=true;
-    if(hybrid_){
+    if(hybrid_&&correction_){
         AXIOM_FRAME_TIMING_SCOPE(edgeUploadTiming,material_submit);
         auto image=correction_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
         auto* target=tile_->getCanvas();target->save();target->resetMatrix();
