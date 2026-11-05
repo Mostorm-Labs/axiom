@@ -1,0 +1,53 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "scope": "bounded engineering repair of large-scene navigation submission wait",
+  "official_gate_pass_claimed": false,
+  "implementation_revision": "ed8df6af",
+  "sampling_context": "9f312e92",
+  "regression": {
+    "on": {
+      "before_ms": [
+        1205.2999999821186,
+        1192.699999988079,
+        1205,
+        1194.5
+      ],
+      "after_ms": [
+        82,
+        18.599999994039536,
+        82.89999997615814,
+        17.19999998807907
+      ],
+      "before_median_ms": 1199.75,
+      "after_median_ms": 50.29999999701977,
+      "ratio": 0.04192540112275038,
+      "meets_task_reduction": true
+    },
+    "off": {
+      "before_ms": [
+        1205.6000000238419,
+        1194,
+        1205.0999999940395,
+        1195.699999988079
+      ],
+      "after_ms": [
+        107,
+        18.400000005960464,
+        80.80000001192093,
+        18.399999976158142
+      ],
+      "before_median_ms": 1200.3999999910593,
+      "after_median_ms": 49.6000000089407,
+      "ratio": 0.041319560154373644,
+      "meets_task_reduction": true
+    }
+  },
+  "paired_cases": 8,
+  "edit_cases": 5,
+  "remaining": [
+    "cold source preparation",
+    "temporary coarse frontier",
+    "dense exact convergence",
+    "old scale/authority/platform blockers"
+  ]
+}
