@@ -17,7 +17,9 @@
         "runtime/render/tests",
         "verification/runners/g5/prepared_gpu_probe.mjs",
         "verification/evidence/performance/g5-material-tile",
-        "runtime/render/src/skia_renderer.cpp"
+        "runtime/render/src/skia_renderer.cpp",
+        "runtime/render/src/skia_navigation_tiles.cpp",
+        "runtime/render/src/skia_navigation_tiles.hpp"
       ],
       "forbidden_changes": [
         "Brush geometry/schema/semantic/Skia locks",
