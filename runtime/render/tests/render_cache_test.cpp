@@ -678,7 +678,26 @@ void checkFrontierRegionCompaction(TestSurface& target){
 // Catch the oversized full-frame gate escaping cooperative preparation into
 // synchronous Direct. The small target reproduces the DPR4 ratio without a
 // slow performance threshold or a huge test allocation.
+void checkCoverageQuotaDenial(TestSurface& target) {
+    const auto acquired=target.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"coverage denial target");
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,256*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kScratch,200*1024,true);
+    require(bool(token),"coverage denial quota");resources::ResourceLease held(budget,*token);
+    const auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    const std::vector<foundation::InkKnot> knots{{20,40,32768},{225,60,32768}};
+    internal::CompactCoverageTargets targets;targets.budget=budget;
+    internal::CompactStrokeRasterJob job(*acquired.frame.surface->getCanvas(),config,knots,nullptr,false,budget);
+    bool escaped=false,complete=false;
+    try{complete=job.step(*acquired.frame.surface->getCanvas(),config,knots,42,targets,false,nullptr);}
+    catch(const std::bad_alloc&){escaped=true;}
+    require(!escaped&&!complete,"coverage quota denial escaped as bad_alloc instead of yielding");
+    held.reset();unsigned attempts=0;
+    while(!complete){complete=job.step(*acquired.frame.surface->getCanvas(),config,knots,42,targets,false,nullptr);
+        require(++attempts<64,"coverage quota release did not resume job");}
+    target.release();
+}
 void checkOversizedCanonical(TestSurface& target) {
+    checkCoverageQuotaDenial(target);
     TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oversized oracle surface");
     SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=64*1024;options.maxEntryBytes=16*1024;
     cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);

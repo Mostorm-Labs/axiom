@@ -279,7 +279,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     }
     if(compatibleCoverage&&targets&&config.algorithmVersion==3&&canvas.recordingContext()){
         CompactStrokeRasterJob job(canvas,config,knots,grid,true,targets->budget);
-        while(!job.step(canvas,config,knots,seed,*targets,true,work)){}
+        // Legacy synchronous callers have no resumable owner. Preserve their
+        // explicit allocation failure instead of spinning on a denied token.
+        while(!job.step(canvas,config,knots,seed,*targets,true,work))
+            if(job.resourcePending())throw std::bad_alloc();
         return;
     }
     // V3 keeps its qualified hybrid/CPU path. V5/V6 own target-compatible
@@ -513,6 +516,7 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
     bool compatible,CompactRasterWork* work){
+    resourcePending_=false;
     if(done_)return true;
     if(!tile_){
         // Empty tiles do no shader work; preserve the Direct grid anchor.
@@ -529,7 +533,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         // Legacy coverage is a continuous gradient throughout its body;
         // its exact GPU execution is unqualified and stays CPU-backed.
         tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
-        if(!tile_)throw std::bad_alloc();
+        if(!tile_){resourcePending_=true;return false;}
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
         if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;
             if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)++work->scalarCoverageTiles;}
@@ -543,7 +547,8 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         auto* target=tile_->getCanvas();target->resetMatrix();target->clear(tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
         target->translate(float(-x_),float(-y_));target->concat(matrix_);
         if(hybrid_){
-            correction_=targets.acquire(canvas,w,h,false,work);if(!correction_)throw std::bad_alloc();
+            correction_=targets.acquire(canvas,w,h,false,work);
+            if(!correction_){tile_.reset();resourcePending_=true;return false;}
             auto* cpu=correction_->getCanvas();cpu->resetMatrix();cpu->clear(SK_ColorBLACK);
             // Saturation encodes .045 to the exact pinned N32 value (11/255).
             AXIOM_FRAME_TIMING_SCOPE(interiorTiming,gpu_coverage_submit);
@@ -635,7 +640,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     if(recordBudget_)recordComplete_=true;
     if(hybrid_){
         AXIOM_FRAME_TIMING_SCOPE(edgeUploadTiming,material_submit);
-        auto image=correction_->makeImageSnapshot();if(!image)throw std::bad_alloc();
+        auto image=correction_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
         auto* target=tile_->getCanvas();target->save();target->resetMatrix();
         target->clipRegion(tileInterior_,SkClipOp::kDifference);
         SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
@@ -644,7 +649,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     }
     {
         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
-        auto image=tile_->makeImageSnapshot();if(!image)throw std::bad_alloc();
+        auto image=tile_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
         canvas.save();canvas.resetMatrix();
         auto shaded=SkIRect::MakeXYWH(x_,y_,tile_->width(),tile_->height());
         if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}

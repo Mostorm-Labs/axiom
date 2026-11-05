@@ -288,7 +288,15 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         return !a.second.crop.isEmpty()&&a.second.kind!=AdmissionKind::kComposite;
     });
     const auto buffers=std::size_t(streamFrame_)+std::size_t(needsScratch);
-    if(buffers&&frameBytes>options.sharedMaxBytes/buffers)return Preparation::kRejected;
+    const auto coverageBytes=std::size_t(std::min(256,surface_->width()))*std::min(256,surface_->height())*4;
+    const bool hybrid=options.gpuCoverageCandidate&&canvas.recordingContext()&&
+        std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){
+            const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);
+            return c&&c->content.get().stroke.config.algorithmVersion==3;
+        });
+    const auto coverageReserve=needsScratch?coverageBytes*(hybrid?2:1):0;
+    if(coverageReserve>options.sharedMaxBytes||
+        (buffers&&frameBytes>(options.sharedMaxBytes-coverageReserve)/buffers))return Preparation::kRejected;
     if(streamFrame_&&!ensureComposite(canvas,plan))return allocationFailure_;
     if(compositeReady_)return Preparation::kReady;
     ++work.preparationSlices;
@@ -351,6 +359,17 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                     coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
             catch(...){target->restore();pending_.reset();throw;}
             target->restore();noteCoverage(rasterWork);++steps;++work.preparationCoverageSteps;
+            if(pending_->raster->resourcePending()){
+                // Admission failure is an expected resumable state. Never
+                // throw across a no-exception WASM Runtime boundary, discard
+                // the job, or publish its partial coverage.
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+                std::fprintf(stderr,"AXIOM_RENDER_RESOURCE_RETRY {\"stage\":\"coverage\",\"used_bytes\":%llu,\"hard_bytes\":%llu}\n",
+                    static_cast<unsigned long long>(budget?budget->used():0),static_cast<unsigned long long>(options.sharedMaxBytes));
+#endif
+                if(reclaimPreparation)reclaimPreparation(coverageBytes*(hybrid?2:1));
+                flushPreparation();++work.preparationYields;return Preparation::kResourcePending;
+            }
             if(!complete&&exhausted())return yield();
         }while(!complete);
         const auto crop=pending_->crop;pending_.reset();

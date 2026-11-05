@@ -37,6 +37,7 @@ class CompactStrokeRasterJob final {
         std::function<void(std::size_t)> reclaim={});
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
+    [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
  private:
     SkMatrix matrix_{};
     SkIRect clip_{},deviceClip_{};
@@ -45,7 +46,7 @@ class CompactStrokeRasterJob final {
     resources::ResourceLease interiorLease_;
     sk_sp<SkSurface> correction_;
     bool hybrid_=false;
-    bool canCull_=false,done_=false;
+    bool canCull_=false,done_=false,resourcePending_=false;
     int x_=0,y_=0;
     std::size_t knot_=0;
     double distance_=0,totalDistance_=0;
