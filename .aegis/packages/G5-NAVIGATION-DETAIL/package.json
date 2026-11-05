@@ -1,0 +1,36 @@
+{
+  "task_id": "G5-NAVIGATION-DETAIL",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "8c4ab045a635a60d9e22f6bcbf30b55962d0493c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "88e44d1cb982a2b9df8f3c0c8536b3ba01df240d33b70a9589296f1fd31ee146"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "86f7b8ab213ac3622df5c523cb359db8ab8d4fb3c5c91844c9417edbf7593200"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "2cf378912bc0792f08bd8fb5bf20f26d064f55b160d2b33a66ebc5aaab400fe5"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "a3f8724616741b37a7cba401daff40fcd29c27702afb530e968749f4e7df8235"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "733ccdd7a072fbb704fea9e02d60b10cea6c981ed3c3e7373c89af52a57bf717"
+  }
+}
