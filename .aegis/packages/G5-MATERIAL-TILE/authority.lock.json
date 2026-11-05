@@ -20,7 +20,8 @@
     "Other sources keep the cooperative full-scratch or existing direct-composite path.",
     "Every layer is a single-use transaction;reserve before saveLayer,explicit clip at identity,keep original global shader matrix,restore before advancing,release through actual GPU epoch.",
     "32/96MiB,8MiB entry,8ms exact and existing CPU/GPU quotas remain unchanged.",
-    "The withdrawn A2 frontier-replay extension stays withdrawn."
+    "The withdrawn A2 frontier-replay extension stays withdrawn.",
+    "Mandatory admission must first wait for sufficient already-released GPU quota;then reclaim disposable navigation tiles;drop the qualified sharp frame only if neither can satisfy the request. No busy wait or larger budget."
   ],
   "skia_source": {
     "commit": "b6d106297ff9ef2ff8094033695d045e87775581",

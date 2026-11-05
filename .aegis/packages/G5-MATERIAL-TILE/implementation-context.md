@@ -9,3 +9,5 @@ Add a private admission kind for qualified streamed isolated v4;it writes materi
 ## P31 qualification correction
 
 The native characterization rejected the initial all-backend assumption. Scope is now Ganesh GPU only;CPU keeps the original path. This is a package correction before final implementation,not a relaxed pixel oracle. The same8 geometric fixtures must remain exact on both backends;the constrained5MiB capacity obligation applies only to qualified GPU. Earlier experimental evidence remains durable and is not marked PASS.
+
+Mandatory quota mapping:SkiaRenderer owns the navigation alias and reclaim callback. Before dropping it,account already-pending GPU releases and reclaim disposable world tiles. A failure caused by retiring transient material must yield for completion. Add a real GPU delayed-poll test:pending exact work cannot discard the still-qualified sharp navigation frame or emit a canonical receipt. This completes the existing retained-frame/lifetime obligation;no new performance finish line.
