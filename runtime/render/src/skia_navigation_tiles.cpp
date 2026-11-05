@@ -13,6 +13,14 @@
 
 namespace canvas::render::internal {
 namespace {
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+struct DiagnosticTiming {
+    std::uint64_t* result;std::chrono::steady_clock::time_point started=std::chrono::steady_clock::now();
+    explicit DiagnosticTiming(std::uint64_t& value):result(&value){}
+    void finish(){if(result){*result+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();result=nullptr;}}
+    ~DiagnosticTiming(){finish();}
+};
+#endif
 constexpr int pixels=256,gutter=2,extent=pixels+2*gutter;
 constexpr std::size_t tileBytes=extent*extent*4;
 foundation::WorldRect expanded(foundation::WorldRect r,double amount){
@@ -125,6 +133,9 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
 bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uint64_t scene,
     std::vector<Patch>& patches,const RetainedNavigationSource* retained,
     std::vector<foundation::WorldRect>* missing){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    DiagnosticTiming partitionTiming(work.partitionNanoseconds);
+#endif
     struct Candidate {TileKey key;foundation::WorldRect bounds;double density;bool retained;};
     std::vector<Candidate> candidates;candidates.reserve(tiles_.size()+1);
     for(const auto& [key,tile]:tiles_)if(tile.image&&tile.checkedScene==scene)
@@ -199,7 +210,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
-                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu}\n",
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"alpha_masks\":%llu,\"region_compactions\":%llu,\"partition_ns\":%llu,\"contour_ns\":%llu,\"material_ns\":%llu,\"other_draw_ns\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu}\n",
                 static_cast<unsigned long long>(std::chrono::duration_cast<std::chrono::nanoseconds>(started.time_since_epoch()).count()),
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
@@ -221,6 +232,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.vectorPreparedUses-before.vectorPreparedUses),
                 static_cast<unsigned long long>(work.gpuContourPrimitives-before.gpuContourPrimitives),
                 static_cast<unsigned long long>(work.coarseMaskStarts-before.coarseMaskStarts),
+                static_cast<unsigned long long>(work.alphaMaskStarts-before.alphaMaskStarts),
+                static_cast<unsigned long long>(work.regionCompactions-before.regionCompactions),
+                static_cast<unsigned long long>(work.partitionNanoseconds-before.partitionNanoseconds),
+                static_cast<unsigned long long>(work.contourNanoseconds-before.contourNanoseconds),
+                static_cast<unsigned long long>(work.materialNanoseconds-before.materialNanoseconds),
+                static_cast<unsigned long long>(work.otherDrawNanoseconds-before.otherDrawNanoseconds),
                 work.presented?"true":"false",work.coverageComplete?"true":"false",
                 work.maximumUpscale,work.lowResolutionFraction,work.retainedFraction,
                 static_cast<unsigned long long>(work.suspendedRefinements-before.suspendedRefinements),
@@ -258,6 +275,11 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     if(level_&&scale>=std::ldexp(.85,*level_-1)&&scale<=std::ldexp(1.15,*level_))level=*level_;
     const foundation::WorldRect visible{-camera.translationX/camera.scale,-camera.translationY/camera.scale,
         (frame.metrics.logicalWidth-camera.translationX)/camera.scale,(frame.metrics.logicalHeight-camera.translationY)/camera.scale};
+    std::optional<foundation::WorldRect> previousVisible;
+    if(last_&&scene_==scene&&camera_.scale>0)
+        previousVisible=foundation::WorldRect{-camera_.translationX/camera_.scale,-camera_.translationY/camera_.scale,
+            (frame.metrics.logicalWidth-camera_.translationX)/camera_.scale,(frame.metrics.logicalHeight-camera_.translationY)/camera_.scale};
+    else if(retainedSource&&retainedSource->draw&&retainedSource->bounds.isFiniteAndOrdered())previousVisible=retainedSource->bounds;
     const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3+tileMetadataBytes));
     // Choose coarse density from viewport extent, not its grid alignment.
     // A cell at least as wide/tall as the viewport needs at most2x2 cells at
@@ -456,7 +478,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
                 return !compact||compact->content.get().stroke.config.algorithmVersion==4;
             });
-            job->coverage=job->cpuCoverage?SkSurfaces::Raster(coverageInfo):target->makeSurface(coverageInfo);
+            // Reuse canonical's qualified single-channel encoding for v4
+            // white CPU masks. Geometry/order/grid stay shared and unchanged;
+            // unsupported materials/targets retain the original N32 fallback.
+            const bool alpha=job->cpuCoverage&&std::all_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& entry){
+                const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+                return !compact||compact->content.get().stroke.config.materialVersion<3;
+            });
+            if(alpha)job->coverage=SkSurfaces::Raster(SkImageInfo::MakeA8(extent,extent));
+            if(!job->coverage)job->coverage=job->cpuCoverage?SkSurfaces::Raster(coverageInfo):target->makeSurface(coverageInfo);
             if(!job->surface||!job->coverage){deferred=true;break;}
             job->surface->getCanvas()->clear(SK_ColorTRANSPARENT);
             const auto b=grid_.bounds(*next);const float s=std::ldexp(1.F,next->scale);
@@ -482,21 +512,61 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                     // lead at every exposed viewport edge, within the admitted
                     // cell. This amortizes source setup across successive
                     // camera updates without making a whole cell critical.
-                    const float lead=64/s;
-                    if(r.left<=visible.left)r.left=std::max(b.left,r.left-lead);
-                    if(r.right>=visible.right)r.right=std::min(b.right,r.right+lead);
-                    if(r.top<=visible.top)r.top=std::max(b.top,r.top-lead);
-                    if(r.bottom>=visible.bottom)r.bottom=std::min(b.bottom,r.bottom+lead);
+                    // Fixed transverse prefetch made a tiny visible strip
+                    // depend on dense offscreen ink. Lead the short axis by
+                    // observed demand movement; preserve the long-axis guard
+                    // so successive strips still merge without L-shaped holes.
+                    const auto speculative=foundation::WorldRect{
+                        r.left<=visible.left?std::max(b.left,r.left-64/s):r.left,
+                        r.top<=visible.top?std::max(b.top,r.top-64/s):r.top,
+                        r.right>=visible.right?std::min(b.right,r.right+64/s):r.right,
+                        r.bottom>=visible.bottom?std::min(b.bottom,r.bottom+64/s):r.bottom};
+                    const auto deviceDemand=[&](foundation::WorldRect a){return SkRect::MakeLTRB(
+                        gutter+(a.left-b.left)*s-gutter,gutter+(a.top-b.top)*s-gutter,
+                        gutter+(a.right-b.left)*s+gutter,gutter+(a.bottom-b.top)*s+gutter);};
+                    const auto actualClip=deviceDemand(r),speculativeClip=deviceDemand(speculative);
+                    bool extraDependency=false;
+                    auto* probe=job->coverage->getCanvas();
+                    for(std::size_t i=0;i<job->sources->entries.size();++i){
+                        const auto& geometry=job->sources->geometry[i];
+                        if(!geometry||!geometry->isContour())continue;
+                        probe->save();probe->translate(gutter-b.left*s,gutter-b.top*s);probe->scale(s,s);
+                        const auto& t=job->sources->entries[i].record.transform;
+                        probe->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
+                        extraDependency=geometry->nextVisiblePrimitive(*probe,0,&actualClip)==geometry->primitiveCount()&&
+                            geometry->nextVisiblePrimitive(*probe,0,&speculativeClip)<geometry->primitiveCount();
+                        probe->restore();if(extraDependency)break;
+                    }
+                    const bool vertical=r.right-r.left<r.bottom-r.top;
+                    const auto lead=[&](float edge,float previous,bool transverse){
+                        if(!extraDependency||!transverse||!previousVisible)return 64.F/s;
+                        return float(std::clamp(2.*std::abs(double(edge)-previous),1./s,64./s));
+                    };
+                    const auto prior=previousVisible.value_or(visible);
+                    if(r.left<=visible.left)r.left=std::max(b.left,r.left-lead(visible.left,prior.left,vertical));
+                    if(r.right>=visible.right)r.right=std::min(b.right,r.right+lead(visible.right,prior.right,vertical));
+                    if(r.top<=visible.top)r.top=std::max(b.top,r.top-lead(visible.top,prior.top,!vertical));
+                    if(r.bottom>=visible.bottom)r.bottom=std::min(b.bottom,r.bottom+lead(visible.bottom,prior.bottom,!vertical));
                     demand=r;break;
                 }
             }
             if(reusable)job->valid=old->second.valid;
             if(!job->valid.add(demand)){
+                ++work.regionCompactions;
+                auto repaint=demand;
+                for(std::size_t i=0;i<job->valid.count;++i){const auto& area=job->valid.areas[i];
+                    repaint={std::min(repaint.left,area.left),std::min(repaint.top,area.top),
+                        std::max(repaint.right,area.right),std::max(repaint.bottom,area.bottom)};
+                }
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
-                std::fprintf(stderr,"AXIOM_NAVIGATION_REGION_LIMIT {\"x\":%lld,\"y\":%lld,\"scale\":%d,\"regions\":%zu}\n",
-                    static_cast<long long>(next->x),static_cast<long long>(next->y),next->scale,job->valid.count);
+                std::fprintf(stderr,"AXIOM_NAVIGATION_REGION_COMPACT {\"x\":%lld,\"y\":%lld,\"scale\":%d,\"regions\":%zu,\"left\":%.3f,\"top\":%.3f,\"right\":%.3f,\"bottom\":%.3f}\n",
+                    static_cast<long long>(next->x),static_cast<long long>(next->y),next->scale,job->valid.count,
+                    double(repaint.left),double(repaint.top),double(repaint.right),double(repaint.bottom));
 #endif
-                job->valid.reset(b);demand=b;
+                // The rectangle includes unknown inside corners: repaint all
+                // sources there before publishing validity. Metadata exhaustion
+                // must not make this strip depend on the rest of the cell.
+                job->valid.reset(repaint);demand=repaint;
             }
             const auto deviceRect=[&](foundation::WorldRect r){return SkRect::MakeLTRB(
                 gutter+(r.left-b.left)*s-gutter,gutter+(r.top-b.top)*s-gutter,
@@ -533,13 +603,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         }
     const auto& entry=job.sources->entries[job.source];submitted=true;
         if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command)){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            DiagnosticTiming contourTiming(work.contourNanoseconds);
+#endif
             const auto& stroke=c->content.get().stroke;auto* draw=job.coverage->getCanvas();
             if(!job.sourceInitialized){
                 if(job.cpuCoverage)++work.coarseMaskStarts;
+                if(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType)++work.alphaMaskStarts;
                 const auto range = compactRange(entry);
                 if (range.second <= range.first) { ++job.source; continue; }
                 job.knot = range.first;
-                draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+                draw->resetMatrix();draw->clear(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
                 const auto& t=entry.record.transform;
                 draw->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
                 // The range renderer backs up one shared neighbor before
@@ -587,6 +661,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                                          stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<range.second)continue;
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            contourTiming.finish();DiagnosticTiming materialTiming(work.materialNanoseconds);
+#endif
             auto* material=job.surface->getCanvas();material->save();
             const auto& t=entry.record.transform;
             material->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
@@ -595,6 +672,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 drawEraseMasksToSkCanvas(*material, entry);
             material->restore();
         }else{
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            DiagnosticTiming otherTiming(work.otherDrawNanoseconds);
+#endif
             const auto& geometry=job.sources->geometry[job.source];
             const auto* path=geometry?geometry->vectorPath():nullptr;
             drawNavigationEntry(*job.surface->getCanvas(),entry,textResources,images,path);

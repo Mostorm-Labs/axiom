@@ -103,7 +103,7 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
     const auto clip=compactContourCullBounds(canvas,deviceDemand);
     const auto visible=[&](const SkRect& b){return visibleContour(clip,b);};
-    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
+    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(canvas.imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
     if(!replay_.empty()){
         const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
         for(const auto& block:replay_){

@@ -5,6 +5,7 @@
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
 #include "exact_contour_replay_oracle.hpp"
+#include "navigation_alpha_mask_oracle.hpp"
 #include "exact_contour_locality_oracle.hpp"
 #include "reference_draw_stream_oracle.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
@@ -443,13 +444,13 @@ void checkCoarseCameraStability(){
         if(prior)require(span==prior,"pan changed coarse level solely at a grid boundary");prior=span;
     }
 }
-void checkDenseFrontier(TestSurface& target){
+void checkDenseFrontier(TestSurface& target,bool offscreen=false){
     std::vector<ReferenceTraversalEntry> entries;
     for(unsigned line=0;line<5;++line){
         auto entry=stroke(89000+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
         c.stroke.knots.clear();
-        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({110.+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({(offscreen?370.:110.)+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
         entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
     }
     auto crossing=stroke(89010);auto c=std::get<CompactStrokeReferenceCommand>(crossing.command).content.get();
@@ -472,6 +473,8 @@ void checkDenseFrontier(TestSurface& target){
         if(nav.navigationWork().presented){first=i;break;}
     }
     require(first>0,"tiny content frontier waited for unrelated dense cell interior");
+    require(nav.navigationWork().coarseMaskStarts>0,"frontier fixture did not execute coarse CPU coverage");
+    require(nav.navigationWork().alphaMaskStarts>0,"coarse frontier did not reuse qualified A8 coverage");
     require(nav.submissionCount()==1,"frontier forged canonical receipt");
     std::cout<<"dense frontier first feedback opportunity="<<first<<'\n';
     // Cold full-region rendering is an independent pixel oracle: it cannot
@@ -479,7 +482,10 @@ void checkDenseFrontier(TestSurface& target){
     for(const auto [dx,dy]:std::vector<std::pair<int,int>>{{4,0},{8,0},{16,4},{40,12}}){
         if(dx!=4)for(unsigned i=0;;++i){
             require(navigate(nav,target,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier extension rejected");
-            if(nav.navigationWork().presented)break;require(i<32,"frontier extension stalled");
+            if(nav.navigationWork().presented)break;
+            // The heavy variant brings its coils into view on the later pan;
+            // unlike first feedback, that geometry must actually be drawn.
+            require(i<(offscreen?4096U:32U),"frontier extension stalled");
         }
         TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier reference surface");
         SkiaRenderer reference;auto referenceOptions=options;referenceOptions.navigationMaxSteps=1;reference.setRenderCacheOptions(referenceOptions);
@@ -504,6 +510,47 @@ void checkDenseFrontier(TestSurface& target){
     require(reference.renderFrame(exact,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(exact),"frontier changed exact canonical pixels");
 }
 
+void checkFrontierRegionCompaction(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned line=0;line<5;++line){
+        auto entry=stroke(89200+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;c.stroke.config.smoothing=0;c.stroke.knots.clear();
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({490.+std::sin(i*.017)*8.,64.+std::sin(i*.013+line)*12.,32768});
+        entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
+    }
+    auto visible=stroke(89210);auto content=std::get<CompactStrokeReferenceCommand>(visible.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots={{200,40,32768},{350,90,32768}};visible.record.content=content;visible.command=CompactStrokeReferenceCommand{content};entries.push_back(visible);
+    auto corner=stroke(89211);auto mark=std::get<CompactStrokeReferenceCommand>(corner.command).content.get();
+    mark.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    mark.stroke.knots={{320,230,32768},{340,230,32768}};corner.record.content=mark;corner.command=CompactStrokeReferenceCommand{mark};entries.push_back(corner);
+    const auto frame=plan(8920,entries);SkiaRenderer nav;RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;options.navigationMaxGpuContourPrimitives=32;nav.setRenderCacheOptions(options);
+    for(unsigned i=0;;++i){auto r=nav.renderFrame(target,frame);if(r.code==BackendSubmissionCode::kAccepted)break;require(r.code==BackendSubmissionCode::kRetry&&i<256,"compaction canonical setup");}
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    for(unsigned step=1;step<=25;++step){
+        for(unsigned i=0;;++i){
+            require(navigate(nav,target,{1,float(-4*int(step)),float(2*int(step))},frame.frame,query).code==BackendSubmissionCode::kAccepted,"compaction navigation rejected");
+            if(nav.navigationWork().presented)break;
+            require(i<32,"small frontier compaction waited for unrelated full-cell ink");
+        }
+        const auto image=pixels(target);const auto sample=((56+2*step)*256+(248-4*step))*4;
+        require(image[sample]<250,"compaction published a blank visible stroke");
+        require(nav.navigationWork().retainedBytes<=options.maxBytes,"compaction escaped resource budget");
+    }
+    require(nav.navigationWork().regionCompactions>0,"compaction fixture never exhausted region metadata");
+    // This zoom lies wholly inside the compacted rectangle but reaches a
+    // previously unknown inside corner. A metadata-only union would be blank.
+    require(navigate(nav,target,{4,-1136,-856},frame.frame,query).code==BackendSubmissionCode::kAccepted&&nav.navigationWork().presented,
+        "compacted corner was not complete coverage");
+    require(pixels(target)[(64*256+184)*4]<250,"compaction advertised an unpainted inside corner");
+    const auto final=plan(8920,entries,1,{1,0,0,1,-100,50});
+    require(nav.renderFrame(target,final).code==BackendSubmissionCode::kAccepted,"compaction final canonical");
+    TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"compaction reference surface");SkiaRenderer reference;
+    RenderCacheOptions direct;direct.enabled=false;reference.setRenderCacheOptions(direct);
+    require(reference.renderFrame(full,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(full),"compaction changed final Direct pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -512,9 +559,9 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
-        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
-            checkCoarseCameraStability();checkDenseFrontier(provider);if(argc>1)return finishNative(0);
+            checkCoarseCameraStability();checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);if(argc>1)return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
@@ -548,7 +595,9 @@ int main(int argc,char** argv) {
             checkAffineStrokes(provider,reference);return finishNative(0);
         }
 #if defined(G5_TEST_WEBGL)
-        if(argc>1&&std::string_view(argv[1])=="--contour-only"){checkGpuContours(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--contour-only"){
+            const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"alpha oracle acquire");
+            testing::requirePreparedAlphaMaskParity(*a.frame.surface);provider.release();checkGpuContours(provider);return finishNative(0);}
         {
             SkiaRenderer nav;RenderCacheOptions options;
             options.navigationMaxSteps=4096;options.navigationMicroseconds=1000000;

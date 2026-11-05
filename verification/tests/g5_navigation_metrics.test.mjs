@@ -104,3 +104,23 @@ test('shared-source gauges and query deltas stay distinct from historical missin
   assert.equal(v.peakRetainedBytes,4096);assert.equal(v.hits,7);
   assert.equal(summarizePhase(phase,[{version:3,elapsed_ns:0,overlay_ns:0}],[]).navigation.sharedSources,null);
 });
+
+test('coarse CPU mask encoding counts stay distinct from GPU work and old missing observations',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const rows=[{elapsed_ns:0,overlay_ns:0,coarse_masks:3,alpha_masks:2},{elapsed_ns:0,overlay_ns:0,coarse_masks:2,alpha_masks:2}];
+  assert.deepEqual(summarizePhase(phase,rows,[]).navigation.maskEncoding,{alphaStarts:4,n32Starts:1});
+  assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0,coarse_masks:2}],[]).navigation.maskEncoding,null);
+  assert.equal(summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0,coarse_masks:2,alpha_masks:3}],[]).navigation.maskEncoding,null);
+});
+
+test('navigation components and region compactions preserve old unknown diagnostics',()=>{
+  const phase={samples:[],displayTimes:[],fences:[],longTasks:[]};
+  const value=summarizePhase(phase,[
+    {elapsed_ns:0,overlay_ns:0,partition_ns:1000000,contour_ns:3000000,material_ns:5000000,other_draw_ns:7000000,region_compactions:2},
+    {elapsed_ns:0,overlay_ns:0,partition_ns:2000000,contour_ns:4000000,material_ns:6000000,other_draw_ns:8000000,region_compactions:3}
+  ],[]).navigation;
+  assert.deepEqual(value.componentsMs,{partition:3,contour:7,material:11,otherDraw:15});
+  assert.equal(value.regionCompactions,5);
+  const old=summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0}],[]).navigation;
+  assert.equal(old.componentsMs,null);assert.equal(old.regionCompactions,null);
+});

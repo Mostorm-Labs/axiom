@@ -143,7 +143,8 @@ void drawContourCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& conf
 }
 }
 void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
-    drawContourCoverage(canvas,config,contour,SkBlendMode::kLighten);
+    drawContourCoverage(canvas,config,contour,
+        canvas.imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten);
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed,

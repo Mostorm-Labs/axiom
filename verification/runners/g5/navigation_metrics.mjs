@@ -48,6 +48,12 @@ export function summarizePhase(phase, navigationRows, frameRows) {
       fallbacks:total(navigationRows.map(r=>r.index_fallbacks)),payloadCopyBytes:total(navigationRows.map(r=>r.source_copy_bytes)),
       aliases:total(navigationRows.map(r=>r.source_aliases)),queriesObserved:total(navigationRows.map(r=>r.source_queries_observed)),
       peakRetainedBytes:Math.max(...navigationRows.map(r=>r.source_bytes)),hits:total(navigationRows.map(r=>r.source_hits))}:null;
+    nav.maskEncoding=navigationRows.every(r=>Number.isSafeInteger(r.alpha_masks)&&r.alpha_masks>=0&&Number.isSafeInteger(r.coarse_masks)&&r.alpha_masks<=r.coarse_masks)
+      ?{alphaStarts:total(navigationRows.map(r=>r.alpha_masks)),n32Starts:total(navigationRows.map(r=>r.coarse_masks-r.alpha_masks))}:null;
+    const components={partition:'partition_ns',contour:'contour_ns',material:'material_ns',otherDraw:'other_draw_ns'};
+    nav.componentsMs=navigationRows.every(r=>Object.values(components).every(k=>Number.isSafeInteger(r[k])&&r[k]>=0))
+      ?Object.fromEntries(Object.entries(components).map(([key,field])=>[key,total(navigationRows.map(r=>r[field]))/1e6])):null;
+    nav.regionCompactions=navigationRows.every(r=>Number.isSafeInteger(r.region_compactions)&&r.region_compactions>=0)?total(navigationRows.map(r=>r.region_compactions)):null;
     nav.quality=summarizeQuality(navigationRows);
     nav.cpu_ms=times(navigationRows.map(row=>row.elapsed_ns/1e6));
     nav.query_cpu_ms=times(navigationRows.map(row=>row.query_ns/1e6).filter(Number.isFinite));
