@@ -18,13 +18,14 @@ class SkiaRenderCache final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
     std::function<void(std::size_t)> reclaimRecorded;
+    std::function<void(std::size_t)> reclaimPreparation;
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {});
     // Called only after full plan validation. False executes permanent Direct.
     bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true);
-    enum class Preparation { kReady, kPending, kFallback };
+    enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
     Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*);
     bool compositePreparedFrame(SkCanvas&);
     // Retained ordered compact runs qualify approximate editing only. Exact
@@ -76,9 +77,11 @@ class SkiaRenderCache final {
     bool preparationTransparent_=false,preparationIsolate_=false;
     void resetPreparation();
     bool ensureComposite(SkCanvas&,const FramePlan&);
+    bool acquireWorkSurface(SkCanvas&,sk_sp<SkSurface>&,resources::ResourceLease&,bool mandatory);
+    Preparation allocationFailure_=Preparation::kResourcePending;
     void flushPreparation();
     std::size_t preparationCursor_=0;
-    bool ensureScratch(SkCanvas&);
+    bool ensureScratch(SkCanvas&,bool mandatory=false);
     SkMatrix entryMatrix(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&)const;
     void configureScratch(SkCanvas&,const FramePlan&,const SkMatrix&);
     bool store(SkCanvas&,const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&,bool composite,bool preservePrepared=false);

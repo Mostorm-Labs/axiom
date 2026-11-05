@@ -1,0 +1,47 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "90ef6b691e7d980ea8ed59195b5311eb7e3da4d9",
+  "baseline_revision": "10f3ecd86f60f3dfffb407644af3921817dfcc58",
+  "official_gate_pass_claimed": false,
+  "default_budget_mib": [
+    32,
+    96
+  ],
+  "experimental_budget_mib": [
+    64,
+    192
+  ],
+  "qualifying_browser_samples": 10,
+  "gpu_modes": [
+    "oversized",
+    "frontier",
+    "quality",
+    "affine",
+    "background",
+    "contour",
+    "replay",
+    "exact-replay"
+  ],
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "baseline_failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": [],
+    "resolved_failures": []
+  },
+  "all_required_checks_satisfied": true,
+  "scope": "Local shared Render engineering proof,not physical input-to-photon,all-platform verification or formal100K/1M qualification."
+}

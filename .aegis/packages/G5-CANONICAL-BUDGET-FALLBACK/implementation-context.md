@@ -1,0 +1,3 @@
+# Canonical budget fallback
+
+Owner:SkiaRenderer/SkiaRenderCache. Current full-frame composite/scratch admission uses optional32MiB; failure returns kFallback into full synchronous reference. DPR4 frame35.83MiB,cold wait7300ms. Reuse existing CompactStrokeRasterJob checkpoints; no scissor/rebase. Render only finished work; preserve exact validation,source/target generations and GPU lease retirement. Separate optional cache gate from shared critical scratch admission. On transient denial retain valid state and retry; structurally impossible demands reject explicitly. Build-profile64/192 is an experimental comparator,not a new default.

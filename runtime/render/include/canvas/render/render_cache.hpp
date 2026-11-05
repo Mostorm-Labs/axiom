@@ -7,6 +7,9 @@ namespace canvas::render {
 struct RenderCacheOptions final {
     bool enabled=true;
     std::size_t maxBytes=32U*1024U*1024U;
+    // Shared derived-resource hard cap, independent of optional cache capacity.
+    // Mandatory cooperative work buffers use this same manager, not a new pool.
+    std::size_t sharedMaxBytes=96U*1024U*1024U;
     std::size_t maxEntryBytes=8U*1024U*1024U;
     std::size_t maxEntries=512;
     // Candidate world-tile metadata is opt-in until seam/scale benchmarks close.

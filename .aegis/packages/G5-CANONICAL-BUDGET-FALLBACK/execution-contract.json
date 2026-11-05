@@ -1,0 +1,62 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "independent shared hard budget",
+        "private reproducible32/96 and64/192 build profiles",
+        "cooperative mandatory preparation independent of optional cache gate",
+        "fail closed on preparation allocation denial without synchronous fallback"
+      ],
+      "forbidden_changes": [
+        "silent default expansion",
+        "semantic/schema/SDK version/API changes",
+        "Skia/Semantic rebuild",
+        "AA/grid/order/erase changes",
+        "partial canonical receipt",
+        "overwrite4226 artifacts"
+      ]
+    },
+    "tests": {
+      "required": [
+        "bounded",
+        "regression",
+        "budget-comparison"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing CI"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "native/GPU correctness",
+        "root SDK budget comparison",
+        "source/artifact SHA256 manifest"
+      ],
+      "corroborative": [
+        "DPR proxy optical metrics; not physical input-to-photon"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "required implementation/tests/evidence complete",
+        "exact source/result and evidence committed/pushed",
+        "READY_FOR_CONTROL_REVIEW only"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

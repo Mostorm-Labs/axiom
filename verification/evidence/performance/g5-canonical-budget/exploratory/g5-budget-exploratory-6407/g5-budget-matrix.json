@@ -1,0 +1,2480 @@
+[
+  {
+    "dpr": 4,
+    "profile": "baseline",
+    "cacheMiB": 32,
+    "sharedHardMiB": 96,
+    "sdk": "out/g5-gpu-ready-on/js",
+    "output": "out/g5-budget-dpr4-baseline",
+    "status": "MEASURED",
+    "workerExit": 0,
+    "phases": [
+      {
+        "id": "interrupted-selection",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.599999994039536,
+            "p95": 28.19999998807907,
+            "p99": 98.69999998807907,
+            "max": 98.69999998807907,
+            "mean": 18.424999999917215
+          },
+          "display_submission_gap_ms": {
+            "count": 675,
+            "p50": 0,
+            "p95": 15.599999994039536,
+            "p99": 36.30000001192093,
+            "max": 1464.9000000059605,
+            "mean": 4.242518518545009
+          },
+          "input_display_submission_gap_ms": {
+            "count": 578,
+            "p50": 0,
+            "p95": 15.699999988079071,
+            "p99": 55.30000001192093,
+            "max": 1454.0999999940395,
+            "mean": 4.817647058813217
+          },
+          "updatedInputs": 36,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 0.800000011920929,
+            "p95": 1.2999999821186066,
+            "p99": 3,
+            "max": 3,
+            "mean": 0.8888888897167312
+          },
+          "canonicalReceiptsDuringInput": 1,
+          "settle_ms": 1582.4000000059605,
+          "navigation": {
+            "queries": 36,
+            "built": 48,
+            "knots": 398039,
+            "prefix_knots": 0,
+            "fallback": 2192,
+            "cancelled": 2,
+            "discarded_knots": 6125,
+            "throttled": 1,
+            "prewarm": 0,
+            "calls": 74,
+            "sharedSources": {
+              "chunkCandidates": 2040,
+              "indexNodes": 260,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 370,
+              "queriesObserved": 36,
+              "peakRetainedBytes": 266699,
+              "hits": 1240
+            },
+            "maskEncoding": {
+              "alphaStarts": 89,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 0.8,
+              "contour": 72.3,
+              "material": 6.8,
+              "otherDraw": 4.3
+            },
+            "regionCompactions": 1,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 39,
+              "maximumUpscale": 26.843624,
+              "lowResolutionAreaFraction": {
+                "count": 39,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9946926153846153
+              },
+              "retainedAreaFraction": {
+                "count": 39,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 1149.4,
+              "timeWeightedLowResolutionFraction": 0.9970023704541501,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 1149.4,
+              "suspended": 1,
+              "resumed": 1
+            },
+            "cpu_ms": {
+              "count": 74,
+              "p50": 2.1,
+              "p95": 12.6,
+              "p99": 83.6,
+              "max": 83.6,
+              "mean": 4.748648648648649,
+              "total": 351.4
+            },
+            "query_cpu_ms": {
+              "count": 74,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.3,
+              "max": 0.3,
+              "mean": 0.01756756756756757,
+              "total": 1.3
+            },
+            "overlay_cpu_ms": {
+              "count": 74,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.01891891891891892,
+              "total": 1.4000000000000001
+            },
+            "initialization_cpu_ms": {
+              "count": 74,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.4,
+              "max": 0.4,
+              "mean": 0.03918918918918919,
+              "total": 2.900000000000001
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 4153,
+              "coarseMasks": 89
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 130,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 45571,
+              "contourDrawn": 13363,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 2,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 2875.8,
+              "exclusive_ms": 0.4,
+              "calls": 2
+            },
+            "visibility": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "reference_build": {
+              "inclusive_ms": 1.2,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "reference_entries": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.5,
+              "exclusive_ms": 0.5,
+              "calls": 2
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.6,
+              "exclusive_ms": 0.6,
+              "calls": 2
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 2
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "render": {
+              "inclusive_ms": 2873.8999999999996,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "validation": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 4
+            },
+            "cache_begin": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "group_update": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "cache_prepare": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 2
+            },
+            "cache_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 2831.6000000000004,
+              "exclusive_ms": 2831.6000000000004,
+              "calls": 1000
+            },
+            "material_submit": {
+              "inclusive_ms": 32,
+              "exclusive_ms": 32,
+              "calls": 1000
+            },
+            "scene_draw": {
+              "inclusive_ms": 2868.1,
+              "exclusive_ms": 4.5,
+              "calls": 2
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "provider_present": {
+              "inclusive_ms": 5.4,
+              "exclusive_ms": 5.4,
+              "calls": 2
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0
+          },
+          "client_wait_cpu_ms": {
+            "count": 246,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0.09999999403953552,
+            "max": 0.09999999403953552,
+            "mean": 0.0040650404081112,
+            "total": 0.9999999403953552
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 75,
+          "longTasks": [
+            {
+              "start": 12543.799999982119,
+              "duration": 1442
+            },
+            {
+              "start": 14243.799999982119,
+              "duration": 86
+            },
+            {
+              "start": 14330.5,
+              "duration": 55
+            },
+            {
+              "start": 14386,
+              "duration": 64
+            },
+            {
+              "start": 15409.09999999404,
+              "duration": 1437
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": false,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "4ca187a21b3c08f00612547df6230fb75e8ad57b237660f7fbd5803ccdea6709",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 1436.0,
+        "maxSharedChargeBytes": 13207042,
+        "maxNavChargeBytes": 12203520,
+        "attemptOutcomes": {
+          "accepted": 1
+        }
+      },
+      {
+        "id": "repeat-0",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.599999994039536,
+            "p95": 20.19999998807907,
+            "p99": 53.400000005960464,
+            "max": 53.400000005960464,
+            "mean": 17.15138888855775
+          },
+          "display_submission_gap_ms": {
+            "count": 2441,
+            "p50": 0,
+            "p95": 0.09999999403953552,
+            "p99": 17,
+            "max": 1512.5,
+            "mean": 1.13859074149206
+          },
+          "input_display_submission_gap_ms": {
+            "count": 2276,
+            "p50": 0,
+            "p95": 0.09999999403953552,
+            "p99": 17.200000017881393,
+            "max": 53.5,
+            "mean": 0.5474956063242704
+          },
+          "updatedInputs": 72,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 1,
+            "p95": 1.300000011920929,
+            "p99": 1.5,
+            "max": 1.5,
+            "mean": 0.8999999993377261
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 1614.5,
+          "navigation": {
+            "queries": 39,
+            "built": 38,
+            "knots": 257194,
+            "prefix_knots": 0,
+            "fallback": 897,
+            "cancelled": 2,
+            "discarded_knots": 12250,
+            "throttled": 1,
+            "prewarm": 0,
+            "calls": 77,
+            "sharedSources": {
+              "chunkCandidates": 2000,
+              "indexNodes": 250,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 324,
+              "queriesObserved": 39,
+              "peakRetainedBytes": 266699,
+              "hits": 1104
+            },
+            "maskEncoding": {
+              "alphaStarts": 0,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 2.4,
+              "contour": 7.9,
+              "material": 1.9,
+              "otherDraw": 1.4
+            },
+            "regionCompactions": 0,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 75,
+              "maximumUpscale": 25.440001,
+              "lowResolutionAreaFraction": {
+                "count": 75,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9813211733333332
+              },
+              "retainedAreaFraction": {
+                "count": 75,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 1264.8,
+              "timeWeightedLowResolutionFraction": 0.9822063187065148,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 1264.8,
+              "suspended": 0,
+              "resumed": 0
+            },
+            "cpu_ms": {
+              "count": 77,
+              "p50": 0.5,
+              "p95": 11.3,
+              "p99": 50.5,
+              "max": 50.5,
+              "mean": 2.142857142857143,
+              "total": 165.00000000000003
+            },
+            "query_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.019480519480519484,
+              "total": 1.5000000000000002
+            },
+            "overlay_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.016883116883116885,
+              "total": 1.3
+            },
+            "initialization_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.2,
+              "max": 0.2,
+              "mean": 0.016883116883116882,
+              "total": 1.3
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 2683,
+              "coarseMasks": 0
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 125,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 26076,
+              "contourDrawn": 2683,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 1,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 1463.5,
+              "exclusive_ms": 0.5,
+              "calls": 1
+            },
+            "visibility": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ms": 0.5,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.3,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ms": 1462.4,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "validation": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "cache_begin": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "group_update": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "cache_prepare": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "cache_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 11
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 1442.3,
+              "exclusive_ms": 1442.3,
+              "calls": 500
+            },
+            "material_submit": {
+              "inclusive_ms": 15.8,
+              "exclusive_ms": 15.8,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 1460.1,
+              "exclusive_ms": 2,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 2.1,
+              "exclusive_ms": 2.1,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0
+          },
+          "client_wait_cpu_ms": {
+            "count": 230,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0.10000002384185791,
+            "max": 0.10000002384185791,
+            "mean": 0.003478261050970658,
+            "total": 0.8000000417232513
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 77,
+          "longTasks": [
+            {
+              "start": 17494.59999999404,
+              "duration": 53
+            },
+            {
+              "start": 18510.29999998212,
+              "duration": 1464
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "5780d476a7ba35ed7f78ad0dc901bb45d2fd27a7ef3f335f5eff89732cb33498",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 1463.5,
+        "maxSharedChargeBytes": 23333794,
+        "maxNavChargeBytes": 22243840,
+        "attemptOutcomes": {
+          "accepted": 1
+        }
+      },
+      {
+        "id": "repeat-1",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.700000017881393,
+            "p95": 20.69999998807907,
+            "p99": 25.099999994039536,
+            "max": 25.099999994039536,
+            "mean": 16.72638888905446
+          },
+          "display_submission_gap_ms": {
+            "count": 2976,
+            "p50": 0,
+            "p95": 0,
+            "p99": 16.700000017881393,
+            "max": 1580.9000000059605,
+            "mean": 0.9293346774153491
+          },
+          "input_display_submission_gap_ms": {
+            "count": 2964,
+            "p50": 0,
+            "p95": 0,
+            "p99": 16.700000017881393,
+            "max": 19.099999994039536,
+            "mean": 0.4063765182186235
+          },
+          "updatedInputs": 72,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 0.8999999761581421,
+            "p95": 1.2000000178813934,
+            "p99": 1.4000000059604645,
+            "max": 1.4000000059604645,
+            "mean": 0.8680555567973189
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 1630.5999999940395,
+          "navigation": {
+            "queries": 18,
+            "built": 19,
+            "knots": 163296,
+            "prefix_knots": 0,
+            "fallback": 416,
+            "cancelled": 0,
+            "discarded_knots": 0,
+            "throttled": 0,
+            "prewarm": 0,
+            "calls": 76,
+            "sharedSources": {
+              "chunkCandidates": 1200,
+              "indexNodes": 150,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 202,
+              "queriesObserved": 18,
+              "peakRetainedBytes": 266699,
+              "hits": 682
+            },
+            "maskEncoding": {
+              "alphaStarts": 0,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 2.7,
+              "contour": 4.9,
+              "material": 0.7,
+              "otherDraw": 1.2
+            },
+            "regionCompactions": 0,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 72,
+              "maximumUpscale": 25.440001,
+              "lowResolutionAreaFraction": {
+                "count": 72,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9689290972222222
+              },
+              "retainedAreaFraction": {
+                "count": 72,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 1183.6,
+              "timeWeightedLowResolutionFraction": 0.9694190362453531,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 1183.6,
+              "suspended": 0,
+              "resumed": 0
+            },
+            "cpu_ms": {
+              "count": 76,
+              "p50": 0.5,
+              "p95": 4.7,
+              "p99": 15.3,
+              "max": 15.3,
+              "mean": 1.0960526315789476,
+              "total": 83.30000000000001
+            },
+            "query_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.2,
+              "max": 0.2,
+              "mean": 0.007894736842105265,
+              "total": 0.6
+            },
+            "overlay_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.010526315789473684,
+              "total": 0.7999999999999999
+            },
+            "initialization_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.006578947368421052,
+              "total": 0.5
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 1459,
+              "coarseMasks": 0
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 75,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 17320,
+              "contourDrawn": 1459,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 1,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 1467.3,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "visibility": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ms": 0.6,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.4,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ms": 1466.2,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "validation": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "cache_begin": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "group_update": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "cache_prepare": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "cache_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 11
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 1446.6,
+              "exclusive_ms": 1446.6,
+              "calls": 500
+            },
+            "material_submit": {
+              "inclusive_ms": 14.9,
+              "exclusive_ms": 14.9,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 1463.9,
+              "exclusive_ms": 2.4,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 2.1,
+              "exclusive_ms": 2.1,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0
+          },
+          "client_wait_cpu_ms": {
+            "count": 197,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0.10000002384185791,
+            "max": 0.10000002384185791,
+            "mean": 0.0035532995831542816,
+            "total": 0.7000000178813934
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 74,
+          "longTasks": [
+            {
+              "start": 21625.899999976158,
+              "duration": 1468
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "c0d7d6d7d4543ea3e49c960e72ebb63a878b6a24e8116a61fb7c3fc4dbefdb86",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 1467.3,
+        "maxSharedChargeBytes": 27460170,
+        "maxNavChargeBytes": 26316160,
+        "attemptOutcomes": {
+          "accepted": 1
+        }
+      },
+      {
+        "id": "after-idle",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.69999998807907,
+            "p95": 18.80000001192093,
+            "p99": 74.7000000178814,
+            "max": 74.7000000178814,
+            "mean": 17.612499999917215
+          },
+          "display_submission_gap_ms": {
+            "count": 3389,
+            "p50": 0,
+            "p95": 0,
+            "p99": 16.599999994039536,
+            "max": 1591.9000000059605,
+            "mean": 0.8388610209518915
+          },
+          "input_display_submission_gap_ms": {
+            "count": 3377,
+            "p50": 0,
+            "p95": 0,
+            "p99": 16.599999994039536,
+            "max": 59.400000005960464,
+            "mean": 0.37554042048803055
+          },
+          "updatedInputs": 72,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 0.7000000178813934,
+            "p95": 1.4000000059604645,
+            "p99": 2.5,
+            "max": 2.5,
+            "mean": 0.9027777773638567
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 1631.0999999940395,
+          "navigation": {
+            "queries": 12,
+            "built": 12,
+            "knots": 91854,
+            "prefix_knots": 0,
+            "fallback": 156,
+            "cancelled": 0,
+            "discarded_knots": 0,
+            "throttled": 0,
+            "prewarm": 0,
+            "calls": 76,
+            "sharedSources": {
+              "chunkCandidates": 720,
+              "indexNodes": 90,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 124,
+              "queriesObserved": 12,
+              "peakRetainedBytes": 266699,
+              "hits": 424
+            },
+            "maskEncoding": {
+              "alphaStarts": 0,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 3.6,
+              "contour": 2.2,
+              "material": 0.5,
+              "otherDraw": 0.7
+            },
+            "regionCompactions": 0,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 72,
+              "maximumUpscale": 6.194947,
+              "lowResolutionAreaFraction": {
+                "count": 72,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9552997916666668
+              },
+              "retainedAreaFraction": {
+                "count": 72,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 1249.8,
+              "timeWeightedLowResolutionFraction": 0.9582700956953113,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 1249.8,
+              "suspended": 0,
+              "resumed": 0
+            },
+            "cpu_ms": {
+              "count": 76,
+              "p50": 0.5,
+              "p95": 12.5,
+              "p99": 56.6,
+              "max": 56.6,
+              "mean": 2.180263157894737,
+              "total": 165.70000000000002
+            },
+            "query_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.005263157894736842,
+              "total": 0.4
+            },
+            "overlay_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.02105263157894737,
+              "total": 1.6000000000000003
+            },
+            "initialization_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.2,
+              "max": 0.2,
+              "mean": 0.003947368421052633,
+              "total": 0.30000000000000004
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 651,
+              "coarseMasks": 0
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 45,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 9299,
+              "contourDrawn": 651,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 1,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 1477.1,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "visibility": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ms": 0.5,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.3,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ms": 1476,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "validation": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "cache_begin": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "group_update": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "cache_prepare": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "cache_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 11
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 1457.1,
+              "exclusive_ms": 1457.1,
+              "calls": 500
+            },
+            "material_submit": {
+              "inclusive_ms": 15,
+              "exclusive_ms": 15,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 1473.9,
+              "exclusive_ms": 1.8,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 1.9,
+              "exclusive_ms": 1.9,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0
+          },
+          "client_wait_cpu_ms": {
+            "count": 182,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0.09999999403953552,
+            "max": 0.10000002384185791,
+            "mean": 0.0027472527472527475,
+            "total": 0.5
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 74,
+          "longTasks": [
+            {
+              "start": 24809.899999976158,
+              "duration": 59
+            },
+            {
+              "start": 25843.29999998212,
+              "duration": 1478
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "6175d5f9f2157c9842c1120fb7101da1f81caa92ffc1dfc8038325c2524a2b4b",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 1477.1,
+        "maxSharedChargeBytes": 30478490,
+        "maxNavChargeBytes": 29303040,
+        "attemptOutcomes": {
+          "accepted": 1
+        }
+      },
+      {
+        "id": "after-freeze",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 25.69999998807907,
+            "p95": 2066.5,
+            "p99": 2466.5,
+            "max": 2466.5,
+            "mean": 352.4166666666667
+          },
+          "display_submission_gap_ms": {
+            "count": 3526,
+            "p50": 0,
+            "p95": 0.10000002384185791,
+            "p99": 26.5,
+            "max": 2617.600000023842,
+            "mean": 7.552665910376653
+          },
+          "input_display_submission_gap_ms": {
+            "count": 3514,
+            "p50": 0,
+            "p95": 0.09999999403953552,
+            "p99": 26.5,
+            "max": 2617.600000023842,
+            "mean": 7.2235059760973135
+          },
+          "updatedInputs": 72,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 8,
+            "p95": 983.3000000119209,
+            "p99": 1633.199999988079,
+            "max": 1633.199999988079,
+            "mean": 164.35555555754237
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 2875.699999988079,
+          "navigation": {
+            "queries": 3,
+            "built": 1,
+            "knots": 24495,
+            "prefix_knots": 0,
+            "fallback": 45,
+            "cancelled": 2,
+            "discarded_knots": 14289,
+            "throttled": 0,
+            "prewarm": 0,
+            "calls": 76,
+            "sharedSources": {
+              "chunkCandidates": 240,
+              "indexNodes": 30,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 40,
+              "queriesObserved": 3,
+              "peakRetainedBytes": 266699,
+              "hits": 160
+            },
+            "maskEncoding": {
+              "alphaStarts": 0,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 119.7,
+              "contour": 4.9,
+              "material": 1.7,
+              "otherDraw": 0.3
+            },
+            "regionCompactions": 0,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 72,
+              "maximumUpscale": 6.194947,
+              "lowResolutionAreaFraction": {
+                "count": 72,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9503780555555554
+              },
+              "retainedAreaFraction": {
+                "count": 72,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 24268.5,
+              "timeWeightedLowResolutionFraction": 0.9306697999752765,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 24268.5,
+              "suspended": 0,
+              "resumed": 0
+            },
+            "cpu_ms": {
+              "count": 76,
+              "p50": 2.6,
+              "p95": 233.2,
+              "p99": 282.4,
+              "max": 282.4,
+              "mean": 39.05526315789474,
+              "total": 2968.1999999999985
+            },
+            "query_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.002631578947368421,
+              "total": 0.2
+            },
+            "overlay_cpu_ms": {
+              "count": 76,
+              "p50": 0.1,
+              "p95": 0.9,
+              "p99": 17.5,
+              "max": 17.5,
+              "mean": 0.7526315789473684,
+              "total": 57.20000000000004
+            },
+            "initialization_cpu_ms": {
+              "count": 76,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.003947368421052633,
+              "total": 0.30000000000000004
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 273,
+              "coarseMasks": 0
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 15,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 2661,
+              "contourDrawn": 273,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 1,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 2399.1,
+              "exclusive_ms": 0.5,
+              "calls": 1
+            },
+            "visibility": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ms": 1.5,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ms": 1,
+              "exclusive_ms": 1,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.4,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.3,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ms": 2396.7,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "validation": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "cache_begin": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "group_update": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "cache_prepare": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.4,
+              "calls": 1
+            },
+            "cache_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 11
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 2356,
+              "exclusive_ms": 2356,
+              "calls": 500
+            },
+            "material_submit": {
+              "inclusive_ms": 35.7,
+              "exclusive_ms": 35.7,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 2394,
+              "exclusive_ms": 2.2,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 2.2,
+              "exclusive_ms": 2.2,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0
+          },
+          "client_wait_cpu_ms": {
+            "count": 153,
+            "p50": 0,
+            "p95": 0.19999998807907104,
+            "p99": 16.5,
+            "max": 16.799999982118607,
+            "mean": 0.2836601303683387,
+            "total": 43.39999994635582
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 74,
+          "longTasks": [
+            {
+              "start": 32659,
+              "duration": 1033
+            },
+            {
+              "start": 33692.69999998808,
+              "duration": 1649
+            },
+            {
+              "start": 35342.29999998212,
+              "duration": 1750
+            },
+            {
+              "start": 37109.59999999404,
+              "duration": 1983
+            },
+            {
+              "start": 39092.79999998212,
+              "duration": 2116
+            },
+            {
+              "start": 41276.09999999404,
+              "duration": 1883
+            },
+            {
+              "start": 43176,
+              "duration": 1949
+            },
+            {
+              "start": 45125.89999997616,
+              "duration": 1566
+            },
+            {
+              "start": 46709.19999998808,
+              "duration": 2047
+            },
+            {
+              "start": 48809,
+              "duration": 1933
+            },
+            {
+              "start": 50742.39999997616,
+              "duration": 2648
+            },
+            {
+              "start": 53408.89999997616,
+              "duration": 1199
+            },
+            {
+              "start": 54790.59999999404,
+              "duration": 228
+            },
+            {
+              "start": 55022.79999998212,
+              "duration": 56
+            },
+            {
+              "start": 55240.19999998808,
+              "duration": 176
+            },
+            {
+              "start": 55496,
+              "duration": 139
+            },
+            {
+              "start": 56276.29999998212,
+              "duration": 70
+            },
+            {
+              "start": 56349.39999997616,
+              "duration": 105
+            },
+            {
+              "start": 56457.09999999404,
+              "duration": 251
+            },
+            {
+              "start": 56725.39999997616,
+              "duration": 241
+            },
+            {
+              "start": 56992.09999999404,
+              "duration": 436
+            },
+            {
+              "start": 57604.09999999404,
+              "duration": 73
+            },
+            {
+              "start": 57705.09999999404,
+              "duration": 54
+            },
+            {
+              "start": 57875.5,
+              "duration": 130
+            },
+            {
+              "start": 58124.79999998212,
+              "duration": 2400
+            },
+            {
+              "start": 60606.59999999404,
+              "duration": 302
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "d04e57023e654fc3ccced9ade0b106b6a71ca2e31abc39afae328a8aaea5f25f",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 2399.1,
+        "maxSharedChargeBytes": 30763498,
+        "maxNavChargeBytes": 29576320,
+        "attemptOutcomes": {
+          "accepted": 1
+        }
+      }
+    ],
+    "error": null
+  },
+  {
+    "dpr": 4,
+    "profile": "default",
+    "cacheMiB": 32,
+    "sharedHardMiB": 96,
+    "sdk": "out/g5-budget-on/js",
+    "output": "out/g5-budget-dpr4-default",
+    "status": "BLOCKED_EVIDENCE",
+    "workerExit": 2,
+    "phases": [
+      {
+        "id": "interrupted-selection",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.69999998807907,
+            "p95": 19.099999994039536,
+            "p99": 120.59999999403954,
+            "max": 120.59999999403954,
+            "mean": 19.006944444444443
+          },
+          "display_submission_gap_ms": {
+            "count": 73,
+            "p50": 0,
+            "p95": 17.19999998807907,
+            "p99": 1240,
+            "max": 1240,
+            "mean": 21.126027397096973
+          },
+          "input_display_submission_gap_ms": {
+            "count": 72,
+            "p50": 0,
+            "p95": 80.7000000178814,
+            "p99": 787.5999999940395,
+            "max": 787.5999999940395,
+            "mean": 19.23888888872332
+          },
+          "updatedInputs": 10,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 0.800000011920929,
+            "p95": 1.2000000178813934,
+            "p99": 1.300000011920929,
+            "max": 1.300000011920929,
+            "mean": 0.8944444428715441
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 463.7000000178814,
+          "navigation": {
+            "queries": 14,
+            "built": 21,
+            "knots": 228656,
+            "prefix_knots": 75528,
+            "fallback": 1389,
+            "cancelled": 3,
+            "discarded_knots": 13530,
+            "throttled": 0,
+            "prewarm": 0,
+            "calls": 78,
+            "sharedSources": {
+              "chunkCandidates": 1080,
+              "indexNodes": 140,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 192,
+              "queriesObserved": 14,
+              "peakRetainedBytes": 266699,
+              "hits": 1973
+            },
+            "maskEncoding": {
+              "alphaStarts": 65,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 0.8,
+              "contour": 131.6,
+              "material": 3.7,
+              "otherDraw": 2.8
+            },
+            "regionCompactions": 0,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 10,
+              "maximumUpscale": 26.843624,
+              "lowResolutionAreaFraction": {
+                "count": 10,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 1
+              },
+              "retainedAreaFraction": {
+                "count": 10,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 316.8,
+              "timeWeightedLowResolutionFraction": 1,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 316.8,
+              "suspended": 0,
+              "resumed": 0
+            },
+            "cpu_ms": {
+              "count": 78,
+              "p50": 2.1,
+              "p95": 13.2,
+              "p99": 117.9,
+              "max": 117.9,
+              "mean": 5.223076923076923,
+              "total": 407.40000000000043
+            },
+            "query_cpu_ms": {
+              "count": 78,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.2,
+              "max": 0.2,
+              "mean": 0.008974358974358974,
+              "total": 0.7000000000000001
+            },
+            "overlay_cpu_ms": {
+              "count": 78,
+              "p50": 0,
+              "p95": 0,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.001282051282051282,
+              "total": 0.1
+            },
+            "initialization_cpu_ms": {
+              "count": 78,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.2,
+              "max": 0.2,
+              "mean": 0.014102564102564101,
+              "total": 1.0999999999999999
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 820,
+              "coarseMasks": 65
+            },
+            "prepared": {
+              "builds": 5,
+              "hits": 65,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 21139,
+              "contourDrawn": 5438,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 22,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 182.20000000000002,
+              "exclusive_ms": 9.400000000000002,
+              "calls": 22
+            },
+            "visibility": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "reference_build": {
+              "inclusive_ms": 1.2999999999999998,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "reference_entries": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 2
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.6000000000000001,
+              "exclusive_ms": 0.6000000000000001,
+              "calls": 2
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.6,
+              "exclusive_ms": 0.6,
+              "calls": 2
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.30000000000000004,
+              "exclusive_ms": 0.30000000000000004,
+              "calls": 2
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 2
+            },
+            "render": {
+              "inclusive_ms": 171.19999999999996,
+              "exclusive_ms": 0.8999999999999999,
+              "calls": 22
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "validation": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "cache_begin": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.2,
+              "calls": 22
+            },
+            "group_update": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 22
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "cache_prepare": {
+              "inclusive_ms": 169.7,
+              "exclusive_ms": 9.900000000000002,
+              "calls": 22
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 2
+            },
+            "coverage_select": {
+              "inclusive_ms": 1.3,
+              "exclusive_ms": 1.3,
+              "calls": 3006
+            },
+            "contour_compile": {
+              "inclusive_ms": 6.399999999999999,
+              "exclusive_ms": 6.399999999999999,
+              "calls": 2651
+            },
+            "contour_record": {
+              "inclusive_ms": 0.7000000000000001,
+              "exclusive_ms": 0.7000000000000001,
+              "calls": 320
+            },
+            "contour_replay": {
+              "inclusive_ms": 144.70000000000002,
+              "exclusive_ms": 2.3000000000000007,
+              "calls": 2331
+            },
+            "contour_draw": {
+              "inclusive_ms": 139.6,
+              "exclusive_ms": 139.6,
+              "calls": 2651
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 150.8,
+              "exclusive_ms": 1.8,
+              "calls": 2651
+            },
+            "material_submit": {
+              "inclusive_ms": 7.5,
+              "exclusive_ms": 7.5,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 84534,
+            "record_candidates": 31703,
+            "record_replays": 0,
+            "record_rejected": 29349,
+            "record_groups": 1991,
+            "record_selection_yields": 224,
+            "checkpoint_replays": 2331,
+            "checkpoint_replay_knots": 74328,
+            "scalar_coverage_tiles": 500
+          },
+          "client_wait_cpu_ms": {
+            "count": 218,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0.09999999403953552,
+            "max": 0.10000002384185791,
+            "mean": 0.0032110091196287664,
+            "total": 0.699999988079071
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 83,
+          "longTasks": [
+            {
+              "start": 8525.699999988079,
+              "duration": 120
+            },
+            {
+              "start": 8646.5,
+              "duration": 80
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "4ca187a21b3c08f00612547df6230fb75e8ad57b237660f7fbd5803ccdea6709",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 9.9,
+        "maxSharedChargeBytes": 6919338,
+        "maxNavChargeBytes": 5964160,
+        "attemptOutcomes": {
+          "retry": 20,
+          "accepted": 1
+        }
+      },
+      {
+        "id": "repeat-0",
+        "summary": {
+          "raf_ms": {
+            "count": 72,
+            "p50": 16.599999994039536,
+            "p95": 21.599999994039536,
+            "p99": 59.900000005960464,
+            "max": 59.900000005960464,
+            "mean": 17.408333333416117
+          },
+          "display_submission_gap_ms": {
+            "count": 1114,
+            "p50": 0,
+            "p95": 0.09999999403953552,
+            "p99": 18.299999982118607,
+            "max": 367.2999999821186,
+            "mean": 1.4067324955063192
+          },
+          "input_display_submission_gap_ms": {
+            "count": 1071,
+            "p50": 0,
+            "p95": 0.09999999403953552,
+            "p99": 18.399999976158142,
+            "max": 139.59999999403954,
+            "mean": 1.1735760971110742
+          },
+          "updatedInputs": 48,
+          "inputCount": 72,
+          "input_dispatch_ms": {
+            "count": 72,
+            "p50": 0.7999999821186066,
+            "p95": 1.300000011920929,
+            "p99": 1.9000000059604645,
+            "max": 1.9000000059604645,
+            "mean": 0.90277777860562
+          },
+          "canonicalReceiptsDuringInput": 0,
+          "settle_ms": 464.89999997615814,
+          "navigation": {
+            "queries": 35,
+            "built": 45,
+            "knots": 393255,
+            "prefix_knots": 42867,
+            "fallback": 3003,
+            "cancelled": 3,
+            "discarded_knots": 15633,
+            "throttled": 0,
+            "prewarm": 0,
+            "calls": 77,
+            "sharedSources": {
+              "chunkCandidates": 2160,
+              "indexNodes": 270,
+              "fallbacks": 0,
+              "payloadCopyBytes": 0,
+              "aliases": 338,
+              "queriesObserved": 35,
+              "peakRetainedBytes": 266699,
+              "hits": 1798
+            },
+            "maskEncoding": {
+              "alphaStarts": 56,
+              "n32Starts": 0
+            },
+            "componentsMs": {
+              "partition": 1.2,
+              "contour": 77,
+              "material": 2.9,
+              "otherDraw": 2.2
+            },
+            "regionCompactions": 1,
+            "quality": {
+              "thresholdDevicePixelsPerTexel": 1.25,
+              "presentations": 49,
+              "maximumUpscale": 32.340576,
+              "lowResolutionAreaFraction": {
+                "count": 49,
+                "p50": 1,
+                "p95": 1,
+                "p99": 1,
+                "max": 1,
+                "mean": 0.9868753469387755
+              },
+              "retainedAreaFraction": {
+                "count": 49,
+                "p50": 0,
+                "p95": 0,
+                "p99": 0,
+                "max": 0,
+                "mean": 0
+              },
+              "observedMilliseconds": 1198.9,
+              "timeWeightedLowResolutionFraction": 0.9762257900575528,
+              "timeToAdequateMs": {
+                "count": 0,
+                "p50": null,
+                "p95": null,
+                "p99": null,
+                "max": null,
+                "mean": null
+              },
+              "unrecoveredEpisodes": 1,
+              "rightCensoredMilliseconds": 1198.9,
+              "suspended": 3,
+              "resumed": 3
+            },
+            "cpu_ms": {
+              "count": 77,
+              "p50": 2,
+              "p95": 10.8,
+              "p99": 57.1,
+              "max": 57.1,
+              "mean": 3.144155844155843,
+              "total": 242.09999999999994
+            },
+            "query_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.015584415584415584,
+              "total": 1.2
+            },
+            "overlay_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.1,
+              "max": 0.1,
+              "mean": 0.012987012987012986,
+              "total": 0.9999999999999999
+            },
+            "initialization_cpu_ms": {
+              "count": 77,
+              "p50": 0,
+              "p95": 0.1,
+              "p99": 0.3,
+              "max": 0.3,
+              "mean": 0.02467532467532468,
+              "total": 1.9000000000000004
+            },
+            "gpuAdmission": {
+              "contourPrimitives": 3555,
+              "coarseMasks": 56
+            },
+            "prepared": {
+              "builds": 0,
+              "hits": 135,
+              "denied": 0,
+              "peakResidentBytes": 623135,
+              "contourTested": 36489,
+              "contourDrawn": 4862,
+              "vectorUses": 0
+            }
+          },
+          "exactAttempts": 22,
+          "exactStages": {
+            "attempt": {
+              "inclusive_ms": 179,
+              "exclusive_ms": 9.100000000000001,
+              "calls": 22
+            },
+            "visibility": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ms": 0.7,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ms": 0.3,
+              "exclusive_ms": 0.3,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.4,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ms": 169.1,
+              "exclusive_ms": 0.9999999999999999,
+              "calls": 22
+            },
+            "acquire": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "validation": {
+              "inclusive_ms": 0.6,
+              "exclusive_ms": 0.6,
+              "calls": 22
+            },
+            "cache_begin": {
+              "inclusive_ms": 0.4,
+              "exclusive_ms": 0.2,
+              "calls": 22
+            },
+            "group_update": {
+              "inclusive_ms": 0.2,
+              "exclusive_ms": 0.2,
+              "calls": 22
+            },
+            "damage": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 22
+            },
+            "cache_prepare": {
+              "inclusive_ms": 167.10000000000005,
+              "exclusive_ms": 10.100000000000001,
+              "calls": 22
+            },
+            "prepare_scan": {
+              "inclusive_ms": 0.1,
+              "exclusive_ms": 0.1,
+              "calls": 1
+            },
+            "coverage_select": {
+              "inclusive_ms": 1.7000000000000004,
+              "exclusive_ms": 1.7000000000000004,
+              "calls": 3006
+            },
+            "contour_compile": {
+              "inclusive_ms": 7.899999999999999,
+              "exclusive_ms": 7.899999999999999,
+              "calls": 2651
+            },
+            "contour_record": {
+              "inclusive_ms": 0.7,
+              "exclusive_ms": 0.7,
+              "calls": 320
+            },
+            "contour_replay": {
+              "inclusive_ms": 143.10000000000002,
+              "exclusive_ms": 1.5999999999999999,
+              "calls": 2331
+            },
+            "contour_draw": {
+              "inclusive_ms": 137.20000000000002,
+              "exclusive_ms": 137.20000000000002,
+              "calls": 2651
+            },
+            "cpu_coverage": {
+              "inclusive_ms": 149.1,
+              "exclusive_ms": 1.7000000000000004,
+              "calls": 2651
+            },
+            "material_submit": {
+              "inclusive_ms": 6.1,
+              "exclusive_ms": 6.1,
+              "calls": 500
+            },
+            "scene_draw": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ms": 0,
+              "exclusive_ms": 0,
+              "calls": 1
+            }
+          },
+          "exactCoverageWork": {
+            "compiled_contour_knots": 84534,
+            "record_candidates": 31703,
+            "record_replays": 0,
+            "record_rejected": 29349,
+            "record_groups": 1991,
+            "record_selection_yields": 224,
+            "checkpoint_replays": 2331,
+            "checkpoint_replay_knots": 74328,
+            "scalar_coverage_tiles": 500
+          },
+          "client_wait_cpu_ms": {
+            "count": 238,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0.10000002384185791,
+            "mean": 0.0008403362095856867,
+            "total": 0.20000001788139343
+          },
+          "maximum_fence_timeout": 0,
+          "fenceCalls": 95,
+          "longTasks": [
+            {
+              "start": 10647.40000000596,
+              "duration": 60
+            }
+          ],
+          "gpu_execution_ms": {
+            "value": null,
+            "reason": "CPU GL calls and polling do not measure GPU execution."
+          },
+          "input_to_photon_ms": {
+            "value": null,
+            "reason": "Synthetic input and default-framebuffer draw calls do not observe physical display."
+          }
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "pixels": {
+          "sha256": "5780d476a7ba35ed7f78ad0dc901bb45d2fd27a7ef3f335f5eff89732cb33498",
+          "width": 2544,
+          "height": 3692,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "maxExactAttemptMs": 8.9,
+        "maxSharedChargeBytes": 53262690,
+        "maxNavChargeBytes": 14649600,
+        "attemptOutcomes": {
+          "retry": 21,
+          "accepted": 1
+        }
+      }
+    ],
+    "error": "Error: page.evaluate: Error: post-input canonical completion timeout\n    at until (http://127.0.0.1:57616/navigation_sampling.html:10:89)\n    at async phase (http://127.0.0.1:57616/navigation_sampling.html:91:3)\n    at async <anonymous>:337:30"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "obligations": [
+    {
+      "id": "bounded",
+      "requirement": "Oversized or denied preparation never silently performs synchronous complete compact-stroke Direct.",
+      "oracle": "G5RenderCache --oversized-only; bounded one-step,partial-target/present checks,structural denial and transient-pressure recovery.",
+      "acceptance": "Retry/progress or explicit rejection; no partial present; converged exact pixels equal Direct.",
+      "evidence_required": "RED/GREEN logs,native/GPU outputs"
+    },
+    {
+      "id": "regression",
+      "requirement": "Preserve exact geometry,lifecycle,retirement,SDK boundaries.",
+      "oracle": "112-test native set;7 existing GPU modes plus oversized;G5 Node/boundary/package checks.",
+      "acceptance": "No new failure vs exact5 known native failures;GPU/Node/boundary/package checks pass.",
+      "evidence_required": "logs and comparison"
+    },
+    {
+      "id": "budget-comparison",
+      "requirement": "Separate optional and shared budget; compare unchanged default to expanded experimental profile.",
+      "oracle": "Same installed root SDK corpus DPR2/3/4,32/96 vs64/192; source/artifact hashes,freeze/idle,pixels,receipts and charged memory.",
+      "acceptance": "Measured classified results,identical final pixels/semantic/receipt invariants; disclose slow/regressing or inconclusive metrics. Default remains32/96.",
+      "evidence_required": "bounded-worker observations,machine-derived comparison,immutable artifact identity"
+    }
+  ]
+}

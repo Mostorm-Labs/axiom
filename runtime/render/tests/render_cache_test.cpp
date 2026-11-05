@@ -2,6 +2,7 @@
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "../src/skia_navigation_tiles.hpp"
+#include "../src/skia_render_cache_internal.hpp"
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -674,6 +675,88 @@ void checkFrontierRegionCompaction(TestSurface& target){
     require(reference.renderFrame(full,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(full),"compaction changed final Direct pixels");
 }
 
+// Catch the oversized full-frame gate escaping cooperative preparation into
+// synchronous Direct. The small target reproduces the DPR4 ratio without a
+// slow performance threshold or a huge test allocation.
+void checkCoverageQuotaDenial(TestSurface& target) {
+    const auto acquired=target.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"coverage denial target");
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,256*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kScratch,200*1024,true);
+    require(bool(token),"coverage denial quota");resources::ResourceLease held(budget,*token);
+    const auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    const std::vector<foundation::InkKnot> knots{{20,40,32768},{225,60,32768}};
+    internal::CompactCoverageTargets targets;targets.budget=budget;
+    internal::CompactStrokeRasterJob job(*acquired.frame.surface->getCanvas(),config,knots,nullptr,false,budget);
+    bool escaped=false,complete=false;
+    try{complete=job.step(*acquired.frame.surface->getCanvas(),config,knots,42,targets,false,nullptr);}
+    catch(const std::bad_alloc&){escaped=true;}
+    require(!escaped&&!complete,"coverage quota denial escaped as bad_alloc instead of yielding");
+    held.reset();unsigned attempts=0;
+    while(!complete){complete=job.step(*acquired.frame.surface->getCanvas(),config,knots,42,targets,false,nullptr);
+        require(++attempts<64,"coverage quota release did not resume job");}
+    target.release();
+}
+void checkOversizedCanonical(TestSurface& target) {
+    checkCoverageQuotaDenial(target);
+    TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oversized oracle surface");
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=64*1024;options.maxEntryBytes=16*1024;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    auto entry=stroke(9821);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots.clear();
+    for(unsigned i=0;i<160;++i)content.stroke.knots.push_back({20.+i*1.2,50.+std::sin(i*.1)*30,32768});
+    entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};
+    const auto demand=plan(9821,{entry},1,{1.1,0,0,1.1,-3.5,-2.5});
+    const auto before=pixels(target);const auto presents=target.presentCount();
+    RenderPreparationBudget slice;slice.maxCoverageSteps=1;slice.maxGroups=1;
+    auto result=cached.renderFrame(target,demand,nullptr,&slice);
+    require(result.code==BackendSubmissionCode::kRetry,"oversized canonical escaped to synchronous full-frame Direct");
+    require(target.presentCount()==presents&&pixels(target)==before,"oversized preparation published partial pixels");
+    require(cached.renderCacheWork().preparationCoverageSteps==1,"oversized preparation ignored one-step limit");
+    unsigned attempts=0;
+    while(result.code==BackendSubmissionCode::kRetry){
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        result=cached.renderFrame(target,demand,nullptr,&slice);
+        require(++attempts<1024,"oversized preparation did not converge");
+    }
+    require(result.code==BackendSubmissionCode::kAccepted&&target.presentCount()==presents+1,"oversized canonical receipt");
+    require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"oversized preparation changed Direct pixels");
+    // A structurally impossible pair must fail explicitly, without touching
+    // the presented target, retrying forever, or accepting a Direct frame.
+    SkiaRenderer impossible;options.sharedMaxBytes=192*1024;impossible.setRenderCacheOptions(options);
+    const auto stable=pixels(target);const auto count=target.presentCount();
+    require(impossible.renderFrame(target,demand,nullptr,&slice).code==BackendSubmissionCode::kRejected&&
+        pixels(target)==stable&&target.presentCount()==count,"impossible work buffers escaped admission");
+    // Non-isolated transformed ink writes into the composite directly. It
+    // still needs a coverage tile even though it does not need full scratch.
+    auto transformed=entry;transformed.record.transform.tx=2;
+    SkiaRenderer compositeOnly;options.sharedMaxBytes=128*1024;compositeOnly.setRenderCacheOptions(options);
+    require(compositeOnly.renderFrame(target,plan(9822,{transformed}),nullptr,&slice).code==BackendSubmissionCode::kRejected&&
+        pixels(target)==stable&&target.presentCount()==count,"composite-only coverage cannot fit but retries forever");
+
+    // Inject real shared quota pressure, then retire it. No allocator mock:
+    // the production cache must keep offscreen progress and resume admission.
+    internal::SkiaRenderCache cache;options.sharedMaxBytes=600*1024;cache.options=options;
+    cache.budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,600*1024});
+    const auto token=cache.budget->reserve(resources::ResourceClass::kScratch,400*1024,true);
+    require(bool(token),"quota pressure setup");resources::ResourceLease held(cache.budget,*token);
+    const auto acquired=target.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"quota target");
+    cache.begin(demand,&target,*acquired.frame.surface,0);
+    auto preparation=cache.prepare(*acquired.frame.surface->getCanvas(),demand,slice,nullptr,nullptr);
+    require(preparation==internal::SkiaRenderCache::Preparation::kResourcePending&&
+        cache.work.preparationCoverageSteps==0,"denied scratch escaped into synchronous work");
+    require(!cache.compositePreparedFrame(*acquired.frame.surface->getCanvas()),"denied scratch qualified incomplete pixels");
+    held.reset();unsigned resumed=0;
+    do{preparation=cache.prepare(*acquired.frame.surface->getCanvas(),demand,slice,nullptr,nullptr);
+        require(++resumed<1024,"retired quota did not resume work");}
+    while(preparation==internal::SkiaRenderCache::Preparation::kPending);
+    require(preparation==internal::SkiaRenderCache::Preparation::kReady&&
+        cache.compositePreparedFrame(*acquired.frame.surface->getCanvas()),"retired quota failed canonical preparation");
+    target.release();require(pixels(target)==pixels(reference),"quota recovery changed exact pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -682,6 +765,9 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--oversized-only")){
+            checkOversizedCanonical(provider);if(argc>1)return finishNative(0);
+        }
         if(argc>1&&std::string_view(argv[1])=="--coverage-reuse-only"){checkCoverageReclaimFeasibility(provider);return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);checkDenseFrontier(provider,true);checkFrontierRegionCompaction(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
