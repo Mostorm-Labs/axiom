@@ -1,0 +1,82 @@
+{
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "sourceRevision": "c8bc77ec2a45e390a709f7489d1a5680262f91b8",
+  "baselineRevision": "90ef6b691e7d980ea8ed59195b5311eb7e3da4d9",
+  "measurementBindingsAndPixels": true,
+  "regression": true,
+  "guards": {
+    "cold15Percent": false,
+    "clarity10Points": true,
+    "navigation150Ms": false
+  },
+  "dpr4Cold": {
+    "phase": "after-freeze",
+    "sameFinalPixels": true,
+    "beforeWaitMs": 1393.5,
+    "afterWaitMs": 1829,
+    "beforeGapMs": 18.700000017881393,
+    "afterGapMs": 19.900000005960464,
+    "beforeLowDensity": 0.9458903349403703,
+    "afterLowDensity": 0.6467952758445945
+  },
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "baseline_failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": [],
+    "resolved_failures": []
+  },
+  "gpuModes": [
+    "detail",
+    "oversized",
+    "frontier",
+    "quality",
+    "affine",
+    "background",
+    "contour",
+    "replay",
+    "exact-replay"
+  ],
+  "boundedBrowserRuns": 22,
+  "budgetMiB": [
+    32,
+    96
+  ],
+  "officialGatePassClaimed": false,
+  "measuredDemo": "http://127.0.0.1:4234/example.html",
+  "scope": "Local Chrome synthetic root SDK navigation and native/private GPU conformance. Not physical sleep/input-to-photon,unique GPU memory,all-platform evidence or100K/1M qualification.",
+  "withdrawnExperiment": true,
+  "activeCandidate": {
+    "activeSourceRevision": "7299f6874be4947af219354dfa06bc6729a7b380",
+    "codeEquivalentRevision": "903761e4b4aad5ab5fd2d630edb232c530c05b41",
+    "withdrawnRevision": "c8bc77ec2a45e390a709f7489d1a5680262f91b8",
+    "checkedPaths": [
+      "runtime",
+      "sdk",
+      "apps",
+      "debug_ui",
+      "verification/runners",
+      "verification/tests",
+      "tools",
+      "CMakeLists.txt"
+    ],
+    "codeDiff": [],
+    "reason": "Critical frontier replay worsened measured DPR4 cold completion1393.5\u21921829ms and increased CPU coverage calls2651\u219214376. Keep pre-A2 candidate;frozen performance guards remain open.",
+    "demo": "http://127.0.0.1:4235/example.html"
+  },
+  "activePerformanceAcceptance": "NOT_ACCEPTED"
+}

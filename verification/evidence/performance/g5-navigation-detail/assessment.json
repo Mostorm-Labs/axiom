@@ -1,0 +1,28 @@
+{
+  "status": "BLOCKED",
+  "guards": {
+    "cold15Percent": false,
+    "clarity10Points": true,
+    "navigation150Ms": false
+  },
+  "failedGuards": [
+    "cold15Percent",
+    "navigation150Ms"
+  ],
+  "worstAfterInputGap": {
+    "ms": 378.09999999403954,
+    "dpr": 4,
+    "mode": "on",
+    "case": "selected-zoom",
+    "phase": "interrupted-selection"
+  },
+  "limits": [
+    "Local ordered pairs are not statistical latency equivalence.",
+    "Time-weighted low-density fraction measures source density,not optical blur.",
+    "1000ms/60000ms foreground idle and5s CDP freeze do not reproduce OS sleep or physical GPU eviction.",
+    "Shared charge is allocator accounting,not unique physical GPU residency;Skia may perform internal copies.",
+    "Process-family RSS may count shared pages twice.",
+    "Large zoom resolution debt and cold exact CPU raster work remain observable.",
+    "No Android/Windows/iOS or100K/1M Gate qualification is inferred."
+  ]
+}
