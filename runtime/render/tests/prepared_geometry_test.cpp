@@ -38,11 +38,13 @@ void replayGeometryParity(){
         auto entry=compact(variant);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
         auto& s=content.stroke;s.config.smoothing=.5;s.config.startTaper=35;s.config.endTaper=50;s.knots.clear();
         for(unsigned i=0;i<100003;++i)s.knots.push_back({i*.5+(variant?30*std::sin(i*.02):0),64.+std::sin(i*.01)*20,32768});
+        if(variant)for(unsigned i=500;i<516;++i)s.knots[i]={i%2?110.:150.,64,32768};
         entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
         auto prepared=cache.get(entry,options,budget);
         require(bool(prepared),"large v4 source denied compact local replay despite small checkpoint footprint");
         auto shared=cache.get(entry,options,budget);require(shared==prepared,"replay source was not shared");shared.reset();
         const auto full=ink::compileCompactContour(s.config,s.knots);
+        if(variant)require(!full.caps.empty(),"checkpoint reversal fixture emitted no corner caps");
         require(prepared->primitiveCount()==full.patches.size()-1+full.caps.size(),"replay duplicated or lost boundary ribbons/caps");
         for(unsigned view=0;view<4;++view){
             auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
