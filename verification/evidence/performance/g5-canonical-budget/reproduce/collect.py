@@ -7,7 +7,7 @@ def write(p,v):(D/p).parent.mkdir(parents=True,exist_ok=True);(D/p).write_text(j
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def copy(src,dst):
  src=Path(src);dst=D/dst;dst.parent.mkdir(parents=True,exist_ok=True)
- if src.suffix=='.log' or (src.suffix=='.json' and src.stat().st_size>131072):dst=dst.with_suffix(dst.suffix+'.gz');dst.write_bytes(gzip.compress(src.read_bytes(),mtime=0))
+ if src.suffix=='.log' or src.name.endswith('CMakeCache.txt') or (src.suffix=='.json' and src.stat().st_size>131072):dst=dst.with_suffix(dst.suffix+'.gz');dst.write_bytes(gzip.compress(src.read_bytes(),mtime=0))
  else:shutil.copyfile(src,dst)
 def tree(src,dst):
  for p in Path(src).rglob('*'):
