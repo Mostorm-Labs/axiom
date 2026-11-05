@@ -5,3 +5,7 @@ SkiaRenderCache retains a completed full-frame composite,while SkiaRenderer sepa
 Canonical v4 jobs retain checkpoints under hard admission,but replay SkPictures use soft admission. Two mandatory full-frame buffers already exceed soft32MiB,so cold work repeatedly rebuilds/draws contour blocks. Add canonical-only replay policy using bounded free hard headroom;do not reclaim navigation for this optional acceleration. Existing standalone/legacy policy remains unchanged.
 
 No unresolved semantic decisions. Extend existing Render owners;normal SDK wrappers/DTOs unchanged. Preserve all prior demos,locks,authority and Gate evidence. Baseline source90ef6b69;installed out/g5-budget-closed-{on,off}/js.
+
+## Amendment A1
+
+Pilot676aad1e improves cold low-density time fraction0.946→0.724 but cold completion1446→1312ms misses the frozen15% improvement guard. Preserve that intermediate evidence and the guard. Inspection found navigation planning still multiplies every resident tile by its transient3-buffer peak despite completed GPU tiles shrinking to one image;actual admission already accounts staging and pending GPU release. Plan resident capacity with one additional transient peak,while retaining the actual allocator as the final authority. Also allow navigation to discard obsolete camera-bound exact jobs after complete private stamp comparison. A pending job for the same demand must survive;new navigation never increments canonical submissions. No public API,default budget,quota,rasterization,receipt or semantic changes.

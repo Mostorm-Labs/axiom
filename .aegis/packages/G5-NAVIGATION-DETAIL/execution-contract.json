@@ -5,7 +5,9 @@
         "immutable completed-frame sharing with one charged owner",
         "GPU actual-read/write retirement for shared frame images",
         "bounded canonical-only replay admission under existing hard limit",
-        "preserve all invalidation/admission/presentation behavior"
+        "preserve all invalidation/admission/presentation behavior",
+        "resident-image navigation density planning with bounded transient headroom",
+        "release obsolete exact preparation on renewed navigation without cancelling matching work"
       ],
       "forbidden_changes": [
         "new public SDK API/version",
@@ -22,7 +24,8 @@
         "share",
         "replay",
         "regression",
-        "performance"
+        "performance",
+        "residency"
       ]
     },
     "hosted_verification": {
@@ -36,7 +39,8 @@
         "share",
         "replay",
         "regression",
-        "performance"
+        "performance",
+        "residency"
       ],
       "corroborative": [
         "optical/source-density proxies are not physical input-to-photon or unique GPU memory"
