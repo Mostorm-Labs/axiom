@@ -269,7 +269,9 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             }
             const auto allocation=std::uint64_t(crop.width())*crop.height()*4;
             if(allocation>options.maxEntryBytes||allocation>options.maxBytes||bytes>options.maxBytes-allocation||admitted>=options.maxEntries){
-                admissions_.insert_or_assign(entry.record.objectId,Admission{crop,AdmissionKind::kDirect});
+                const bool materialTiles=isolatedInk&&options.maxEntryBytes>=kMaterialTileReservation&&
+                    supportsIsolatedMaterialTiles(surface_->imageInfo(),compact->content.get().stroke.config);
+                admissions_.insert_or_assign(entry.record.objectId,Admission{crop,materialTiles?AdmissionKind::kMaterialTile:AdmissionKind::kDirect});
                 AXIOM_FRAME_TIMING_ADD(prepare_budget,1);
                 ++work.preparationBudgetEntries;streamFrame_=true;continue;
             }
@@ -293,7 +295,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     // escaping into an unbounded synchronous renderer.
     const auto frameBytes=std::size_t(surface_->width())*surface_->height()*4;
     const bool needsScratch=std::any_of(admissions_.begin(),admissions_.end(),[](const auto& a){
-        return !a.second.crop.isEmpty()&&a.second.kind!=AdmissionKind::kComposite;
+        return !a.second.crop.isEmpty()&&a.second.kind!=AdmissionKind::kComposite&&a.second.kind!=AdmissionKind::kMaterialTile;
     });
     const auto buffers=std::size_t(streamFrame_)+std::size_t(needsScratch);
     const bool needsCoverage=std::any_of(admissions_.begin(),admissions_.end(),[](const auto& a){
@@ -306,8 +308,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             return c&&c->content.get().stroke.config.algorithmVersion==3;
         });
     const auto coverageReserve=needsCoverage?coverageBytes*(hybrid?2:1):0;
-    if(coverageReserve>options.sharedMaxBytes||
-        (buffers&&frameBytes>(options.sharedMaxBytes-coverageReserve)/buffers))return Preparation::kRejected;
+    const bool materialTiles=std::any_of(admissions_.begin(),admissions_.end(),[](const auto& a){return a.second.kind==AdmissionKind::kMaterialTile;});
+    const auto workingReserve=coverageReserve+(materialTiles?kMaterialTileReservation:0);
+    if(workingReserve>options.sharedMaxBytes||
+        (buffers&&frameBytes>(options.sharedMaxBytes-workingReserve)/buffers))return Preparation::kRejected;
     if(compositeReady_)return Preparation::kReady;
     if(streamFrame_&&!ensureComposite(canvas,plan))return allocationFailure_;
     ++work.preparationSlices;
@@ -321,7 +325,8 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(admission==admissions_.end())return Preparation::kFallback;
         if(admission->second.kind==AdmissionKind::kEmpty){captureRunEntry(plan,preparationCursor_,nullptr);continue;}
         const bool raster=admission->second.kind==AdmissionKind::kRaster;
-        const bool directComposite=admission->second.kind==AdmissionKind::kComposite;
+        const bool isolatedMaterial=admission->second.kind==AdmissionKind::kMaterialTile;
+        const bool directComposite=admission->second.kind==AdmissionKind::kComposite||isolatedMaterial;
         const bool streamedCompact=streamFrame_&&!raster&&!admission->second.crop.isEmpty();
         if(!raster&&!streamedCompact){
             if(streamFrame_){
@@ -353,7 +358,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
             auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
-                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true);
+                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,isolatedMaterial);
             target->restore();
             pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
             ++work.misses;
@@ -378,7 +383,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 std::fprintf(stderr,"AXIOM_RENDER_RESOURCE_RETRY {\"stage\":\"coverage\",\"used_bytes\":%llu,\"hard_bytes\":%llu}\n",
                     static_cast<unsigned long long>(budget?budget->used():0),static_cast<unsigned long long>(options.sharedMaxBytes));
 #endif
-                if(reclaimPreparation)reclaimPreparation(coverageBytes*(hybrid?2:1));
+                if(reclaimPreparation)reclaimPreparation(std::max(coverageBytes*(hybrid?2:1),pending_->raster->pendingResourceBytes()));
                 flushPreparation();++work.preparationYields;return Preparation::kResourcePending;
             }
             if(!complete&&exhausted())return yield();
@@ -430,6 +435,8 @@ void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
         const auto& t=entry.record.transform;
         // Identity compact entries have destination-independent isolation in
         // the shared mapping. Legacy destination-clear never enters a run.
+        const auto admission=admissions_.find(entry.record.objectId);
+        if(admission!=admissions_.end()&&admission->second.kind==AdmissionKind::kMaterialTile)return false;
         return entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
             entry.contributesPixels&&entry.record.eraseMasks.empty()&&t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
     };
@@ -571,6 +578,8 @@ void SkiaRenderCache::configureScratch(SkCanvas& target,const FramePlan& plan,co
     target.clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));target.setMatrix(matrix);
 }
 void SkiaRenderCache::noteCoverage(const CompactRasterWork& rasterWork){
+    work.materialIsolationTiles+=rasterWork.materialIsolationTiles;
+    work.materialIsolationPeakBytes=std::max(work.materialIsolationPeakBytes,rasterWork.materialIsolationPeakBytes);
     work.gpuCoverageTiles+=rasterWork.gpuTiles;work.cpuCoverageTiles+=rasterWork.cpuTiles;
     work.coverageTargetAllocations+=rasterWork.allocatedTiles;work.coverageTargetReuses+=rasterWork.targetReuses;
     work.gpuInteriorPixels+=rasterWork.gpuInteriorPixels;work.cpuEdgePixels+=rasterWork.cpuEdgePixels;

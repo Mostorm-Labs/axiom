@@ -25,6 +25,11 @@ class CompactCoverageTargets final {
     std::array<Slot,8> slots_{};
     std::uint64_t tick_=0;
 };
+// A conservative single-use material layer charge (including one-pixel guard
+// and a second backing allowance). No mutable target is reused across snapshots.
+inline constexpr std::size_t kMaterialTileReservation=258U*258U*8U;
+bool supportsIsolatedMaterialTiles(const SkImageInfo&,const foundation::InkBrushConfig&)noexcept;
+
 // One device tile at a time, max-combined before material is applied once.
 // No pointer to a FramePlan survives a yield. The owner validates source and
 // target revisions before resuming with the current immutable knot span.
@@ -34,10 +39,11 @@ class CompactStrokeRasterJob final {
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
         std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
         std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
-        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false);
+        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false,bool isolatedMaterialTiles=false);
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
+    [[nodiscard]] std::size_t pendingResourceBytes()const noexcept{return pendingResourceBytes_;}
  private:
     SkMatrix matrix_{};
     SkIRect clip_{},deviceClip_{};
@@ -66,7 +72,8 @@ class CompactStrokeRasterJob final {
     SkRect recordBounds_{};
     std::size_t recordLimit_=0,recordBytes_=0,recordStorageBytes_=0;
     bool recordComplete_=false,picturesEnabled_=false;
-    bool canonicalReplay_=false;
+    bool canonicalReplay_=false,isolatedMaterialTiles_=false;
+    std::size_t pendingResourceBytes_=0;
     SkBlendMode contourBlend_=SkBlendMode::kLighten;
     std::function<void(std::size_t)> reclaim_;
     void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&,ink::CompactContourCompiler);

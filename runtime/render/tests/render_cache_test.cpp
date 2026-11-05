@@ -849,6 +849,68 @@ void checkObsoleteExactNavigation(){
     require(read(target)==read(reference),"obsolete exact recovery changed canonical pixels");
 }
 
+// Removing bounded isolation (or drawing straight into the destination) must
+// fail either real capacity admission or the independently rendered Direct bytes.
+void checkMaterialIsolationOwner(bool constrained){
+    TestSurface target,reference;require(target.resize(1024,768).code==BackendSubmissionCode::kAccepted&&reference.resize(1024,768).code==BackendSubmissionCode::kAccepted,"material owner targets");
+    const auto read=[](TestSurface& surface){const auto a=surface.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"material owner read");
+        const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"material owner readback");surface.release();return bytes;};
+    bool mismatch=false;
+    for(unsigned variant=0;variant<8;++variant){
+        std::vector<semantic::ObjectRecord> objects(3);
+        objects[0].id=ObjectId::fromUint64(9880);objects[0].kind=semantic::ObjectKind::kShape;objects[0].kind_version=1;objects[0].content=semantic::ShapeContent{1,480,340};
+        for(unsigned n=1;n<=2;++n){auto& object=objects[n];object.id=ObjectId::fromUint64(9880+n);object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
+            semantic::CompactStrokeContent content;auto& stroke=content.stroke;stroke.seed=41+n;
+            stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+            stroke.config.color={.17,.37,.71,.83};stroke.config.opacity=.57;stroke.config.size=31;
+            stroke.config.startTaper=17;stroke.config.endTaper=23;
+            for(unsigned i=0;i<160;++i)stroke.knots.push_back({10.+i*3.,184.+std::sin(i*.17+n*.2)*150,static_cast<std::uint16_t>(12000+(i%100)*500)});
+            if(variant==1){object.transform.a=1.37;object.transform.b=.13;object.transform.c=-.21;object.transform.d=.91;object.transform.tx=-7.25;object.transform.ty=13.375;}
+            if(variant==3){object.transform.a=-1;object.transform.tx=512;}
+            if(variant==4){object.transform.a=object.transform.d=std::cos(.17);object.transform.b=std::sin(.17);object.transform.c=-std::sin(.17);object.transform.tx=25;}
+            if(variant==5){for(auto& knot:stroke.knots){knot.x+=1000000;knot.y+=1000000;}object.transform.tx=object.transform.ty=-1000000;}
+            if(variant==7){stroke.config.family=foundation::InkFamily::kMarker;stroke.config.markerAngle=.7;stroke.config.markerFlatness=.4;stroke.config.startCap=false;}
+            object.content=content;
+        }
+        const auto projected=projectRuntimeScene(objects,semantic::SemanticGeneration{9880});std::vector<ReferenceTraversalEntry> entries;
+        entries.push_back({projected.records[0],true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(objects[0].content)}});
+        for(unsigned i=1;i<=2;++i)entries.push_back({projected.records[i],true,CompactStrokeReferenceCommand{std::get<semantic::CompactStrokeContent>(objects[i].content)}});
+        const foundation::WorldRect clip=variant==6?foundation::WorldRect{13.25F,7.125F,497.75F,379.5F}:foundation::WorldRect{0,0,512,384};
+        FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,384},{512,384,1024,768,2,2},
+            semantic::SemanticGeneration{9880},SceneRevision{9880},SurfaceGeneration{1},MetricsGeneration{1},FrameId{9880+variant}};
+        ReferenceDrawList list{state};list.viewportClip=clip;list.entries=std::move(entries);
+        if(variant==2)list.worldToView={1.59,0,0,1.59,-187.61724853515625,-269.62725830078125};
+        const FramePlan frame{state,std::move(list)};
+        SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;options.maxEntryBytes=1024*1024;
+        options.sharedMaxBytes=(constrained?5:96)*1024*1024;cached.setRenderCacheOptions(options);
+        RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+        const auto before=read(target);const auto presents=target.presentCount();RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+        BackendSubmissionResult result=cached.renderFrame(target,frame,nullptr,&slice);
+        require(result.code!=BackendSubmissionCode::kRejected,"qualified material still requires a full-frame isolated scratch");
+        if(result.code==BackendSubmissionCode::kRetry)require(target.presentCount()==presents&&read(target)==before,"material preparation published incomplete pixels");
+        slice.maxCoverageSteps=64;slice.maxMicroseconds=1000000;unsigned ticks=0;
+        while(result.code==BackendSubmissionCode::kRetry){
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            result=cached.renderFrame(target,frame,nullptr,&slice);require(++ticks<4096,"material owner failed to converge");
+        }
+        require(result.code==BackendSubmissionCode::kAccepted&&target.presentCount()==presents+1,"material owner final presentation");
+        require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted,"material owner Direct oracle");
+        const auto actual=read(target),expected=read(reference);std::size_t changed=0,first=0;unsigned maximum=0;
+        for(std::size_t i=0;i<actual.size();++i)if(actual[i]!=expected[i]){if(!changed)first=i;++changed;maximum=std::max(maximum,unsigned(std::abs(int(actual[i])-int(expected[i]))));}
+        std::cout<<"{\"variant\":"<<variant<<",\"constrained\":"<<constrained<<",\"changed_channels\":"<<changed<<",\"max_delta\":"<<maximum
+            <<",\"first_x\":"<<(first/4)%1024<<",\"first_y\":"<<(first/4)/1024<<",\"first_channel\":"<<first%4
+            <<",\"actual\":"<<unsigned(actual[first])<<",\"expected\":"<<unsigned(expected[first])
+            <<",\"scratch_peak_bytes\":"<<cached.renderCacheWork().scratchPeakBytes<<",\"material_tiles\":"<<cached.renderCacheWork().materialIsolationTiles
+            <<",\"material_peak_bytes\":"<<cached.renderCacheWork().materialIsolationPeakBytes<<"}\n";
+        mismatch|=changed>0;
+        if(constrained)require(cached.renderCacheWork().scratchPeakBytes==0,"qualified material allocated framebuffer scratch despite bounded capacity");
+    }
+    require(!mismatch,"material isolation changed canonical pixels");
+}
+
 void checkSharedCanonicalNavigation(TestSurface&) {
     TestSurface target,reference;
     require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
@@ -978,6 +1040,8 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--material-only")){checkMaterialIsolationOwner(true);if(argc>1)return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--material-parity-only"){checkMaterialIsolationOwner(false);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
             checkResidentNavigationDensity();checkObsoleteExactNavigation();checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
         }
