@@ -102,6 +102,7 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
   value.pixels=await pixels();return value;
 }
 window.probe={
+  failureState(){return {errors:[...errors],frames:[...frames],state:sdk?.readState()};},
   async setupEditing(){
     const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
     sdk=await createRuntime({mount,documentId:'99999999999999999999999999999999',permission:'localSingleUser',

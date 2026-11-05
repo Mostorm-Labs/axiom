@@ -236,15 +236,19 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
                 navigationCache_.reset();
                 const auto reservation=resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true);
-                if(!reservation)throw std::bad_alloc();
-                resources::ResourceLease lease(resourceBudget_,*reservation);
-                auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);
-                candidate->provider=&provider;candidate->image=acquired.frame.surface->makeImageSnapshot();
-                candidate->frame=std::make_unique<FrameState>(plan.frame);
-                candidate->transform=plan.referenceDrawList.worldToView;
-                const auto& color=plan.background.color;
-                candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
-                navigationCache_=std::move(candidate);
+                // This retained navigation snapshot is optional. Denial must
+                // not throw out the already drawn canonical frame/receipt.
+                // In particular,WASM consumers need an explicit branch here.
+                if(reservation){
+                    resources::ResourceLease lease(resourceBudget_,*reservation);
+                    auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);
+                    candidate->provider=&provider;candidate->image=acquired.frame.surface->makeImageSnapshot();
+                    candidate->frame=std::make_unique<FrameState>(plan.frame);
+                    candidate->transform=plan.referenceDrawList.worldToView;
+                    const auto& color=plan.background.color;
+                    candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
+                    navigationCache_=std::move(candidate);
+                }
             }else navigationCache_.reset();
         }catch(const std::bad_alloc&){navigationCache_.reset();}
     }

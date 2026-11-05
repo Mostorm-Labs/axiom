@@ -115,7 +115,8 @@ try{
         receiptAfterInput:record.phases.every(p=>p.summary.settle_ms!==null&&p.summary.settle_ms>=0),
         nonblockingFences:record.phases.every(p=>p.summary.maximum_fence_timeout===0)};
       record.status=Object.values(record.checks).every(Boolean)?'MEASURED':'BLOCKED_EVIDENCE';
-    }catch(error){record.error=String(error);record.status='BLOCKED_EVIDENCE';}
+    }catch(error){record.error=String(error);record.status='BLOCKED_EVIDENCE';
+      record.failure=await page.evaluate(()=>probe.failureState()).catch(error=>({diagnosticError:String(error)}));}
     record.exceptions=exceptions;record.rows=rows;results.push(record);
     await fs.writeFile(path.join(output,mode+'.json.gz'),gzipSync(JSON.stringify(record)));
     await fs.writeFile(path.join(output,mode+'.console.json.gz'),gzipSync(JSON.stringify(logs)));
