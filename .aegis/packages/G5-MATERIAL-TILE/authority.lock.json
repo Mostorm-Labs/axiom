@@ -16,7 +16,7 @@
   "statements": [
     "Existing Render owner and Direct pixel mapping are authoritative;no semantic decision is changed.",
     "Qualified overflow v4 solid ink uses integer device-clipped Skia material layers,without changing coverage grid/matrix/AA/order/shader inputs.",
-    "Qualifier:isolated scene ink,no erase masks,algorithm4,material<3,8-bit RGBA/BGRA premul,sRGB or untagged target,affine;entry capacity>=conservative258x258x8 layer charge.",
+    "Corrected qualifier after exact characterization786f38bc:Ganesh GPU context,isolated scene ink,no erase masks,algorithm4,material<3,8-bit RGBA/BGRA premul,sRGB or untagged target,affine;entry capacity>=conservative258x258x8 layer charge. CPU raster stays on the original isolated path.",
     "Other sources keep the cooperative full-scratch or existing direct-composite path.",
     "Every layer is a single-use transaction;reserve before saveLayer,explicit clip at identity,keep original global shader matrix,restore before advancing,release through actual GPU epoch.",
     "32/96MiB,8MiB entry,8ms exact and existing CPU/GPU quotas remain unchanged.",
@@ -28,5 +28,11 @@
     "sha256": "8525dcfdbc72006d1020270d3d64dc7ea4777f4d00720bddd3083f88ceac71cd",
     "local_sha256": "8525dcfdbc72006d1020270d3d64dc7ea4777f4d00720bddd3083f88ceac71cd",
     "matches_local_archive": true
+  },
+  "characterization": {
+    "sourceRevision": "786f38bc6e3c306080c397003377747abb1212c1",
+    "native_log_sha256": "3536e299d97db25bd793adc5859e74498cb95fa701f75587576d49aef013c456",
+    "gpu_result_sha256": "d5f466a06ea194ca59defe626e8ab8dadaf3037d003c074ccd909b7a2169d8dd",
+    "finding": "Native layer material has30/35 one-LSB changed channels in shear/rotation;all8 real WebGL2 cases exact. Narrow the optimization qualifier;do not relax byte equality."
   }
 }

@@ -6,7 +6,7 @@ Prepare:validate FramePlan/current provider;freeze source/target/camera stamps;c
 
 Publish:all ordered entries must complete before immutable frame/present. Abort:denial/lost/stale/failure does not advance material tile/canonical receipt;cancel discards derived progress using existing cleanup. No layer spans a yield.
 
-Eligibility is frozen in authority.lock.json. Material-only clipping does not alter coverage raster clip. A pixel mismatch is terminal verification failure,not permission to change AA or tolerance. A layer-allocation NoPixels failure is observed by the same public Skia APIs on CPU/GPU;late driver failures retain existing provider/loss behavior.
+Eligibility is frozen in authority.lock.json. Material-only clipping does not alter coverage raster clip. A pixel mismatch is terminal verification failure,not permission to change AA or tolerance. A Ganesh layer-allocation NoPixels device loses its recording context and must yield;Runtime quota denial is injected and tested. Physical GPU-OOM is not injected;late driver failures retain existing provider/loss behavior.
 
 Obligations capacity/parity map to admission+material helper and Direct pixel oracles;lifetime maps to reserve/restore/epoch tests;regression/performance map to unchanged installed root SDK and frozen worker corpus.
 
@@ -14,3 +14,7 @@ unresolved_semantic_decisions:[]
 authority_conflict:false
 verification_conflict:false
 package_scope_conflict:false
+
+## P31 qualification correction
+
+The native characterization rejected the initial all-backend assumption. Scope is now Ganesh GPU only;CPU keeps the original path. This is a package correction before final implementation,not a relaxed pixel oracle. The same8 geometric fixtures must remain exact on both backends;the constrained5MiB capacity obligation applies only to qualified GPU. Earlier experimental evidence remains durable and is not marked PASS.

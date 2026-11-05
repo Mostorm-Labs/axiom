@@ -3,22 +3,22 @@
     {
       "id": "capacity",
       "requirement": "Qualified isolated canonical drawing must complete with one ordered composite plus bounded material/coverage,not a second framebuffer scratch.",
-      "oracle": "1024x768 mixed shape and v4 strokes under5MiB;old owner rejects,optimized owner presents exact Direct pixels;no partial present on yields.",
-      "acceptance": "No rejection or full scratch for qualified case;strict pixels;finite completion.",
+      "oracle": "1024x768 mixed shape/v4 strokes under5MiB in actual Ganesh;old owner rejects,optimized owner presents exact Direct pixels. CPU fallback uses original sufficient buffer allowance;no partial presents.",
+      "acceptance": "Ganesh qualified work completes without full scratch;strict pixels;CPU is not accelerated.",
       "evidence_required": "RED native, GREEN native and actual Chrome/WebGL2 logs"
     },
     {
       "id": "parity",
       "requirement": "Preserve two-stage material premultiplication/quantization and all original coverage coordinates.",
-      "oracle": "Mixed overlapping ink;fractional affine,rotation/reflection,large origin,non-grid/fractional clip,pressure/caps;CPU/GPU Direct and independent full-frame isolation oracles;null/sRGB positive,linear/opaque/non-v4/mask qualifier fallback.",
+      "oracle": "Mixed overlapping ink;fractional affine,rotation/reflection,large origin,non-grid/fractional clip,pressure/caps;CPU/GPU Direct and independent full-frame isolation oracles;null/sRGB positive,linear/opaque/non-v4/mask qualifier fallback. CPU raster is a negative qualification case for every transform and retains exact original pixels.",
       "acceptance": "Zero changed canonical bytes;no tolerance changes;unqualified command mapping unchanged.",
       "evidence_required": "Frozen fixture description,private GPU modes,exact output hashes/counts"
     },
     {
       "id": "lifetime",
       "requirement": "Transient material layers cannot be uncharged while queued GPU work still reads them;admission/failure/cancel cannot publish partial content.",
-      "oracle": "Actual shared-manager soft/hard denial and resume;CPU NoPixels save-layer failure;GPU epoch retirement after test-only real completion;stale/cancel/present-failure and retained-sharp-frame integration.",
-      "acceptance": "Deny before draw;retry retains ready coverage;no duplicate alpha;no leak/early reuse;only completed current frames present.",
+      "oracle": "Actual shared-manager denial/resume;GPU epoch retirement after real test-only completion;stale/cancel/present/context failure and retained-sharp-frame integration.",
+      "acceptance": "Deny before draw;retry retains ready coverage;no duplicate alpha or early quota release;only completed current frames present. No injected physical GPU-OOM claim.",
       "evidence_required": "Budget usage/retirement and provider logs"
     },
     {
