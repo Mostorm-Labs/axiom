@@ -7,6 +7,7 @@
 #include "canvas/render/skia_text_resources.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "skia_prepared_geometry.hpp"
+#include "gpu_resource_retirement.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
@@ -38,7 +39,7 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={});
  private:
     // Fixed-size metadata: no unadmitted region growth on long diagonal pans.
     struct ValidRegions {
@@ -97,8 +98,7 @@ class SkiaNavigationTiles final {
     bool dirty_=true;
     std::optional<int> level_;
     std::size_t warmed_=0;
-    struct Completion {std::atomic<bool> done=false;};
-    std::vector<std::shared_ptr<Completion>> gpuBatches_;
+    std::shared_ptr<GpuResourceRetirement> gpuRetirements_;
     struct Patch {TileKey source;foundation::WorldRect area;double density=0;bool retained=false;};
     bool coverage(const foundation::WorldRect&,std::uint64_t scene,std::vector<Patch>&,
         const RetainedNavigationSource*,std::vector<foundation::WorldRect>* missing=nullptr);

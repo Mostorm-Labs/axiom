@@ -15,7 +15,7 @@
 #include <utility>
 
 namespace canvas::render {
-struct WebGlSurfaceProvider::Impl final {
+struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
     WebGlSurfaceConfig config;
     EMSCRIPTEN_WEBGL_CONTEXT_HANDLE webgl = 0;
     sk_sp<GrDirectContext> context;
@@ -27,9 +27,28 @@ struct WebGlSurfaceProvider::Impl final {
     bool lost = false;
     bool ownsContext = false;
     bool overlayVisible = true;
-    ~Impl() { surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
+    bool completionCapable=false;
+    std::shared_ptr<GpuCompletionState> completion=std::make_shared<GpuCompletionState>();
+    std::shared_ptr<const GpuCompletionState> state()const noexcept override{return completion;}
+    void service()noexcept override {
+      if(!context||completion->abandoned.load())return;
+      const auto previous=emscripten_webgl_get_current_context();
+      // Emscripten also reports a deleted registry handle as "lost". That
+      // alone does NOT prove the browser GPU context has physically finished.
+      EmscriptenWebGLContextAttributes actual;
+      if(emscripten_webgl_get_context_attributes(webgl,&actual)!=EMSCRIPTEN_RESULT_SUCCESS){
+        completion->abandoned=true;context->abandonContext();return;
+      }
+      if(emscripten_is_webgl_context_lost(webgl)){
+        completion->physicalLost=true;completion->abandoned=true;context->abandonContext();return;
+      }
+      if(emscripten_webgl_make_context_current(webgl)!=EMSCRIPTEN_RESULT_SUCCESS)return;
+      context->checkAsyncWorkCompletion();
+      if(previous!=webgl)(void)emscripten_webgl_make_context_current(previous);
+    }
+    ~Impl() { completion->abandoned=true;surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
 };
-WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(std::make_unique<Impl>()) {
+WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(std::make_shared<Impl>()) {
     impl_->config = std::move(config);
     if ((impl_->config.canvasSelector.empty() && impl_->config.appOwnedContext <= 0) ||
         impl_->config.physicalWidth == 0U || impl_->config.physicalHeight == 0U) { impl_->error = "invalid WebGL2 surface configuration"; return; }
@@ -43,6 +62,8 @@ WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(st
       impl_->ownsContext = true;
     }
     if (impl_->webgl <= 0 || emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) { impl_->error = "WebGL2 context creation failed"; return; }
+    EmscriptenWebGLContextAttributes actual;
+    impl_->completionCapable=emscripten_webgl_get_context_attributes(impl_->webgl,&actual)==EMSCRIPTEN_RESULT_SUCCESS&&actual.majorVersion>=2;
     impl_->context = GrDirectContexts::MakeGL(GrGLMakeNativeInterface());
     if (!impl_->context) { impl_->error = "Skia WebGL2 context creation failed"; return; }
     GLint framebuffer = 0; glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer); GrGLFramebufferInfo info{static_cast<GrGLuint>(framebuffer), static_cast<GrGLenum>(GL_RGBA8)};
@@ -58,7 +79,10 @@ std::unique_ptr<WebGlSurfaceProvider> WebGlSurfaceProvider::fromCurrentContext(
       {}, physicalWidth, physicalHeight, static_cast<std::int32_t>(current), {}});
 }
 WebGlSurfaceProvider::~WebGlSurfaceProvider() = default;
-bool WebGlSurfaceProvider::ready() const noexcept { return impl_ && impl_->surface != nullptr; }
+std::shared_ptr<GpuCompletionService> WebGlSurfaceProvider::gpuCompletionService()const noexcept {
+  return impl_&&impl_->completionCapable?impl_:nullptr;
+}
+bool WebGlSurfaceProvider::ready() const noexcept { return impl_ && impl_->surface != nullptr && !impl_->completion->abandoned.load(); }
 const std::string& WebGlSurfaceProvider::error() const noexcept { return impl_->error; }
 RenderTargetInfo WebGlSurfaceProvider::describe() const noexcept { return {"webgl-window", RenderTargetKind::kGpuWindow, RenderTargetBackend::kWebGL2, RenderTargetFormat::kRgba8888, {static_cast<float>(impl_->config.physicalWidth), static_cast<float>(impl_->config.physicalHeight), impl_->config.physicalWidth, impl_->config.physicalHeight, 1.0F, 1.0F}, {true, false, false, false, true, true}}; }
 SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire() noexcept {

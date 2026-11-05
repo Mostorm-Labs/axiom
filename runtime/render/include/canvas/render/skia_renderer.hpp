@@ -20,7 +20,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;}
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class GpuResourceRetirement;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -30,6 +30,11 @@ struct CanonicalViewportTransform;
 class SkiaRenderer final {
   public:
     SkiaRenderer() = default;
+    ~SkiaRenderer();
+    SkiaRenderer(const SkiaRenderer&)=delete;
+    SkiaRenderer& operator=(const SkiaRenderer&)=delete;
+    // Private/source owner opportunity only; no GPU handle or consumer API.
+    void serviceResourceRetirements()noexcept;
     explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
     void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
@@ -82,6 +87,7 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    std::shared_ptr<internal::GpuResourceRetirement> gpuRetirements_;
     std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;

@@ -36,7 +36,11 @@ class TestSurface final : public SkiaSurfaceProvider {
     std::unique_ptr<WebGlSurfaceProvider> provider_;
     std::uint64_t generation_=0,presents_=0;
     bool lost_=false;
+    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE nativeContext_=0;
   public:
+    void forgetAppContextForTest(){if(nativeContext_)emscripten_webgl_destroy_context(nativeContext_);nativeContext_=0;}
+    bool completionSupported=true;
+    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return completionSupported&&provider_?provider_->gpuCompletionService():nullptr;}
     RenderTargetInfo describe()const noexcept override{return provider_->describe();}
     SkiaSurfaceAcquireResult acquire()noexcept override{
         if(lost_)return SkiaSurfaceAcquireResult::rejected(SkiaSurfaceAcquireCode::kLost,"lost");
@@ -53,7 +57,7 @@ class TestSurface final : public SkiaSurfaceProvider {
             a.majorVersion=2;a.alpha=true;a.antialias=false;a.depth=false;a.stencil=true;a.premultipliedAlpha=true;a.preserveDrawingBuffer=true;
             const auto context=emscripten_webgl_create_context(selector.c_str(),&a);
             if(context<=0||emscripten_webgl_make_context_current(context)!=EMSCRIPTEN_RESULT_SUCCESS)return BackendSubmissionResult::rejected("GPU test context");
-            provider_=WebGlSurfaceProvider::fromCurrentContext(width,height);
+            nativeContext_=context;provider_=WebGlSurfaceProvider::fromCurrentContext(width,height);
         }
         ++generation_;lost_=false;return provider_&&provider_->ready()?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("GPU test provider");}
     BackendSubmissionResult readbackRgba(std::span<std::uint8_t> data)noexcept override{
@@ -107,6 +111,7 @@ BackendSubmissionResult navigate(SkiaRenderer& renderer, SkiaSurfaceProvider& pr
 class FailingPresent final : public SkiaSurfaceProvider {
   public:
     TestSurface raster;bool fail=true;
+    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return raster.gpuCompletionService();}
     RenderTargetInfo describe()const noexcept override{return raster.describe();}
     SkiaSurfaceAcquireResult acquire()noexcept override{return raster.acquire();}
     void release()noexcept override{raster.release();}
@@ -182,7 +187,32 @@ void checkExactCachePressure(TestSurface& target,TestSurface& reference){
             NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
             target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
 }
+void checkCompletionProviderLifetime(TestSurface& target){
+#if defined(G5_TEST_WEBGL)
+    SkiaRenderer renderer;auto owned=std::make_unique<TestSurface>();
+    require(owned->resize(256,128).code==BackendSubmissionCode::kAccepted,"retired context setup");
+    std::weak_ptr<GpuCompletionService> context=owned->gpuCompletionService();
+    require(!context.expired()&&renderer.renderFrame(*owned,plan(8391,{stroke(8391)})).code==BackendSubmissionCode::kAccepted,"retired context frame");
+    renderer.clearRenderCache();owned.reset();
+    require(!context.expired(),"provider destruction abandoned unfinished tracked context");
+    for(unsigned i=0;i<128&&!context.expired();++i){emscripten_sleep(1);renderer.serviceResourceRetirements();}
+    require(context.expired(),"replaced provider completion context leaked");
+    target.completionSupported=false;SkiaRenderer unsupported;
+    require(unsupported.renderFrame(target,plan(8391,{stroke(8391)})).code==BackendSubmissionCode::kAccepted,"unsupported provider lost Direct fallback");
+    require(unsupported.renderCacheWork().retainedBytes==0,"unsupported GPU completion admitted optional cache");
+    const auto frame=plan(8391,{stroke(8391)});
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=frame.referenceDrawList.entries;return true;};
+    require(unsupported.renderNavigation(target,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kRetry,"unsupported provider accepted unsafe navigation cache");
+    target.completionSupported=true;
+    auto missing=std::make_unique<TestSurface>();require(missing->resize(256,128).code==BackendSubmissionCode::kAccepted,"missing context setup");
+    auto abandoned=missing->gpuCompletionService();missing->forgetAppContextForTest();abandoned->service();
+    require(abandoned->state()->abandoned.load()&&!abandoned->state()->physicalLost.load(),"deleted app handle masqueraded as physical GPU completion");
+#else
+    (void)target;
+#endif
+}
 void checkCoverageReclaimFeasibility(TestSurface& target){
+    checkCompletionProviderLifetime(target);
     constexpr std::size_t mib=1024*1024;
     auto entry=stroke(8392);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
     content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
@@ -190,17 +220,28 @@ void checkCoverageReclaimFeasibility(TestSurface& target){
     const auto frame=plan(8392,{entry});
     for(auto pressureClass:{resources::ResourceClass::kRecorded,resources::ResourceClass::kScratch})for(bool feasible:{false,true}){
         internal::SkiaNavigationTiles nav;
+        auto retirement=std::make_shared<internal::GpuResourceRetirement>();
         RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntryBytes=options.maxBytes;
         options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
         auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
         NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
         for(unsigned i=0;;++i){
-            require(nav.render(target,{1,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"coverage reclaim setup");
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{1,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"coverage reclaim setup");
             if(!nav.work.pending)break;require(i<256,"coverage reclaim setup stalled");
         }
+        (void)pixels(target);retirement->service(); // private oracle drain, never production wait
+#if defined(G5_TEST_WEBGL)
+        for(unsigned i=0;i<128&&budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();}
+#endif
+        const auto usage=budget->snapshot(resources::ResourceClass::kNavigationTile);
+        require(usage.staging==0&&usage.pendingRelease==0,"completed navigation retained transient staging charge");
+        nav.work.retainedBytes=usage.used;
         const auto retained=nav.work.retainedBytes;const auto evictions=nav.work.evictions;
         require(retained>0,"coverage reclaim fixture retained no work");
-        const auto pressure=budget->reserve(pressureClass,(feasible?3:4)*mib,true);
+        const auto pressure=budget->reserve(pressureClass,(feasible?4*mib+4096-budget->used():4*mib),true);
         require(bool(pressure),"coverage pressure fixture reservation");
         resources::ResourceLease lease(budget,*pressure);
         nav.reclaimForExact(budget,4*mib,4096,frame.frame,&target,1);
@@ -211,7 +252,10 @@ void checkCoverageReclaimFeasibility(TestSurface& target){
             budget->release(*admitted);
             const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
             options.navigationMaxSteps=1;
-            require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
                 "optional recording discarded the completed frontier needed by the next camera demand");
             require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"feasible reclaim forced a completed frontier to be rebuilt");
         }else{
@@ -219,7 +263,10 @@ void checkCoverageReclaimFeasibility(TestSurface& target){
             const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;
             require(masks>0,"reclaim reuse fixture never built coarse coverage");
             options.navigationMaxSteps=1;
-            require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
                 "next camera demand could not present preserved complete coverage");
             require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"next camera demand repeated completed coarse coverage");
         }
@@ -234,22 +281,26 @@ void checkCoverageReclaimFeasibility(TestSurface& target){
     // A bounded cache can contain the old coarse frontier, its parent and the
     // current sharp cell. Optional prewarm must not trade the frontier away.
     internal::SkiaNavigationTiles nav;
+        auto retirement=std::make_shared<internal::GpuResourceRetirement>();
     RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntries=3;
     options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
     auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,12*mib});
     NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
     for(auto camera:{CanonicalViewportTransform{1,0,0},CanonicalViewportTransform{2,0,0}}){
         for(unsigned i=0;;++i){
-            require(nav.render(target,camera,frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"prewarm reuse setup");
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+            require(nav.render(target,camera,frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"prewarm reuse setup");
             if(!nav.work.pending)break;require(i<256,"prewarm reuse setup stalled");
         }
     }
     for(unsigned i=0;;++i){
-        require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,true).code==BackendSubmissionCode::kAccepted,"prewarm reuse admission");
+        require(nav.render(target,{2,0,0},frame.frame,query,1,options,budget,true,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"prewarm reuse admission");
         if(!nav.work.pending)break;require(i<256,"prewarm reuse did not yield");
     }
     const auto masks=nav.work.coarseMaskStarts,built=nav.work.tilesBuilt;options.navigationMaxSteps=1;
-    require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
+    require(nav.render(target,{1,-8,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted&&nav.work.presented,
         "optional prewarm evicted reusable frontier coverage");
     require(nav.work.coarseMaskStarts==masks&&nav.work.tilesBuilt==built,"prewarm forced frontier replay");
 }

@@ -42,6 +42,7 @@ class WebGlSurfaceProvider final : public SkiaSurfaceProvider {
     WebGlSurfaceProvider(const WebGlSurfaceProvider&) = delete;
     WebGlSurfaceProvider& operator=(const WebGlSurfaceProvider&) = delete;
 
+    [[nodiscard]] std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override;
     [[nodiscard]] bool ready() const noexcept;
     [[nodiscard]] const std::string& error() const noexcept;
     [[nodiscard]] RenderTargetInfo describe() const noexcept override;
@@ -63,7 +64,7 @@ class WebGlSurfaceProvider final : public SkiaSurfaceProvider {
 
   private:
     struct Impl;
-    std::unique_ptr<Impl> impl_;
+    std::shared_ptr<Impl> impl_;
 };
 
 // Compatibility facade for existing hosts. Drawing is delegated to the same

@@ -4,6 +4,8 @@
 #include "canvas/render/render_target.hpp"
 
 #include <cstdint>
+#include <atomic>
+#include <memory>
 #include <span>
 #include <string>
 #include <utility>
@@ -41,9 +43,28 @@ struct SkiaSurfaceAcquireResult final {
     }
 };
 
+// Source/developer-provider contract only; no consumer JS/DLL GPU handle API.
+// service() is owner-thread, nonblocking and non-reentrant: no draw/present or
+// Runtime/document callbacks. A shared service retains the context independently
+// of the logical provider. Callback state outlives it without retaining context.
+struct GpuCompletionState final {
+    std::atomic<bool> abandoned=false,physicalLost=false;
+};
+class GpuCompletionService {
+  public:
+    virtual ~GpuCompletionService()=default;
+    virtual void service()noexcept=0;
+    [[nodiscard]] virtual std::shared_ptr<const GpuCompletionState> state()const noexcept=0;
+};
 class SkiaSurfaceProvider {
   public:
     virtual ~SkiaSurfaceProvider() = default;
+    // Null means unsupported; GPU optional caches then use Direct fallback.
+    // Retaining this service must keep the physical context alive. Logical
+    // lose/resize cannot report physical loss. Destruction marks abandoned
+    // before draining Skia callbacks; only actual context loss sets physicalLost.
+    [[nodiscard]] virtual std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept {return {};}
+
     [[nodiscard]] virtual RenderTargetInfo describe() const noexcept = 0;
     [[nodiscard]] virtual SkiaSurfaceAcquireResult acquire() noexcept = 0;
     virtual void release() noexcept = 0;
