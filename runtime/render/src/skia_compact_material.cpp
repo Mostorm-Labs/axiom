@@ -5,6 +5,7 @@
 #include "compact_contour_skia_path.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
+#include "include/gpu/ganesh/GrRecordingContext.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPicture.h"
@@ -368,8 +369,9 @@ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bo
     if(work){++work->allocatedTiles;work->allocatedPixels+=bytes/4;}
     return target;
 }
-bool supportsIsolatedMaterialTiles(const SkImageInfo& info,const foundation::InkBrushConfig& config)noexcept{
-    return config.algorithmVersion==4&&config.materialVersion<3&&info.alphaType()==kPremul_SkAlphaType&&
+bool supportsIsolatedMaterialTiles(const SkCanvas& canvas,const foundation::InkBrushConfig& config)noexcept{
+    const auto info=canvas.imageInfo();auto* context=canvas.recordingContext();
+    return context&&!context->abandoned()&&config.algorithmVersion==4&&config.materialVersion<3&&info.alphaType()==kPremul_SkAlphaType&&
         (info.colorType()==kRGBA_8888_SkColorType||info.colorType()==kBGRA_8888_SkColorType)&&
         (!info.colorSpace()||info.colorSpace()->isSRGB());
 }
@@ -525,6 +527,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     bool compatible,CompactRasterWork* work){
     resourcePending_=false;pendingResourceBytes_=0;
     if(done_)return true;
+    if(isolatedMaterialTiles_&&!supportsIsolatedMaterialTiles(canvas,config)){resourcePending_=true;pendingResourceBytes_=kMaterialTileReservation;return false;}
     if(!tile_){
         // Empty tiles do no shader work; preserve the Direct grid anchor.
         while(y_<clip_.bottom()){
@@ -664,16 +667,16 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             if(isolatedMaterialTiles_){
                 const auto bytes=std::size_t(tile_->width()+2)*(tile_->height()+2)*8;
                 auto token=targets.budget?targets.budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
-                if(targets.budget&&!token){resourcePending_=true;pendingResourceBytes_=bytes;return false;}
-                materialLease=resources::ResourceLease(targets.budget,token.value_or(0));
+                if(!token){resourcePending_=true;pendingResourceBytes_=bytes;return false;}
+                materialLease=resources::ResourceLease(targets.budget,*token);
+                if(work)work->materialIsolationReservedBytes+=bytes;
             }
             SkAutoCanvasRestore restore(&canvas,true);canvas.resetMatrix();canvas.clipIRect(shaded);
             if(isolatedMaterialTiles_){
                 // Bounds alone are a hint. The integer clip bounds allocation;
                 // Skia's layer origin keeps the original global shader matrix.
                 auto* context=canvas.recordingContext();canvas.saveLayer(nullptr,nullptr);
-                const bool ready=context?canvas.recordingContext()==context:
-                    canvas.accessTopLayerPixels(nullptr,nullptr)!=nullptr;
+                const bool ready=context&&canvas.recordingContext()==context&&!context->abandoned();
                 if(!ready){resourcePending_=true;pendingResourceBytes_=kMaterialTileReservation;return false;}
             }
             canvas.setMatrix(matrix_);

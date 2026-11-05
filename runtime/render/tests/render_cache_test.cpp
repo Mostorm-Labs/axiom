@@ -4,6 +4,7 @@
 #include "../src/skia_navigation_tiles.hpp"
 #include "../src/skia_render_cache_internal.hpp"
 #include "include/core/SkCanvas.h"
+#include "material_tile_oracle.hpp"
 #include <type_traits>
 #include <iostream>
 #include <stdexcept>
@@ -857,7 +858,7 @@ void checkMaterialIsolationOwner(bool constrained){
         const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
         require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"material owner readback");surface.release();return bytes;};
     bool mismatch=false;
-    for(unsigned variant=0;variant<8;++variant){
+    for(unsigned variant=0;variant<11;++variant){
         std::vector<semantic::ObjectRecord> objects(3);
         objects[0].id=ObjectId::fromUint64(9880);objects[0].kind=semantic::ObjectKind::kShape;objects[0].kind_version=1;objects[0].content=semantic::ShapeContent{1,480,340};
         for(unsigned n=1;n<=2;++n){auto& object=objects[n];object.id=ObjectId::fromUint64(9880+n);object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
@@ -871,11 +872,17 @@ void checkMaterialIsolationOwner(bool constrained){
             if(variant==4){object.transform.a=object.transform.d=std::cos(.17);object.transform.b=std::sin(.17);object.transform.c=-std::sin(.17);object.transform.tx=25;}
             if(variant==5){for(auto& knot:stroke.knots){knot.x+=1000000;knot.y+=1000000;}object.transform.tx=object.transform.ty=-1000000;}
             if(variant==7){stroke.config.family=foundation::InkFamily::kMarker;stroke.config.markerAngle=.7;stroke.config.markerFlatness=.4;stroke.config.startCap=false;}
+            if(variant==8)stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;
             object.content=content;
         }
         const auto projected=projectRuntimeScene(objects,semantic::SemanticGeneration{9880});std::vector<ReferenceTraversalEntry> entries;
         entries.push_back({projected.records[0],true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(objects[0].content)}});
         for(unsigned i=1;i<=2;++i)entries.push_back({projected.records[i],true,CompactStrokeReferenceCommand{std::get<semantic::CompactStrokeContent>(objects[i].content)}});
+        if(variant==9){semantic::SweptCircleMask erase;
+            erase.segments.push_back({{{80.,64.},12.},{{120.,64.},12.},{93.333333,64.},{106.666667,64.}});
+            entries[1].record.eraseMasks={{ObjectId::fromUint64(9899),erase}};
+            entries[2].record.eraseMasks={{ObjectId::fromUint64(9899),erase}};
+        }
         const foundation::WorldRect clip=variant==6?foundation::WorldRect{13.25F,7.125F,497.75F,379.5F}:foundation::WorldRect{0,0,512,384};
         FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,384},{512,384,1024,768,2,2},
             semantic::SemanticGeneration{9880},SceneRevision{9880},SurfaceGeneration{1},MetricsGeneration{1},FrameId{9880+variant}};
@@ -883,7 +890,12 @@ void checkMaterialIsolationOwner(bool constrained){
         if(variant==2)list.worldToView={1.59,0,0,1.59,-187.61724853515625,-269.62725830078125};
         const FramePlan frame{state,std::move(list)};
         SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;options.maxEntryBytes=1024*1024;
-        options.sharedMaxBytes=(constrained?5:96)*1024*1024;cached.setRenderCacheOptions(options);
+#if defined(G5_TEST_WEBGL)
+        const bool qualified=variant<8||variant==10;
+#else
+        const bool qualified=false;
+#endif
+        options.sharedMaxBytes=(constrained&&qualified?(variant==10?8:5):96)*1024*1024;cached.setRenderCacheOptions(options);
         RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         const auto before=read(target);const auto presents=target.presentCount();RenderPreparationBudget slice;slice.maxCoverageSteps=1;
         BackendSubmissionResult result=cached.renderFrame(target,frame,nullptr,&slice);
@@ -906,7 +918,31 @@ void checkMaterialIsolationOwner(bool constrained){
             <<",\"scratch_peak_bytes\":"<<cached.renderCacheWork().scratchPeakBytes<<",\"material_tiles\":"<<cached.renderCacheWork().materialIsolationTiles
             <<",\"material_peak_bytes\":"<<cached.renderCacheWork().materialIsolationPeakBytes<<"}\n";
         mismatch|=changed>0;
-        if(constrained)require(cached.renderCacheWork().scratchPeakBytes==0,"qualified material allocated framebuffer scratch despite bounded capacity");
+        if(constrained&&qualified)require(cached.renderCacheWork().scratchPeakBytes==0&&cached.renderCacheWork().materialIsolationTiles>0,"qualified GPU material did not use bounded isolation");
+        if(!qualified)require(cached.renderCacheWork().materialIsolationTiles==0,"unqualified source/target entered material tile path");
+        if(variant==10&&constrained&&qualified){
+            const auto sharp=read(target);const auto count=target.presentCount();
+            auto movingList=frame.referenceDrawList;movingList.worldToView={1.2,0,0,1.2,-20,-16};
+            const FramePlan moving{frame.frame,std::move(movingList)};
+#if defined(G5_TEST_WEBGL)
+            // Delay the real completion poll without blocking or pretending
+            // queued work completed. Retiring material quota must yield,not
+            // discard the only qualified sharp source.
+            EM_ASM({const p=WebGL2RenderingContext.prototype;window.materialOriginalPoll=p.clientWaitSync;
+                p.clientWaitSync=function(...args){const r=window.materialOriginalPoll.apply(this,args);return r===this.WAIT_FAILED?r:this.TIMEOUT_EXPIRED;};});
+#endif
+            slice.maxCoverageSteps=64;slice.maxGroups=2;
+            const auto pending=cached.renderFrame(target,moving,nullptr,&slice);
+            require(pending.code==BackendSubmissionCode::kRetry,"material sharp setup did not retain offscreen work");
+            unsigned queries=0;NavigationSourceQuery unavailable=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&){++queries;return false;};
+            const auto feedback=navigate(cached,target,{1,0,0},frame.frame,unavailable,false);
+#if defined(G5_TEST_WEBGL)
+            EM_ASM({WebGL2RenderingContext.prototype.clientWaitSync=window.materialOriginalPoll;});
+#endif
+            require(feedback.code==BackendSubmissionCode::kAccepted&&cached.navigationWork().presented&&
+                target.presentCount()==count+1&&queries==0&&read(target)==sharp,
+                "pending material work evicted the qualified sharp frame or rebuilt its geometry");
+        }
     }
     require(!mismatch,"material isolation changed canonical pixels");
 }
@@ -1040,7 +1076,7 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
-        if(argc==1||(argc>1&&std::string_view(argv[1])=="--material-only")){checkMaterialIsolationOwner(true);if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--material-only")){checkMaterialIsolationOwner(true);const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"material lifetime provider");testing::requireMaterialTileLifetime(*a.frame.surface);provider.release();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--material-parity-only"){checkMaterialIsolationOwner(false);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
             checkResidentNavigationDensity();checkObsoleteExactNavigation();checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);

@@ -28,7 +28,7 @@ class CompactCoverageTargets final {
 // A conservative single-use material layer charge (including one-pixel guard
 // and a second backing allowance). No mutable target is reused across snapshots.
 inline constexpr std::size_t kMaterialTileReservation=258U*258U*8U;
-bool supportsIsolatedMaterialTiles(const SkImageInfo&,const foundation::InkBrushConfig&)noexcept;
+bool supportsIsolatedMaterialTiles(const SkCanvas&,const foundation::InkBrushConfig&)noexcept;
 
 // One device tile at a time, max-combined before material is applied once.
 // No pointer to a FramePlan survives a yield. The owner validates source and

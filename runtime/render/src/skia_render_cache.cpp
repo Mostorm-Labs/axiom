@@ -270,7 +270,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             const auto allocation=std::uint64_t(crop.width())*crop.height()*4;
             if(allocation>options.maxEntryBytes||allocation>options.maxBytes||bytes>options.maxBytes-allocation||admitted>=options.maxEntries){
                 const bool materialTiles=isolatedInk&&options.maxEntryBytes>=kMaterialTileReservation&&
-                    supportsIsolatedMaterialTiles(surface_->imageInfo(),compact->content.get().stroke.config);
+                    supportsIsolatedMaterialTiles(canvas,compact->content.get().stroke.config);
                 admissions_.insert_or_assign(entry.record.objectId,Admission{crop,materialTiles?AdmissionKind::kMaterialTile:AdmissionKind::kDirect});
                 AXIOM_FRAME_TIMING_ADD(prepare_budget,1);
                 ++work.preparationBudgetEntries;streamFrame_=true;continue;
