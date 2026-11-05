@@ -14,12 +14,20 @@
 
 namespace canvas::render::internal {
 void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
-bool SkiaRenderCache::releaseIdleWorkBuffers()noexcept{
-    if(pending_)return false;
+bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
+    const void* target,std::uint64_t resourceEpoch)noexcept{
+    const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
+        frame_->viewId==current.viewId&&frame_->sceneGeneration==current.sceneGeneration&&
+        frame_->sceneReadToken==current.sceneReadToken&&frame_->metrics==current.metrics&&
+        frame_->metricsGeneration==current.metricsGeneration&&frame_->surfaceGeneration==current.surfaceGeneration&&
+        frame_->viewportClip==current.viewportClip&&transform_==camera;
+    if(pending_&&matching)return false;
+    if(!matching&&(pending_||composite_))resetPreparation();
     scratch_.reset();scratchLease_.reset();coverageTargets_.clear();return true;
 }
 void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& surface,std::uint64_t resourceEpoch,foundation::ObjectId activeSource){
     const auto& f=plan.frame;
+    resourceEpoch_=resourceEpoch;
     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
     SourceRetentions candidateSources;resources::ResourceLease candidateMetadata;

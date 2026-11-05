@@ -160,7 +160,7 @@ void idleWorkBufferReclaim(){
     using Progress=internal::SkiaRenderCache::Preparation;
     auto progress=cache.prepare(*acquired.frame.surface->getCanvas(),plan,slice,nullptr,nullptr);
     check(progress==Progress::kPending,"scratch guard did not retain an active raster job");
-    const auto busy=budget->used();check(!cache.releaseIdleWorkBuffers()&&budget->used()==busy,"active raster buffers released before its checkpoint retired");
+    const auto busy=budget->used();check(!cache.releaseIdleWorkBuffers(state,{},&surface,0)&&budget->used()==busy,"active raster buffers released before its checkpoint retired");
     for(unsigned i=0;progress==Progress::kPending&&i<256;++i)
         progress=cache.prepare(*acquired.frame.surface->getCanvas(),plan,slice,nullptr,nullptr);
     check(progress==Progress::kReady,"scratch fixture did not complete canonical preparation");
@@ -169,7 +169,7 @@ void idleWorkBufferReclaim(){
     check(bool(token),"scratch pressure admission");resources::ResourceLease pressure(budget,*token);
     internal::PreparedGeometryCache geometry;geometry.setRetentionPool(pool);
     check(!geometry.get(entry,RenderCacheOptions{},budget),"scratch fixture did not deny optional prepared paths");
-    const auto before=budget->used();check(cache.releaseIdleWorkBuffers()&&budget->used()<before,"idle canonical scratch kept navigation behind the soft cap");
+    const auto before=budget->used();check(cache.releaseIdleWorkBuffers(state,{},&surface,0)&&budget->used()<before,"idle canonical scratch kept navigation behind the soft cap");
     const auto reclaimed=before-budget->used();
     auto prepared=geometry.get(entry,RenderCacheOptions{},budget);
     std::cout<<"{\"reclaimed_idle_bytes\":"<<reclaimed<<",\"soft_limit\":"<<soft<<"}\n";

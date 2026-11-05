@@ -41,8 +41,10 @@ class SkiaRenderCache final {
     void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
-    // Navigation may reclaim idle exact work buffers, never an active raster job.
-    bool releaseIdleWorkBuffers()noexcept;
+    // Keep matching exact work resumable; obsolete camera/target work cannot
+    // reserve the buffers needed by a renewed navigation demand.
+    bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,
+        const void* target,std::uint64_t resourceEpoch)noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
     SourceRetentions groupSourceLeases_;
@@ -107,7 +109,7 @@ class SkiaRenderCache final {
     const SkSurface* surface_=nullptr;
     std::unique_ptr<FrameState> frame_;
     WorldToViewAffine transform_{};
-    std::uint64_t targetEpoch_=0,tick_=0;
+    std::uint64_t targetEpoch_=0,tick_=0,resourceEpoch_=0;
     void evict(std::size_t bytes);
     sk_sp<SkPicture> coverage(const ReferenceTraversalEntry&,const RenderGroup&,const SkRect&);
 };

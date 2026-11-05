@@ -329,7 +329,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         previousVisible=foundation::WorldRect{-camera_.translationX/camera_.scale,-camera_.translationY/camera_.scale,
             (frame.metrics.logicalWidth-camera_.translationX)/camera_.scale,(frame.metrics.logicalHeight-camera_.translationY)/camera_.scale};
     else if(retainedSource&&retainedSource->draw&&retainedSource->bounds.isFiniteAndOrdered())previousVisible=retainedSource->bounds;
-    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3+tileMetadataBytes));
+    // Completed tiles retain one image; only an active job needs two extra
+    // staging buffers. Reserve that next-job peak here,then let fits()/the
+    // shared allocator enforce actual overlapping GPU lifetimes and yields.
+    const auto transientBytes=2*tileBytes;
+    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes>transientBytes
+        ?(options.maxBytes-transientBytes)/(tileBytes+tileMetadataBytes):std::size_t(0));
     // Choose coarse density from viewport extent, not its grid alignment.
     // A cell at least as wide/tall as the viewport needs at most2x2 cells at
     // every origin. Counting only the current cells toggled coarse levels on
