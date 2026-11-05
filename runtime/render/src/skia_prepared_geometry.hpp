@@ -25,8 +25,8 @@ class PreparedNavigationGeometry final {
     std::span<const double> distances()const noexcept{return distances_;}
     std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replay_.back().last;}
     double totalDistance()const noexcept{return distances_.empty()?replayDistance_:distances_.back();}
-    std::size_t nextVisiblePrimitive(SkCanvas&,std::size_t first)const;
-    PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0})const;
+    std::size_t nextVisiblePrimitive(SkCanvas&,std::size_t first,const SkRect* deviceDemand=nullptr)const;
+    PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0},const SkRect* deviceDemand=nullptr)const;
  private:
     friend class PreparedGeometryCache;
     struct Group {SkRect bounds;std::size_t begin=0,end=0;};

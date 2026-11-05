@@ -15,6 +15,7 @@
 #include <map>
 #include <atomic>
 #include <unordered_map>
+#include <array>
 
 class SkCanvas;
 namespace canvas::render::internal {
@@ -38,6 +39,14 @@ class SkiaNavigationTiles final {
         ImageResourceResolver* images=nullptr,
         const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={});
  private:
+    // Fixed-size metadata: no unadmitted region growth on long diagonal pans.
+    struct ValidRegions {
+        std::array<foundation::WorldRect,8> areas{};
+        std::size_t count=0;
+        void reset(foundation::WorldRect r){areas[0]=r;count=1;}
+        bool full(foundation::WorldRect r)const{return count==1&&areas[0]==r;}
+        bool add(foundation::WorldRect);
+    };
     struct Sources {
         std::uint64_t scene=0;
         std::vector<ReferenceTraversalEntry> entries;
@@ -50,6 +59,7 @@ class SkiaNavigationTiles final {
         sk_sp<SkImage> image;
         std::uint64_t used=0,checkedScene=0;
         resources::ResourceLease lease;
+        ValidRegions valid;
     };
     struct Job {
         TileKey key;
@@ -64,7 +74,9 @@ class SkiaNavigationTiles final {
         bool prewarm=false;
         bool cpuCoverage=false;
         resources::ResourceLease lease;
+        ValidRegions valid;
     };
+    static constexpr std::size_t tileMetadataBytes=sizeof(Tile)+sizeof(Job);
     std::map<TileKey,Tile> tiles_;
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
     PreparedGeometryCache geometry_;

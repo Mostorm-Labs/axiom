@@ -19,9 +19,17 @@ SkRect capBounds(const ink::ContourCap& cap){
     return SkRect::MakeLTRB(std::nextafter(x-r,-inf),std::nextafter(y-r,-inf),
                            std::nextafter(x+r,inf),std::nextafter(y+r,inf));
 }
-std::optional<SkRect> contourClip(SkCanvas& canvas){
+std::optional<SkRect> contourClip(SkCanvas& canvas,const SkRect* deviceDemand=nullptr){
     auto clip=canvas.getLocalClipBounds();SkMatrix inverse;
     bool cull=!canvas.getTotalMatrix().hasPerspective()&&canvas.getTotalMatrix().invert(&inverse)&&clip.isFinite();
+    // Selection demand must not change Skia's raster clip: analytic AA of a
+    // clipped curve can differ from full-cell rasterization even away from the
+    // clip edge. Cull complete paths, then raster them on the original grid.
+    if(cull&&deviceDemand){
+        const auto demand=inverse.mapRect(*deviceDemand);
+        if(!demand.isFinite())cull=false;
+        else if(!clip.intersect(demand))clip=SkRect::MakeEmpty();
+    }
     if(cull){
         const auto& matrix=canvas.getTotalMatrix();
         const auto scale=std::max(std::hypot(matrix.getScaleX(),matrix.getSkewY()),
@@ -104,8 +112,8 @@ void PreparedNavigationGeometry::buildReplay(){
     }
     replayOutput_.patches.clear();replayOutput_.caps.clear();
 }
-std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first)const{
-    first=std::min(first,primitiveCount());const auto clip=contourClip(canvas);
+std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
+    first=std::min(first,primitiveCount());const auto clip=contourClip(canvas,deviceDemand);
     if(!clip)return first;
     if(!replay_.empty()){
         for(const auto& block:replay_)if(block.last>first&&visibleContour(clip,block.bounds))return std::max(first,block.first);
@@ -124,11 +132,11 @@ std::size_t PreparedNavigationGeometry::footprint()const{
     bytes+=replay_.capacity()*(sizeof(ReplayBlock)+512)+replayOutput_.patches.capacity()*sizeof(ink::ContourPatch)+replayOutput_.caps.capacity()*sizeof(ink::ContourCap);
     return bytes;
 }
-PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count)const{
+PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
-    const auto clip=contourClip(canvas);
+    const auto clip=contourClip(canvas,deviceDemand);
     const auto visible=[&](const SkRect& b){return visibleContour(clip,b);};
     SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
     if(!replay_.empty()){

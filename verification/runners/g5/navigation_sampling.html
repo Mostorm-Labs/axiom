@@ -159,7 +159,7 @@ window.probe={
     for(let line=0;line<lines;++line){
       const prior=frames.length;
       for(let i=0;i<points;++i){
-        const t=i*.017;
+        const t=i*.017+line*(options.scribblePhase??0);
         pointer(i===0?'pointerdown':i===points-1?'pointerup':'pointermove',
           options.scribble?300+Math.sin(t)*220+Math.sin(t*.37)*60:40+i*(options.span?options.span/points:1.5),
           options.scribble?350+Math.sin(t*.73)*180:90+line*(options.lineSpacing??310)+Math.sin(i*.035)*42);

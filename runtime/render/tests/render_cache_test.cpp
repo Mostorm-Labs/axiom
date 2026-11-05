@@ -429,6 +429,80 @@ std::vector<std::uint8_t> checkLargeReplayNavigation(TestSurface& target,bool le
     return feedback;
 }
 
+void checkCoarseCameraStability(){
+    RasterSkiaSurfaceProvider target;
+    require(target.resize(1272,1846).code==BackendSubmissionCode::kAccepted,"portrait coarse surface");
+    FrameState frame{ViewId{1},{},{0,0,636,923},{636,923,1272,1846,2,1},
+        semantic::SemanticGeneration{8900},SceneRevision{8900},SurfaceGeneration{1},MetricsGeneration{1},FrameId{8900}};
+    double prior=0;
+    for(float x:{20.F,130.F}){
+        SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxQueries=1;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;nav.setRenderCacheOptions(options);
+        double span=0;NavigationSourceQuery query=[&](const foundation::WorldRect& bounds,std::vector<ReferenceTraversalEntry>& out){span=bounds.right-bounds.left;out.clear();return true;};
+        require(navigate(nav,target,{1.59F,-x*1.59F,-480*1.59F},frame,query).code==BackendSubmissionCode::kAccepted&&span>0,"portrait coarse query");
+        if(prior)require(span==prior,"pan changed coarse level solely at a grid boundary");prior=span;
+    }
+}
+void checkDenseFrontier(TestSurface& target){
+    std::vector<ReferenceTraversalEntry> entries;
+    for(unsigned line=0;line<5;++line){
+        auto entry=stroke(89000+line);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        c.stroke.knots.clear();
+        for(unsigned i=0;i<2048;++i)c.stroke.knots.push_back({110.+std::sin(i*.017)*80.,64.+std::sin(i*.013+line)*42.,32768});
+        entry.record.content=c;entry.command=CompactStrokeReferenceCommand{c};entries.push_back(entry);
+    }
+    auto crossing=stroke(89010);auto c=std::get<CompactStrokeReferenceCommand>(crossing.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.knots={{230,40,32768},{290,80,48000}};crossing.record.content=c;crossing.command=CompactStrokeReferenceCommand{c};entries.push_back(crossing);
+    const auto frame=plan(8901,entries);SkiaRenderer nav;
+    RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMaxGpuContourPrimitives=32;options.navigationMicroseconds=1000000;
+    nav.setRenderCacheOptions(options);
+    for(unsigned i=0;;++i){
+        const auto r=nav.renderFrame(target,frame);if(r.code==BackendSubmissionCode::kAccepted)break;
+        require(i<256&&r.code==BackendSubmissionCode::kRetry,"dense canonical setup");
+    }
+    const auto canonical=pixels(target);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+    unsigned first=0;
+    for(unsigned i=1;i<=8;++i){
+        const auto gpu=nav.navigationWork().gpuContourPrimitives;
+        require(navigate(nav,target,{1,-4,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"dense frontier navigation");
+        require(nav.navigationWork().gpuContourPrimitives-gpu<=32,"frontier bypassed GPU quota");
+        if(nav.navigationWork().presented){first=i;break;}
+    }
+    require(first>0,"tiny content frontier waited for unrelated dense cell interior");
+    require(nav.submissionCount()==1,"frontier forged canonical receipt");
+    std::cout<<"dense frontier first feedback opportunity="<<first<<'\n';
+    // Cold full-region rendering is an independent pixel oracle: it cannot
+    // reuse partial frontier images or the retained canonical snapshot.
+    for(const auto [dx,dy]:std::vector<std::pair<int,int>>{{4,0},{8,0},{16,4},{40,12}}){
+        if(dx!=4)for(unsigned i=0;;++i){
+            require(navigate(nav,target,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"frontier extension rejected");
+            if(nav.navigationWork().presented)break;require(i<32,"frontier extension stalled");
+        }
+        TestSurface full;require(full.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier reference surface");
+        SkiaRenderer reference;auto referenceOptions=options;referenceOptions.navigationMaxSteps=1;reference.setRenderCacheOptions(referenceOptions);
+        for(unsigned i=0;;++i){
+            require(navigate(reference,full,{1,float(-dx),float(-dy)},frame.frame,query).code==BackendSubmissionCode::kAccepted,"full-cell reference rejected");
+            if(reference.navigationWork().presented)break;require(i<4096,"full-cell reference stalled");
+        }
+        const auto actual=pixels(target),expected=pixels(full);
+        for(int y=0;y<128;++y)for(int x=0;x<256;++x)for(int channel=0;channel<4;++channel){
+            const auto at=(y*256+x)*4+channel;
+            if(x>=256-dx||y>=128-dy)
+                {if(actual[at]!=expected[at])std::cerr<<"frontier mismatch dx="<<dx<<" dy="<<dy<<" x="<<x<<" y="<<y<<" c="<<channel<<" actual="<<int(actual[at])<<" expected="<<int(expected[at])<<"\n";
+                require(actual[at]==expected[at],"partial/expanded cell changed frontier pixels or exposed unfinished content");}
+            else require(actual[at]==canonical[((y+dy)*256+x+dx)*4+channel],"coarse frontier replaced sharp retained overlap");
+        }
+        require(nav.navigationWork().retainedBytes<=options.maxBytes,"partial cells exceeded residency budget");
+    }
+    const auto final=plan(8901,entries,1,{1,0,0,1,-40,-12});
+    require(nav.renderFrame(target,final).code==BackendSubmissionCode::kAccepted,"frontier final canonical rejected");
+    TestSurface exact;require(exact.resize(256,128).code==BackendSubmissionCode::kAccepted,"frontier exact reference surface");
+    SkiaRenderer reference;RenderCacheOptions disabled;disabled.enabled=false;reference.setRenderCacheOptions(disabled);
+    require(reference.renderFrame(exact,final).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(exact),"frontier changed exact canonical pixels");
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
@@ -437,6 +511,10 @@ int main(int argc,char** argv) {
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc>1&&std::string_view(argv[1])=="--dense-frontier-only"){checkDenseFrontier(provider);return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--frontier-only")){
+            checkCoarseCameraStability();checkDenseFrontier(provider);if(argc>1)return finishNative(0);
+        }
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--exact-replay-only"){
             const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"exact replay acquire");

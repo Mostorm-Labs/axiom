@@ -71,6 +71,17 @@ try{
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/navigation_sampling.html`);
       record.setup=await page.evaluate(({options,selected})=>probe.setup('mixed',selected,'round-handdrawn',4,options),{options:record.options,selected});
+      if(process.env.AXIOM_NAV_QUIESCE==='1'){
+        // A coarse onFrame may precede work for the requested camera. Require
+        // actual SDK RAF quiescence before the first measured input, without
+        // keeping the page alive with a sampler RAF of our own.
+        let prior=-1,stable=0;const started=Date.now();
+        for(let n=0;n<100&&stable<3;++n){await page.waitForTimeout(100);
+          const requests=await page.evaluate(()=>lifecycleStats.requests);
+          stable=requests===prior?stable+1:0;prior=requests;}
+        record.setupQuiescence={stopped:stable===3,waitMs:Date.now()-started};
+        if(!record.setupQuiescence.stopped)throw Error('setup SDK RAF never quiesced');
+      }
       record.edits=[];for(let i=0;i<editSamples;++i)record.edits.push(await page.evaluate(i=>probe.commitStroke(i),i));
       const measure=async(id,interrupt=false)=>{
         const options={mode,burst:mode==='wheel'?4:1,panOnly,zoomDelta,qualityEvery,panStep};
