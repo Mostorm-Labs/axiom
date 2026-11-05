@@ -1,0 +1,80 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "pending-aware mandatory eviction arbitration",
+        "qualified frame retention when already-released quota suffices",
+        "bounded mandatory Nav victim selection",
+        "real-owner RED/GREEN integration tests"
+      ],
+      "scope": [
+        "runtime/render/src/skia_renderer.cpp",
+        "runtime/render/src/skia_navigation_tiles.cpp",
+        "runtime/render/src/skia_navigation_tiles.hpp",
+        "runtime/render/src/resource_reclaim.hpp",
+        "runtime/render/tests/render_cache_test.cpp",
+        "runtime/render/tests/retirement_arbitration_oracle.hpp",
+        "verification/runners/g5/prepared_gpu_probe.mjs",
+        "verification/evidence/performance/g5-retirement-arbitration"
+      ],
+      "forbidden_changes": [
+        "new public API/version",
+        "schema/semantic/Skia locks or dependency rebuild",
+        "budget/quota increases",
+        "new material path or A2 replay",
+        "raster/AA/order changes",
+        "partial/fake canonical receipt",
+        "overwrite earlier artifacts/demos/evidence"
+      ]
+    },
+    "tests": {
+      "required": [
+        "retirement",
+        "parity-lifecycle",
+        "regression",
+        "performance"
+      ]
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "Stable owner unnecessarily discards qualified frame/cells while released GPU quota already covers the request."
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing CI"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "retirement",
+        "parity-lifecycle",
+        "regression",
+        "performance"
+      ],
+      "corroborative": [
+        "source density is not optical blur;process-family RSS is not unique GPU memory;CDP freeze is not physical sleep"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all slice obligations satisfied",
+        "source/evidence committed and pushed",
+        "matching new root Demo",
+        "READY_FOR_CONTROL_REVIEW for this slice only"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

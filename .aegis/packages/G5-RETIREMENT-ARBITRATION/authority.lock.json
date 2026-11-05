@@ -1,0 +1,24 @@
+{
+  "status": "current",
+  "repository": "https://github.com/Mostorm-Labs/axiom",
+  "revision": "07f55270e4a214c59089f90073416018a59a0f74",
+  "inputs": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+    "verification/evidence/performance/g5-material-tile/result.json": "88f1bae968ac92f620e0d8ca94c85b7932bb1b86c6ef47cc5b9f64872d782eb1",
+    "verification/evidence/performance/g5-material-tile/next-step-review.md": "cbe46ece8831273904360ab85969bded56b51f175801dc583635298e28ba926a"
+  },
+  "authorization": "User accepted the next budget-contention step after the rejected material experiment. This is a new focused P31 slice,not an extension of its failed performance target.",
+  "statements": [
+    "Existing shared Render owns derived images and eviction;ResourceBudgetManager remains the sole admission/epoch owner.",
+    "On actual mandatory pressure:first account already-pending GPU release;retire optional whole-frame navigation only if still necessary;account that pending release before evicting navigation cells.",
+    "When mandatory cell reclaim is still necessary,select only enough victims to satisfy the minimum after retirement. Optional replay reclaim policy stays unchanged.",
+    "Projected future availability is a scheduling/eviction hint only;actual reserve remains fail closed against charged bytes until real GPU completion.",
+    "Keep stable32/96MiB budgets,8MiB entry,CPU8ms/4096 steps,Nav2ms/64steps/4queries and existing GPU quotas.",
+    "No material-tile resurrection,A2 replay extension,geometry/pixel/AA/grid/order or receipt changes. No new SDK API/version or dependency/schema/lock updates.",
+    "The prior material15%/150ms closure remains failed. This slice closes avoidable GPU-retirement collateral eviction,with explicit real-browser nonregression,not the entire G5 program."
+  ]
+}
