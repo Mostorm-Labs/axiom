@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Axiom SDK Demo</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100dvh; overflow: hidden; font: 13px system-ui, sans-serif; color: #243246; background: #f5f7fa; }
+  button, select, input { font: inherit; }
+  button, select, input[type=number] { min-height: 32px; border: 1px solid #d7dee8; border-radius: 6px; color: inherit; background: white; }
+  button { padding: 5px 11px; white-space: nowrap; cursor: pointer; }
+  button:hover:not(:disabled) { background: #f0f5fc; border-color: #a8bfdc; }
+  button[aria-pressed=true] { color: #174c99; background: #e7f0ff; border-color: #8bb1eb; }
+  button:disabled { opacity: .4; cursor: default; }
+  :focus-visible { outline: 2px solid #3978cf; outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  #tools { position: fixed; z-index: 3; top: 12px; left: 16px; right: 16px; overflow: hidden; border: 1px solid #d7dee8; border-radius: 12px; background: #fffffff2; box-shadow: 0 5px 24px #172c4c1a; }
+  .toolbar-row { display: flex; align-items: center; height: 52px; flex: none; padding: 0 16px; border-bottom: 1px solid #edf0f5; }
+  .toolbar-row:last-child { border: 0; background: #f8fafc; }
+  .row-label { flex: 0 0 44px; color: #7b8798; font-size: 12px; }
+  .row-content { min-width: 0; flex: 1; display: flex; align-items: center; gap: 16px; overflow-x: auto; padding: 8px 2px; scrollbar-width: thin; }
+  .group { display: flex; flex: none; align-items: center; gap: 6px; white-space: nowrap; }
+  #workspace { position: fixed; inset: 0; overflow: hidden; }
+  #properties { position: absolute; z-index: 2; bottom: 44px; left: 16px; right: 16px; max-height: min(38vh, 260px); overflow: auto; border: 1px solid #d7dee8; border-radius: 12px; background: #fffffff2; box-shadow: 0 5px 24px #172c4c1a; }
+  #properties .toolbar-row { height: auto; min-height: 48px; }
+  #properties .row-content { flex-wrap: wrap; overflow: visible; gap: 10px; }
+  #properties .group { flex-wrap: wrap; gap: 6px; max-width: 100%; padding: 0; border: 0; }
+  #properties .group + .group { border-left: 1px solid #e1e6ee; padding-left: 12px; }
+  #ink-parameters { flex-wrap: wrap; white-space: normal; row-gap: 10px; }
+  #ink-parameters output { min-width: 30px; font-variant-numeric: tabular-nums; }
+  .group + .group { border-left: 1px solid #e1e6ee; padding-left: 16px; }
+  label { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  input[type=color] { width: 30px; height: 30px; padding: 2px; border: 1px solid #d7dee8; border-radius: 6px; background: white; cursor: pointer; }
+  input[type=number] { width: 68px; padding: 4px 6px; }
+  input[type=range] { width: 100px; accent-color: #3978cf; }
+  label[data-mixed=true]::after { content: "混合"; color: #946317; font-size: 10px; }
+  .mixed-value { color: #946317; font-size: 11px; }
+  input[type=checkbox] { accent-color: #3978cf; }
+  select { max-width: 170px; padding: 4px 8px; }
+  .hint { color: #8290a3; white-space: nowrap; }
+  #context-title { color: #52657d; font-weight: 500; white-space: nowrap; flex: none; }
+  #canvas { position: absolute; inset: 0; overflow: hidden; background: white; }
+  #status { position: fixed; z-index: 3; left: 16px; bottom: 8px; max-width: calc(100vw - 32px); max-height: 28px; overflow: auto; padding: 6px 12px; margin: 0; border-radius: 8px; color: #6a7a90; background: #fffffff2; font-size: 12px; white-space: pre-wrap; pointer-events: none; }
+  #status[data-error=true] { color: #b42318; background: #fff1f0; }
+  dialog { width: min(390px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; margin: auto; padding: 22px; border: 1px solid #dbe2ec; border-radius: 12px; color: inherit; box-shadow: 0 12px 60px #172c4c30; }
+  dialog::backdrop { background: #15243a35; }
+  dialog h2 { margin: 0 0 18px; font-size: 17px; }
+  .settings { display: grid; gap: 16px; }
+  .settings > label { justify-content: space-between; }
+  .settings select { min-width: 125px; }
+  .settings .hint { white-space: normal; line-height: 1.6; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+  .primary { color: white; background: #2866ba; border-color: #2866ba; }
+  .primary:hover:not(:disabled) { color: white; background: #1f55a0; }
+  #background-preview { display: block; height: 80px; border: 1px solid #d7dee8; border-radius: 6px; }
+  @media (max-width: 600px) { .toolbar-row { padding: 0 8px; } .row-label { flex-basis: 34px; } .row-content { gap: 10px; } .group + .group { padding-left: 10px; } }
+</style>
+<header id="tools" aria-busy="true" inert>
+  <nav class="toolbar-row" aria-label="绘制工具"><span class="row-label">工具</span><div id="drawing-tools" class="row-content"></div></nav>
+  <nav class="toolbar-row" aria-label="画板操作"><span class="row-label">画板</span><div id="board-tools" class="row-content"></div></nav>
+</header>
+<main id="workspace">
+  <div id="canvas"></div>
+  <aside id="properties" aria-label="工具与对象属性" aria-busy="true" inert>
+    <div class="toolbar-row"><span class="row-label">参数</span><div id="context-tools" class="row-content"><span id="context-title"></span></div></div>
+    <div class="toolbar-row"><span class="row-label">属性</span><div id="detail-tools" class="row-content"></div></div>
+  </aside>
+</main>
+<output id="status" role="status">Loading SDK…</output>
+<input id="file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<dialog id="background-panel" aria-labelledby="background-title">
+  <h2 id="background-title">画板背景</h2>
+  <div class="settings">
+    <label>背景样式<select id="background-mode"><option value="plain">纯色</option><option value="dots">点阵</option><option value="grid">方格线</option></select></label>
+    <label>底色<input id="background-color" type="color" aria-label="底色"></label>
+    <label>点线颜色<input id="background-pattern-color" type="color" aria-label="点线颜色"></label>
+    <span id="background-preview" aria-label="背景预览"></span>
+  </div>
+  <div class="dialog-actions"><button id="background-cancel" type="button">取消更改</button><button id="background-apply" type="button" class="primary">应用背景</button></div>
+</dialog>
+<dialog id="export-panel" aria-labelledby="export-title">
+  <h2 id="export-title">导出画板图片</h2>
+  <div class="settings">
+    <label>图片格式<select id="export-format"><option value="png">PNG</option><option value="jpg">JPG</option><option value="jpeg">JPEG</option></select></label>
+    <label>导出倍率<select id="export-scale"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+    <label>透明背景<input id="export-transparent" type="checkbox"></label>
+    <label>包含点线<input id="export-pattern" type="checkbox" checked></label>
+    <span class="hint">导出画板全部内容，包含屏幕外的对象。</span>
+  </div>
+  <div class="dialog-actions"><button id="export-cancel" type="button">取消</button><button id="export-image" type="button" class="primary">导出图片</button></div>
+</dialog>
+<dialog id="table-panel" aria-labelledby="table-title">
+  <h2 id="table-title">插入表格</h2><div class="settings">
+    <label>行数<input id="table-rows" type="number" value="3" min="1" max="64" step="1"></label>
+    <label>列数<input id="table-columns" type="number" value="3" min="1" max="64" step="1"></label>
+    <span class="hint">最多 1024 个单元格。确认后点击画板放置，Esc 取消。双击单元格编辑文字。</span>
+  </div><div class="dialog-actions"><button id="table-cancel">取消</button><button id="table-place" class="primary">在画板放置</button></div>
+</dialog>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+import {DEMO_BRUSHES, DEMO_DRAWING_TOOLS, DEMO_BOARD_ACTIONS, DEMO_PRESSURE_SOURCES, DEMO_SHAPES, DEMO_SELECTION_MODES, DEMO_ERASER_MODES, resolveDemoBrushChoices} from './api/demo-controls.mjs';
+const $ = id => document.getElementById(id);
+const status = $('status'), tools = $('tools');
+let sdk, syncContext = () => {}, syncBackground = () => {};
+const fail = error => { status.dataset.error = 'true'; status.textContent = `${error.code || 'ERROR'}: ${error.message}`; };
+const show = () => {
+  if (!sdk) return;
+  const state = sdk.readState();
+  status.dataset.error = 'false';
+  status.textContent = `${state.objects} objects · ${state.selected.length} selected · Zoom ${state.camera.scale.toFixed(2)}`;
+  syncContext(state); syncBackground();
+};
+const run = async action => { try { await action(); show(); } catch (error) { fail(error); } };
+const button = (parent, label, action, id) => {
+  const element = document.createElement('button'); element.type = 'button'; element.textContent = label;
+  if (id) element.id = id;
+  element.onclick = () => run(action); parent.append(element); return element;
+};
+const group = (parent, id) => {
+  const element = document.createElement('div'); element.className = 'group';
+  if (id) element.id = id;
+  parent.append(element); return element;
+};
+const field = (parent, label, type, id) => {
+  const wrapper = document.createElement('label'); wrapper.textContent = label;
+  const input = document.createElement('input'); input.type = type; input.id = id;
+  input.setAttribute('aria-label', label); wrapper.append(input); parent.append(wrapper); return input;
+};
+const select = (parent, label, id, choices) => {
+  const wrapper = document.createElement('label'); wrapper.textContent = label;
+  const input = document.createElement('select'); input.id = id; input.setAttribute('aria-label', label);
+  for (const [value, text] of choices) input.add(new Option(text, value));
+  wrapper.append(input); parent.append(wrapper); return input;
+};
+const hex = color => '#' + color.slice(0, 3).map(n => Math.round(n * 255).toString(16).padStart(2, '0')).join('');
+const rgba = (value, alpha = 1) => [1, 3, 5].map(i => parseInt(value.slice(i, i + 2), 16) / 255).concat(alpha);
+const setValue = (input, value) => { if (document.activeElement !== input) input.value = value; };
+try {
+  sdk = await createRuntime({mount: $('canvas'), permission: 'localSingleUser', onError: fail, onChange: show});
+  const drawing = $('drawing-tools'), context = $('context-tools'), details = $('detail-tools'), board = $('board-tools');
+  const drawingGroup = group(drawing);
+  const toolButtons = [];
+  const addTool = (label, key, action, parent = drawingGroup) => {
+    const element = button(parent, label, action); element.dataset.tool = key;
+    element.setAttribute('aria-pressed', 'false'); toolButtons.push(element);
+  };
+  for (const tool of DEMO_DRAWING_TOOLS)
+    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool));
+  DEMO_SHAPES.forEach((shape, code) => addTool(shape.label, `shape:${code}`, () => sdk.selectShape(shape.id)));
+  button(drawingGroup,'表格',()=> $('table-panel').showModal(),'table-open');
+  const pathSamples={
+    hole:[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'},{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],
+    curve:[{op:'move',point:[0,50]},{op:'quad',control:[50,-20],point:[100,50]},{op:'cubic',control1:[130,110],control2:[165,-10],point:[200,50]}]
+  };
+  const addPath=kind=>run(async()=>{await sdk.text.finish();await sdk.selectTool('select');const camera=sdk.readState().camera,rect=sdk.canvas.getBoundingClientRect();await sdk.createVectorPath({commands:pathSamples[kind],fillRule:kind==='hole'?'evenodd':'nonzero',x:(rect.width/2-camera.x)/camera.scale-80,y:(rect.height/2-camera.y)/camera.scale-80});});
+  button(drawingGroup,'带孔路径',()=>addPath('hole'),'path-hole');
+  button(drawingGroup,'开放曲线',()=>addPath('curve'),'path-curve');
+  let tablePlacement=null;
+  $('table-cancel').onclick=()=> $('table-panel').close();
+  $('table-place').onclick=()=>run(async()=>{
+    const rows=Number($('table-rows').value),columns=Number($('table-columns').value);
+    if(!Number.isInteger(rows)||!Number.isInteger(columns)||rows<1||columns<1||rows>64||columns>64||rows*columns>1024)throw Error('请输入有效行列数，总单元格不超过 1024');
+    await sdk.text.finish();await sdk.selectTool('select');tablePlacement={rows,columns};$('table-panel').close();
+    sdk.canvas.style.cursor='crosshair';status.textContent='点击画板放置表格，Esc 取消';
+  });
+  const cancelPlacement=()=>{tablePlacement=null;sdk.canvas.style.cursor='';};
+  $('canvas').addEventListener('pointerdown',event=>{if(tablePlacement){event.preventDefault();event.stopImmediatePropagation();$('canvas').setPointerCapture(event.pointerId);}},true);
+  $('canvas').addEventListener('pointerup',event=>{if(!tablePlacement)return;event.preventDefault();event.stopImmediatePropagation();const placement=tablePlacement;cancelPlacement();const rect=sdk.canvas.getBoundingClientRect(),camera=sdk.readState().camera;
+    void run(()=>sdk.table.create({...placement,x:(event.clientX-rect.left-camera.x)/camera.scale,y:(event.clientY-rect.top-camera.y)/camera.scale}));},true);
+  $('canvas').addEventListener('pointercancel',cancelPlacement,true);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tablePlacement){cancelPlacement();show();}});
+
+
+  const file = $('file'); let replaceImage = false;
+  const chooseImage = replace => { replaceImage = replace; file.value = ''; file.click(); };
+  button(group(drawing), '导入图片', () => chooseImage(false), 'image-import');
+  file.onchange = () => run(async () => {
+    const image = file.files?.[0]; if (!image) return;
+    const bytes = new Uint8Array(await image.arrayBuffer());
+    if (replaceImage) await sdk.replaceImage(bytes, image.type); else await sdk.importImage(bytes, image.type);
+  });
+
+  const inkGroup = group(context, 'ink-parameters');
+  const presets = [...sdk.brushPresets().reduce((map,preset)=>{
+    const previous=map.get(preset.profileId);
+    if(!previous||preset.revision>previous.revision)map.set(preset.profileId,preset);
+    return map;
+  },new Map()).values()];
+  const brushChoices = resolveDemoBrushChoices(presets);
+  const brush = select(inkGroup, '笔刷', 'ink-preset', [['', '切换预设…'], ...brushChoices.map((preset, index) => [String(index), preset.label])]);
+  const brushHint=document.createElement('span');brushHint.id='ink-hint';brushHint.className='hint';inkGroup.append(brushHint);
+  brush.onchange = () => run(async () => { if (brush.value !== '') { const preset = brushChoices[Number(brush.value)]; await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); } });
+
+  const pressureMode=select(inkGroup,'压力来源','ink-pressure',DEMO_PRESSURE_SOURCES.map(source=>[String(source.id),source.label]));
+  const inkColor=field(inkGroup,'笔迹颜色','color','ink-color');
+  inkColor.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c)await sdk.setBrushConfig({...c,color:rgba(inkColor.value,c.color[3])});});
+  const inkControls={};
+  for(const [key,label,min,max,step] of [['size','笔宽',1,128,1],['opacity','透明度',0,1,.05],['thinning','粗细变化 Thinning',-1,1,.01],['streamline','轨迹稳定 Streamline',0,1,.01],['smoothing','曲线平滑 Smoothing',0,1,.01],['startTaper','起笔收尖（世界单位）',0,128,1],['endTaper','收笔收尖（世界单位）',0,128,1],['markerAngle','笔头角度',-3.14,3.14,.05],['markerFlatness','扁率',.05,1,.05],['density','粉笔覆盖率',0,1,.05],['textureScale','纸纹尺度',.25,32,.25],['deposition','蜡笔沉积',0,1,.05],['wetEdge','水彩湿边',0,1,.05]]){
+    const control=field(inkGroup,label,'range','ink-'+key);control.min=min;control.max=max;control.step=step;inkControls[key]=control;
+    const value=document.createElement('output');value.textContent=control.value;control.parentElement.append(value);
+    control.oninput=()=>{value.textContent=control.value;};
+    control.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,[key]:Number(control.value)});syncBrush();}});
+  }
+  const vectorControls=['thinning','streamline','smoothing','startTaper','endTaper'];
+  const familyControls={1:['size','opacity',...vectorControls],2:['size','opacity','markerAngle','markerFlatness',...vectorControls],3:['size','opacity','density','textureScale','thinning','streamline','startTaper','endTaper'],4:['size','opacity','deposition','textureScale','thinning','streamline','startTaper','endTaper'],5:['size','opacity','wetEdge','textureScale','thinning','streamline','startTaper','endTaper'],6:['size','opacity']};
+  const easingMode=select(inkGroup,'粗细响应 Easing','ink-easing',[['1','Linear'],['2','Ease in'],['3','Ease out'],['4','Smoothstep']]);
+  const pressureModel=select(inkGroup,'模拟压力算法','ink-pressure-model',[['2','点间距（perfect-freehand 风格）'],['1','速度 / 时间']]);
+  const startCap=field(inkGroup,'起笔圆头 Cap','checkbox','ink-start-cap');
+  const endCap=field(inkGroup,'收笔圆头 Cap','checkbox','ink-end-cap');
+  for(const [control,key] of [[easingMode,'easing'],[pressureModel,'pressureModel'],[startCap,'startCap'],[endCap,'endCap']]){
+    control.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,[key]:control.type==='checkbox'?control.checked:Number(control.value)});syncBrush();}});
+  }
+  const familyHints={1:'平滑圆头 · 速度模拟粗细',2:'斜切扁头 · 半透明叠色',3:'粉笔颗粒 · 压力控制纸纹覆盖',4:'柔边蜡笔 · 压力控制出墨与纸纹',5:'柔和色洗 · 压力控制浓淡与纸纹',6:'临时光迹 · 自动消退'};
+  const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;control.parentElement.hidden=!!c&&!familyControls[c.family]?.includes(key);if(c)control.value=c[key];const output=control.parentElement.querySelector('output');if(output)output.textContent=control.value;}const vector=!!c&&(c.family===1||c.family===2||([3,4,5].includes(c.family)&&c.version===2));
+    for(const [control,key] of [[easingMode,'easing'],[pressureModel,'pressureModel'],[startCap,'startCap'],[endCap,'endCap']]){control.parentElement.hidden=!vector;control.disabled=!vector;if(c){if(control.type==='checkbox')control.checked=c[key];else control.value=String(c[key]);}}
+    pressureModel.parentElement.hidden=!vector||c?.pressureSource!==1;
+    pressureMode.disabled=!c;pressureMode.parentElement.hidden=c?.family===6;inkColor.disabled=!c;if(c){pressureMode.value=String(c.pressureSource);inkColor.value=hex(c.color);}brushHint.textContent=c?(c.family===1&&c.thinning===0?'平滑圆头 · 固定笔宽':familyHints[c.family]):'兼容笔刷';};
+  inkGroup.append(brushHint);
+  pressureMode.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,pressureSource:Number(pressureMode.value)});syncBrush();}});
+  const initialBrush=new URLSearchParams(location.search).get('brush');
+  const initialPreset=brushChoices.find(p=>p.profileId===({crayon:'crayon-wax-v1',chalk:'chalk-compact-v1',watercolor:'watercolor-lite-v1'}[initialBrush]||'round-handdrawn'))||brushChoices[0];
+  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(brushChoices.indexOf(initialPreset));syncBrush();
+
+  const selectionGroup = group(context, 'selection-parameters');
+  const selectionMode = select(selectionGroup, '选择方式', 'selection-mode', DEMO_SELECTION_MODES.map(mode => [mode.id, mode.label]));
+  selectionMode.onchange = () => run(() => sdk.setSelectionMode(selectionMode.value));
+  const eraserGroup = group(context, 'eraser-parameters');
+  const eraserMode = select(eraserGroup, '擦除方式', 'eraser-mode', DEMO_ERASER_MODES.map(mode => [mode.id, mode.label]));
+  eraserMode.onchange = () => run(() => sdk.selectTool(eraserMode.value));
+
+  const appearanceGroup = group(context, 'appearance-parameters');
+  const fillEnabled = field(appearanceGroup, '填充', 'checkbox', 'object-fill-enabled');
+  const fill = field(appearanceGroup, '填充色', 'color', 'object-fill');
+  const strokeEnabled = field(appearanceGroup, '描边', 'checkbox', 'object-stroke-enabled');
+  const stroke = field(appearanceGroup, '描边色', 'color', 'object-stroke');
+  const strokeWidth = field(appearanceGroup, '线宽', 'number', 'object-stroke-width'); strokeWidth.min = '.1'; strokeWidth.step = '.5';
+  fillEnabled.onchange = () => run(() => sdk.setAppearance({fillEnabled: fillEnabled.checked}));
+  strokeEnabled.onchange = () => run(() => sdk.setAppearance({strokeEnabled: strokeEnabled.checked}));
+  fill.onchange = () => run(() => sdk.setAppearance({fill: rgba(fill.value, sdk.readSelection().appearance.fill[3])}));
+  stroke.onchange = () => run(() => sdk.setAppearance({stroke: rgba(stroke.value, sdk.readSelection().appearance.stroke[3])}));
+  strokeWidth.onchange = () => run(() => sdk.setAppearance({strokeWidth: Number(strokeWidth.value)}));
+  const sketchGroup=group(context,'sketch-parameters');
+  const styleScope=document.createElement('span');styleScope.className='hint';sketchGroup.append(styleScope);
+  const sketchEnabled=field(sketchGroup,'手绘','checkbox','sketch-enabled');
+  const roughness=field(sketchGroup,'程度','range','sketch-roughness');roughness.min='0';roughness.max='3';roughness.step='.01';
+  const roughLabel=document.createElement('output');roughLabel.id='sketch-degree';roughLabel.style.minWidth='30px';sketchGroup.append(roughLabel);
+  const quickStyle=select(sketchGroup,'快选','sketch-preset',[['','自定义'],['0','规则'],['1','轻微'],['2','明显']]);
+  const styleFill=select(sketchGroup,'填充','sketch-fill-kind',[['none','无'],['solid','纯色'],['hachure','斜线'],['crosshatch','交叉线']]);
+  const styleColor=field(sketchGroup,'填充色','color','sketch-fill-color');
+  const styleStrokeEnabled=field(sketchGroup,'描边','checkbox','sketch-stroke-enabled');
+  const styleStroke=field(sketchGroup,'描边色','color','sketch-stroke-color');
+  const styleWidth=field(sketchGroup,'线宽','number','sketch-stroke-width');styleWidth.min='.1';styleWidth.max='1024';styleWidth.step='.5';
+  const styleOpacity=field(sketchGroup,'透明度','number','sketch-opacity');styleOpacity.min='0';styleOpacity.max='1';styleOpacity.step='.05';
+  const styleDash=select(sketchGroup,'线型','sketch-dash',[['solid','实线'],['dash','虚线']]);
+  const hatchGap=field(sketchGroup,'间距','number','sketch-gap');hatchGap.min='2';hatchGap.max='1024';hatchGap.step='1';
+  const hatchWidth=field(sketchGroup,'排线宽','number','sketch-hatch-width');hatchWidth.min='.1';hatchWidth.max='64';hatchWidth.step='.1';
+  const hatchAngle=field(sketchGroup,'角度','number','sketch-angle');hatchAngle.min='-180';hatchAngle.max='180';hatchAngle.step='5';
+  const radius=field(sketchGroup,'圆角','range','corner-radius');radius.min='0';radius.max='128';radius.step='.5';
+  const radiusValue=field(sketchGroup,'半径','number','corner-radius-value');radiusValue.min='0';radiusValue.max='16384';radiusValue.step='.5';radiusValue.title='对象本地单位；按形状与线段尺寸限制实际圆角';
+  const sketchDetails=group(details,'sketch-details');
+  for(const input of [styleOpacity,styleDash,hatchGap,hatchWidth,hatchAngle])sketchDetails.append(input.parentElement);
+  let styleDrag=null,styleDragCanceled=false;
+  const editingDefaults=()=>sdk.readSelection().count===0;
+  const appearancePatch=patch=>editingDefaults()?sdk.appearance.setDefaults(patch):sdk.appearance.patch(patch);
+  quickStyle.onchange=()=>{if(quickStyle.value!=='')void run(()=>appearancePatch({enabled:true,roughness:Number(quickStyle.value)}));};
+  sketchEnabled.onchange=()=>run(()=>appearancePatch({enabled:sketchEnabled.checked}));
+  styleFill.onchange=()=>run(()=>appearancePatch({fillKind:styleFill.value}));
+  styleColor.onchange=()=>run(()=>appearancePatch({fill:rgba(styleColor.value)}));
+  styleStrokeEnabled.onchange=()=>run(()=>appearancePatch({strokeEnabled:styleStrokeEnabled.checked}));
+  styleStroke.onchange=()=>run(()=>appearancePatch({stroke:rgba(styleStroke.value),strokeEnabled:true}));
+  styleWidth.onchange=()=>run(()=>appearancePatch({strokeWidth:Number(styleWidth.value),strokeEnabled:true}));
+  styleOpacity.onchange=()=>run(()=>appearancePatch({opacity:Number(styleOpacity.value)}));
+  styleDash.onchange=()=>run(()=>appearancePatch({dash:styleDash.value==='dash'?[8,5]:[]}));
+  hatchGap.onchange=()=>run(()=>appearancePatch({gap:Number(hatchGap.value)}));
+  hatchWidth.onchange=()=>run(()=>appearancePatch({hatchWidth:Number(hatchWidth.value)}));
+  hatchAngle.onchange=()=>run(()=>appearancePatch({angle:Number(hatchAngle.value)}));
+  const startStyleDrag=(fieldName='roughness')=>{
+    if(styleDrag)return styleDrag;
+    const defaults=editingDefaults();
+    const begin=defaults?Promise.resolve(null):sdk.appearance.begin();
+    styleDrag={defaults,begin,tail:begin,touched:false,fieldName};return styleDrag;
+  };
+  roughness.onpointerdown=()=>{styleDragCanceled=false;startStyleDrag();};
+  roughness.onkeydown=event=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))styleDragCanceled=false;};
+  roughness.oninput=()=>{
+    if(styleDragCanceled)return;
+    const drag=startStyleDrag(),degree=Number(roughness.value);drag.degree=degree;drag.touched=true;roughLabel.value=degree.toFixed(2);
+    drag.tail=drag.tail.then(async()=>{if(drag.defaults)return;const begin=await drag.begin;return sdk.appearance.updatePreview(begin.token,{enabled:true,roughness:degree});});
+    drag.tail.catch(fail);
+  };
+  const finishStyleDrag=cancel=>{
+    const drag=styleDrag;if(!drag)return;styleDrag=null;if(cancel)styleDragCanceled=true;
+    void run(async()=>{await drag.tail;if(!drag.defaults){const begin=await drag.begin;await(cancel?sdk.appearance.cancel(begin.token):sdk.appearance.commit(begin.token));}else if(!cancel&&drag.touched)await sdk.appearance.setDefaults(drag.fieldName==='cornerRadius'?{cornerRadius:drag.degree}:{enabled:true,roughness:drag.degree});if(cancel){const value=(drag.defaults?sdk.appearance.readDefaults():sdk.appearance.read()).values;roughness.value=value.roughness;radius.value=value.cornerRadius;radiusValue.value=value.cornerRadius;}});
+  };
+  radius.onpointerdown=()=>{styleDragCanceled=false;startStyleDrag('cornerRadius');};
+  radius.onkeydown=()=>{styleDragCanceled=false;};
+  radius.oninput=()=>{if(styleDragCanceled)return;const drag=startStyleDrag('cornerRadius'),degree=Number(radius.value);drag.degree=degree;drag.touched=true;radiusValue.value=degree;drag.tail=drag.tail.then(async()=>{if(!drag.defaults){const begin=await drag.begin;await sdk.appearance.updatePreview(begin.token,{cornerRadius:degree});}});drag.tail.catch(fail);};
+  radius.onchange=radius.onpointerup=()=>finishStyleDrag(false);radius.onpointercancel=()=>finishStyleDrag(true);
+  radiusValue.onchange=()=>run(()=>appearancePatch({cornerRadius:Number(radiusValue.value)}));
+  roughness.onchange=()=>finishStyleDrag(false);
+  roughness.onpointerup=()=>finishStyleDrag(false);
+  roughness.onpointercancel=()=>finishStyleDrag(true);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&styleDrag){event.preventDefault();finishStyleDrag(true);}});
+  const sizeGroup = group(details, 'size-parameters');
+  const width = field(sizeGroup, '宽', 'number', 'object-width'), height = field(sizeGroup, '高', 'number', 'object-height');
+  for (const input of [width, height]) { input.min = '.1'; input.step = '1'; input.onchange = () => run(() => sdk.resizeSelection(Number(width.value), Number(height.value))); }
+
+  const textGroup = group(context, 'text-parameters');
+  const textDetails=group(details,'text-details');
+  const fontChoices=[['','选择字体…'],...sdk.text.fonts().entries.map(f=>[f.id,f.family==='Excalifont'?'Excalifont · 手绘':f.family])];
+  const fontFamily=select(textGroup,'字体','text-font',fontChoices);fontFamily.onchange=()=>{if(fontFamily.value)void run(()=>sdk.text.format({font:fontFamily.value}));};
+  const fontHint=document.createElement('span');fontHint.className='hint';fontHint.textContent='中文使用 Noto Sans CJK SC';textGroup.append(fontHint);
+  const fontSize = select(textGroup, '字号', 'text-size', [['', '设置字号…'], ['32', 'Title · 32'], ['24', 'Heading · 24'], ['20', 'Subheading · 20'], ['16', 'Body · 16']]);
+  fontSize.onchange = () => run(() => sdk.text.format({fontSize: Number(fontSize.value)}));
+  const textButtons = [];
+  for (const [name, label] of [['bold', 'B'], ['italic', 'I'], ['underline', 'U'], ['strikethrough', '删除线'], ['bulleted', '项目符号']]) {
+    const element = button(textGroup, label, () => sdk.text.format({[name]: !sdk.text.read().format[name]}));
+    element.title = name; element.setAttribute('aria-label', name); textButtons.push([name, element]);textDetails.append(element);
+  }
+  textGroup.onpointerdown = textDetails.onpointerdown = () => { void sdk.text.completeComposition().catch(fail); };
+
+  const tableGroup=group(details,'table-parameters');
+  const cellName=document.createElement('span');tableGroup.append(cellName);
+  const tableTarget=()=>{const t=sdk.table.read();return {objectId:t.objectId,rowId:t.rowId,columnId:t.columnId,generation:t.generation};};
+  button(tableGroup,'编辑文字',()=>sdk.table.edit(tableTarget()),'table-edit');
+  for(const axis of ['Row','Column']){
+    const label=axis==='Row'?'行':'列';
+    button(tableGroup,`+ ${label}`,()=>{const t=sdk.table.read(),axes=axis==='Row'?t.rows:t.columns,key=axis==='Row'?t.rowId:t.columnId;return sdk.table[`insert${axis}`]({objectId:t.objectId,index:axes.findIndex(a=>a.id===key)+1,generation:t.generation});},`table-add-${axis.toLowerCase()}`);
+    button(tableGroup,`删${label}`,()=>{const t=tableTarget();return sdk.table[`remove${axis}`](t);},`table-remove-${axis.toLowerCase()}`);
+  }
+  const rowHeight=field(tableGroup,'行高','number','table-row-height'),columnWidth=field(tableGroup,'列宽','number','table-column-width');
+  for(const input of [rowHeight,columnWidth]){input.min='24';input.max='16384';input.step='1';}
+  rowHeight.onchange=()=>run(()=>sdk.table.setRowHeight({...tableTarget(),size:Number(rowHeight.value)}));
+  columnWidth.onchange=()=>run(()=>sdk.table.setColumnWidth({...tableTarget(),size:Number(columnWidth.value)}));
+  const cellFill=field(tableGroup,'底色','color','table-cell-fill'),cellText=field(tableGroup,'文字','color','table-cell-color'),cellSize=field(tableGroup,'字号','number','table-cell-size');cellSize.min='1';cellSize.max='512';
+  cellFill.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),fill:rgba(cellFill.value)}));
+  cellText.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{color:rgba(cellText.value)}}));
+  cellSize.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{fontSize:Number(cellSize.value)}}));
+  const cellBold=button(tableGroup,'B',()=>{const t=sdk.table.read(),i=t.rows.findIndex(a=>a.id===t.rowId)*t.columns.length+t.columns.findIndex(a=>a.id===t.columnId);return sdk.table.setCellStyle({...tableTarget(),format:{bold:!t.cells[i].format.bold}});},'table-cell-bold');
+  const cellFont=select(tableGroup,'字体','table-cell-font',fontChoices);cellFont.onchange=()=>{if(cellFont.value)void run(()=>sdk.table.setCellStyle({...tableTarget(),format:{font:cellFont.value}}));};
+  const cellAlign=select(tableGroup,'对齐','table-cell-align',[['1','左'],['2','中'],['3','右']]);cellAlign.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{alignment:Number(cellAlign.value)}}));
+  const gridColor=field(tableGroup,'网格','color','table-grid-color'),gridWidth=field(tableGroup,'线宽','number','table-grid-width');gridWidth.min='0';gridWidth.max='16';gridWidth.step='.5';
+  const applyGrid=()=>sdk.table.setGridStyle({objectId:sdk.table.read().objectId,color:rgba(gridColor.value),width:Number(gridWidth.value)});gridColor.onchange=gridWidth.onchange=()=>run(applyGrid);
+  const imageGroup = group(details, 'image-parameters');
+  button(imageGroup, '替换图片', () => chooseImage(true), 'image-replace');
+  const crop = button(imageGroup, '裁剪', () => sdk.beginCrop(sdk.readSelectedImage().objectId), 'image-crop');
+  const cropGroup = group(details, 'crop-parameters');
+  button(cropGroup, '完成裁剪', () => sdk.commitCrop(sdk.readCrop().token), 'crop-done');
+  button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
+  const objectGroup = group(details, 'object-actions');
+  const groupButton = button(objectGroup, '组合', () => sdk.group());
+  const ungroupButton = button(objectGroup, '取消组合', () => sdk.ungroup());
+  const enterGroup = button(objectGroup, '进入组合', () => sdk.enterGroup());
+  const leaveGroup = button(objectGroup, '退出组合', () => sdk.leaveGroup());
+  const deleteButton = button(objectGroup, '删除', () => sdk.deleteSelection());
+
+  const historyGroup = group(board);
+  const boardLabels = Object.fromEntries(DEMO_BOARD_ACTIONS.map(action => [action.id, action.label]));
+  const undo = button(historyGroup, boardLabels.undo, () => sdk.undo(), 'undo');
+  const redo = button(historyGroup, boardLabels.redo, () => sdk.redo(), 'redo');
+  button(historyGroup, boardLabels.fit, () => sdk.fitContent(), 'fit');
+  const navigationGroup = group(board);
+  for (const tool of DEMO_DRAWING_TOOLS.filter(tool => tool.id === 'select' || tool.id === 'hand'))
+    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool), navigationGroup);
+  const boardGroup = group(board);
+  button(boardGroup, '创建分区', () => sdk.createSection(), 'section-create');
+  button(boardGroup, boardLabels.background, () => $('background-panel').showModal(), 'background-open');
+  button(boardGroup, boardLabels.export, () => $('export-panel').showModal(), 'export-open');
+
+  const contextHint = document.createElement('span'); contextHint.className = 'hint'; context.append(contextHint);
+  // The v1 actions array follows the SDK SelectionAction order. Availability
+  // comes from the Runtime; these names only identify the projected actions.
+  const actionIndex = {delete: 1, size: 6, appearance: 7, group: 9, ungroup: 10};
+
+  // Visibility and enabled states are projections of the public SDK readback.
+  // The Demo does not maintain another selection or editing owner.
+  syncContext = state => {
+    const selected = sdk.readSelection(), text = sdk.text.read(), image = sdk.readSelectedImage(), cropping = sdk.readCrop();
+    const table=sdk.table.read();tableGroup.hidden=!table.available;
+    if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
+      setValue(cellFont,cell.format.font??'');
+      cellName.textContent=`单元格 ${r+1} 行 ${c+1} 列`;
+      setValue(rowHeight,table.rows[r].size);setValue(columnWidth,table.columns[c].size);setValue(cellFill,hex(cell.fill));setValue(cellText,hex(cell.format.color??[0,0,0,1]));setValue(cellSize,cell.format.fontSize??16);setValue(cellAlign,cell.format.alignment??1);cellBold.setAttribute('aria-pressed',String(Boolean(cell.format.bold)));setValue(gridColor,hex(table.grid.color));setValue(gridWidth,table.grid.width);
+      for(const input of tableGroup.querySelectorAll('button,input,select'))input.disabled=!table.editable;
+      $('table-remove-row').disabled=!table.editable||table.rows.length===1;$('table-remove-column').disabled=!table.editable||table.columns.length===1;
+    }
+    const capability = action => selected.actions[actionIndex[action]]?.available === true;
+    const activeKey = state.creationMode ? `shape:${state.shape}` : `tool:${state.tool}`;
+    for (const element of toolButtons) element.setAttribute('aria-pressed', String(element.dataset.tool === activeKey));
+    const toolName = toolButtons.find(element => element.dataset.tool === activeKey)?.textContent || '工具';
+    $('context-title').textContent = selected.count ? `已选 ${selected.count} 个对象` : toolName;
+    inkGroup.hidden = state.creationMode || state.tool !== 0 || selected.count > 0;
+    selectionGroup.hidden = state.creationMode || state.tool !== 1;
+    eraserGroup.hidden = state.creationMode || state.tool !== 2;
+    selectionMode.value = ['point', 'rectangle', 'lasso'][state.selectionMode];
+    eraserMode.value = state.eraserMode === 1 ? 'objectEraser' : 'partialEraser';
+    appearanceGroup.hidden = selected.count !== 1 || !capability('appearance') || !selected.appearance;
+    if (!appearanceGroup.hidden) {
+      const appearance = selected.appearance;
+      fillEnabled.checked = appearance.fillEnabled; strokeEnabled.checked = appearance.strokeEnabled;
+      setValue(fill, hex(appearance.fill)); setValue(stroke, hex(appearance.stroke)); setValue(strokeWidth, appearance.strokeWidth);
+      fill.disabled = !appearance.fillEnabled; stroke.disabled = strokeWidth.disabled = !appearance.strokeEnabled;
+    }
+    const defaults=selected.count===0,styleState=defaults?sdk.appearance.readDefaults():sdk.appearance.read();
+    sketchGroup.hidden=defaults?!state.creationMode:styleState.eligible.length===0;
+    sketchDetails.hidden=sketchGroup.hidden;
+    if(!sketchGroup.hidden){
+      const v=styleState.values,mixed=new Set(styleState.mixed);
+      styleScope.textContent=defaults?'新建默认':styleState.excluded.length?`${styleState.eligible.length} 可调 / ${styleState.excluded.length} 排除`:'';
+      if(!styleDrag){sketchEnabled.checked=v.enabled;sketchEnabled.indeterminate=mixed.has('enabled');setValue(roughness,v.roughness);roughLabel.value=mixed.has('roughness')?'混合':Number(v.roughness).toFixed(2);}
+      styleStrokeEnabled.checked=v.strokeEnabled;styleStrokeEnabled.indeterminate=mixed.has('strokeEnabled');
+      setValue(quickStyle,[0,1,2].includes(v.roughness)?String(v.roughness):'');
+      setValue(styleFill,v.fillKind);setValue(styleColor,hex(v.fill));setValue(styleStroke,hex(v.stroke));setValue(styleWidth,v.strokeWidth);setValue(styleOpacity,v.opacity);setValue(styleDash,v.dash.length?'dash':'solid');setValue(hatchGap,v.gap);setValue(hatchWidth,v.hatchWidth);setValue(hatchAngle,v.angle);
+      for(const input of [...sketchGroup.querySelectorAll('input,select'),...sketchDetails.querySelectorAll('input,select')])input.disabled=!styleState.writable;
+      const radiusAvailable=defaults?state.creationMode&&![1,5].includes(state.shape):styleState.radiusEligible.length>0;
+      for(const input of [radius,radiusValue]){input.parentElement.hidden=!radiusAvailable;input.disabled=!styleState.writable||!radiusAvailable;input.parentElement.dataset.mixed=String(mixed.has('cornerRadius'));}
+      if(!styleDrag){radius.max=String(Math.max(128,v.cornerRadius));setValue(radius,v.cornerRadius);setValue(radiusValue,v.cornerRadius);}
+      const fillAvailable=defaults||styleState.fillEligible.length>0;
+      const strokeAvailable=defaults||styleState.strokeEligible.length>0;
+      for(const input of [styleStrokeEnabled,styleStroke,styleWidth,styleDash]){input.disabled=!styleState.writable||!strokeAvailable;input.parentElement.hidden=!strokeAvailable;}
+      for(const input of [styleFill,styleColor])input.parentElement.hidden=!fillAvailable;
+      if(!defaults&&!strokeAvailable&&styleState.eligible.length)styleScope.textContent='网格笔触';
+      styleFill.disabled=styleColor.disabled=!styleState.writable||!fillAvailable;
+      for(const input of [hatchGap,hatchWidth,hatchAngle]){input.parentElement.hidden=!['hachure','crosshatch'].includes(v.fillKind);input.disabled=!styleState.writable||!fillAvailable;}
+      for(const [input,key] of [[styleFill,'fillKind'],[styleColor,'fill'],[styleStroke,'stroke'],[styleWidth,'strokeWidth'],[styleOpacity,'opacity'],[hatchGap,'gap'],[hatchWidth,'hatchWidth'],[hatchAngle,'angle']]){input.title=mixed.has(key)?'多个对象的值不同':'';input.parentElement.dataset.mixed=String(mixed.has(key));}
+      appearanceGroup.hidden=true;
+    }
+    sizeGroup.hidden = selected.count !== 1 || !capability('size');
+    if (!sizeGroup.hidden) { setValue(width, Number(selected.width.toFixed(2))); setValue(height, Number(selected.height.toFixed(2))); }
+    textGroup.hidden = !(state.tool === 4 || text.phase !== 0 || selected.kind === 4);
+    textDetails.hidden=textGroup.hidden;
+    if (!textGroup.hidden) {
+      setValue(fontFamily,text.format.font??'');fontFamily.disabled=text.phase===0&&(!text.formatObject||/^0+$/.test(text.formatObject));
+      fontHint.textContent=fontFamily.disabled?'点击画板开始输入，再选择字体':'中文使用 Noto Sans CJK SC';
+      fontHint.hidden=!fontFamily.disabled&&fontFamily.value!==sdk.text.fonts().entries.find(f=>f.family==='Excalifont')?.id;
+      const size = text.format.fontSize;
+      if (size && !Array.from(fontSize.options).some(option => option.value === String(size))) fontSize.add(new Option(String(size), String(size)));
+      setValue(fontSize, size ? String(size) : '');
+      for (const [name, element] of textButtons) element.setAttribute('aria-pressed', String(Boolean(text.format[name])));
+    }
+    imageGroup.hidden = !image.available; crop.disabled = !image.editable || cropping.active;
+    cropGroup.hidden = !cropping.active;
+    objectGroup.hidden = selected.count === 0 && !selected.groupScope;
+    groupButton.hidden = selected.count < 2; groupButton.disabled = !capability('group');
+    ungroupButton.hidden = selected.kind !== 9; ungroupButton.disabled = !capability('ungroup'); deleteButton.disabled = !capability('delete');
+    enterGroup.hidden = selected.kind !== 9; leaveGroup.hidden = !selected.groupScope;
+    undo.disabled = !state.canUndo; redo.disabled = !state.canRedo;
+    contextHint.hidden = Array.from(context.children).some(element => element.classList.contains('group') && !element.hidden);
+    contextHint.textContent = state.creationMode ? '拖动绘制，选中对象后可调整样式与尺寸' : state.tool === 3 ? '拖动画板移动视角' : '选择工具或对象以调整参数';
+  };
+
+  const backgroundMode = $('background-mode'), backgroundColor = $('background-color'), patternColor = $('background-pattern-color');
+  let backgroundDirty = false, backgroundDraft = sdk.readBackground();
+  const previewDraft = () => {
+    const ink = `rgba(${backgroundDraft.patternColor.slice(0, 3).map(n => Math.round(n * 255)).join(',')},${backgroundDraft.patternColor[3]})`;
+    const preview = $('background-preview'); preview.style.backgroundColor = backgroundColor.value; preview.style.backgroundSize = '12px 12px';
+    preview.style.backgroundImage = backgroundMode.value === 'dots' ? `radial-gradient(circle,${ink} 1px,transparent 1.5px)` : backgroundMode.value === 'grid' ? `linear-gradient(${ink} 1px,transparent 1px),linear-gradient(90deg,${ink} 1px,transparent 1px)` : 'none';
+  };
+  for (const input of [backgroundMode, backgroundColor, patternColor]) input.oninput = () => {
+    backgroundDirty = true;
+    if (input === backgroundMode) backgroundDraft.mode = input.value;
+    else if (input === backgroundColor) backgroundDraft.color = rgba(input.value);
+    else backgroundDraft.patternColor = rgba(input.value, backgroundDraft.patternColor[3]);
+    previewDraft();
+  };
+  syncBackground = () => {
+    if (backgroundDirty) return;
+    backgroundDraft = sdk.readBackground(); backgroundMode.value = backgroundDraft.mode;
+    backgroundColor.value = hex(backgroundDraft.color); patternColor.value = hex(backgroundDraft.patternColor); previewDraft();
+  };
+  $('background-apply').onclick = () => run(async () => { await sdk.setBackground(backgroundDraft); backgroundDirty = false; $('background-panel').close(); });
+  $('background-cancel').onclick = () => { backgroundDirty = false; syncBackground(); $('background-panel').close(); };
+
+  const exportFormat = $('export-format'), transparent = $('export-transparent');
+  exportFormat.onchange = () => { transparent.disabled = exportFormat.value !== 'png'; if (transparent.disabled) transparent.checked = false; };
+  $('export-cancel').onclick = () => $('export-panel').close();
+  $('export-image').onclick = () => run(async () => {
+    const exportButton = $('export-image'); exportButton.disabled = true;
+    try {
+      const format = exportFormat.value;
+      const image = await sdk.exportImage({format, scale: Number($('export-scale').value), background: transparent.checked ? 'transparent' : 'document', includePattern: $('export-pattern').checked});
+      const url = URL.createObjectURL(new Blob([image.bytes], {type: image.mimeType})), link = document.createElement('a');
+      link.href = url; link.download = `axiom-board.${format}`; document.body.append(link); link.click(); link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000); $('export-panel').close();
+    } catch (error) {
+      if (error.code === 'EXPORT_TOO_LARGE') error.message = '图片尺寸过大，请降低导出倍率或缩小画板内容范围';
+      throw error;
+    } finally { exportButton.disabled = false; }
+  });
+  tools.inert = false; tools.setAttribute('aria-busy', 'false'); $('properties').inert = false; $('properties').setAttribute('aria-busy', 'false'); show();
+  window.addEventListener('pagehide', () => { void sdk.close().catch(fail); }, {once: true});
+} catch (error) { fail(error); }
+</script>
+</html>

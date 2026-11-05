@@ -1,0 +1,26 @@
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 60df4733..ef4d0b4f 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -181,7 +181,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
+     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
+     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
+-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
++        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile),
++        resources::kPixelResourceClasses&~(resources::resourceClassMask(resources::ResourceClass::kNavigationTile)|
++            resources::resourceClassMask(resources::ResourceClass::kNavigation)));
+     const bool cachedGpuSafe=!gpuContext||gpu.ready();
+     if(gpu.ready())gpu.touch();
+     internal::SkiaRenderCache* cache=nullptr;
+@@ -447,7 +449,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
+     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
+     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
+-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
++        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile),
++        resources::kPixelResourceClasses&~(resources::resourceClassMask(resources::ResourceClass::kNavigationTile)|
++            resources::resourceClassMask(resources::ResourceClass::kNavigation)));
+     const bool cachedGpuSafe=!gpuContext||gpu.ready();
+     if(gpu.ready())gpu.touch();
+     internal::SkiaRenderCache* cache=nullptr;
