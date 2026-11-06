@@ -910,6 +910,13 @@ bool requiresInkIsolation(const FramePlan& plan) {
 void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas, entry.record.eraseMasks);
 }
+void drawInkBodyToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
+    ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
+    drawCommand(canvas,entry,images,text,true,false,nullptr,grid);
+}
+void drawPresentationEraseMasksToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
+    eraseMasks(canvas,entry.presentationEraseMasks);
+}
 
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
                                   const semantic::ObjectRecord& object,
@@ -1025,6 +1032,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     for (std::size_t index=begin;index<end;++index) {
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
+        if(cache&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&cache->drawDamagedInk(canvas,plan,entry,images,textResources,grid))continue;
         SkAutoCanvasRestore feedbackRestore(&canvas, false);
         if (entry.presentationOpacity != 1.0F) {
             SkPaint feedback; feedback.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
