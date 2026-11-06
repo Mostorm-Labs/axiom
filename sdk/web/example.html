@@ -352,6 +352,24 @@ try {
     sdk.canvas.focus({preventScroll: true});
     return sdk.table.read().available ? sdk.table.edit(tableTarget()) : sdk.text.edit(sdk.readSelection().primary);
   }, 'object-edit');
+  const clipboardMime = 'application/x-axiom-objects', clipboardPrefix = 'AXIOM_OBJECTS_V1\n';
+  const clipboardText = bytes => {
+    const chunks=[];for(let i=0;i<bytes.length;i+=32768)chunks.push(String.fromCharCode(...bytes.subarray(i,i+32768)));
+    return clipboardPrefix+btoa(chunks.join(''));
+  };
+  const clipboardBytes = value => {
+    if(typeof value!=='string'||!value.startsWith(clipboardPrefix)||value.length>24*1024*1024)throw Error('剪贴板中没有可粘贴的 Axiom 对象');
+    return Uint8Array.from(atob(value.slice(clipboardPrefix.length)),c=>c.charCodeAt(0));
+  };
+  const writeClipboard = async cut => {
+    const capture=sdk.copySelection();
+    await navigator.clipboard.writeText(clipboardText(capture.bytes));
+    if(cut)await sdk.cutSelection(capture.stamp);
+  };
+  const copyButton = button(objectGroup, '拷贝', () => writeClipboard(false), 'object-copy');
+  const duplicateButton = button(objectGroup, '复制副本', () => sdk.duplicateSelection(), 'object-duplicate');
+  const cutButton = button(objectGroup, '剪切', () => writeClipboard(true), 'object-cut');
+  copyButton.title='拷贝对象（Ctrl/Cmd+C）';duplicateButton.title='复制副本（Ctrl/Cmd+D）';cutButton.title='剪切对象（Ctrl/Cmd+X）';
   const frontButton = button(objectGroup, '置顶', () => sdk.orderSelection(true), 'object-front');
   const backButton = button(objectGroup, '置底', () => sdk.orderSelection(false), 'object-back');
   frontButton.title = backButton.title = '调整对象在当前层级中的顺序';
@@ -372,11 +390,36 @@ try {
   const leaveGroup = button(boardGroup, '退出组合', () => sdk.leaveGroup());
   button(boardGroup, boardLabels.background, () => $('background-panel').showModal(), 'background-open');
   button(boardGroup, boardLabels.export, () => $('export-panel').showModal(), 'export-open');
+  const pasteButton = button(boardGroup, '粘贴', async () => sdk.pasteObjects(clipboardBytes(await navigator.clipboard.readText())), 'object-paste');
+  pasteButton.title='粘贴对象（Ctrl/Cmd+V）';
 
   const contextHint = document.createElement('span'); contextHint.className = 'hint'; context.append(contextHint);
   // The v1 actions array follows the SDK SelectionAction order. Availability
   // comes from the Runtime; these names only identify the projected actions.
   const actionIndex = {delete: 1, lock: 2, unlock: 3, order: 4, transform: 5, size: 6, appearance: 7, group: 9, ungroup: 10};
+  const objectKeyboardContext = event => !event.defaultPrevented && !event.isComposing && event.keyCode!==229 &&
+    sdk.text.read().phase===0 && !document.querySelector('dialog[open]') &&
+    !event.target.closest?.('input,textarea,select,[contenteditable]');
+  for(const action of ['copy','cut'])document.addEventListener(action,event=>{
+    if(!objectKeyboardContext(event)||!sdk.readSelection().count)return;
+    event.preventDefault();
+    try {
+      const capture=sdk.copySelection(),value=clipboardText(capture.bytes);
+      if(!event.clipboardData)throw Error('无法写入系统剪贴板');
+      event.clipboardData.setData(clipboardMime,value);event.clipboardData.setData('text/plain',value);
+      if(action==='cut')void run(async()=>{await navigator.clipboard.writeText(value);await sdk.cutSelection(capture.stamp);});
+    }catch(error){fail(error);}
+  });
+  document.addEventListener('paste',event=>{
+    if(!objectKeyboardContext(event))return;
+    const value=event.clipboardData?.getData(clipboardMime)||event.clipboardData?.getData('text/plain');
+    if(!value?.startsWith(clipboardPrefix))return;
+    event.preventDefault();void run(()=>sdk.pasteObjects(clipboardBytes(value)));
+  });
+  document.addEventListener('keydown',event=>{
+    if(!objectKeyboardContext(event)||!(event.ctrlKey||event.metaKey)||event.altKey||event.shiftKey||event.key.toLowerCase()!=='d'||!sdk.readSelection().count)return;
+    event.preventDefault();void run(()=>sdk.duplicateSelection());
+  });
 
   // Object shortcuts are Shell bindings to the existing admitted SDK command.
   // Native text/IME, HTML inputs and dialogs retain their own keyboard behavior.
@@ -469,6 +512,7 @@ try {
     editButton.disabled = !capability('transform') || table.available && !table.editable;
     for (const element of [frontButton, backButton]) { element.hidden = locked; element.disabled = !capability('order'); }
     lockButton.hidden = locked; lockButton.disabled = !capability('lock');
+    for(const element of [copyButton,duplicateButton,cutButton]){element.hidden=locked;element.disabled=!capability('delete');}
     unlockButton.hidden = !locked; unlockButton.disabled = !capability('unlock');
     groupButton.hidden = locked || selected.count < 2; groupButton.disabled = !capability('group');
     ungroupButton.hidden = locked || selected.kind !== 9; ungroupButton.disabled = !capability('ungroup');

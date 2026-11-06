@@ -186,3 +186,16 @@ transport with pressure/contact, thinning, streamline, easing, pressure model,
 taper and caps. Smoothing is fixed at .5. Resource/evaluator binding is selected
 by the preset, not caller-supplied engine IDs. Historical revisions remain valid.
 No DLL ABI changes; native host/Web results do not qualify Windows rendering.
+
+
+Object clipboard v1 reuses the bounded `clipboard` Session command through the
+existing C/POD request/response transport. The caller wrapper provides
+`copySelection`, `cutSelection`, `duplicateSelection`, `pasteObjects`; Copy owns its
+returned bytes and JSON stamp, and Paste borrows input bytes only during the call.
+The same shared Runtime performs identity remapping, scope/lock/stamp validation,
+atomic History and operation publication as Web. Clipboard data contains no Runtime
+pointers or STL objects across the DLL. Hosts own OS clipboard transfer; write must
+succeed before invoking Cut with the captured complete stamp. Refer to the Web
+README/object-clipboard-and-live-erase-v1 contract for v1 format, bounds, placement,
+resource requirements and errors. Windows binary/physical input qualification must
+be performed on Windows; macOS shared Runtime/Web checks do not establish it.

@@ -25,6 +25,15 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
     return skpathutils::FillPathWithPaint(path,p);
 }
 bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
+std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask) {
+        SkPath eraser;
+        if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
+        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
+            SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
+            if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return std::nullopt;
+        }
+    return eraser;
+}
 bool fillVisible(const RuntimeSceneRecord& r) {
     for(const auto& p:r.properties.entries)if(p.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&p.value)) {
         const auto* solid=std::get_if<semantic::SolidFill>(v);if(const auto* pattern=std::get_if<semantic::PatternFillV1>(v))return pattern->color.a>0;return solid&&solid->color.a>0;
@@ -201,18 +210,26 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         if(width>0&&!sketch->arrowFill.commands.empty())decorations.push_back(internal::semanticPath(sketch->arrowFill));
     }
     for(const auto& mask:r.eraseMasks) {
-        SkPath eraser;
-        if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask.geometry))eraser=internal::semanticPath(filled->path);
-        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask.geometry))for(const auto& s:swept->segments) {
-            SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
-            if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return Hit::kInvalid;
-        }
+        const auto built=erasePath(mask.geometry);if(!built)return Hit::kInvalid;
+        const auto& eraser=*built;
         const auto subtract=[&](SkPath& candidate){auto remaining=Op(candidate,eraser,kDifference_SkPathOp);if(!remaining)return false;candidate=*remaining;return true;};
         if(!subtract(path))return Hit::kInvalid;
         for(auto& decoration:decorations)if(!subtract(decoration))return Hit::kInvalid;
     }
     return path.isFinite()&&std::all_of(decorations.begin(),decorations.end(),[](const auto& p){return p.isFinite();})?Hit::kHit:Hit::kInvalid;
 }
+}
+SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
+    try {
+        SkPath visible;std::vector<SkPath> decorations;
+        const auto status=geometry(record,visible,decorations);if(status!=Hit::kHit)return status;
+        const auto eraser=erasePath(mask);if(!eraser)return Hit::kInvalid;
+        const auto intersects=[&](const SkPath& body){const auto overlap=Op(body,*eraser,kIntersect_SkPathOp);return !overlap?Hit::kInvalid:overlap->isEmpty()?Hit::kMiss:Hit::kHit;};
+        const auto body=intersects(visible);if(body==Hit::kHit)return body;
+        bool invalid=body==Hit::kInvalid;
+        for(const auto& part:decorations){const auto hit=intersects(part);if(hit==Hit::kHit)return hit;invalid=invalid||hit==Hit::kInvalid;}
+        return invalid?Hit::kInvalid:Hit::kMiss;
+    }catch(const std::bad_alloc&){return Hit::kInvalid;}
 }
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {
     try {
@@ -252,6 +269,7 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
 }
 #else
 namespace canvas::render {
+SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&) noexcept {return SelectionGeometryHit::kUnsupported;}
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>) noexcept {return SelectionGeometryHit::kUnsupported;}
 }
 #endif

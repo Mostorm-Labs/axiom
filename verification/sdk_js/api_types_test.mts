@@ -1,5 +1,13 @@
 import {createRuntime,AxiomError,type Color} from '../../sdk/web/axiom.mjs';
 const sdk=await createRuntime({mount:document.createElement('div'),permission:'localSingleUser',onOperation:bytes=>{bytes.slice();}});
+const clipboard=sdk.copySelection();clipboard.bytes.slice();const clipboardRevision:string=clipboard.stamp.token[0];void clipboardRevision;
+await sdk.cutSelection(clipboard.stamp);await sdk.duplicateSelection({offset:[24,24]});await sdk.pasteObjects(clipboard.bytes);
+// @ts-expect-error a bare array is not a Runtime-owned selection Stamp
+await sdk.cutSelection(clipboard.stamp.token);
+// @ts-expect-error clipboard bytes retain explicit ownership/type
+await sdk.pasteObjects([1,2,3]);
+// @ts-expect-error placement options are closed
+await sdk.duplicateSelection({parentId:'bad'});
 const imageExportVersion:1=sdk.readBuildInfo().features.imageExport;
 void imageExportVersion;
 await sdk.selectTool('objectEraser');

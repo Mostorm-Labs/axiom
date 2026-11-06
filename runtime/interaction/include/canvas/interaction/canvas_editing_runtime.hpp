@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/object_clipboard.hpp"
 #include "canvas/ink/laser_trail.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
@@ -164,6 +165,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   virtual ~CanvasEditingRuntime() = default;
   void close() noexcept;
   [[nodiscard]] bool closed() const noexcept { return closed_; }
+  [[nodiscard]] runtime::ClipboardResult clipboardCommand(const runtime::ClipboardRequest&, const runtime::MultiSelectionProjection&);
   [[nodiscard]] bool beginExplicitIntent() noexcept;
   [[nodiscard]] bool prepareExplicitIntent(std::span<const semantic::Operation> operations);
   [[nodiscard]] bool commitExplicitIntent() noexcept;
@@ -359,6 +361,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
                                   bool renderPreview = true) noexcept;
+  [[nodiscard]] bool partialEraseFeedbackActive() const noexcept { return toolMode_==ToolMode::kPartialEraser && !eraserTraces_.empty(); }
   [[nodiscard]] bool objectEraseFeedbackActive() const noexcept { return !objectEraseCandidates_.empty(); }
   void finishObjectEraseFeedback(std::uint64_t pointerId, bool cancel) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
@@ -708,6 +711,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<semantic::ObjectRecord> textPresentation();
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
+  [[nodiscard]] std::optional<std::vector<semantic::EraseMaskAddItem>> partialEraseTargets(std::span<const foundation::WorldPoint>) const;
+  [[nodiscard]] bool applyPartialErasePreview(render::ReferenceDrawList&) const;
   bool textWritable(semantic::ObjectId) const noexcept override;
   semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }

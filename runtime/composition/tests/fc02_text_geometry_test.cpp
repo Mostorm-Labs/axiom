@@ -1,5 +1,6 @@
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 #include "host_font_resources.hpp"
 
 #include <fstream>
@@ -2232,4 +2233,84 @@ TEST(CreationHover, AttachmentPreviewReusesTheCommittedSiblingFactoryAndIdentiti
     EXPECT_EQ(sibling->properties,expected);
     const auto* connector=h.runtime.qualificationRuntime().qualificationObjectRecord(preview.primary.id);ASSERT_NE(connector,nullptr);
     EXPECT_EQ(connector->content,preview.primary.content);
+}
+
+TEST(ObjectClipboard, GroupDescendantsWorldTransformsAndInternalAttachmentsAreRemapped) {
+    Host h;
+    ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
+    auto& q=h.runtime.qualificationRuntime();
+    auto a=labelShape(),b=labelShape();
+    semantic::ObjectRecord group;group.id=foundation::ObjectId::fromUint64(1000);group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;group.content=semantic::GroupContent{};group.placement.order_key=semantic::OrderKey({1});group.transform.tx=10;group.transform.ty=15;
+    a.id=foundation::ObjectId::fromUint64(1001);a.placement.parent_id=group.id;a.transform.tx=10;a.transform.ty=10;a.content=semantic::ShapeContent{1,60,60};a.properties.entries.push_back({0x102U,semantic::SketchStyleV1{1,12345,1.25,true}});
+    b.id=foundation::ObjectId::fromUint64(1002);b.placement.parent_id=group.id;b.placement.order_key=semantic::OrderKey({2});b.transform.tx=130;b.transform.ty=10;b.content=semantic::ShapeContent{1,60,60};
+    semantic::ObjectRecord line;line.id=foundation::ObjectId::fromUint64(1003);line.kind=semantic::ObjectKind::kConnector;line.kind_version=1;line.placement.parent_id=group.id;line.placement.order_key=semantic::OrderKey({3});line.content=semantic::ConnectorContent{{semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{2}}},{semantic::AttachedEndpoint{b.id,semantic::StablePortAnchor{4}}},semantic::ConnectorRouting::kStraight};
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8000)},q.documentId(),1,1,semantic::InsertObjectsOp{{group,a,b,line}}};
+    ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(45,45));ASSERT_EQ(q.selectedPrimaryObject(),group.id);
+    const auto generation=q.semanticGeneration();const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);EXPECT_EQ(copy.objectCount,4U);EXPECT_EQ(q.semanticGeneration(),generation);
+    runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto result=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(result.applied);ASSERT_EQ(result.roots.size(),1U);EXPECT_EQ(q.qualificationObjectCount(),8U);
+    const auto* cloned=q.qualificationObjectRecord(result.roots[0]);ASSERT_NE(cloned,nullptr);EXPECT_DOUBLE_EQ(cloned->transform.tx,group.transform.tx+24);EXPECT_DOUBLE_EQ(cloned->transform.ty,group.transform.ty+24);
+    std::vector<semantic::ObjectRecord> children;for(const auto& r:q.snapshotObjects())if(r.placement.parent_id==cloned->id)children.push_back(r);ASSERT_EQ(children.size(),3U);
+    const auto it=std::find_if(children.begin(),children.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kConnector;});ASSERT_NE(it,children.end());const auto& c=std::get<semantic::ConnectorContent>(it->content);const auto start=std::get<semantic::AttachedEndpoint>(c.start.value).target_object_id,end=std::get<semantic::AttachedEndpoint>(c.end.value).target_object_id;EXPECT_NE(start,a.id);EXPECT_NE(end,b.id);EXPECT_EQ(q.qualificationObjectRecord(start)->placement.parent_id,cloned->id);EXPECT_EQ(q.qualificationObjectRecord(end)->placement.parent_id,cloned->id);EXPECT_EQ(q.qualificationObjectRecord(start)->properties,a.properties);
+    const auto newId=cloned->id;ASSERT_TRUE(q.undo());EXPECT_EQ(q.qualificationObjectCount(),4U);ASSERT_TRUE(q.redo());EXPECT_NE(q.qualificationObjectRecord(newId),nullptr);
+}
+TEST(ObjectClipboard, TableCellsAxesParagraphsAndCutHistoryKeepTheirIdentityRules) {
+    Host h(true);ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
+    const auto created=h.facade.tableCommand({});ASSERT_TRUE(created.applied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"A\nB").status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    const auto original=h.facade.readTable(created.object);ASSERT_TRUE(original.available);
+    runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto clone=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(clone.applied);
+    const auto table=h.facade.readTable(clone.roots.at(0));ASSERT_TRUE(table.available);ASSERT_EQ(table.content.rows.size(),2U);ASSERT_EQ(table.content.cells.size(),4U);
+    for(std::size_t i=0;i<2;++i){EXPECT_NE(table.content.rows[i].id,original.content.rows[i].id);EXPECT_NE(table.content.columns[i].id,original.content.columns[i].id);EXPECT_DOUBLE_EQ(table.content.rows[i].size,original.content.rows[i].size);}
+    const auto& before=original.content.cells[0].text.document.paragraphs;const auto& after=table.content.cells[0].text.document.paragraphs;ASSERT_EQ(before.size(),after.size());for(std::size_t i=0;i<before.size();++i){EXPECT_NE(before[i].id,after[i].id);EXPECT_EQ(before[i].runs,after[i].runs);}
+    const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);runtime::ClipboardRequest cut;cut.action=runtime::ClipboardAction::kCut;cut.stamp=copy.stamp;
+    ASSERT_TRUE(h.facade.clipboardCommand(cut).applied);EXPECT_EQ(h.runtime.semanticObjectCount(),1U);ASSERT_TRUE(h.runtime.qualificationRuntime().undo());EXPECT_EQ(h.facade.readTable(clone.roots[0]).content,table.content);
+    const auto stale=h.facade.clipboardCommand(cut);EXPECT_FALSE(stale.applied);EXPECT_EQ(stale.error,runtime::ClipboardError::kStale);
+}
+TEST(ObjectClipboard, MaskedInkKeepsAppearanceButAllocatesFreshMaskIdentity) {
+    Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();
+    ASSERT_TRUE(q.selectBrushProfile("round-handdrawn",4));auto config=q.inkBrushConfig();ASSERT_TRUE(config.has_value());config->size=40;config->thinning=0;config->streamline=0;config->smoothing=0;ASSERT_TRUE(q.configureInkBrush(*config));
+    ASSERT_TRUE(q.beginBrushSession(700));ASSERT_TRUE(q.appendBrushSample(700,20,100,.5,1,false,false));ASSERT_TRUE(q.appendBrushSample(700,220,100,.5,2,false,false));ASSERT_TRUE(q.finishBrushSession(700));
+    ASSERT_TRUE(q.selectTool(interaction::CanvasEditingRuntime::ToolMode::kPartialEraser));ASSERT_TRUE(q.eraserBegin(701));ASSERT_TRUE(q.eraserSample(701,120,20,false));ASSERT_TRUE(q.eraserSample(701,120,200,false));ASSERT_TRUE(q.eraserFinish(701));
+    const auto original=q.snapshotObjects();ASSERT_EQ(original.size(),1U);ASSERT_EQ(original[0].erase_masks.size(),1U);
+    ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(50,100));runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto result=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(result.applied);
+    const auto* clone=q.qualificationObjectRecord(result.roots.at(0));ASSERT_NE(clone,nullptr);ASSERT_EQ(clone->erase_masks.size(),1U);EXPECT_NE(clone->erase_masks[0].id,original[0].erase_masks[0].id);EXPECT_EQ(clone->erase_masks[0].geometry,original[0].erase_masks[0].geometry);EXPECT_EQ(clone->content,original[0].content);
+    ASSERT_TRUE(q.setSelectionMode(false));ASSERT_TRUE(q.selectTool(interaction::CanvasEditingRuntime::ToolMode::kPartialEraser));const auto before=q.snapshotObjects();const auto generation=q.semanticGeneration();ASSERT_TRUE(q.eraserBegin(702));ASSERT_TRUE(q.eraserSample(702,50,100,false));ASSERT_TRUE(q.eraserCancel(702));EXPECT_EQ(q.semanticGeneration(),generation);EXPECT_EQ(q.snapshotObjects(),before);
+}
+TEST(ObjectClipboard, ForeignCutLockedSourcesAndUnknownVersionRejectWithoutMutation) {
+    Host h,other;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));ASSERT_TRUE(other.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));seedShape(h,labelShape());seedShape(other,labelShape());auto& q=h.runtime.qualificationRuntime();auto& foreign=other.runtime.qualificationRuntime();ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(foreign.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(90,90));ASSERT_TRUE(foreign.selectAtViewPoint(90,90));const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);
+    runtime::ClipboardRequest cut;cut.action=runtime::ClipboardAction::kCut;cut.stamp=copy.stamp;const auto rejected=other.facade.clipboardCommand(cut);EXPECT_FALSE(rejected.applied);EXPECT_EQ(rejected.error,runtime::ClipboardError::kStale);
+    runtime::ClipboardRequest paste;paste.action=runtime::ClipboardAction::kPaste;paste.bytes=copy.bytes;paste.bytes[4]=2;const auto generation=q.semanticGeneration();const auto unsupported=h.facade.clipboardCommand(paste);EXPECT_FALSE(unsupported.applied);EXPECT_EQ(unsupported.error,runtime::ClipboardError::kUnsupported);EXPECT_EQ(q.semanticGeneration(),generation);
+    ASSERT_TRUE(q.patchSelectedProperty(2U,semantic::PropertyValue{true}));const auto locked=q.semanticGeneration();EXPECT_EQ(h.facade.clipboardCommand({}).error,runtime::ClipboardError::kLocked);runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;EXPECT_FALSE(h.facade.clipboardCommand(duplicate).applied);EXPECT_EQ(q.semanticGeneration(),locked);
+}
+TEST(ObjectClipboard, PublicationBackpressureRejectsDuplicateAndCutAtomically) {
+    Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));seedShape(h,labelShape());auto& q=h.runtime.qualificationRuntime();ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(90,90));
+    struct Sink:interaction::LocalOperationSink {
+        unsigned published=0;
+        bool preparePublication(std::span<const semantic::Operation>) noexcept override {return false;}
+        void applied(const semantic::Operation&,const semantic::CanonicalCommitRecord&) noexcept override {++published;}
+        interaction::AxisOperationStatus status(const semantic::OperationId&,const semantic::CanonicalCommitStamp&) const noexcept override {return {};}
+    } sink;
+    const auto before=q.snapshotObjects();const auto generation=q.semanticGeneration();const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);
+    q.setLocalOperationSink(&sink);runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;EXPECT_FALSE(h.facade.clipboardCommand(duplicate).applied);
+    runtime::ClipboardRequest cut;cut.action=runtime::ClipboardAction::kCut;cut.stamp=copy.stamp;EXPECT_FALSE(h.facade.clipboardCommand(cut).applied);EXPECT_EQ(q.snapshotObjects(),before);EXPECT_EQ(q.semanticGeneration(),generation);EXPECT_EQ(sink.published,0U);q.setLocalOperationSink(nullptr);
+}
+TEST(ObjectClipboard, StandaloneConnectorDetachesExternalTargetsAtCapturedWorldEndpoints) {
+    Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();auto shape=labelShape();shape.transform.tx=10;shape.transform.ty=50;shape.content=semantic::ShapeContent{1,50,50};
+    semantic::ObjectRecord line;line.id=foundation::ObjectId::fromUint64(1003);line.kind=semantic::ObjectKind::kConnector;line.kind_version=1;line.placement.order_key=semantic::OrderKey({2});line.content=semantic::ConnectorContent{{semantic::AttachedEndpoint{shape.id,semantic::StablePortAnchor{2}}},{semantic::FreePointEndpoint{{200,75}}},semantic::ConnectorRouting::kStraight};
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8000)},q.documentId(),1,1,semantic::InsertObjectsOp{{shape,line}}};ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(130,75));ASSERT_EQ(q.selectedPrimaryObject(),line.id);runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto result=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(result.applied);const auto* clone=q.qualificationObjectRecord(result.roots.at(0));ASSERT_NE(clone,nullptr);const auto& c=std::get<semantic::ConnectorContent>(clone->content);ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.start.value));ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.end.value));EXPECT_NEAR(std::get<semantic::FreePointEndpoint>(c.start.value).point.x,60,1);EXPECT_NEAR(std::get<semantic::FreePointEndpoint>(c.start.value).point.y,75,1);EXPECT_DOUBLE_EQ(clone->transform.tx,24);EXPECT_DOUBLE_EQ(clone->transform.ty,24);
+}
+TEST(ObjectClipboard, SectionCutAndPasteCarryTheSubtreeWithoutChangingDeleteSemantics) {
+    Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();semantic::ObjectRecord section;section.id=foundation::ObjectId::fromUint64(1000);section.kind=semantic::ObjectKind::kSection;section.kind_version=1;section.placement.order_key=semantic::OrderKey({1});section.transform.tx=10;section.transform.ty=20;section.content=semantic::SectionContent{{0,0,230,200},"Section",0,0};auto child=labelShape();child.placement.parent_id=section.id;child.transform.tx=50;child.transform.ty=50;child.content=semantic::ShapeContent{1,60,60};
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8000)},q.documentId(),1,1,semantic::InsertObjectsOp{{section,child}}};ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(10,70));ASSERT_EQ(q.selectedPrimaryObject(),section.id);const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);EXPECT_EQ(copy.objectCount,2U);
+    runtime::ClipboardRequest cut;cut.action=runtime::ClipboardAction::kCut;cut.stamp=copy.stamp;ASSERT_TRUE(h.facade.clipboardCommand(cut).applied);EXPECT_EQ(q.qualificationObjectCount(),0U);runtime::ClipboardRequest paste;paste.action=runtime::ClipboardAction::kPaste;paste.bytes=copy.bytes;const auto result=h.facade.clipboardCommand(paste);ASSERT_TRUE(result.applied);EXPECT_EQ(q.qualificationObjectCount(),2U);EXPECT_EQ(q.qualificationObjectRecord(result.roots.at(0))->kind,semantic::ObjectKind::kSection);ASSERT_TRUE(q.undo());EXPECT_EQ(q.qualificationObjectCount(),0U);ASSERT_TRUE(q.undo());EXPECT_NE(q.qualificationObjectRecord(section.id),nullptr);EXPECT_NE(q.qualificationObjectRecord(child.id),nullptr);
+}
+TEST(PartialEraseLive, DefaultSmoothedRoundStrokeSupportsEverySweepSample) {
+    Host h;auto& q=h.runtime.qualificationRuntime();ASSERT_TRUE(q.selectBrushProfile("round-handdrawn",4));auto config=q.inkBrushConfig();ASSERT_TRUE(config);config->size=24;config->thinning=0;ASSERT_TRUE(q.configureInkBrush(*config));ASSERT_TRUE(q.beginBrushSession(800));for(unsigned i=0;i<=24;++i)ASSERT_TRUE(q.appendBrushSample(800,20+i*8,100,.5,i+1,false,false));ASSERT_TRUE(q.finishBrushSession(800));q.setPlatformPresentationDeferred(true);ASSERT_TRUE(q.setEraserOptions(2,40));ASSERT_TRUE(q.eraserBegin(801));EXPECT_FALSE(q.previewActive());for(unsigned i=0;i<=24;++i){SCOPED_TRACE(i);EXPECT_TRUE(q.eraserSample(801,50+i*5,100,true));runtime::RuntimeFrameOpportunity frame;EXPECT_TRUE(h.runtime.serviceFrameOpportunity(false,frame));}EXPECT_TRUE(q.eraserFinish(801));
+}
+TEST(ObjectClipboard, CopyAndPastePreserveRootStackingAfterReordering) {
+    Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();auto top=labelShape(),bottom=labelShape();top.id=foundation::ObjectId::fromUint64(100);top.placement.order_key=semantic::OrderKey({2});top.transform.tx=20;top.transform.ty=20;top.content=semantic::ShapeContent{1,100,100};bottom.id=foundation::ObjectId::fromUint64(200);bottom.placement.order_key=semantic::OrderKey({1});bottom.transform.tx=60;bottom.transform.ty=20;bottom.content=semantic::ShapeContent{1,100,100};
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8000)},q.documentId(),1,1,semantic::InsertObjectsOp{{top,bottom}}};ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(30,50));ASSERT_TRUE(q.toggleSelectionAtViewPoint(150,50));ASSERT_EQ(q.selectedObjectCount(),2U);const auto copy=h.facade.clipboardCommand({});ASSERT_TRUE(copy.applied);runtime::ClipboardRequest paste;paste.action=runtime::ClipboardAction::kPaste;paste.bytes=copy.bytes;paste.offsetX=paste.offsetY=0;const auto result=h.facade.clipboardCommand(paste);ASSERT_TRUE(result.applied);ASSERT_TRUE(q.selectAtViewPoint(100,50));const auto* hit=q.qualificationObjectRecord(q.selectedPrimaryObject());ASSERT_NE(hit,nullptr);EXPECT_DOUBLE_EQ(hit->transform.tx,20);EXPECT_NE(hit->id,top.id);
 }

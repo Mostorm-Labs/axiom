@@ -130,6 +130,10 @@ ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id)
   }
   return snapshot;
 }
+ClipboardResult CanvasRuntimeFacade::clipboardCommand(const ClipboardRequest& request) {
+ if(!ownerThread()||!composition_||!composition_->canMutate())return {};
+ return runtime_.clipboardCommand(request,readMultiSelection());
+}
 AppearanceSnapshot CanvasRuntimeFacade::readAppearance(bool defaults) const {
  if(!ownerThread())return {};return runtime_.appearanceSnapshot(readMultiSelection(),defaults);
 }

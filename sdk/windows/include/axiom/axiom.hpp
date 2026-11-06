@@ -268,6 +268,11 @@ class Runtime final {
     void redo() {
         control("redo");
     }
+    struct ObjectClipboard { Json value; std::vector<std::uint8_t> bytes; };
+    ObjectClipboard copySelection() { auto r=invoke("clipboard",{{"action","copy"}}); return {r.value.at("value"),std::move(r.bytes)}; }
+    Json cutSelection(Json stamp) { return invoke("clipboard",{{"action","cut"},{"stamp",std::move(stamp)}}).value; }
+    Json duplicateSelection(Json options=Json::object()) { options["action"]="duplicate";options["stamp"]=invoke("multi",{{"action","read"}}).value.at("value").at("stamp");return invoke("clipboard",std::move(options)).value; }
+    Json pasteObjects(const std::vector<std::uint8_t>& bytes,Json options=Json::object()) { options["action"]="paste";options["stamp"]=invoke("multi",{{"action","read"}}).value.at("value").at("stamp");return invoke("clipboard",std::move(options),bytes).value; }
     void remove() {
         control("delete");
     }

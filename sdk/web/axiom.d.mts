@@ -14,7 +14,7 @@ export interface Runtime {
   table:TableAPI;
   appearance:AppearanceAPI;
   readonly version:'0.3.14'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readBuildInfo():{ok:true;apiVersion:1;features:{objectClipboard:1;livePartialErase:1;shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
   /** Read-only committed content; owned bytes. Default complete visible content, 16px padding. */
@@ -27,6 +27,10 @@ export interface Runtime {
     readNext(after?:OperationMetadata|null):OperationPacket|null;
     release(through:OperationMetadata):CommandResult;
     reportStatus(packet:OperationMetadata,localDurable:DataProgress,cloudSynced:DataProgress):CommandResult;};
+  copySelection():{version:1;bytes:Uint8Array;stamp:Stamp;roots:Id128[];objectCount:number};
+  cutSelection(stamp:Stamp):Promise<CommandResult>;
+  duplicateSelection(options?:{offset?:[number,number]}):Promise<CommandResult>;
+  pasteObjects(bytes:Uint8Array,options?:{offset?:[number,number]}):Promise<CommandResult>;
   readSelection():{count:number;roots:Id128[];primary:Id128;status:number;reason:number;groupScope:Id128|null;bounds:[number,number,number,number]|null;actions:{available:boolean;state:number;reason:number}[];generation:Revision;selectionRevision:Revision;kind:number;width:number;height:number;transform:[number,number,number,number,number,number]|null;appearance:{fill:Color;stroke:Color;strokeWidth:number;opacity:number;fillEnabled:boolean;strokeEnabled:boolean}|null};
   selectTool(name:'ink'|'select'|'objectEraser'|'partialEraser'|'hand'|'text'):Promise<CommandResult>;
   selectShape(name:'rectangle'|'ellipse'|'triangle'|'line'|'arrow'|'sticky'|'table'|'section'):Promise<CommandResult>;

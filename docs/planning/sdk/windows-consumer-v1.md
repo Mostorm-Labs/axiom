@@ -56,3 +56,6 @@ stale-identity rejection, supported facade command coverage, real native HWND
 input/IME routing, existing affected regressions and same-revision artifacts.
 Synthetic tests remain distinct from physical IME/touch validation. The known
 D07 OOM and separately recorded legacy failures are not silently closed.
+
+
+Object clipboard v1 uses the existing C/POD Session transport and caller-side `axiom.hpp` methods. Requests/results remain value DTOs plus owned bytes and complete integer stamps. No DLL export, internal pointer, CRT ownership or public Runtime exposure is added. See `../object-clipboard-and-live-erase-v1.json`; actual Windows ABI/input qualification remains required on Windows.

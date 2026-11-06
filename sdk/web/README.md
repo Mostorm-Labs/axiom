@@ -62,9 +62,40 @@ and retains its parent/group. A locked selection exposes only Unlock in its
 object actions; its editing properties are hidden. Global navigation/history
 are separate board actions. Backspace/Delete invoke `deleteSelection` outside
 text/IME, HTML inputs and modal dialogs, subject to Runtime availability.
-Object Copy, Duplicate and Cut (Ctrl/Cmd+C/D/X) are not implemented or bound by
-this Demo/SDK. Browser text clipboard behavior is a separate input path; no
-object clipboard or Shell-side object cloning is implied.
+Object Copy/Cut/Duplicate/Paste use shared Runtime clipboard v1. `copySelection()`
+is a synchronous read returning owned `Uint8Array` bytes, object/root counts and
+an owner-bound full selection `Stamp`; it creates no operation or History.
+`cutSelection(capture.stamp)` validates the complete captured basis before one
+atomic canonical deletion; write the OS clipboard successfully before calling it.
+`duplicateSelection({offset:[24,24]})` and `pasteObjects(bytes,{offset:[24,24]})`
+allocate all new identities in Runtime and atomically create/select new roots.
+Offsets are world units; omitted offsets default to `[24,24]`. These queued
+commands resolve after application, without claiming persistence or cloud sync.
+`createController` exposes the same methods asynchronously.
+
+The versioned opaque bundle includes selected subtrees, world root placement,
+local child placement and exact resource descriptors. Internal connector targets
+are remapped; attachments to objects outside the copied subtree become free
+endpoints at their captured positions. Text paragraphs, Table axes and erase
+masks receive fresh identities; sketch/ink seeds and appearance are preserved.
+Paste uses the current group scope; Duplicate retains original parents. Cut uses
+the canonical deletion closure (including dependent connectors); cutting a Section
+removes its subtree, while the existing Delete action releases its boundary.
+Locked/hidden source subtrees, active edits, stale/foreign cut stamps, unsupported
+versions and invalid data reject. Clipboard v1 is bounded to 4096 objects and
+16 MiB. The destination must already have matching active resource descriptors
+through its resource owner. Missing image/font/brush resources reject the entire
+paste with `CLIPBOARD_RESOURCE_UNAVAILABLE`; blobs are not silently substituted.
+No internal object, store, codec or renderer handles cross this interface.
+
+The Demo binds Ctrl/Cmd+C/D/X/V outside native text, HTML inputs, IME and dialogs.
+Copy/Cut events use `application/x-axiom-objects` plus a version-prefixed plain-text
+fallback; buttons use the browser Clipboard API. Clipboard write denial preserves
+the source. Native text clipboard events retain their existing adapter path.
+Cut/duplicate/paste each create one History item and follow existing operation
+publication and backpressure admission. Buffers returned from Copy are independent
+owned copies; Paste copies its input before queueing. All calls retain existing
+owner-thread, callback non-reentrancy and close/lifecycle rules.
 
 To install from the private registry, put the following in your application's
 `.npmrc` and set `NODE_AUTH_TOKEN` in your environment. Do not commit credentials:
@@ -502,3 +533,11 @@ records replay unchanged; the new immutable evaluator/resource requires a matchi
 reader. No expanded dabs or image masks are persisted. Same-stroke max coverage
 applies opacity once; separate strokes use SrcOver. Watercolor is a procedural
 wash without diffusion, canvas color pickup or fluid simulation.
+
+
+Live partial erasing uses transient per-stroke masks and the existing Skia full-scene
+replacement presenter. Preview and commit share the same object-local swept mask;
+non-ink objects and colored backgrounds remain visible through the cutout. Sparse
+pointer samples are joined geometrically. Canonical state/History/publication change
+only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
+uses conservative bounded candidates; the renderer still clips against actual ink.
