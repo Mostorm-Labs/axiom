@@ -47,6 +47,22 @@ struct SkiaRenderer::NavigationCache final {
     SkColor background=SK_ColorWHITE;
     std::optional<CanonicalViewportTransform> feedbackCamera;
     bool backgroundProofRejected=false;
+    bool matches(const void* target,const FrameState& current)const noexcept {
+        return image&&frame&&provider==target&&frame->viewId==current.viewId&&
+            frame->sceneGeneration==current.sceneGeneration&&frame->sceneReadToken==current.sceneReadToken&&
+            frame->metrics==current.metrics&&frame->metricsGeneration==current.metricsGeneration&&
+            frame->surfaceGeneration==current.surfaceGeneration&&frame->viewportClip==current.viewportClip&&
+            transform.a>0&&std::isfinite(transform.a)&&transform.d==transform.a&&transform.b==0&&transform.c==0&&
+            std::isfinite(transform.tx)&&std::isfinite(transform.ty);
+    }
+    foundation::WorldRect worldBounds()const noexcept {
+        return {float(-transform.tx/transform.a),float(-transform.ty/transform.a),
+            float((frame->metrics.logicalWidth-transform.tx)/transform.a),
+            float((frame->metrics.logicalHeight-transform.ty)/transform.a)};
+    }
+    double worldArea()const noexcept {
+        return frame->metrics.logicalWidth*frame->metrics.logicalHeight/(transform.a*transform.a);
+    }
 };
 struct SkiaRenderer::CompactCache final {
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
@@ -223,6 +239,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                 // Already-released scratch/frame bytes can cover this minimum.
                 // Wait for their real completion before sacrificing feedback.
                 if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
+                navigationFallback_.reset();
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
                 navigationCache_.reset();
                 // Retiring the optional whole frame may itself be sufficient.
                 // Keep useful navigation cells while that GPU read finishes.
@@ -255,6 +273,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
             if(cachedGpuSafe && resourceBudget_ && renderCacheOptions_.enabled && (!selectionOverlay || (!selectionOverlay->creationPreview() && !selectionOverlay->textCaret)) &&
                plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
+                const auto previous=navigationCache_;
                 navigationCache_.reset();
                 const auto shared=(preparation&&cache)?cache->completedFrame():nullptr;
                 const auto reservation=!shared&&bytes<=renderCacheOptions_.maxBytes
@@ -270,10 +289,21 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                     candidate->transform=plan.referenceDrawList.worldToView;
                     const auto& color=plan.background.color;
                     candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
+                    // Keep one previous qualified plane for a resumed gesture.
+                    // A narrow sharp zoom-in must not erase all wider coverage.
+                    // These are existing admitted images, never another copy or pool.
+                    std::shared_ptr<NavigationCache> fallback;
+                    const auto consider=[&](const std::shared_ptr<NavigationCache>& old){
+                        if(old&&old->matches(&provider,plan.frame)&&old->transform!=candidate->transform&&
+                           old->worldBounds().intersects(candidate->worldBounds())&&
+                           (!fallback||old->worldArea()>fallback->worldArea()))fallback=old;
+                    };
+                    consider(previous);consider(navigationFallback_);
+                    navigationFallback_=std::move(fallback);
                     navigationCache_=std::move(candidate);
                 }
-            }else navigationCache_.reset();
-        }catch(const std::bad_alloc&){navigationCache_.reset();}
+            }else{navigationCache_.reset();navigationFallback_.reset();}
+        }catch(const std::bad_alloc&){navigationCache_.reset();navigationFallback_.reset();}
     }
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
@@ -316,7 +346,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,
         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame));
+        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
+        ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::retry("navigation completion unavailable");}
     gpu.touch();
     const auto& old=cache->transform;
@@ -331,6 +362,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
     canvas->scale(ratio,ratio);
     if(cache->prepared)cache->prepared->markGpuUse();
+    (void)cache->lease.markGpuUse();
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
     canvas->restore();
     if(selectionOverlay){
@@ -359,14 +391,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(renderCache_)renderCache_->releaseIdleWorkBuffers(current,
         {camera.scale,0,0,camera.scale,camera.translationX,camera.translationY},&provider,resourceEpoch_);
     auto options=renderCacheOptions_;
-    internal::RetainedNavigationSource retained;
-    const auto cache=navigationCache_;
-    if(cache&&cache->image&&cache->frame&&cache->provider==&provider&&
-       cache->frame->viewId==current.viewId&&cache->frame->sceneGeneration==current.sceneGeneration&&
-       cache->frame->sceneReadToken==current.sceneReadToken&&cache->frame->metrics==current.metrics&&
-       cache->frame->metricsGeneration==current.metricsGeneration&&cache->frame->surfaceGeneration==current.surfaceGeneration&&
-       cache->frame->viewportClip==current.viewportClip&&cache->transform.a>0&&std::isfinite(cache->transform.a)&&
-       cache->transform.d==cache->transform.a&&cache->transform.b==0&&cache->transform.c==0){
+    internal::RetainedNavigationSource retained,fallback;
+    const auto bindRetained=[&](const std::shared_ptr<NavigationCache>& cache,internal::RetainedNavigationSource& retained){
+      if(cache&&cache->matches(&provider,current)){
         const auto& old=cache->transform;
         retained.bounds={float(-old.tx/old.a),float(-old.ty/old.a),
             float((cache->frame->metrics.logicalWidth-old.tx)/old.a),float((cache->frame->metrics.logicalHeight-old.ty)/old.a)};
@@ -406,6 +433,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         };
         retained.draw=[cache,camera,current](SkCanvas& canvas,const foundation::WorldRect& area){
             if(cache->prepared)cache->prepared->markGpuUse();
+            (void)cache->lease.markGpuUse();
             const auto& old=cache->transform;const float ratio=float(camera.scale/old.a);
             const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
             const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
@@ -417,7 +445,11 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
             canvas.translate(float((camera.translationX-ratio*old.tx)*sx),float((camera.translationY-ratio*old.ty)*sy));
             canvas.scale(ratio,ratio);canvas.drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));canvas.restore();
         };
-    }
+      }
+    };
+    bindRetained(navigationCache_,retained);bindRetained(navigationFallback_,fallback);
+    if(!retained.draw)retained=std::move(fallback);
+    else if(fallback.draw)retained.fallback=&fallback;
     const auto drawOverlay=[&](SkCanvas& canvas){
         if(selectionOverlay){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
@@ -444,7 +476,7 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 

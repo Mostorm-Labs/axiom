@@ -177,13 +177,17 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
     DiagnosticTiming partitionTiming(work.partitionNanoseconds);
 #endif
-    struct Candidate {TileKey key;foundation::WorldRect bounds;double density;bool retained;};
+    struct Candidate {TileKey key;foundation::WorldRect bounds;double density;const RetainedNavigationSource* retained;};
     std::vector<Candidate> candidates;candidates.reserve(tiles_.size()+1);
     for(const auto& [key,tile]:tiles_)if(tile.image&&tile.checkedScene==scene)
         for(std::size_t i=0;i<tile.valid.count;++i)if(intersects(tile.valid.areas[i],visible))
-            candidates.push_back({key,tile.valid.areas[i],std::ldexp(1.,key.scale),false});
-    if(retained&&retained->draw&&retained->density>0&&retained->bounds.isFiniteAndOrdered())
-        candidates.push_back({{},retained->bounds,retained->density,true});
+            candidates.push_back({key,tile.valid.areas[i],std::ldexp(1.,key.scale),nullptr});
+    // At most two qualified canonical planes. Each keeps its own density and
+    // world bounds; the normal disjoint partition still picks sharper pixels.
+    auto* source=retained;
+    for(unsigned i=0;source&&i<2;++i,source=source->fallback)
+        if(source->draw&&source->density>0&&source->bounds.isFiniteAndOrdered())
+            candidates.push_back({{},source->bounds,source->density,source});
     std::stable_sort(candidates.begin(),candidates.end(),[](const auto& a,const auto& b){
         return a.density!=b.density?a.density>b.density:a.retained&&!b.retained;});
     std::vector<foundation::WorldRect> holes{visible};patches.clear();
@@ -208,7 +212,7 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
     return holes.empty();
 }
 void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patches,
-    const CanonicalViewportTransform& camera,const FrameState& frame,const RetainedNavigationSource* retained){
+    const CanonicalViewportTransform& camera,const FrameState& frame){
     canvas.save();canvas.resetMatrix();canvas.clear(SK_ColorWHITE);
     double total=0,low=0,retainedArea=0;work.maximumUpscale=0;
     const double sx=frame.metrics.physicalWidth/frame.metrics.logicalWidth;
@@ -218,7 +222,7 @@ void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patche
         const double upscale=camera.scale*std::max(sx,sy)/patch.density;
         total+=area;if(upscale>1.25)low+=area;if(patch.retained)retainedArea+=area;
         work.maximumUpscale=std::max(work.maximumUpscale,upscale);
-        if(patch.retained){retained->draw(canvas,patch.area);continue;}
+        if(patch.retained){patch.retained->draw(canvas,patch.area);continue;}
         auto& tile=tiles_.at(patch.source);(void)tile.lease.markGpuUse();tile.used=tick_;const auto b=grid_.bounds(patch.source);
         const auto sourceScale=std::ldexp(1.,patch.source.scale);const auto& a=patch.area;
         const auto dst=SkRect::MakeLTRB(float((a.left*camera.scale+camera.translationX)*sx),
@@ -379,7 +383,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     auto* context=GrAsDirectContext(target->recordingContext());
     SkiaGpuLifetime gpu(*gpuRetirements_,budget,provider,context,resources::kPixelResourceClasses,
         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile)&
-        ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame));
+        ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
+        ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
     if(!gpu.ready())return BackendSubmissionResult::retry("world navigation completion unavailable");
     RetainedNavigationSource retainedValue=retainedSource?*retainedSource:RetainedNavigationSource{};
     const RetainedNavigationSource* retained=retainedSource?&retainedValue:nullptr;
@@ -391,7 +396,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // Compose the highest-density valid sources in disjoint regions. A complete
     // coarse plane must never overwrite sharper valid pixels in the overlap.
     if(dirty_&&work.coverageComplete){
-        gpu.touch();compose(*target,patches,camera,frame,retained);
+        gpu.touch();compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
@@ -766,7 +771,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     work.pending=bool(job_)||bool(refinement_)||!work.coverageComplete;
     for(const auto key:keys)work.pending|=!ready(key)&&needsFine(key);
     if(dirty_&&work.coverageComplete&&!work.presented){
-        gpu.touch();compose(*target,patches,camera,frame,retained);
+        gpu.touch();compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;

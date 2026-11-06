@@ -111,6 +111,22 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
   value.pixels=await pixels();return value;
 }
 window.probe={
+ async pauseResume(kind,{delta=4,pauseMs=1000}={}){
+  const before=sdk.readState(),prior=frames.length;
+  const value={id:'pause-resume-'+kind,started:performance.now(),displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],samples:[],marks:[],before};
+  active=value;feedbackObserver.begin(value);mark('begin',value.id);
+  const wheel=(ctrl,dy,dx=0)=>feedbackObserver.dispatch(sdk.canvas,new WheelEvent('wheel',{clientX:318,clientY:457,ctrlKey:ctrl,deltaX:dx,deltaY:dy,bubbles:true,cancelable:true}));
+  value.marks.push({kind:'zoom-in',at:performance.now()});
+  for(let i=0;i<18;++i){for(let b=0;b<4;++b)wheel(true,-delta);await raf();}
+  value.marks.push({kind:'pause-start',at:performance.now()});
+  await new Promise(r=>setTimeout(r,pauseMs));
+  value.marks.push({kind:'resume',at:performance.now()});
+  for(let i=0;i<18;++i){for(let b=0;b<4;++b)wheel(kind==='zoom',kind==='zoom'?delta:2,kind==='zoom'?0:4);await raf();}
+  value.inputEnded=performance.now();value.marks.push({kind:'input-end',at:value.inputEnded});
+  await until(()=>frames.slice(prior).some(f=>f.at>=value.inputEnded),'post-resume receipt timeout');
+  const at=performance.now();for(;;){const a=feedbackObserver.activity();if(a.pending===0&&a.at-a.lastSdkActivity>=200){value.quiescence=a;break;}if(performance.now()-at>20000)throw Error('quiescence timeout');await new Promise(r=>setTimeout(r,25));}
+  value.ended=performance.now();feedbackObserver.end(value);active=null;mark('end',value.id);value.after=sdk.readState();value.receipts=frames.slice(prior);value.pixels=await pixels();return value;
+ },
   failureState(){return {errors:[...errors],frames:[...frames],state:sdk?.readState(),observation:active,activity:feedbackObserver.activity()};},
   async setupEditing(){
     const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
@@ -184,7 +200,7 @@ window.probe={
       const prior=frames.length;await sdk.transformSelection([1,0,0,1,12,8]);await settle(prior);
     }
     for(let i=0;i<(options.shapes??0);++i){
-      await sdk.selectShape(i%2?'ellipse':'rectangle');
+      await sdk.selectShape(options.shapeKinds?.[i%options.shapeKinds.length]??(i%2?'ellipse':'rectangle'));
       const prior=frames.length;pointer('pointerdown',100+i*60,220+i*30);pointer('pointerup',270+i*60,340+i*30);await settle(prior);
     }
     let target=null;const prior=frames.length;
@@ -192,7 +208,14 @@ window.probe={
       const c=document.createElement('canvas');c.width=2048;c.height=1024;
       const ctx=c.getContext('2d'),gradient=ctx.createLinearGradient(0,0,c.width,c.height);
       gradient.addColorStop(0,'#345eb8');gradient.addColorStop(1,'#f19d42');ctx.fillStyle=gradient;ctx.fillRect(0,0,c.width,c.height);
+      if(options.noisyImage){
+        const noise=new ImageData(300,250);let seed=42;
+        for(let i=0;i<noise.data.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+          noise.data[i]=seed>>>24;noise.data[i+1]=(seed>>>16)&255;noise.data[i+2]=(seed>>>8)&255;noise.data[i+3]=255;}
+        ctx.putImageData(noise,0,0);
+      }
       const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+      window.probe.fixtureImageBytes=blob.size;
       target=(await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png')).objectId;
       await sdk.transformSelection([1,0,0,1,200,170]);
     }

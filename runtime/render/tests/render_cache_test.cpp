@@ -850,6 +850,33 @@ void checkObsoleteExactNavigation(){
     require(read(target)==read(reference),"obsolete exact recovery changed canonical pixels");
 }
 
+// A qualified zoom-in frame must not discard the wider same-scene coverage
+// needed by the next gesture. One bounded tile step cannot rebuild that plane.
+void checkRetainedZoomReentry(){
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"reentry target");
+    SkiaRenderer renderer;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    renderer.setRenderCacheOptions(options);const auto entry=stroke(9881);
+    const auto wide=plan(9881,{entry});
+    require(renderer.renderFrame(target,wide).code==BackendSubmissionCode::kAccepted,"reentry wide source");
+    const auto widePixels=pixels(target);
+    const auto narrow=plan(9881,{entry},1,{2,0,0,2,-128,0});
+    require(renderer.renderFrame(target,narrow).code==BackendSubmissionCode::kAccepted,"reentry zoomed canonical");
+    const auto canonical=renderer.submissionCount(),presents=target.presentCount();
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    (void)navigate(renderer,target,{1,0,0},wide.frame,query,false);
+    require(target.presentCount()==presents+1&&renderer.navigationWork().presented,
+        "zoom-in canonical discarded wide coverage before resumed zoom-out");
+    require(renderer.submissionCount()==canonical,"reentry feedback emitted canonical receipt");
+    const auto resumed=pixels(target);const auto point=(42*256+24)*4;
+    require(resumed[point]==widePixels[point]&&resumed[point]<180,"reentry lost content outside zoom-in source");
+    const auto outside=target.presentCount();
+    (void)navigate(renderer,target,{1,512,0},wide.frame,query,false);
+    require(target.presentCount()==outside,"reentry fallback certified unknown outside both images");
+    const auto before=target.presentCount();const auto changed=plan(9882,{entry});
+    (void)navigate(renderer,target,{1,0,0},changed.frame,query,false);
+    require(target.presentCount()==before,"reentry retained source crossed scene identity");
+}
+
 void checkSharedCanonicalNavigation(TestSurface&) {
     TestSurface target,reference;
     require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
@@ -1088,6 +1115,8 @@ int main(int argc,char** argv) {
         if(argc>1&&std::string_view(argv[1])=="--retirement-cells-only"){checkRetirementCells();return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--retirement-only"){checkRetirementFrame();checkRetirementCells();return finishNative(0);}
 #endif
+        if(argc>1&&std::string_view(argv[1])=="--reentry-only"){checkRetainedZoomReentry();return finishNative(0);}
+        if(argc==1)checkRetainedZoomReentry();
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
