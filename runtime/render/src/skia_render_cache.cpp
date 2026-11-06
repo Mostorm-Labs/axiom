@@ -418,7 +418,7 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
     if(run.end>plan.referenceDrawList.entries.size()||run.end-run.begin!=run.stamps.size())return false;
     for(std::size_t i=run.begin;i<run.end;++i){
         const auto& entry=plan.referenceDrawList.entries[i];const auto* group=groups_.find(entry.record.objectId);
-        if(entry.presentationOpacity!=1.0F||!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
+        if(entry.presentationOpacity!=1.0F||!entry.presentationEraseMasks.empty()||!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
     }
     return true;
 }
@@ -430,7 +430,7 @@ void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
         const auto& t=entry.record.transform;
         // Identity compact entries have destination-independent isolation in
         // the shared mapping. Legacy destination-clear never enters a run.
-        return entry.presentationOpacity==1.0F&&entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
+        return entry.presentationOpacity==1.0F&&entry.presentationEraseMasks.empty()&&entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
             entry.contributesPixels&&entry.record.eraseMasks.empty()&&t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
     };
     std::erase_if(runs_,[&](const auto& run){return !validRun(run,plan);});
@@ -482,6 +482,10 @@ bool SkiaRenderCache::compositeRetainedRun(SkCanvas& canvas,const FramePlan& pla
     return false;
 }
 void SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk){
+    // A transient source may include permanent masks that cooperative exact
+    // preparation routes Direct. Reuse/build its bounded isolated cache here;
+    // never keep an exact-frame admission that forbids that source reuse.
+    resetPreparation();
     drawReferenceBackgroundToSkCanvas(canvas,plan);
     std::size_t begin=0;
     if(includeInk)for(std::size_t i=0;i<plan.referenceDrawList.entries.size();++i){

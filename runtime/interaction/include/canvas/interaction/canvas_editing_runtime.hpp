@@ -711,7 +711,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<semantic::ObjectRecord> textPresentation();
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
-  [[nodiscard]] std::optional<std::vector<semantic::EraseMaskAddItem>> partialEraseTargets(std::span<const foundation::WorldPoint>) const;
+  [[nodiscard]] std::optional<std::vector<semantic::EraseMaskAddItem>> partialEraseTargets(std::span<const foundation::WorldPoint>, bool exactHit = true) const;
   [[nodiscard]] bool applyPartialErasePreview(render::ReferenceDrawList&) const;
   bool textWritable(semantic::ObjectId) const noexcept override;
   semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }

@@ -1133,9 +1133,55 @@ void checkErasedInkOverShapeNavigation() {
     }
 }
 
+namespace {
+void checkLiveEraseSourceReuse() {
+    TestSurface target,reference;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"live erase targets");
+    SkiaRenderer cached,oracle;RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    std::vector<ReferenceTraversalEntry> sources;
+    for(unsigned i=0;i<3;++i) {
+        auto entry=stroke(90000+i);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.config.size=12;content.stroke.config.thinning=.4;content.stroke.config.opacity=.65;content.stroke.knots.clear();
+        for(unsigned j=0;j<1001;++j)content.stroke.knots.push_back({12.+j*.21,55.+30*std::sin(j*.04),static_cast<std::uint16_t>(18000+j%300*100)});
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+        entry.record.transform.tx=i*4;entry.record.transform.ty=i*5;entry.presentationEraseActive=true;sources.push_back(entry);
+    }
+    // Existing canonical erasure must not disable source reuse on the next drag.
+    semantic::FilledPathMask old;old.path.commands={semantic::MoveTo{{38,0}},semantic::LineTo{{43,0}},semantic::LineTo{{43,128}},semantic::LineTo{{38,128}},semantic::ClosePath{}};
+    sources[0].record.eraseMasks={{ObjectId::fromUint64(91000),old}};
+    const auto initial=plan(900,sources);EditingOverlay overlay(initial.frame);
+    require(cached.renderTransientOverlay(target,initial,&overlay).code==BackendSubmissionCode::kAccepted,"live erase warm source");
+    const auto warmed=cached.renderCacheWork();require(warmed.entries==3,"translated/permanently masked sources not admitted");
+    for(unsigned frame=0;frame<8;++frame) {
+        for(auto& source:sources) {
+            semantic::FilledPathMask mask;const double x=70+frame*7;
+            mask.path.commands={semantic::MoveTo{{x,0}},semantic::LineTo{{x+25,0}},semantic::LineTo{{x+25,128}},semantic::LineTo{{x,128}},semantic::ClosePath{}};
+            source.presentationEraseMasks={{ObjectId{},mask}};
+        }
+        auto direct=sources;
+        for(auto& source:direct){source.record.eraseMasks.insert(source.record.eraseMasks.end(),source.presentationEraseMasks.begin(),source.presentationEraseMasks.end());source.presentationEraseMasks.clear();}
+        const auto framePlan=plan(901+frame,sources),expected=plan(901+frame,direct);
+        require(cached.renderTransientOverlay(target,framePlan,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,expected,&overlay).code==BackendSubmissionCode::kAccepted,"live erase frame");
+        const auto actual=pixels(target),wanted=pixels(reference);
+        for(std::size_t k=0;k<actual.size();++k)require(std::abs(int(actual[k])-int(wanted[k]))<=2,"live erase cached pixels differ from canonical oracle");
+        require(cached.renderCacheWork().rasterizedGroups==warmed.rasterizedGroups,"growing erase trace rerasterized canonical stroke bodies");
+        require(cached.renderCacheWork().coverageBuilds==warmed.coverageBuilds,"growing erase trace rebuilt canonical contour coverage");
+    }
+    for(auto& source:sources)source.presentationEraseMasks.clear();
+    require(cached.renderTransientOverlay(target,plan(910,sources),&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,plan(910,sources),&overlay).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"cancel failed to restore canonical cached ink");
+    // A canonical content edit still invalidates that source.
+    auto changed=std::get<CompactStrokeReferenceCommand>(sources[1].command).content.get();changed.stroke.config.color={1,0,0,1};sources[1].command=CompactStrokeReferenceCommand{changed};sources[1].record.content=changed;
+    require(cached.renderTransientOverlay(target,plan(911,sources),&overlay).code==BackendSubmissionCode::kAccepted&&cached.renderCacheWork().rasterizedGroups==warmed.rasterizedGroups+1,"canonical edit failed to invalidate erased source");
+    semantic::SweptCircleMask bad;bad.segments.push_back({{{10,10},-1},{{20,20},-1},{13,13},{17,17}});sources[0].presentationEraseMasks={{ObjectId{},bad}};auto invalid=plan(912,sources);
+    const auto presents=target.presentCount();require(cached.renderTransientOverlay(target,invalid,&overlay).code==BackendSubmissionCode::kRejected&&target.presentCount()==presents,"invalid transient mask presented");
+}
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
         if(argc==1)checkErasedInkOverShapeNavigation();
 #if defined(G5_TEST_WEBGL)
@@ -1342,6 +1388,13 @@ int main(int argc,char** argv) {
             for(std::size_t n=0;n<feedbackPixels.size();++n)
                 require(std::abs(int(feedbackPixels[n])-int(directPixels[n]))<=2,"cached feedback differs from Direct");
             sources[0].presentationOpacity=1;
+            // A retained run must not conceal frame-only clipping metadata.
+            sources[0].presentationEraseMasks={{ObjectId{},mask}};
+            auto clippedOracle=sources;clippedOracle[0].record.eraseMasks.push_back({ObjectId::fromUint64(31003),mask});clippedOracle[0].presentationEraseMasks.clear();
+            require(retained.renderTransientOverlay(provider,plan(569,sources),&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,plan(569,clippedOracle),&overlay).code==BackendSubmissionCode::kAccepted,"retained run transient erase");
+            const auto clippedPixels=pixels(provider),clippedExpected=pixels(reference);
+            for(std::size_t n=0;n<clippedPixels.size();++n)require(std::abs(int(clippedPixels[n])-int(clippedExpected[n]))<=2,"retained run ignored transient erase");
+            sources[0].presentationEraseMasks.clear();
             // Content, order, camera, target and resource changes must never
             // reuse old pixels, including remove/readd with a repeated ID.
             auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content.get();

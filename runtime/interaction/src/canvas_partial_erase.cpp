@@ -5,7 +5,7 @@
 
 namespace canvas::interaction {
 std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::partialEraseTargets(
-    std::span<const foundation::WorldPoint> trace) const {
+    std::span<const foundation::WorldPoint> trace, bool exactHit) const {
     std::vector<semantic::EraseMaskAddItem> result;
     if (trace.empty() || !sceneCoordinator_) return result;
     const double radius = eraserDiameterLogicalPx_ * .5;
@@ -23,9 +23,11 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         if(b.right<left-radius||b.left>right+radius||b.bottom<top-radius||b.top>bottom+radius)continue;
         auto mask=partialEraseGeometry(trace,record.transform,radius);
         if(!mask)return std::nullopt;
-        const auto hit=render::intersectEraseGeometry(record,*mask);
-        if(hit==render::SelectionGeometryHit::kInvalid)return std::nullopt;
-        if(hit==render::SelectionGeometryHit::kMiss)continue;
+        if(exactHit) {
+            const auto hit=render::intersectEraseGeometry(record,*mask);
+            if(hit==render::SelectionGeometryHit::kInvalid)return std::nullopt;
+            if(hit==render::SelectionGeometryHit::kMiss)continue;
+        }
         // Textured materials have no exact opaque-coverage hit oracle. Their
         // bounded broad-phase is conservative; Skia clips the identical mask
         // against actual pigment coverage, never against other object kinds.
@@ -35,11 +37,20 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
 }
 bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& list) const {
     if(!partialEraseFeedbackActive())return true;
+    // Feedback may reuse transparent sources for translated ink too. Scope
+    // this to the active gesture: exact canonical composition remains unchanged.
+    for(auto& entry:list.entries)
+        if((entry.record.kind==semantic::ObjectKind::kVectorStroke || entry.record.kind==semantic::ObjectKind::kDabStroke) && textWritable(entry.record.objectId))
+            entry.presentationEraseActive=true;
     for(const auto& [pointer,trace]:eraserTraces_) {
         (void)pointer;
-        auto masks=partialEraseTargets(trace);if(!masks)return false;
+        // The renderer clips this disposable mask against the actual source.
+        // A precise CPU PathOps intersection here repeats contour/mask work on
+        // every frame without changing pixels. Keep it at the canonical commit
+        // boundary, where no-op/history semantics require exact target filtering.
+        auto masks=partialEraseTargets(trace,false);if(!masks)return false;
         for(const auto& item:*masks)for(auto& entry:list.entries)if(entry.record.objectId==item.object_id)
-            entry.record.eraseMasks.insert(entry.record.eraseMasks.end(),item.masks.begin(),item.masks.end());
+            entry.presentationEraseMasks.insert(entry.presentationEraseMasks.end(),item.masks.begin(),item.masks.end());
     }
     list.canonicalBytes.clear();list.digest.clear();return true;
 }

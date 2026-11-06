@@ -126,6 +126,11 @@ struct ReferenceTraversalEntry final {
 
     // Frame-local feedback only; excluded from canonical reference bytes.
     float presentationOpacity = 1.0F;
+    // Local transient clipping applied after the canonical cached source.
+    // Excluded from canonical bytes and source cache revisions.
+    std::vector<semantic::EraseMaskRecord> presentationEraseMasks{};
+    // Erase feedback can cache isolated ink before the trace reaches its body.
+    bool presentationEraseActive = false;
     bool operator==(const ReferenceTraversalEntry&) const = default;
 };
 
