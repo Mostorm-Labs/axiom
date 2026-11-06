@@ -1,0 +1,26 @@
+{
+  "candidate": "6638c646fc08fb22ecbf374f1cfbf2696261cd84",
+  "tag": "v0.4.0",
+  "runs": [
+    42255241270,
+    42255241327
+  ],
+  "failures": [
+    {
+      "kind": "environment",
+      "job": 128020581593,
+      "finding": "Chrome debugging endpoint did not start within 45024ms before build"
+    },
+    {
+      "kind": "compile",
+      "job": 128020792233,
+      "code": "MSVC C4267 /WX",
+      "location": "runtime/interaction/src/canvas_placement.cpp:102",
+      "finding": "size_t to uint32_t for rows and columns already bounded to64"
+    }
+  ],
+  "publication_steps": "cancelled/not executed in both runs",
+  "github_release_query": "404",
+  "local_registry_query": "E401; not used as absence evidence",
+  "repair": "new version0.4.1, keep original tag; explicit casts with narrowing compiler RED/GREEN"
+}

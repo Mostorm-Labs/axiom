@@ -99,7 +99,10 @@ bool CanvasEditingRuntime::placementPointer(const input::PointerKey& key,
   placementCreation_.reset();transientOverlayDirty_=false;transientOverlayHandoffPending_=true;
   if (creationPreset_==CreationPreset::kTable) {
     const auto& table=std::get<semantic::TableContent>(completed.preview.record.content);
-    runtime::TableRequest request;request.rows=table.rows.size();request.columns=table.columns.size();
+    // Both axis counts were clamped to at most 64 above.
+    runtime::TableRequest request;
+    request.rows=static_cast<std::uint32_t>(table.rows.size());
+    request.columns=static_cast<std::uint32_t>(table.columns.size());
     request.x=completed.preview.record.transform.tx;request.y=completed.preview.record.transform.ty;
     request.generation=completed.generation;
     return createTableObject(request,&completed.preview.record).applied;

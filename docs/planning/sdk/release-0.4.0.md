@@ -31,7 +31,7 @@ bytes/DTOs, validates offsets/size/foreign tokens and preserves captured full
 stamps and stale error receipts. Three added transport regressions fail before
 that fix (undefined methods) and pass afterward; no new editing owner is added.
 
-All platforms/package versions are 0.4.0. Accepted Semantic/Skia SDK locks and
+All platforms/package versions for the first candidate were 0.4.0. Accepted Semantic/Skia SDK locks and
 32/96MiB production budgets remain unchanged. No dependency stack rebuild.
 
 Fresh local release checks pass: 41 selected native CTest groups (including
@@ -67,3 +67,16 @@ Historical full-suite failures and BLOCKED performance evidence remain retained;
 this release does not declare full-suite, physical-input/IME, all-device latency,
 100K/1M or formal G5/P34/Gate acceptance. Web checks do not establish Windows ABI;
 Windows hosted consumers and each RN native target remain separate obligations.
+
+## First candidate failure
+
+Candidate `6638c646fc08fb22ecbf374f1cfbf2696261cd84`, tag v0.4.0, was not
+reported as published. SDK run 42255241270 failed Chrome startup probing before
+product compilation (45s endpoint timeout). RN run 42255241327 failed MSVC /WX:
+C4267 in canvas_placement.cpp, implicit size_t to uint32_t for bounded Table axes.
+Both runs were cancelled and their publication jobs never executed. Local npm
+readback returned E401, so independent registry absence could not be confirmed.
+The tag is retained, not rewritten/deleted; repair proceeds under new v0.4.1.
+Local checks above describe this first candidate; final checks are recorded in
+release-0.4.1.md. This preserves the failure and does not weaken a verification
+threshold or published-tag immutability.
