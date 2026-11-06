@@ -2994,7 +2994,14 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
   ink::BrushPreviewDelta delta;
   delta.revision = ++eraserPreviewRevisions_[pointerId];
   const auto& trace = it->second;
-  if (trace.size() == 1U) {
+  if (toolMode_ == ToolMode::kPartialEraser) {
+    // Keep the sampled centerline: a hand-built offset polygon has flat caps
+    // and different joins from the committed round SweptCircleMask.
+    delta.roundStroke.emplace();
+    delta.roundStroke->radius = kRadius;
+    delta.roundStroke->points.reserve(trace.size());
+    for (const auto& point : trace) delta.roundStroke->points.push_back({point.x, point.y});
+  } else if (trace.size() == 1U) {
     delta.outline.reserve(kSegments);
     for (std::size_t i = 0; i < kSegments; ++i) {
       const double angle = 2.0 * 3.14159265358979323846 * static_cast<double>(i) /
@@ -3077,6 +3084,7 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
     // outside ink, or when it crosses a non-ink object: otherwise a moved
     // Shape exposes a white/purple ghost along its former path.
     if (!overlapsInk || overlapsNonInk) {
+      delta.roundStroke.reset();
       delta.outline.clear();
       delta.dabs.clear();
     }

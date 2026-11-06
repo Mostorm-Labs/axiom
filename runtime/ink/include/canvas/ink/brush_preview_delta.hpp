@@ -25,6 +25,13 @@ struct BrushDab final {
     bool operator==(const BrushDab&) const = default;
 };
 
+// Transient round sweep. Renderer-neutral centerline/radius, used by the
+// eraser preview to match the canonical SweptCircleMask silhouette.
+struct RoundStrokePreview final {
+    std::vector<reference::StrokeOutlinePoint> points;
+    double radius = 0.0;
+};
+
 // Immutable preview publication. A delta is replaceable and never contains
 // confirmed samples or commit state.
 struct BrushPreviewDelta final {
@@ -40,6 +47,7 @@ struct BrushPreviewDelta final {
     float opacity = 1.0F;
     std::vector<reference::StrokeOutlinePoint> outline;
     std::vector<BrushDab> dabs;
+    std::optional<RoundStrokePreview> roundStroke;
     std::optional<foundation::InkBrushConfig> compactConfig;
     std::uint64_t compactSeed=0;
     // Immutable shared chunks keep stable prefix publications O(1). New

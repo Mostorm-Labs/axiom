@@ -707,7 +707,27 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             contourPaint.setColor4f({contour.red, contour.green, contour.blue,
                                      effectiveAlpha}, nullptr);
         }
-        if (contour.dabs.empty()) drawOutline(contour.outline, contourPaint);
+        if (contour.roundStroke) {
+            const auto& stroke = *contour.roundStroke;
+            if (stroke.points.empty() || !std::isfinite(stroke.radius) || stroke.radius <= 0) return;
+            contourPaint.setStyle(SkPaint::kStroke_Style);
+            contourPaint.setStrokeWidth(static_cast<float>(2 * stroke.radius));
+            contourPaint.setStrokeCap(SkPaint::kRound_Cap);
+            contourPaint.setStrokeJoin(SkPaint::kRound_Join);
+            SkPathBuilder path;
+            path.moveTo(static_cast<float>(stroke.points.front().x), static_cast<float>(stroke.points.front().y));
+            bool hasLength = false;
+            for (const auto& point : stroke.points) {
+                path.lineTo(static_cast<float>(point.x), static_cast<float>(point.y));
+                hasLength |= point.x != stroke.points.front().x || point.y != stroke.points.front().y;
+            }
+            if (hasLength) canvas->drawPath(path.detach(), contourPaint);
+            else {
+                contourPaint.setStyle(SkPaint::kFill_Style);
+                canvas->drawCircle(static_cast<float>(stroke.points.front().x),
+                    static_cast<float>(stroke.points.front().y), static_cast<float>(stroke.radius), contourPaint);
+            }
+        } else if (contour.dabs.empty()) drawOutline(contour.outline, contourPaint);
         else drawDabs(contour.dabs, contourPaint);
     };
     if (!geometry.contours.empty()) {
