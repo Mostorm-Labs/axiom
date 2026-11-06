@@ -2325,9 +2325,10 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   const auto cropBounds = imageCropPresentation_
       ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
   std::vector<render::AttachmentPointGeometry> attachmentPoints;
-  if (record->kind == semantic::ObjectKind::kShape ||
+  const bool hasAttachmentPorts = record->kind == semantic::ObjectKind::kShape ||
       record->kind == semantic::ObjectKind::kImage ||
-      record->kind == semantic::ObjectKind::kSticky) {
+      record->kind == semantic::ObjectKind::kSticky;
+  if (hasAttachmentPorts) {
     // Attachment points are presentation affordances around the same visible
     // outline used by the selection chrome.  Using geometryBounds here leaves
     // the top and left ports inside the outline whenever a stroke expands the
@@ -2393,7 +2394,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       true, false, transformDrag_.active(),
       render::HandleCapabilities{
           !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_},
-      snapGuides_, attachmentPoints});
+      snapGuides_, attachmentPoints, hasAttachmentPorts ? 60.0F : 32.0F});
   if(updated)appendGroupScopeOutline(selectionView_->editingOverlay());
   if (updated) ++selectionOverlayUpdates_;
   return updated;

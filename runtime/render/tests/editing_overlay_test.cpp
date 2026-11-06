@@ -4,6 +4,7 @@
 #include "canvas/foundation/object_id.hpp"
 
 #include <cassert>
+#include <cmath>
 
 namespace {
 using canvas::foundation::ObjectId;
@@ -126,8 +127,37 @@ void attachment_points_are_offset_from_selection_outline() {
     assert(ports[2].center.y > outline.corners[2].y);
     assert(ports[3].center.x < outline.corners[3].x);
     const auto rotation = view.editingOverlay().handle(HandleKind::kRotation).center;
-    assert(rotation.x > outline.corners[1].x);
-    assert(rotation.y < outline.corners[1].y);
+    const auto topX = (outline.corners[0].x + outline.corners[1].x) * 0.5F;
+    assert(rotation.x == topX);
+    assert(rotation.y < ports[0].center.y);
+    assert(std::hypot(rotation.x - ports[0].center.x, rotation.y - ports[0].center.y) >= 32.0F);
+    assert(view.editingOverlay().hitTest(rotation) == HandleKind::kRotation);
+    // During a drag the ports disappear, but the rotation grip must not jump.
+    input.rotationGap = 62.0F;
+    input.attachmentPoints = {};
+    input.active = true;
+    assert(view.editingOverlay().update(input));
+    assert(view.editingOverlay().handle(HandleKind::kRotation).center == rotation);
+}
+void rotation_follows_top_edge_and_preserves_edge_hit_targets() {
+    RenderViewRuntime view(frame(ViewId(8), CameraGeneration(17), 1.0F));
+    EditingOverlayInput input{id(17), WorldRect{-100.0F, -50.0F, 100.0F, 50.0F}, {}, true};
+    assert(view.editingOverlay().update(input));
+    const auto& overlay = view.editingOverlay();
+    const auto rotation = overlay.handle(HandleKind::kRotation).center;
+    assert(rotation.x == 400.0F && rotation.y == 218.0F);
+    const auto side = overlay.handle(HandleKind::kRight).center;
+    assert(overlay.hitTest(side) == HandleKind::kRight);
+    // A quarter-turn moves the top edge to the right of the object.
+    input.objectTransform = {0, 1, -1, 0, 0, 0};
+    assert(view.editingOverlay().update(input));
+    const auto turned = overlay.handle(HandleKind::kRotation).center;
+    assert(turned.x == 482.0F && turned.y == 300.0F);
+    assert(overlay.hitTest(turned) == HandleKind::kRotation);
+    // Reflected geometry must keep the affordance outside the selection.
+    input.objectTransform = {-1, 0, 0, 1, 0, 0};
+    assert(view.editingOverlay().update(input));
+    assert(overlay.handle(HandleKind::kRotation).center == rotation);
 }
 } // namespace
 
@@ -138,5 +168,6 @@ int main() {
     unsupported_handle_capabilities_do_not_create_hit_targets();
     guides_are_transient_screen_space_overlay_geometry();
     attachment_points_are_offset_from_selection_outline();
+    rotation_follows_top_edge_and_preserves_edge_hit_targets();
     return 0;
 }

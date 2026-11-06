@@ -50,7 +50,7 @@ enum class HandleKind : std::uint8_t {
 struct HandleGeometry final {
     HandleKind kind = HandleKind::kNone;
     ScreenPoint center{};
-    float visualRadius = 6.0F;
+    float visualRadius = 4.0F;
     float hitRadius = 12.0F;
     bool active = false;
 };
@@ -78,6 +78,8 @@ struct EditingOverlayInput final {
     HandleCapabilities capabilities{};
     std::span<const SnapGuideGeometry> guides{};
     std::span<const AttachmentPointGeometry> attachmentPoints{};
+    // Retain layout clearance while attachment affordances are hidden in a drag.
+    float rotationGap = 32.0F;
 };
 
 class EditingOverlay final {

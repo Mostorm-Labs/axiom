@@ -132,8 +132,8 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
         SkPaint chrome;
         chrome.setAntiAlias(true);
         chrome.setStyle(SkPaint::kStroke_Style);
-        chrome.setStrokeWidth(2.0F);
-        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
+        chrome.setStrokeWidth(1.25F);
+        chrome.setColor(SkColorSetRGB(0x69, 0x65, 0xFF));
         const auto& outline = overlay.selectionOutline();
         SkPathBuilder path;
         path.moveTo(outline.corners[0].x, outline.corners[0].y);
@@ -142,16 +142,29 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
         path.lineTo(outline.corners[3].x, outline.corners[3].y);
         path.close();
         canvas.drawPath(path.detach(), chrome);
-        chrome.setStyle(SkPaint::kFill_Style);
-        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
-                                HandleKind::kTopRight, HandleKind::kRight,
-                                HandleKind::kBottomRight, HandleKind::kBottom,
-                                HandleKind::kBottomLeft, HandleKind::kLeft,
+        // Four quiet corner grips; edge midpoint hit targets retain single-axis
+        // resizing without adding more dots to the selection outline.
+        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTopRight,
+                                HandleKind::kBottomRight, HandleKind::kBottomLeft,
                                 HandleKind::kRotation}) {
             const auto& handle = overlay.handle(kind);
             if (handle.kind == HandleKind::kNone) continue;
-            canvas.drawCircle(handle.center.x, handle.center.y,
-                               handle.visualRadius, chrome);
+            const auto drawGrip = [&](const SkPaint& paint) {
+                if (kind == HandleKind::kRotation) {
+                    canvas.drawCircle(handle.center.x, handle.center.y,
+                                      handle.visualRadius, paint);
+                } else {
+                    const auto bounds = SkRect::MakeLTRB(
+                        handle.center.x - handle.visualRadius, handle.center.y - handle.visualRadius,
+                        handle.center.x + handle.visualRadius, handle.center.y + handle.visualRadius);
+                    canvas.drawRoundRect(bounds, 2.0F, 2.0F, paint);
+                }
+            };
+            SkPaint fill;
+            fill.setAntiAlias(true);
+            fill.setColor(SK_ColorWHITE);
+            drawGrip(fill);
+            drawGrip(chrome);
         }
     }
     canvas.restore();
@@ -540,58 +553,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache,true);
     }
-    canvas->save();
-    canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
-                  plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
-    drawAcquisition(*canvas,*selectionOverlay);
-    SkPaint guidePaint;
-    guidePaint.setAntiAlias(true);
-    guidePaint.setStyle(SkPaint::kStroke_Style);
-    guidePaint.setStrokeWidth(1.0F);
-    guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
-    for (const auto& guide : selectionOverlay->guides()) {
-        canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
-                         guidePaint);
-    }
-    SkPaint attachmentPaint;
-    attachmentPaint.setAntiAlias(true);
-    attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-    for (const auto& point : selectionOverlay->attachmentPoints()) {
-        if (point.active) {
-            attachmentPaint.setColor4f(point.hovered
-                ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
-                : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-            canvas->drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
-                               attachmentPaint);
-        }
-    }
-    if (selectionOverlay->selectionOutline().visible) {
-        SkPaint chrome;
-        chrome.setAntiAlias(true);
-        chrome.setStyle(SkPaint::kStroke_Style);
-        chrome.setStrokeWidth(2.0F);
-        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
-        const auto& outline = selectionOverlay->selectionOutline();
-        SkPathBuilder path;
-        path.moveTo(outline.corners[0].x, outline.corners[0].y);
-        path.lineTo(outline.corners[1].x, outline.corners[1].y);
-        path.lineTo(outline.corners[2].x, outline.corners[2].y);
-        path.lineTo(outline.corners[3].x, outline.corners[3].y);
-        path.close();
-        canvas->drawPath(path.detach(), chrome);
-        chrome.setStyle(SkPaint::kFill_Style);
-        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
-                                HandleKind::kTopRight, HandleKind::kRight,
-                                HandleKind::kBottomRight, HandleKind::kBottom,
-                                HandleKind::kBottomLeft, HandleKind::kLeft,
-                                HandleKind::kRotation}) {
-            const auto& handle = selectionOverlay->handle(kind);
-            if (handle.kind == HandleKind::kNone) continue;
-            canvas->drawCircle(handle.center.x, handle.center.y,
-                               handle.visualRadius, chrome);
-        }
-    }
-    canvas->restore();
+    internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
     provider.release();
     ++submissions_;
     ++rasterizations_;
