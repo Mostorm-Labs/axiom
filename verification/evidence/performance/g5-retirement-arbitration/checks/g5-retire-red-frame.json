@@ -1,0 +1,21 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+    "g5_render_cache_gpu.wasm": "0f2e974eaa2787c260b1bc4d6c690b6efcbed934ad15967a61300ca3a5a73c26"
+  },
+  "probeArgument": "--retirement-frame-only",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [],
+    "errors": [
+      "already-retiring scratch caused qualified whole-frame feedback eviction"
+    ],
+    "code": 1,
+    "processExit": 0
+  },
+  "status": "FAIL"
+}

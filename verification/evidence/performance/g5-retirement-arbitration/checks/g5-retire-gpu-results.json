@@ -1,0 +1,215 @@
+[
+  {
+    "mode": "retirement",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--retirement-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [
+        "{\"retirement_frame\":\"PASS\",\"canonical_before\":1,\"canonical_after\":2}",
+        "{\"retirement_cells\":\"PASS\",\"retiring\":1,\"evictions\":0}",
+        "{\"retirement_cells\":\"PASS\",\"retiring\":0,\"evictions\":1}"
+      ],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "detail",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--detail-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "oversized",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--oversized-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "frontier",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--frontier-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [
+        "dense frontier first feedback opportunity=7",
+        "dense frontier first feedback opportunity=7"
+      ],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "quality",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--quality-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "affine",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--affine-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "background",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--background-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "contour",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--contour-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "replay",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--replay-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [
+        "large navigation legacy=0 first feedback opportunity=1",
+        "large navigation legacy=1 first feedback opportunity=391"
+      ],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "mode": "exact-replay",
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--exact-replay-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [
+        "exact locality softDenied=0 steps=183 fallback=768 record_replays=111",
+        "exact locality softDenied=1 steps=183 fallback=768 record_replays=0"
+      ],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  }
+]

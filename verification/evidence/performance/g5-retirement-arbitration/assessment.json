@@ -1,0 +1,62 @@
+{
+  "sourceRevision": "3fcf642bbfdda126246e29dd1b32ec7710154f62",
+  "baselineRevision": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+  "obligations": {
+    "retirement": {
+      "status": "PASS",
+      "observations": [
+        {
+          "retirement_frame": "PASS",
+          "canonical_before": 1,
+          "canonical_after": 2
+        },
+        {
+          "retirement_cells": "PASS",
+          "retiring": 1,
+          "evictions": 0
+        },
+        {
+          "retirement_cells": "PASS",
+          "retiring": 0,
+          "evictions": 1
+        }
+      ]
+    },
+    "parity-lifecycle": {
+      "status": "PASS"
+    },
+    "regression": {
+      "status": "PASS_NO_NEW_FAILURES",
+      "native": {
+        "tests": 112,
+        "passed": 107,
+        "failed_names": [
+          "canvas_rf01_full_rebuild",
+          "canvas_fc02_shape_label_scene",
+          "G3HeadlessCanvasDemo",
+          "FC00XRuntimeComposition",
+          "SketchSemantic"
+        ],
+        "baseline_failed_names": [
+          "canvas_rf01_full_rebuild",
+          "canvas_fc02_shape_label_scene",
+          "G3HeadlessCanvasDemo",
+          "FC00XRuntimeComposition",
+          "SketchSemantic"
+        ],
+        "new_failures": [],
+        "resolved_failures": []
+      }
+    },
+    "performance": {
+      "status": "FAIL",
+      "guards": {
+        "clarityNoRegression2Points": true,
+        "waitNonRegression": false,
+        "inputGapNonRegression": false
+      }
+    }
+  },
+  "result": "BLOCKED",
+  "officialGatePassClaimed": false
+}

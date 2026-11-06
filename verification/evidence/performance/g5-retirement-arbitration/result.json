@@ -1,0 +1,70 @@
+{
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "sourceRevision": "3fcf642bbfdda126246e29dd1b32ec7710154f62",
+  "baselineRevision": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+  "measurementBindingsAndPixels": true,
+  "regression": true,
+  "guards": {
+    "clarityNoRegression2Points": true,
+    "waitNonRegression": false,
+    "inputGapNonRegression": false
+  },
+  "dpr4Cold": {
+    "phase": "after-freeze",
+    "sameFinalPixels": true,
+    "beforeWaitMs": 1443.1000000238419,
+    "afterWaitMs": 1461.0999999940395,
+    "beforeGapMs": 115.69999998807907,
+    "afterGapMs": 63.30000001192093,
+    "beforeLowDensity": 0.6423072258977903,
+    "afterLowDensity": 0.6219292517964293
+  },
+  "native": {
+    "tests": 112,
+    "passed": 107,
+    "failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "baseline_failed_names": [
+      "canvas_rf01_full_rebuild",
+      "canvas_fc02_shape_label_scene",
+      "G3HeadlessCanvasDemo",
+      "FC00XRuntimeComposition",
+      "SketchSemantic"
+    ],
+    "new_failures": [],
+    "resolved_failures": []
+  },
+  "gpuModes": [
+    "retirement",
+    "detail",
+    "oversized",
+    "frontier",
+    "quality",
+    "affine",
+    "background",
+    "contour",
+    "replay",
+    "exact-replay"
+  ],
+  "boundedBrowserRuns": 22,
+  "budgetMiB": [
+    32,
+    96
+  ],
+  "officialGatePassClaimed": false,
+  "measuredDemo": "http://127.0.0.1:4239/example.html",
+  "scope": "GPU-retirement arbitration slice only. Previous global15% cold/150ms navigation targets remain open. Local Chrome synthetic SDK evidence;not all-platform/G5/P34/100K/1M acceptance.",
+  "priorGlobalClosureStillOpen": true,
+  "candidateDisposition": "Retained on controlled development branch for review;stable4238 unchanged;performance acceptance not granted.",
+  "corroborativeAA": {
+    "pairs": 3,
+    "sameArtifactFalseReports": 2,
+    "interpretation": "One-frame wait variance is demonstrated by baselineA/A. This does not dismiss A/B input-gap findings or alter frozen guards."
+  }
+}
