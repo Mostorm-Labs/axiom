@@ -12,6 +12,13 @@ using namespace canvas::ink_playground;
 using namespace canvas::runtime;
 using namespace canvas::input;
 
+void assert_creation_finished_in_point_selection(const InkPlaygroundHost& host) {
+  assert(!host.creationActive() && !host.creationMode());
+  assert(host.selectionMode());
+  assert(host.selectionAcquisitionMode() == CanvasSelectionMode::kPoint);
+  assert(host.selectedObjectCount() == 1U);
+}
+
 void one_gesture_one_operation() {
   InkPlaygroundHost host;
   assert(host.bindSurface(320U, 240U));
@@ -114,11 +121,14 @@ void arrow_then_arrow_remains_usable() {
   draw(81U, 20.0F, 30.0F, 120.0F, 30.0F);
   assert(host.semanticObjectCount() == 1U);
   assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
-  // The product keeps the selected creation preset active after a commit;
-  // a second gesture must therefore work without another control request.
+  assert_creation_finished_in_point_selection(host);
+  // Creation is one-shot. Reselect through the same control boundary before
+  // checking that another creation gesture can still commit.
+  selectArrow(2U);
   draw(82U, 40.0F, 60.0F, 160.0F, 60.0F);
   assert(host.semanticObjectCount() == 2U &&
          "creating an Arrow must not block another Arrow gesture");
+  assert_creation_finished_in_point_selection(host);
 }
 
 void arrow_then_arrow_reuses_platform_pointer() {
@@ -145,9 +155,12 @@ void arrow_then_arrow_reuses_platform_pointer() {
   draw(1U, 30.0F);
   assert(host.semanticObjectCount() == 1U);
   assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
+  assert_creation_finished_in_point_selection(host);
+  assert(host.selectCreationPreset(CreationPreset::kArrow));
   draw(4U, 60.0F);
   assert(host.semanticObjectCount() == 2U &&
          "a stable Windows mouse pointer must be reusable for Arrow creation");
+  assert_creation_finished_in_point_selection(host);
 }
 
 void line_then_line_reuses_platform_pointer() {
@@ -174,9 +187,12 @@ void line_then_line_reuses_platform_pointer() {
   draw(1U, 30.0F);
   assert(host.semanticObjectCount() == 1U);
   assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
+  assert_creation_finished_in_point_selection(host);
+  assert(host.selectCreationPreset(CreationPreset::kLine));
   draw(4U, 60.0F);
   assert(host.semanticObjectCount() == 2U &&
          "Line must remain reusable for a second connector gesture");
+  assert_creation_finished_in_point_selection(host);
 }
 
 void create_move_changes_real_pixels_without_canonical_mutation() {
@@ -223,10 +239,13 @@ void repeated_gestures_and_other_source_cancellation() {
   assert(send(11,4,PointerPhase::kMove,100,80));
   assert(send(11,5,PointerPhase::kUp,100,80));
   assert(host.semanticObjectCount()==1);
+  assert_creation_finished_in_point_selection(host);
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
   assert(send(11,6,PointerPhase::kDown,140,140));
   assert(send(11,7,PointerPhase::kMove,220,200));
   assert(send(11,8,PointerPhase::kUp,220,200));
   assert(host.semanticObjectCount()==2 && host.submittedOperationCount()==2);
+  assert_creation_finished_in_point_selection(host);
 }
 
 void source_unregister_closes_coordinator_contact() {

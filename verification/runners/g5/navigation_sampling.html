@@ -128,21 +128,49 @@ window.probe={
   value.ended=performance.now();feedbackObserver.end(value);active=null;mark('end',value.id);value.after=sdk.readState();value.receipts=frames.slice(prior);value.pixels=await pixels();return value;
  },
   failureState(){return {errors:[...errors],frames:[...frames],state:sdk?.readState(),observation:active,activity:feedbackObserver.activity()};},
-  async setupEditing(){
+  async setupEditing(options={}){
     const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
     sdk=await createRuntime({mount,documentId:'99999999999999999999999999999999',permission:'localSingleUser',
       onError:e=>errors.push(String(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
     sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
-    editingTargets=await buildEditingScene(sdk,{pointer,settle,frames,click});
+    editingTargets=await buildEditingScene(sdk,{pointer,settle,frames,click},options);
     return {targets:editingTargets,build:sdk.readBuildInfo(),state:sdk.readState()};
   },
-  async performEditing(kind){
+  async performEditing(kind,options={}){
     const before=sdk.readState(),prior=frames.length;mark('begin','edit-'+kind);const at=performance.now();
-    const details=await applyEditingAction(sdk,editingTargets,kind,{pointer,click});
+    const details=await applyEditingAction(sdk,editingTargets,kind,{pointer,click,...options});
     const admittedAt=performance.now(),generation=sdk.readState().generation;await until(()=>sdk.readState().lastCommit.presentedGeneration===generation,'edited generation not presented');await settle(prior);const after=sdk.readState();mark('end','edit-'+kind);
     return {kind,before,after,details,dispatchMs:admittedAt-at,completeMs:performance.now()-at,receipts:frames.slice(prior),
       checks:{generationAdvanced:BigInt(after.generation)>BigInt(before.generation),operationChanged:after.lastCommit.operationId!==before.lastCommit.operationId,
-        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,objectCountStable:before.objects===after.objects}};
+        presentedGenerationMatches:after.lastCommit.presentedGeneration===after.generation,
+        objectCountExpected:after.objects===before.objects+(kind==='copy'?1:0)}};
+  },
+  async prepareEditingNavigation(selected){
+    await sdk.selectTool('select');
+    if(!selected)await click(790,490);else if(sdk.readState().selected.length!==1)await click(680,400);
+    return sdk.readState();
+  },
+  async restoreEditingCamera(camera){
+    const previous=sdk.readState().camera,n=frames.length;
+    if(Math.abs(previous.scale-camera.scale)<1e-6&&Math.abs(previous.x-camera.x)<.001&&Math.abs(previous.y-camera.y)<.001)return;
+    if(Math.abs(previous.scale-camera.scale)>=1e-6)await sdk.zoomAt(0,0,camera.scale);
+    // panBy has wheel-scroll semantics: translation subtracts the deltas.
+    const current=sdk.readState().camera;await sdk.panBy(current.x-camera.x,current.y-camera.y);await settle(n);
+    const after=sdk.readState().camera;
+    if(Math.abs(after.scale-camera.scale)>.0001||Math.abs(after.x-camera.x)>.01||Math.abs(after.y-camera.y)>.01)throw Error('camera restoration mismatch');
+  },
+  async restoreEditingContext(){
+    const canvas=sdk.canvas,gl=canvas.getContext('webgl2'),extension=gl.getExtension('WEBGL_lose_context');
+    if(!extension)return {available:false,reason:'WEBGL_lose_context unavailable'};
+    const event=kind=>new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error(kind+' timeout')),10000);canvas.addEventListener(kind,e=>{e.preventDefault();clearTimeout(timer);resolve();},{once:true});});
+    const before=sdk.readState(),prior=frames.length,started=performance.now(),lostEvent=event('webglcontextlost');
+    extension.loseContext();await lostEvent;const lost=sdk.readState();
+    await new Promise(r=>setTimeout(r,100));const restoredEvent=event('webglcontextrestored'),restoreRequestedAt=performance.now();extension.restoreContext();await restoredEvent;
+    await until(()=>sdk.readState().surface.available&&frames.length>prior,'context did not present again');
+    await settle(prior);
+    const receipts=frames.slice(prior),first=receipts.find(f=>f.at>=restoreRequestedAt);
+    return {available:true,before,lost,after:sdk.readState(),started,restoreRequestedAt,
+      firstReceiptWaitMs:first?first.at-restoreRequestedAt:null,completeMs:performance.now()-started,receipts};
   },
   async checkpoint(){
     const state=sdk.readState(),at=performance.now();

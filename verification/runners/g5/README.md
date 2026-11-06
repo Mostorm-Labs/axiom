@@ -94,3 +94,27 @@ python3.12 verification/runners/g5/bounded_worker.py \
 0ms。计时、worker 清理、文档状态和最终像素都保存在结果中；本地响应诊断不等于
 物理输入到显示延迟或 G5 Gate PASS。当前修复基线及 14 组结果见
 `verification/evidence/performance/g5-pause-resume-repair/`。
+
+## 合并主线后的编辑／导航基线
+
+`post_edit_navigation.mjs` 在同一混合文档中执行复制粘贴、变换、三次不同位置的
+局部擦除、便签文本、表格文本和图片资源替换。每一步检查真实 generation／operation／
+presented receipt、Undo/Redo 的 committed export 像素往返，以及随后的平移／缩放。
+最终再覆盖选中／未选中的 1000ms 暂停后缩小及平移。图片为约 2.33MB 的确定性
+PNG，笔画经实际公共 SDK 输入生成。没有 JS Brush／Scene 几何实现。
+
+```sh
+python3.12 verification/runners/g5/bounded_worker.py \
+  --prefix out/post-edit-dpr2-worker --timeout 180 --rss-mib 3072 -- \
+  node verification/runners/g5/post_edit_navigation.mjs /absolute/path/to/matching-sdk/js out/post-edit-dpr2 2
+```
+
+分别使用匹配的 ON/OFF SDK 和新的输出目录执行 DPR1/2；DPR4 单列为压力观察。
+加 `G5_CONTEXT_RESTORE=1` 可在编辑后触发实际 WebGL context loss/restore，再检查
+文档／像素与导航。`firstReceiptWaitMs` 从 restore 请求开始计时，不包含显式100ms
+loss 等待；`completeMs` 包含该等待与后续安静帧。ON 表面 generation 来源于既有
+frame diagnostic，OFF 保持 unavailable，不新增公开调试 API。
+
+所有 readback/export/snapshot 都在 timed navigation 之外。raw GL 内容调用、
+Runtime accepted-submit、精确 receipt 与物理显示延迟保持独立。计数、失败、worker
+上限、source/artifact 身份与清理结果须一起保留。单次通过不是统计性能资格。
