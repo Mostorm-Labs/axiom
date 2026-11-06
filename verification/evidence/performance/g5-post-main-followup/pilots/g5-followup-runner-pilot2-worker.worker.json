@@ -1,0 +1,24 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/post_edit_navigation.mjs",
+    "out/g5-main-integration-sdk/js",
+    "out/g5-followup-runner-pilot2",
+    "1"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 41.45899462496163,
+  "peak_process_family_rss_kib": 2568272,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_EVIDENCE",
+    "edits": 8,
+    "phases": 9,
+    "error": "page.evaluate: Error: camera restoration mismatch\n    at Object.restoreEditingCamera (http://127.0.0.1:58127/navigation_sampling.html:159:119)\n    at async <anonymous>:337:30\n    at /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_edit_navigation.mjs:68:18"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

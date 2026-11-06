@@ -1,0 +1,25 @@
+{
+  "command": [
+    "env",
+    "G5_CONTEXT_RESTORE=1",
+    "node",
+    "verification/runners/g5/post_edit_navigation.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-followup-on/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-followup-final/on-dpr2-restore",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 51.48971879098099,
+  "peak_process_family_rss_kib": 2701152,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "edits": 8,
+    "phases": 13
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

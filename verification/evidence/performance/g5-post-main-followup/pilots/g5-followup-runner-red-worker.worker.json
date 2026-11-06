@@ -1,0 +1,24 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/post_edit_navigation.mjs",
+    "out/g5-main-integration-sdk/js",
+    "out/g5-followup-runner-red",
+    "1"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 4.742957666981965,
+  "peak_process_family_rss_kib": 1652832,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_EVIDENCE",
+    "edits": 0,
+    "phases": 0,
+    "error": "page.evaluate: Error: unknown complex edit\n    at applyEditingAction (http://127.0.0.1:57808/editing_actions.mjs:35:14)\n    at Object.performEditing (http://127.0.0.1:57808/navigation_sampling.html:141:25)\n    at eval (eval at evaluate (:311:30), <anonymous>:1:19)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_edit_navigation.mjs:52:27"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

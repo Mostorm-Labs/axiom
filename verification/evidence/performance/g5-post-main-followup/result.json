@@ -1,0 +1,211 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_FINDINGS",
+  "scope": "This test/tooling/engineering-observation slice only;no G5/P34/physical/all-platform PASS",
+  "officialGatePassClaimed": false,
+  "codeRevision": "c05d3a2f54fcb44c771d797bbe3255f46dcac962",
+  "taskAnchor": "55e21707ccaa42cb5c2fef49de1265134fd6a996",
+  "productionRuntimeChanged": false,
+  "sourceArtifactFrozen": true,
+  "steps": {
+    "creationFixtures": {
+      "status": "VERIFIED",
+      "resolved": [
+        "FC01Creation-arrow-arrow",
+        "FC01Creation-arrow-arrow-pointer",
+        "FC01Creation-line-line-pointer",
+        "FC01CreationSources"
+      ]
+    },
+    "editedNavigation": {
+      "status": "MEASURED",
+      "cleanSourceWorkers": 10,
+      "editsPerWorker": 8,
+      "baseNavigationPhases": 12,
+      "additionalContextPhase": 1,
+      "pairedPixels": {
+        "on-dpr1__off-dpr1": {
+          "sameEditCount": true,
+          "samePhaseCount": true,
+          "editedExportPixels": true,
+          "navigationCanvasPixels": true,
+          "finalExportPixels": true
+        },
+        "on-dpr2__off-dpr2": {
+          "sameEditCount": true,
+          "samePhaseCount": true,
+          "editedExportPixels": true,
+          "navigationCanvasPixels": true,
+          "finalExportPixels": true
+        },
+        "on-dpr2-restore__off-dpr2-restore": {
+          "sameEditCount": true,
+          "samePhaseCount": true,
+          "editedExportPixels": true,
+          "navigationCanvasPixels": true,
+          "finalExportPixels": true
+        },
+        "on-dpr4__off-dpr4": {
+          "sameEditCount": true,
+          "samePhaseCount": true,
+          "editedExportPixels": true,
+          "navigationCanvasPixels": true,
+          "finalExportPixels": true
+        },
+        "on-dpr4-repeat__off-dpr4": {
+          "sameEditCount": true,
+          "samePhaseCount": true,
+          "editedExportPixels": true,
+          "navigationCanvasPixels": true,
+          "finalExportPixels": true
+        }
+      }
+    },
+    "coldRecovery": {
+      "status": "OBSERVED_WITH_FINDINGS",
+      "defaultDpr2RestoreFirstReceiptMs": {
+        "on-dpr2-restore": 69.39999997615814,
+        "off-dpr2-restore": 66.60000002384186
+      },
+      "remaining": "Reproducible DPR4 idle selected pan submission gap:many short coverage preparation attempts do not present;DPR4 zoom also has finite CPU coverage cost. No accepted SLO or paired prior-version regression experiment;not declared repaired."
+    },
+    "scale": {
+      "status": "OBSERVED_WITH_BLOCKED_TIERS",
+      "matrixRows": 49,
+      "measured": 36,
+      "blocked": 13,
+      "documentTotalPoints": {
+        "classification": "MEASURED",
+        "objects": 10,
+        "points": 1000000,
+        "visiblePointCentres": 16000,
+        "dpr": 2,
+        "scope": "ON diagnostic engineering observation;not single-stroke1M or1Mobjects"
+      }
+    }
+  },
+  "native": {
+    "configured": 1076,
+    "failed_names": [
+      "FC00XRuntimeComposition",
+      "FC01Creation-width-style",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "G3HeadlessCanvasDemo",
+      "G45BrushRuntimePipeline",
+      "G46BQueryStructure",
+      "G46CQualificationBehavior",
+      "G46CQualificationBundle",
+      "G46PlaygroundTransform",
+      "G47TextHost",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4InkPlaygroundSurface",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "InkV2NativeSession",
+      "SketchSemantic",
+      "canvas_fc02_shape_label_scene",
+      "canvas_rf01_full_rebuild",
+      "canvas_semantic_connector_stateful_validation_test_NOT_BUILT",
+      "canvas_semantic_object_store_differential_test_NOT_BUILT",
+      "canvas_semantic_stateful_kind_applicability_test_NOT_BUILT",
+      "canvas_semantic_stateful_validation_differential_test_NOT_BUILT",
+      "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/41",
+      "fc08.section_b.SectionAllocation.IndexedOwnerRejectsPostInitializationAllocationFailures",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithGroupWrapper",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithSectionFill",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithSetSectionContent",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerRejectsPostInitializationAllocationFailures",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithGroupWrapper",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithSectionFill",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithSetSectionContent",
+      "fc08.section_b.SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4",
+      "fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.RejectedForwardPreservesExistingRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyUndo"
+    ],
+    "passed": 1010,
+    "new_failed_names": [],
+    "resolved_names": [
+      "FC01Creation-arrow-arrow",
+      "FC01Creation-arrow-arrow-pointer",
+      "FC01Creation-line-line-pointer",
+      "FC01CreationSources"
+    ],
+    "prior": "verification/evidence/performance/g5-main-integration-2026-11-07/result.json"
+  },
+  "otherChecks": {
+    "g5Node": 39,
+    "boundaries": 119,
+    "python": 11,
+    "fullLogs": "logs/"
+  },
+  "workerContainment": {
+    "workers": 76,
+    "allCleanupComplete": true,
+    "nativeRssMiB": 2048,
+    "browserFamilyRssMiB": 3072,
+    "timeoutSeconds": 180,
+    "rssInterpretation": "sum of process RSS;shared pages may be counted more than once"
+  },
+  "limits": {
+    "snapshotRepeatedFieldOccurrences": {
+      "value": 65535,
+      "source": "runtime/semantic/src/codec.cpp",
+      "scope": "one repeated wire field in one message;not universal Runtime document object maximum"
+    },
+    "snapshotObjectRecordBytes": {
+      "value": 16777216,
+      "source": "runtime/semantic/src/codec.cpp"
+    },
+    "compactStrokeKnots": {
+      "value": 262144,
+      "source": "runtime/semantic/include/canvas/semantic/compact_stroke.hpp"
+    },
+    "renderMiB": {
+      "optional": 32,
+      "shared": 96
+    }
+  },
+  "unresolved": [
+    "DPR4 repeated idle navigation coverage wait and zoom coverage cost",
+    "100K/1Mobject root SDK tiers blocked by admission or containment",
+    "66existing native failed/not-built tests including G3 authority issue",
+    "Formal statistical,physical input,other platforms and Gate acceptance not performed"
+  ],
+  "preserved": [
+    "4242Demo/tab/document",
+    "old G5/P34 records",
+    "Semantic/Skia locks",
+    "SDK0.4.3/API/ABI/budgets"
+  ]
+}
