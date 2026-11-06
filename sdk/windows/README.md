@@ -10,6 +10,16 @@ Windows x64. `axiom.dll` privately links the locked Runtime, Semantic and Skia
 implementations. Apps link only the small `axiom.lib` import stub. Headers and
 helper JSON code compile inside the application's own CRT; the DLL uses /MT.
 No Semantic/Skia CMake package or component archive is needed by consumers.
+`Runtime::tableTool()` and `Runtime::sectionTool()` arm the shared pointer creation
+presets through the existing Session command boundary. Table creation starts at
+2×2; Section supports click/default and drag/custom sizes. Ordinary byte image
+import uses the current viewport center. Table text can grow its row using one
+local History entry. These additions do not add DLL exports or expose Runtime
+objects; actual Windows ABI and native input qualification remain platform checks.
+Point selection also supports single-click text entry on an already selected
+Shape, RichText, Sticky or Table cell. The shared Runtime opens editing on
+release, preserving drags, handles, Group scope and navigation. This behavior
+uses existing native pointer input and does not introduce a consumer API.
 The shipped demo and example default to /MT and need no VC redistributable;
 `-DAXIOM_EXAMPLE_CRT=MD` independently exercises a /MD caller against the same DLL.
 

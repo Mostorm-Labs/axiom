@@ -347,7 +347,7 @@ TEST(FC02StickyLabel, SelectedExpandAfterManualScaleUsesVisibleButton) {
     EXPECT_GT(sticky.width, 200.0);
     EXPECT_EQ(sticky.width, sticky.height);
 }
-TEST(FC02ShapeLabel, RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor) {
+TEST(FC02ShapeLabel, PointerEntryKeepsItsSessionAndExplicitReentryRemainsBusy) {
     Host h(true); seedShape(h, labelShape());
     runtime::TextIntent edit;
     edit.clientId = 15; edit.requestId = ++h.request;
@@ -366,10 +366,13 @@ TEST(FC02ShapeLabel, RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor) 
             input::SampleProvenance::kConfirmedCurrent, phase});
         ASSERT_TRUE(h.runtime.submit(batch));
     }
+    ASSERT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    const auto session=h.facade.readTextEditor().token.session;
     edit.requestId = ++h.request;
     ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
     ASSERT_TRUE(h.runtime.ownerPump());
-    EXPECT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    EXPECT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kBusy);
+    EXPECT_EQ(h.facade.readTextEditor().token.session,session);
     EXPECT_EQ(h.facade.readTextEditor().token.object, labelShape().id);
     EXPECT_EQ(h.facade.readTextEditor().projection, u"existing label");
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations);
@@ -981,13 +984,9 @@ TEST(FC02ShapeLabel, SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview
             input::SampleProvenance::kConfirmedCurrent, phase});
         ASSERT_TRUE(h.runtime.submit(batch));
     }
-    runtime::TextIntent edit;
-    edit.clientId=15; edit.requestId=++h.request;
-    edit.target=h.facade.mountedCanvasTargets().front();
-    edit.kind=runtime::TextIntentKind::kEditAtPoint; edit.viewX=120; edit.viewY=90;
-    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);
-    ASSERT_TRUE(h.runtime.ownerPump());
-    ASSERT_EQ(h.facade.textIntentReceipt(15,h.request)->status,runtime::TextStatus::kApplied);
+    // The second point click has already entered the shared editor.
+    ASSERT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    ASSERT_EQ(h.facade.readTextEditor().token.object,labelShape().id);
     ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
     ASSERT_EQ(h.input(runtime::TextInputKind::kUpdate,u"MMMM").status,runtime::TextStatus::kObserved);
     runtime::RuntimeFrameOpportunity frame;
@@ -1971,4 +1970,183 @@ TEST(DefaultInteractions, EmptyStickyDraftCaretUsesItsAncestorsWorldPose) {
     EXPECT_NEAR(after.caret[0]-before.caret[0],30,0.01F);EXPECT_NEAR(after.caret[1]-before.caret[1],40,0.01F);
     EXPECT_EQ(h.runtime.semanticObjectCount(),2U); // Sticky + Section, no empty child.
 }
+TEST(PlacementDefaults, CellTextGrowsOnlyItsRowWithOneUndoAndRedo) {
+    Host h(true);
+    runtime::TableRequest create;create.rows=3;create.columns=3;create.x=20;create.y=30;
+    const auto result=h.facade.tableCommand(create);ASSERT_TRUE(result.applied);
+    const auto initial=h.facade.readTable(result.object);
+    ASSERT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"A\nB\nC\nD\nE").status,runtime::TextStatus::kApplied);
+    const auto grown=h.facade.readTable(result.object);
+    EXPECT_GT(grown.content.rows[0].size,48);
+    EXPECT_EQ(grown.content.rows[1],initial.content.rows[1]);
+    EXPECT_EQ(grown.content.columns,initial.content.columns);
+    const auto caret=h.facade.readTextGeometry();ASSERT_TRUE(caret.available);
+    EXPECT_GE(grown.content.rows[0].size,caret.caret[5]-30+6);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    const auto history=[&](bool undo,std::uint64_t seq) {
+        runtime::CanvasControlRequest r;r.clientId=8820;r.requestId=seq;r.target=h.facade.mountedCanvasTargets().front();
+        r.payload.kind=undo?runtime::CanvasControlPayloadKind::kUndo:runtime::CanvasControlPayloadKind::kRedo;
+        EXPECT_EQ(h.facade.submitCanvasControl(r).state,runtime::ProductControlState::kQueued);EXPECT_TRUE(h.runtime.ownerPump());
+    };
+    history(true,1);EXPECT_EQ(h.facade.readTable(result.object).content,initial.content);
+    history(false,2);EXPECT_EQ(h.facade.readTable(result.object).content,grown.content);
+}
+TEST(PlacementDefaults, ShorterTextDoesNotShrinkAnAlreadyGrownRow) {
+    Host h(true);runtime::TableRequest create;const auto table=h.facade.tableCommand(create);ASSERT_TRUE(table.applied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"A\nB\nC\nD\nE").status,runtime::TextStatus::kApplied);
+    const auto height=h.facade.readTable(table.object).content.rows[0].size;ASSERT_GT(height,48);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kSelectAll).status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"A").status,runtime::TextStatus::kApplied);
+    EXPECT_EQ(h.facade.readTable(table.object).content.rows[0].size,height);
+}
+TEST(PlacementDefaults, PublicationRejectionPreservesBothTextAndHeight) {
+    Host h(true);runtime::TableRequest create;const auto table=h.facade.tableCommand(create);ASSERT_TRUE(table.applied);
+    const auto before=h.facade.readTable(table.object);const auto count=h.runtime.qualificationRuntime().submittedOperationCount();
+    struct Sink:interaction::LocalOperationSink {
+        unsigned published=0;std::size_t prepared=0;
+        bool preparePublication(std::span<const semantic::Operation> ops) noexcept override {prepared=ops.size();return ops.size()<2;}
+        void applied(const semantic::Operation&,const semantic::CanonicalCommitRecord&) noexcept override {++published;}
+        interaction::AxisOperationStatus status(const semantic::OperationId&,const semantic::CanonicalCommitStamp&) const noexcept override {return {};}
+    } sink;
+    h.runtime.qualificationRuntime().setLocalOperationSink(&sink);
+    EXPECT_EQ(h.input(runtime::TextInputKind::kReplace,u"A\nB\nC\nD\nE").status,runtime::TextStatus::kRejected);
+    EXPECT_EQ(sink.prepared,2U);EXPECT_EQ(sink.published,0U);
+    EXPECT_EQ(h.facade.readTable(table.object).content,before.content);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),count);
+    h.runtime.qualificationRuntime().setLocalOperationSink(nullptr);
+}
+TEST(PlacementDefaults, NativePlacementToolsUseTheSharedPointerOwner) {
+    for(const auto preset:{runtime::CanvasCreationPreset::kTable,runtime::CanvasCreationPreset::kSection}) {
+        Host h(true);ASSERT_TRUE(h.runtime.registerSource(88));
+        runtime::CanvasControlRequest r;r.clientId=8830;r.requestId=1;r.target=h.facade.mountedCanvasTargets().front();
+        r.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;r.payload.creationPreset=preset;
+        ASSERT_EQ(h.facade.submitCanvasControl(r).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+        EXPECT_EQ(h.runtime.semanticObjectCount(),0U);
+        const auto pointer=[&](std::uint64_t seq,input::PointerPhase phase,float x,float y){input::PlatformPointerBatch b;b.samples.push_back({88,1,seq,seq*1000,x,y,0,0,0,{},{},input::SampleProvenance::kConfirmedCurrent,phase});return h.runtime.submit(b);};
+        ASSERT_TRUE(pointer(1,input::PointerPhase::kDown,20,30));
+        EXPECT_EQ(h.runtime.semanticObjectCount(),0U);
+        std::optional<semantic::TableContent> previewTable;
+        if(preset==runtime::CanvasCreationPreset::kTable)
+            previewTable=std::get<semantic::TableContent>(h.runtime.qualificationRuntime().creationPreview().record.content);
+        ASSERT_TRUE(pointer(2,input::PointerPhase::kUp,20,30));
+        EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
+        const auto state=h.facade.readCanvasControlSnapshot(r.target);EXPECT_EQ(state.tool,runtime::CanvasToolKind::kSelect);
+        if(preset==runtime::CanvasCreationPreset::kTable) {
+            const auto table=h.facade.readTable();EXPECT_EQ(table.content.rows.size(),2U);EXPECT_EQ(table.content.columns.size(),2U);
+            EXPECT_EQ(table.content.rows,previewTable->rows);
+            EXPECT_EQ(table.content.columns,previewTable->columns);
+            EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+        } else {
+            const auto section=h.facade.readSection();EXPECT_TRUE(section.available);EXPECT_EQ(section.content.boundary.width,320);EXPECT_EQ(section.content.boundary.height,240);
+        }
+    }
+}
 } // namespace
+
+// Opening on Down would steal drags; requiring double tap would fail the
+// deliberately separated, already-selected second click below.
+TEST(SelectedTextClick, FirstClickSelectsSecondClickEditsOnlyAfterRelease) {
+    for (auto tool : {input::PointerTool::kUnknown,input::PointerTool::kPen,input::PointerTool::kFinger}) {
+        SCOPED_TRACE(static_cast<int>(tool));
+        Host h(true);seedShape(h,labelShape());
+        runtime::CanvasControlRequest control;control.clientId=6003;control.requestId=++h.request;
+        control.target=h.facade.mountedCanvasTargets().front();
+        control.payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;
+        control.payload.tool=runtime::CanvasToolKind::kSelect;
+        ASSERT_EQ(h.facade.submitCanvasControl(control).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(h.runtime.ownerPump());ASSERT_TRUE(h.runtime.registerSource(6003));
+        std::uint64_t seq=0;
+        const auto send=[&](input::PointerPhase phase,std::uint64_t time) {
+            input::PlatformPointerSample p;p.source=6003;p.pointer=1;p.sequence=++seq;p.timestampNs=time;
+            p.phase=phase;p.x=120;p.y=90;p.capabilities.tool=tool;
+            input::PlatformPointerBatch b;b.samples={p};return h.runtime.submit(b);
+        };
+        ASSERT_TRUE(send(input::PointerPhase::kDown,1'000'000));
+        ASSERT_TRUE(send(input::PointerPhase::kUp,2'000'000));
+        ASSERT_EQ(h.facade.readSelectionSummary().primary,labelShape().id);
+        ASSERT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+        const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+        ASSERT_TRUE(send(input::PointerPhase::kDown,2'000'000'000));
+        EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+        ASSERT_TRUE(send(input::PointerPhase::kUp,2'001'000'000));
+        EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+        EXPECT_EQ(h.facade.readTextEditor().token.object,labelShape().id);
+        EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+    }
+}
+
+TEST(SelectedTextClick, AnotherTableCellWaitsForNativeCompositionCompletion) {
+    Host h(true);runtime::TableRequest create;create.x=20;create.y=30;
+    const auto table=h.facade.tableCommand(create);ASSERT_TRUE(table.applied);
+    const auto initial=h.facade.readTextEditor();
+    ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kUpdate,u"preedit").status,runtime::TextStatus::kObserved);
+    ASSERT_TRUE(h.runtime.registerSource(6004));
+    for (auto phase : {input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+        input::PlatformPointerSample p;p.source=6004;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+        p.timestampNs=p.sequence*1'000'000;p.phase=phase;p.x=180;p.y=100;
+        input::PlatformPointerBatch batch;batch.samples={p};ASSERT_TRUE(h.runtime.submit(batch));
+    }
+    const auto pending=h.facade.readTextEditor();
+    EXPECT_EQ(pending.phase,runtime::TextPhase::kFinishing);
+    EXPECT_EQ(pending.token.session,initial.token.session);
+    EXPECT_EQ(pending.token.row,initial.token.row);EXPECT_EQ(pending.token.column,initial.token.column);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kCommit,u"confirmed").status,runtime::TextStatus::kApplied);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+    EXPECT_EQ(h.facade.readTable(table.object).content.cells[1].text.document.paragraphs.size(),0U);
+}
+TEST(SelectedTextClick, StickyWithTextDoesNotSnapOrPublishOnAStationaryClick) {
+    Host h(true);auto sticky=labelShape();sticky.kind=semantic::ObjectKind::kSticky;
+    sticky.content=semantic::StickyContent{200,200};
+    sticky.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{1,1,0.5F,1}}}},
+        {0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{{0.1F,0.2F,0.3F,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+    seedSticky(h,sticky);
+    runtime::TextIntent edit;edit.clientId=15;edit.requestId=++h.request;
+    edit.target=h.facade.mountedCanvasTargets().front();edit.kind=runtime::TextIntentKind::kEditAtPoint;
+    edit.viewX=42;edit.viewY=52;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Sticky label").status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    const auto before=h.runtime.readback();const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+    ASSERT_TRUE(h.runtime.registerSource(6005));
+    for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+        input::PlatformPointerSample p;p.source=6005;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+        p.timestampNs=p.sequence*1'000'000;p.phase=phase;p.x=42;p.y=52;
+        input::PlatformPointerBatch b;b.samples={p};ASSERT_TRUE(h.runtime.submit(b));
+    }
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.facade.readTextEditor().projection,u"Sticky label");
+    EXPECT_EQ(h.facade.readSelectionSummary().primary,sticky.id);
+    EXPECT_EQ(h.runtime.readback().semanticGeneration,before.semanticGeneration);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+}
+TEST(SelectedTextClick, ChangingTableCellSelectsBeforeTheNextClickEdits) {
+    Host h(true);runtime::TableRequest create;create.x=20;create.y=30;
+    const auto table=h.facade.tableCommand(create);ASSERT_TRUE(table.applied);
+    const auto cells=h.facade.readTable(table.object).content;
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"First cell").status,runtime::TextStatus::kApplied);
+    ASSERT_TRUE(h.runtime.registerSource(6006));std::uint64_t sequence=0;
+    const auto click=[&](float x,float y){
+        for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+            input::PlatformPointerSample p;p.source=6006;p.pointer=1;p.sequence=++sequence;
+            p.timestampNs=p.sequence*1'000'000;p.phase=phase;p.x=x;p.y=y;
+            input::PlatformPointerBatch b;b.samples={p};EXPECT_TRUE(h.runtime.submit(b));
+        }
+    };
+    const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+    click(180,100);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+    EXPECT_EQ(h.facade.readTable(table.object).row,cells.rows[1].id);
+    EXPECT_EQ(h.facade.readTable(table.object).column,cells.columns[1].id);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+    click(180,100);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.facade.readTextEditor().token.row,cells.rows[1].id);
+    EXPECT_EQ(h.facade.readTextEditor().token.column,cells.columns[1].id);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    click(60,50);EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+    click(60,50);EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+}

@@ -144,6 +144,13 @@ ImageCommandReceipt CanvasRuntimeFacade::importImage(const ImageImportRequest& r
       prepared.width = std::max(32.0, prepared.intrinsicWidth * scale);
       prepared.height = prepared.width * prepared.intrinsicHeight / prepared.intrinsicWidth;
     }
+    if (prepared.centerInViewport) {
+      const auto center=runtime_.viewToContent(runtime_.surface().logicalWidth*.5F,
+                                               runtime_.surface().logicalHeight*.5F);
+      prepared.transform.tx=center.first-(prepared.transform.a*prepared.width+prepared.transform.c*prepared.height)*.5;
+      prepared.transform.ty=center.second-(prepared.transform.b*prepared.width+prepared.transform.d*prepared.height)*.5;
+      prepared.centerInViewport=false;
+    }
     if (prepared.objectId.isZero()) prepared.objectId = runtime_.allocateTextIdentity();
     semantic::ObjectRecord candidate{};
     candidate.id = prepared.objectId; candidate.kind = semantic::ObjectKind::kImage; candidate.kind_version = 1;

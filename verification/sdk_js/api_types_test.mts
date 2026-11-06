@@ -4,6 +4,10 @@ const imageExportVersion:1=sdk.readBuildInfo().features.imageExport;
 void imageExportVersion;
 await sdk.selectTool('objectEraser');
 await sdk.selectShape('triangle');
+await sdk.selectShape('table');
+await sdk.selectShape('section');
+// @ts-expect-error creation presets remain a closed vocabulary
+await sdk.selectShape('unregistered-preset');
 const projection=sdk.multi.read(), property=projection.properties['3'];
 await sdk.multi.setProperty(3,{type:'float',value:.5},projection.stamp,property.eligible);
 const color:Color=[0,0,1,1];await sdk.text.format({color,bold:true});

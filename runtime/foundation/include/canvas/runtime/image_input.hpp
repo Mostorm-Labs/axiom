@@ -32,6 +32,8 @@ struct ImageImportRequest final {
   semantic::ObjectId objectId{};
   // Empty ResourceId requests owner-side registration from immutable bytes.
   std::string mimeType;
+  // SDK byte-import policy; prepared resource transforms remain explicit.
+  bool centerInViewport = false;
 };
 
 struct ImageReplaceRequest final {

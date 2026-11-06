@@ -96,6 +96,35 @@ remains owned by the IME, and pending or failed native completion does not count
 as a successful finish. Text still uses the existing incremental History/Operation
 path; finishing an editor does not itself acknowledge persistence.
 
+In point selection mode, the first click selects a text-capable object. A later
+single click on that selected object's body opens its existing text editor on
+release: Shape labels, RichText, Sticky text and the clicked Table cell. Opening
+an empty editor does not publish an operation. A selected Table also supports
+clicking another cell to finish the current editor and select that cell without
+editing it. Click the selected cell again to enter editing. This selection-first
+rule also applies when changing cells while no editor is open. Pending native
+composition must finish successfully before another cell can be selected.
+Stationary clicks and up to 4 logical pixels of pointer jitter do not move or
+snap the object. Dragging, resize handles, connector ports, Shift/multiple selection, locks,
+Group scope and viewport navigation retain their existing priority. A browser
+double-click does not restart an editor already opened by the pointer gesture.
+
+`selectShape('table')` and `selectShape('section')` arm shared Runtime creation
+tools. Selecting a tool creates no object. A Table click creates 2×2 cells;
+dragging adds rows and columns in 120×48 world-unit cells, with a 2×2 minimum.
+Creation is bounded by the existing 64-axis/1024-cell limits. Programmatic
+`table.create` defaults to 2×2 when counts are omitted and retains explicit sizes. A Section click creates the
+existing 320×240 default; dragging specifies its range. Preview and cancellation
+are Runtime-owned, and successful creation returns to point selection.
+
+Confirmed Table text edits automatically grow the edited row when required by
+its content and padding. Rows do not automatically shrink. Text and the matching
+row resize use existing operations in one atomic local intent and one Undo entry;
+the existing independent remote-operation protocol and conflict guards remain.
+Ordinary byte image import centers the image on the current mounted viewport,
+including pan and zoom. Explicit prepared source-profile image transforms and
+image replacement retain their existing semantics.
+
 Document backgrounds use complete value DTOs:
 
 ```js
@@ -261,7 +290,8 @@ methods use `objectId` and the corresponding stable axis ID. Insertion takes
 
 Limits: 1..64 rows/columns, at most 1024 cells, dimensions 24..16384 world units,
 text at most 1 MiB per table; grid width 0..16 and font size 1..512. Cells wrap with
-6-unit padding and clip at fixed row height. The last row/column cannot be removed.
+6-unit padding and clip at the stored row height; confirmed text editing grows
+that height when necessary. The last row/column cannot be removed.
 Select a cell, double-click or press Enter to edit; Tab/Shift+Tab navigates while
 not editing. Drag internal row/column boundaries to preview size, release to
 commit, or cancel the pointer to discard. IME uses the existing native fact lane.

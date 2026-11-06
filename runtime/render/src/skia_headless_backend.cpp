@@ -929,6 +929,10 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         entry.command = ConnectorReferenceCommand{*connector};
     else if (const auto* sticky = std::get_if<semantic::StickyContent>(&object.content))
         entry.command = StickyReferenceCommand{*sticky, nullptr, false};
+    else if (const auto* table = std::get_if<semantic::TableContent>(&object.content))
+        entry.command = TableReferenceCommand{*table, nullptr};
+    else if (const auto* section = std::get_if<semantic::SectionContent>(&object.content))
+        entry.command = SectionReferenceCommand{*section, nullptr};
     else return;
     drawTransientEntryToSkCanvas(canvas, plan, entry);
 }

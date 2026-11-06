@@ -254,6 +254,8 @@ class Runtime final {
     void sticky() {
         control("shape", {{"value", 5}});
     }
+    void tableTool() { control("shape", {{"value", 6}}); }
+    void sectionTool() { control("shape", {{"value", 7}}); }
     void line() {
         control("shape", {{"value", 3}});
     }

@@ -185,9 +185,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
   [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                      float x, float y) noexcept;
-  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty() || textCreation_.has_value(); }
+  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty() || textCreation_.has_value() || placementCreation_.has_value(); }
   [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
-  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
+  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { if(placementCreation_)return placementCreation_->preview; static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
   [[nodiscard]] std::optional<input::PointerKey> platformKey(
       input::InputSourceId source, input::PointerId pointer) const noexcept {
       return appBinding_ == nullptr ? std::nullopt : appBinding_->keyFor(source, pointer);
@@ -318,7 +318,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // Layout geometry and canonical text remain independent of the blink phase.
   void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
   bool setTextTool(bool value) noexcept {
-    if (textTool_ != value) resetTouchTextTap();
+    if (textTool_ != value) resetTextTap();
     if (!value && textCreation_) {textCreation_.reset();canonicalPresentationDirty_=true;}
     textTool_=value;
     return true;
@@ -669,7 +669,21 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ObjectId hitTextAtView(float,float);
   [[nodiscard]] runtime::TableResult tableCommand(const runtime::TableRequest&);
   [[nodiscard]] runtime::TableSnapshot tableSnapshot(semantic::ObjectId = {}) const;
-  bool tableTargetAt(runtime::TextIntent&);
+  runtime::TableResult createTableObject(const runtime::TableRequest&, const semantic::ObjectRecord* preview = nullptr);
+  struct PlacementCreation {
+    input::PointerKey key;
+    CreationPreview preview;
+    std::vector<semantic::ObjectId> rows,columns;
+    std::uint64_t generation=0,camera=0,metrics=0,selection=0;
+    std::optional<semantic::ObjectId> scope;
+    bool dragged=false;
+  };
+  std::optional<PlacementCreation> placementCreation_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> placementPointers_;
+  bool placementPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
+  void cancelPlacementCreation() noexcept;
+  bool growTableTextRow(semantic::ObjectId, const semantic::TableContent&, semantic::TableContent&);
+  bool tableTargetAt(runtime::TextIntent&, bool updateSelection=true);
   bool tablePointer(const input::PointerKey&,input::PointerPhase,float,float);
   semantic::ObjectId tableObject_{},tableRow_{},tableColumn_{};
   struct TableResize {input::PointerKey key;semantic::ObjectId object,row,column;double start=0,size=0,preview=0;std::uint64_t generation=0;};
@@ -677,9 +691,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
 
   bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
-  bool observeTouchTextTap(const input::PointerSample&);
-  bool beginShapeTextEditAt(float, float, semantic::ObjectId);
-  void resetTouchTextTap() noexcept;
+  bool observeTextTap(const input::PointerSample&);
+  bool beginSelectedTextEditAt(float, float, semantic::ObjectId);
+  void resetTextTap() noexcept;
   void selectCreatedObject(semantic::ObjectId, bool editText = false) noexcept;
   void textFinished(semantic::ObjectId) noexcept override;
   struct TextCreation {
@@ -820,11 +834,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey textSelectionPointer_{};
   std::uint32_t textSelectionAnchor_=0;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
-  struct TouchTapContact final {
+  struct TextTapContact final {
     semantic::ObjectId object{};
     float x = 0.0F, y = 0.0F;
     std::uint64_t timestampNs = 0;
     bool moved = false;
+    semantic::ObjectId selectedObject{};
+    RegionSelectionContext context{};
+    std::uint64_t generation = 0;
   };
   struct CompletedTouchTap final {
     input::PointerKey key{};
@@ -832,10 +849,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     float x = 0.0F, y = 0.0F;
     std::uint64_t timestampNs = 0;
   };
-  std::unordered_map<input::PointerKey, TouchTapContact, input::PointerKeyHash>
-      touchTapContacts_;
+  std::unordered_map<input::PointerKey, TextTapContact, input::PointerKeyHash>
+      textTapContacts_;
   std::optional<CompletedTouchTap> previousTouchTap_;
-  bool touchTapMultiContact_ = false;
+  bool textTapMultiContact_ = false;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> shapeExpandPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
@@ -853,7 +870,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
   bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
-  runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop) noexcept;
+  runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance = nullptr) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
   void applyAppearancePreview(render::ReferenceDrawList&);
   bool applyAppearanceToRecord(canvas::RuntimeSceneRecord&);

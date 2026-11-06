@@ -280,7 +280,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
         release:packet=>{const result=call('data',{action:'release',packet:packetMetadata(owned(packet))});schedule();return result;},
         reportStatus:(packet,localDurable,cloudSynced)=>{const result=call('data',{action:'report',packet:packetMetadata(owned(packet)),localDurable,cloudSynced});schedule();return result;}},
       selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return enqueue(()=>{const result=call('control',{kind:'tool',value});if(name.endsWith('Eraser'))call('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return result;});},
-      selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5},name)}),
+      selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5,table:6,section:7},name)}),
       setSelectionMode:async name=>control({kind:'selectionMode',value:enumValue({point:0,rectangle:1,lasso:2},name)}),
       setInk:options=>control({kind:'ink',...options}),setEraser:options=>control({kind:'eraser',...options}),
       brushPresets:()=>call('presets').value,selectBrush:(profileId,revision)=>control({kind:'preset',profileId,revision}),

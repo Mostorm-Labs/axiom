@@ -102,7 +102,7 @@ try {
   observation.checks.cleanClose=true;
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
   for(let n=0;!await evaluate("document.getElementById('tools')?.getAttribute('aria-busy')==='false'");++n){if(n>300)throw Error('Demo failed to initialize');await delay(50);}
-  await evaluate("document.getElementById('table-open').click();document.getElementById('table-rows').value='2';document.getElementById('table-columns').value='3';document.getElementById('table-place').click()");await delay(200);
+  await evaluate("document.getElementById('table-open').click()");await delay(200);
   const placement=await evaluate("(()=>{const r=document.querySelector('#canvas canvas').getBoundingClientRect();return {x:r.left+120,y:r.top+220};})()");await click(placement);await delay(200);
   observation.checks.demoTableControls=await evaluate("!document.getElementById('table-parameters').hidden&&document.getElementById('table-row-height').value==='48'");
   observation.checks.demoAutoEditor=await evaluate("document.activeElement?.id.endsWith('-ime')");

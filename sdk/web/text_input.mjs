@@ -112,6 +112,9 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     // Touch double-taps are already routed through Runtime's pointer path.
     // The browser's compatibility mouse event must not submit them again.
     if(event.sourceCapabilities?.firesTouchEvents)return;
+    // A selected-object click already entered Runtime's editor on release.
+    // Keep that session (and any composition) when the compatibility dblclick arrives.
+    if(snapshot().phase!==0)return;
     const rect=canvas.getBoundingClientRect();finish().then(()=>{
     // Finishing the single-click draft blurs the carrier. Restore canvas focus
     // so sync can hand it to the newly entered editor rather than leaving it on body.

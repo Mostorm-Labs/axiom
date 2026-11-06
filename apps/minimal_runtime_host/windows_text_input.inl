@@ -269,11 +269,9 @@ std::optional<LRESULT> windowsTextMessage(State& state, UINT message, WPARAM key
         if(targets.empty())return 0;
         const auto tool=state.facade->readCanvasControlSnapshot(targets.front()).tool;
         if(tool!=CanvasToolKind::kText && tool!=CanvasToolKind::kSelect)return 0;
-        if (active) {
-            textIntent(state, TextIntentKind::kFinish);
-            if (snapshot.composition)
-                return 0;
-        }
+        // A preceding selected-object click already opened the shared editor.
+        // Keep that session and native composition when Win32 sends dblclick.
+        if (active) return 0;
         const auto metrics = state.host->publicComposition().surfaceMetrics().value_or(RuntimeSurfaceMetrics{});
         if (!metrics.width || !metrics.height)
             return 0;

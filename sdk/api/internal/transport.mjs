@@ -38,7 +38,7 @@ export function createTransportController(port) {
     exportImage:options=>enqueue('exportImage',{options:options||{}}).then(r=>({...r.value,bytes:r.bytes})),
     subscribeState:fn=>{check();return port.subscribe('state',fn);},subscribeOperations:fn=>{check();return port.subscribe('operation',fn);},dispatchEvents:()=>port.dispatchEvents?.()||Promise.resolve(),
     selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return run(async()=>{const r=await request('control',{kind:'tool',value});if(name.endsWith('Eraser'))await request('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return r;});},
-    selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5},name)}),
+    selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5,table:6,section:7},name)}),
     setSelectionMode:async name=>control({kind:'selectionMode',value:enumValue({point:0,rectangle:1,lasso:2},name)}),
     setInk:options=>control({kind:'ink',...options}),setEraser:options=>control({kind:'eraser',...options}),
     brushPresets:()=>read('presets'),selectBrush:(profileId,revision)=>control({kind:'preset',profileId,revision}),

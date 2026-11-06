@@ -1,0 +1,77 @@
+{
+  "task": "uiux-selected-single-click-text-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "a79435e4b63eb58a8e49201a8d76662e70a0dc80",
+    "relation": "ancestor"
+  },
+  "authority": "User request 2026-11-06: a single click on an already selected text-capable object enters editing, including Shape/RichText/Sticky and Table cells. Preserve completed placement, 2x2 defaults and row fit changes.",
+  "owners": {
+    "gesture": "CanvasEditingRuntime normalized pointer acquisition and existing text tap recognizer",
+    "editor": "existing TextEditSession/TextEditPort",
+    "mutations": "existing OperationEngine/History/publication"
+  },
+  "contract": [
+    "First click on an unselected object selects it; a later single click on its body enters text editing on release, regardless of double-click timing.",
+    "Shape labels, standalone RichText, Sticky (including existing RichText child), and cells of a selected Table use their existing text target and caret mapping. Opening an empty editor makes no canonical operation.",
+    "Capture selection, semantic, camera, metrics, surface, scope and full pointer identity; reject changed/cancelled/retired candidates. Drag, resize, ports, Shift/multiple selection, lasso, image/crop, group scope, navigation and locks retain priority.",
+    "A browser double-click delivered after single-click entry must not finish/restart the active editor. Retain existing Group entry and Text-tool double-click behavior.",
+    "User correction 2026-11-06: Table cell changes select first, then a subsequent click on that same selected cell enters editing. Clicking another cell while editing finishes the old editor and selects the clicked cell only after immediate successful finish; pending/failed native composition does not switch cells.",
+    "For an otherwise eligible selected-object click, retain up to 4 logical pixels of pointer jitter without producing a Transform operation. Stationary clicks bypass drag snapping; real drag snapping remains unchanged."
+  ],
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "shared Runtime recognizer and target resolution",
+        "Web and shared Windows native double-click adapter guards",
+        "consumer documentation and focused real-input regressions"
+      ],
+      "forbidden_changes": [
+        "new public APIs or semantic/ABI formats",
+        "Shell editing or canonical owners",
+        "dependency/lock/version/release changes",
+        "unrelated baseline fixes"
+      ]
+    },
+    "tests": {
+      "required": [
+        "Native first-select/second-click editor, no operation on entry and shared pointer tools",
+        "Real Chrome copied SDK: all supported targets, empty and existing text, correct Table cell, drag/cancel/stale/locks/multiselect/navigation and double-click continuity",
+        "Affected text/selection native regressions and configured CTest suite with baseline failures reported separately",
+        "Existing public SDK, Table, placement and default-interaction Chrome regressions; Runtime boundary check"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "out/single-click-* results with source/package hashes"
+      ],
+      "corroborative": [
+        "matching rebuilt Demo served at local HTTP"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "requested behavior and affected regressions verified",
+        "existing baseline failures identified separately",
+        "Demo available for testing"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

@@ -29,7 +29,7 @@ export interface Runtime {
     reportStatus(packet:OperationMetadata,localDurable:DataProgress,cloudSynced:DataProgress):CommandResult;};
   readSelection():{count:number;roots:Id128[];primary:Id128;status:number;reason:number;groupScope:Id128|null;bounds:[number,number,number,number]|null;actions:{available:boolean;state:number;reason:number}[];generation:Revision;selectionRevision:Revision;kind:number;width:number;height:number;transform:[number,number,number,number,number,number]|null;appearance:{fill:Color;stroke:Color;strokeWidth:number;opacity:number;fillEnabled:boolean;strokeEnabled:boolean}|null};
   selectTool(name:'ink'|'select'|'objectEraser'|'partialEraser'|'hand'|'text'):Promise<CommandResult>;
-  selectShape(name:'rectangle'|'ellipse'|'triangle'|'line'|'arrow'|'sticky'):Promise<CommandResult>;
+  selectShape(name:'rectangle'|'ellipse'|'triangle'|'line'|'arrow'|'sticky'|'table'|'section'):Promise<CommandResult>;
   setSelectionMode(name:'point'|'rectangle'|'lasso'):Promise<CommandResult>;
   setInk(options:{size?:number;opacity?:number;color?:[number,number,number,number]}):Promise<CommandResult>;
   setEraser(options:{mode:1|2;diameter?:number}):Promise<CommandResult>;

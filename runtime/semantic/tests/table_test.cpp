@@ -57,6 +57,24 @@ TEST(TableV1, TextAndPaintOperationsCannotSmuggleStructuralChanges){
   for(auto kind:{TableEditKind::kText,TableEditKind::kCellStyle,TableEditKind::kGridStyle})
     EXPECT_FALSE(SemanticCodec::encodeProtobufOperation(operation(4,EditTableOp{object.id,kind,before,after})).ok());
 }
+TEST(TableV1, PreparedTableIntentIsAtomicAndDoesNotPublishDuringPrepare){
+  IndexedObjectStore store;AppliedOperationLedger ledger;SemanticGenerationState generation;
+  CanonicalCommitClock clock{RuntimeEpoch{1}};OperationEngine engine;ResourceManifest manifest;
+  const auto object=fixture();
+  ASSERT_EQ(engine.apply(operation(1,InsertObjectsOp{{object}}),ApplySource::kLocalInteraction,store,manifest,ledger,generation,clock).disposition,ApplyDisposition::kApplied);
+  const auto before=std::get<TableContent>(object.content);auto one=before,two=before;one.rows[0].size=96;two=one;two.rows[1].size=120;
+  const auto first=operation(2,EditTableOp{object.id,TableEditKind::kResize,before,one});
+  const std::array bad{first,operation(3,EditTableOp{object.id,TableEditKind::kResize,before,two})};
+  EXPECT_FALSE(engine.prepareIntent(bad,ApplySource::kLocalInteraction,store,manifest,ledger,generation,clock));
+  EXPECT_EQ(std::get<TableContent>(store.find(object.id)->content),before);
+  EXPECT_EQ(generation.current().value(),1U);EXPECT_FALSE(ledger.find(first.id));
+  const std::array good{first,operation(4,EditTableOp{object.id,TableEditKind::kResize,one,two})};
+  auto prepared=engine.prepareIntent(good,ApplySource::kLocalInteraction,store,manifest,ledger,generation,clock);ASSERT_TRUE(prepared);
+  EXPECT_EQ(std::get<TableContent>(store.find(object.id)->content),before);
+  ASSERT_TRUE(engine.commitIntent(*prepared,generation,clock));
+  EXPECT_EQ(std::get<TableContent>(store.find(object.id)->content),two);
+  EXPECT_EQ(generation.current().value(),3U);EXPECT_TRUE(ledger.find(first.id));
+}
 TEST(TableRuntime, CommandsHistoryAndSnapshotPreserveIdentities){
   using namespace canvas;
   runtime::RuntimeComposition owner;ASSERT_TRUE(owner.openDocument(id(1)));ASSERT_TRUE(owner.bindSurface(800,600));auto& api=owner.controlFacade();

@@ -51,7 +51,7 @@ void validateTransportEnums(const Json& j) {
         if (kind == "tool")
             bounded(j.at("value"), 4);
         else if (kind == "shape")
-            bounded(j.at("value"), 5);
+            bounded(j.at("value"), 7);
         else if (kind == "selectionMode")
             bounded(j.at("value"), 2);
         else if (kind == "fit")
@@ -1256,7 +1256,7 @@ class Session::Impl {
             } else if (kind == "shape") {
                 p.kind = K::kSelectCreationPreset;
                 p.creationPreset =
-                    static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 5));
+                    static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 7));
             } else if (kind == "background") {
                 p.kind = K::kDocumentBackground;
                 const auto& value = j.at("value");
@@ -1461,6 +1461,7 @@ class Session::Impl {
                 runtime::ImageImportRequest r;
                 r.bytes = bytes;
                 r.mimeType = j.at("mime");
+                r.centerInViewport = true;
                 result = f.importImage(r);
             } else if (action == "replace") {
                 const auto s = f.readSelectedImage();

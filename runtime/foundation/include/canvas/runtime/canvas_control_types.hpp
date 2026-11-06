@@ -24,6 +24,8 @@ enum class CanvasCreationPreset : std::uint8_t {
   kLine,
   kArrow,
   kSticky,
+  kTable,
+  kSection,
 };
 enum class BrushPresetError : std::uint8_t { kNone, kUnknownPreset, kResourceUnavailable };
 enum class OptionPatchKind : std::uint8_t { kKeep, kSet, kClearOverride };

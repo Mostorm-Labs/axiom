@@ -864,19 +864,24 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
           auto cancelSample=sample;cancelSample.key=key;cancelSample.phase=input::PointerPhase::kCancel;
           (void)dispatchRuntime_.cancel(cancelSample);
         }
-        if (routing.becameViewport) resetTouchTextTap();
+        if (routing.becameViewport) resetTextTap();
         if (routing.endedViewport) viewportController_->endGesture();
         if (routing.viewportClaimed) viewportContactsChanged = true;
         if (!routing.routesToInk) continue;
       }
-      if (!dispatchRuntime_.submit(sample)) return false;
+      // Capture selection before Down can acquire a different object. Complete
+      // only after dispatch retires Up, when the existing text owner is ready.
+      if (selectionMode_ && selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint &&
+          sample.phase==input::PointerPhase::kDown) (void)observeTextTap(sample);
+      if (!dispatchRuntime_.submit(sample)) { resetTextTap(); return false; }
       if(selectionMode_&&selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint&&selectedObjectCount()==1&&(sample.phase==input::PointerPhase::kDown||sample.phase==input::PointerPhase::kUp)){
         runtime::TextIntent cell;cell.object=selection_.primary();cell.viewX=sample.x;cell.viewY=sample.y;(void)tableTargetAt(cell);
       }
       if (selectionMode_ && selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint && !textTool_ &&
+          sample.phase!=input::PointerPhase::kDown &&
           (!interaction_->textSession() ||
            interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
-        (void)observeTouchTextTap(sample);
+        (void)observeTextTap(sample);
     }
     if (viewportContactsChanged) {
       const auto contacts = coordinator_->viewportSamples();
@@ -1027,15 +1032,17 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
 }
 
 bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept {
+  if (preset>CreationPreset::kSection) return false;
   if (closed_ || !brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
       panTool_ || creationActive()) return false;
   if (selectionMode_) {
     dispatchRuntime_.cancelAll();
-    resetTouchTextTap();
+    resetTextTap();
     selectionMode_ = false;
     cancelSelectionTransform();
     connectorPointerKeys_.clear();
   }
+  if(preset==CreationPreset::kTable||preset==CreationPreset::kSection){selection_.cancel();selectionView_.reset();}
   creationPreset_ = preset;
   creationMode_ = true;
   if (!selection_.primary().isZero()) (void)renderSelectionOverlay();
@@ -1047,6 +1054,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
       surface_.height == 0U) return false;
+  if(creationPreset_==CreationPreset::kTable||creationPreset_==CreationPreset::kSection)
+    return placementPointer(key,phase,x,y);
   const auto content = viewportController_->viewToContent(x, y);
   const auto viewportTopLeft = viewportController_->viewToContent(0.0F, 0.0F);
   const auto viewportBottomRight = viewportController_->viewToContent(
@@ -1401,9 +1410,11 @@ void CanvasEditingRuntime::onSessionCancel(
     if (!sample.key.valid()) continue;
     textPointerKeys_.erase(sample.key);
     if (textCreation_ && textCreation_->key == sample.key) textCreation_.reset();
-    touchTapContacts_.erase(sample.key);
+    placementPointers_.erase(sample.key);
+    if(placementCreation_&&placementCreation_->key==sample.key)cancelPlacementCreation();
+    textTapContacts_.erase(sample.key);
     previousTouchTap_.reset();
-    if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+    if (textTapContacts_.empty()) textTapMultiContact_ = false;
     const auto routing = coordinator_->route(sample);
     if (routing.endedViewport) viewportController_->endGesture();
     baselineDownTimestamps_.erase(sample.key);
@@ -1426,7 +1437,8 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   cancelRegionSelection();acquisitionClickPointers_.clear();
   textPointerKeys_.clear();
   textCreation_.reset();
-  resetTouchTextTap();
+  cancelPlacementCreation();
+  resetTextTap();
   shapeExpandPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
@@ -1556,6 +1568,7 @@ bool CanvasEditingRuntime::selectTool(ToolMode mode) noexcept {
   dispatchRuntime_.cancelAll();
   toolMode_ = mode;
   panTool_ = false;
+  cancelPlacementCreation();
   creationMode_ = false;
   creations_.clear();
   creationFences_.clear();
@@ -1567,6 +1580,7 @@ bool CanvasEditingRuntime::setPanTool(bool enabled) noexcept {
   if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) return false;
   dispatchRuntime_.cancelAll();
   panTool_ = enabled;
+  cancelPlacementCreation();
   creationMode_ = false;
   creations_.clear();
   creationFences_.clear();
@@ -1585,10 +1599,11 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
   if (selectionMode_ != enabled) {
     dispatchRuntime_.cancelAll();
     coordinator_->reset();viewportController_->endGesture();
-    resetTouchTextTap();
+    resetTextTap();
   }
   selectionMode_ = enabled;
   if (enabled) {
+    cancelPlacementCreation();
     creationMode_ = false;
     creations_.clear();
     creationFences_.clear();
@@ -1943,6 +1958,21 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
 
 bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
                                                semantic::Operation inverse) {
+  if (const auto* table=std::get_if<semantic::EditTableOp>(&forward.payload);
+      table && table->action==semantic::TableEditKind::kText) {
+    auto fitted=table->replacement;
+    if (!growTableTextRow(table->object_id,table->expected,fitted)) return false;
+    if (fitted!=table->replacement) {
+      const semantic::Operation resize{allocateOperationId(),documentId_,1,1,
+          semantic::EditTableOp{table->object_id,semantic::TableEditKind::kResize,table->replacement,std::move(fitted)}};
+      const std::array operations{forward,resize};
+      if (!beginExplicitIntent()) return false;
+      // Both existing operation kinds stay strict. The existing intent owner
+      // prepares their final scene, publication reservation and one History.
+      if (!prepareExplicitIntent(operations) || !commitExplicitIntent()) return false;
+      return true;
+    }
+  }
   const auto* edit = std::get_if<semantic::EditRichTextOp>(&forward.payload);
   const bool isTextEdit = edit != nullptr;
   const auto target = edit ? edit->object_id : semantic::ObjectId{};
@@ -2625,6 +2655,20 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         editingMetricsGeneration_!=surface_.metricsGeneration || editingSurfaceGeneration_!=surface_.generation ||
         editingSelectionRevision_!=selection_.revision()) {
       cancelSelectionTransform(); return false;
+    }
+    const auto tap=textTapContacts_.find(key);
+    const bool textClick=tap!=textTapContacts_.end() &&
+        tap->second.selectedObject==selection_.primary() &&
+        std::hypot(x-tap->second.x,y-tap->second.y)<=RegionSelectionSession::kDragThreshold;
+    if (editingHandle_==render::HandleKind::kNone && !editingChanged_ &&
+        ((world.first==editingDownWorld_.x && world.second==editingDownWorld_.y) || textClick)) {
+      // Snapping belongs to actual drags. A stationary click must not align a
+      // Sticky to its own RichText child or turn text entry into a Transform op.
+      if (phase==input::PointerPhase::kUp) {
+        cancelSelectionTransform();
+        (void)clearTransientOverlay();
+      }
+      return true;
     }
     editingDropWorld_={world.first,world.second};
     const auto& t = editingInitial_;
@@ -4195,7 +4239,7 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
     }
     return false;
   }
-  resetTouchTextTap();
+  resetTextTap();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();
   auto* nextPreview = appBinding_->previewSurfaces()->activeProvider();
@@ -4240,7 +4284,7 @@ bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
   exactDemand_.reset();
   clearAppearancePreview();
-  resetTouchTextTap();
+  resetTextTap();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
     surface_.available = false;
