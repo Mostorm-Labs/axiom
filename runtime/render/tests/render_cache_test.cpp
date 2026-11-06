@@ -18,6 +18,7 @@
 #include "include/core/SkColorSpace.h"
 #include "../src/compact_raster_internal.hpp"
 #include "../src/skia_prepared_geometry.hpp"
+#include "../src/skia_gpu_lifetime.hpp"
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #endif
@@ -970,11 +971,122 @@ void checkCanonicalReplayHeadroom(TestSurface& provider){
     limitedTargets.clear();require(limited->used()==0,"canonical hard fallback leaked quota");provider.release();
 }
 
+#if defined(G5_TEST_WEBGL)
+// Keep real GPU work pending without blocking or reporting false completion.
+struct DelayedRetirementPoll final {
+    DelayedRetirementPoll(){EM_ASM({const p=WebGL2RenderingContext.prototype;
+        window.retirementOriginalPoll=p.clientWaitSync;p.clientWaitSync=function(...args){
+            const r=window.retirementOriginalPoll.apply(this,args);return r===this.WAIT_FAILED?r:this.TIMEOUT_EXPIRED;};});}
+    ~DelayedRetirementPoll(){restore();}
+    void restore(){if(active){EM_ASM({WebGL2RenderingContext.prototype.clientWaitSync=window.retirementOriginalPoll;});active=false;}}
+    bool active=true;
+};
+std::vector<std::uint8_t> retirementPixels(TestSurface& provider){
+    const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"retirement read acquire");
+    const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> out(info.computeMinByteSize());
+    require(a.frame.surface->readPixels(info,out.data(),info.minRowBytes(),0,0),"retirement full readback");provider.release();return out;
+}
+void checkRetirementFrame(){
+    TestSurface target,reference;require(target.resize(1024,768).code==BackendSubmissionCode::kAccepted&&
+        reference.resize(1024,768).code==BackendSubmissionCode::kAccepted,"retirement frame targets");
+    FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,384},
+        {512,384,1024,768,2,2},semantic::SemanticGeneration{9871},SceneRevision{9871},SurfaceGeneration{1},MetricsGeneration{1},FrameId{9871}};
+    ReferenceDrawList list{state};list.viewportClip={0,0,512,384};list.entries={stroke(9871)};
+    const FramePlan frame{state,std::move(list)};
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;
+    options.maxEntryBytes=16*1024;options.sharedMaxBytes=8*1024*1024;cached.setRenderCacheOptions(options);
+    RenderCacheOptions off;off.enabled=false;direct.setRenderCacheOptions(off);
+    RenderPreparationBudget slice;slice.maxCoverageSteps=64;slice.maxMicroseconds=1000000;
+    BackendSubmissionResult warm;
+    for(unsigned i=0;;++i){warm=cached.renderFrame(target,frame,nullptr,&slice);if(warm.code!=BackendSubmissionCode::kRetry)break;
+        require(i<128,"retirement warm frame convergence");emscripten_sleep(1);}
+    require(warm.code==BackendSubmissionCode::kAccepted&&cached.renderCacheWork().scratchPeakBytes==3*1024*1024,"retirement frame did not use stable full scratch");
+    const auto sharp=retirementPixels(target);const auto canonical=cached.submissionCount();
+    DelayedRetirementPoll delayed;
+    unsigned queries=0;NavigationSourceQuery unavailable=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&){++queries;return false;};
+    require(navigate(cached,target,{1,0,0},state,unavailable,false).code==BackendSubmissionCode::kAccepted,
+        "retirement old feedback setup");
+    auto movingList=frame.referenceDrawList;movingList.worldToView={1.2,0,0,1.2,-12,-6};const FramePlan moving{state,std::move(movingList)};
+    const auto presents=target.presentCount();
+    const auto pending=cached.renderFrame(target,moving,nullptr,&slice);
+    require(pending.code==BackendSubmissionCode::kRetry&&target.presentCount()==presents&&cached.submissionCount()==canonical,
+        "retirement pressure published partial canonical work");
+    const auto feedback=cached.renderNavigation(target,{1,0,0},state);
+    delayed.restore();
+    require(feedback.code==BackendSubmissionCode::kAccepted&&queries==0&&retirementPixels(target)==sharp,
+        "already-retiring scratch caused qualified whole-frame feedback eviction");
+    require(cached.submissionCount()==canonical,"retirement feedback manufactured canonical receipt");
+    BackendSubmissionResult resumed;
+    for(unsigned i=0;;++i){emscripten_sleep(1);resumed=cached.renderFrame(target,moving,nullptr,&slice);
+        if(resumed.code!=BackendSubmissionCode::kRetry)break;require(i<256,"retirement frame resume stalled");}
+    require(resumed.code==BackendSubmissionCode::kAccepted&&direct.renderFrame(reference,moving).code==BackendSubmissionCode::kAccepted&&
+        retirementPixels(target)==retirementPixels(reference),"retirement resume changed Direct canonical pixels");
+    std::cout<<"{\"retirement_frame\":\"PASS\",\"canonical_before\":"<<canonical<<",\"canonical_after\":"<<cached.submissionCount()<<"}\n";
+}
+void checkRetirementCells(){
+    constexpr std::size_t mib=1024*1024,hard=12*mib;
+    for(bool retiring:{true,false}){
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"retirement cell target");
+        auto nav=std::make_unique<internal::SkiaNavigationTiles>();auto retirement=std::make_shared<internal::GpuResourceRetirement>();
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,hard});
+        RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntryBytes=4*mib;options.sharedMaxBytes=hard;
+        options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+        auto entry=stroke(9872);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};const auto frame=plan(9872,{entry});
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+        for(unsigned i=0;;++i){emscripten_sleep(1);
+            require(nav->render(target,{1,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"retirement cell warm");
+            if(!nav->work.pending)break;require(i<256,"retirement cells setup stalled");}
+        (void)retirementPixels(target);
+        for(unsigned i=0;budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();require(i<128,"retirement warm drain");}
+        const auto cells=budget->used(resources::ResourceClass::kNavigationTile);
+        const auto evictions=nav->work.evictions;
+        require(cells>128*1024,"retirement cells fixture empty");
+        DelayedRetirementPoll delayed;resources::ResourceLease pressureLease;sk_sp<SkSurface> pressure;
+        const auto a=target.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"retirement pressure acquire");
+        {
+            internal::SkiaGpuLifetime gpu(*retirement,budget,target,GrAsDirectContext(a.frame.surface->recordingContext()),
+                resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame),0);
+            require(gpu.ready(),"retirement pressure GPU scope");
+            const auto token=budget->reserve(resources::ResourceClass::kCanonicalFrame,8*mib,true);require(bool(token),"retirement pressure lease");
+            pressureLease=resources::ResourceLease(budget,*token);pressure=a.frame.surface->makeSurface(SkImageInfo::MakeN32Premul(2048,1024));
+            require(bool(pressure),"retirement pressure physical surface");pressure->getCanvas()->clear(SK_ColorRED);
+            a.frame.surface->getCanvas()->drawImage(pressure->makeImageSnapshot(),0,0);gpu.touch();
+            if(retiring){pressure.reset();pressureLease.reset();}
+        }
+        target.release();
+        const auto used=budget->used(),requested=hard-used+std::min<std::size_t>(64*1024,cells/2);
+        require(!budget->reserve(resources::ResourceClass::kScratch,requested,true),"retirement pressure did not deny actual admission");
+        const auto pending=budget->snapshot(resources::ResourceClass::kCanonicalFrame).pendingRelease;
+        require((retiring&&pending==8*mib)||(!retiring&&pending==0),"retirement fixture did not distinguish live from pending frame bytes");
+        nav->reclaimForExact(budget,hard,requested,frame.frame,&target,1,true);
+        const auto evicted=nav->work.evictions-evictions;
+        delayed.restore();
+        if(retiring){
+            require(evicted==0&&budget->used(resources::ResourceClass::kNavigationTile)==cells,
+                "already-retiring frame caused unnecessary navigation cell eviction");
+            require(!budget->reserve(resources::ResourceClass::kScratch,requested,true),"future quota was uncharged before real completion");
+        }else require(evicted>0,"mandatory live pressure failed to reclaim cells");
+        (void)retirementPixels(target);
+        for(unsigned i=0;budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();require(i<128,"retirement pressure drain");}
+        const auto admitted=budget->reserve(resources::ResourceClass::kScratch,requested,true);require(bool(admitted),"retirement quota did not resume");budget->release(*admitted);
+        nav.reset();pressure.reset();pressureLease.reset();retirement->service();require(budget->used()==0,"retirement owner leaked quota");
+        std::cout<<"{\"retirement_cells\":\"PASS\",\"retiring\":"<<retiring<<",\"evictions\":"<<evicted<<"}\n";
+    }
+}
+#endif
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--stream-only"){testing::requireReferenceDrawStream();return finishNative(0);}
+#endif
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--retirement-frame-only"){checkRetirementFrame();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--retirement-cells-only"){checkRetirementCells();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--retirement-only"){checkRetirementFrame();checkRetirementCells();return finishNative(0);}
 #endif
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");

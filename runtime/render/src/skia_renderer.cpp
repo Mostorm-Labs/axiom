@@ -1,5 +1,6 @@
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "resource_reclaim.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -219,9 +220,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(budget,limit,bytes,frame,providerIdentity,resource);
             };
             cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t bytes){
-                // Reclaim optional resources only on actual critical admission
-                // pressure. Their unfinished GPU reads remain charged.
+                // Already-released scratch/frame bytes can cover this minimum.
+                // Wait for their real completion before sacrificing feedback.
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
                 navigationCache_.reset();
+                // Retiring the optional whole frame may itself be sufficient.
+                // Keep useful navigation cells while that GPU read finishes.
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(resourceBudget_,
                     renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
             };

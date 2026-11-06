@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {gpuProbeStatus} from './gpu_probe_status.mjs';
 const root=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const probeArgument=process.argv[4]??'--gpu-candidate';
-if(!['--gpu-candidate','--frontier-only','--replay-only','--contour-only','--stream-only','--continuity-only','--affine-only','--background-only','--exact-replay-only','--quality-only','--oversized-only','--detail-only','--detail-share-only','--detail-replay-only'].includes(probeArgument))throw Error('invalid GPU probe mode');
+if(!['--retirement-only','--retirement-frame-only','--retirement-cells-only','--gpu-candidate','--frontier-only','--replay-only','--contour-only','--stream-only','--continuity-only','--affine-only','--background-only','--exact-replay-only','--quality-only','--oversized-only','--detail-only','--detail-share-only','--detail-replay-only'].includes(probeArgument))throw Error('invalid GPU probe mode');
 const result={scope:'Real Chrome WebGL2 private renderer Direct parity, not a latency measurement',pageErrors:[],deadlineMs:240000,artifacts:{}};
 for(const name of ['g5_render_cache_gpu.js','g5_render_cache_gpu.wasm'])
   result.artifacts[name]=createHash('sha256').update(await fs.readFile(path.join(root,name))).digest('hex');
