@@ -39,6 +39,7 @@ collection. Resizing does not pan/zoom the Runtime camera or change the document
 The SDK clips its display layers to the mount and restores the mount's prior
 inline overflow value on close. A retained frame bridges the buffer replacement
 until qualified presentation; it does not emit a canonical completion receipt.
+
 Its whitelist includes the internal loader; release verification exercises the
 extracted npm package in Chrome as well as the ZIP. The package is named
 `@mostorm/axiom`; `publishConfig` binds it to the private Nearhub registry and the
@@ -49,6 +50,21 @@ The Emscripten loader lives in `internal/axiom.mjs`; applications import only
 the public root `axiom.mjs`. Keep the `internal/` directory, both input modules,
 declarations and the `licenses/` directory alongside them. For bundlers that relocate the
 data/WASM, pass `assetBaseURL` pointing to the deployed engine assets.
+
+The Web Demo groups primary tools in row one, active-tool subtypes (shape, brush,
+selection or eraser mode) as flat buttons in row two, and board actions in row
+three. Both tool rows scroll horizontally when their choices exceed the width. Object
+properties/actions remain contextual. Creation-tool appearance controls update
+new-object defaults even if a previous object remains selected. Object actions
+delegate to the existing root SDK: text/cell Edit, sibling-level front/back,
+Lock/Unlock, and Delete. Front/back currently requires a single selected object
+and retains its parent/group. A locked selection exposes only Unlock in its
+object actions; its editing properties are hidden. Global navigation/history
+are separate board actions. Backspace/Delete invoke `deleteSelection` outside
+text/IME, HTML inputs and modal dialogs, subject to Runtime availability.
+Object Copy, Duplicate and Cut (Ctrl/Cmd+C/D/X) are not implemented or bound by
+this Demo/SDK. Browser text clipboard behavior is a separate input path; no
+object clipboard or Shell-side object cloning is implied.
 
 To install from the private registry, put the following in your application's
 `.npmrc` and set `NODE_AUTH_TOKEN` in your environment. Do not commit credentials:
@@ -108,6 +124,17 @@ Stationary clicks and up to 4 logical pixels of pointer jitter do not move or
 snap the object. Dragging, resize handles, connector ports, Shift/multiple selection, locks,
 Group scope and viewport navigation retain their existing priority. A browser
 double-click does not restart an editor already opened by the pointer gesture.
+
+Creation tools show a translucent default object under the mouse before pressing:
+rectangles, ellipses and triangles use 120×80 world units, Sticky uses 200×200,
+and Table uses 2×2 cells. Click creates that default; drag specifies custom size
+or Table counts. The ghost is drawn at 25% of the object's opacity using the same
+shared Skia geometry and style. Runtime reserves the prospective identity/style
+once and reuses them on creation; hovering publishes no operation or History.
+Hovering a selected object's attachment point previews the sibling and connector
+that its existing point action will create. Leaving the canvas/point, changing
+tools, editing text, navigation or stale context removes the preview. Ghosts are
+presentation only and are excluded from snapshots and image export.
 
 `selectShape('table')` and `selectShape('section')` arm shared Runtime creation
 tools. Selecting a tool creates no object. A Table click creates 2×2 cells;

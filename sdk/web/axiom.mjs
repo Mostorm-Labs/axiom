@@ -180,6 +180,10 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const listen=(name,fn,options)=>{canonical.addEventListener(name,fn,options);events.push([name,fn,options]);};
     listen('dblclick',event=>{const s=call('state').value;if(s.tool!==4 && !(s.tool===1&&s.selectionMode===0))event.stopImmediatePropagation();},true);
     listen('pointermove',e=>{if(e.pointerType==='mouse'&&!e.buttons){const r=canonical.getBoundingClientRect();try{call('hover',{x:e.clientX-r.left,y:e.clientY-r.top});schedule();}catch(error){emitError(error);}}});
+    const clearHover=()=>{try{call('hover',{x:-1,y:-1});schedule();}catch(error){emitError(error);}};
+    listen('pointerleave',clearHover);
+    window.addEventListener('blur',clearHover);
+
     listen('wheel',e=>{e.preventDefault();const r=canonical.getBoundingClientRect();try{
       if(e.ctrlKey){const s=call('state').value;call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale:s.camera.scale*Math.exp(-e.deltaY*.01)});}
       else call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});text.sync();schedule();
@@ -187,7 +191,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const contextLost=e=>{e.preventDefault();retainVisibleFrame();try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
     const contextRestored=()=>{if(!canonical.getContext('webgl2').isContextLost()&&!preview.getContext('webgl2').isContextLost())try{resize();}catch(error){emitError(error);}};
     for(const c of [canonical,preview]){c.addEventListener('webglcontextlost',contextLost);c.addEventListener('webglcontextrestored',contextRestored);}
-    const inputCleanup=disposeInput;disposeInput=()=>{inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
+    const inputCleanup=disposeInput;disposeInput=()=>{window.removeEventListener('blur',clearHover);inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
     observer=new ResizeObserver(requestResize);observer.observe(mount);
     const control=async args=>{
       const selected=['size','transform','delete','lock','visible','unlock','order'].includes(args.kind)||(args.kind==='appearance'&&args.selected!==false);

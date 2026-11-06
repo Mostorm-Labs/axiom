@@ -82,6 +82,13 @@ struct EditingOverlayInput final {
     float rotationGap = 32.0F;
 };
 
+// Bounded, presentation-only geometry: one tool object or connector + sibling.
+struct CreationHoverPreview final {
+    semantic::ObjectRecord primary;
+    std::optional<semantic::ObjectRecord> sibling;
+    std::optional<scene::ConnectorGeometry> route;
+};
+
 class EditingOverlay final {
   public:
     explicit constexpr EditingOverlay(const FrameState& frame) noexcept : frame_(frame) {}
@@ -101,6 +108,10 @@ class EditingOverlay final {
     [[nodiscard]] const scene::ConnectorGeometry* creationRoute() const noexcept {
         return creationRoute_?&*creationRoute_:nullptr;
     }
+
+    void setCreationHover(const CreationHoverPreview& value) { creationHover_=value; }
+    void clearCreationHover() noexcept { creationHover_.reset(); }
+    [[nodiscard]] const std::optional<CreationHoverPreview>& creationHover() const noexcept { return creationHover_; }
 
     std::vector<std::array<float,8>> textSelection;
     std::optional<std::array<float,8>> textCaret;
@@ -145,6 +156,7 @@ class EditingOverlay final {
     std::vector<SnapGuideGeometry> guides_{};
     std::vector<AttachmentPointGeometry> attachmentPoints_{};
     std::uint64_t updateCount_ = 0;
+    std::optional<CreationHoverPreview> creationHover_;
     std::optional<semantic::ObjectRecord> creationPreview_;
     std::optional<scene::ConnectorGeometry> creationRoute_;
 };

@@ -517,6 +517,7 @@ CanvasEditingRuntime::appearanceCommand(const runtime::AppearanceRequest &r,
                              static_cast<float>(v.strokeWidth),
                              static_cast<float>(v.opacity)};
         futureStyleConfigured_ = true;
+        (void)clearCreationHover();
         out.applied = true;
         out.error = AppearanceError::kNone;
         return out;
@@ -561,6 +562,7 @@ CanvasEditingRuntime::appearanceCommand(const runtime::AppearanceRequest &r,
     }
     auto &session = sessionAction ? *appearanceSession_ : local;
     if (r.action == AppearanceAction::kBegin) {
+        (void)clearCreationHover();
         appearanceSession_ = std::move(local);
         ++appearancePreviewRevision_;
         out.token = appearanceSession_->token;

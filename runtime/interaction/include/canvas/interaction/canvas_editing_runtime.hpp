@@ -318,7 +318,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // Layout geometry and canonical text remain independent of the blink phase.
   void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
   bool setTextTool(bool value) noexcept {
-    if (textTool_ != value) resetTextTap();
+    if (textTool_ != value) {resetTextTap();(void)clearCreationHover();}
     if (!value && textCreation_) {textCreation_.reset();canonicalPresentationDirty_=true;}
     textTool_=value;
     return true;
@@ -986,6 +986,29 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::vector<render::SnapGuideGeometry> snapGuides_;
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
+  struct CreationHover final {
+    render::CreationHoverPreview preview;
+    RegionSelectionContext context;
+    runtime::AppearanceValues defaults;
+    std::uint64_t generation=0;
+    CreationPreset preset=CreationPreset::kRectangle;
+    semantic::ConnectorRouting routing=semantic::ConnectorRouting::kStraight;
+    bool toolMode=false;
+    semantic::ObjectId source{};
+    std::uint32_t port=0;
+    float x=0,y=0;
+  };
+  std::optional<CreationHover> creationHover_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> creationClickCandidates_;
+  std::unordered_map<input::PointerKey,semantic::ObjectRecord,input::PointerKeyHash> creationSiblingPrototypes_;
+  semantic::ObjectRecord makeCreationPrototype(CreationPreset,bool linked=false);
+  semantic::ObjectRecord makeConnectorSibling(semantic::ObjectId,std::uint32_t,foundation::WorldPoint,semantic::ObjectRecord={});
+  foundation::WorldPoint defaultAttachmentEnd(const semantic::AttachedEndpoint&) const;
+  static std::uint32_t oppositeAttachmentPort(std::uint32_t) noexcept;
+  bool updateCreationHover(float,float);
+  bool validCreationHover(bool allowContact=false) const;
+  bool clearCreationHover() noexcept;
+  void installCreationHover(render::EditingOverlay&);
   std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
   std::unordered_set<input::PointerKey, input::PointerKeyHash> connectorPointerKeys_;
   struct CreationFence final {

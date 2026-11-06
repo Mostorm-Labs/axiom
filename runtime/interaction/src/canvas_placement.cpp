@@ -32,12 +32,19 @@ bool CanvasEditingRuntime::placementPointer(const input::PointerKey& key,
     draft.selection=selection_.revision();draft.scope=selection_.groupScope();
     draft.preview.active=true;draft.preview.valid=true;draft.preview.preset=creationPreset_;
     draft.preview.start={point.first,point.second};draft.preview.end=draft.preview.start;
-    draft.preview.record.id=allocateTextIdentity();
+    if(creationPreset_==CreationPreset::kTable) {
+      draft.preview.record=validCreationHover(true)&&creationHover_->source.isZero()
+          ?creationHover_->preview.primary:makeCreationPrototype(CreationPreset::kTable);
+      if(const auto* table=std::get_if<semantic::TableContent>(&draft.preview.record.content)) {
+        for(const auto& row:table->rows)draft.rows.push_back(row.id);
+        for(const auto& column:table->columns)draft.columns.push_back(column.id);
+      }
+    } else {
+      draft.preview.record.id=allocateTextIdentity();draft.preview.record.kind=semantic::ObjectKind::kSection;
+      draft.preview.record.kind_version=1;materializeStructuralAppearance(draft.preview.record);
+    }
+    (void)clearCreationHover();
     if(draft.preview.record.id.isZero())return false;
-    draft.preview.record.kind=creationPreset_==CreationPreset::kTable
-        ?semantic::ObjectKind::kTable:semantic::ObjectKind::kSection;
-    draft.preview.record.kind_version=1;
-    materializeStructuralAppearance(draft.preview.record);
     placementCreation_=std::move(draft);
   }
   const auto terminal=phase==input::PointerPhase::kUp||phase==input::PointerPhase::kCancel;

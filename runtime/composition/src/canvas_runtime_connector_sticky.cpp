@@ -82,6 +82,7 @@ ConnectorCommandReceipt CanvasRuntimeFacade::setConnectorRouting(const Connector
   ConnectorCommandReceipt receipt{};receipt.objectId=request.objectId;
   if(request.objectId.isZero()) {
     runtime_.connectorRoutingPreset_=request.routing;
+    (void)runtime_.clearCreationHover();
   } else {
     const auto* current=runtime_.textRecord(request.objectId);
     if(!current||current->kind!=semantic::ObjectKind::kConnector)return rejectConnector(ConnectorFailureReason::kInvalidTarget);

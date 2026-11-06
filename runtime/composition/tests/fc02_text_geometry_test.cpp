@@ -2150,3 +2150,86 @@ TEST(SelectedTextClick, ChangingTableCellSelectsBeforeTheNextClickEdits) {
     click(60,50);EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
 }
+
+TEST(CreationHover, ShowsDefaultWithoutCreatingDocumentObjectsOrHistory) {
+    Host h(true);
+    runtime::CanvasControlRequest control;control.clientId=6010;control.requestId=1;
+    control.target=h.facade.mountedCanvasTargets().front();
+    control.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+    control.payload.creationPreset=runtime::CanvasCreationPreset::kRectangle;
+    ASSERT_EQ(h.facade.submitCanvasControl(control).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());const auto before=h.runtime.readback();
+    ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(40,60));
+    EXPECT_EQ(h.runtime.semanticObjectCount(),0U);
+    EXPECT_EQ(h.runtime.readback().semanticGeneration,before.semanticGeneration);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),0U);
+    ASSERT_TRUE(h.runtime.registerSource(6010));
+    for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+        input::PlatformPointerSample p;p.source=6010;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+        p.timestampNs=p.sequence*1000;p.phase=phase;p.x=40;p.y=60;
+        input::PlatformPointerBatch b;b.samples={p};ASSERT_TRUE(h.runtime.submit(b));
+    }
+    ASSERT_EQ(h.runtime.semanticObjectCount(),1U);
+    const auto shape=h.facade.readSelectionSummary().primary;
+    const auto* record=h.runtime.qualificationRuntime().qualificationObjectRecord(shape);
+    ASSERT_NE(record,nullptr);
+    EXPECT_EQ(std::get<semantic::ShapeContent>(record->content).width,120);
+    EXPECT_EQ(std::get<semantic::ShapeContent>(record->content).height,80);
+}
+TEST(CreationHover, ReusesStyleSeedObjectAndTableAxesThroughMovementAndClick) {
+    for(const auto preset:{runtime::CanvasCreationPreset::kRectangle,runtime::CanvasCreationPreset::kSticky,runtime::CanvasCreationPreset::kTable}) {
+        Host h(true);ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
+        runtime::AppearanceRequest appearance;appearance.action=runtime::AppearanceAction::kDefaults;
+        appearance.patch.enabled=true;appearance.patch.roughness=2;
+        ASSERT_TRUE(h.facade.appearanceCommand(appearance).applied);
+        runtime::CanvasControlRequest tool;tool.clientId=6011;tool.requestId=1;tool.target=h.facade.mountedCanvasTargets().front();
+        tool.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;tool.payload.creationPreset=preset;
+        ASSERT_EQ(h.facade.submitCanvasControl(tool).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+        ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(30,40));
+        const auto* overlay=h.runtime.qualificationRuntime().selectionOverlay();ASSERT_NE(overlay,nullptr);ASSERT_TRUE(overlay->creationHover());
+        const auto first=overlay->creationHover()->primary;
+        ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(60,70));
+        const auto moved=h.runtime.qualificationRuntime().selectionOverlay()->creationHover()->primary;
+        EXPECT_EQ(first.id,moved.id);EXPECT_EQ(first.properties,moved.properties);
+        ASSERT_TRUE(h.runtime.registerSource(6011));
+        for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+            input::PlatformPointerSample p;p.source=6011;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+            p.timestampNs=p.sequence*1000;p.phase=phase;p.x=60;p.y=70;
+            input::PlatformPointerBatch b;b.samples={p};ASSERT_TRUE(h.runtime.submit(b));
+        }
+        const auto* actual=h.runtime.qualificationRuntime().qualificationObjectRecord(first.id);ASSERT_NE(actual,nullptr);
+        auto expected=first.properties;
+        std::erase_if(expected.entries,[](const auto& e){return e.field_id==3U&&std::holds_alternative<float>(e.value)&&std::get<float>(e.value)==1.0F;});
+        EXPECT_EQ(actual->properties,expected); // Canonical normalization omits opacity=1.
+        if(preset==runtime::CanvasCreationPreset::kTable) {
+            const auto& before=std::get<semantic::TableContent>(first.content);
+            const auto& after=std::get<semantic::TableContent>(actual->content);
+            EXPECT_EQ(before.rows,after.rows);EXPECT_EQ(before.columns,after.columns);
+        }
+        EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
+    }
+}
+TEST(CreationHover, AttachmentPreviewReusesTheCommittedSiblingFactoryAndIdentities) {
+    Host h(true);seedShape(h,labelShape());
+    runtime::CanvasControlRequest tool;tool.clientId=6012;tool.requestId=1;tool.target=h.facade.mountedCanvasTargets().front();
+    tool.payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;tool.payload.tool=runtime::CanvasToolKind::kSelect;
+    ASSERT_EQ(h.facade.submitCanvasControl(tool).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(120,90));
+    const auto& ports=h.runtime.qualificationRuntime().selectionOverlay()->attachmentPoints();ASSERT_EQ(ports.size(),4U);
+    const auto point=ports[1].center;ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(point.x,point.y));
+    const auto preview=*h.runtime.qualificationRuntime().selectionOverlay()->creationHover();ASSERT_TRUE(preview.sibling);
+    ASSERT_EQ(h.runtime.semanticObjectCount(),1U);ASSERT_TRUE(h.runtime.registerSource(6012));
+    for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+        input::PlatformPointerSample p;p.source=6012;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+        p.timestampNs=p.sequence*1000;p.phase=phase;p.x=point.x;p.y=point.y;
+        input::PlatformPointerBatch b;b.samples={p};ASSERT_TRUE(h.runtime.submit(b));
+    }
+    ASSERT_EQ(h.runtime.semanticObjectCount(),3U);
+    const auto* sibling=h.runtime.qualificationRuntime().qualificationObjectRecord(preview.sibling->id);ASSERT_NE(sibling,nullptr);
+    EXPECT_EQ(sibling->transform,preview.sibling->transform);EXPECT_EQ(sibling->content,preview.sibling->content);
+    auto expected=preview.sibling->properties;
+    std::erase_if(expected.entries,[](const auto& e){return e.field_id==3U&&std::holds_alternative<float>(e.value)&&std::get<float>(e.value)==1.0F;});
+    EXPECT_EQ(sibling->properties,expected);
+    const auto* connector=h.runtime.qualificationRuntime().qualificationObjectRecord(preview.primary.id);ASSERT_NE(connector,nullptr);
+    EXPECT_EQ(connector->content,preview.primary.content);
+}

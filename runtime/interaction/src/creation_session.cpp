@@ -165,7 +165,8 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
         {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
                                       : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
         routing_};
-    if (preset_ == CreationPreset::kArrow)
+    if (preset_ == CreationPreset::kArrow && std::none_of(record.properties.entries.begin(),record.properties.entries.end(),
+        [](const auto& property){return property.field_id==0x201U;}))
       record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
   }
   preview_.valid = true;

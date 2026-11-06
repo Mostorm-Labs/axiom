@@ -392,6 +392,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
         }
+        if (const auto& hover=selectionOverlay->creationHover()) {
+            SkPaint ghostPaint;ghostPaint.setAlphaf(0.25F);
+            canvas->saveLayer(nullptr,&ghostPaint);
+            if(hover->sibling) internal::drawTransientObjectToSkCanvas(*canvas,plan,*hover->sibling);
+            internal::drawTransientObjectToSkCanvas(*canvas,plan,hover->primary,hover->route?&*hover->route:nullptr);
+            canvas->restore();
+        }
         internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
     }
     provider.release();
@@ -620,6 +627,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache,true);
+    }
+    if (const auto& hover=selectionOverlay->creationHover()) {
+        SkPaint ghostPaint;ghostPaint.setAlphaf(0.25F);
+        canvas->saveLayer(nullptr,&ghostPaint);
+        if(hover->sibling) internal::drawTransientObjectToSkCanvas(*canvas,plan,*hover->sibling);
+        internal::drawTransientObjectToSkCanvas(*canvas,plan,hover->primary,hover->route?&*hover->route:nullptr);
+        canvas->restore();
     }
     internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
     provider.release();

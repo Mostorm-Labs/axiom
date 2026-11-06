@@ -1,0 +1,76 @@
+{
+  "task": "uiux-demo-actions-and-tool-categories-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "6f9c40a335515ee385efb1e1a3d8edcd1c800e37",
+    "relation": "ancestor"
+  },
+  "authority": "User request 2026-11-06: audit eight object actions and simplify the Web toolbar by moving secondary choices to row 2/3. Preserve uncommitted creation-hover implementation.",
+  "scope": [
+    "Audit Edit/Copy/Duplicate/Cut/Front/Back/Lock/Delete against actual consumer SDK and Runtime. Object clipboard/copy/duplicate/cut have no current implementation or exported consumer contract; record the gap, do not fake it in Shell.",
+    "Web Demo: compact primary tool categories, row-two flat subtype buttons (no dropdowns; horizontal overflow scroll) and no duplicated Select/Pan buttons in board actions.",
+    "Expose existing SDK Edit, sibling-level front/back, lock/unlock and delete. Backspace/Delete operate only outside text editing, editable HTML inputs, IME and modal dialogs.",
+    "For a locked selected object show only Unlock in object actions and hide its editing properties. Runtime capabilities remain authoritative; global canvas navigation/history is separate.",
+    "Creation-tool style controls edit Runtime defaults, and selected-object style controls edit the object. Demo owns only layout, preference and shortcut translation."
+  ],
+  "owners": {
+    "layout_and_shortcuts": "sdk/web/example.html",
+    "consumer_commands": "existing root JS SDK transport",
+    "selection_text_lock_order_delete": "existing shared Runtime owners and OperationEngine/History"
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "Demo UI and existing action bindings",
+        "audit/current limitations documentation",
+        "real Chrome interaction evidence"
+      ],
+      "forbidden_changes": [
+        "new public clipboard formats or APIs",
+        "Shell object cloning/identity/history logic",
+        "semantic/dependency/version/release changes",
+        "unrelated baseline fixes"
+      ]
+    },
+    "tests": {
+      "required": [
+        "Real Chrome actual Demo: compact tools and reachable shape/brush/eraser subtypes",
+        "Edit native text input, layering, lock-only-unlock UI and Runtime rejection, delete/undo keyboard and focus guards",
+        "Creation defaults preserve existing selected object and generation",
+        "Existing external SDK, hover, text, Table and placement Demo regressions; matching package and boundary check"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "out/demo-actions-* browser and package records"
+      ],
+      "corroborative": [
+        "served local Demo screenshots"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "requested audit reported honestly",
+        "UI and existing action bindings verified",
+        "matching local Demo available"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

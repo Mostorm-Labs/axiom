@@ -20,6 +20,11 @@ Point selection also supports single-click text entry on an already selected
 Shape, RichText, Sticky or Table cell. The shared Runtime opens editing on
 release, preserving drags, handles, Group scope and navigation. This behavior
 uses existing native pointer input and does not introduce a consumer API.
+Mouse movement also feeds shared creation hover previews for Shape, Sticky,
+Table and selected attachment points. Mouse leave/focus loss clears presentation.
+Default click sizes and derived styles share the Runtime creation factories.
+This source change has not been qualified as Windows ABI/native-message evidence
+on the macOS development host.
 The shipped demo and example default to /MT and need no VC redistributable;
 `-DAXIOM_EXAMPLE_CRT=MD` independently exercises a /MD caller against the same DLL.
 
