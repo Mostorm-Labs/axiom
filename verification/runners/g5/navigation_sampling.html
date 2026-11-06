@@ -1,12 +1,14 @@
 <!doctype html><meta charset="utf-8"><title>G5 cold/warm root SDK consumer</title>
 <style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
 <script type="module">
-import {createRuntime} from '/axiom.mjs';
+import {installNavigationObserver} from '/navigation_observer.mjs';
 import {buildEditingScene,applyEditingAction} from '/editing_actions.mjs';
 import {postInputReceiptWait} from '/navigation_metrics.mjs';
 const errors=[],frames=[],bindings=new WeakMap();
 let sdk,active=null,sequence=0,selectionPoint=[40,90],editingTargets;
-const raf=()=>new Promise(requestAnimationFrame);
+const feedbackObserver=installNavigationObserver(()=>sdk?.canvas);
+const {createRuntime}=await import('/axiom.mjs');
+const raf=()=>new Promise(resolve=>{const done=at=>resolve(at);done.g5SamplerRaf=true;requestAnimationFrame(done);});
 const until=async(fn,label)=>{for(let i=0;i<1800;++i){if(fn())return;await raf();}throw Error(label);};
 const proto=WebGL2RenderingContext.prototype;
 const bind=proto.bindFramebuffer;
@@ -33,7 +35,7 @@ function pointer(type,x,y){
   const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent(type,{pointerId:1,pointerType:'mouse',
     clientX:r.left+x,clientY:r.top+y,button:type==='pointermove'?-1:0,buttons:type==='pointerup'?0:1,
     pressure:type==='pointerup'?0:.5,bubbles:true,cancelable:true});
-  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});sdk.canvas.dispatchEvent(e);
+  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});feedbackObserver.dispatch(sdk.canvas,e);
 }
 async function settle(prior){await until(()=>frames.length>prior,'canonical receipt did not arrive');for(let i=0;i<10;++i)await raf();}
 async function click(x,y){const n=frames.length;pointer('pointerdown',x,y);pointer('pointerup',x,y);await settle(n);}
@@ -63,12 +65,12 @@ function opticalRoi(){
 function touch(type,id,x,y){
   const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent(type,{pointerId:id,pointerType:'touch',
     clientX:r.left+x,clientY:r.top+y,buttons:type==='pointerup'?0:1,pressure:.5,width:12,height:12,bubbles:true,cancelable:true});
-  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});sdk.canvas.dispatchEvent(e);
+  Object.defineProperty(e,'timeStamp',{value:1000+(++sequence)*4});feedbackObserver.dispatch(sdk.canvas,e);
 }
 async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityEvery=0,panStep=8}={}){
   const before=sdk.readState(),prior=frames.length;
   const value={id,optical:[],samples:[],displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],before};
-  mark('begin',id);active=value;value.started=performance.now();
+  mark('begin',id);active=value;value.started=performance.now();feedbackObserver.begin(value);
   value.contactDispatch=[];
   const contact=(...args)=>{const start=performance.now();touch(...args);value.contactDispatch.push({type:args[0],ms:performance.now()-start});};
   if(mode==='touch'){contact('pointerdown',2,40,90);await raf();contact('pointerdown',3,120,90);}
@@ -77,7 +79,7 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
     const beforeDraws=value.draws,tick=performance.now(),pan=panOnly||i>=36;
     if(mode==='touch'){
       const dx=(i<36?i+1:71-i)*4;contact('pointermove',2,40+dx,90);contact('pointermove',3,120+dx,90);
-    }else for(let b=0;b<burst;++b)sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
+    }else for(let b=0;b<burst;++b)feedbackObserver.dispatch(sdk.canvas,new WheelEvent('wheel',{clientX:400,clientY:250,ctrlKey:!pan,
       deltaX:pan?(i<(panOnly?36:54)?-panStep:panStep):0,deltaY:pan?(i<(panOnly?36:54)?-panStep/2:panStep/2):(i<18?-zoomDelta:zoomDelta),bubbles:true,cancelable:true}));
     const dispatchMs=performance.now()-tick,rafTimestamp=await raf(),now=performance.now();
     if(qualityEvery&&i%qualityEvery===0)value.optical.push({index:i,...opticalRoi()});
@@ -91,7 +93,14 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
   await until(()=>postInputReceiptWait(frames.slice(prior),value.inputEnded)!==null,'post-input canonical completion timeout');
   value.settleMilliseconds=postInputReceiptWait(frames.slice(prior),value.inputEnded);
   for(let i=0;i<12;++i)await raf();
-  value.ended=performance.now();active=null;mark('end',id);
+  const quietStarted=performance.now();
+  for(;;){
+    const activity=feedbackObserver.activity();
+    if(activity.pending===0&&activity.at-activity.lastSdkActivity>=200){value.quiescence={...activity,quietMs:200,waitMs:activity.at-quietStarted};break;}
+    if(performance.now()-quietStarted>30000)throw Error('SDK RAF did not quiesce');
+    await new Promise(resolve=>setTimeout(resolve,25));
+  }
+  value.ended=performance.now();feedbackObserver.end(value);active=null;mark('end',id);
   value.longTasks=value.longTasks.filter(t=>t.start>=value.started&&t.start<value.ended);
   value.after=sdk.readState();value.receipts=frames.slice(prior);
   value.checks={documentUnchanged:before.generation===value.after.generation&&before.objects===value.after.objects,
@@ -102,7 +111,23 @@ async function phase(id,{mode='wheel',burst=1,panOnly=false,zoomDelta=2,qualityE
   value.pixels=await pixels();return value;
 }
 window.probe={
-  failureState(){return {errors:[...errors],frames:[...frames],state:sdk?.readState()};},
+ async pauseResume(kind,{delta=4,pauseMs=1000}={}){
+  const before=sdk.readState(),prior=frames.length;
+  const value={id:'pause-resume-'+kind,started:performance.now(),displayTimes:[],draws:0,colorClears:0,fences:[],longTasks:[],samples:[],marks:[],before};
+  active=value;feedbackObserver.begin(value);mark('begin',value.id);
+  const wheel=(ctrl,dy,dx=0)=>feedbackObserver.dispatch(sdk.canvas,new WheelEvent('wheel',{clientX:318,clientY:457,ctrlKey:ctrl,deltaX:dx,deltaY:dy,bubbles:true,cancelable:true}));
+  value.marks.push({kind:'zoom-in',at:performance.now()});
+  for(let i=0;i<18;++i){for(let b=0;b<4;++b)wheel(true,-delta);await raf();}
+  value.marks.push({kind:'pause-start',at:performance.now()});
+  await new Promise(r=>setTimeout(r,pauseMs));
+  value.marks.push({kind:'resume',at:performance.now()});
+  for(let i=0;i<18;++i){for(let b=0;b<4;++b)wheel(kind==='zoom',kind==='zoom'?delta:2,kind==='zoom'?0:4);await raf();}
+  value.inputEnded=performance.now();value.marks.push({kind:'input-end',at:value.inputEnded});
+  await until(()=>frames.slice(prior).some(f=>f.at>=value.inputEnded),'post-resume receipt timeout');
+  const at=performance.now();for(;;){const a=feedbackObserver.activity();if(a.pending===0&&a.at-a.lastSdkActivity>=200){value.quiescence=a;break;}if(performance.now()-at>20000)throw Error('quiescence timeout');await new Promise(r=>setTimeout(r,25));}
+  value.ended=performance.now();feedbackObserver.end(value);active=null;mark('end',value.id);value.after=sdk.readState();value.receipts=frames.slice(prior);value.pixels=await pixels();return value;
+ },
+  failureState(){return {errors:[...errors],frames:[...frames],state:sdk?.readState(),observation:active,activity:feedbackObserver.activity()};},
   async setupEditing(){
     const mount=document.getElementById('mount');mount.style.width='800px';mount.style.height='500px';
     sdk=await createRuntime({mount,documentId:'99999999999999999999999999999999',permission:'localSingleUser',
@@ -175,7 +200,7 @@ window.probe={
       const prior=frames.length;await sdk.transformSelection([1,0,0,1,12,8]);await settle(prior);
     }
     for(let i=0;i<(options.shapes??0);++i){
-      await sdk.selectShape(i%2?'ellipse':'rectangle');
+      await sdk.selectShape(options.shapeKinds?.[i%options.shapeKinds.length]??(i%2?'ellipse':'rectangle'));
       const prior=frames.length;pointer('pointerdown',100+i*60,220+i*30);pointer('pointerup',270+i*60,340+i*30);await settle(prior);
     }
     let target=null;const prior=frames.length;
@@ -183,7 +208,14 @@ window.probe={
       const c=document.createElement('canvas');c.width=2048;c.height=1024;
       const ctx=c.getContext('2d'),gradient=ctx.createLinearGradient(0,0,c.width,c.height);
       gradient.addColorStop(0,'#345eb8');gradient.addColorStop(1,'#f19d42');ctx.fillStyle=gradient;ctx.fillRect(0,0,c.width,c.height);
+      if(options.noisyImage){
+        const noise=new ImageData(300,250);let seed=42;
+        for(let i=0;i<noise.data.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+          noise.data[i]=seed>>>24;noise.data[i+1]=(seed>>>16)&255;noise.data[i+2]=(seed>>>8)&255;noise.data[i+3]=255;}
+        ctx.putImageData(noise,0,0);
+      }
       const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+      window.probe.fixtureImageBytes=blob.size;
       target=(await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png')).objectId;
       await sdk.transformSelection([1,0,0,1,200,170]);
     }

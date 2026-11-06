@@ -1,4 +1,5 @@
 #include "skia_navigation_tiles.hpp"
+#include "resource_reclaim.hpp"
 #include "skia_gpu_lifetime.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/compact_geometry.hpp"
@@ -125,7 +126,9 @@ bool SkiaNavigationTiles::usefulFallback(TileKey key,const Tile& tile,
 }
 void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
     std::size_t limit,std::size_t requested,const FrameState& frame,const SkiaSurfaceProvider* provider,std::uint64_t resourceEpoch,bool mandatory){
-    if(!budget||budgetOwner_.lock()!=budget||requested>limit||budget->used()<=limit-requested)return;
+    if(!budget||budgetOwner_.lock()!=budget||requested>limit)return;
+    const auto charged=[&]{return mandatory?chargeAfterRetirement(*budget):budget->used();};
+    if(charged()<=limit-requested)return;
     // Optional picture recording cannot reclaim mandatory canonical buffers.
     // If those alone exceed its soft limit, throwing away completed navigation
     // regions still cannot admit the picture. Keep that reusable coverage and
@@ -133,7 +136,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     // Bound everything this owner could release, including Recorded metadata.
     // Shared source lists/payloads may still be pinned by other consumers;
     // counting aliases again overestimates reclaimability, so skipping is safe.
-    const auto used=budget->used();std::size_t reclaimable=0;
+    const auto used=charged();std::size_t reclaimable=0;
     const auto add=[&](std::size_t bytes){reclaimable+=std::min(bytes,used-reclaimable);};
     add(work.retainedBytes);add(geometry_.preparedBytes());add(geometry_.sourceStatistics().bytes);
     for(const auto& [key,source]:sources_){(void)key;add(source->admittedBytes);}
@@ -151,7 +154,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     const bool sameTarget=provider_==provider&&resource_==resourceEpoch&&last_&&last_->viewId==frame.viewId&&last_->metrics==frame.metrics&&
         last_->metricsGeneration==frame.metricsGeneration&&last_->surfaceGeneration==frame.surfaceGeneration&&
         last_->sceneGeneration==frame.sceneGeneration&&last_->sceneReadToken==frame.sceneReadToken&&last_->viewportClip==frame.viewportClip;
-    while(budget->used()>limit-requested&&!tiles_.empty()){
+    while(charged()>limit-requested&&!tiles_.empty()){
         auto victim=tiles_.end();
         for(auto it=tiles_.begin();it!=tiles_.end();++it){
             if(!mandatory&&sameTarget&&usefulFallback(it->first,it->second,focus,level_.value_or(it->first.scale),scene_))continue;
@@ -163,9 +166,9 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
         // Optional picture recording yields to already completed frontier work.
         // The canonical checkpoint path remains available at the same budget.
         if(victim==tiles_.end())break;
-        const auto before=budget->used();const auto key=victim->first;tiles_.erase(victim);sources_.erase(key);
+        const auto before=charged();const auto key=victim->first;tiles_.erase(victim);sources_.erase(key);
         ++work.evictions;work.coverageComplete=false;dirty_=true;
-        work.retainedBytes=budget->used(resources::ResourceClass::kNavigationTile);if(budget->used()>=before)break;
+        work.retainedBytes=budget->used(resources::ResourceClass::kNavigationTile);if(charged()>=before)break;
     }
 }
 bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uint64_t scene,
@@ -174,13 +177,17 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
     DiagnosticTiming partitionTiming(work.partitionNanoseconds);
 #endif
-    struct Candidate {TileKey key;foundation::WorldRect bounds;double density;bool retained;};
+    struct Candidate {TileKey key;foundation::WorldRect bounds;double density;const RetainedNavigationSource* retained;};
     std::vector<Candidate> candidates;candidates.reserve(tiles_.size()+1);
     for(const auto& [key,tile]:tiles_)if(tile.image&&tile.checkedScene==scene)
         for(std::size_t i=0;i<tile.valid.count;++i)if(intersects(tile.valid.areas[i],visible))
-            candidates.push_back({key,tile.valid.areas[i],std::ldexp(1.,key.scale),false});
-    if(retained&&retained->draw&&retained->density>0&&retained->bounds.isFiniteAndOrdered())
-        candidates.push_back({{},retained->bounds,retained->density,true});
+            candidates.push_back({key,tile.valid.areas[i],std::ldexp(1.,key.scale),nullptr});
+    // At most two qualified canonical planes. Each keeps its own density and
+    // world bounds; the normal disjoint partition still picks sharper pixels.
+    auto* source=retained;
+    for(unsigned i=0;source&&i<2;++i,source=source->fallback)
+        if(source->draw&&source->density>0&&source->bounds.isFiniteAndOrdered())
+            candidates.push_back({{},source->bounds,source->density,source});
     std::stable_sort(candidates.begin(),candidates.end(),[](const auto& a,const auto& b){
         return a.density!=b.density?a.density>b.density:a.retained&&!b.retained;});
     std::vector<foundation::WorldRect> holes{visible};patches.clear();
@@ -205,7 +212,7 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
     return holes.empty();
 }
 void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patches,
-    const CanonicalViewportTransform& camera,const FrameState& frame,const RetainedNavigationSource* retained){
+    const CanonicalViewportTransform& camera,const FrameState& frame){
     canvas.save();canvas.resetMatrix();canvas.clear(SK_ColorWHITE);
     double total=0,low=0,retainedArea=0;work.maximumUpscale=0;
     const double sx=frame.metrics.physicalWidth/frame.metrics.logicalWidth;
@@ -215,7 +222,7 @@ void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patche
         const double upscale=camera.scale*std::max(sx,sy)/patch.density;
         total+=area;if(upscale>1.25)low+=area;if(patch.retained)retainedArea+=area;
         work.maximumUpscale=std::max(work.maximumUpscale,upscale);
-        if(patch.retained){retained->draw(canvas,patch.area);continue;}
+        if(patch.retained){patch.retained->draw(canvas,patch.area);continue;}
         auto& tile=tiles_.at(patch.source);(void)tile.lease.markGpuUse();tile.used=tick_;const auto b=grid_.bounds(patch.source);
         const auto sourceScale=std::ldexp(1.,patch.source.scale);const auto& a=patch.area;
         const auto dst=SkRect::MakeLTRB(float((a.left*camera.scale+camera.translationX)*sx),
@@ -329,7 +336,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         previousVisible=foundation::WorldRect{-camera_.translationX/camera_.scale,-camera_.translationY/camera_.scale,
             (frame.metrics.logicalWidth-camera_.translationX)/camera_.scale,(frame.metrics.logicalHeight-camera_.translationY)/camera_.scale};
     else if(retainedSource&&retainedSource->draw&&retainedSource->bounds.isFiniteAndOrdered())previousVisible=retainedSource->bounds;
-    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3+tileMetadataBytes));
+    // Completed tiles retain one image; only an active job needs two extra
+    // staging buffers. Reserve that next-job peak here,then let fits()/the
+    // shared allocator enforce actual overlapping GPU lifetimes and yields.
+    const auto transientBytes=2*tileBytes;
+    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes>transientBytes
+        ?(options.maxBytes-transientBytes)/(tileBytes+tileMetadataBytes):std::size_t(0));
     // Choose coarse density from viewport extent, not its grid alignment.
     // A cell at least as wide/tall as the viewport needs at most2x2 cells at
     // every origin. Counting only the current cells toggled coarse levels on
@@ -370,7 +382,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     auto* target=acquired.frame.surface->getCanvas();++tick_;
     auto* context=GrAsDirectContext(target->recordingContext());
     SkiaGpuLifetime gpu(*gpuRetirements_,budget,provider,context,resources::kPixelResourceClasses,
-        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile));
+        resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile)&
+        ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
+        ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
     if(!gpu.ready())return BackendSubmissionResult::retry("world navigation completion unavailable");
     RetainedNavigationSource retainedValue=retainedSource?*retainedSource:RetainedNavigationSource{};
     const RetainedNavigationSource* retained=retainedSource?&retainedValue:nullptr;
@@ -382,7 +396,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // Compose the highest-density valid sources in disjoint regions. A complete
     // coarse plane must never overwrite sharper valid pixels in the overlap.
     if(dirty_&&work.coverageComplete){
-        gpu.touch();compose(*target,patches,camera,frame,retained);
+        gpu.touch();compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
@@ -757,7 +771,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     work.pending=bool(job_)||bool(refinement_)||!work.coverageComplete;
     for(const auto key:keys)work.pending|=!ready(key)&&needsFine(key);
     if(dirty_&&work.coverageComplete&&!work.presented){
-        gpu.touch();compose(*target,patches,camera,frame,retained);
+        gpu.touch();compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
         const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;

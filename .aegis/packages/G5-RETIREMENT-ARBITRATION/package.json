@@ -1,0 +1,36 @@
+{
+  "task_id": "G5-RETIREMENT-ARBITRATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "07f55270e4a214c59089f90073416018a59a0f74",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "0e02199c78ca5a246278226afe229ec2f5b3feacc73a332e0991396e95547cba"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "727a8000409f0d5d8d31346f60f458e9878a61b3dee8f89f122f3dd82e739838"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5f2789b5df3da36c3c4a705a16b93d14dc5cff3264532c7f3f0f41abc9a1b5b6"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0721d060bef7c46239095c7055036249af4238b7c343f7926a2700f394921e07"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f5d28a908c4357e2e415c7230f01f3535f631314a635dfeff292bb45d081a474"
+  }
+}

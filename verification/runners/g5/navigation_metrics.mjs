@@ -1,3 +1,4 @@
+import {summarizeInputFeedback,summarizeRuntimeSubmits} from './feedback_metrics.mjs';
 import {statistics} from './browser_metrics.mjs';
 const total=values=>values.reduce((a,b)=>a+b,0);
 const times=values=>({...statistics(values),total:total(values)});
@@ -82,6 +83,8 @@ export function summarizePhase(phase, navigationRows, frameRows) {
   const exactCoverageWork=frameRows.length&&frameRows.every(r=>exactKeys.every(k=>Number.isSafeInteger(r.counts?.[k])&&r.counts[k]>=0))
     ?Object.fromEntries(exactKeys.map(k=>[k,total(frameRows.map(r=>r.counts[k]))])):null;
   return {
+    feedbackV2:summarizeInputFeedback(phase),
+    runtimeSubmitV2:summarizeRuntimeSubmits(phase),
     raf_ms:statistics(phase.samples.map(row=>row.interval)),
     display_submission_gap_ms:statistics(gaps),
     input_display_submission_gap_ms:statistics(bounded.slice(1).map((t,i)=>t-bounded[i])),

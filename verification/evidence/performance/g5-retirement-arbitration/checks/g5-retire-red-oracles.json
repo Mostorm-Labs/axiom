@@ -1,0 +1,113 @@
+{
+  "baselineProductionRevision": "07f55270e4a214c59089f90073416018a59a0f74",
+  "testSha256": "1a805c73c8ff825bc26596c639251c0923c83e4f8ede735e43448988f05b2821",
+  "oracles": {
+    "frame": {
+      "expectedFailure": "already-retiring scratch caused qualified whole-frame feedback eviction",
+      "result": {
+        "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+        "pageErrors": [],
+        "deadlineMs": 240000,
+        "artifacts": {
+          "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+          "g5_render_cache_gpu.wasm": "0f2e974eaa2787c260b1bc4d6c690b6efcbed934ad15967a61300ca3a5a73c26"
+        },
+        "probeArgument": "--retirement-frame-only",
+        "browser": "156.0.8078.80",
+        "observation": {
+          "nativeDone": true,
+          "logs": [],
+          "errors": [
+            "already-retiring scratch caused qualified whole-frame feedback eviction"
+          ],
+          "code": 1,
+          "processExit": 0
+        },
+        "status": "FAIL"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/prepared_gpu_probe.mjs",
+          "out/web-prepared-probe",
+          "out/g5-retire-red-frame.json",
+          "--retirement-frame-only"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 1.3496412920067087,
+        "peak_process_family_rss_kib": 1303680,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    "cells": {
+      "expectedFailure": "already-retiring frame caused unnecessary navigation cell eviction",
+      "result": {
+        "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+        "pageErrors": [],
+        "deadlineMs": 240000,
+        "artifacts": {
+          "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+          "g5_render_cache_gpu.wasm": "0f2e974eaa2787c260b1bc4d6c690b6efcbed934ad15967a61300ca3a5a73c26"
+        },
+        "probeArgument": "--retirement-cells-only",
+        "browser": "156.0.8078.80",
+        "observation": {
+          "nativeDone": true,
+          "logs": [],
+          "errors": [
+            "already-retiring frame caused unnecessary navigation cell eviction"
+          ],
+          "code": 1,
+          "processExit": 0
+        },
+        "status": "FAIL"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/prepared_gpu_probe.mjs",
+          "out/web-prepared-probe",
+          "out/g5-retire-red-cells.json",
+          "--retirement-cells-only"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 1.118709249974927,
+        "peak_process_family_rss_kib": 1274864,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  },
+  "green": {
+    "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+    "pageErrors": [],
+    "deadlineMs": 240000,
+    "artifacts": {
+      "g5_render_cache_gpu.js": "2e831b2e34e24f6df36948010145ec439e0bb54cde0bac66af059d07fff1f7ef",
+      "g5_render_cache_gpu.wasm": "428f151e31a871e06e91b28f1855513d0c3ac0b19df9dfd562ca8981d330fdd2"
+    },
+    "probeArgument": "--retirement-only",
+    "browser": "156.0.8078.80",
+    "observation": {
+      "nativeDone": true,
+      "logs": [
+        "{\"retirement_frame\":\"PASS\",\"canonical_before\":1,\"canonical_after\":2}",
+        "{\"retirement_cells\":\"PASS\",\"retiring\":1,\"evictions\":0}",
+        "{\"retirement_cells\":\"PASS\",\"retiring\":0,\"evictions\":1}"
+      ],
+      "errors": [],
+      "code": 0,
+      "processExit": 0
+    },
+    "status": "PASS"
+  }
+}

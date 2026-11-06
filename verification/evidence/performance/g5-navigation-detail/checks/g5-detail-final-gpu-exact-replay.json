@@ -1,0 +1,22 @@
+{
+  "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+  "pageErrors": [],
+  "deadlineMs": 240000,
+  "artifacts": {
+    "g5_render_cache_gpu.js": "78ebfac67fdd0ea3e2b41209226052323e4358f1eed5d3369a24351984d52230",
+    "g5_render_cache_gpu.wasm": "f89a14a201b03eb38912629f0cd087a0e508e813519fadcaea3082f75aaff69f"
+  },
+  "probeArgument": "--exact-replay-only",
+  "browser": "156.0.8078.80",
+  "observation": {
+    "nativeDone": true,
+    "logs": [
+      "exact locality softDenied=0 steps=183 fallback=768 record_replays=111",
+      "exact locality softDenied=1 steps=183 fallback=768 record_replays=0"
+    ],
+    "errors": [],
+    "code": 0,
+    "processExit": 0
+  },
+  "status": "PASS"
+}

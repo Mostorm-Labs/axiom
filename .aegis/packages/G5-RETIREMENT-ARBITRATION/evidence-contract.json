@@ -1,0 +1,11 @@
+{
+  "directory": "verification/evidence/performance/g5-retirement-arbitration",
+  "blocking_obligations": [
+    "retirement",
+    "parity-lifecycle",
+    "regression",
+    "performance"
+  ],
+  "bindings": "Exact package,input,source,normal installed SDK and GPU probe artifact SHA;real RED/GREEN;22 bounded workers;independent verifier. Separate rejected attempts if any.",
+  "return": "READY_FOR_CONTROL_REVIEW slice only or exact terminal blocker;no official Gate/P34/G5 pass."
+}

@@ -1,0 +1,44 @@
+{
+  "baseline_source_revision": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+  "baseline_artifact_paths": {
+    "on": "out/g5-material-retained-on/js",
+    "off": "out/g5-material-retained-off/js"
+  },
+  "obligations": [
+    {
+      "id": "retirement",
+      "requirement": "Do not evict useful cells or drop a qualified frame if pending GPU releases already cover the mandatory minimum.",
+      "oracle": "Actual Chrome/Ganesh delayed completion:completed frame plus released scratch preserves old qualified feedback;direct Nav owner with real GPU pending resource preserves cells;insufficient pending still permits required reclaim.",
+      "acceptance": "Expected RED on stable owner;after fix,no collateral eviction,no early uncharge,no extra canonical receipt;resume only after actual completion.",
+      "evidence_required": "RED/GREEN private GPU logs with actual provider,budget,epoch and pixel checks."
+    },
+    {
+      "id": "parity-lifecycle",
+      "requirement": "Preserve exact publication,identity and epoch accounting.",
+      "oracle": "Private GPU delayed-poll resume versus independent Direct bytes;existing stale/lost/cancel/provider tests.",
+      "acceptance": "Zero changed canonical bytes;hard admission remains closed until completion;no leak or fake present.",
+      "evidence_required": "New retirement mode and all9 existing GPU modes."
+    },
+    {
+      "id": "regression",
+      "requirement": "No new native/SDK boundary failures.",
+      "oracle": "112 existing native tests,31Node,118boundary,normal ON/OFF installed packages,actual root Demo.",
+      "acceptance": "Same5 known native failures;all other required checks pass;developer components OFF,root exports only.",
+      "evidence_required": "Source/artifact SHA,logs and known-failure comparison."
+    },
+    {
+      "id": "performance",
+      "requirement": "The arbitration fix must not trade navigation clarity/continuity or exact completion for fewer cache evictions.",
+      "oracle": "Existing22 bounded paired workers,DPR2/3/4,ON/OFF,pan/zoom,selected/unselected,60s foreground idle and5s CDP freeze;no concurrent builds/tests.",
+      "acceptance": "Each ON-phase low-density time fraction<=baseline+0.02;each phase wait and input submission maxgap<=baseline+max(16.7ms,10%baseline);same final pixels/doc/selection/Operations/receipts. Forced pressure fixture must remove unnecessary eviction. Prior global15%/150ms targets stay open.",
+      "evidence_required": "180s/3GiB bounded workers,raw traces,exact clean source/artifact bindings,independent guard recomputation."
+    }
+  ],
+  "baseline_failed_tests": [
+    "canvas_rf01_full_rebuild",
+    "canvas_fc02_shape_label_scene",
+    "G3HeadlessCanvasDemo",
+    "FC00XRuntimeComposition",
+    "SketchSemantic"
+  ]
+}

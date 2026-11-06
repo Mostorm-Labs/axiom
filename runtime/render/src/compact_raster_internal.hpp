@@ -34,7 +34,7 @@ class CompactStrokeRasterJob final {
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
         std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
         std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
-        std::function<void(std::size_t)> reclaim={});
+        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false);
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
@@ -66,6 +66,7 @@ class CompactStrokeRasterJob final {
     SkRect recordBounds_{};
     std::size_t recordLimit_=0,recordBytes_=0,recordStorageBytes_=0;
     bool recordComplete_=false,picturesEnabled_=false;
+    bool canonicalReplay_=false;
     SkBlendMode contourBlend_=SkBlendMode::kLighten;
     std::function<void(std::size_t)> reclaim_;
     void recordContour(const foundation::InkBrushConfig&,const ink::CompactContour&,ink::CompactContourCompiler);

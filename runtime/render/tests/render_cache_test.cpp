@@ -3,6 +3,8 @@
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "../src/skia_navigation_tiles.hpp"
 #include "../src/skia_render_cache_internal.hpp"
+#include "include/core/SkCanvas.h"
+#include <type_traits>
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -16,6 +18,7 @@
 #include "include/core/SkColorSpace.h"
 #include "../src/compact_raster_internal.hpp"
 #include "../src/skia_prepared_geometry.hpp"
+#include "../src/skia_gpu_lifetime.hpp"
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #endif
@@ -757,14 +760,372 @@ void checkOversizedCanonical(TestSurface& target) {
     target.release();require(pixels(target)==pixels(reference),"quota recovery changed exact pixels");
 }
 
+// Resident images use one tile allocation after completion; only active
+// preparation needs the extra two buffers. A cold viewport must not remain
+// blurry solely because planning charges every finished image at peak size.
+void checkResidentNavigationDensity(){
+    TestSurface target,reference;
+    require(target.resize(1024,768).code==BackendSubmissionCode::kAccepted&&reference.resize(1024,768).code==BackendSubmissionCode::kAccepted,"resident density targets");
+    semantic::ObjectRecord object;object.id=ObjectId::fromUint64(9870);object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+    object.content=semantic::ShapeContent{1,192,120};object.transform.tx=32;object.transform.ty=40;
+    const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+    const ReferenceTraversalEntry entry{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+    FrameState frame{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,384},
+        {512,384,1024,768,2,2},semantic::SemanticGeneration{1},SceneRevision{1},SurfaceGeneration{1},MetricsGeneration{1},FrameId{9870}};
+    ReferenceDrawList list{frame};list.viewportClip={0,0,512,384};list.entries={entry};FramePlan canonical{frame,std::move(list)};
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=6*1024*1024;
+    options.navigationMicroseconds=1000000;cached.setRenderCacheOptions(options);
+    RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    unsigned ticks=0;
+    do{require(navigate(cached,target,{1,0,0},frame,query,false).code==BackendSubmissionCode::kAccepted,"resident density navigation");
+        require(cached.navigationWork().retainedBytes<=options.maxBytes,"resident density escaped tile budget");
+        require(++ticks<256,"resident density preparation stalled");
+    }while(cached.navigationWork().pending);
+    require(cached.navigationWork().maximumUpscale<=1.25&&cached.navigationWork().lowResolutionFraction==0,
+        "resident tile capacity left avoidable low-resolution debt");
+    require(cached.submissionCount()==0,"navigation density emitted canonical submission");
+    require(direct.renderFrame(reference,canonical).code==BackendSubmissionCode::kAccepted,"resident density Direct reference");
+    const auto read=[](TestSurface& surface){const auto a=surface.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"resident density read");
+        const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"resident density readback");surface.release();return bytes;};
+    require(read(target)==read(reference),"resident density pixels differ from Direct");
+}
+
+void checkObsoleteExactNavigation(){
+    TestSurface target,reference;require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"obsolete exact targets");
+    const auto make=[](std::uint64_t scene,std::vector<ReferenceTraversalEntry> entries,WorldToViewAffine transform=WorldToViewAffine{}){
+        FrameState frame{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,256},
+            {512,256,2048,1024,4,4},semantic::SemanticGeneration{scene},SceneRevision{scene},SurfaceGeneration{1},MetricsGeneration{1},FrameId{scene}};
+        ReferenceDrawList list{frame};list.viewportClip={0,0,512,256};list.entries=std::move(entries);list.worldToView=transform;
+        return FramePlan{frame,std::move(list)};
+    };
+    auto first=stroke(9871);auto second=stroke(9872,70);
+    for(auto* entry:{&first,&second}){auto content=std::get<CompactStrokeReferenceCommand>(entry->command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.knots.clear();for(unsigned i=0;i<160;++i)content.stroke.knots.push_back({10.+i*3.,120.+std::sin(i*.1)*100,32768});
+        semantic::ObjectRecord object;object.id=entry->record.objectId;object.kind=semantic::ObjectKind::kVectorStroke;
+        object.kind_version=3;object.content=content;
+        entry->record=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1}).records.front();entry->command=CompactStrokeReferenceCommand{content};}
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;options.maxEntryBytes=512*1024;
+    options.sharedMaxBytes=24*1024*1024+768*1024;options.navigationMicroseconds=1000000;cached.setRenderCacheOptions(options);
+    RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    RenderPreparationBudget slice;slice.maxCoverageSteps=1;slice.maxGroups=1;
+    const auto warm=make(9871,{first});BackendSubmissionResult result;unsigned ticks=0;
+    do{
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        result=cached.renderFrame(target,warm,nullptr,&slice);require(++ticks<1024,"obsolete exact warmup stalled");
+    }while(result.code==BackendSubmissionCode::kRetry);
+    require(result.code==BackendSubmissionCode::kAccepted,"obsolete exact warmup");
+    const auto pending=make(9872,{first,second});
+    require(cached.renderFrame(target,pending,nullptr,&slice).code==BackendSubmissionCode::kRetry,"obsolete exact setup did not suspend");
+    const auto steps=cached.renderCacheWork().preparationCoverageSteps,allocations=cached.renderCacheWork().scratchAllocations;
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={first,second};return true;};
+    // A matching demand must not throw away its cursor/checkpoints.
+    (void)navigate(cached,target,{1,0,0},pending.frame,query,false);
+    require(cached.renderFrame(target,pending,nullptr,&slice).code==BackendSubmissionCode::kRetry&&
+        cached.renderCacheWork().preparationCoverageSteps==steps+1&&cached.renderCacheWork().scratchAllocations==allocations,"matching navigation discarded exact progress");
+    const auto count=cached.submissionCount(),presents=target.presentCount();bool feedback=false;
+    for(unsigned i=0;i<512&&!feedback;++i){
+        const auto nav=navigate(cached,target,{1.3F,-280,-140},pending.frame,query,false);
+        require(nav.code==BackendSubmissionCode::kAccepted,nav.message.c_str());
+        feedback=cached.navigationWork().presented;
+    }
+    require(feedback&&target.presentCount()>presents,"obsolete exact buffers starved renewed navigation");
+    require(cached.submissionCount()==count,"obsolete exact cancellation qualified canonical work");
+    const auto current=make(9872,{first,second},{1.3F,0,0,1.3F,-280,-140});ticks=0;
+    do{
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        result=cached.renderFrame(target,current,nullptr,&slice);require(++ticks<1024,"new-camera exact recovery stalled");
+    }while(result.code==BackendSubmissionCode::kRetry);
+    require(result.code==BackendSubmissionCode::kAccepted,"new-camera exact recovery");
+    require(direct.renderFrame(reference,current).code==BackendSubmissionCode::kAccepted,"new-camera Direct oracle");
+    const auto read=[](TestSurface& surface){const auto a=surface.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"obsolete exact read");
+        const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"obsolete exact readback");surface.release();return bytes;};
+    require(read(target)==read(reference),"obsolete exact recovery changed canonical pixels");
+}
+
+// A qualified zoom-in frame must not discard the wider same-scene coverage
+// needed by the next gesture. One bounded tile step cannot rebuild that plane.
+void checkRetainedZoomReentry(){
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"reentry target");
+    SkiaRenderer renderer;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    renderer.setRenderCacheOptions(options);const auto entry=stroke(9881);
+    const auto wide=plan(9881,{entry});
+    require(renderer.renderFrame(target,wide).code==BackendSubmissionCode::kAccepted,"reentry wide source");
+    const auto widePixels=pixels(target);
+    const auto narrow=plan(9881,{entry},1,{2,0,0,2,-128,0});
+    require(renderer.renderFrame(target,narrow).code==BackendSubmissionCode::kAccepted,"reentry zoomed canonical");
+    const auto canonical=renderer.submissionCount(),presents=target.presentCount();
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    (void)navigate(renderer,target,{1,0,0},wide.frame,query,false);
+    require(target.presentCount()==presents+1&&renderer.navigationWork().presented,
+        "zoom-in canonical discarded wide coverage before resumed zoom-out");
+    require(renderer.submissionCount()==canonical,"reentry feedback emitted canonical receipt");
+    const auto resumed=pixels(target);const auto point=(42*256+24)*4;
+    require(resumed[point]==widePixels[point]&&resumed[point]<180,"reentry lost content outside zoom-in source");
+    const auto outside=target.presentCount();
+    (void)navigate(renderer,target,{1,512,0},wide.frame,query,false);
+    require(target.presentCount()==outside,"reentry fallback certified unknown outside both images");
+    const auto before=target.presentCount();const auto changed=plan(9882,{entry});
+    (void)navigate(renderer,target,{1,0,0},changed.frame,query,false);
+    require(target.presentCount()==before,"reentry retained source crossed scene identity");
+}
+
+void checkSharedCanonicalNavigation(TestSurface&) {
+    TestSurface target,reference;
+    require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
+    const auto makePlan=[](std::uint64_t id,std::vector<ReferenceTraversalEntry> entries,WorldToViewAffine transform=WorldToViewAffine{}){
+        FrameState f{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,256},
+            {512,256,2048,1024,4,4},semantic::SemanticGeneration{id},SceneRevision{id},SurfaceGeneration{1},MetricsGeneration{1},FrameId{id}};
+        ReferenceDrawList list{f};list.viewportClip={0,0,512,256};list.worldToView=transform;list.entries=std::move(entries);
+        return FramePlan{f,std::move(list)};
+    };
+    const auto read=[](TestSurface& surface){
+        const auto a=surface.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"shared frame readback acquire");
+        const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> bytes(info.computeMinByteSize());
+        require(a.frame.surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"shared frame readback");surface.release();return bytes;
+    };
+    // The required fine/coarse tile set fits,but the8MiB frame cannot be
+    // duplicated into the4MiB optional cache:the real DPR4 gate relationship.
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;options.maxEntryBytes=16*1024;
+    options.navigationMaxSteps=1;options.navigationMaxQueries=4;
+    cached.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+    const auto entry=stroke(9861);const auto frame=makePlan(9861,{entry});RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+    unsigned attempts=0;BackendSubmissionResult result;
+    do{result=cached.renderFrame(target,frame,nullptr,&slice);require(++attempts<128,"shared frame setup convergence");}
+    while(result.code==BackendSubmissionCode::kRetry);
+    require(result.code==BackendSubmissionCode::kAccepted,"shared canonical frame setup");
+    require(cached.renderCacheWork().preparationBudgetEntries>0,"share fixture did not create a streamed composite");
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    NavigationBackgroundQuery empty=[](const foundation::WorldRect&){return true;};
+    const auto presents=target.presentCount();
+    require(navigate(cached,target,{1,4,0},frame.frame,query,false,nullptr,empty).code==BackendSubmissionCode::kAccepted&&
+        target.presentCount()==presents+1,"completed canonical pixels were lost at optional snapshot capacity");
+    require(direct.renderFrame(reference,makePlan(9862,{entry},{1,0,0,1,4,0})).code==BackendSubmissionCode::kAccepted&&
+        read(target)==read(reference),"shared sharp overlap changed Direct pixels");
+    const auto count=target.presentCount();const auto changed=makePlan(9863,{entry});
+    (void)navigate(cached,target,{1,4,0},changed.frame,query,false,nullptr,empty);
+    require(target.presentCount()==count,"shared frame crossed semantic/scene binding");
+}
+void checkSharedFrameAccounting(TestSurface& target){
+    for(bool sampled:{false,true}){
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,8*1024*1024});
+        internal::SkiaRenderCache cache;cache.budget=budget;cache.options.maxBytes=64*1024;cache.options.maxEntryBytes=16*1024;
+        const auto frame=plan(9864,{stroke(9864)});RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+        const auto write=budget->beginGpuEpoch(internal::GpuResourceRetirement::canonicalAllocations,
+            internal::GpuResourceRetirement::canonicalReads);require(bool(write),"shared frame write epoch");
+        const auto a=target.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"shared frame accounting acquire");
+        cache.begin(frame,&target,*a.frame.surface,0);internal::SkiaRenderCache::Preparation result;
+        unsigned attempts=0;
+        do{result=cache.prepare(*a.frame.surface->getCanvas(),frame,slice,nullptr,nullptr);require(++attempts<128,"shared accounting convergence");}
+        while(result==internal::SkiaRenderCache::Preparation::kPending);
+        require(result==internal::SkiaRenderCache::Preparation::kReady&&cache.compositePreparedFrame(*a.frame.surface->getCanvas()),"shared accounting completion");
+        target.release();(void)pixels(target); // Test-only real GPU completion before retiring the write epoch.
+        require(budget->endGpuEpoch(*write)&&budget->completeGpuEpoch(*write),"shared write retirement");
+        auto first=cache.completedFrame(),alias=first;require(bool(first),"completed immutable image");
+        cache.clear();first.reset();
+        require(budget->used(resources::ResourceClass::kCanonicalFrame)==128*1024,"aliases duplicated or lost the one pixel charge");
+        const auto epoch=budget->beginGpuEpoch(internal::GpuResourceRetirement::canonicalAllocations,
+            internal::GpuResourceRetirement::canonicalReads);require(bool(epoch),"shared read epoch");
+        if(sampled){alias->markGpuUse();const auto draw=target.acquire();require(draw.code==SkiaSurfaceAcquireCode::kAcquired,"shared sample acquire");
+            draw.frame.surface->getCanvas()->drawImage(alias->image,0,0);target.release();}
+        alias.reset();require(budget->used(resources::ResourceClass::kCanonicalFrame)==(sampled?128*1024:0),
+            "shared frame lifetime did not distinguish actual reads from unused retention");
+        require(budget->endGpuEpoch(*epoch),"shared read scope end");
+        if(sampled)(void)pixels(target);
+        require(budget->completeGpuEpoch(*epoch)&&budget->used()==0,"shared frame read retirement leaked");
+    }
+}
+template<class Job>
+std::unique_ptr<Job> canonicalReplayJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+    std::span<const foundation::InkKnot> knots,std::shared_ptr<resources::ResourceBudgetManager> budget){
+    using Reclaim=std::function<void(std::size_t)>;
+    // The frozen RED oracle remains runnable against the old constructor.
+    if constexpr(std::is_constructible_v<Job,SkCanvas&,const foundation::InkBrushConfig&,
+        std::span<const foundation::InkKnot>,const internal::CompactDeviceGrid*,bool,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t,Reclaim,bool>)
+        return std::make_unique<Job>(canvas,config,knots,nullptr,true,budget,8*1024*1024,Reclaim{},true);
+    else return std::make_unique<Job>(canvas,config,knots,nullptr,true,budget);
+}
+void checkCanonicalReplayHeadroom(TestSurface& provider){
+    const auto acquired=provider.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"critical replay root");
+    const auto info=acquired.frame.surface->imageInfo().makeWH(512,384);
+    auto actual=acquired.frame.surface->makeSurface(info),oracle=acquired.frame.surface->makeSurface(info);
+    require(actual&&oracle,"critical replay targets");actual->getCanvas()->clear(SK_ColorTRANSPARENT);oracle->getCanvas()->clear(SK_ColorTRANSPARENT);
+    auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    std::vector<foundation::InkKnot> knots;for(unsigned i=0;i<1024;++i)knots.push_back({5.+i*.49,190.+std::sin(i*.04)*160,32768});
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,16*1024*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kScratch,2*1024*1024,true);require(bool(token),"critical replay occupied soft quota");
+    resources::ResourceLease occupied(budget,*token);internal::CompactCoverageTargets targets;targets.budget=budget;
+    internal::CompactRasterWork work;
+    {
+        auto job=canonicalReplayJob<internal::CompactStrokeRasterJob>(*actual->getCanvas(),config,knots,budget);
+        for(unsigned i=0;!job->step(*actual->getCanvas(),config,knots,42,targets,true,&work);++i)
+            require(i<10000,"critical replay convergence");
+        require(work.compiledContourKnots==knots.size()&&work.contourRecordReplays>0,
+            "canonical replay recompiled contour despite bounded hard headroom");
+        require(budget->used(resources::ResourceClass::kRecorded)<=8*1024*1024&&budget->used()<=16*1024*1024,"critical replay exceeded admission caps");
+    }
+    std::vector<std::uint8_t> got(info.computeMinByteSize()),want(got.size());
+    require(actual->readPixels(info,got.data(),info.minRowBytes(),0,0),"critical replay readback");
+    internal::drawCompactStrokeToSkCanvas(*oracle->getCanvas(),config,knots,42);
+    require(oracle->readPixels(info,want.data(),info.minRowBytes(),0,0)&&got==want,"critical replay changed pinned Direct pixels");
+    targets.clear();occupied.reset();require(budget->used()==0,"critical replay lease leaked");provider.release();
+    // Denial part-way through an admitted canonical stream must preserve the
+    // complete checkpoint index and exact fallback,without reclaiming navigation.
+    const auto again=provider.acquire();require(again.code==SkiaSurfaceAcquireCode::kAcquired,"critical fallback root");
+    auto denied=again.frame.surface->makeSurface(info);require(bool(denied),"critical fallback target");denied->getCanvas()->clear(SK_ColorTRANSPARENT);
+    auto limited=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{64*1024,4*1024*1024});
+    internal::CompactCoverageTargets limitedTargets;limitedTargets.budget=limited;internal::CompactRasterWork fallback;
+    {
+        auto job=canonicalReplayJob<internal::CompactStrokeRasterJob>(*denied->getCanvas(),config,knots,limited);
+        require(!job->step(*denied->getCanvas(),config,knots,42,limitedTargets,true,&fallback)&&
+            limited->used(resources::ResourceClass::kRecorded)>0,"canonical partial denial did not admit first record");
+        const auto pressure=limited->reserve(resources::ResourceClass::kScratch,4*1024*1024-limited->used()-132*1024,true);
+        require(bool(pressure),"canonical partial hard pressure");resources::ResourceLease pressureLease(limited,*pressure);
+        for(unsigned i=0;!job->step(*denied->getCanvas(),config,knots,42,limitedTargets,true,&fallback);++i)
+            require(i<10000&&!job->resourcePending(),"canonical partial denial lost bounded checkpoint fallback");
+        require(fallback.contourRecordReplays==0&&fallback.checkpointReplayKnots>0,"canonical hard denial did not use exact checkpoints");
+    }
+    std::vector<std::uint8_t> fallbackPixels(want.size());
+    require(denied->readPixels(info,fallbackPixels.data(),info.minRowBytes(),0,0)&&fallbackPixels==want,"canonical hard denial changed Direct pixels");
+    limitedTargets.clear();require(limited->used()==0,"canonical hard fallback leaked quota");provider.release();
+}
+
+#if defined(G5_TEST_WEBGL)
+// Keep real GPU work pending without blocking or reporting false completion.
+struct DelayedRetirementPoll final {
+    DelayedRetirementPoll(){EM_ASM({const p=WebGL2RenderingContext.prototype;
+        window.retirementOriginalPoll=p.clientWaitSync;p.clientWaitSync=function(...args){
+            const r=window.retirementOriginalPoll.apply(this,args);return r===this.WAIT_FAILED?r:this.TIMEOUT_EXPIRED;};});}
+    ~DelayedRetirementPoll(){restore();}
+    void restore(){if(active){EM_ASM({WebGL2RenderingContext.prototype.clientWaitSync=window.retirementOriginalPoll;});active=false;}}
+    bool active=true;
+};
+std::vector<std::uint8_t> retirementPixels(TestSurface& provider){
+    const auto a=provider.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"retirement read acquire");
+    const auto info=a.frame.surface->imageInfo();std::vector<std::uint8_t> out(info.computeMinByteSize());
+    require(a.frame.surface->readPixels(info,out.data(),info.minRowBytes(),0,0),"retirement full readback");provider.release();return out;
+}
+void checkRetirementFrame(){
+    TestSurface target,reference;require(target.resize(1024,768).code==BackendSubmissionCode::kAccepted&&
+        reference.resize(1024,768).code==BackendSubmissionCode::kAccepted,"retirement frame targets");
+    FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,384},
+        {512,384,1024,768,2,2},semantic::SemanticGeneration{9871},SceneRevision{9871},SurfaceGeneration{1},MetricsGeneration{1},FrameId{9871}};
+    ReferenceDrawList list{state};list.viewportClip={0,0,512,384};list.entries={stroke(9871)};
+    const FramePlan frame{state,std::move(list)};
+    SkiaRenderer cached,direct;RenderCacheOptions options;options.maxBytes=4*1024*1024;
+    options.maxEntryBytes=16*1024;options.sharedMaxBytes=8*1024*1024;cached.setRenderCacheOptions(options);
+    RenderCacheOptions off;off.enabled=false;direct.setRenderCacheOptions(off);
+    RenderPreparationBudget slice;slice.maxCoverageSteps=64;slice.maxMicroseconds=1000000;
+    BackendSubmissionResult warm;
+    for(unsigned i=0;;++i){warm=cached.renderFrame(target,frame,nullptr,&slice);if(warm.code!=BackendSubmissionCode::kRetry)break;
+        require(i<128,"retirement warm frame convergence");emscripten_sleep(1);}
+    require(warm.code==BackendSubmissionCode::kAccepted&&cached.renderCacheWork().scratchPeakBytes==3*1024*1024,"retirement frame did not use stable full scratch");
+    const auto sharp=retirementPixels(target);const auto canonical=cached.submissionCount();
+    DelayedRetirementPoll delayed;
+    unsigned queries=0;NavigationSourceQuery unavailable=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&){++queries;return false;};
+    require(navigate(cached,target,{1,0,0},state,unavailable,false).code==BackendSubmissionCode::kAccepted,
+        "retirement old feedback setup");
+    auto movingList=frame.referenceDrawList;movingList.worldToView={1.2,0,0,1.2,-12,-6};const FramePlan moving{state,std::move(movingList)};
+    const auto presents=target.presentCount();
+    const auto pending=cached.renderFrame(target,moving,nullptr,&slice);
+    require(pending.code==BackendSubmissionCode::kRetry&&target.presentCount()==presents&&cached.submissionCount()==canonical,
+        "retirement pressure published partial canonical work");
+    const auto feedback=cached.renderNavigation(target,{1,0,0},state);
+    delayed.restore();
+    require(feedback.code==BackendSubmissionCode::kAccepted&&queries==0&&retirementPixels(target)==sharp,
+        "already-retiring scratch caused qualified whole-frame feedback eviction");
+    require(cached.submissionCount()==canonical,"retirement feedback manufactured canonical receipt");
+    BackendSubmissionResult resumed;
+    for(unsigned i=0;;++i){emscripten_sleep(1);resumed=cached.renderFrame(target,moving,nullptr,&slice);
+        if(resumed.code!=BackendSubmissionCode::kRetry)break;require(i<256,"retirement frame resume stalled");}
+    require(resumed.code==BackendSubmissionCode::kAccepted&&direct.renderFrame(reference,moving).code==BackendSubmissionCode::kAccepted&&
+        retirementPixels(target)==retirementPixels(reference),"retirement resume changed Direct canonical pixels");
+    std::cout<<"{\"retirement_frame\":\"PASS\",\"canonical_before\":"<<canonical<<",\"canonical_after\":"<<cached.submissionCount()<<"}\n";
+}
+void checkRetirementCells(){
+    constexpr std::size_t mib=1024*1024,hard=12*mib;
+    for(bool retiring:{true,false}){
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"retirement cell target");
+        auto nav=std::make_unique<internal::SkiaNavigationTiles>();auto retirement=std::make_shared<internal::GpuResourceRetirement>();
+        auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{4*mib,hard});
+        RenderCacheOptions options;options.maxBytes=4*mib;options.maxEntryBytes=4*mib;options.sharedMaxBytes=hard;
+        options.navigationMaxSteps=64;options.navigationMicroseconds=1000000;
+        auto entry=stroke(9872);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        entry.record.content=content;entry.command=CompactStrokeReferenceCommand{content};const auto frame=plan(9872,{entry});
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+        for(unsigned i=0;;++i){emscripten_sleep(1);
+            require(nav->render(target,{1,0,0},frame.frame,query,1,options,budget,false,nullptr,nullptr,nullptr,{}, {},retirement).code==BackendSubmissionCode::kAccepted,"retirement cell warm");
+            if(!nav->work.pending)break;require(i<256,"retirement cells setup stalled");}
+        (void)retirementPixels(target);
+        for(unsigned i=0;budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();require(i<128,"retirement warm drain");}
+        const auto cells=budget->used(resources::ResourceClass::kNavigationTile);
+        const auto evictions=nav->work.evictions;
+        require(cells>128*1024,"retirement cells fixture empty");
+        DelayedRetirementPoll delayed;resources::ResourceLease pressureLease;sk_sp<SkSurface> pressure;
+        const auto a=target.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"retirement pressure acquire");
+        {
+            internal::SkiaGpuLifetime gpu(*retirement,budget,target,GrAsDirectContext(a.frame.surface->recordingContext()),
+                resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame),0);
+            require(gpu.ready(),"retirement pressure GPU scope");
+            const auto token=budget->reserve(resources::ResourceClass::kCanonicalFrame,8*mib,true);require(bool(token),"retirement pressure lease");
+            pressureLease=resources::ResourceLease(budget,*token);pressure=a.frame.surface->makeSurface(SkImageInfo::MakeN32Premul(2048,1024));
+            require(bool(pressure),"retirement pressure physical surface");pressure->getCanvas()->clear(SK_ColorRED);
+            a.frame.surface->getCanvas()->drawImage(pressure->makeImageSnapshot(),0,0);gpu.touch();
+            if(retiring){pressure.reset();pressureLease.reset();}
+        }
+        target.release();
+        const auto used=budget->used(),requested=hard-used+std::min<std::size_t>(64*1024,cells/2);
+        require(!budget->reserve(resources::ResourceClass::kScratch,requested,true),"retirement pressure did not deny actual admission");
+        const auto pending=budget->snapshot(resources::ResourceClass::kCanonicalFrame).pendingRelease;
+        require((retiring&&pending==8*mib)||(!retiring&&pending==0),"retirement fixture did not distinguish live from pending frame bytes");
+        nav->reclaimForExact(budget,hard,requested,frame.frame,&target,1,true);
+        const auto evicted=nav->work.evictions-evictions;
+        delayed.restore();
+        if(retiring){
+            require(evicted==0&&budget->used(resources::ResourceClass::kNavigationTile)==cells,
+                "already-retiring frame caused unnecessary navigation cell eviction");
+            require(!budget->reserve(resources::ResourceClass::kScratch,requested,true),"future quota was uncharged before real completion");
+        }else require(evicted>0,"mandatory live pressure failed to reclaim cells");
+        (void)retirementPixels(target);
+        for(unsigned i=0;budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement->service();require(i<128,"retirement pressure drain");}
+        const auto admitted=budget->reserve(resources::ResourceClass::kScratch,requested,true);require(bool(admitted),"retirement quota did not resume");budget->release(*admitted);
+        nav.reset();pressure.reset();pressureLease.reset();retirement->service();require(budget->used()==0,"retirement owner leaked quota");
+        std::cout<<"{\"retirement_cells\":\"PASS\",\"retiring\":"<<retiring<<",\"evictions\":"<<evicted<<"}\n";
+    }
+}
+#endif
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--stream-only"){testing::requireReferenceDrawStream();return finishNative(0);}
 #endif
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--retirement-frame-only"){checkRetirementFrame();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--retirement-cells-only"){checkRetirementCells();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--retirement-only"){checkRetirementFrame();checkRetirementCells();return finishNative(0);}
+#endif
+        if(argc>1&&std::string_view(argv[1])=="--reentry-only"){checkRetainedZoomReentry();return finishNative(0);}
+        if(argc==1)checkRetainedZoomReentry();
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
+            checkResidentNavigationDensity();checkObsoleteExactNavigation();checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
+        }
+        if(argc>1&&std::string_view(argv[1])=="--detail-obsolete-only"){checkObsoleteExactNavigation();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--detail-residency-only"){checkResidentNavigationDensity();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--detail-share-only"){checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--detail-replay-only"){checkCanonicalReplayHeadroom(provider);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--oversized-only")){
             checkOversizedCanonical(provider);if(argc>1)return finishNative(0);
         }

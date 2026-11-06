@@ -1,0 +1,20 @@
+{
+  "from_stage": "P20",
+  "next_stage": "P31",
+  "status": "READY_FOR_P31",
+  "package_id": "G5-FEEDBACK-TIMING-V2",
+  "verification_ref": ".aegis/verification/G5-FEEDBACK-TIMING-V2/verification-spec.json",
+  "trusted_runtime_source": "3fcf642bbfdda126246e29dd1b32ec7710154f62",
+  "priority": [
+    "Review bounded exact coverage contour replay locality/reuse using retained raw replay/candidate counts.",
+    "Add narrow navigation compose/present/lifetime accounting where existing substage timers leave large wall-time residual,before assigning source cause."
+  ],
+  "preserve": [
+    "No frozen old verdict changes",
+    "No budget increases,API/schema changes or new renderer",
+    "Protect first/steady local submission,clarity,exact receipt,state and case-matched final pixels",
+    "At least8 independent ABBA blocks percase for source effect acceptance;two-block pilot remains INCONCLUSIVE",
+    "Retain150ms/global15% targets and long foreground-idle/hardware input limitations"
+  ],
+  "implementation_executed": false
+}

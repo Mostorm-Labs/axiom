@@ -1,0 +1,279 @@
+[
+  {
+    "mode": "reentry",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--reentry-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "retirement",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--retirement-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [
+          "{\"retirement_frame\":\"PASS\",\"canonical_before\":1,\"canonical_after\":2}",
+          "{\"retirement_cells\":\"PASS\",\"retiring\":1,\"evictions\":0}",
+          "{\"retirement_cells\":\"PASS\",\"retiring\":0,\"evictions\":1}"
+        ],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "detail",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--detail-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "oversized",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--oversized-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "frontier",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--frontier-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [
+          "dense frontier first feedback opportunity=7",
+          "dense frontier first feedback opportunity=7"
+        ],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "quality",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--quality-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "affine",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--affine-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "background",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--background-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "contour",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--contour-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "replay",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--replay-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [
+          "large navigation legacy=0 first feedback opportunity=1",
+          "large navigation legacy=1 first feedback opportunity=391"
+        ],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  },
+  {
+    "mode": "exact-replay",
+    "exit": 0,
+    "status": "PASS",
+    "observation": {
+      "scope": "Real Chrome WebGL2 private renderer Direct parity, not a latency measurement",
+      "pageErrors": [],
+      "deadlineMs": 240000,
+      "artifacts": {
+        "g5_render_cache_gpu.js": "86d453a8c65804a0a5e064af7dfec08835240a60cf161d7c55d65fc7caf7b839",
+        "g5_render_cache_gpu.wasm": "96ae0af35ad1eab2b0ae7334486b4a5f2e643c3499b4aa39dd7f936c90b24e29"
+      },
+      "probeArgument": "--exact-replay-only",
+      "browser": "156.0.8078.81",
+      "observation": {
+        "nativeDone": true,
+        "logs": [
+          "exact locality softDenied=0 steps=183 fallback=768 record_replays=111",
+          "exact locality softDenied=1 steps=183 fallback=768 record_replays=0"
+        ],
+        "errors": [],
+        "code": 0,
+        "processExit": 0
+      },
+      "status": "PASS"
+    }
+  }
+]

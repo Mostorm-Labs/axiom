@@ -1,0 +1,18 @@
+{
+  "sourceRevision": "aaf459452f75017960f1a8dfc63a8f2cf00c22aa",
+  "testSourceSha256": "a982f511835cca46680d8fd358b575cd6970e5cbaf5066340e3e729776f5df45",
+  "results": [
+    {
+      "mode": "--material-parity-only",
+      "returncode": 0,
+      "log": "out/g5-material-baseline-parity-qualified.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "mode": "--material-only",
+      "returncode": -6,
+      "log": "out/g5-material-red-qualified.log",
+      "sha256": "084bbbc1e2a279b5dfaa469a883afdabe2e64c2f9a670944293ce0982a105516"
+    }
+  ]
+}

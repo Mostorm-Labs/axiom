@@ -1,0 +1,12 @@
+{
+  "scope": "Observer qualification on actual Chrome/WebGL2;no Axiom Runtime performance or physical presentation claim",
+  "errors": [],
+  "artifacts": {
+    "navigation_observer.mjs": "fa1026b7e2d3c933b2d22deb4b6813a4a3700e9eee490e6c754707333a1621d1",
+    "feedback_metrics.mjs": "b2fdc1242df781a7e528ef42be64f4a104480bca16a728c4967640737b683075",
+    "browser_metrics.mjs": "2f7fb51f4836afad6ed6cfb731df3f069b2b71425684bf91d00fe63e1976ec02"
+  },
+  "browser": "156.0.8078.80",
+  "status": "FAIL",
+  "error": "page.evaluate: Error: masked draw was counted as content\n    at check (eval at evaluate (:311:30), <anonymous>:3:35)\n    at eval (eval at evaluate (:311:30), <anonymous>:20:3)\n    at async <anonymous>:337:30\n    at /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/feedback_observer_probe.mjs:13:32"
+}

@@ -1,0 +1,45 @@
+{
+  "scope": "Native controlled mutations;real GPU GREEN modes are separately hashed. No RED GPU claim.",
+  "cases": [
+    {
+      "id": "sharp-sharing",
+      "log": "checks/g5-detail-share-red-final-fixture.log.gz",
+      "argument": "--detail-share-only",
+      "reproduce_mutation": "Disable completedFrame sharing in SkiaRenderer;retain the final2048x1024/4MiB fixture.",
+      "disposition": "retained7299f68 GREEN;initial64KiB/1MiB exploratory fixtures are excluded.",
+      "test_source_reference": "runtime/render/tests/render_cache_test.cpp at903761e4,or c8bc77ec for withdrawn A2"
+    },
+    {
+      "id": "canonical-replay",
+      "log": "checks/g5-detail-replay-red.log.gz",
+      "argument": "--detail-replay-only",
+      "reproduce_mutation": "Force CompactStrokeRasterJob canonicalReplay_ false under occupied soft budget.",
+      "disposition": "retained7299f68 GREEN;bounded hard denial still falls back exactly.",
+      "test_source_reference": "runtime/render/tests/render_cache_test.cpp at903761e4,or c8bc77ec for withdrawn A2"
+    },
+    {
+      "id": "resident-density",
+      "log": "checks/g5-detail-residency-red.log.gz",
+      "argument": "--detail-residency-only",
+      "reproduce_mutation": "Restore maximumTiles=maxBytes/(3*tileBytes+metadata).",
+      "disposition": "retained7299f68 GREEN;actual allocation/backpressure unchanged.",
+      "test_source_reference": "runtime/render/tests/render_cache_test.cpp at903761e4,or c8bc77ec for withdrawn A2"
+    },
+    {
+      "id": "obsolete-exact",
+      "log": "checks/g5-detail-obsolete-red-final.log.gz",
+      "argument": "--detail-obsolete-only",
+      "reproduce_mutation": "Restore unconditional pending-job retention in releaseIdleWorkBuffers.",
+      "disposition": "retained7299f68 GREEN;earlier invalid16KiB Nav-entry fixture is excluded.",
+      "test_source_reference": "runtime/render/tests/render_cache_test.cpp at903761e4,or c8bc77ec for withdrawn A2"
+    },
+    {
+      "id": "critical-frontier",
+      "log": "checks/g5-detail-a2-red.log.gz",
+      "argument": "--detail-frontier-only",
+      "reproduce_mutation": "Use pre-A2 get() with the c8 small-source pressure oracle.",
+      "disposition": "WITHDRAWN:semantic pixel oracle passed c8,but performance failed;test/helper extension removed from active branch.",
+      "test_source_reference": "runtime/render/tests/render_cache_test.cpp at903761e4,or c8bc77ec for withdrawn A2"
+    }
+  ]
+}

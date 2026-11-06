@@ -13,6 +13,13 @@
 #include <unordered_map>
 
 namespace canvas::render::internal {
+// Immutable completed pixels shared by exact presentation and navigation.
+// Both aliases retain this one charged allocation; no framebuffer recapture.
+struct PreparedFrameImage final {
+    sk_sp<SkImage> image;
+    resources::ResourceLease pixels,metadata;
+    void markGpuUse()const noexcept{(void)pixels.markGpuUse();}
+};
 class SkiaRenderCache final {
   public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
@@ -28,13 +35,16 @@ class SkiaRenderCache final {
     enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
     Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*);
     bool compositePreparedFrame(SkCanvas&);
+    [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
     // frames still consume per-object/streamed composition in original order.
     void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
-    // Navigation may reclaim idle exact work buffers, never an active raster job.
-    bool releaseIdleWorkBuffers()noexcept;
+    // Keep matching exact work resumable; obsolete camera/target work cannot
+    // reserve the buffers needed by a renewed navigation demand.
+    bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,
+        const void* target,std::uint64_t resourceEpoch)noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
     SourceRetentions groupSourceLeases_;
@@ -73,11 +83,14 @@ class SkiaRenderCache final {
     bool admissionReady_=false,streamFrame_=false,compositeReady_=false;
     sk_sp<SkSurface> composite_;
     resources::ResourceLease compositeLease_;
+    std::shared_ptr<const PreparedFrameImage> preparedFrame_;
     foundation::DocumentBackground preparationBackground_{};
     bool preparationTransparent_=false,preparationIsolate_=false;
     void resetPreparation();
     bool ensureComposite(SkCanvas&,const FramePlan&);
-    bool acquireWorkSurface(SkCanvas&,sk_sp<SkSurface>&,resources::ResourceLease&,bool mandatory);
+    bool finishComposite();
+    bool acquireWorkSurface(SkCanvas&,sk_sp<SkSurface>&,resources::ResourceLease&,bool mandatory,
+        resources::ResourceClass kind=resources::ResourceClass::kScratch);
     Preparation allocationFailure_=Preparation::kResourcePending;
     void flushPreparation();
     std::size_t preparationCursor_=0;
@@ -96,7 +109,7 @@ class SkiaRenderCache final {
     const SkSurface* surface_=nullptr;
     std::unique_ptr<FrameState> frame_;
     WorldToViewAffine transform_{};
-    std::uint64_t targetEpoch_=0,tick_=0;
+    std::uint64_t targetEpoch_=0,tick_=0,resourceEpoch_=0;
     void evict(std::size_t bytes);
     sk_sp<SkPicture> coverage(const ReferenceTraversalEntry&,const RenderGroup&,const SkRect&);
 };

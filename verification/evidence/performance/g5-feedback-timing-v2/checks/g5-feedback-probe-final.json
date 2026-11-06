@@ -1,0 +1,277 @@
+{
+  "scope": "Observer qualification on actual Chrome/WebGL2;no Axiom Runtime performance or physical presentation claim",
+  "errors": [],
+  "artifacts": {
+    "navigation_observer.mjs": "0968ca9a696e42735f43edd5426641604aeece8b58c31bf2116e13b7ef4bd00e",
+    "feedback_metrics.mjs": "0aca7a7fbe97b2c2e785a2189cf12d513dc42bb41fd2c7d6ffb8570af0900580",
+    "browser_metrics.mjs": "2f7fb51f4836afad6ed6cfb731df3f069b2b71425684bf91d00fe63e1976ec02"
+  },
+  "browser": "156.0.8078.80",
+  "observation": {
+    "preInput": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 1,
+      "firstInputAt": 151,
+      "lastInputAt": 151,
+      "lastInputEndedAt": 171.19999998807907,
+      "preInputWaitMs": 82.80000001192093,
+      "inputDispatchSpanMs": 20.19999998807907,
+      "legacyInputEndOffsetMs": 20.19999998807907,
+      "firstContentResponseMs": 20.19999998807907,
+      "lastInputContentResponseMs": 20.19999998807907,
+      "lastInputToCoarseReceiptMs": null,
+      "lastInputToLastCoarseReceiptMs": null,
+      "contentCalls": 1,
+      "clearCalls": 0,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 1,
+        "p50": 20.19999998807907,
+        "p95": 20.19999998807907,
+        "p99": 20.19999998807907,
+        "max": 20.19999998807907,
+        "mean": 20.19999998807907
+      },
+      "steadyContentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "worstGap": {
+        "started": 151,
+        "ended": 171.19999998807907,
+        "durationMs": 20.19999998807907,
+        "observedCallbackCoveredMs": 20.19999998807907,
+        "outsideObservedCallbacksMs": 0,
+        "rafIds": [],
+        "inputIds": [
+          1
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "clearOnly": {
+      "version": 2,
+      "status": "CENSORED",
+      "cameraQualified": false,
+      "eventCount": 1,
+      "firstInputAt": 171.5,
+      "lastInputAt": 171.5,
+      "lastInputEndedAt": 171.5,
+      "preInputWaitMs": 0,
+      "inputDispatchSpanMs": 0,
+      "legacyInputEndOffsetMs": 129.2999999821186,
+      "firstContentResponseMs": null,
+      "lastInputContentResponseMs": null,
+      "lastInputToCoarseReceiptMs": null,
+      "lastInputToLastCoarseReceiptMs": null,
+      "contentCalls": 0,
+      "clearCalls": 8,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyContentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredContentGapLowerBoundMs": 129.2999999821186,
+      "rafCallbackMs": {
+        "count": 8,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "worstGap": null
+    },
+    "masked": {
+      "version": 2,
+      "status": "CENSORED",
+      "cameraQualified": false,
+      "eventCount": 1,
+      "firstInputAt": 301,
+      "lastInputAt": 301,
+      "lastInputEndedAt": 301,
+      "preInputWaitMs": 0,
+      "inputDispatchSpanMs": 0,
+      "legacyInputEndOffsetMs": 0.09999999403953552,
+      "firstContentResponseMs": null,
+      "lastInputContentResponseMs": null,
+      "lastInputToCoarseReceiptMs": null,
+      "lastInputToLastCoarseReceiptMs": null,
+      "contentCalls": 0,
+      "clearCalls": 0,
+      "maskedCalls": 1,
+      "contentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyContentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredContentGapLowerBoundMs": 0.09999999403953552,
+      "rafCallbackMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "worstGap": null
+    },
+    "offscreen": {
+      "version": 2,
+      "status": "CENSORED",
+      "cameraQualified": false,
+      "eventCount": 1,
+      "firstInputAt": 301.69999998807907,
+      "lastInputAt": 301.69999998807907,
+      "lastInputEndedAt": 301.69999998807907,
+      "preInputWaitMs": 0,
+      "inputDispatchSpanMs": 0,
+      "legacyInputEndOffsetMs": 0,
+      "firstContentResponseMs": null,
+      "lastInputContentResponseMs": null,
+      "lastInputToCoarseReceiptMs": null,
+      "lastInputToLastCoarseReceiptMs": null,
+      "contentCalls": 0,
+      "clearCalls": 0,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyContentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredContentGapLowerBoundMs": 0,
+      "rafCallbackMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "worstGap": null
+    },
+    "defaultBlit": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 1,
+      "firstInputAt": 301.69999998807907,
+      "lastInputAt": 301.69999998807907,
+      "lastInputEndedAt": 301.69999998807907,
+      "preInputWaitMs": 0,
+      "inputDispatchSpanMs": 0,
+      "legacyInputEndOffsetMs": 0,
+      "firstContentResponseMs": 0,
+      "lastInputContentResponseMs": 0,
+      "lastInputToCoarseReceiptMs": null,
+      "lastInputToLastCoarseReceiptMs": null,
+      "contentCalls": 1,
+      "clearCalls": 0,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 1,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "steadyContentGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "worstGap": {
+        "started": 301.69999998807907,
+        "ended": 301.69999998807907,
+        "durationMs": 0,
+        "observedCallbackCoveredMs": 0,
+        "outsideObservedCallbacksMs": 0,
+        "rafIds": [],
+        "inputIds": [],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "idle": {
+      "before": {
+        "sdkRequests": 9,
+        "sdkCallbacks": 8,
+        "pending": 0,
+        "lastSdkActivity": 301.69999998807907,
+        "at": 301.69999998807907
+      },
+      "after": {
+        "sdkRequests": 9,
+        "sdkCallbacks": 8,
+        "pending": 0,
+        "lastSdkActivity": 301.69999998807907,
+        "at": 384.40000000596046
+      }
+    },
+    "forwardedEvents": 5
+  },
+  "status": "PASS"
+}

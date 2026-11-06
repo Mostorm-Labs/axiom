@@ -27,6 +27,7 @@ struct RetainedNavigationSource final {
     double density=0;
     std::function<bool()> extend;
     std::function<void(SkCanvas&,const foundation::WorldRect&)> draw;
+    const RetainedNavigationSource* fallback=nullptr;
 };
 class SkiaNavigationTiles final {
  public:
@@ -99,11 +100,10 @@ class SkiaNavigationTiles final {
     std::optional<int> level_;
     std::size_t warmed_=0;
     std::shared_ptr<GpuResourceRetirement> gpuRetirements_;
-    struct Patch {TileKey source;foundation::WorldRect area;double density=0;bool retained=false;};
+    struct Patch {TileKey source;foundation::WorldRect area;double density=0;const RetainedNavigationSource* retained=nullptr;};
     bool coverage(const foundation::WorldRect&,std::uint64_t scene,std::vector<Patch>&,
         const RetainedNavigationSource*,std::vector<foundation::WorldRect>* missing=nullptr);
-    void compose(SkCanvas&,std::span<const Patch>,const CanonicalViewportTransform&,const FrameState&,
-        const RetainedNavigationSource*);
+    void compose(SkCanvas&,std::span<const Patch>,const CanonicalViewportTransform&,const FrameState&);
     void cancel();
     void cancelJob(std::unique_ptr<Job>&);
 };

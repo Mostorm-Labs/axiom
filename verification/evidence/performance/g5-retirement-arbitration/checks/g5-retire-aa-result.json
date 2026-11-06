@@ -1,0 +1,217 @@
+{
+  "scope": "Three predeclared A/A pairs with identical baseline artifact and workload;diagnosis only,no replacement of frozenA/B verdict.",
+  "comparisons": [
+    {
+      "pair": 0,
+      "phase": "repeat-0",
+      "beforeWaitMs": 115.2000000178814,
+      "afterWaitMs": 130.30000001192093,
+      "beforeGapMs": 61.69999998807907,
+      "afterGapMs": 58.5,
+      "beforeLowDensity": 0.4985388799266728,
+      "afterLowDensity": 0.48427922215010144,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 0,
+      "phase": "repeat-1",
+      "beforeWaitMs": 131,
+      "afterWaitMs": 113.80000001192093,
+      "beforeGapMs": 23.600000023841858,
+      "afterGapMs": 22.099999994039536,
+      "beforeLowDensity": 0.10273903242400621,
+      "afterLowDensity": 0.10396537806706116,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 0,
+      "phase": "after-idle",
+      "beforeWaitMs": 130,
+      "afterWaitMs": 131.59999999403954,
+      "beforeGapMs": 17.900000005960464,
+      "afterGapMs": 19.099999994039536,
+      "beforeLowDensity": 0.10149387802026501,
+      "afterLowDensity": 0.102730859927399,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 0,
+      "phase": "after-freeze",
+      "beforeWaitMs": 127.90000000596046,
+      "afterWaitMs": 128.90000000596046,
+      "beforeGapMs": 17.599999994039536,
+      "afterGapMs": 20.299999982118607,
+      "beforeLowDensity": 0.10024627758728179,
+      "afterLowDensity": 0.10059092898347366,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 1,
+      "phase": "repeat-0",
+      "beforeWaitMs": 130.09999999403954,
+      "afterWaitMs": 130.7000000178814,
+      "beforeGapMs": 58.79999998211861,
+      "afterGapMs": 60.30000001192093,
+      "beforeLowDensity": 0.48392935272638743,
+      "afterLowDensity": 0.4838667471805275,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 1,
+      "phase": "repeat-1",
+      "beforeWaitMs": 130.90000000596046,
+      "afterWaitMs": 114.59999999403954,
+      "beforeGapMs": 17.799999982118607,
+      "afterGapMs": 26.599999994039536,
+      "beforeLowDensity": 0.10218162694946972,
+      "afterLowDensity": 0.10506178328396448,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 1,
+      "phase": "after-idle",
+      "beforeWaitMs": 114.09999999403954,
+      "afterWaitMs": 131.59999999403954,
+      "beforeGapMs": 17.600000023841858,
+      "afterGapMs": 17.700000017881393,
+      "beforeLowDensity": 0.10356778400639743,
+      "afterLowDensity": 0.09411292049581557,
+      "guards": {
+        "wait": false,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 1,
+      "phase": "after-freeze",
+      "beforeWaitMs": 126.5,
+      "afterWaitMs": 125.59999999403954,
+      "beforeGapMs": 140.40000000596046,
+      "afterGapMs": 17.700000017881393,
+      "beforeLowDensity": 0.12680823749999998,
+      "afterLowDensity": 0.08908828886292833,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 2,
+      "phase": "repeat-0",
+      "beforeWaitMs": 114.59999999403954,
+      "afterWaitMs": 114.90000000596046,
+      "beforeGapMs": 61.400000005960464,
+      "afterGapMs": 62.69999998807907,
+      "beforeLowDensity": 0.49482580363307577,
+      "afterLowDensity": 0.5079009023434243,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 2,
+      "phase": "repeat-1",
+      "beforeWaitMs": 114.2000000178814,
+      "afterWaitMs": 113.7999999821186,
+      "beforeGapMs": 20.099999994039536,
+      "afterGapMs": 34.79999998211861,
+      "beforeLowDensity": 0.11044905066687706,
+      "afterLowDensity": 0.11317280869286803,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 2,
+      "phase": "after-idle",
+      "beforeWaitMs": 131.5,
+      "afterWaitMs": 115,
+      "beforeGapMs": 17.5,
+      "afterGapMs": 17.5,
+      "beforeLowDensity": 0.09459667292965976,
+      "afterLowDensity": 0.09122325234018716,
+      "guards": {
+        "wait": true,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 2,
+      "phase": "after-freeze",
+      "beforeWaitMs": 111.40000000596046,
+      "afterWaitMs": 128.40000000596046,
+      "beforeGapMs": 17.5,
+      "afterGapMs": 18,
+      "beforeLowDensity": 0.09564553971261647,
+      "afterLowDensity": 0.09478646503469243,
+      "guards": {
+        "wait": false,
+        "gap": true,
+        "clarity": true
+      }
+    }
+  ],
+  "falseRegressionReports": [
+    {
+      "pair": 1,
+      "phase": "after-idle",
+      "beforeWaitMs": 114.09999999403954,
+      "afterWaitMs": 131.59999999403954,
+      "beforeGapMs": 17.600000023841858,
+      "afterGapMs": 17.700000017881393,
+      "beforeLowDensity": 0.10356778400639743,
+      "afterLowDensity": 0.09411292049581557,
+      "guards": {
+        "wait": false,
+        "gap": true,
+        "clarity": true
+      }
+    },
+    {
+      "pair": 2,
+      "phase": "after-freeze",
+      "beforeWaitMs": 111.40000000596046,
+      "afterWaitMs": 128.40000000596046,
+      "beforeGapMs": 17.5,
+      "afterGapMs": 18,
+      "beforeLowDensity": 0.09564553971261647,
+      "afterLowDensity": 0.09478646503469243,
+      "guards": {
+        "wait": false,
+        "gap": true,
+        "clarity": true
+      }
+    }
+  ]
+}

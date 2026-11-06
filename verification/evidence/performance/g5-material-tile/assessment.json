@@ -1,0 +1,65 @@
+{
+  "testedSourceRevision": "1e6b5f5764c4585c61d658d6d628ba699a1e0d91",
+  "activeSourceRevision": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+  "capacity": {
+    "status": "DEMONSTRATED_EXPERIMENTAL",
+    "qualified5MiBGpuCases": 8,
+    "fullScratchBytes": 0,
+    "boundedLayerPeakBytes": 532512
+  },
+  "parity": {
+    "status": "DEMONSTRATED_EXPERIMENTAL",
+    "gpuCases": 11,
+    "changedChannels": 0,
+    "cpu": "Original path retained;11 native variants pass. Broad CPU layer prototype had30/35 changed channels and was rejected."
+  },
+  "lifetime": {
+    "status": "DEMONSTRATED_EXPERIMENTAL",
+    "oracle": "Material mode includes real admission denial,resume,cancel,actual GPU epoch retirement and delayed-poll retained-sharp integration;no physical GPU-OOM injection."
+  },
+  "regression": {
+    "status": "NO_NEW_FAILURES_EXPERIMENTAL",
+    "native": {
+      "tests": 112,
+      "passed": 107,
+      "failed_names": [
+        "canvas_rf01_full_rebuild",
+        "canvas_fc02_shape_label_scene",
+        "G3HeadlessCanvasDemo",
+        "FC00XRuntimeComposition",
+        "SketchSemantic"
+      ],
+      "baseline_failed_names": [
+        "canvas_rf01_full_rebuild",
+        "canvas_fc02_shape_label_scene",
+        "G3HeadlessCanvasDemo",
+        "FC00XRuntimeComposition",
+        "SketchSemantic"
+      ],
+      "new_failures": [],
+      "resolved_failures": []
+    },
+    "gpuModes": 10
+  },
+  "performance": {
+    "status": "FAILED",
+    "guards": {
+      "cold15Percent": false,
+      "clarityNoRegression2Points": false,
+      "navigation150Ms": false
+    },
+    "cold": {
+      "phase": "after-freeze",
+      "sameFinalPixels": true,
+      "beforeWaitMs": 1460.5,
+      "afterWaitMs": 1380.0999999940395,
+      "beforeGapMs": 78.69999998807907,
+      "afterGapMs": 56.30000001192093,
+      "beforeLowDensity": 0.6427075490714285,
+      "afterLowDensity": 0.7338301561143735
+    },
+    "runs": 22
+  },
+  "terminal": "FROZEN_VERIFICATION_FAILURE",
+  "decision": "Restore stable default. Experimental code remains reachable in Git;no production adoption or Gate PASS."
+}

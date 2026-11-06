@@ -4,6 +4,7 @@ import {spawn,execFileSync} from 'node:child_process';
 import fs from 'node:fs/promises';import path from 'node:path';import os from 'node:os';import http from 'node:http';
 import {createHash} from 'node:crypto';import {gzipSync} from 'node:zlib';
 import {summarizePhase} from './navigation_metrics.mjs';import {summarizeCache,assessStage} from './complex_scale_metrics.mjs';
+import {readFixtureModule,waitForNavigationProbe} from './fixture_modules.mjs';
 const [sdkArg,outArg,kind,fixtureArg,dprArg='2',diagnosticsArg='required']=process.argv.slice(2),sdk=path.resolve(sdkArg),output=path.resolve(outArg),dpr=Number(dprArg);
 if(!['transform','erase','text','table','resource','scale'].includes(kind)||![1,2].includes(dpr))throw Error('worker arguments');
 const hash=b=>createHash('sha256').update(b).digest('hex');
@@ -34,13 +35,16 @@ try{
  });
  const local=['navigation_sampling.html','navigation_metrics.mjs','browser_metrics.mjs','editing_actions.mjs'];
  server=http.createServer(async(req,res)=>{try{
-  const name=new URL(req.url,'http://local').pathname.slice(1);let file;
+  const pathname=new URL(req.url,'http://local').pathname;
+  const module=await readFixtureModule(pathname);if(module){res.setHeader('Content-Type','text/javascript');res.end(module);return;}
+  const name=pathname.slice(1);let file;
   if(name==='fixture.axsnap'&&fixture)file=fixture.snapshot_path;
   else file=local.includes(name)?new URL('./'+name,import.meta.url):path.resolve(sdk,name);
   if(typeof file==='string'&&name!=='fixture.axsnap'&&!file.startsWith(sdk+path.sep))throw Error('path');
   res.setHeader('Content-Type',name.endsWith('.html')?'text/html':name.endsWith('.mjs')?'text/javascript':name.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));
  }catch{res.statusCode=404;res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
  await page.goto('http://127.0.0.1:'+server.address().port+'/navigation_sampling.html');
+ await waitForNavigationProbe(page);
  const checkpoint=async name=>{
   const r=await page.evaluate(()=>probe.checkpoint());const bytes=new Uint8Array(r.snapshot.bytes);await fs.writeFile(path.join(output,name+'.axsnap'),bytes);
   r.snapshot={...r.snapshot,bytes:undefined,sha256:hash(bytes),byteLength:bytes.length,path:name+'.axsnap'};return r;

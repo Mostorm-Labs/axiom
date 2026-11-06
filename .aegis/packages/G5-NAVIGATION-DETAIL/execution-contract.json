@@ -1,0 +1,71 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "immutable completed-frame sharing with one charged owner",
+        "GPU actual-read/write retirement for shared frame images",
+        "bounded canonical-only replay admission under existing hard limit",
+        "preserve all invalidation/admission/presentation behavior",
+        "resident-image navigation density planning with bounded transient headroom",
+        "release obsolete exact preparation on renewed navigation without cancelling matching work",
+        "critical frontier bounded replay fallback under occupied soft budget"
+      ],
+      "forbidden_changes": [
+        "new public SDK API/version",
+        "Brush/semantic/schema/lock changes",
+        "dependency rebuild",
+        "CPU/GPU quota or default budget increases",
+        "raster scissor/AA/grid/order changes",
+        "partial or fake receipts",
+        "overwrite4231/4232 or older installs"
+      ]
+    },
+    "tests": {
+      "required": [
+        "share",
+        "replay",
+        "regression",
+        "performance",
+        "residency"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "existing CI"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "share",
+        "replay",
+        "regression",
+        "performance",
+        "residency"
+      ],
+      "corroborative": [
+        "optical/source-density proxies are not physical input-to-photon or unique GPU memory"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all frozen implementation/oracles satisfied",
+        "exact source and evidence committed/pushed",
+        "new matching root SDK demo available",
+        "READY_FOR_CONTROL_REVIEW only"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

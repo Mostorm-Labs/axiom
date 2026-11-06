@@ -1,0 +1,39 @@
+{
+  "obligations": [
+    {
+      "id": "share",
+      "requirement": "Completed canonical pixels remain available for sharp navigation even when a duplicate whole-frame optional image cannot fit.",
+      "oracle": "Native/Chrome detail mode:small optional cap;strict translated Direct pixels;distinct semantic/provider/generation/resource stamps;pending/failing present;shared lease accounting and GPU epochs.",
+      "acceptance": "Immediate valid overlap feedback;no duplicate pixel reservation;no stale or partial canonical publication.",
+      "evidence_required": "RED/GREEN native and real GPU logs"
+    },
+    {
+      "id": "replay",
+      "requirement": "Canonical v4 replay avoids repeated contour compilation when soft budget is occupied but bounded hard headroom is available.",
+      "oracle": "Canonical-owner test plus pinned no-record Direct pixel oracle;hard denial,cap denial,cancel and teardown.",
+      "acceptance": "One input compilation and recorded reuse when admitted;exact fallback otherwise;<=8MiB entry and<=96MiB shared.",
+      "evidence_required": "work counters and pixel/budget/retirement tests"
+    },
+    {
+      "id": "residency",
+      "requirement": "Navigation converges to adequate density when resident images and one transient preparation peak fit;obsolete exact buffers cannot starve a new camera demand.",
+      "oracle": "Native and Chrome: cold DPR2 shape navigation under6MiB;Direct pixels,density and bytes;pending exact demand under constrained hard budget;matching-demand continuation and changed-camera cancellation. Small-source staging pressure:optional deny,critical replay exact pixels,hard denial and lifetime.",
+      "acceptance": "No persistent avoidable low-resolution debt;bounded actual allocation and completion;no canonical submission from navigation;canonical recovery equals Direct.",
+      "evidence_required": "RED/GREEN tests plus actual GPU modes and paired performance;original15% cold improvement and0.10 clarity guards remain unchanged."
+    },
+    {
+      "id": "regression",
+      "requirement": "Preserve canonical/input/SDK boundaries and known failure baseline.",
+      "oracle": "112 native tests,8 existing GPU modes plus detail,31 G5 Node,118 boundary contracts,normal installed root SDK package checks.",
+      "acceptance": "No new native failures vs frozen five;GPU/Node/boundary/package checks pass.",
+      "evidence_required": "logs and source/artifact hashes"
+    },
+    {
+      "id": "performance",
+      "requirement": "Improve default-budget detail and cold completion without sacrificing navigation submissions.",
+      "oracle": "Same installed SDK mixed corpus,before90ef6b69 vs candidate,DPR2/3/4;selected/unselected pan/zoom;idle/freeze;ON/OFF;strict final pixels,semantics and receipts.",
+      "acceptance": "DPR4 default cold completion<=85% baseline;low-density time fraction reduced>=0.10;paired input submission max gap<=150ms;fixed budgets and no CPU/GPU fences. DPR2/3 measured tails/findings disclosed.",
+      "evidence_required": "bounded worker raw traces,deterministic comparison and manifest"
+    }
+  ]
+}
