@@ -31,11 +31,23 @@ export function createTransportController(port) {
   };
   const table=async(action,options={})=>enqueue('table',{...options,action,generation:options.generation??(await read('state')).generation});
   const section=(action,options={})=>enqueue('section',{...options,action});
+  const clipboard=async(action,options={},bytes)=>{
+    if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>k!=='offset')||
+       options.offset!==undefined&&!(Array.isArray(options.offset)&&options.offset.length===2&&options.offset.every(n=>typeof n==='number'&&Number.isFinite(n))))
+      throw new AxiomError('INVALID_ARGUMENT');
+    if(action==='paste'&&(Object.prototype.toString.call(bytes)!=='[object Uint8Array]'||bytes.length>16777216))
+      throw new AxiomError('INVALID_ARGUMENT');
+    const basis=await read('multi',{action:'read'});
+    return enqueue('clipboard',{...options,action,stamp:basis.stamp},bytes);
+  };
   const textIntent=(kind,options={})=>run(async()=>{const s=await read('text',{action:'snapshot'});await request('text',{action:'intent',intent:{kind,clientId:'16515592',requestId:String(++textSequence),target:s.target,token:s.token,...options}});return read('text',{action:'snapshot'});});
   const api={version:port.version,
     readBuildInfo:()=>request('version'),readState:()=>read('state'),readSelection:()=>read('selection'),
     readBackground:()=>read('background'),setBackground:value=>control({kind:'background',value}),
     exportImage:options=>enqueue('exportImage',{options:options||{}}).then(r=>({...r.value,bytes:r.bytes})),
+    copySelection:()=>request('clipboard',{action:'copy'}).then(r=>({...r.value,stamp:{owner:port.owner,token:copy(r.value.stamp)},bytes:new Uint8Array(r.bytes)})),
+    cutSelection:stamp=>enqueue('clipboard',{action:'cut',stamp:own(stamp).token}),
+    duplicateSelection:options=>clipboard('duplicate',options),pasteObjects:(bytes,options)=>clipboard('paste',options,bytes),
     subscribeState:fn=>{check();return port.subscribe('state',fn);},subscribeOperations:fn=>{check();return port.subscribe('operation',fn);},dispatchEvents:()=>port.dispatchEvents?.()||Promise.resolve(),
     selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return run(async()=>{const r=await request('control',{kind:'tool',value});if(name.endsWith('Eraser'))await request('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return r;});},
     selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5,table:6,section:7},name)}),
