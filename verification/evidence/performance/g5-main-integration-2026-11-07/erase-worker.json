@@ -1,0 +1,79 @@
+{
+  "command": [
+    "node",
+    "verification/sdk_js/verify_partial_erase_capacity.mjs",
+    "out/g5-main-integration-sdk/js",
+    "out/g5-main-integration-erase.json",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 41.676671832974534,
+  "peak_process_family_rss_kib": 1698640,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "erase",
+    "x": 740,
+    "downMs": 0.914667000000918,
+    "upMs": 279.4875830000019,
+    "settledMs": 894.2044170000008,
+    "moves": {
+      "meanMs": 49.26866668750032,
+      "p95Ms": 51.77275000000009,
+      "maxMs": 615.6049160000002
+    },
+    "pixels": {
+      "canvas": [
+        2000,
+        1400
+      ],
+      "original": 12042,
+      "preview": 0,
+      "committed": 0,
+      "rawMinAlpha": [
+        255,
+        0
+      ],
+      "maxDelta": 0,
+      "previewFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ],
+      "committedFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}
