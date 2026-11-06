@@ -14,5 +14,5 @@ named `MostormAxiom.dll` to match the C++/WinRT activation namespace; the pure
 engine remains `axiom.dll`. The canvas HWND is placed above RNW's sibling
 ContentIsland within its layout rectangle so native pointer input can reach it.
 These integration fixes do not change the public C ABI or protocol. Drawing and
-preview remain pending physical revalidation; SDK 0.3.13 remains NOT_QUALIFIED
+preview remain pending physical revalidation; SDK 0.3.14 remains NOT_QUALIFIED
 until the release evidence contract is complete.
