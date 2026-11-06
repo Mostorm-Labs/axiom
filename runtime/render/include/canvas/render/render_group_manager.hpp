@@ -3,11 +3,16 @@
 #include "canvas/render/reference_draw_list.hpp"
 #include "canvas/render/damage_tracker.hpp"
 #include <unordered_map>
+#include <optional>
 
 namespace canvas::render {
 class RenderGroupManager final {
   public:
-    struct Update final {std::vector<VisualContributionDelta> contributions;};
+    struct EraseDamage final {
+        bool active=false,continuous=false;
+        std::optional<foundation::WorldRect> bounds;
+    };
+    struct Update final {std::vector<VisualContributionDelta> contributions;EraseDamage erase;};
     [[nodiscard]] Update update(std::span<const ReferenceTraversalEntry> entries,
         const foundation::WorldRect& clip, std::uint64_t resourceEpoch);
     [[nodiscard]] const RenderGroup* find(foundation::ObjectId id) const noexcept;

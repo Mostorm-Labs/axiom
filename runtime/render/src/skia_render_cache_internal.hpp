@@ -38,7 +38,11 @@ class SkiaRenderCache final {
     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
     // frames still consume per-object/streamed composition in original order.
-    void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
+    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
+    [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
+    [[nodiscard]] std::uint64_t frameSequence()const noexcept{return tick_;}
+    bool prepareEraseDamage(SkCanvas& canvas){return sourceAdmission_&&ensureScratch(canvas);}
+    bool drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
     // Keep matching exact work resumable; obsolete camera/target work cannot
@@ -105,6 +109,8 @@ class SkiaRenderCache final {
     scheduling::RuntimeScheduler scheduler_{8};
     std::uint64_t workId_=0;
     RenderGroupManager groups_;
+    RenderGroupManager::EraseDamage eraseDamage_;
+    bool damageOnly_=false,damageFailed_=false;
     const void* target_=nullptr;
     const SkSurface* surface_=nullptr;
     std::unique_ptr<FrameState> frame_;

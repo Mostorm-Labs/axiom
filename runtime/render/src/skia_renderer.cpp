@@ -39,6 +39,33 @@ SkiaRenderer::~SkiaRenderer(){
 }
 void SkiaRenderer::serviceResourceRetirements()noexcept {if(gpuRetirements_)gpuRetirements_->service();}
 
+// Constant-size validity only. Pixels remain owned by the qualified target;
+// canonical source records and mask-prefix validation stay in RenderGroupManager.
+struct SkiaRenderer::PartialEraseFrame final {
+    FrameState frame;
+    WorldToViewAffine transform;
+    foundation::DocumentBackground background;
+    bool transparent=false,isolate=false;
+    const SkiaSurfaceProvider* provider=nullptr;
+    const SkSurface* surface=nullptr;
+    const internal::SkiaRenderCache* cache=nullptr;
+    std::uint64_t sequence=0,resource=0,presents=0;
+    std::uint32_t contents=0;
+    explicit PartialEraseFrame(const FramePlan& p):frame(p.frame),transform(p.referenceDrawList.worldToView),
+        background(p.background),transparent(p.transparentBackground),isolate(p.isolateEraseMasks){}
+    bool matches(const SkiaSurfaceProvider& target,SkSurface& acquired,const FramePlan& p,
+                 const internal::SkiaRenderCache& current,std::uint64_t epoch)const {
+        const auto& f=p.frame;
+        return provider==&target&&surface==&acquired&&cache==&current&&sequence+1==current.frameSequence()&&
+            presents==target.presentCount()&&contents==acquired.generationID()&&resource==epoch&&
+            frame.viewId==f.viewId&&frame.camera==f.camera&&frame.worldViewport==f.worldViewport&&
+            frame.sceneGeneration==f.sceneGeneration&&frame.sceneReadToken==f.sceneReadToken&&
+            frame.metrics==f.metrics&&frame.metricsGeneration==f.metricsGeneration&&
+            frame.surfaceGeneration==f.surfaceGeneration&&frame.viewportClip==f.viewportClip&&
+            frame.frameId.value()<f.frameId.value()&&transform==p.referenceDrawList.worldToView&&
+            background==p.background&&transparent==p.transparentBackground&&isolate==p.isolateEraseMasks;
+    }
+};
 struct SkiaRenderer::NavigationCache final {
     const void* provider=nullptr;
     sk_sp<SkImage> image;
@@ -242,6 +269,7 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
+    partialEraseFrame_.reset();
     serviceResourceRetirements();
     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
     const auto& metrics=plan.frame.metrics;
@@ -564,13 +592,14 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay) {
+    auto previousErase=std::move(partialEraseFrame_);
     serviceResourceRetirements();
     if (selectionOverlay == nullptr) {
         return clearPreview(provider, SurfaceGeneration{provider.generation()});
@@ -616,10 +645,64 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // plan already contains any transient transform overrides, so render the
     // whole scene first and then add the editing chrome.
     const auto includeInk=!selectionOverlay->creationPreview().has_value();
-    BackendSubmissionResult scene;
-    if(cache){cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk);scene=BackendSubmissionResult::accepted();}
-    else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+    const bool bareOverlay=!selectionOverlay->selectionOutline().visible&&!selectionOverlay->creationPreview()&&
+        !selectionOverlay->creationHover()&&!selectionOverlay->textBox&&!selectionOverlay->textCaret&&
+        selectionOverlay->textSelection.empty()&&selectionOverlay->readOnlyOutlines.empty()&&
+        selectionOverlay->candidateOutlines.empty()&&selectionOverlay->acquisitionOutline.empty()&&
+        selectionOverlay->guides().empty()&&selectionOverlay->attachmentPoints().empty();
+    const bool compactInkOnly=std::none_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& entry){
+        return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabStrokeReferenceCommand>(entry.command)||
+            std::holds_alternative<BrushStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+    });
+    const bool persistentErase=compactInkOnly&&cache&&renderCacheOptions_.enabled&&bareOverlay&&cache->eraseDamage().active&&
+        !renderCacheOptions_.tileCandidate&&canvas->getTotalMatrix().isIdentity()&&
+        canvas->isClipRect()&&canvas->getDeviceClipBounds()==SkIRect::MakeWH(acquired.frame.surface->width(),acquired.frame.surface->height())&&
+        provider.describe().capabilities.supportsPartialUpdate;
+    bool incremental=persistentErase&&cache->eraseDamage().continuous&&previousErase&&
+        previousErase->matches(provider,*acquired.frame.surface,plan,*cache,resourceEpoch_);
+    if(incremental&&!cache->prepareEraseDamage(*canvas))incremental=false;
+    // Preserve the full frame's coverage tile origin and dimensions. A narrow
+    // clip changes how many tiles are needed, never their AA/noise sampling grid.
+    SkIRect originalClip;
+    {SkAutoCanvasRestore restore(canvas,true);
+        const auto& m=plan.frame.metrics;canvas->scale(m.physicalWidth/m.logicalWidth,m.physicalHeight/m.logicalHeight);
+        const auto& c=plan.referenceDrawList.viewportClip;canvas->clipRect(SkRect::MakeLTRB(c.left,c.top,c.right,c.bottom));
+        originalClip=canvas->getDeviceClipBounds();}
+    const internal::CompactDeviceGrid deviceGrid{originalClip.left(),originalClip.top(),originalClip.right(),originalClip.bottom()};
+    SkAutoCanvasRestore damageRestore(canvas,false);
+    if(incremental) {
+        canvas->save();canvas->resetMatrix();
+        SkIRect clip=SkIRect::MakeEmpty();
+        if(const auto& bounds=cache->eraseDamage().bounds) {
+            const auto& v=plan.referenceDrawList.worldToView;const auto& m=plan.frame.metrics;
+            const double sx=m.physicalWidth/m.logicalWidth,sy=m.physicalHeight/m.logicalHeight;
+            SkMatrix matrix;matrix.setAll(v.a*sx,v.c*sx,v.tx*sx,v.b*sy,v.d*sy,v.ty*sy,0,0,1);
+            auto area=matrix.mapRect(SkRect::MakeLTRB(bounds->left,bounds->top,bounds->right,bounds->bottom));
+            area.outset(3,3); // Include stroke AA and inverse-affine rounding.
+            if(!area.isFinite()){damageRestore.restore();incremental=false;}
+            else if(area.intersect(SkRect::Make(canvas->getDeviceClipBounds())))area.roundOut(&clip);
+        }
+        if(incremental)canvas->clipIRect(clip);
+    }
+    if(cache&&cache->eraseDamage().active) {
+        if(incremental){const auto clip=canvas->getDeviceClipBounds();++cache->work.eraseDamageFrames;
+            cache->work.eraseDamagePixels+=std::uint64_t(clip.width())*clip.height();}
+        else ++cache->work.eraseFullFrames;
+    }
+    BackendSubmissionResult scene=BackendSubmissionResult::accepted();
+    const auto sceneSaveCount=canvas->getSaveCount();
+    try {
+        if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
+            if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,incremental?&deviceGrid:nullptr))
+                scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
+            else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+        }
+    }catch(const std::bad_alloc&){
+        canvas->restoreToCount(sceneSaveCount);clearRenderCache();
+        scene=BackendSubmissionResult::retry("transient scene allocation unavailable");
+    }
     if (scene.code != BackendSubmissionCode::kAccepted) {
+        damageRestore.restore();
         provider.release();
         return scene;
     }
@@ -636,10 +719,20 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         canvas->restore();
     }
     internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
+    damageRestore.restore();
+    std::shared_ptr<PartialEraseFrame> candidate;
+    if(persistentErase)try {
+        candidate=std::make_shared<PartialEraseFrame>(plan);candidate->provider=&provider;
+        candidate->surface=acquired.frame.surface;candidate->cache=cache;
+        candidate->sequence=cache->frameSequence();candidate->resource=resourceEpoch_;
+        candidate->contents=acquired.frame.surface->generationID();
+    }catch(const std::bad_alloc&){} // Optional validity; next frame fully replaces.
     provider.release();
     ++submissions_;
     ++rasterizations_;
-    return provider.present();
+    const auto presented=provider.present();
+    if(candidate&&presented.code==BackendSubmissionCode::kAccepted){candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);}
+    return presented;
 }
 
 BackendSubmissionResult SkiaRenderer::renderPreview(
