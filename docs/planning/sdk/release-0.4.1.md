@@ -38,3 +38,22 @@ bounded conversion fix; their original logs/source binding are preserved.
 
 Hosted Web/Windows/Demo and all six RN native target verification and six npm
 publications must freshly pass this release source before completion is reported.
+
+
+## Hosted outcome and immutable publication
+
+RN run 42257428510 published five npm packages at 0.4.1, so v0.4.1 is immutable.
+SDK run 42257428508 passed Web but Windows rejected four old verification
+expectations: FC00XRuntimeComposition sampled the removed cyan solid grip;
+FC02WindowsTextToolFocus/TouchFocus/AfterInk expected ordinary Enter to close the
+editor and keep Text selected. The branch approved white/violet grips and
+Enter=paragraph, Ctrl+Enter=finish then Select. These are related verification
+fixtures, not authority changes or a reason to weaken the gate. GitHub Release
+and Web npm publication were skipped. Repair proceeds as 0.4.2, retaining all
+0.4.1 tags/packages/evidence unchanged.
+
+Subsequent0.4.2 inspection found cached local Session version macros still0.4.0
+and a tautological Web version check (both compared values came from the engine).
+Earlier local behavior checks are not independent version-parity evidence. The
+new public native/Web version guards and CMake input dependency repair this gap;
+fresh hosted0.4.1 builds used the correct0.4.1 configuration and are unaffected.

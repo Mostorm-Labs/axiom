@@ -11,6 +11,7 @@
 namespace {
 POINTER_INFO nativePointer{};
 bool syntheticPointerClock = false;
+bool syntheticControlDown = false;
 ULONGLONG pointerClockMs = 0;
 ULONGLONG observedTickCount64() {
     return syntheticPointerClock ? pointerClockMs : ::GetTickCount64();
@@ -30,8 +31,9 @@ BOOL noTouchHistory(UINT32, UINT32*, POINTER_TOUCH_INFO*) {
 BOOL noTouchInfo(UINT32, POINTER_TOUCH_INFO*) {
     return FALSE;
 }
-SHORT observedKeyState(int) {
-    return 0;
+SHORT observedKeyState(int key) {
+    return key == VK_CONTROL && syntheticControlDown
+        ? static_cast<SHORT>(-32768) : static_cast<SHORT>(0);
 }
 } // namespace
 
@@ -596,14 +598,23 @@ int main(int argc, char** argv) {
         }
         SendMessageW(GetFocus(), WM_KEYDOWN, VK_RETURN, 0);
         pumpWindowsText(state);
+        assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+        assert(state.facade->readTextEditor().projection == u"A\u4f60\u597d\n");
+        SendMessageW(GetFocus(), WM_KEYDOWN, VK_BACK, 0);
+        pumpWindowsText(state);
+        assert(state.facade->readTextEditor().projection == u"A\u4f60\u597d");
+        syntheticControlDown = true;
+        SendMessageW(GetFocus(), WM_KEYDOWN, VK_RETURN, 0);
+        syntheticControlDown = false;
+        pumpWindowsText(state);
         assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
         assert(state.facade->readCanvasControlSnapshot(state.facade->mountedCanvasTargets().front())
-                   .tool == runtime::CanvasToolKind::kText);
+                   .tool == runtime::CanvasToolKind::kSelect);
         if (mode == "reedit") {
             const auto originalObject = state.facade->readTextEditor().token.object;
             for (int attempt = 0; attempt < 3; ++attempt) {
-                // The first Down creates an empty Text draft. The subsequent
-                // Win32 double-click must replace it with the existing text.
+                // Selected-object click and Win32 double-click must retain the
+                // existing text session and its object identity.
                 SetFocus(state.debugUi->nativeWindow());
                 SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(554, 207));
                 SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(554, 207));
@@ -629,6 +640,15 @@ int main(int argc, char** argv) {
                 assert(composition.semanticObjectCount() == objectsBefore + 1);
             }
         }
+        // Finish returns to Select. Explicitly reselect the actual Text widget
+        // before checking that another canvas click starts an empty draft.
+        SetFocus(state.debugUi->nativeWindow());
+        ImGui::NewFrame();
+        g.NavActivateId = g.NavActivateDownId = content->GetID("Text tool");
+        g.NavInputSource = ImGuiInputSource_Keyboard;
+        assert(state.controller->buildImGuiFrame());
+        ImGui::Render();
+        assert(composition.ownerPump());
         SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(550, 300));
         SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(550, 300));
         assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);

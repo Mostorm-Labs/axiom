@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {createInterface} from 'node:readline';
 import {createTransportController} from '../../sdk/api/internal/transport.mjs';
+import {SDK_VERSION} from '../../sdk/api/axiom.mjs';
 const child=spawn(process.argv[2],[],{stdio:['pipe','pipe','inherit']});
 const lines=createInterface({input:child.stdout});const waiting=[];
 lines.on('line',line=>waiting.shift()?.(JSON.parse(line)));
@@ -9,7 +10,8 @@ const raw=(command,args={},bytes)=>new Promise(resolve=>{waiting.push(r=>{if(r.b
 const request=async(...args)=>{const r=await raw(...args);assert(r.ok,JSON.stringify(r));return r;};
 try{
  await request('open',{documentId:'a'.repeat(32),builtinFonts:true});
- const c=createTransportController({owner:'real-session',version:'0.3.0',request:raw,subscribe(){return ()=>{};},close:()=>request('close')});
+ const c=createTransportController({owner:'real-session',version:SDK_VERSION,request:raw,subscribe(){return ()=>{};},close:()=>request('close')});
+ assert.equal((await c.readBuildInfo()).sdkVersion,SDK_VERSION);
  assert.equal((await c.readState()).documentId,'a'.repeat(32));
  await c.selectBrush('crayon-wax-v1',3);assert.equal((await c.readBrushConfig()).family,4);
  await c.selectTool('partialEraser');assert.equal((await c.readState()).eraserMode,2);

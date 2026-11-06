@@ -24,7 +24,7 @@ class AxiomNativeModule(context: ReactApplicationContext) : NativeAxiomSpec(cont
     owner(promise) {
       val bytes=data(snapshot)
       // Assets are copied from the matching SDK release; never a network URL.
-      val root=java.io.File(reactApplicationContext.filesDir,"axiom-sdk-0.4.1")
+      val root=java.io.File(reactApplicationContext.filesDir,"axiom-sdk-0.4.2")
       if (!java.io.File(root,"fonts/catalog.json").isFile) {
         fun copyAssets(relative: String, destination: java.io.File) {
           val children=reactApplicationContext.assets.list(relative) ?: emptyArray()
