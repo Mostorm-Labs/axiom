@@ -193,6 +193,33 @@ void checkExactCachePressure(TestSurface& target,TestSurface& reference){
             NavigationBackgroundQuery{[](const foundation::WorldRect&){return true;}}).code==BackendSubmissionCode::kAccepted&&
             target.presentCount()==presents+1,"exact pressure eviction lost retained-image navigation feedback");
 }
+void checkCriticalNavigationPressure(TestSurface& target){
+    // A conservative Scene query can include offscreen ink. Above the soft
+    // cache limit, that ink must still have a budgeted local replay rather
+    // than forcing the exposed viewport to wait for every source knot.
+    auto entry=stroke(8392);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots.clear();
+    for(unsigned i=0;i<2048;++i)content.stroke.knots.push_back({-900.+i*1.2,-400.+std::sin(i*.07)*23,32768});
+    entry.record.content=content;entry.record.worldBounds={-1000,-500,2000,128};
+    entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1024*1024,4*1024*1024});
+    const auto token=budget->reserve(resources::ResourceClass::kCanonicalFrame,1024*1024,true);
+    require(bool(token),"critical navigation pressure setup");resources::ResourceLease pressure(budget,*token);
+    internal::SkiaNavigationTiles nav;RenderCacheOptions options;
+    options.navigationMaxSteps=8;options.navigationMicroseconds=1000000;
+    const auto frame=plan(8392,{entry},target.generation(),{}, {0,0,64,32},{},false,4);
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={entry};return true;};
+    require(nav.render(target,{1,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,
+            "critical navigation admission");
+    require(nav.work.presented&&nav.work.coverageComplete&&nav.work.preparedGeometryBuilds==1,
+            "offscreen short ink delayed visible coverage under soft pressure");
+    require(nav.work.contourPrimitivesTested==0&&budget->used()>1024*1024&&budget->used()<=4*1024*1024,
+            "critical navigation lost locality or shared hard-cap accounting");
+    const auto actual=pixels(target);
+    require(std::all_of(actual.begin(),actual.end(),[](auto c){return c==255;}),
+            "offscreen pressure source painted visible pixels");
+}
 void checkCompletionProviderLifetime(TestSurface& target){
 #if defined(G5_TEST_WEBGL)
     SkiaRenderer renderer;auto owned=std::make_unique<TestSurface>();
@@ -1436,6 +1463,9 @@ int main(int argc,char** argv) {
         if(argc==1){checkRetainedZoomReentry();checkMixedNavigationReentry();}
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--critical-replay-only")){
+            checkCriticalNavigationPressure(provider);if(argc>1)return finishNative(0);
+        }
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){
             checkResidentNavigationDensity();checkObsoleteExactNavigation();checkSharedCanonicalNavigation(provider);checkSharedFrameAccounting(provider);checkCanonicalReplayHeadroom(provider);if(argc>1)return finishNative(0);
         }
