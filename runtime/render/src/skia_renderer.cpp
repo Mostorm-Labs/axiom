@@ -16,6 +16,7 @@
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
+#include "include/effects/SkGradient.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
@@ -707,7 +708,30 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             contourPaint.setColor4f({contour.red, contour.green, contour.blue,
                                      effectiveAlpha}, nullptr);
         }
-        if (contour.roundStroke) {
+        if (contour.fadingTrail) {
+            // Captured per-contour paint keeps old laser/eraser tails independent
+            // of the next selected tool's global preview tint.
+            const auto& points = contour.fadingTrail->points;
+            const auto colorAt = [&](float life) {
+                return SkColor4f{contour.red,contour.green,contour.blue,
+                    std::clamp(contour.alpha*contour.opacity*life,0.0F,1.0F)};
+            };
+            SkPaint trailPaint;trailPaint.setAntiAlias(true);
+            trailPaint.setStyle(SkPaint::kStroke_Style);trailPaint.setStrokeCap(SkPaint::kRound_Cap);
+            if (points.size()==1) {
+                trailPaint.setStyle(SkPaint::kFill_Style);trailPaint.setColor4f(colorAt(points[0].opacity),nullptr);
+                canvas->drawCircle(float(points[0].x),float(points[0].y),points[0].width*.5F,trailPaint);
+            }
+            for(std::size_t i=1;i<points.size();++i){
+                const auto& a=points[i-1];const auto& b=points[i];
+                const SkPoint ends[]{SkPoint::Make(float(a.x),float(a.y)),SkPoint::Make(float(b.x),float(b.y))};
+                const SkColor4f colors[]{colorAt(a.opacity),colorAt(b.opacity)};
+                trailPaint.setColor(SK_ColorWHITE);
+                trailPaint.setStrokeWidth(std::max(.05F,(a.width+b.width)*.5F));
+                trailPaint.setShader(SkShaders::LinearGradient(ends,SkGradient{SkGradient::Colors{SkSpan<const SkColor4f>(colors,2),SkTileMode::kClamp},{}}));
+                canvas->drawLine(ends[0],ends[1],trailPaint);
+            }
+        } else if (contour.roundStroke) {
             const auto& stroke = *contour.roundStroke;
             if (stroke.points.empty() || !std::isfinite(stroke.radius) || stroke.radius <= 0) return;
             contourPaint.setStyle(SkPaint::kStroke_Style);

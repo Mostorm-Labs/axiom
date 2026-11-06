@@ -599,15 +599,24 @@ bool CanvasEditingRuntime::brushBatch(
     std::span<const input::PointerSample> samples,
     std::uint64_t session) noexcept {
   if (samples.empty()) return false;
-  if(laserTrails_.trails().contains(session)||
+  if(transientTrails_.trails().contains(session)||
       (samples.front().phase==input::PointerPhase::kDown&&inkBrushConfig_&&inkBrushConfig_->family==foundation::InkFamily::kLaser)){
     const auto now=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
     if(samples.front().phase==input::PointerPhase::kDown){
-        if(!laserTrails_.begin(session,*inkBrushConfig_)||!previewController_||!previewProvider_||!previewController_->begin(1,session,1,previewProvider_->generation()))return false;
+        if(!transientTrails_.begin(session,*inkBrushConfig_)||!previewController_||!previewProvider_||!previewController_->begin(1,session,1,previewProvider_->generation()))return false;
         auto style=render::PreviewStyleOverride{};style.preferCapturedPaint=true;previewController_->setPresentationStyle(style);
     }
-    for(const auto& s:samples){if(s.phase==input::PointerPhase::kCancel){laserTrails_.cancel(session);if(previewController_&&previewProvider_)(void)previewController_->retireSession(session,previewProvider_->generation());return true;}
-        if(!s.predicted&&!laserTrails_.append(session,s.x,s.y,now))return false;}
+    const auto lastTime=samples.back().timestampNs;
+    for(const auto& sample:samples){
+        if(sample.phase==input::PointerPhase::kCancel){transientTrails_.cancel(session);if(previewController_&&previewProvider_)(void)previewController_->retireSession(session,previewProvider_->generation());return true;}
+        if(sample.predicted)continue;
+        if(sample.phase==input::PointerPhase::kUp){(void)transientTrails_.end(session);continue;}
+        const auto delta=lastTime>=sample.timestampNs?lastTime-sample.timestampNs:0;
+        auto sampleTime=now>delta?now-delta:0;
+        const auto& retained=transientTrails_.trails().at(session).points;
+        if(!retained.empty())sampleTime=std::max(sampleTime,retained.back().time);
+        if(!transientTrails_.append(session,sample.x,sample.y,sampleTime))return false;
+    }
     advanceLaserPresentation(now);return true;
   }
   if (samples.front().phase == input::PointerPhase::kDown) {
@@ -1434,7 +1443,9 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
     (void)pointer;
     session->cancel();
   }
-  laserTrails_.clear();
+  transientTrails_.clear();
+  if(!objectEraseCandidates_.empty())canonicalPresentationDirty_=true;
+  objectEraseCandidates_.clear();
   brushSessions_.clear();
   brushSessionPackages_.clear();
   brushSessionSeeds_.clear();
@@ -2890,20 +2901,28 @@ bool CanvasEditingRuntime::configureInkBrush(const foundation::InkBrushConfig& c
   return true;
 }
 void CanvasEditingRuntime::advanceLaserPresentation(std::uint64_t now) noexcept {
-  std::vector<std::uint64_t> previous;
-  for(const auto& [id,t]:laserTrails_.trails()){(void)t;previous.push_back(id);}
-  (void)laserTrails_.tick(now);
+  std::vector<std::pair<std::uint64_t,bool>> previous;
+  for(const auto& [id,trail]:transientTrails_.trails())previous.push_back({id,!trail.points.empty()});
+  (void)transientTrails_.tick(now);
   if(!previewController_||!previewProvider_)return;
-  for(auto id:previous)if(!laserTrails_.trails().contains(id))(void)previewController_->retireSession(id,previewProvider_->generation());
-  const auto viewport=viewportController_->state();
-  for(const auto& [id,t]:laserTrails_.trails()){
-    ink::BrushPreviewDelta delta;delta.revision=++laserRevision_;delta.compactConfig=t.config;
-    const auto age=now>=t.points.back().time?now-t.points.back().time:0;
-    delta.compactConfig->opacity*=std::clamp(1.-double(age)/(double(t.config.laserFadeMs)*1e6),0.,1.);
-    auto chunk=std::make_shared<ink::BrushPreviewDelta::Chunk>();
-    for(const auto& p:t.points)chunk->knots.push_back({p.x,p.y,32768});delta.compactChunks=chunk;
+  for(const auto& [id,visible]:previous){
+    const auto found=transientTrails_.trails().find(id);
+    if(found==transientTrails_.trails().end()){(void)previewController_->retireSession(id,previewProvider_->generation());continue;}
+    const auto& trail=found->second;
+    if(trail.points.empty()&&!visible)continue; // no idle redraw loop
+    ink::BrushPreviewDelta delta;delta.revision=++laserRevision_;
+    delta.hasPaint=true;delta.red=float(trail.config.color[0]);delta.green=float(trail.config.color[1]);
+    delta.blue=float(trail.config.color[2]);delta.alpha=float(trail.config.color[3]);delta.opacity=float(trail.config.opacity);
+    if(!trail.points.empty())delta.fadingTrail=transientTrails_.sample(id,now);
+    const auto viewport=viewportController_->state();
     (void)previewController_->updateForSession(id,delta,viewport.scale,viewport.translationX,viewport.translationY);
   }
+}
+void CanvasEditingRuntime::finishObjectEraseFeedback(std::uint64_t pointerId,bool cancel) noexcept {
+  if(objectEraseCandidates_.erase(pointerId)){
+    canonicalPresentationDirty_=true;transientOverlayDirty_=objectEraseFeedbackActive();
+  }
+  if(cancel)transientTrails_.cancel(pointerId);else (void)transientTrails_.end(pointerId);
 }
 void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
 void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
@@ -2980,6 +2999,14 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
     eraserPreviewRevisions_.erase(pointerId);
     return false;
   }
+  if(toolMode_==ToolMode::kObjectEraser){
+    foundation::InkBrushConfig trail;trail.family=foundation::InkFamily::kLaser;
+    const auto zoom=viewportController_->state().scale;
+    trail.color={.45,.45,.45,1};trail.size=6.0/zoom;trail.opacity=.65;
+    trail.laserFadeMs=240;trail.laserTailLength=110.0/zoom;
+    if(!transientTrails_.begin(pointerId,trail)){(void)eraserCancel(pointerId);return false;}
+    objectEraseCandidates_[pointerId]={};
+  }
   return true;
 }
 
@@ -2989,6 +3016,25 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
+  if(toolMode_==ToolMode::kObjectEraser){
+    auto& candidates=objectEraseCandidates_[pointerId];const auto count=candidates.size();
+    if(runtimeSceneHost_){
+      const auto tested=runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+          {float(x),float(y)},eraserDiameterLogicalPx_*.5F,
+          canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
+              static_cast<std::uint32_t>(canvas::HitTestKindMask::kVectorStroke)|
+              static_cast<std::uint32_t>(canvas::HitTestKindMask::kDabStroke)),false},64U});
+      if(tested)for(const auto id:tested.value().frontToBack)candidates.insert(id);
+    }
+    const auto now=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    if(!transientTrails_.append(pointerId,x,y,now))return false;
+    advanceLaserPresentation(now);
+    if(candidates.size()!=count){
+      transientOverlayDirty_=true;
+      if(!platformPresentationDeferred_)(void)presentTransientOverlayFrame(nextCanonicalFrameId());
+    }
+    return !renderPreview||platformPresentationDeferred_||previewController_->renderIfDirty(previewController_->presentationStyle());
+  }
   constexpr std::size_t kSegments = 24U;
   const double kRadius = static_cast<double>(eraserDiameterLogicalPx_) * 0.5;
   ink::BrushPreviewDelta delta;
@@ -3041,8 +3087,8 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
     // Preview is an independent transparent overlay.  For partial erase we
     // paint the swept region with the canvas background so the user sees the
     // final visual effect grow sample-by-sample; semantic masks are still
-    // committed only by eraserFinish(). Object eraser keeps the amber tool
-    // indicator and its existing commit-time disappearance semantics.
+    // committed only by eraserFinish(). Object erase uses the independent
+    // fading trail and candidate feedback handled above.
     style.red = 1.0F;
     style.green = 1.0F;
     style.blue = 1.0F;
@@ -3100,14 +3146,16 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
 bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
-  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
+  const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
+  if(objectEraser)finishObjectEraseFeedback(pointerId,false);
+  if (!objectEraser && previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end()) return false;
   if (!canonicalWriteAdmission()) return false;
   if (it->second.empty() || runtimeSceneHost_ == nullptr) {
     eraserTraces_.erase(it);
     eraserPreviewRevisions_.erase(pointerId);
-    if (previewController_ != nullptr && previewController_->active()) {
+    if (!objectEraser && previewController_ != nullptr && previewController_->active()) {
       (void)previewController_->cancelSession(pointerId);
       (void)previewController_->retireSession(pointerId, previewProvider_->generation());
     }
@@ -3122,7 +3170,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     if (!tested) {
       eraserTraces_.erase(it);
       eraserPreviewRevisions_.erase(pointerId);
-      if (previewController_ != nullptr && previewController_->active() &&
+      if (!objectEraser && previewController_ != nullptr && previewController_->active() &&
           previewProvider_ != nullptr) {
         (void)previewController_->cancelSession(pointerId);
         (void)previewController_->retireSession(pointerId, previewProvider_->generation());
@@ -3134,7 +3182,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   if (hit.empty()) {
     eraserTraces_.erase(it);
     eraserPreviewRevisions_.erase(pointerId);
-    if (previewController_ != nullptr && previewController_->active()) {
+    if (!objectEraser && previewController_ != nullptr && previewController_->active()) {
       (void)previewController_->cancelSession(pointerId);
       (void)previewController_->retireSession(pointerId, previewProvider_->generation());
     }
@@ -3303,16 +3351,17 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     // eraser overlay is retired immediately.
     (void)presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
   }
-  if (previewController_ != nullptr && previewController_->active()) {
+  if (!objectEraser && previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
         !previewController_->retireSession(pointerId, previewProvider_->generation())) return false;
   }
-  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
+  if (!objectEraser && previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   return true;
 }
 
 bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
   std::lock_guard lock(previewStateMutex_);
+  finishObjectEraseFeedback(pointerId,true);
   const bool erased = eraserTraces_.erase(pointerId) != 0U;
   eraserPreviewRevisions_.erase(pointerId);
   // Hide the platform overlay before any clear/retire present. DirectComposition
@@ -5036,7 +5085,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   transientOverlayDirty_ = true;
   if (!surface_.available || frameId == 0U || previewProvider_ == nullptr ||
       runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
-      (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && selectionOverlay() == nullptr)) {
+      (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && selectionOverlay() == nullptr)) {
     return false;
   }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
@@ -5068,7 +5117,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   }
   // Canonical and preview providers have independent generations. Validate
   // the transient plan against the provider it actually renders into.
-  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
+  auto* target = (platformPresentationDeferred_||objectEraseFeedbackActive()) ? activeSurfaceProvider() : previewProvider_;
   if (target == nullptr) return false;
   const render::FrameState frame{
       viewId_,
@@ -5263,6 +5312,11 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     }
   }
   applyContainerPreview(references.value());
+  if(objectEraseFeedbackActive()){
+    for(auto& entry:references.value().entries)
+      for(const auto& [pointer,ids]:objectEraseCandidates_){(void)pointer;if(ids.contains(entry.record.objectId)){entry.presentationOpacity=.2F;break;}}
+    references.value().canonicalBytes.clear();references.value().digest.clear();
+  }
   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) return false;
   const bool connectorCreation = creationMode_ &&
@@ -5299,10 +5353,11 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
         ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
     selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
   }
+  if(objectEraseFeedbackActive()&&!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
   // Deferred editing uses the canonical target's warm cache for approximate
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
-  auto& renderer = platformPresentationDeferred_ ? skiaRenderer_ : previewRenderer_;
+  auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
@@ -5311,14 +5366,14 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   if (frameCoordinator_.receive({previewCapture.identity, render::FrameRole::kPreview,
                                  true, render::RuntimePresentEvidence::kApproximate}) !=
       render::RuntimeFrameDisposition::kAccepted) return false;
-  previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
+  if(!objectEraseFeedbackActive())previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
   transientOverlayDirty_ = false;
   return true;
 }
 
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
-  if (!creationActive() && !selectionTransformActive() && !regionSelectionActive()) return clearTransientOverlay();
+  if (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive()) return clearTransientOverlay();
   return presentTransientOverlayFrame(nextCanonicalFrameId(),true);
 }
 

@@ -1301,6 +1301,16 @@ int main(int argc,char** argv) {
                 require(maximum<=2,"ordered run changes occlusion/erase or excessive quantization");
             }
             require(retained.renderCacheWork().retainedRunBuilds==builds&&retained.renderCacheWork().retainedRunHits>=6,"transform rebuilt static front/back runs");
+            const auto beforeFeedback=pixels(provider);
+            sources[0].presentationOpacity=.2F;
+            const auto dimmed=plan(569,sources);
+            require(retained.renderTransientOverlay(provider,dimmed,&overlay).code==BackendSubmissionCode::kAccepted&&
+                oracle.renderTransientOverlay(reference,dimmed,&overlay).code==BackendSubmissionCode::kAccepted,"feedback opacity presentation");
+            const auto feedbackPixels=pixels(provider),directPixels=pixels(reference);
+            require(feedbackPixels!=beforeFeedback,"cached run ignored candidate opacity");
+            for(std::size_t n=0;n<feedbackPixels.size();++n)
+                require(std::abs(int(feedbackPixels[n])-int(directPixels[n]))<=2,"cached feedback differs from Direct");
+            sources[0].presentationOpacity=1;
             // Content, order, camera, target and resource changes must never
             // reuse old pixels, including remove/readd with a repeated ID.
             auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content.get();

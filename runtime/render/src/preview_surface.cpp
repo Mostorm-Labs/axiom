@@ -91,6 +91,7 @@ bool PreviewSurfaceController::updateForSession(
     contour->outline = delta.outline;
     contour->dabs = delta.dabs;
     contour->roundStroke = delta.roundStroke;
+    contour->fadingTrail = delta.fadingTrail;
     contour->compactSeed=delta.compactSeed;contour->compactConfig=delta.compactConfig;contour->compactChunks=delta.compactChunks;
     geometry_.revision = std::max(geometry_.revision, delta.revision);
     if (session == defaultSession_) {
@@ -134,6 +135,7 @@ bool PreviewSurfaceController::cancelSession(std::uint64_t session) noexcept {
     it->outline.clear();
     it->dabs.clear();
     it->roundStroke.reset();
+    it->fadingTrail.reset();
     it->compactChunks.reset();it->compactConfig.reset();
     ++it->revision;
     if (session == defaultSession_) { geometry_.outline.clear(); geometry_.dabs.clear(); }
@@ -215,7 +217,8 @@ bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) 
     bool hasGeometry = false;
     for (const auto& contour : geometry_.contours)
         hasGeometry |= !contour.outline.empty() || !contour.dabs.empty() || bool(contour.compactChunks) ||
-            (contour.roundStroke && !contour.roundStroke->points.empty());
+            (contour.roundStroke && !contour.roundStroke->points.empty()) ||
+            (contour.fadingTrail && !contour.fadingTrail->points.empty());
     const auto result = !hasGeometry
         ? renderer_.clearPreview(provider_, geometry_.surfaceGeneration)
         : renderer_.renderPreview(provider_, geometry_, style);

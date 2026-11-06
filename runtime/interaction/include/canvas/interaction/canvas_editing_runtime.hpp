@@ -327,7 +327,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool configureInkBrush(const foundation::InkBrushConfig&) noexcept;
   void advanceLaserPresentation(std::uint64_t monotonicNs) noexcept;
-  [[nodiscard]] bool laserActive()const noexcept{return laserTrails_.activeCount()!=0;}
+  [[nodiscard]] bool laserActive()const noexcept{return transientTrails_.activeCount()!=0;}
   [[nodiscard]] std::optional<foundation::InkBrushConfig> inkBrushConfig() const noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
                                    float alpha, float opacity) noexcept;
@@ -358,6 +358,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
                                   bool renderPreview = true) noexcept;
+  [[nodiscard]] bool objectEraseFeedbackActive() const noexcept { return !objectEraseCandidates_.empty(); }
+  void finishObjectEraseFeedback(std::uint64_t pointerId, bool cancel) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserCancel(std::uint64_t pointerId) noexcept;
   [[nodiscard]] ToolMode toolMode() const noexcept { return toolMode_; }
@@ -747,7 +749,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
   std::optional<foundation::InkBrushConfig> inkBrushConfig_;
-  ink::LaserTrail laserTrails_;
+  ink::TransientTrails transientTrails_;
   std::uint64_t laserRevision_=0;
   bool panTool_ = false;
   std::uint32_t eraserMode_ = 2U;
@@ -766,6 +768,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   float eraserDiameterLogicalPx_ = 18.0F;
   std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
   std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
+  std::unordered_map<std::uint64_t, std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash>> objectEraseCandidates_;
   std::vector<render::BrushRenderPoint> committedBrushPoints_;
   std::uint64_t brushDigest_ = 0;
   std::uint64_t brushResolvedStateDigest_ = 0;

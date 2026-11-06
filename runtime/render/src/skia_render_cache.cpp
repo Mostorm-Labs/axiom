@@ -418,7 +418,7 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
     if(run.end>plan.referenceDrawList.entries.size()||run.end-run.begin!=run.stamps.size())return false;
     for(std::size_t i=run.begin;i<run.end;++i){
         const auto& entry=plan.referenceDrawList.entries[i];const auto* group=groups_.find(entry.record.objectId);
-        if(!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
+        if(entry.presentationOpacity!=1.0F||!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
     }
     return true;
 }
@@ -430,7 +430,7 @@ void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
         const auto& t=entry.record.transform;
         // Identity compact entries have destination-independent isolation in
         // the shared mapping. Legacy destination-clear never enters a run.
-        return entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
+        return entry.presentationOpacity==1.0F&&entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
             entry.contributesPixels&&entry.record.eraseMasks.empty()&&t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
     };
     std::erase_if(runs_,[&](const auto& run){return !validRun(run,plan);});

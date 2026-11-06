@@ -1016,6 +1016,11 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     for (std::size_t index=begin;index<end;++index) {
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
+        SkAutoCanvasRestore feedbackRestore(&canvas, false);
+        if (entry.presentationOpacity != 1.0F) {
+            SkPaint feedback; feedback.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
+            canvas.saveLayer(nullptr, &feedback);
+        }
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         if (cache) {

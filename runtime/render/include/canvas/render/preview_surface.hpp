@@ -54,6 +54,7 @@ struct PreviewGeometry final {
         std::vector<ink::reference::StrokeOutlinePoint> outline;
         std::vector<ink::BrushDab> dabs;
         std::optional<ink::RoundStrokePreview> roundStroke;
+        std::optional<ink::FadingTrailPreview> fadingTrail;
         std::optional<foundation::InkBrushConfig> compactConfig;
     std::uint64_t compactSeed=0;
         std::shared_ptr<const ink::BrushPreviewDelta::Chunk> compactChunks;

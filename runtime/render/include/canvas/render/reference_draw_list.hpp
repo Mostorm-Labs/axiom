@@ -124,6 +124,8 @@ struct ReferenceTraversalEntry final {
     bool geometryChunked = false;
     std::optional<NavigationChunkSpan> navigationChunkSpan = std::nullopt;
 
+    // Frame-local feedback only; excluded from canonical reference bytes.
+    float presentationOpacity = 1.0F;
     bool operator==(const ReferenceTraversalEntry&) const = default;
 };
 

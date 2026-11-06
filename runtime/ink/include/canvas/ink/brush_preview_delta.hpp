@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include "canvas/runtime/ink_brush.hpp"
+#include "canvas/ink/transient_trail_geometry.hpp"
 #include "canvas/ink/compact_contour.hpp"
 
 namespace canvas::ink {
@@ -48,6 +49,7 @@ struct BrushPreviewDelta final {
     std::vector<reference::StrokeOutlinePoint> outline;
     std::vector<BrushDab> dabs;
     std::optional<RoundStrokePreview> roundStroke;
+    std::optional<FadingTrailPreview> fadingTrail;
     std::optional<foundation::InkBrushConfig> compactConfig;
     std::uint64_t compactSeed=0;
     // Immutable shared chunks keep stable prefix publications O(1). New
