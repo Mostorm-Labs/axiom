@@ -256,7 +256,7 @@ void pumpWindowsText(State& state) {
     else
         SetWindowTextW(
             state.window,
-            L"Axiom Minimal Runtime Host - T: Text / Enter: Finish / Ctrl+Enter: Paragraph");
+            L"Axiom Minimal Runtime Host - T: Text / Enter: Paragraph / Ctrl+Enter: Finish");
 }
 std::optional<LRESULT> windowsTextMessage(State& state, UINT message, WPARAM key, LPARAM flags) {
     using namespace canvas::runtime;
@@ -392,7 +392,7 @@ std::optional<LRESULT> windowsTextMessage(State& state, UINT message, WPARAM key
     if (message == WM_KEYDOWN && !state.nativeComposing && key != VK_PROCESSKEY) {
         const bool control = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
         if (key == VK_RETURN) {
-            textIntent(state, control ? TextIntentKind::kInsertParagraph : TextIntentKind::kFinish);
+            textIntent(state, control ? TextIntentKind::kFinish : TextIntentKind::kInsertParagraph);
             return 0;
         }
         if (key == VK_ESCAPE) {

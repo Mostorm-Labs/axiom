@@ -13,9 +13,9 @@ const observation = {checks: {}, errors: [], exceptions: [], input: 'Chrome CDP 
 try {
   await fs.mkdir(files);
   const hashes = {};
-  for (const name of ['axiom.mjs', 'internal', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html']) {
+  for (const name of ['axiom.mjs', 'api', 'internal', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html']) {
     await fs.cp(path.resolve(process.argv[2], name), path.join(files, name), {recursive: true});
-    if (name !== 'internal') hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
+    if (!['internal','api'].includes(name)) hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
   }
   hashes['internal/axiom.mjs'] = createHash('sha256').update(await fs.readFile(path.join(files, 'internal/axiom.mjs'))).digest('hex');
   observation.files = hashes;
@@ -103,10 +103,11 @@ try {
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
   for(let n=0;!await evaluate("document.getElementById('tools')?.getAttribute('aria-busy')==='false'");++n){if(n>300)throw Error('Demo failed to initialize');await delay(50);}
   await evaluate("document.getElementById('table-open').click();document.getElementById('table-rows').value='2';document.getElementById('table-columns').value='3';document.getElementById('table-place').click()");await delay(200);
-  const placement=await evaluate("(()=>{const r=document.querySelector('#canvas canvas').getBoundingClientRect();return {x:r.left+120,y:r.top+100};})()");await click(placement);await delay(200);
+  const placement=await evaluate("(()=>{const r=document.querySelector('#canvas canvas').getBoundingClientRect();return {x:r.left+120,y:r.top+220};})()");await click(placement);await delay(200);
   observation.checks.demoTableControls=await evaluate("!document.getElementById('table-parameters').hidden&&document.getElementById('table-row-height').value==='48'");
-  await evaluate("document.getElementById('table-edit').click()");await delay(150);await send('Input.insertText',{text:'表格 Demo'});await delay(150);
-  await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});await delay(150);
+  observation.checks.demoAutoEditor=await evaluate("document.activeElement?.id.endsWith('-ime')");
+  await send('Input.insertText',{text:'表格 Demo'});await delay(150);
+  await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',modifiers:2,windowsVirtualKeyCode:13});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',modifiers:2,windowsVirtualKeyCode:13});await delay(150);
   await evaluate("const h=document.getElementById('table-row-height');h.value='64';h.dispatchEvent(new Event('change',{bubbles:true}))");await delay(150);
   observation.checks.demoResize=await evaluate("document.getElementById('table-row-height').value==='64'&&document.getElementById('status').dataset.error==='false'");
   await evaluate("document.getElementById('undo').click()");await delay(150);observation.checks.demoUndo=await evaluate("document.getElementById('table-row-height').value==='48'");

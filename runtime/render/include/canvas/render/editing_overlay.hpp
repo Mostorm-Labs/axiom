@@ -104,6 +104,7 @@ class EditingOverlay final {
 
     std::vector<std::array<float,8>> textSelection;
     std::optional<std::array<float,8>> textCaret;
+    std::optional<std::array<float,8>> textBox;
     std::vector<SelectionOutline> readOnlyOutlines;
     std::vector<SelectionOutline> candidateOutlines;
     std::vector<ScreenPoint> acquisitionOutline;

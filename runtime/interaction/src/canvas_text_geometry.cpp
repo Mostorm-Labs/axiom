@@ -358,12 +358,103 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
     }
     return out;
 }
+void CanvasEditingRuntime::selectCreatedObject(semantic::ObjectId id, bool editText) noexcept {
+    if (!setSelectionAcquisitionMode(runtime::CanvasSelectionMode::kPoint)) return;
+    const auto root = resolveSelectionRoot(id);
+    if (!root.isZero()) (void)selection_.click(root);
+    else selection_.cancel();
+    canonicalPresentationDirty_ = true;
+    if (editText) {
+        runtime::TextIntent edit;
+        edit.kind = runtime::TextIntentKind::kEdit;
+        edit.object = id;
+        if (const auto* record = semanticObjects_.find(id))
+            if (const auto* table = std::get_if<semantic::TableContent>(&record->content)) {
+                edit.row = table->rows.front().id;
+                edit.column = table->columns.front().id;
+            }
+        if (auto* editor = interaction_->textSession()) (void)editor->intent(edit);
+    }
+}
+void CanvasEditingRuntime::textFinished(semantic::ObjectId id) noexcept {
+    selectCreatedObject(id);
+}
+std::optional<std::array<float,8>> CanvasEditingRuntime::textEditingBox() {
+    semantic::Transform2D transform;
+    float width = 320, height = 24;
+    if (textCreation_) {
+        transform.tx = std::min(textCreation_->startX, textCreation_->currentX);
+        transform.ty = textCreation_->startY;
+        if (textCreation_->dragged)
+            width = std::max(24.0F, std::abs(textCreation_->currentX-textCreation_->startX));
+    } else {
+        const auto object = textPresentation();
+        if (!object || object->kind != semantic::ObjectKind::kRichText || object->placement.parent_id)
+            return {};
+        const auto* content = std::get_if<semantic::RichTextContent>(&object->content);
+        if (!content || !content->layout) return {};
+        transform = object->transform;
+        width = static_cast<float>(content->layout->wrap_width);
+        if (const auto layout = textLayoutService_->resolve(object->id, *content))
+            height = std::max(height, layout->localBounds.bottom);
+    }
+    const auto view = viewportGesture();
+    std::array<float,8> box{};
+    const std::array<foundation::WorldPoint,4> corners{{{0,0},{width,0},{width,height},{0,height}}};
+    for (std::size_t i=0;i<4;++i) {
+        box[i*2] = static_cast<float>((transform.a*corners[i].x+transform.c*corners[i].y+transform.tx)*view.scale+view.translationX);
+        box[i*2+1] = static_cast<float>((transform.b*corners[i].x+transform.d*corners[i].y+transform.ty)*view.scale+view.translationY);
+    }
+    return box;
+}
 bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
     auto* editor = interaction_->textSession();
     if (!editor)
         return false;
     auto state = editor->read();
     const bool active = state.phase != runtime::TextPhase::kClosed;
+    if (textCreation_) {
+        if (sample.phase == input::PointerPhase::kDown && sample.key != textCreation_->key) {
+            textPointerKeys_.insert(sample.key);
+            textCreation_.reset();
+            transientOverlayDirty_ = false;
+            transientOverlayHandoffPending_ = true;
+            canonicalPresentationDirty_ = true;
+            return true;
+        }
+        if (sample.key == textCreation_->key) {
+            const auto point = viewToContent(sample.x, sample.y);
+            textCreation_->currentX = point.first;
+            if (std::abs(point.first-textCreation_->startX)*viewportGesture().scale >= 4)
+                textCreation_->dragged = true;
+            if (sample.phase == input::PointerPhase::kCancel) textCreation_.reset();
+            else if (sample.phase == input::PointerPhase::kUp) {
+                const auto draft = *textCreation_;
+                textCreation_.reset();
+                runtime::TextIntent create;
+                create.kind = runtime::TextIntentKind::kCreate;
+                const auto view = viewportGesture();
+                create.viewX = std::min(draft.startX,draft.currentX)*view.scale+view.translationX;
+                create.viewY = draft.startY*view.scale+view.translationY;
+                if (editor->intent(create).status == runtime::TextStatus::kApplied && draft.dragged) {
+                    runtime::TextIntent width;
+                    width.kind = runtime::TextIntentKind::kSetWidth;
+                    width.token = editor->read().token;
+                    width.width = std::max(24.0F,std::abs(draft.currentX-draft.startX));
+                    (void)editor->intent(width);
+                }
+            }
+            if (sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel)
+                textPointerKeys_.erase(sample.key);
+            if (textCreation_) (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+            else {
+                transientOverlayDirty_ = false;
+                transientOverlayHandoffPending_ = true;
+            }
+            canonicalPresentationDirty_ = true;
+            return true;
+        }
+    }
     if (sample.phase == input::PointerPhase::kDown && (textTool_ || active)) {
         const float x = sample.x, y = sample.y;
         const auto existing = hitTextAtView(x, y);
@@ -381,6 +472,14 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             return true;
         textSelectionPointer_ = sample.key;
         if (!active) {
+            if (textPointerKeys_.size() != 1) return true;
+            if (existing.isZero()) {
+                const auto point = viewToContent(x,y);
+                textCreation_ = TextCreation{sample.key,point.first,point.second,point.first,false};
+                (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+                canonicalPresentationDirty_ = true;
+                return true;
+            }
             runtime::TextIntent create;
             const auto existingForEdit = hitTextAtView(x, y);
             create.kind = existingForEdit.isZero() ? runtime::TextIntentKind::kCreate

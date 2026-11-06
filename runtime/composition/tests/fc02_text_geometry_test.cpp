@@ -244,9 +244,9 @@ TEST(FC02StickyLabel, SelectedExpandButtonCommitsSquareGrowth) {
     const auto& sticky = std::get<semantic::StickyContent>(after->content);
     EXPECT_GT(sticky.width, 48.0);
     EXPECT_EQ(sticky.width, sticky.height);
-    // Sticky editing first creates its lazy RichText child, then commits the
-    // text and the explicit square expansion.
-    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 3U);
+    // First input inserts the lazy child with its text in one operation;
+    // the explicit square expansion is the second operation.
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 2U);
 }
 TEST(FC02StickyLabel, SelectedExpandButtonGrowsForHorizontalOverflow) {
     Host h(true);
@@ -1421,14 +1421,14 @@ TEST(FC02Geometry, TextFrameShowsWrapExtentAfterEditingEnds) {
     ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
     std::vector<std::uint8_t> pixels(256 * 256 * 4);
     ASSERT_TRUE(h.runtime.readCanonicalRgba(pixels));
-    std::size_t dark = 0;
+    std::size_t outline = 0;
     // Text starts at x=20 with width=180. Its right border is far from glyph A.
     for (std::size_t y = 30; y < 50; ++y)
         for (std::size_t x = 199; x <= 201; ++x) {
             const auto i = (y * 256 + x) * 4;
-            if (pixels[i] < 128 && pixels[i + 1] < 128 && pixels[i + 2] < 128) ++dark;
+            if (pixels[i+2] > pixels[i]+30 && pixels[i+2] > pixels[i+1]+30 && pixels[i] < 200) ++outline;
         }
-    EXPECT_GT(dark, 8U) << "A black frame must show the full persisted wrap width";
+    EXPECT_GT(outline, 8U) << "The selected text outline must show the persisted wrap width";
     EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations);
 }
@@ -1883,5 +1883,92 @@ TEST(SelectionBatch2Text, UnfilledShapeVisibleLabelParticipatesInRegionSelection
     EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
     EXPECT_EQ(h.facade.readSection().selectedRoots,std::vector{record.id});
     EXPECT_EQ(h.runtime.readback().semanticGeneration,before.semanticGeneration);
+}
+TEST(DefaultInteractions, TextFinishSelectsObjectInPointMode) {
+    Host h(true); seedShape(h, labelShape());
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status, runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, u"text").status, runtime::TextStatus::kApplied);
+    const auto id=h.facade.readTextEditor().token.object;
+    const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status, runtime::TextStatus::kApplied);
+    const auto state=h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front());
+    EXPECT_EQ(state.tool,runtime::CanvasToolKind::kSelect);
+    EXPECT_EQ(state.selectionAcquisitionMode,runtime::CanvasSelectionMode::kPoint);
+    EXPECT_EQ(state.selectedObject,id);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+}
+TEST(DefaultInteractions, CompositionFinishWaitsForNativeResultBeforeToolSwitch) {
+    Host h(true); seedShape(h, labelShape());
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status, runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kUpdate,u"中文").status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kQueued);
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).tool,runtime::CanvasToolKind::kText);
+    const auto id=h.facade.readTextEditor().token.object;
+    ASSERT_EQ(h.input(runtime::TextInputKind::kCommit,u"中文").status,runtime::TextStatus::kApplied);
+    const auto state=h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front());
+    EXPECT_EQ(state.tool,runtime::CanvasToolKind::kSelect);
+    EXPECT_EQ(state.selectedObject,id);
+}
+TEST(DefaultInteractions, FailedCompositionFinishKeepsEditorAndTool) {
+    Host h(true); seedShape(h, labelShape());
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kQueued);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kFinishFailed).status,runtime::TextStatus::kRejected);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kComposing);
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).tool,runtime::CanvasToolKind::kText);
+}
+TEST(DefaultInteractions, EmptyDraftFinishSelectsToolWithoutHistoryMutation) {
+    Host h(true); seedShape(h,labelShape());
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status,runtime::TextStatus::kApplied);
+    const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).tool,runtime::CanvasToolKind::kSelect);
+}
+TEST(DefaultInteractions, RetiredInputSourceCancelsTextCreationPreview) {
+    Host h(true); seedShape(h,labelShape());
+    ASSERT_TRUE(h.runtime.registerSource(87));
+    input::PlatformPointerBatch batch;
+    batch.samples.push_back({87,1,1,1000,240,180,0,0,0,{},{},
+        input::SampleProvenance::kConfirmedCurrent,input::PointerPhase::kDown});
+    ASSERT_TRUE(h.runtime.submit(batch));
+    EXPECT_TRUE(h.runtime.qualificationRuntime().creationActive());
+    ASSERT_TRUE(h.runtime.unregisterSource(87,2,2000));
+    EXPECT_FALSE(h.runtime.qualificationRuntime().creationActive());
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+    EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
+}
+TEST(DefaultInteractions, CompletingCompositionKeepsTheEditor) {
+    Host h(true); seedShape(h,labelShape());
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCompleteComposition).status,runtime::TextStatus::kQueued);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kCommit,u"中文").status,runtime::TextStatus::kApplied);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).tool,runtime::CanvasToolKind::kText);
+}
+TEST(DefaultInteractions, EmptyStickyDraftCaretUsesItsAncestorsWorldPose) {
+    Host h(true);
+    auto sticky=labelShape();sticky.kind=semantic::ObjectKind::kSticky;sticky.content=semantic::StickyContent{200,200};
+    seedSticky(h,sticky);
+    const auto edit=[&] {
+        runtime::TextIntent e;e.clientId=15;e.requestId=++h.request;e.target=h.facade.mountedCanvasTargets().front();
+        e.kind=runtime::TextIntentKind::kEdit;e.object=sticky.id;
+        EXPECT_EQ(h.facade.submitTextIntent(e).status,runtime::TextStatus::kQueued);EXPECT_TRUE(h.runtime.ownerPump());
+        EXPECT_EQ(h.facade.textIntentReceipt(15,h.request)->status,runtime::TextStatus::kApplied);
+    };
+    edit();const auto before=h.facade.readTextGeometry();ASSERT_TRUE(before.available);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    runtime::SectionIntent wrap;wrap.action=runtime::SectionAction::kWrap;wrap.objects={sticky.id};wrap.objectId=foundation::ObjectId::fromUint64(6003);
+    ASSERT_EQ(h.facade.submitSectionIntent(wrap,1,8810).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    runtime::CanvasControlRequest move;move.clientId=8810;move.requestId=2;move.target=h.facade.mountedCanvasTargets().front();
+    move.payload.kind=runtime::CanvasControlPayloadKind::kSelectedTransform;move.payload.transform={1,0,0,1,30,40};
+    ASSERT_EQ(h.facade.submitCanvasControl(move).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    edit();const auto after=h.facade.readTextGeometry();ASSERT_TRUE(after.available);
+    EXPECT_NEAR(after.caret[0]-before.caret[0],30,0.01F);EXPECT_NEAR(after.caret[1]-before.caret[1],40,0.01F);
+    EXPECT_EQ(h.runtime.semanticObjectCount(),2U); // Sticky + Section, no empty child.
 }
 } // namespace

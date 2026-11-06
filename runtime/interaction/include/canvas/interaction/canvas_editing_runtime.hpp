@@ -185,7 +185,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
   [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                      float x, float y) noexcept;
-  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty(); }
+  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty() || textCreation_.has_value(); }
   [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
   [[nodiscard]] const CreationPreview& creationPreview() const noexcept { static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
   [[nodiscard]] std::optional<input::PointerKey> platformKey(
@@ -319,6 +319,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
   bool setTextTool(bool value) noexcept {
     if (textTool_ != value) resetTouchTextTap();
+    if (!value && textCreation_) {textCreation_.reset();canonicalPresentationDirty_=true;}
     textTool_=value;
     return true;
   }
@@ -679,6 +680,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool observeTouchTextTap(const input::PointerSample&);
   bool beginShapeTextEditAt(float, float, semantic::ObjectId);
   void resetTouchTextTap() noexcept;
+  void selectCreatedObject(semantic::ObjectId, bool editText = false) noexcept;
+  void textFinished(semantic::ObjectId) noexcept override;
+  struct TextCreation {
+    input::PointerKey key;
+    float startX = 0, startY = 0, currentX = 0;
+    bool dragged = false;
+  };
+  std::optional<TextCreation> textCreation_;
+  std::optional<std::array<float,8>> textEditingBox();
   bool shapeExpandPointer(const input::PointerSample&);
   std::optional<semantic::Transform2D> fittedShapeLabelTransform(const semantic::ObjectRecord&);
   std::optional<semantic::ObjectRecord> textPresentation();

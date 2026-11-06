@@ -77,6 +77,25 @@ strings for 64-bit revisions/tokens. Command promises resolve only after the
 Runtime's result is available; this does not acknowledge durable storage.
 Application callbacks are deferred and must not replace native IME results.
 
+Local drawing tools are one-shot for shapes, lines and arrows: a successful
+pointer creation switches to point selection and selects the new object. Sticky
+creation opens its text editor; Table creation opens its first cell. Image import
+selects the image in point mode even if a lasso was used previously. These local
+interaction transitions do not run for restore, remote application or Undo/Redo.
+The Demo chooses its round brush at startup; the SDK's initial brush is unchanged.
+
+With the Text tool, a click opens an empty editor at the default 320 world-unit
+wrap width. A horizontal drag shows a dashed, presentation-only box; release
+opens the editor at the dragged width (minimum 24 world units). Text height grows
+with its layout. Cancelling the drag creates no object or operation. An empty
+editor remains a draft until actual text is inserted, including Sticky text.
+Enter inserts a paragraph; Ctrl+Enter or Cmd+Enter finishes editing. Clicking
+outside finishes and consumes that click. A successful finish switches to point
+selection and selects the text object, Sticky parent or Table. Input-method Enter
+remains owned by the IME, and pending or failed native completion does not count
+as a successful finish. Text still uses the existing incremental History/Operation
+path; finishing an editor does not itself acknowledge persistence.
+
 Document backgrounds use complete value DTOs:
 
 ```js

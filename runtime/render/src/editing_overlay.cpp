@@ -36,6 +36,7 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 } // namespace
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
+    textBox.reset();
     creationPreview_.reset();
     creationRoute_.reset();
     if (input.selectedObject.isZero() || !input.worldBounds.isFiniteAndOrdered()) {
@@ -128,6 +129,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 }
 
 void EditingOverlay::clear() noexcept {
+    textBox.reset();
     readOnlyOutlines.clear();candidateOutlines.clear();acquisitionOutline.clear();
     creationPreview_.reset();
     creationRoute_.reset();

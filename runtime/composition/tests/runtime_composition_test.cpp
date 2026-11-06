@@ -733,6 +733,8 @@ void fitIncludesEarlierUnchangedObjects() {
   payload.creationPreset=runtime::CanvasCreationPreset::kRectangle; control(payload);
   std::vector<foundation::WorldRect> originals;
   for(unsigned i=0;i<7;++i) {
+    // Creation is one-shot; explicitly rearm before each independent Shape.
+    control(payload);
     const float x=20.0F+180.0F*(i%4),y=40.0F+200.0F*(i/4);
     pointer(input::PointerPhase::kDown,x,y); pointer(input::PointerPhase::kUp,x+90,y+90);
     originals.push_back({x,y,x+90,y+90});

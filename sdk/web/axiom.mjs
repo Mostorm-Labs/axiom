@@ -218,7 +218,11 @@ export async function createRuntime({mount, documentId, restore, initialResource
     };
     const tableCommand=(action,options={})=>{
       let request;try{request=tableOptions(action,options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}
-      return enqueue(()=>call('table',{...request,action}));
+      return enqueue(()=>{const result=call('table',{...request,action});
+        // Runtime owns editor entry. The adapter only gives that local editor
+        // its native input focus, including programmatic Table creation.
+        if(action==='create'&&text.snapshot().phase!==0){canonical.focus({preventScroll:true});text.sync();}
+        return result;});
     };
     const tableEdit=options=>{
       let request;try{request=tableOptions('select',options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}

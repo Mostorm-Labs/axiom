@@ -1,0 +1,79 @@
+{
+  "task": "uiux-default-interaction-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "8b61c9de723e5a3c1155b7ed1290a46f9e7a4f3a",
+    "relation": "ancestor"
+  },
+  "authority": "User-approved default interaction rules and response annotations, 2026-11-06; additive interaction policy, not a semantic schema or ABI freeze",
+  "owners": {
+    "creation_and_selection": "CanvasEditingRuntime",
+    "text_lifecycle": "TextEditSession through TextEditPort",
+    "canonical_changes": "existing OperationEngine/History/publication path",
+    "presentation": "shared EditingOverlay/Skia",
+    "native_keys": "existing Web and Windows text input adapters"
+  },
+  "required_changes": [
+    "Keep Demo round brush and SDK initial brush defaults unchanged",
+    "Successful local Shape/line/arrow creation selects the created object in point selection mode",
+    "Text click uses default 320 world-unit wrap width; drag previews a dashed box and creates a width-sized editor on release; height is automatic",
+    "Dragging cancels without canonical mutation; empty text remains a draft until input",
+    "Successful local Sticky creation opens its existing shared text editor; Table creation opens its first cell",
+    "Enter inserts a paragraph, Ctrl+Enter or Cmd+Enter finishes; beforeinput line breaks also insert paragraphs",
+    "Successful text finish selects the user-facing object in point mode; pending/failed composition must not switch tools",
+    "Native composition Enter stays owned by the input method",
+    "Normal image import explicitly resets selection acquisition to point",
+    "Restore, remote operations and undo/redo do not run local creation focus policy"
+  ],
+  "forbidden_changes": [
+    "New public API, DTO, ABI, semantic format or dependency lock changes",
+    "Shell-owned selection, history, identity or text lifecycle",
+    "Fixed text height/overflow semantics",
+    "Published dependency rebuilds, publication or version bump"
+  ],
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "tests": {
+      "required": [
+        "Native shared text lifecycle tests: immediate and composition-delayed finish, failed composition, empty draft, selection-root behavior",
+        "Real Chrome copied root SDK: creation selection, click/drag/cancel text, Enter/Ctrl/Cmd finish, Sticky/Table initial edit, lasso-to-point image import, dashed pixels and read-only drag preview",
+        "Affected native composition/text/selection and rendering regressions",
+        "Existing Chrome table and public SDK consumer regressions",
+        "Runtime boundary checker"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "Local native and Chrome results under out/default-interaction-*; matching built JS/WASM/resources"
+      ],
+      "corroborative": [
+        "Interactive Web Demo at local HTTP URL; physical IME testing remains a separate user exercise"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Required behavior and regressions verified",
+        "Demo rebuilt and served for user testing",
+        "Report exact changes and platform verification limits"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

@@ -29,7 +29,9 @@ const pointer=(type,x,y)=>{const c=sdk.canvas,r=c.getBoundingClientRect();
   c.dispatchEvent(new PointerEvent(type,{pointerId:31,pointerType:'mouse',clientX:r.left+x,clientY:r.top+y,
     buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));};
 const blue=()=>{const c=sdk.canvas,g=c.getContext('webgl2'),f=g.getParameter(g.FRAMEBUFFER_BINDING),p=new Uint8Array(4),d=devicePixelRatio||1;
-  g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.round(90*d),c.height-Math.round(90*d),1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);
+  // Auto-selection now shows the Shape's centered text placeholder. Sample
+  // below it so this remains an oracle for canonical fill and frame handoff.
+  g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.round(120*d),c.height-Math.round(120*d),1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);
   return p[2]>p[0]+20&&p[3]>0;};
 try{
   sdk=await createRuntime({mount:document.getElementById('mount'),onError:e=>errors.push({code:e.code,details:e.details}),onFrame:()=>++frames});
@@ -81,6 +83,6 @@ try{
   scenarios.push('context-recovery');
   await sdk.close();
   document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,scenarios,delayed,frames});
-}catch(e){held=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,scenarios,delayed,frames,error:String(e),errors});}
+}catch(e){held=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,scenarios,delayed,frames,error:String(e),errors,state:sdk?.readState(),selection:sdk?.readSelection()});}
 finally{held=false;delayLoss=false;WebGL2RenderingContext.prototype.clientWaitSync=original;EventTarget.prototype.addEventListener=add;EventTarget.prototype.removeEventListener=remove;}
 </script>

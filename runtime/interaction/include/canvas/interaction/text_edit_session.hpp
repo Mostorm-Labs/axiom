@@ -12,6 +12,7 @@ class TextEditPort {
     virtual ~TextEditPort() = default;
     virtual bool textReady() const noexcept = 0;
     virtual bool textClosed() const noexcept = 0;
+    virtual void textFinished(semantic::ObjectId) noexcept {}
     virtual bool textWritable(semantic::ObjectId) const noexcept = 0;
     virtual semantic::ObjectId textSelectedObject() const noexcept { return {}; }
     virtual semantic::DocumentId textDocument() const noexcept = 0;
@@ -46,6 +47,7 @@ class TextEditSession final {
   private:
     void refresh();
     void end() noexcept;
+    void finishAndSelect() noexcept;
     [[nodiscard]] runtime::TextReceipt outcome(runtime::TextStatus, std::uint64_t = 0) const;
     [[nodiscard]] runtime::TextStatus replace(runtime::TextRange, const std::u16string&);
     [[nodiscard]] runtime::TextStatus format(const runtime::TextFormatPatch&);

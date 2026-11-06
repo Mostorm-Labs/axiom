@@ -17,6 +17,7 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkVertices.h"
+#include "include/effects/SkDashPathEffect.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
@@ -155,6 +156,17 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
     canvas.scale(metrics.physicalWidth / metrics.logicalWidth,
                   metrics.physicalHeight / metrics.logicalHeight);
     drawAcquisition(canvas,overlay);
+    if (overlay.textBox) {
+        const auto& q=*overlay.textBox;
+        SkPathBuilder path;path.moveTo(q[0],q[1]);
+        for(std::size_t i=1;i<4;++i)path.lineTo(q[i*2],q[i*2+1]);
+        path.close();
+        SkPaint paint;paint.setAntiAlias(true);paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(1);paint.setColor4f({.50F,.45F,1,.75F},nullptr);
+        constexpr SkScalar dashes[]{7,5};
+        paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(dashes,2),0));
+        canvas.drawPath(path.detach(),paint);
+    }
     if(overlay.textCaret){
         SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
         const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas.drawPath(path.detach(),paint);};

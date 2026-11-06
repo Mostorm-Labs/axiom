@@ -38,7 +38,8 @@ runtime::TableResult CanvasEditingRuntime::tableCommand(const runtime::TableRequ
     TableContent t;for(std::uint32_t i=0;i<request.rows;++i)t.rows.push_back({allocateTextIdentity(),48});for(std::uint32_t i=0;i<request.columns;++i)t.columns.push_back({allocateTextIdentity(),120});t.cells.resize(request.rows*request.columns);widths(t);object.content=t;materializeStructuralAppearance(object);
     const auto f=allocateOperationId(),u=allocateOperationId();
     if(!applyLocalHistoryOperation({f,documentId_,1,1,InsertObjectsOp{{object}}},{u,documentId_,1,1,DeleteObjectsOp{{object.id}}}))return failure;
-    (void)selection_.click(object.id);tableObject_=object.id;tableRow_=t.rows.front().id;tableColumn_=t.columns.front().id;canonicalPresentationDirty_=true;
+    tableObject_=object.id;tableRow_=t.rows.front().id;tableColumn_=t.columns.front().id;
+    selectCreatedObject(object.id, true);
     return {true,object.id,semanticGeneration_.current().value()};
   }
   const auto* object=semanticObjects_.find(request.object.isZero()?selection_.primary():request.object);if(!object||object->kind!=ObjectKind::kTable||!textWritable(object->id))return failure;

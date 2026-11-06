@@ -158,11 +158,7 @@ ImageCommandReceipt CanvasRuntimeFacade::importImage(const ImageImportRequest& r
     if (registration.state != ImageCommandState::kApplied) return registration;
     const auto result = importImage(prepared);
     if (result.state == ImageCommandState::kApplied) {
-      (void)runtime_.setTextTool(false);
-      (void)runtime_.setPanTool(false);
-      (void)runtime_.setSelectionMode(true);
-      (void)runtime_.selection_.click(result.objectId);
-      runtime_.markCanonicalPresentationDirty();
+      runtime_.selectCreatedObject(result.objectId);
     }
     return result;
   }

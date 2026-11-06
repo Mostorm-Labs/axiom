@@ -849,7 +849,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   // Normalize/retire full pointer identities even while the text editor owns input.
   if(textTool_ || (interaction_->textSession() && interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed) || !textPointerKeys_.empty()){
     for(const auto& sample:routedSamples)(void)textPointer(sample);
-    if(routed.terminalCancel)textPointerKeys_.clear();
+    if(routed.terminalCancel){textPointerKeys_.clear();textCreation_.reset();}
     return routed.accepted || routed.terminalCancel;
   }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
@@ -1362,9 +1362,10 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   if (inverseId.isZero()) return false;
   const bool applied = applyLocalHistoryOperation(std::move(operation),
       {inverseId, documentId_, 1U, 1U, semantic::DeleteObjectsOp{std::move(inverseIds)}});
-  // Keep the last transient creation frame visible until the canonical frame
-  // containing the committed object is accepted. Clearing here exposes one
-  // blank/old frame between pointer-up and the render-pump handoff.
+  // Keep the creation frame until canonical presentation, but finish the local
+  // one-shot tool only after a successful commit.
+  if (applied) selectCreatedObject(commit->record.id,
+      commit->record.kind == semantic::ObjectKind::kSticky);
   return applied;
 }
 
@@ -1398,6 +1399,8 @@ void CanvasEditingRuntime::onSessionCancel(
     const input::PlatformInteractionIngressResult& result) noexcept {
   for (const auto& sample : result.normalized.samples) {
     if (!sample.key.valid()) continue;
+    textPointerKeys_.erase(sample.key);
+    if (textCreation_ && textCreation_->key == sample.key) textCreation_.reset();
     touchTapContacts_.erase(sample.key);
     previousTouchTap_.reset();
     if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
@@ -1422,6 +1425,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   cancelConnectorRouting();
   cancelRegionSelection();acquisitionClickPointers_.clear();
   textPointerKeys_.clear();
+  textCreation_.reset();
   resetTouchTextTap();
   shapeExpandPointerKeys_.clear();
   creations_.clear();
@@ -1826,7 +1830,7 @@ bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operati
 
 bool CanvasEditingRuntime::textReady() const noexcept {
   return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
-         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
+         creations_.empty() && !textCreation_ && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
 }
 bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
   const auto* current=semanticObjects_.find(id);
@@ -4917,6 +4921,11 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
     if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
     selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
+    selectionView_->editingOverlay().textBox = textEditingBox();
+  }
+  if (textCreation_) {
+    selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    selectionView_->editingOverlay().textBox=textEditingBox();
   }
   render::RenderPreparationBudget preparation{};
   // V4 contours can finish many cheap groups inside the same time/coverage
@@ -5352,6 +5361,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     const auto route = previewRecord.kind == semantic::ObjectKind::kConnector
         ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
     selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
+  }
+  if (textCreation_) {
+    selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    selectionView_->editingOverlay().textBox=textEditingBox();
   }
   if(objectEraseFeedbackActive()&&!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
   // Deferred editing uses the canonical target's warm cache for approximate
