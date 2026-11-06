@@ -16,6 +16,8 @@ window.addEventListener('load',async()=>{
   const lines=Number(query.get('lines')??(dense?5:1));if(!Number.isInteger(lines)||lines<1||lines>8)throw Error('lines must be1..8');
   const options=dense?{width:636,height:923,shapes:2,lines,points:2048,scribble:true,scribblePhase:.63,zoom:1.59,drawLast:true,uiReads:true}:
     {width:636,height:914,shapes:2,lines,points:8192,scribble:true,zoom:.57,drawZoom:.57,transformedStroke:moved,uiReads:true,brush:{thinning:.99,streamline:.13,smoothing:.61}};
+  const started=performance.now();
+  while(!window.probe){if(performance.now()-started>30000)throw Error('sampling fixture import timeout');await new Promise(r=>setTimeout(r,25));}
   const setup=await probe.setup('mixed',false,'round-handdrawn',4,options);
   result.textContent=setup.state.objects+' objects · Zoom '+setup.state.camera.scale.toFixed(2)+' · '+setup.build.sourceRevision.slice(0,8)+'\\n可直接使用触控板。'+(moved?'笔迹移动对照':'原位笔迹');button.disabled=false;
   button.onclick=async()=>{button.disabled=true;try{const p=await probe.measure('native-browser-mixed',{mode:'wheel',burst:4,panOnly:false});

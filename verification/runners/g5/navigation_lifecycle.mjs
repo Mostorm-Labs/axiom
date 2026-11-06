@@ -9,7 +9,7 @@ import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {gzipSync} from 'node:zlib';
 import {summarizePhase} from './navigation_metrics.mjs';
-import {readFixtureModule} from './fixture_modules.mjs';
+import {readFixtureModule,waitForNavigationProbe} from './fixture_modules.mjs';
 const sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const idleMs=Number(process.argv[4]??60000),cycles=Number(process.argv[5]??6);
 const selected=process.env.AXIOM_NAV_SELECTED!=='0',modes=(process.env.AXIOM_NAV_MODES??'wheel,touch').split(',');
@@ -72,6 +72,7 @@ try{
     const record={mode,selected,panOnly,options:{width:636,height:914,points:mode==='wheel'?4096:16384,lines:mode==='wheel'?6:2,span:570,lineSpacing:65,uiReads:true,...fixtureOptions},phases:[]};
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/navigation_sampling.html`);
+      await waitForNavigationProbe(page);
       record.setup=await page.evaluate(({options,selected})=>probe.setup('mixed',selected,'round-handdrawn',4,options),{options:record.options,selected});
       if(process.env.AXIOM_NAV_QUIESCE==='1'){
         // A coarse onFrame may precede work for the requested camera. Require

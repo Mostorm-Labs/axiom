@@ -7,7 +7,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {summarizePhase} from './navigation_metrics.mjs';
-import {readFixtureModule} from './fixture_modules.mjs';
+import {readFixtureModule,waitForNavigationProbe} from './fixture_modules.mjs';
 const root=process.cwd(),sdk=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
 const repeats=Number(process.argv[4]??3),workloads=(process.argv[5]??'long-line,image,table,sticky').split(',');
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -56,7 +56,7 @@ try{
     const record={id,repeat,workload,selected};
     try{
       await page.goto(`http://127.0.0.1:${server.address().port}/sample.html`);
-      await page.waitForFunction(()=>window.probe);
+      await waitForNavigationProbe(page);
       record.setup=await page.evaluate(({workload,selected,profile,revision})=>probe.setup(workload,selected,profile,revision),{workload,selected,profile,revision});
       record.raw=await page.evaluate(()=>probe.run());
       record.summary={};
