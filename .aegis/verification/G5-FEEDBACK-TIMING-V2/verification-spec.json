@@ -1,0 +1,113 @@
+{
+  "id": "G5-FEEDBACK-TIMING-V2",
+  "stage": "P20",
+  "status": "FROZEN_FOR_OBSERVER_QUALIFICATION",
+  "repository": "https://github.com/Mostorm-Labs/axiom",
+  "anchor": "c70d0bf372746d340877858ef04445d14ed9e7d1",
+  "inputs": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "verification/evidence/performance/g5-retirement-arbitration/result.json": "aa44c35119e9bac2fc3839678e5c8410f146adc26bdf5de6eb6e4ff7d2a1c856",
+    "verification/evidence/performance/g5-retirement-arbitration/performance-violations.json": "ba02b6bae6e2c6ece8eb31ba16406f03eb98e760c64d1b390af94c5b78740e8a",
+    "verification/evidence/performance/g5-retirement-arbitration/checks/g5-retire-aa-result.json": "03ee5940b5066cf2e6c3904c0b04b2a55f882da3cb874f124f0140388e9d490a",
+    "verification/runners/g5/navigation_sampling.html": "395b7c78a7396561b6880ecbccb599c536d4319a13943ce36253c2e1a013d332",
+    "verification/runners/g5/navigation_metrics.mjs": "204683a45bfb45175dda3a58e57ba6d309ba0bac00ab4cfd2af0b2bcf0852bbc"
+  },
+  "scope": [
+    "verification/runners/g5",
+    "verification/tests",
+    "verification/evidence/performance/g5-feedback-timing-v2"
+  ],
+  "preserve": [
+    "Runtime/SDK/Brush/Scene/Skia/locks/defaults unchanged",
+    "previous BLOCKED evidence remains immutable",
+    "legacy timing fields retained;v2 cannot backfill unknown input timestamps"
+  ],
+  "obligations": [
+    {
+      "id": "input-boundary",
+      "requirement": "Measure feedback from actual event dispatch;separate pre-input harness RAF delay and final input-to-receipt latency.",
+      "invariant": "No pre-input time counts toward v2 input latency. No last-awaitRAF time silently disappears from receipt wait.",
+      "failure_mode": "Harness alignment invents input stalls and one-frame settle differences.",
+      "impact": "Materially changes performance adoption decision.",
+      "existing_independent_coverage": [
+        "legacy raw samples,GL timestamps and receipt timestamps"
+      ],
+      "residual_proof_gap": "Old logs do not retain exact event start/end;bounded retrospective audit can identify pre-input minimum but cannot reconstruct exact response.",
+      "oracle": "Hand-computed timestamp corpus plus real browser forced pre-input delay;old v2 fields absent is RED.",
+      "evidence": "RED/GREEN Node logs,real WebGL witness,versioned raw event and RAF ledger.",
+      "classification": "blocking",
+      "blocking_justification": "No other source measures actual dispatch timing in existing logs."
+    },
+    {
+      "id": "content-vs-activity",
+      "requirement": "Separate color clears from content draw/blit completion. Preserve default-framebuffer and target-canvas filtering,original calls and idle quiescence.",
+      "failure_mode": "Clear-only or offscreen work hides missing content feedback;pre-call timestamp masks long GL calls.",
+      "impact": "False continuity pass.",
+      "existing_independent_coverage": [
+        "native presented/coverage diagnostic flags,final pixels"
+      ],
+      "residual_proof_gap": "Diagnostics lack public camera-qualified presentation identity;final pixels do not detect transient gaps.",
+      "oracle": "Deterministic clear/offscreen/call-duration fixtures;real WebGL clear-only interval with two actual draws;no sampler-owned RAF when idle.",
+      "evidence": "Pure metric tests and real browser witness.",
+      "classification": "blocking",
+      "blocking_justification": "Only independent actual-target operation observer detects clear-only transient false positives."
+    },
+    {
+      "id": "ordering-and-variance",
+      "requirement": "Separate one-run observations from source-attributed repeated effects.",
+      "failure_mode": "Single maxima and order drift manufacture regression or improvement.",
+      "impact": "Wrong optimization decision.",
+      "existing_independent_coverage": [
+        "three old identical-baseline A/A pairs"
+      ],
+      "residual_proof_gap": "No v2 same-artifact control or counterbalanced same-workload comparison.",
+      "oracle": "Pilot:two AAAA blocks on pan baseline;two ABBA blocks each for DPR2 pan andzoom,all legacy prologue,1s idle,5s freeze,allrawphases retained.",
+      "evidence": "24 bounded180s/3GiB workers,clean source and locked SDK hashes,pixel/state/receipt checks.",
+      "classification": "blocking-for-method-qualification",
+      "blocking_justification": "Validates observer/run protocol. Pilot effects are corroborative only;insufficient blocks cannot pass Runtime nonregression."
+    }
+  ],
+  "pilot": {
+    "noise_blocks": 2,
+    "comparison_blocks_per_case": 2,
+    "order_noise": "AAAA",
+    "order_comparison": "ABBA",
+    "cases": [
+      "dpr2-pan",
+      "dpr2-zoom"
+    ],
+    "workers": 24,
+    "budgets_mib": [
+      32,
+      96
+    ],
+    "baseline_source": "5672f6aea1007f5bc654038353a6f5f36851a6e4",
+    "candidate_source": "3fcf642bbfdda126246e29dd1b32ec7710154f62",
+    "sdk_baseline": "out/g5-material-retained-on/js",
+    "sdk_candidate": "out/g5-retire-on/js",
+    "no_concurrent_builds_or_tests": true
+  },
+  "successor_P31_protocol": {
+    "unit": "one counterbalanced ABBA block;never individual pointer samples or draw calls",
+    "minimum_independent_blocks_per_case": 8,
+    "primary_endpoints_per_case": [
+      "worst first-content-op response across phases",
+      "worst steady content-op gap after initial response across phases",
+      "worst last-event-to-coarse-onFrame wait across phases",
+      "worst phase low-density time fraction"
+    ],
+    "cases": 2,
+    "family_tests": 8,
+    "family_alpha": 0.05,
+    "test": "one-sided exact binomial sign test on block effect minus prespecified margin;ties count as non-wins",
+    "margins": {
+      "time_ms": "max(16.7,10% of block baseline mean)",
+      "low_density_fraction": 0.02
+    },
+    "decision": "NONREGRESSION_SUPPORTED only if min blocks met,all family tests meet alpha/8 and same-artifact controls credible;otherwise REGRESSION_DETECTED or INCONCLUSIVE. Do not equate lack of significance with equivalence.",
+    "safety": "Retain every raw worst stall and existing150ms/global15% targets as separate open results;no retrospective relabeling.",
+    "assumptions": "Independent block disturbances with stable common median;counterbalancing removes linear order drift only. Report limitations;observational proxies are not camera-qualified presents or input-to-photon."
+  },
+  "terminal": "P20 method ready for new P31 or exact method blocker;no production coverage implementation or Gate PASS in this stage."
+}
