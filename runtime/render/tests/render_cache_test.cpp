@@ -1,6 +1,7 @@
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
+#include "canvas/render/image_resource.hpp"
 #include "../src/skia_navigation_tiles.hpp"
 #include "../src/skia_render_cache_internal.hpp"
 #include "include/core/SkCanvas.h"
@@ -877,6 +878,113 @@ void checkRetainedZoomReentry(){
     require(target.presentCount()==before,"reentry retained source crossed scene identity");
 }
 
+// Regressions caught: replacing wide coverage on a repeated exact completion,
+// losing that coverage on resumed pan, baking selection chrome into it, or
+// reusing it after its Scene/surface/provider binding is no longer valid.
+// The renderer has no idle timer. No calls between completion and reentry is
+// the deterministic unit equivalent of the browser's 1000ms pause.
+void checkMixedNavigationReentry(){
+    runtime::MemoryResourceProvider resources;
+    const auto imageId=ObjectId::fromUint64(98900);
+    // Actual decoded opaque red PNG; large encoded-image load is covered by
+    // pause_resume.mjs, not duplicated as a multi-megabyte unit-test asset.
+    resources.publish(imageId,{0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,
+        0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
+        0x08,0x06,0x00,0x00,0x00,0x1f,0x15,0xc4,0x89,0x00,0x00,0x00,0x0d,0x49,0x44,0x41,
+        0x54,0x78,0x9c,0x63,0xf8,0xcf,0xc0,0xf0,0x1f,0x00,0x05,0x00,0x01,0xff,0x89,0x99,
+        0x3d,0x1d,0x00,0x00,0x00,0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82});
+    ImageResourceResolver images(resources);
+    std::vector<ReferenceTraversalEntry> entries;
+    const auto add=[&](semantic::ObjectKind kind,auto content,auto command,double x,double y){
+        semantic::ObjectRecord object;object.id=ObjectId::fromUint64(98901+entries.size());
+        object.kind=kind;object.kind_version=1;object.content=content;object.transform.tx=x;object.transform.ty=y;
+        const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{989});
+        require(projection.records.size()==1,"mixed reentry fixture projection");
+        entries.push_back({projection.records.front(),true,std::move(command)});
+    };
+    semantic::ImageContent image;image.resource_id.value=imageId;
+    image.intrinsic_width=image.intrinsic_height=1;image.width=48;image.height=20;
+    add(semantic::ObjectKind::kImage,image,ImageReferenceCommand{image},16,12);
+    for(unsigned kind:{1U,2U,3U}){
+        const semantic::ShapeContent shape{kind,24,24};
+        add(semantic::ObjectKind::kShape,shape,ShapeReferenceCommand{shape},72+kind*36,8);
+    }
+    const semantic::StickyContent sticky{36,24};
+    add(semantic::ObjectKind::kSticky,sticky,StickyReferenceCommand{sticky},212,8);
+    semantic::TableContent table;
+    table.rows={{ObjectId::fromUint64(98921),12},{ObjectId::fromUint64(98922),12}};
+    table.columns={{ObjectId::fromUint64(98923),18},{ObjectId::fromUint64(98924),18}};
+    table.cells.resize(4);
+    add(semantic::ObjectKind::kTable,table,TableReferenceCommand{table,nullptr},176,100);
+    for(unsigned i=0;i<5;++i){
+        auto entry=stroke(98930+i);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.config.size=3;content.stroke.knots.clear();
+        for(unsigned k=0;k<129;++k)content.stroke.knots.push_back({8+k*1.875,50+i*10+std::sin(k*.2)*4,32768});
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+        entry.record.worldBounds={4,42,252,104};entries.push_back(std::move(entry));
+    }
+    const auto original=entries;
+    struct Scenario {const char* name;bool pan;unsigned completions;};
+    for(const auto scenario:{Scenario{"zoom-out",false,1},Scenario{"pan",true,1},
+            Scenario{"repeated zoom-out",false,3},Scenario{"repeated pan",true,3}}){
+      for(bool selected:{false,true}){
+        TestSurface target,reference;
+        require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&
+            reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"mixed reentry surfaces");
+        SkiaRenderer renderer(&images),direct(&images);RenderCacheOptions options;
+        options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;renderer.setRenderCacheOptions(options);
+        RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+        const auto wide=plan(989,entries);EditingOverlay overlay(wide.frame);
+        EditingOverlayInput input;input.selected=selected;input.selectedObject=entries.back().record.objectId;
+        input.worldBounds={70,70,200,90};require(overlay.update(input),"mixed reentry selection");
+        const auto* chrome=selected?&overlay:nullptr;
+        require(renderer.renderFrame(target,wide,chrome).code==BackendSubmissionCode::kAccepted,"mixed wide canonical");
+        double zoom=1;
+        for(unsigned i=0;i<scenario.completions;++i){zoom=2+i;
+            const auto narrow=plan(989,entries,1,{zoom,0,0,zoom,-64*zoom,0});
+            require(renderer.renderFrame(target,narrow,chrome).code==BackendSubmissionCode::kAccepted,"mixed narrow canonical");
+        }
+        const CanonicalViewportTransform camera=scenario.pan?
+            CanonicalViewportTransform{float(zoom),float(-32*zoom),0}:CanonicalViewportTransform{1,0,0};
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+        const auto presents=target.presentCount(),canonical=renderer.submissionCount();
+        const auto result=navigate(renderer,target,camera,wide.frame,query,false,chrome);
+        if(target.presentCount()!=presents+1)std::cerr<<"reentry scenario="<<scenario.name<<" selected="<<selected<<'\n';
+        require(result.code==BackendSubmissionCode::kAccepted&&target.presentCount()==presents+1&&renderer.navigationWork().presented,
+            "mixed paused navigation waited for cold coverage");
+        require(renderer.submissionCount()==canonical,"mixed reentry feedback emitted canonical receipt");
+        // This red image pixel lies outside every zoomed-in canonical source.
+        // A blank present, stale narrow image, or wrong source transform fails.
+        const auto feedback=pixels(target);const unsigned x=scenario.pan?unsigned(8*zoom):40,y=scenario.pan?unsigned(20*zoom):20;
+        const auto p=(y*256+x)*4;
+        require(feedback[p]==255&&feedback[p+1]==0&&feedback[p+2]==0&&feedback[p+3]==255,
+            "mixed reentry lost image pixels outside narrow source");
+        const auto final=plan(989,entries,1,{camera.scale,0,0,camera.scale,camera.translationX,camera.translationY});
+        require(renderer.renderFrame(target,final,chrome).code==BackendSubmissionCode::kAccepted&&
+            direct.renderFrame(reference,final,chrome).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),
+            "mixed reentry changed final canonical pixels");
+        require(entries==original,"mixed reentry mutated source data");
+      }
+    }
+    for(unsigned invalidation=0;invalidation<4;++invalidation){
+        TestSurface target,foreign;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&
+            foreign.resize(256,128).code==BackendSubmissionCode::kAccepted,"reentry invalidation surfaces");
+        SkiaRenderer renderer(&images);RenderCacheOptions options;options.navigationMaxSteps=1;renderer.setRenderCacheOptions(options);
+        require(renderer.renderFrame(target,plan(989,entries)).code==BackendSubmissionCode::kAccepted&&
+            renderer.renderFrame(target,plan(989,entries,1,{2,0,0,2,-128,0})).code==BackendSubmissionCode::kAccepted,
+            "reentry invalidation source");
+        if(invalidation==1)require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"reentry surface generation");
+        if(invalidation==3)renderer.clearRenderCache();
+        auto& output=invalidation==2?foreign:target;
+        const auto current=plan(invalidation==0?990:989,entries,output.generation());
+        NavigationSourceQuery unavailable=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&){return false;};
+        const auto before=output.presentCount();
+        (void)navigate(renderer,output,{1,0,0},current.frame,unavailable,false);
+        require(output.presentCount()==before,"reentry presented invalidated retained pixels");
+    }
+}
+
 void checkSharedCanonicalNavigation(TestSurface&) {
     TestSurface target,reference;
     require(target.resize(2048,1024).code==BackendSubmissionCode::kAccepted&&reference.resize(2048,1024).code==BackendSubmissionCode::kAccepted,"shared DPR4 targets");
@@ -1115,8 +1223,9 @@ int main(int argc,char** argv) {
         if(argc>1&&std::string_view(argv[1])=="--retirement-cells-only"){checkRetirementCells();return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--retirement-only"){checkRetirementFrame();checkRetirementCells();return finishNative(0);}
 #endif
-        if(argc>1&&std::string_view(argv[1])=="--reentry-only"){checkRetainedZoomReentry();return finishNative(0);}
-        if(argc==1)checkRetainedZoomReentry();
+        if(argc>1&&std::string_view(argv[1])=="--mixed-reentry-only"){checkMixedNavigationReentry();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--reentry-only"){checkRetainedZoomReentry();checkMixedNavigationReentry();return finishNative(0);}
+        if(argc==1){checkRetainedZoomReentry();checkMixedNavigationReentry();}
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--detail-only")){

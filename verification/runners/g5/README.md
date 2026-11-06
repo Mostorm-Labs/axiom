@@ -62,3 +62,35 @@ owner，结果仍是 host raster。通过 `ctest --test-dir <native-build> --out
 执行。`g5_locality_guards raster` 保留旧 full-clip raster 作为逐像素 oracle。
 
 本切片不等于正式 G5 全部前置闭合，未实现 Damage/RenderGroup/Tile。
+
+## 放大、暂停、再次缩小／平移回归
+
+`G5MixedNavigationReentry` 使用真实 SkiaRenderer/provider 和轻量混合场景：
+已解码 PNG、矩形／椭圆／三角形、便签、表格及 5 条曲线。固定覆盖再次缩小／
+同层平移、单次／连续 3 次精确帧完成、选中／未选中，共 8 个组合；另检查
+Scene 变化、Surface generation 变化、不同 provider 和显式缓存清理后的旧图拒绝。
+断言下一次有界工作机会即 present、宽图中可见的图片像素保留、feedback 不发出
+canonical receipt，以及最终 canonical 与 Direct 路径逐像素一致。
+
+```sh
+ctest --test-dir out/host -R 'G5(RetainedZoomReentry|MixedNavigationReentry)$' --output-on-failure
+```
+
+它们也包含在 `G5RenderCache` 和 G5 原生验证子项目中。已有私有 WebGL probe 的
+`--reentry-only` 同样运行这些用例。单元测试不 sleep 或依赖墙钟阈值：Render
+没有 idle timer，精确帧完成到下一次调用之间不做工作即可覆盖其保留状态。
+
+真实 1000ms 暂停、大图及公共 SDK wheel 路由继续通过浏览器回归运行：
+
+```sh
+G5_USER_CORPUS=1 G5_PINCH_DELTA=1 G5_EXPECT_RESPONSIVE=1 \
+python3.12 verification/runners/g5/bounded_worker.py \
+  --prefix out/reentry-zoom-worker --timeout 180 --rss-mib 3072 -- \
+  node verification/runners/g5/pause_resume.mjs /absolute/path/to/diagnostics-on/js out/reentry-zoom zoom
+```
+
+将末尾 `zoom` 改为 `pan` 并使用新的 output/prefix 可测再次平移。诊断 OFF 包不传
+`G5_EXPECT_RESPONSIVE=1`，其 native accepted-submit 数据为 unavailable，不能当作
+0ms。计时、worker 清理、文档状态和最终像素都保存在结果中；本地响应诊断不等于
+物理输入到显示延迟或 G5 Gate PASS。当前修复基线及 14 组结果见
+`verification/evidence/performance/g5-pause-resume-repair/`。

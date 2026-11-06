@@ -81,6 +81,8 @@ add_executable(g5_render_cache "${AXIOM_G5_SOURCE}/runtime/render/tests/render_c
 target_link_libraries(g5_render_cache PRIVATE canvas_runtime_composition)
 target_compile_features(g5_render_cache PRIVATE cxx_std_20)
 add_test(NAME G5RenderCache COMMAND g5_render_cache)
+add_test(NAME G5RetainedZoomReentry COMMAND g5_render_cache --reentry-only)
+add_test(NAME G5MixedNavigationReentry COMMAND g5_render_cache --mixed-reentry-only)
 add_executable(g5_render_damage "${AXIOM_G5_SOURCE}/runtime/render/tests/damage_ownership_test.cpp")
 target_link_libraries(g5_render_damage PRIVATE canvas_runtime_render)
 target_compile_features(g5_render_damage PRIVATE cxx_std_20)
