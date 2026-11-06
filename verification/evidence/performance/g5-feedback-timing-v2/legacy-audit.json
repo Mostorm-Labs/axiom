@@ -1,0 +1,6560 @@
+{
+  "scope": "Read-only audit of immutable legacy evidence;bounds only,not corrected v2 measurements or changed verdicts.",
+  "sourceManifestSha256": "05ed4d823f3c910a03c042aaac4e968d9532c19cf2717b047fde269989a55ab4",
+  "rows": [
+    {
+      "run": "dpr2-off-dense-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 58,
+      "gapStart": 5339,
+      "gapEnd": 5397,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": 58,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 116,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5347,
+          "rafTimestamp": 5343.3,
+          "interval": 8,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5364.899999976158,
+          "rafTimestamp": 5359.9,
+          "interval": 17.899999976158142,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5381.799999982119,
+          "rafTimestamp": 5376.6,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5397.899999976158,
+          "rafTimestamp": 5393.2,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 10
+        },
+        {
+          "index": 4,
+          "at": 5417.899999976158,
+          "rafTimestamp": 5410,
+          "interval": 20,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 10
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 25.599999994039536,
+      "gapStart": 6886.699999988079,
+      "gapEnd": 6912.299999982119,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 7.800000011920929,
+      "firstColorResponseUpperBoundMs": 17.799999982118607,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 131.5,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 6914.5,
+          "rafTimestamp": 6909.9,
+          "interval": 20,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 30
+        },
+        {
+          "index": 1,
+          "at": 6929.0999999940395,
+          "rafTimestamp": 6926.5,
+          "interval": 14.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 30
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.100000023841858,
+      "gapStart": 9827.399999976158,
+      "gapEnd": 9845.5,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 132.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 20,
+          "at": 9812.899999976158,
+          "rafTimestamp": 9809.7,
+          "interval": 17.399999976158142,
+          "dispatchMs": 0.5,
+          "draws": 71
+        },
+        {
+          "index": 21,
+          "at": 9828.299999982119,
+          "rafTimestamp": 9826.4,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 73
+        },
+        {
+          "index": 22,
+          "at": 9846.399999976158,
+          "rafTimestamp": 9843.1,
+          "interval": 18.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 64
+        },
+        {
+          "index": 23,
+          "at": 9863.199999988079,
+          "rafTimestamp": 9859.8,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 60
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 18.30000001192093,
+      "gapStart": 17027.79999998212,
+      "gapEnd": 17046.09999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 127.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 58,
+          "at": 17018.29999998212,
+          "rafTimestamp": 17009.5,
+          "interval": 18.5,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 68
+        },
+        {
+          "index": 59,
+          "at": 17032.69999998808,
+          "rafTimestamp": 17026.1,
+          "interval": 14.400000005960464,
+          "dispatchMs": 3.4000000059604645,
+          "draws": 58
+        },
+        {
+          "index": 60,
+          "at": 17050.5,
+          "rafTimestamp": 17042.9,
+          "interval": 17.80000001192093,
+          "dispatchMs": 1.9000000059604645,
+          "draws": 58
+        },
+        {
+          "index": 61,
+          "at": 17067.59999999404,
+          "rafTimestamp": 17059.5,
+          "interval": 17.099999994039536,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 57
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 54.5,
+      "gapStart": 5297,
+      "gapEnd": 5351.5,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": 54.30000001192093,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 116.5,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5303.799999982119,
+          "rafTimestamp": 5299.8,
+          "interval": 6.5999999940395355,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5321.799999982119,
+          "rafTimestamp": 5316.5,
+          "interval": 18,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5337.799999982119,
+          "rafTimestamp": 5333.1,
+          "interval": 16,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5352.299999982119,
+          "rafTimestamp": 5349.8,
+          "interval": 14.5,
+          "dispatchMs": 0.5,
+          "draws": 10
+        },
+        {
+          "index": 4,
+          "at": 5374.199999988079,
+          "rafTimestamp": 5366.5,
+          "interval": 21.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 10
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 31.30000001192093,
+      "gapStart": 6836.699999988079,
+      "gapEnd": 6868,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 15.199999988079071,
+      "firstColorResponseUpperBoundMs": 16.100000023841858,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 131.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 6870.199999988079,
+          "rafTimestamp": 6866.3,
+          "interval": 18.30000001192093,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 30
+        },
+        {
+          "index": 1,
+          "at": 6886,
+          "rafTimestamp": 6883.1,
+          "interval": 15.800000011920929,
+          "dispatchMs": 0.5,
+          "draws": 30
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.599999994039536,
+      "gapStart": 9966.59999999404,
+      "gapEnd": 9985.199999988079,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 117,
+      "nearbyRafSamples": [
+        {
+          "index": 31,
+          "at": 9952.59999999404,
+          "rafTimestamp": 9949.5,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 45
+        },
+        {
+          "index": 32,
+          "at": 9967.5,
+          "rafTimestamp": 9966.2,
+          "interval": 14.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 38
+        },
+        {
+          "index": 33,
+          "at": 9986.09999999404,
+          "rafTimestamp": 9983,
+          "interval": 18.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 39
+        },
+        {
+          "index": 34,
+          "at": 10002.799999982119,
+          "rafTimestamp": 9999.6,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 40
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 18.799999982118607,
+      "gapStart": 16267,
+      "gapEnd": 16285.799999982119,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 128.30000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 16,
+          "at": 16256.299999982119,
+          "rafTimestamp": 16249.3,
+          "interval": 17.400000005960464,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 78
+        },
+        {
+          "index": 17,
+          "at": 16269.699999988079,
+          "rafTimestamp": 16266,
+          "interval": 13.400000005960464,
+          "dispatchMs": 1.7000000178813934,
+          "draws": 71
+        },
+        {
+          "index": 18,
+          "at": 16289.5,
+          "rafTimestamp": 16282.7,
+          "interval": 19.80000001192093,
+          "dispatchMs": 2.4000000059604645,
+          "draws": 81
+        },
+        {
+          "index": 19,
+          "at": 16306,
+          "rafTimestamp": 16299.3,
+          "interval": 16.5,
+          "dispatchMs": 2.899999976158142,
+          "draws": 71
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 66.80000001192093,
+      "gapStart": 5640,
+      "gapEnd": 5706.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.899999976158142,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 131.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5658.200000017881,
+          "rafTimestamp": 5653.1,
+          "interval": 17.100000023841858,
+          "dispatchMs": 0.800000011920929,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5675,
+          "rafTimestamp": 5669.8,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5691,
+          "rafTimestamp": 5686.4,
+          "interval": 16,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5707.9000000059605,
+          "rafTimestamp": 5703.1,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 12
+        },
+        {
+          "index": 4,
+          "at": 5726.700000017881,
+          "rafTimestamp": 5719.8,
+          "interval": 18.80000001192093,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 12
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 21.5,
+      "gapStart": 7217.300000011921,
+      "gapEnd": 7238.800000011921,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 3.0,
+      "firstColorResponseUpperBoundMs": 18.5,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 115.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 7240.800000011921,
+          "rafTimestamp": 7236.4,
+          "interval": 20.5,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 33
+        },
+        {
+          "index": 1,
+          "at": 7256.9000000059605,
+          "rafTimestamp": 7253,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 33
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 18.700000017881393,
+      "gapStart": 9020,
+      "gapEnd": 9038.700000017881,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 129.89999997615814,
+      "nearbyRafSamples": [
+        {
+          "index": 13,
+          "at": 9006.300000011921,
+          "rafTimestamp": 9003,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 73
+        },
+        {
+          "index": 14,
+          "at": 9020.90000000596,
+          "rafTimestamp": 9019.6,
+          "interval": 14.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 73
+        },
+        {
+          "index": 15,
+          "at": 9039.59999999404,
+          "rafTimestamp": 9036.3,
+          "interval": 18.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 83
+        },
+        {
+          "index": 16,
+          "at": 9054.5,
+          "rafTimestamp": 9052.9,
+          "interval": 14.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 79
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.600000023841858,
+      "gapStart": 11536.59999999404,
+      "gapEnd": 11555.200000017881,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 132.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 10,
+          "at": 11523,
+          "rafTimestamp": 11519.5,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 72
+        },
+        {
+          "index": 11,
+          "at": 11537.5,
+          "rafTimestamp": 11536.2,
+          "interval": 14.5,
+          "dispatchMs": 0.5,
+          "draws": 73
+        },
+        {
+          "index": 12,
+          "at": 11556.09999999404,
+          "rafTimestamp": 11552.8,
+          "interval": 18.599999994039536,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 83
+        },
+        {
+          "index": 13,
+          "at": 11572.700000017881,
+          "rafTimestamp": 11569.5,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.5,
+          "draws": 73
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 44.19999998807907,
+      "gapStart": 18689.80000001192,
+      "gapEnd": 18734,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 110.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 45,
+          "at": 18676.40000000596,
+          "rafTimestamp": 18669.2,
+          "interval": 18.30000001192093,
+          "dispatchMs": 2.7000000178813934,
+          "draws": 65
+        },
+        {
+          "index": 46,
+          "at": 18694.09999999404,
+          "rafTimestamp": 18685.9,
+          "interval": 17.69999998807907,
+          "dispatchMs": 2.699999988079071,
+          "draws": 78
+        },
+        {
+          "index": 47,
+          "at": 18746.59999999404,
+          "rafTimestamp": 18702.6,
+          "interval": 52.5,
+          "dispatchMs": 1.7000000178813934,
+          "draws": 73
+        },
+        {
+          "index": 48,
+          "at": 18755,
+          "rafTimestamp": 18735.9,
+          "interval": 8.400000005960464,
+          "dispatchMs": 2.800000011920929,
+          "draws": 73
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 66.59999999403954,
+      "gapStart": 5494.5,
+      "gapEnd": 5561.0999999940395,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.099999994039536,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5512.800000011921,
+          "rafTimestamp": 5508.4,
+          "interval": 17.100000023841858,
+          "dispatchMs": 1.100000023841858,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5529.800000011921,
+          "rafTimestamp": 5525,
+          "interval": 17,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5545.5999999940395,
+          "rafTimestamp": 5541.8,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5562.0999999940395,
+          "rafTimestamp": 5558.5,
+          "interval": 16.5,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 12
+        },
+        {
+          "index": 4,
+          "at": 5583.4000000059605,
+          "rafTimestamp": 5575.1,
+          "interval": 21.30000001192093,
+          "dispatchMs": 0.5,
+          "draws": 12
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 27.900000005960464,
+      "gapStart": 7048.699999988079,
+      "gapEnd": 7076.5999999940395,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 10.900000005960464,
+      "firstColorResponseUpperBoundMs": 17.0,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 115.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 7078.9000000059605,
+          "rafTimestamp": 7075.1,
+          "interval": 19.30000001192093,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 32
+        },
+        {
+          "index": 1,
+          "at": 7095.199999988079,
+          "rafTimestamp": 7091.7,
+          "interval": 16.299999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 32
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 16.80000001192093,
+      "gapStart": 9393.09999999404,
+      "gapEnd": 9409.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 115.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 46,
+          "at": 9377.40000000596,
+          "rafTimestamp": 9374.9,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 79
+        },
+        {
+          "index": 47,
+          "at": 9394.300000011921,
+          "rafTimestamp": 9391.7,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 73
+        },
+        {
+          "index": 48,
+          "at": 9411.199999988079,
+          "rafTimestamp": 9408.3,
+          "interval": 16.899999976158142,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 73
+        },
+        {
+          "index": 49,
+          "at": 9427.59999999404,
+          "rafTimestamp": 9424.9,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 83
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 16.80000001192093,
+      "gapStart": 11226.5,
+      "gapEnd": 11243.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 115.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 3,
+          "at": 11211.40000000596,
+          "rafTimestamp": 11208.2,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 50
+        },
+        {
+          "index": 4,
+          "at": 11228,
+          "rafTimestamp": 11224.8,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.699999988079071,
+          "draws": 55
+        },
+        {
+          "index": 5,
+          "at": 11245.199999988079,
+          "rafTimestamp": 11241.5,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.699999988079071,
+          "draws": 68
+        },
+        {
+          "index": 6,
+          "at": 11261.40000000596,
+          "rafTimestamp": 11258.2,
+          "interval": 16.200000017881393,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 66
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 16.900000005960464,
+      "gapStart": 18527.5,
+      "gapEnd": 18544.40000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 109.60000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 48,
+          "at": 18516,
+          "rafTimestamp": 18508,
+          "interval": 18.19999998807907,
+          "dispatchMs": 3,
+          "draws": 73
+        },
+        {
+          "index": 49,
+          "at": 18530.30000001192,
+          "rafTimestamp": 18524.6,
+          "interval": 14.300000011920929,
+          "dispatchMs": 3,
+          "draws": 83
+        },
+        {
+          "index": 50,
+          "at": 18549,
+          "rafTimestamp": 18541.3,
+          "interval": 18.69999998807907,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 73
+        },
+        {
+          "index": 51,
+          "at": 18563.69999998808,
+          "rafTimestamp": 18557.9,
+          "interval": 14.699999988079071,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 73
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 167.5,
+      "gapStart": 6246.799999982119,
+      "gapEnd": 6414.299999982119,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.39999997615814,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6232.0999999940395,
+          "rafTimestamp": 6229,
+          "interval": 16.30000001192093,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 34,
+          "at": 6249,
+          "rafTimestamp": 6245.6,
+          "interval": 16.900000005960464,
+          "dispatchMs": 1,
+          "draws": 61
+        },
+        {
+          "index": 35,
+          "at": 6266,
+          "rafTimestamp": 6262.3,
+          "interval": 17,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6283,
+          "rafTimestamp": 6279,
+          "interval": 17,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6298.5999999940395,
+          "rafTimestamp": 6295.7,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6314.799999982119,
+          "rafTimestamp": 6312.3,
+          "interval": 16.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6331.5,
+          "rafTimestamp": 6329,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6348.399999976158,
+          "rafTimestamp": 6345.7,
+          "interval": 16.899999976158142,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6365.5999999940395,
+          "rafTimestamp": 6362.3,
+          "interval": 17.200000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6381.5999999940395,
+          "rafTimestamp": 6379,
+          "interval": 16,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6398.399999976158,
+          "rafTimestamp": 6395.7,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6415.199999988079,
+          "rafTimestamp": 6412.4,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.5,
+          "draws": 48
+        },
+        {
+          "index": 45,
+          "at": 6431.0999999940395,
+          "rafTimestamp": 6429,
+          "interval": 15.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 36
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 41.79999998211861,
+      "gapStart": 7835.0999999940395,
+      "gapEnd": 7876.899999976158,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7833.299999982119,
+          "rafTimestamp": 7795.6,
+          "interval": 50.19999998807907,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 63
+        },
+        {
+          "index": 27,
+          "at": 7875.199999988079,
+          "rafTimestamp": 7828.9,
+          "interval": 41.900000005960464,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 43.0,
+      "gapStart": 9233.399999976158,
+      "gapEnd": 9276.399999976158,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 247.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 6,
+          "at": 9223.699999988079,
+          "rafTimestamp": 9195.6,
+          "interval": 33.69999998807907,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 69
+        },
+        {
+          "index": 7,
+          "at": 9231.899999976158,
+          "rafTimestamp": 9212.2,
+          "interval": 8.199999988079071,
+          "dispatchMs": 1.199999988079071,
+          "draws": 64
+        },
+        {
+          "index": 8,
+          "at": 9274.699999988079,
+          "rafTimestamp": 9228.8,
+          "interval": 42.80000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 64
+        },
+        {
+          "index": 9,
+          "at": 9288.199999988079,
+          "rafTimestamp": 9262.3,
+          "interval": 13.5,
+          "dispatchMs": 1.199999988079071,
+          "draws": 54
+        },
+        {
+          "index": 10,
+          "at": 9291,
+          "rafTimestamp": 9278.9,
+          "interval": 2.800000011920929,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 11,
+          "at": 9297.399999976158,
+          "rafTimestamp": 9295.5,
+          "interval": 6.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 53
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 28.0,
+      "gapStart": 70943.59999999404,
+      "gapEnd": 70971.59999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.3999999761581421,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 214.5,
+      "nearbyRafSamples": [
+        {
+          "index": 5,
+          "at": 70939,
+          "rafTimestamp": 70926.4,
+          "interval": 27.200000017881393,
+          "dispatchMs": 1,
+          "draws": 87
+        },
+        {
+          "index": 6,
+          "at": 70970,
+          "rafTimestamp": 70943,
+          "interval": 31,
+          "dispatchMs": 1,
+          "draws": 81
+        },
+        {
+          "index": 7,
+          "at": 70994.89999997616,
+          "rafTimestamp": 70959.7,
+          "interval": 24.899999976158142,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 76
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 38.39999997615814,
+      "gapStart": 78311,
+      "gapEnd": 78349.39999997616,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.29999998211860657,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 762.8999999761581,
+      "nearbyRafSamples": [
+        {
+          "index": 46,
+          "at": 78297.29999998212,
+          "rafTimestamp": 78292.8,
+          "interval": 16.5,
+          "dispatchMs": 1.4000000059604645,
+          "draws": 53
+        },
+        {
+          "index": 47,
+          "at": 78313.59999999404,
+          "rafTimestamp": 78309.4,
+          "interval": 16.30000001192093,
+          "dispatchMs": 1.2000000178813934,
+          "draws": 45
+        },
+        {
+          "index": 48,
+          "at": 78352.59999999404,
+          "rafTimestamp": 78326.1,
+          "interval": 39,
+          "dispatchMs": 1.2999999821186066,
+          "draws": 46
+        },
+        {
+          "index": 49,
+          "at": 78357.79999998212,
+          "rafTimestamp": 78342.8,
+          "interval": 5.199999988079071,
+          "dispatchMs": 1.4000000059604645,
+          "draws": 34
+        },
+        {
+          "index": 50,
+          "at": 78363.79999998212,
+          "rafTimestamp": 78359.4,
+          "interval": 6,
+          "dispatchMs": 1.4000000059604645,
+          "draws": 31
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 167.30000001192093,
+      "gapStart": 6222.0999999940395,
+      "gapEnd": 6389.4000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232.7999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6205.699999988079,
+          "rafTimestamp": 6203,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 53
+        },
+        {
+          "index": 34,
+          "at": 6223.800000011921,
+          "rafTimestamp": 6219.7,
+          "interval": 18.100000023841858,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 6241.199999988079,
+          "rafTimestamp": 6236.4,
+          "interval": 17.399999976158142,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6258,
+          "rafTimestamp": 6253,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6272.199999988079,
+          "rafTimestamp": 6269.7,
+          "interval": 14.199999988079071,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6288.9000000059605,
+          "rafTimestamp": 6286.3,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6307,
+          "rafTimestamp": 6303,
+          "interval": 18.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6323.5999999940395,
+          "rafTimestamp": 6319.7,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6340.5,
+          "rafTimestamp": 6336.3,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6356.300000011921,
+          "rafTimestamp": 6353,
+          "interval": 15.800000011920929,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6373.800000011921,
+          "rafTimestamp": 6369.6,
+          "interval": 17.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6390.300000011921,
+          "rafTimestamp": 6386.4,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 49
+        },
+        {
+          "index": 45,
+          "at": 6406.5999999940395,
+          "rafTimestamp": 6403,
+          "interval": 16.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 36
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 41.400000005960464,
+      "gapStart": 7826.4000000059605,
+      "gapEnd": 7867.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 12.300000011920929,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7824.699999988079,
+          "rafTimestamp": 7786.3,
+          "interval": 50,
+          "dispatchMs": 1,
+          "draws": 63
+        },
+        {
+          "index": 27,
+          "at": 7866.4000000059605,
+          "rafTimestamp": 7819.6,
+          "interval": 41.70000001788139,
+          "dispatchMs": 1.2000000178813934,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 41.69999998807907,
+      "gapStart": 9223.40000000596,
+      "gapEnd": 9265.09999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 248.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 6,
+          "at": 9214.300000011921,
+          "rafTimestamp": 9186.2,
+          "interval": 32.80000001192093,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 69
+        },
+        {
+          "index": 7,
+          "at": 9222.199999988079,
+          "rafTimestamp": 9202.9,
+          "interval": 7.899999976158142,
+          "dispatchMs": 1.2999999821186066,
+          "draws": 64
+        },
+        {
+          "index": 8,
+          "at": 9263.699999988079,
+          "rafTimestamp": 9219.5,
+          "interval": 41.5,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 64
+        },
+        {
+          "index": 9,
+          "at": 9276.90000000596,
+          "rafTimestamp": 9252.9,
+          "interval": 13.200000017881393,
+          "dispatchMs": 1,
+          "draws": 54
+        },
+        {
+          "index": 10,
+          "at": 9279.800000011921,
+          "rafTimestamp": 9269.6,
+          "interval": 2.9000000059604645,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 52
+        },
+        {
+          "index": 11,
+          "at": 9287.800000011921,
+          "rafTimestamp": 9286.2,
+          "interval": 8,
+          "dispatchMs": 1,
+          "draws": 53
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 40.0,
+      "gapStart": 71318.30000001192,
+      "gapEnd": 71358.30000001192,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 230.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 71302.69999998808,
+          "rafTimestamp": 71300.4,
+          "interval": 16.19999998807907,
+          "dispatchMs": 1,
+          "draws": 96
+        },
+        {
+          "index": 29,
+          "at": 71356.5,
+          "rafTimestamp": 71317,
+          "interval": 53.80000001192093,
+          "dispatchMs": 1,
+          "draws": 104
+        },
+        {
+          "index": 30,
+          "at": 71359.09999999404,
+          "rafTimestamp": 71350.4,
+          "interval": 2.5999999940395355,
+          "dispatchMs": 1.199999988079071,
+          "draws": 105
+        },
+        {
+          "index": 31,
+          "at": 71369.69999998808,
+          "rafTimestamp": 71367.1,
+          "interval": 10.599999994039536,
+          "dispatchMs": 1,
+          "draws": 112
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-selected-zoom-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 154.89999997615814,
+      "gapStart": 77644.80000001192,
+      "gapEnd": 77799.69999998808,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 153.7999999821186,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 660.5,
+      "nearbyRafSamples": [
+        {
+          "index": 6,
+          "at": 77640.40000000596,
+          "rafTimestamp": 77616.8,
+          "interval": 25,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 90
+        },
+        {
+          "index": 7,
+          "at": 77794.40000000596,
+          "rafTimestamp": 77633.5,
+          "interval": 154,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 85
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 166.69999998807907,
+      "gapStart": 6000.9000000059605,
+      "gapEnd": 6167.5999999940395,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.60000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 5985.800000011921,
+          "rafTimestamp": 5982.8,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 40
+        },
+        {
+          "index": 34,
+          "at": 6002.5,
+          "rafTimestamp": 5999.5,
+          "interval": 16.69999998807907,
+          "dispatchMs": 1,
+          "draws": 61
+        },
+        {
+          "index": 35,
+          "at": 6021.300000011921,
+          "rafTimestamp": 6016.2,
+          "interval": 18.80000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6037.300000011921,
+          "rafTimestamp": 6032.9,
+          "interval": 16,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6051.5999999940395,
+          "rafTimestamp": 6049.5,
+          "interval": 14.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6068.0999999940395,
+          "rafTimestamp": 6066.1,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6086.4000000059605,
+          "rafTimestamp": 6082.8,
+          "interval": 18.30000001192093,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6102.800000011921,
+          "rafTimestamp": 6099.5,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6118.800000011921,
+          "rafTimestamp": 6116.1,
+          "interval": 16,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6136.200000017881,
+          "rafTimestamp": 6132.8,
+          "interval": 17.400000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6153.200000017881,
+          "rafTimestamp": 6149.5,
+          "interval": 17,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6168.4000000059605,
+          "rafTimestamp": 6166.2,
+          "interval": 15.199999988079071,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 47
+        },
+        {
+          "index": 45,
+          "at": 6185.800000011921,
+          "rafTimestamp": 6182.9,
+          "interval": 17.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 34
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 40.79999998211861,
+      "gapStart": 7605.800000011921,
+      "gapEnd": 7646.5999999940395,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 246.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7604.300000011921,
+          "rafTimestamp": 7566.1,
+          "interval": 50.599999994039536,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 62
+        },
+        {
+          "index": 27,
+          "at": 7645.0999999940395,
+          "rafTimestamp": 7599.5,
+          "interval": 40.79999998211861,
+          "dispatchMs": 1,
+          "draws": 63
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 34.400000005960464,
+      "gapStart": 10042.90000000596,
+      "gapEnd": 10077.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232.5,
+      "nearbyRafSamples": [
+        {
+          "index": 9,
+          "at": 10041.5,
+          "rafTimestamp": 10016,
+          "interval": 39.5,
+          "dispatchMs": 0.800000011920929,
+          "draws": 51
+        },
+        {
+          "index": 10,
+          "at": 10076,
+          "rafTimestamp": 10032.7,
+          "interval": 34.5,
+          "dispatchMs": 1,
+          "draws": 49
+        },
+        {
+          "index": 11,
+          "at": 10078.40000000596,
+          "rafTimestamp": 10066,
+          "interval": 2.4000000059604645,
+          "dispatchMs": 1,
+          "draws": 50
+        },
+        {
+          "index": 12,
+          "at": 10084.300000011921,
+          "rafTimestamp": 10082.6,
+          "interval": 5.9000000059604645,
+          "dispatchMs": 0.800000011920929,
+          "draws": 51
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 79.69999998807907,
+      "gapStart": 16756.70000001788,
+      "gapEnd": 16836.40000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 77.69999998807907,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 779,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 16750.40000000596,
+          "rafTimestamp": 16699.1,
+          "interval": 50.80000001192093,
+          "dispatchMs": 4.200000017881393,
+          "draws": 74
+        },
+        {
+          "index": 8,
+          "at": 16831.80000001192,
+          "rafTimestamp": 16749.1,
+          "interval": 81.40000000596046,
+          "dispatchMs": 4.5999999940395355,
+          "draws": 75
+        },
+        {
+          "index": 9,
+          "at": 16841.09999999404,
+          "rafTimestamp": 16832.4,
+          "interval": 9.299999982118607,
+          "dispatchMs": 3.199999988079071,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 167.5,
+      "gapStart": 5969.699999988079,
+      "gapEnd": 6137.199999988079,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 5956,
+          "rafTimestamp": 5952.2,
+          "interval": 18,
+          "dispatchMs": 1,
+          "draws": 41
+        },
+        {
+          "index": 34,
+          "at": 5971.199999988079,
+          "rafTimestamp": 5968.9,
+          "interval": 15.199999988079071,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 5988.899999976158,
+          "rafTimestamp": 5985.5,
+          "interval": 17.69999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6006.5999999940395,
+          "rafTimestamp": 6002.3,
+          "interval": 17.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6021.299999982119,
+          "rafTimestamp": 6018.9,
+          "interval": 14.699999988079071,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6037.799999982119,
+          "rafTimestamp": 6035.5,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6054.5,
+          "rafTimestamp": 6052.2,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6071.399999976158,
+          "rafTimestamp": 6068.9,
+          "interval": 16.899999976158142,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6087.799999982119,
+          "rafTimestamp": 6085.5,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6106,
+          "rafTimestamp": 6102.2,
+          "interval": 18.200000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6120.899999976158,
+          "rafTimestamp": 6118.9,
+          "interval": 14.899999976158142,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6138.0999999940395,
+          "rafTimestamp": 6135.6,
+          "interval": 17.200000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 47
+        },
+        {
+          "index": 45,
+          "at": 6154.0999999940395,
+          "rafTimestamp": 6152.2,
+          "interval": 16,
+          "dispatchMs": 0.5,
+          "draws": 34
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 40.29999998211861,
+      "gapStart": 7573,
+      "gapEnd": 7613.299999982119,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 2.5999999940395355,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 230.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7571.5999999940395,
+          "rafTimestamp": 7535.4,
+          "interval": 49.30000001192093,
+          "dispatchMs": 1,
+          "draws": 62
+        },
+        {
+          "index": 27,
+          "at": 7612,
+          "rafTimestamp": 7568.8,
+          "interval": 40.400000005960464,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 63
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 35.20000001788139,
+      "gapStart": 9980.799999982119,
+      "gapEnd": 10016,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 215,
+      "nearbyRafSamples": [
+        {
+          "index": 8,
+          "at": 9979.399999976158,
+          "rafTimestamp": 9952.1,
+          "interval": 24.69999998807907,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 62
+        },
+        {
+          "index": 9,
+          "at": 10014.5,
+          "rafTimestamp": 9968.7,
+          "interval": 35.10000002384186,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 10,
+          "at": 10017.199999988079,
+          "rafTimestamp": 10002.1,
+          "interval": 2.699999988079071,
+          "dispatchMs": 1,
+          "draws": 50
+        },
+        {
+          "index": 11,
+          "at": 10020.09999999404,
+          "rafTimestamp": 10018.7,
+          "interval": 2.9000000059604645,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 51
+        },
+        {
+          "index": 12,
+          "at": 10037.5,
+          "rafTimestamp": 10035.4,
+          "interval": 17.400000005960464,
+          "dispatchMs": 1,
+          "draws": 51
+        }
+      ]
+    },
+    {
+      "run": "dpr2-off-dense-zoom-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 109.90000000596046,
+      "gapStart": 16819.899999976158,
+      "gapEnd": 16929.79999998212,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 108.2000000178814,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 595.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 10,
+          "at": 16798.19999998808,
+          "rafTimestamp": 16785.1,
+          "interval": 10.5,
+          "dispatchMs": 4.699999988079071,
+          "draws": 59
+        },
+        {
+          "index": 11,
+          "at": 16812.59999999404,
+          "rafTimestamp": 16801.7,
+          "interval": 14.400000005960464,
+          "dispatchMs": 3.5,
+          "draws": 60
+        },
+        {
+          "index": 12,
+          "at": 16923.19999998808,
+          "rafTimestamp": 16818.5,
+          "interval": 110.59999999403954,
+          "dispatchMs": 5.699999988079071,
+          "draws": 56
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 74.80000001192093,
+      "gapStart": 5322,
+      "gapEnd": 5396.800000011921,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": 74.69999998807907,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 116.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5333.200000017881,
+          "rafTimestamp": 5328.2,
+          "interval": 11.099999994039536,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5348.9000000059605,
+          "rafTimestamp": 5344.8,
+          "interval": 15.699999988079071,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5366.4000000059605,
+          "rafTimestamp": 5361.5,
+          "interval": 17.5,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5382.800000011921,
+          "rafTimestamp": 5378.2,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 4,
+          "at": 5397.800000011921,
+          "rafTimestamp": 5394.8,
+          "interval": 15,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 16
+        },
+        {
+          "index": 5,
+          "at": 5420.300000011921,
+          "rafTimestamp": 5411.4,
+          "interval": 22.5,
+          "dispatchMs": 0.5,
+          "draws": 19
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 36.19999998807907,
+      "gapStart": 6877.700000017881,
+      "gapEnd": 6913.9000000059605,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 17.69999998807907,
+      "firstColorResponseUpperBoundMs": 18.5,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 113.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 6916.600000023842,
+          "rafTimestamp": 6911.4,
+          "interval": 21.200000017881393,
+          "dispatchMs": 0.5,
+          "draws": 31
+        },
+        {
+          "index": 1,
+          "at": 6931.800000011921,
+          "rafTimestamp": 6928.1,
+          "interval": 15.199999988079071,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 31
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.5,
+      "gapStart": 9595.300000011921,
+      "gapEnd": 9613.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 116.5,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 9580.5,
+          "rafTimestamp": 9578,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 60
+        },
+        {
+          "index": 8,
+          "at": 9596.5,
+          "rafTimestamp": 9594.6,
+          "interval": 16,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 61
+        },
+        {
+          "index": 9,
+          "at": 9615.200000017881,
+          "rafTimestamp": 9611.3,
+          "interval": 18.700000017881393,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 64
+        },
+        {
+          "index": 10,
+          "at": 9631.5,
+          "rafTimestamp": 9628,
+          "interval": 16.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 70
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 25.0,
+      "gapStart": 16130.700000017881,
+      "gapEnd": 16155.700000017881,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.29999998211860657,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 127,
+      "nearbyRafSamples": [
+        {
+          "index": 6,
+          "at": 16117.600000023842,
+          "rafTimestamp": 16111.1,
+          "interval": 16.80000001192093,
+          "dispatchMs": 1.300000011920929,
+          "draws": 63
+        },
+        {
+          "index": 7,
+          "at": 16133.300000011921,
+          "rafTimestamp": 16127.7,
+          "interval": 15.699999988079071,
+          "dispatchMs": 1.2999999821186066,
+          "draws": 64
+        },
+        {
+          "index": 8,
+          "at": 16161.100000023842,
+          "rafTimestamp": 16144.4,
+          "interval": 27.80000001192093,
+          "dispatchMs": 21.099999994039536,
+          "draws": 65
+        },
+        {
+          "index": 9,
+          "at": 16170.800000011921,
+          "rafTimestamp": 16161,
+          "interval": 9.699999988079071,
+          "dispatchMs": 5.0999999940395355,
+          "draws": 69
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 54.5,
+      "gapStart": 5249,
+      "gapEnd": 5303.5,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": 54.39999997615814,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 116,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5253.700000017881,
+          "rafTimestamp": 5250.2,
+          "interval": 4.5999999940395355,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5272.5,
+          "rafTimestamp": 5266.8,
+          "interval": 18.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5288.5,
+          "rafTimestamp": 5283.5,
+          "interval": 16,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5304.5,
+          "rafTimestamp": 5300.2,
+          "interval": 16,
+          "dispatchMs": 0.5,
+          "draws": 10
+        },
+        {
+          "index": 4,
+          "at": 5325.4000000059605,
+          "rafTimestamp": 5316.8,
+          "interval": 20.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 10
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 19.100000023841858,
+      "gapStart": 6800,
+      "gapEnd": 6819.100000023842,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": 19.0,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 130.10000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 6821.300000011921,
+          "rafTimestamp": 6816.7,
+          "interval": 21.19999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 30
+        },
+        {
+          "index": 1,
+          "at": 6836.700000017881,
+          "rafTimestamp": 6833.5,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 30
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.599999994039536,
+      "gapStart": 9850.300000011921,
+      "gapEnd": 9868.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 132.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 27,
+          "at": 9836.700000017881,
+          "rafTimestamp": 9833.3,
+          "interval": 17.400000005960464,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 54
+        },
+        {
+          "index": 28,
+          "at": 9851.300000011921,
+          "rafTimestamp": 9849.9,
+          "interval": 14.599999994039536,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 46
+        },
+        {
+          "index": 29,
+          "at": 9870.100000023842,
+          "rafTimestamp": 9866.6,
+          "interval": 18.80000001192093,
+          "dispatchMs": 0.5,
+          "draws": 47
+        },
+        {
+          "index": 30,
+          "at": 9884.700000017881,
+          "rafTimestamp": 9883.3,
+          "interval": 14.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 44
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 18.80000001192093,
+      "gapStart": 16251,
+      "gapEnd": 16269.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 110.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 17,
+          "at": 16241.100000023842,
+          "rafTimestamp": 16233,
+          "interval": 16.900000005960464,
+          "dispatchMs": 2.4000000059604645,
+          "draws": 71
+        },
+        {
+          "index": 18,
+          "at": 16256.40000000596,
+          "rafTimestamp": 16249.7,
+          "interval": 15.299999982118607,
+          "dispatchMs": 2.0999999940395355,
+          "draws": 81
+        },
+        {
+          "index": 19,
+          "at": 16274.700000017881,
+          "rafTimestamp": 16266.3,
+          "interval": 18.30000001192093,
+          "dispatchMs": 2.0999999940395355,
+          "draws": 71
+        },
+        {
+          "index": 20,
+          "at": 16291.200000017881,
+          "rafTimestamp": 16283,
+          "interval": 16.5,
+          "dispatchMs": 2.199999988079071,
+          "draws": 71
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 65.69999998807907,
+      "gapStart": 5477.800000011921,
+      "gapEnd": 5543.5,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.200000017881393,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5496.5999999940395,
+          "rafTimestamp": 5491.1,
+          "interval": 17.299999982118607,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5513.199999988079,
+          "rafTimestamp": 5507.8,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5529.199999988079,
+          "rafTimestamp": 5524.5,
+          "interval": 16,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5544.5999999940395,
+          "rafTimestamp": 5541.1,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 12
+        },
+        {
+          "index": 4,
+          "at": 5565,
+          "rafTimestamp": 5557.8,
+          "interval": 20.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 12
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 18.400000005960464,
+      "gapStart": 7358.5,
+      "gapEnd": 7376.9000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 113,
+      "nearbyRafSamples": [
+        {
+          "index": 15,
+          "at": 7345.199999988079,
+          "rafTimestamp": 7341,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 62
+        },
+        {
+          "index": 16,
+          "at": 7360,
+          "rafTimestamp": 7357.8,
+          "interval": 14.800000011920929,
+          "dispatchMs": 0.5,
+          "draws": 61
+        },
+        {
+          "index": 17,
+          "at": 7378.5,
+          "rafTimestamp": 7374.4,
+          "interval": 18.5,
+          "dispatchMs": 0.5,
+          "draws": 62
+        },
+        {
+          "index": 18,
+          "at": 7394.0999999940395,
+          "rafTimestamp": 7391.1,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 68
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 30.100000023841858,
+      "gapStart": 8629.699999988079,
+      "gapEnd": 8659.800000011921,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 12.800000011920929,
+      "firstColorResponseUpperBoundMs": 17.30000001192093,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 133,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 8662,
+          "rafTimestamp": 8657.6,
+          "interval": 19.5,
+          "dispatchMs": 0.699999988079071,
+          "draws": 43
+        },
+        {
+          "index": 1,
+          "at": 8677.800000011921,
+          "rafTimestamp": 8674.3,
+          "interval": 15.800000011920929,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 43
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 18.69999998807907,
+      "gapStart": 11358.300000011921,
+      "gapEnd": 11377,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.89999997615814,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 11344.699999988079,
+          "rafTimestamp": 11340.8,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 66
+        },
+        {
+          "index": 8,
+          "at": 11359.699999988079,
+          "rafTimestamp": 11357.6,
+          "interval": 15,
+          "dispatchMs": 0.5,
+          "draws": 67
+        },
+        {
+          "index": 9,
+          "at": 11378.59999999404,
+          "rafTimestamp": 11374.2,
+          "interval": 18.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 71
+        },
+        {
+          "index": 10,
+          "at": 11394.199999988079,
+          "rafTimestamp": 11390.8,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 72
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 18.69999998807907,
+      "gapStart": 18408.30000001192,
+      "gapEnd": 18427,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 127.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 37,
+          "at": 18401.59999999404,
+          "rafTimestamp": 18390.6,
+          "interval": 19.69999998807907,
+          "dispatchMs": 3,
+          "draws": 43
+        },
+        {
+          "index": 38,
+          "at": 18412.19999998808,
+          "rafTimestamp": 18407.3,
+          "interval": 10.599999994039536,
+          "dispatchMs": 2.300000011920929,
+          "draws": 44
+        },
+        {
+          "index": 39,
+          "at": 18431.09999999404,
+          "rafTimestamp": 18423.9,
+          "interval": 18.900000005960464,
+          "dispatchMs": 2.600000023841858,
+          "draws": 53
+        },
+        {
+          "index": 40,
+          "at": 18446.59999999404,
+          "rafTimestamp": 18440.6,
+          "interval": 15.5,
+          "dispatchMs": 3,
+          "draws": 51
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 66.7999999821186,
+      "gapStart": 5449.100000023842,
+      "gapEnd": 5515.9000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.399999976158142,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 5467.200000017881,
+          "rafTimestamp": 5462.1,
+          "interval": 16.700000017881393,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 1,
+          "at": 5484.300000011921,
+          "rafTimestamp": 5478.7,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 2,
+          "at": 5500.100000023842,
+          "rafTimestamp": 5495.4,
+          "interval": 15.800000011920929,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 3,
+          "at": 5517.4000000059605,
+          "rafTimestamp": 5512.1,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 12
+        },
+        {
+          "index": 4,
+          "at": 5537.4000000059605,
+          "rafTimestamp": 5528.8,
+          "interval": 20,
+          "dispatchMs": 0.5,
+          "draws": 12
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 16.900000005960464,
+      "gapStart": 7164.200000017881,
+      "gapEnd": 7181.100000023842,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.19999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 7150.300000011921,
+          "rafTimestamp": 7145.3,
+          "interval": 17,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 46
+        },
+        {
+          "index": 8,
+          "at": 7166.300000011921,
+          "rafTimestamp": 7162,
+          "interval": 16,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 46
+        },
+        {
+          "index": 9,
+          "at": 7183.5,
+          "rafTimestamp": 7178.7,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.699999988079071,
+          "draws": 47
+        },
+        {
+          "index": 10,
+          "at": 7198.9000000059605,
+          "rafTimestamp": 7195.3,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 53
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 29.099999994039536,
+      "gapStart": 8568.40000000596,
+      "gapEnd": 8597.5,
+      "isPhasePrefix": true,
+      "preInputWaitLowerBoundMs": 12.200000017881393,
+      "firstColorResponseUpperBoundMs": 16.899999976158142,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 114.7999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 8600,
+          "rafTimestamp": 8595.3,
+          "interval": 19.399999976158142,
+          "dispatchMs": 0.699999988079071,
+          "draws": 43
+        },
+        {
+          "index": 1,
+          "at": 8616.100000023842,
+          "rafTimestamp": 8611.9,
+          "interval": 16.100000023841858,
+          "dispatchMs": 0.5,
+          "draws": 43
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 17.5,
+      "gapStart": 11163.40000000596,
+      "gapEnd": 11180.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 131.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 0,
+          "at": 11149.5,
+          "rafTimestamp": 11145.2,
+          "interval": 10.399999976158142,
+          "dispatchMs": 0.699999988079071,
+          "draws": 44
+        },
+        {
+          "index": 1,
+          "at": 11165.600000023842,
+          "rafTimestamp": 11161.9,
+          "interval": 16.100000023841858,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 44
+        },
+        {
+          "index": 2,
+          "at": 11183.300000011921,
+          "rafTimestamp": 11178.6,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 53
+        },
+        {
+          "index": 3,
+          "at": 11199.300000011921,
+          "rafTimestamp": 11195.2,
+          "interval": 16,
+          "dispatchMs": 0.699999988079071,
+          "draws": 50
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 18.69999998807907,
+      "gapStart": 17896.600000023842,
+      "gapEnd": 17915.30000001192,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 126.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 10,
+          "at": 17886.20000001788,
+          "rafTimestamp": 17878.3,
+          "interval": 18,
+          "dispatchMs": 3,
+          "draws": 72
+        },
+        {
+          "index": 11,
+          "at": 17900.80000001192,
+          "rafTimestamp": 17894.9,
+          "interval": 14.599999994039536,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 73
+        },
+        {
+          "index": 12,
+          "at": 17920.30000001192,
+          "rafTimestamp": 17911.6,
+          "interval": 19.5,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 83
+        },
+        {
+          "index": 13,
+          "at": 17934.90000000596,
+          "rafTimestamp": 17928.3,
+          "interval": 14.599999994039536,
+          "dispatchMs": 1.5999999940395355,
+          "draws": 73
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 167.80000001192093,
+      "gapStart": 6202.5,
+      "gapEnd": 6370.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.600000023841858,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6187.800000011921,
+          "rafTimestamp": 6183.5,
+          "interval": 16.30000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 42
+        },
+        {
+          "index": 34,
+          "at": 6204.300000011921,
+          "rafTimestamp": 6200.1,
+          "interval": 16.5,
+          "dispatchMs": 1,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 6221.9000000059605,
+          "rafTimestamp": 6216.9,
+          "interval": 17.599999994039536,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6238.800000011921,
+          "rafTimestamp": 6233.5,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6254.199999988079,
+          "rafTimestamp": 6250.1,
+          "interval": 15.399999976158142,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6271,
+          "rafTimestamp": 6266.8,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6287.5,
+          "rafTimestamp": 6283.5,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6304.4000000059605,
+          "rafTimestamp": 6300.2,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6321,
+          "rafTimestamp": 6316.9,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6337.9000000059605,
+          "rafTimestamp": 6333.5,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6354.300000011921,
+          "rafTimestamp": 6350.1,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6371.5999999940395,
+          "rafTimestamp": 6366.8,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 49
+        },
+        {
+          "index": 45,
+          "at": 6387.199999988079,
+          "rafTimestamp": 6383.5,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 36
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 42.20000001788139,
+      "gapStart": 7806.699999988079,
+      "gapEnd": 7848.9000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 14.400000005960464,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 230.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7805.300000011921,
+          "rafTimestamp": 7766.7,
+          "interval": 49.5,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 63
+        },
+        {
+          "index": 27,
+          "at": 7847.199999988079,
+          "rafTimestamp": 7800.1,
+          "interval": 41.89999997615814,
+          "dispatchMs": 1,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 35.599999994039536,
+      "gapStart": 9245,
+      "gapEnd": 9280.59999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.2999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 8,
+          "at": 9243.800000011921,
+          "rafTimestamp": 9216.7,
+          "interval": 25.200000017881393,
+          "dispatchMs": 1,
+          "draws": 63
+        },
+        {
+          "index": 9,
+          "at": 9279.199999988079,
+          "rafTimestamp": 9233.3,
+          "interval": 35.39999997615814,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 53
+        },
+        {
+          "index": 10,
+          "at": 9282.09999999404,
+          "rafTimestamp": 9266.7,
+          "interval": 2.9000000059604645,
+          "dispatchMs": 1,
+          "draws": 51
+        },
+        {
+          "index": 11,
+          "at": 9286.59999999404,
+          "rafTimestamp": 9283.3,
+          "interval": 4.5,
+          "dispatchMs": 0.800000011920929,
+          "draws": 52
+        },
+        {
+          "index": 12,
+          "at": 9304.199999988079,
+          "rafTimestamp": 9300,
+          "interval": 17.599999994039536,
+          "dispatchMs": 1,
+          "draws": 52
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 56.30000001192093,
+      "gapStart": 71315.5,
+      "gapEnd": 71371.80000001192,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 55.5,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232.19999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 71303.59999999404,
+          "rafTimestamp": 71297.5,
+          "interval": 18.69999998807907,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 96
+        },
+        {
+          "index": 29,
+          "at": 71370.19999998808,
+          "rafTimestamp": 71314.2,
+          "interval": 66.59999999403954,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 103
+        },
+        {
+          "index": 30,
+          "at": 71372.90000000596,
+          "rafTimestamp": 71364.2,
+          "interval": 2.7000000178813934,
+          "dispatchMs": 1,
+          "draws": 104
+        },
+        {
+          "index": 31,
+          "at": 71383.90000000596,
+          "rafTimestamp": 71380.9,
+          "interval": 11,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 111
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 87.40000000596046,
+      "gapStart": 77700,
+      "gapEnd": 77787.40000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 85.69999998807907,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 761,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 77679.80000001192,
+          "rafTimestamp": 77664,
+          "interval": 24.600000023841858,
+          "dispatchMs": 5.5,
+          "draws": 82
+        },
+        {
+          "index": 8,
+          "at": 77695.09999999404,
+          "rafTimestamp": 77680.7,
+          "interval": 15.299999982118607,
+          "dispatchMs": 4,
+          "draws": 81
+        },
+        {
+          "index": 9,
+          "at": 77781.90000000596,
+          "rafTimestamp": 77697.3,
+          "interval": 86.80000001192093,
+          "dispatchMs": 3.4000000059604645,
+          "draws": 68
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 167.5,
+      "gapStart": 6187.5999999940395,
+      "gapEnd": 6355.0999999940395,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 18.400000005960464,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 249.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6171.0999999940395,
+          "rafTimestamp": 6168.5,
+          "interval": 15.299999982118607,
+          "dispatchMs": 1,
+          "draws": 42
+        },
+        {
+          "index": 34,
+          "at": 6189.4000000059605,
+          "rafTimestamp": 6185.1,
+          "interval": 18.30000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 6206.9000000059605,
+          "rafTimestamp": 6201.8,
+          "interval": 17.5,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6223.5,
+          "rafTimestamp": 6218.4,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6238.300000011921,
+          "rafTimestamp": 6235.2,
+          "interval": 14.800000011920929,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6256.200000017881,
+          "rafTimestamp": 6251.8,
+          "interval": 17.900000005960464,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6272.9000000059605,
+          "rafTimestamp": 6268.5,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6288.4000000059605,
+          "rafTimestamp": 6285.2,
+          "interval": 15.5,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6305.5,
+          "rafTimestamp": 6301.8,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6322.5999999940395,
+          "rafTimestamp": 6318.4,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6338.800000011921,
+          "rafTimestamp": 6335.2,
+          "interval": 16.200000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6356.0999999940395,
+          "rafTimestamp": 6351.8,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 49
+        },
+        {
+          "index": 45,
+          "at": 6372.5,
+          "rafTimestamp": 6368.5,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 36
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 40.69999998807907,
+      "gapStart": 7807.200000017881,
+      "gapEnd": 7847.9000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 1.800000011920929,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 248.30000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7805.800000011921,
+          "rafTimestamp": 7768.5,
+          "interval": 48.599999994039536,
+          "dispatchMs": 1,
+          "draws": 63
+        },
+        {
+          "index": 27,
+          "at": 7846.4000000059605,
+          "rafTimestamp": 7801.8,
+          "interval": 40.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 36.19999998807907,
+      "gapStart": 9228.40000000596,
+      "gapEnd": 9264.59999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 8,
+          "at": 9227,
+          "rafTimestamp": 9201.7,
+          "interval": 24.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 63
+        },
+        {
+          "index": 9,
+          "at": 9263.200000017881,
+          "rafTimestamp": 9218.3,
+          "interval": 36.20000001788139,
+          "dispatchMs": 1,
+          "draws": 53
+        },
+        {
+          "index": 10,
+          "at": 9266.200000017881,
+          "rafTimestamp": 9251.7,
+          "interval": 3,
+          "dispatchMs": 1,
+          "draws": 51
+        },
+        {
+          "index": 11,
+          "at": 9271.200000017881,
+          "rafTimestamp": 9268.3,
+          "interval": 5,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 52
+        },
+        {
+          "index": 12,
+          "at": 9289.09999999404,
+          "rafTimestamp": 9285,
+          "interval": 17.899999976158142,
+          "dispatchMs": 1,
+          "draws": 52
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 39.80000001192093,
+      "gapStart": 71318.09999999404,
+      "gapEnd": 71357.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 231.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 71304,
+          "rafTimestamp": 71299.2,
+          "interval": 17.19999998807907,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 97
+        },
+        {
+          "index": 29,
+          "at": 71356.30000001192,
+          "rafTimestamp": 71315.9,
+          "interval": 52.30000001192093,
+          "dispatchMs": 1,
+          "draws": 105
+        },
+        {
+          "index": 30,
+          "at": 71358.90000000596,
+          "rafTimestamp": 71349.2,
+          "interval": 2.5999999940395355,
+          "dispatchMs": 1,
+          "draws": 106
+        },
+        {
+          "index": 31,
+          "at": 71369.30000001192,
+          "rafTimestamp": 71365.9,
+          "interval": 10.400000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 113
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-selected-zoom-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 81.60000002384186,
+      "gapStart": 77686.09999999404,
+      "gapEnd": 77767.70000001788,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 79.80000001192093,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 709.1999999880791,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 77681.20000001788,
+          "rafTimestamp": 77648.9,
+          "interval": 33.80000001192093,
+          "dispatchMs": 3.5,
+          "draws": 83
+        },
+        {
+          "index": 8,
+          "at": 77763.20000001788,
+          "rafTimestamp": 77682.3,
+          "interval": 82,
+          "dispatchMs": 3.399999976158142,
+          "draws": 80
+        },
+        {
+          "index": 9,
+          "at": 77780.30000001192,
+          "rafTimestamp": 77749,
+          "interval": 17.099999994039536,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 69
+        },
+        {
+          "index": 10,
+          "at": 77789.40000000596,
+          "rafTimestamp": 77782.3,
+          "interval": 9.099999994039536,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 167.69999998807907,
+      "gapStart": 5992.5999999940395,
+      "gapEnd": 6160.299999982119,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 248.10000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 5978,
+          "rafTimestamp": 5973.8,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 51
+        },
+        {
+          "index": 34,
+          "at": 5994.5999999940395,
+          "rafTimestamp": 5990.4,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 61
+        },
+        {
+          "index": 35,
+          "at": 6010.199999988079,
+          "rafTimestamp": 6007.1,
+          "interval": 15.599999994039536,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6028.299999982119,
+          "rafTimestamp": 6023.8,
+          "interval": 18.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6044.4000000059605,
+          "rafTimestamp": 6040.4,
+          "interval": 16.100000023841858,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6060.199999988079,
+          "rafTimestamp": 6057.1,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6078,
+          "rafTimestamp": 6073.8,
+          "interval": 17.80000001192093,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6094.5,
+          "rafTimestamp": 6090.4,
+          "interval": 16.5,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6111.299999982119,
+          "rafTimestamp": 6107.1,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6125.9000000059605,
+          "rafTimestamp": 6123.8,
+          "interval": 14.600000023841858,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6142.5999999940395,
+          "rafTimestamp": 6140.5,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6161.4000000059605,
+          "rafTimestamp": 6157.1,
+          "interval": 18.80000001192093,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 47
+        },
+        {
+          "index": 45,
+          "at": 6175.5,
+          "rafTimestamp": 6173.8,
+          "interval": 14.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 34
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 40.900000005960464,
+      "gapStart": 7597,
+      "gapEnd": 7637.9000000059605,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 229.89999997615814,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7595.4000000059605,
+          "rafTimestamp": 7557.1,
+          "interval": 51.20000001788139,
+          "dispatchMs": 0.800000011920929,
+          "draws": 62
+        },
+        {
+          "index": 27,
+          "at": 7636.5,
+          "rafTimestamp": 7590.4,
+          "interval": 41.099999994039536,
+          "dispatchMs": 1,
+          "draws": 63
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 35.89999997615814,
+      "gapStart": 10050.40000000596,
+      "gapEnd": 10086.299999982119,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232,
+      "nearbyRafSamples": [
+        {
+          "index": 9,
+          "at": 10049.09999999404,
+          "rafTimestamp": 10023.6,
+          "interval": 38.400000005960464,
+          "dispatchMs": 0.800000011920929,
+          "draws": 51
+        },
+        {
+          "index": 10,
+          "at": 10084.90000000596,
+          "rafTimestamp": 10040.3,
+          "interval": 35.80000001192093,
+          "dispatchMs": 0.800000011920929,
+          "draws": 49
+        },
+        {
+          "index": 11,
+          "at": 10087.799999982119,
+          "rafTimestamp": 10073.7,
+          "interval": 2.899999976158142,
+          "dispatchMs": 1,
+          "draws": 50
+        },
+        {
+          "index": 12,
+          "at": 10093.5,
+          "rafTimestamp": 10090.3,
+          "interval": 5.700000017881393,
+          "dispatchMs": 0.800000011920929,
+          "draws": 51
+        },
+        {
+          "index": 13,
+          "at": 10110.799999982119,
+          "rafTimestamp": 10107,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 51
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 93.69999998807907,
+      "gapStart": 17076.5,
+      "gapEnd": 17170.19999998808,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 92.0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 762.7999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 20,
+          "at": 17065.79999998212,
+          "rafTimestamp": 17056.7,
+          "interval": 15.099999994039536,
+          "dispatchMs": 4.5,
+          "draws": 52
+        },
+        {
+          "index": 21,
+          "at": 17164.29999998212,
+          "rafTimestamp": 17073.3,
+          "interval": 98.5,
+          "dispatchMs": 3.9000000059604645,
+          "draws": 65
+        },
+        {
+          "index": 22,
+          "at": 17185.59999999404,
+          "rafTimestamp": 17156.7,
+          "interval": 21.30000001192093,
+          "dispatchMs": 4.700000017881393,
+          "draws": 65
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 168.10000002384186,
+      "gapStart": 6001.5,
+      "gapEnd": 6169.600000023842,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 232.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 5987.800000011921,
+          "rafTimestamp": 5983.6,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 40
+        },
+        {
+          "index": 34,
+          "at": 6003.600000023842,
+          "rafTimestamp": 6000.2,
+          "interval": 15.800000011920929,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 61
+        },
+        {
+          "index": 35,
+          "at": 6020.800000011921,
+          "rafTimestamp": 6016.9,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6038,
+          "rafTimestamp": 6033.6,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6054.5,
+          "rafTimestamp": 6050.2,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6069.4000000059605,
+          "rafTimestamp": 6066.9,
+          "interval": 14.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6086.300000011921,
+          "rafTimestamp": 6083.6,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6103.200000017881,
+          "rafTimestamp": 6100.2,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6121.200000017881,
+          "rafTimestamp": 6116.9,
+          "interval": 18,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6137.700000017881,
+          "rafTimestamp": 6133.5,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6153.800000011921,
+          "rafTimestamp": 6150.2,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6170.700000017881,
+          "rafTimestamp": 6166.8,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 47
+        },
+        {
+          "index": 45,
+          "at": 6187.300000011921,
+          "rafTimestamp": 6183.5,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 34
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 40.19999998807907,
+      "gapStart": 7607.300000011921,
+      "gapEnd": 7647.5,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 7.9000000059604645,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 233.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 7605.9000000059605,
+          "rafTimestamp": 7566.9,
+          "interval": 51.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 62
+        },
+        {
+          "index": 27,
+          "at": 7646.100000023842,
+          "rafTimestamp": 7600.1,
+          "interval": 40.20000001788139,
+          "dispatchMs": 1,
+          "draws": 63
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 35.5,
+      "gapStart": 10043.800000011921,
+      "gapEnd": 10079.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 247.2999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 8,
+          "at": 10042.40000000596,
+          "rafTimestamp": 10016.7,
+          "interval": 25.299999982118607,
+          "dispatchMs": 0.699999988079071,
+          "draws": 62
+        },
+        {
+          "index": 9,
+          "at": 10078,
+          "rafTimestamp": 10033.3,
+          "interval": 35.599999994039536,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 10,
+          "at": 10080.700000017881,
+          "rafTimestamp": 10066.7,
+          "interval": 2.7000000178813934,
+          "dispatchMs": 1,
+          "draws": 50
+        },
+        {
+          "index": 11,
+          "at": 10085.90000000596,
+          "rafTimestamp": 10083.4,
+          "interval": 5.199999988079071,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 51
+        },
+        {
+          "index": 12,
+          "at": 10102.700000017881,
+          "rafTimestamp": 10100.1,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 51
+        }
+      ]
+    },
+    {
+      "run": "dpr2-on-dense-zoom-pan-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 75.40000000596046,
+      "gapStart": 17101.70000001788,
+      "gapEnd": 17177.100000023842,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.29999998211860657,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 74.80000001192093,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 742.6999999880791,
+      "nearbyRafSamples": [
+        {
+          "index": 19,
+          "at": 17076.80000001192,
+          "rafTimestamp": 17066.4,
+          "interval": 19.400000005960464,
+          "dispatchMs": 4.5,
+          "draws": 47
+        },
+        {
+          "index": 20,
+          "at": 17090.80000001192,
+          "rafTimestamp": 17083.1,
+          "interval": 14,
+          "dispatchMs": 7,
+          "draws": 51
+        },
+        {
+          "index": 21,
+          "at": 17172.30000001192,
+          "rafTimestamp": 17099.8,
+          "interval": 81.5,
+          "dispatchMs": 5,
+          "draws": 62
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 168.2000000178814,
+      "gapStart": 6710.5999999940395,
+      "gapEnd": 6878.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 26.19999998807907,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 297.80000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6695.200000017881,
+          "rafTimestamp": 6692.9,
+          "interval": 16.700000017881393,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 34,
+          "at": 6711.5999999940395,
+          "rafTimestamp": 6709.6,
+          "interval": 16.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 52
+        },
+        {
+          "index": 35,
+          "at": 6730,
+          "rafTimestamp": 6726.2,
+          "interval": 18.400000005960464,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6747,
+          "rafTimestamp": 6742.9,
+          "interval": 17,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6762.4000000059605,
+          "rafTimestamp": 6759.6,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6779.300000011921,
+          "rafTimestamp": 6776.2,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6796.200000017881,
+          "rafTimestamp": 6792.9,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6812.300000011921,
+          "rafTimestamp": 6809.6,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6828.9000000059605,
+          "rafTimestamp": 6826.2,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6845.5,
+          "rafTimestamp": 6842.9,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6862.5,
+          "rafTimestamp": 6859.6,
+          "interval": 17,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6880.0999999940395,
+          "rafTimestamp": 6876.2,
+          "interval": 17.599999994039536,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 37
+        },
+        {
+          "index": 45,
+          "at": 6895.0999999940395,
+          "rafTimestamp": 6892.9,
+          "interval": 15,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 26
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 41.19999998807907,
+      "gapStart": 8364.90000000596,
+      "gapEnd": 8406.09999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 297.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 8363.300000011921,
+          "rafTimestamp": 8326.2,
+          "interval": 49.70000001788139,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 68
+        },
+        {
+          "index": 27,
+          "at": 8404.59999999404,
+          "rafTimestamp": 8359.5,
+          "interval": 41.29999998211861,
+          "dispatchMs": 1.199999988079071,
+          "draws": 70
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 56.20000001788139,
+      "gapStart": 10260.59999999404,
+      "gapEnd": 10316.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 4.0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 55.60000002384186,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 298.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 10247.40000000596,
+          "rafTimestamp": 10242.8,
+          "interval": 18.5,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 94
+        },
+        {
+          "index": 29,
+          "at": 10315.300000011921,
+          "rafTimestamp": 10259.5,
+          "interval": 67.90000000596046,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 97
+        },
+        {
+          "index": 30,
+          "at": 10317.90000000596,
+          "rafTimestamp": 10309.4,
+          "interval": 2.5999999940395355,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 98
+        },
+        {
+          "index": 31,
+          "at": 10328.300000011921,
+          "rafTimestamp": 10326.1,
+          "interval": 10.400000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 98
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 52.400000005960464,
+      "gapStart": 13060.59999999404,
+      "gapEnd": 13113,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 51.60000002384186,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 298.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 13046.200000017881,
+          "rafTimestamp": 13042.7,
+          "interval": 17,
+          "dispatchMs": 1,
+          "draws": 106
+        },
+        {
+          "index": 29,
+          "at": 13111.09999999404,
+          "rafTimestamp": 13059.4,
+          "interval": 64.89999997615814,
+          "dispatchMs": 1,
+          "draws": 109
+        },
+        {
+          "index": 30,
+          "at": 13114.09999999404,
+          "rafTimestamp": 13109.3,
+          "interval": 3,
+          "dispatchMs": 1,
+          "draws": 110
+        },
+        {
+          "index": 31,
+          "at": 13128.5,
+          "rafTimestamp": 13126,
+          "interval": 14.400000005960464,
+          "dispatchMs": 0.800000011920929,
+          "draws": 110
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 82.2000000178814,
+      "gapStart": 19506.59999999404,
+      "gapEnd": 19588.80000001192,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 80.80000001192093,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1025.300000011921,
+      "nearbyRafSamples": [
+        {
+          "index": 7,
+          "at": 19502.30000001192,
+          "rafTimestamp": 19475.7,
+          "interval": 24.80000001192093,
+          "dispatchMs": 3.9000000059604645,
+          "draws": 90
+        },
+        {
+          "index": 8,
+          "at": 19584.40000000596,
+          "rafTimestamp": 19492.4,
+          "interval": 82.09999999403954,
+          "dispatchMs": 2.9000000059604645,
+          "draws": 76
+        },
+        {
+          "index": 9,
+          "at": 19605.90000000596,
+          "rafTimestamp": 19575.8,
+          "interval": 21.5,
+          "dispatchMs": 3.0999999940395355,
+          "draws": 69
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 166.2000000178814,
+      "gapStart": 6694.5,
+      "gapEnd": 6860.700000017881,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 26.30000001192093,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 313.19999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 6678.9000000059605,
+          "rafTimestamp": 6675.3,
+          "interval": 17.400000005960464,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 34,
+          "at": 6695.700000017881,
+          "rafTimestamp": 6692,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 52
+        },
+        {
+          "index": 35,
+          "at": 6712.800000011921,
+          "rafTimestamp": 6708.6,
+          "interval": 17.099999994039536,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 6729.5999999940395,
+          "rafTimestamp": 6725.3,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 6746.300000011921,
+          "rafTimestamp": 6742,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 6761,
+          "rafTimestamp": 6758.6,
+          "interval": 14.699999988079071,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 6779.800000011921,
+          "rafTimestamp": 6775.3,
+          "interval": 18.80000001192093,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 6796.4000000059605,
+          "rafTimestamp": 6791.9,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 6812.9000000059605,
+          "rafTimestamp": 6808.6,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 6828.200000017881,
+          "rafTimestamp": 6825.3,
+          "interval": 15.300000011920929,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 6844.300000011921,
+          "rafTimestamp": 6841.9,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 6862,
+          "rafTimestamp": 6858.6,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 38
+        },
+        {
+          "index": 45,
+          "at": 6877.200000017881,
+          "rafTimestamp": 6875.3,
+          "interval": 15.200000017881393,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 27
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 41.20000001788139,
+      "gapStart": 8399.59999999404,
+      "gapEnd": 8440.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 16.19999998807907,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 313.7000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 8398.09999999404,
+          "rafTimestamp": 8358.6,
+          "interval": 50.79999998211861,
+          "dispatchMs": 0.699999988079071,
+          "draws": 68
+        },
+        {
+          "index": 27,
+          "at": 8439.300000011921,
+          "rafTimestamp": 8391.9,
+          "interval": 41.20000001788139,
+          "dispatchMs": 1,
+          "draws": 70
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 55.5,
+      "gapStart": 10327.800000011921,
+      "gapEnd": 10383.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 10.300000011920929,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 54.5,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 314.40000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 10314.5,
+          "rafTimestamp": 10308.5,
+          "interval": 20.299999982118607,
+          "dispatchMs": 1,
+          "draws": 94
+        },
+        {
+          "index": 29,
+          "at": 10381.700000017881,
+          "rafTimestamp": 10325.2,
+          "interval": 67.2000000178814,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 97
+        },
+        {
+          "index": 30,
+          "at": 10384.40000000596,
+          "rafTimestamp": 10375.1,
+          "interval": 2.699999988079071,
+          "dispatchMs": 1,
+          "draws": 98
+        },
+        {
+          "index": 31,
+          "at": 10394.09999999404,
+          "rafTimestamp": 10391.8,
+          "interval": 9.699999988079071,
+          "dispatchMs": 0.800000011920929,
+          "draws": 98
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 51.80000001192093,
+      "gapStart": 13142.5,
+      "gapEnd": 13194.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 50.5,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 313.19999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 13129.700000017881,
+          "rafTimestamp": 13125.1,
+          "interval": 16.900000005960464,
+          "dispatchMs": 1,
+          "draws": 106
+        },
+        {
+          "index": 29,
+          "at": 13192.700000017881,
+          "rafTimestamp": 13141.7,
+          "interval": 63,
+          "dispatchMs": 1,
+          "draws": 109
+        },
+        {
+          "index": 30,
+          "at": 13195.40000000596,
+          "rafTimestamp": 13191.7,
+          "interval": 2.699999988079071,
+          "dispatchMs": 1,
+          "draws": 110
+        },
+        {
+          "index": 31,
+          "at": 13211.90000000596,
+          "rafTimestamp": 13208.4,
+          "interval": 16.5,
+          "dispatchMs": 0.699999988079071,
+          "draws": 110
+        }
+      ]
+    },
+    {
+      "run": "dpr3-on-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 88.2999999821186,
+      "gapStart": 20044.30000001192,
+      "gapEnd": 20132.59999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 87.89999997615814,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1141.199999988079,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 20031.80000001192,
+          "rafTimestamp": 20024.8,
+          "interval": 13.800000011920929,
+          "dispatchMs": 4.5999999940395355,
+          "draws": 86
+        },
+        {
+          "index": 27,
+          "at": 20126.30000001192,
+          "rafTimestamp": 20041.5,
+          "interval": 94.5,
+          "dispatchMs": 5.299999982118607,
+          "draws": 103
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 562.5999999940395,
+      "gapStart": 7548.700000017881,
+      "gapEnd": 8111.300000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 26.19999998807907,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 364.10000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 23,
+          "at": 7547.300000011921,
+          "rafTimestamp": 7493.3,
+          "interval": 51.599999994039536,
+          "dispatchMs": 1,
+          "draws": 13
+        },
+        {
+          "index": 24,
+          "at": 7576.200000017881,
+          "rafTimestamp": 7543.3,
+          "interval": 28.900000005960464,
+          "dispatchMs": 1,
+          "draws": 14
+        },
+        {
+          "index": 25,
+          "at": 7581.0999999940395,
+          "rafTimestamp": 7559.9,
+          "interval": 4.899999976158142,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 26,
+          "at": 7597.5,
+          "rafTimestamp": 7593.3,
+          "interval": 16.400000005960464,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 27,
+          "at": 7615.200000017881,
+          "rafTimestamp": 7609.9,
+          "interval": 17.700000017881393,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 28,
+          "at": 7631.5999999940395,
+          "rafTimestamp": 7626.6,
+          "interval": 16.399999976158142,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 29,
+          "at": 7647.0999999940395,
+          "rafTimestamp": 7643.3,
+          "interval": 15.5,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 30,
+          "at": 7664.200000017881,
+          "rafTimestamp": 7659.9,
+          "interval": 17.100000023841858,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 31,
+          "at": 7681.800000011921,
+          "rafTimestamp": 7676.6,
+          "interval": 17.599999994039536,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 32,
+          "at": 7697.5999999940395,
+          "rafTimestamp": 7693.3,
+          "interval": 15.799999982118607,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 33,
+          "at": 7715.0999999940395,
+          "rafTimestamp": 7709.9,
+          "interval": 17.5,
+          "dispatchMs": 1.2000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 34,
+          "at": 7731.800000011921,
+          "rafTimestamp": 7726.5,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 35,
+          "at": 7746.5999999940395,
+          "rafTimestamp": 7743.2,
+          "interval": 14.799999982118607,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 7764.800000011921,
+          "rafTimestamp": 7759.9,
+          "interval": 18.200000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 7781,
+          "rafTimestamp": 7776.6,
+          "interval": 16.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 7798.300000011921,
+          "rafTimestamp": 7793.3,
+          "interval": 17.30000001192093,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 7815,
+          "rafTimestamp": 7810,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 7830.5999999940395,
+          "rafTimestamp": 7826.6,
+          "interval": 15.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 7848.4000000059605,
+          "rafTimestamp": 7843.2,
+          "interval": 17.80000001192093,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 7864.800000011921,
+          "rafTimestamp": 7859.9,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 7880.5999999940395,
+          "rafTimestamp": 7876.5,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 7898.300000011921,
+          "rafTimestamp": 7893.2,
+          "interval": 17.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 7915.0999999940395,
+          "rafTimestamp": 7909.9,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 7929.9000000059605,
+          "rafTimestamp": 7926.6,
+          "interval": 14.800000011920929,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 47,
+          "at": 7947.5999999940395,
+          "rafTimestamp": 7943.2,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 48,
+          "at": 7964.300000011921,
+          "rafTimestamp": 7959.9,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 49,
+          "at": 7980.5,
+          "rafTimestamp": 7976.6,
+          "interval": 16.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 50,
+          "at": 7998.0999999940395,
+          "rafTimestamp": 7993.2,
+          "interval": 17.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 51,
+          "at": 8015.200000017881,
+          "rafTimestamp": 8009.8,
+          "interval": 17.100000023841858,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 52,
+          "at": 8031.5999999940395,
+          "rafTimestamp": 8026.5,
+          "interval": 16.399999976158142,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 53,
+          "at": 8047.200000017881,
+          "rafTimestamp": 8043.2,
+          "interval": 15.600000023841858,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 54,
+          "at": 8064.9000000059605,
+          "rafTimestamp": 8059.9,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 55,
+          "at": 8081.5,
+          "rafTimestamp": 8076.5,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 56,
+          "at": 8097.200000017881,
+          "rafTimestamp": 8093.2,
+          "interval": 15.700000017881393,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 57,
+          "at": 8112.200000017881,
+          "rafTimestamp": 8109.9,
+          "interval": 15,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 11
+        },
+        {
+          "index": 58,
+          "at": 8131,
+          "rafTimestamp": 8126.5,
+          "interval": 18.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 200.59999999403954,
+      "gapStart": 9611.5,
+      "gapEnd": 9812.09999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.10000002384185791,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 366.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 9596.5,
+          "rafTimestamp": 9593.2,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 64
+        },
+        {
+          "index": 34,
+          "at": 9612.59999999404,
+          "rafTimestamp": 9609.8,
+          "interval": 16.099999994039536,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 64
+        },
+        {
+          "index": 35,
+          "at": 9631.700000017881,
+          "rafTimestamp": 9626.5,
+          "interval": 19.100000023841858,
+          "dispatchMs": 1.100000023841858,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 9648.200000017881,
+          "rafTimestamp": 9643.1,
+          "interval": 16.5,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 9664,
+          "rafTimestamp": 9659.8,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 9681.5,
+          "rafTimestamp": 9676.5,
+          "interval": 17.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 9698.09999999404,
+          "rafTimestamp": 9693.2,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 9713.59999999404,
+          "rafTimestamp": 9709.8,
+          "interval": 15.5,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 9731.40000000596,
+          "rafTimestamp": 9726.5,
+          "interval": 17.80000001192093,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 9746.09999999404,
+          "rafTimestamp": 9743.2,
+          "interval": 14.699999988079071,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 9764.800000011921,
+          "rafTimestamp": 9759.8,
+          "interval": 18.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 9780.59999999404,
+          "rafTimestamp": 9776.5,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 9796.700000017881,
+          "rafTimestamp": 9793.2,
+          "interval": 16.100000023841858,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 9814.5,
+          "rafTimestamp": 9809.9,
+          "interval": 17.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 26
+        },
+        {
+          "index": 47,
+          "at": 9828.90000000596,
+          "rafTimestamp": 9826.4,
+          "interval": 14.400000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 20
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 41.30000001192093,
+      "gapStart": 11331.59999999404,
+      "gapEnd": 11372.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 415.30000001192093,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 11329.90000000596,
+          "rafTimestamp": 11293.1,
+          "interval": 47.099999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 73
+        },
+        {
+          "index": 27,
+          "at": 11371.300000011921,
+          "rafTimestamp": 11326.5,
+          "interval": 41.400000005960464,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 76
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 51.599999994039536,
+      "gapStart": 13909.200000017881,
+      "gapEnd": 13960.800000011921,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 50.5,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 415.5,
+      "nearbyRafSamples": [
+        {
+          "index": 5,
+          "at": 13907.800000011921,
+          "rafTimestamp": 13859.6,
+          "interval": 62.400000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 80
+        },
+        {
+          "index": 6,
+          "at": 13959.09999999404,
+          "rafTimestamp": 13893,
+          "interval": 51.29999998211861,
+          "dispatchMs": 0.7999999821186066,
+          "draws": 79
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 84.90000000596046,
+      "gapStart": 21284,
+      "gapEnd": 21368.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.30000001192092896,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 83.59999999403954,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1327.699999988079,
+      "nearbyRafSamples": [
+        {
+          "index": 24,
+          "at": 21277.30000001192,
+          "rafTimestamp": 21209.3,
+          "interval": 64.40000000596046,
+          "dispatchMs": 4.800000011920929,
+          "draws": 75
+        },
+        {
+          "index": 25,
+          "at": 21362.20000001788,
+          "rafTimestamp": 21276,
+          "interval": 84.90000000596046,
+          "dispatchMs": 4.9000000059604645,
+          "draws": 77
+        },
+        {
+          "index": 26,
+          "at": 21374.09999999404,
+          "rafTimestamp": 21359.3,
+          "interval": 11.899999976158142,
+          "dispatchMs": 5.199999988079071,
+          "draws": 100
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 544.4000000059605,
+      "gapStart": 7520.0999999940395,
+      "gapEnd": 8064.5,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 28.100000023841858,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 347.19999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 23,
+          "at": 7518.5,
+          "rafTimestamp": 7460.5,
+          "interval": 52.099999994039536,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 12
+        },
+        {
+          "index": 24,
+          "at": 7548.200000017881,
+          "rafTimestamp": 7510.6,
+          "interval": 29.700000017881393,
+          "dispatchMs": 1,
+          "draws": 13
+        },
+        {
+          "index": 25,
+          "at": 7552.9000000059605,
+          "rafTimestamp": 7543.9,
+          "interval": 4.699999988079071,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 26,
+          "at": 7565.5999999940395,
+          "rafTimestamp": 7560.6,
+          "interval": 12.699999988079071,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 27,
+          "at": 7582.300000011921,
+          "rafTimestamp": 7577.2,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 28,
+          "at": 7598.5999999940395,
+          "rafTimestamp": 7593.9,
+          "interval": 16.299999982118607,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 29,
+          "at": 7615.300000011921,
+          "rafTimestamp": 7610.5,
+          "interval": 16.700000017881393,
+          "dispatchMs": 1.100000023841858,
+          "draws": 0
+        },
+        {
+          "index": 30,
+          "at": 7632.5,
+          "rafTimestamp": 7627.2,
+          "interval": 17.19999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 31,
+          "at": 7648.5,
+          "rafTimestamp": 7643.9,
+          "interval": 16,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 32,
+          "at": 7664.700000017881,
+          "rafTimestamp": 7660.5,
+          "interval": 16.200000017881393,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 33,
+          "at": 7681.200000017881,
+          "rafTimestamp": 7677.2,
+          "interval": 16.5,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 34,
+          "at": 7697.4000000059605,
+          "rafTimestamp": 7693.8,
+          "interval": 16.19999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 35,
+          "at": 7715.0999999940395,
+          "rafTimestamp": 7710.5,
+          "interval": 17.69999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 7732.300000011921,
+          "rafTimestamp": 7727.2,
+          "interval": 17.200000017881393,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 7749,
+          "rafTimestamp": 7743.8,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 7765.0999999940395,
+          "rafTimestamp": 7760.5,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 7782.5,
+          "rafTimestamp": 7777.2,
+          "interval": 17.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 7799,
+          "rafTimestamp": 7793.8,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 7815.0999999940395,
+          "rafTimestamp": 7810.5,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 7832.0999999940395,
+          "rafTimestamp": 7827.1,
+          "interval": 17,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 7849,
+          "rafTimestamp": 7843.9,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 7865.800000011921,
+          "rafTimestamp": 7860.6,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 7881.5,
+          "rafTimestamp": 7877.2,
+          "interval": 15.699999988079071,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 7898.9000000059605,
+          "rafTimestamp": 7893.8,
+          "interval": 17.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 47,
+          "at": 7915.5,
+          "rafTimestamp": 7910.5,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 48,
+          "at": 7931.4000000059605,
+          "rafTimestamp": 7927.2,
+          "interval": 15.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 49,
+          "at": 7949.0999999940395,
+          "rafTimestamp": 7943.9,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 50,
+          "at": 7965.800000011921,
+          "rafTimestamp": 7960.5,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 51,
+          "at": 7981.700000017881,
+          "rafTimestamp": 7977.1,
+          "interval": 15.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 52,
+          "at": 7998.800000011921,
+          "rafTimestamp": 7993.8,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 53,
+          "at": 8014.9000000059605,
+          "rafTimestamp": 8010.5,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 54,
+          "at": 8031.800000011921,
+          "rafTimestamp": 8027.2,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 55,
+          "at": 8049,
+          "rafTimestamp": 8043.8,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 56,
+          "at": 8065.4000000059605,
+          "rafTimestamp": 8060.5,
+          "interval": 16.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 11
+        },
+        {
+          "index": 57,
+          "at": 8079.4000000059605,
+          "rafTimestamp": 8077.1,
+          "interval": 14,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 11
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 200.40000000596046,
+      "gapStart": 9562.300000011921,
+      "gapEnd": 9762.700000017881,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 364.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 9547.40000000596,
+          "rafTimestamp": 9543.8,
+          "interval": 18.5,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 63
+        },
+        {
+          "index": 34,
+          "at": 9563.200000017881,
+          "rafTimestamp": 9560.5,
+          "interval": 15.800000011920929,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 9582.200000017881,
+          "rafTimestamp": 9577.1,
+          "interval": 19,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 9598.700000017881,
+          "rafTimestamp": 9593.8,
+          "interval": 16.5,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 9614.800000011921,
+          "rafTimestamp": 9610.4,
+          "interval": 16.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 9630.59999999404,
+          "rafTimestamp": 9627.1,
+          "interval": 15.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 9648.90000000596,
+          "rafTimestamp": 9643.7,
+          "interval": 18.30000001192093,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 9664.59999999404,
+          "rafTimestamp": 9660.5,
+          "interval": 15.699999988079071,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 9682.09999999404,
+          "rafTimestamp": 9677.1,
+          "interval": 17.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 9698.800000011921,
+          "rafTimestamp": 9693.8,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 9714.200000017881,
+          "rafTimestamp": 9710.4,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 9731.5,
+          "rafTimestamp": 9727.1,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 9747,
+          "rafTimestamp": 9743.7,
+          "interval": 15.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 9764.700000017881,
+          "rafTimestamp": 9760.4,
+          "interval": 17.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 27
+        },
+        {
+          "index": 47,
+          "at": 9779.90000000596,
+          "rafTimestamp": 9777.1,
+          "interval": 15.199999988079071,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 21
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 42.599999994039536,
+      "gapStart": 11262.90000000596,
+      "gapEnd": 11305.5,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 382.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 24,
+          "at": 11238.200000017881,
+          "rafTimestamp": 11227,
+          "interval": 17,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 25,
+          "at": 11251.59999999404,
+          "rafTimestamp": 11243.7,
+          "interval": 13.399999976158142,
+          "dispatchMs": 1,
+          "draws": 52
+        },
+        {
+          "index": 26,
+          "at": 11303.90000000596,
+          "rafTimestamp": 11260.4,
+          "interval": 52.30000001192093,
+          "dispatchMs": 1,
+          "draws": 72
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 50.69999998807907,
+      "gapStart": 13829.40000000596,
+      "gapEnd": 13880.09999999404,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 49.69999998807907,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 383.7999999821186,
+      "nearbyRafSamples": [
+        {
+          "index": 4,
+          "at": 13812.800000011921,
+          "rafTimestamp": 13810.3,
+          "interval": 17.599999994039536,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 79
+        },
+        {
+          "index": 5,
+          "at": 13878.40000000596,
+          "rafTimestamp": 13827,
+          "interval": 65.59999999403954,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 79
+        }
+      ]
+    },
+    {
+      "run": "dpr4-off-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 92.90000000596046,
+      "gapStart": 21340,
+      "gapEnd": 21432.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 91.59999999403954,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1512.699999988079,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 21334.70000001788,
+          "rafTimestamp": 21310,
+          "interval": 31.30000001192093,
+          "dispatchMs": 4,
+          "draws": 100
+        },
+        {
+          "index": 29,
+          "at": 21427.20000001788,
+          "rafTimestamp": 21326.7,
+          "interval": 92.5,
+          "dispatchMs": 3.5,
+          "draws": 103
+        },
+        {
+          "index": 30,
+          "at": 21435.80000001192,
+          "rafTimestamp": 21426.7,
+          "interval": 8.599999994039536,
+          "dispatchMs": 4.199999988079071,
+          "draws": 104
+        },
+        {
+          "index": 31,
+          "at": 21449.30000001192,
+          "rafTimestamp": 21443.3,
+          "interval": 13.5,
+          "dispatchMs": 3,
+          "draws": 104
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-after",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 560.3999999761581,
+      "gapStart": 7518.800000011921,
+      "gapEnd": 8079.199999988079,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 25.19999998807907,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 364.10000002384186,
+      "nearbyRafSamples": [
+        {
+          "index": 23,
+          "at": 7517.4000000059605,
+          "rafTimestamp": 7461.1,
+          "interval": 51.099999994039536,
+          "dispatchMs": 1,
+          "draws": 13
+        },
+        {
+          "index": 24,
+          "at": 7547.0999999940395,
+          "rafTimestamp": 7511.2,
+          "interval": 29.69999998807907,
+          "dispatchMs": 1,
+          "draws": 14
+        },
+        {
+          "index": 25,
+          "at": 7551.800000011921,
+          "rafTimestamp": 7544.5,
+          "interval": 4.700000017881393,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 26,
+          "at": 7564.5999999940395,
+          "rafTimestamp": 7561.2,
+          "interval": 12.799999982118607,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 27,
+          "at": 7581.699999988079,
+          "rafTimestamp": 7577.8,
+          "interval": 17.099999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 28,
+          "at": 7599.5999999940395,
+          "rafTimestamp": 7594.5,
+          "interval": 17.900000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 29,
+          "at": 7616.4000000059605,
+          "rafTimestamp": 7611.1,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 30,
+          "at": 7631.5,
+          "rafTimestamp": 7627.8,
+          "interval": 15.099999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 31,
+          "at": 7648.4000000059605,
+          "rafTimestamp": 7644.5,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 32,
+          "at": 7666.4000000059605,
+          "rafTimestamp": 7661.1,
+          "interval": 18,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 33,
+          "at": 7682.9000000059605,
+          "rafTimestamp": 7677.8,
+          "interval": 16.5,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 34,
+          "at": 7699.5,
+          "rafTimestamp": 7694.5,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 35,
+          "at": 7714.9000000059605,
+          "rafTimestamp": 7711.1,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 7732.699999988079,
+          "rafTimestamp": 7727.8,
+          "interval": 17.799999982118607,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 7749.5,
+          "rafTimestamp": 7744.5,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 7764.5,
+          "rafTimestamp": 7761.1,
+          "interval": 15,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 7782.300000011921,
+          "rafTimestamp": 7777.8,
+          "interval": 17.80000001192093,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 7799.5,
+          "rafTimestamp": 7794.4,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 7814.300000011921,
+          "rafTimestamp": 7811.1,
+          "interval": 14.800000011920929,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 7832.800000011921,
+          "rafTimestamp": 7827.8,
+          "interval": 18.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 7849.800000011921,
+          "rafTimestamp": 7844.5,
+          "interval": 17,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 7864.300000011921,
+          "rafTimestamp": 7861.1,
+          "interval": 14.5,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 7882.9000000059605,
+          "rafTimestamp": 7877.7,
+          "interval": 18.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 7899.5999999940395,
+          "rafTimestamp": 7894.4,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 47,
+          "at": 7914.300000011921,
+          "rafTimestamp": 7911.1,
+          "interval": 14.700000017881393,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 48,
+          "at": 7932.9000000059605,
+          "rafTimestamp": 7927.8,
+          "interval": 18.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 49,
+          "at": 7948.199999988079,
+          "rafTimestamp": 7944.5,
+          "interval": 15.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 50,
+          "at": 7965.800000011921,
+          "rafTimestamp": 7961.2,
+          "interval": 17.600000023841858,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 51,
+          "at": 7981.300000011921,
+          "rafTimestamp": 7977.8,
+          "interval": 15.5,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 52,
+          "at": 7999.4000000059605,
+          "rafTimestamp": 7994.5,
+          "interval": 18.099999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 53,
+          "at": 8016,
+          "rafTimestamp": 8011.1,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 54,
+          "at": 8032.9000000059605,
+          "rafTimestamp": 8027.8,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 55,
+          "at": 8049.699999988079,
+          "rafTimestamp": 8044.5,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 56,
+          "at": 8066.199999988079,
+          "rafTimestamp": 8061.2,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 57,
+          "at": 8080.300000011921,
+          "rafTimestamp": 8077.7,
+          "interval": 14.100000023841858,
+          "dispatchMs": 0.5,
+          "draws": 11
+        },
+        {
+          "index": 58,
+          "at": 8097.5999999940395,
+          "rafTimestamp": 8094.4,
+          "interval": 17.299999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-after",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 200.90000000596046,
+      "gapStart": 9579.09999999404,
+      "gapEnd": 9780,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 381.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 9563.699999988079,
+          "rafTimestamp": 9561.1,
+          "interval": 15.299999982118607,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 63
+        },
+        {
+          "index": 34,
+          "at": 9580.300000011921,
+          "rafTimestamp": 9577.8,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 63
+        },
+        {
+          "index": 35,
+          "at": 9600,
+          "rafTimestamp": 9594.4,
+          "interval": 19.69999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 9616.199999988079,
+          "rafTimestamp": 9611,
+          "interval": 16.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 9633,
+          "rafTimestamp": 9627.8,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 9649.699999988079,
+          "rafTimestamp": 9644.4,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 9664.40000000596,
+          "rafTimestamp": 9661.1,
+          "interval": 14.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 9682.40000000596,
+          "rafTimestamp": 9677.7,
+          "interval": 18,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 9699.59999999404,
+          "rafTimestamp": 9694.4,
+          "interval": 17.19999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 9714.300000011921,
+          "rafTimestamp": 9711,
+          "interval": 14.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 9733.09999999404,
+          "rafTimestamp": 9727.7,
+          "interval": 18.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 9749.59999999404,
+          "rafTimestamp": 9744.4,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 9764.5,
+          "rafTimestamp": 9761,
+          "interval": 14.900000005960464,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 9783,
+          "rafTimestamp": 9777.7,
+          "interval": 18.5,
+          "dispatchMs": 0.5,
+          "draws": 26
+        },
+        {
+          "index": 47,
+          "at": 9795.800000011921,
+          "rafTimestamp": 9794.4,
+          "interval": 12.800000011920929,
+          "dispatchMs": 0.5,
+          "draws": 19
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-after",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 43,
+      "gapStart": 11295,
+      "gapEnd": 11338,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 398.2000000178814,
+      "nearbyRafSamples": [
+        {
+          "index": 24,
+          "at": 11271.5,
+          "rafTimestamp": 11261,
+          "interval": 16.80000001192093,
+          "dispatchMs": 1,
+          "draws": 53
+        },
+        {
+          "index": 25,
+          "at": 11285.199999988079,
+          "rafTimestamp": 11277.6,
+          "interval": 13.699999988079071,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 53
+        },
+        {
+          "index": 26,
+          "at": 11336.5,
+          "rafTimestamp": 11294.3,
+          "interval": 51.30000001192093,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 73
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-after",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 47.599999994039536,
+      "gapStart": 13861.800000011921,
+      "gapEnd": 13909.40000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 396.90000000596046,
+      "nearbyRafSamples": [
+        {
+          "index": 4,
+          "at": 13846.699999988079,
+          "rafTimestamp": 13844.2,
+          "interval": 16.69999998807907,
+          "dispatchMs": 1,
+          "draws": 80
+        },
+        {
+          "index": 5,
+          "at": 13907.59999999404,
+          "rafTimestamp": 13860.9,
+          "interval": 60.900000005960464,
+          "dispatchMs": 1,
+          "draws": 80
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-after",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 63.30000001192093,
+      "gapStart": 21022,
+      "gapEnd": 21085.30000001192,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.19999998807907104,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 61.400000005960464,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1461.0999999940395,
+      "nearbyRafSamples": [
+        {
+          "index": 10,
+          "at": 21014.09999999404,
+          "rafTimestamp": 20960.6,
+          "interval": 52.69999998807907,
+          "dispatchMs": 4.5999999940395355,
+          "draws": 66
+        },
+        {
+          "index": 11,
+          "at": 21078.80000001192,
+          "rafTimestamp": 21010.6,
+          "interval": 64.7000000178814,
+          "dispatchMs": 5.9000000059604645,
+          "draws": 66
+        },
+        {
+          "index": 12,
+          "at": 21091.40000000596,
+          "rafTimestamp": 21077.3,
+          "interval": 12.599999994039536,
+          "dispatchMs": 4.799999982118607,
+          "draws": 61
+        },
+        {
+          "index": 13,
+          "at": 21109.90000000596,
+          "rafTimestamp": 21093.9,
+          "interval": 18.5,
+          "dispatchMs": 4.4000000059604645,
+          "draws": 62
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-before",
+      "phase": "interrupted-selection",
+      "legacyMaxGapMs": 561.3000000119209,
+      "gapStart": 7478.799999982119,
+      "gapEnd": 8040.0999999940395,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 26.599999994039536,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 347.39999997615814,
+      "nearbyRafSamples": [
+        {
+          "index": 23,
+          "at": 7477.4000000059605,
+          "rafTimestamp": 7420.6,
+          "interval": 51.60000002384186,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 12
+        },
+        {
+          "index": 24,
+          "at": 7506.799999982119,
+          "rafTimestamp": 7470.6,
+          "interval": 29.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 13
+        },
+        {
+          "index": 25,
+          "at": 7511.199999988079,
+          "rafTimestamp": 7503.9,
+          "interval": 4.4000000059604645,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 26,
+          "at": 7524.699999988079,
+          "rafTimestamp": 7520.6,
+          "interval": 13.5,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 27,
+          "at": 7541.299999982119,
+          "rafTimestamp": 7537.3,
+          "interval": 16.599999994039536,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 28,
+          "at": 7557.9000000059605,
+          "rafTimestamp": 7553.9,
+          "interval": 16.600000023841858,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 29,
+          "at": 7574.5,
+          "rafTimestamp": 7570.6,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 30,
+          "at": 7591.4000000059605,
+          "rafTimestamp": 7587.3,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 31,
+          "at": 7607.799999982119,
+          "rafTimestamp": 7603.9,
+          "interval": 16.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 32,
+          "at": 7624.5999999940395,
+          "rafTimestamp": 7620.6,
+          "interval": 16.80000001192093,
+          "dispatchMs": 1.100000023841858,
+          "draws": 0
+        },
+        {
+          "index": 33,
+          "at": 7641.299999982119,
+          "rafTimestamp": 7637.2,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 34,
+          "at": 7657.9000000059605,
+          "rafTimestamp": 7654,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 35,
+          "at": 7674.299999982119,
+          "rafTimestamp": 7670.6,
+          "interval": 16.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 7691,
+          "rafTimestamp": 7687.2,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 7707.699999988079,
+          "rafTimestamp": 7703.9,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 7724.5,
+          "rafTimestamp": 7720.5,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 7741.0999999940395,
+          "rafTimestamp": 7737.2,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 7758,
+          "rafTimestamp": 7753.9,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 7774.5999999940395,
+          "rafTimestamp": 7770.6,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 7791.0999999940395,
+          "rafTimestamp": 7787.3,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 7809,
+          "rafTimestamp": 7803.9,
+          "interval": 17.900000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 7824.4000000059605,
+          "rafTimestamp": 7820.6,
+          "interval": 15.400000005960464,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 7841.299999982119,
+          "rafTimestamp": 7837.3,
+          "interval": 16.899999976158142,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 7859.5,
+          "rafTimestamp": 7853.9,
+          "interval": 18.200000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 47,
+          "at": 7874.4000000059605,
+          "rafTimestamp": 7870.6,
+          "interval": 14.900000005960464,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 48,
+          "at": 7891.0999999940395,
+          "rafTimestamp": 7887.2,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 49,
+          "at": 7907.699999988079,
+          "rafTimestamp": 7903.9,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.4000000059604645,
+          "draws": 0
+        },
+        {
+          "index": 50,
+          "at": 7924.4000000059605,
+          "rafTimestamp": 7920.6,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 51,
+          "at": 7941.0999999940395,
+          "rafTimestamp": 7937.2,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 52,
+          "at": 7957.9000000059605,
+          "rafTimestamp": 7954,
+          "interval": 16.80000001192093,
+          "dispatchMs": 0.699999988079071,
+          "draws": 0
+        },
+        {
+          "index": 53,
+          "at": 7974.4000000059605,
+          "rafTimestamp": 7970.6,
+          "interval": 16.5,
+          "dispatchMs": 0.3999999761581421,
+          "draws": 0
+        },
+        {
+          "index": 54,
+          "at": 7991,
+          "rafTimestamp": 7987.3,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5999999940395355,
+          "draws": 0
+        },
+        {
+          "index": 55,
+          "at": 8007.699999988079,
+          "rafTimestamp": 8003.9,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 56,
+          "at": 8024.299999982119,
+          "rafTimestamp": 8020.6,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 57,
+          "at": 8041.299999982119,
+          "rafTimestamp": 8037.2,
+          "interval": 17,
+          "dispatchMs": 0.5,
+          "draws": 11
+        },
+        {
+          "index": 58,
+          "at": 8058,
+          "rafTimestamp": 8053.9,
+          "interval": 16.700000017881393,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-before",
+      "phase": "repeat-0",
+      "legacyMaxGapMs": 199.90000000596046,
+      "gapStart": 9505,
+      "gapEnd": 9704.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 347.69999998807907,
+      "nearbyRafSamples": [
+        {
+          "index": 33,
+          "at": 9489.699999988079,
+          "rafTimestamp": 9487.2,
+          "interval": 16.900000005960464,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 62
+        },
+        {
+          "index": 34,
+          "at": 9505.90000000596,
+          "rafTimestamp": 9503.8,
+          "interval": 16.200000017881393,
+          "dispatchMs": 0.800000011920929,
+          "draws": 62
+        },
+        {
+          "index": 35,
+          "at": 9524.59999999404,
+          "rafTimestamp": 9520.6,
+          "interval": 18.69999998807907,
+          "dispatchMs": 1,
+          "draws": 0
+        },
+        {
+          "index": 36,
+          "at": 9541.199999988079,
+          "rafTimestamp": 9537.1,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 37,
+          "at": 9557.799999982119,
+          "rafTimestamp": 9553.9,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.7000000178813934,
+          "draws": 0
+        },
+        {
+          "index": 38,
+          "at": 9574.40000000596,
+          "rafTimestamp": 9570.5,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 39,
+          "at": 9591.09999999404,
+          "rafTimestamp": 9587.1,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 40,
+          "at": 9607.799999982119,
+          "rafTimestamp": 9603.8,
+          "interval": 16.69999998807907,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 41,
+          "at": 9624.40000000596,
+          "rafTimestamp": 9620.5,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 42,
+          "at": 9641.199999988079,
+          "rafTimestamp": 9637.2,
+          "interval": 16.799999982118607,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 43,
+          "at": 9657.799999982119,
+          "rafTimestamp": 9653.8,
+          "interval": 16.599999994039536,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 44,
+          "at": 9674.799999982119,
+          "rafTimestamp": 9670.5,
+          "interval": 17,
+          "dispatchMs": 0.5,
+          "draws": 0
+        },
+        {
+          "index": 45,
+          "at": 9691.40000000596,
+          "rafTimestamp": 9687.2,
+          "interval": 16.600000023841858,
+          "dispatchMs": 0.6000000238418579,
+          "draws": 0
+        },
+        {
+          "index": 46,
+          "at": 9707.90000000596,
+          "rafTimestamp": 9703.8,
+          "interval": 16.5,
+          "dispatchMs": 0.5,
+          "draws": 26
+        },
+        {
+          "index": 47,
+          "at": 9723.299999982119,
+          "rafTimestamp": 9720.5,
+          "interval": 15.399999976158142,
+          "dispatchMs": 0.699999988079071,
+          "draws": 19
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-before",
+      "phase": "repeat-1",
+      "legacyMaxGapMs": 42.30000001192093,
+      "gapStart": 11207.59999999404,
+      "gapEnd": 11249.90000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 415,
+      "nearbyRafSamples": [
+        {
+          "index": 26,
+          "at": 11206,
+          "rafTimestamp": 11170.4,
+          "interval": 43.900000005960464,
+          "dispatchMs": 1,
+          "draws": 72
+        },
+        {
+          "index": 27,
+          "at": 11248.09999999404,
+          "rafTimestamp": 11203.8,
+          "interval": 42.099999994039536,
+          "dispatchMs": 1.199999988079071,
+          "draws": 75
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-before",
+      "phase": "after-idle",
+      "legacyMaxGapMs": 45.400000005960464,
+      "gapStart": 14205,
+      "gapEnd": 14250.40000000596,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.09999999403953552,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 0,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 415.09999999403954,
+      "nearbyRafSamples": [
+        {
+          "index": 28,
+          "at": 14191.799999982119,
+          "rafTimestamp": 14187,
+          "interval": 18.399999976158142,
+          "dispatchMs": 0.8999999761581421,
+          "draws": 100
+        },
+        {
+          "index": 29,
+          "at": 14248.699999988079,
+          "rafTimestamp": 14203.7,
+          "interval": 56.900000005960464,
+          "dispatchMs": 1,
+          "draws": 103
+        },
+        {
+          "index": 30,
+          "at": 14251.5,
+          "rafTimestamp": 14237,
+          "interval": 2.800000011920929,
+          "dispatchMs": 1.0999999940395355,
+          "draws": 104
+        },
+        {
+          "index": 31,
+          "at": 14256.09999999404,
+          "rafTimestamp": 14253.6,
+          "interval": 4.5999999940395355,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 104
+        },
+        {
+          "index": 32,
+          "at": 14273.799999982119,
+          "rafTimestamp": 14270.4,
+          "interval": 17.69999998807907,
+          "dispatchMs": 0.9000000059604645,
+          "draws": 104
+        }
+      ]
+    },
+    {
+      "run": "dpr4-on-before",
+      "phase": "after-freeze",
+      "legacyMaxGapMs": 115.69999998807907,
+      "gapStart": 21101,
+      "gapEnd": 21216.69999998808,
+      "isPhasePrefix": false,
+      "preInputWaitLowerBoundMs": 0.20000001788139343,
+      "firstColorResponseUpperBoundMs": null,
+      "longTaskOverlapMs": 114.7999999821186,
+      "exactInputTimestampAvailable": false,
+      "canonicalWaitMs": 1443.1000000238419,
+      "nearbyRafSamples": [
+        {
+          "index": 22,
+          "at": 21077.79999998212,
+          "rafTimestamp": 21053.4,
+          "interval": 20.799999982118607,
+          "dispatchMs": 3.2999999821186066,
+          "draws": 68
+        },
+        {
+          "index": 23,
+          "at": 21096.19999998808,
+          "rafTimestamp": 21070.1,
+          "interval": 18.400000005960464,
+          "dispatchMs": 2.800000011920929,
+          "draws": 74
+        },
+        {
+          "index": 24,
+          "at": 21211.19999998808,
+          "rafTimestamp": 21086.7,
+          "interval": 115,
+          "dispatchMs": 3.2000000178813934,
+          "draws": 74
+        }
+      ]
+    }
+  ]
+}
