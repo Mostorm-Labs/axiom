@@ -1,0 +1,9 @@
+{
+  "classification": "build-dependency and verification gap",
+  "local_expected": "0.4.2",
+  "local_actual_before_fix": "0.4.0",
+  "cause": "version.json not registered for CMake reconfiguration; Web compared engine-derived values",
+  "fix": "CMAKE_CONFIGURE_DEPENDS on version.json; native and Web assert independent exported SDK_VERSION",
+  "after": "native Session and real Chrome pass version equality0.4.2",
+  "hosted_0_4_1": "fresh configuration; published RN packages unaffected"
+}

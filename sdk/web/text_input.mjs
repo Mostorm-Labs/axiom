@@ -92,13 +92,13 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     if(['insertText','insertReplacementText'].includes(event.inputType))enqueue({kind:4,text:event.data||'',range:[carrier.selectionStart,carrier.selectionEnd-carrier.selectionStart]});
     else if(event.inputType==='deleteContentBackward')enqueue({intent:8});
     else if(event.inputType==='deleteContentForward')enqueue({intent:9});
-    else if(event.inputType==='insertLineBreak'||event.inputType==='insertParagraph')enqueue({intent:2});
+    else if(event.inputType==='insertLineBreak'||event.inputType==='insertParagraph')enqueue({intent:3});
     else{fault=`Unsupported native input: ${event.inputType}`;stage.dataset.textError=fault;sync();}
   });
   listen(carrier,'paste',event=>{if(nativeComposing)return;event.preventDefault();terminal=null;enqueue({kind:4,text:event.clipboardData.getData('text/plain')});});
   listen(carrier,'keydown',event=>{
     terminal=null;if(event.isComposing||nativeComposing||event.keyCode===229){event.stopPropagation();return;}
-    const kind=event.key==='Enter'?(event.ctrlKey?3:2):event.key==='Escape'?4:event.key==='Backspace'?8:event.key==='Delete'?9:event.key==='ArrowLeft'?10:event.key==='ArrowRight'?11:(event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'?12:undefined;
+    const kind=event.key==='Enter'?((event.ctrlKey||event.metaKey)?2:3):event.key==='Escape'?4:event.key==='Backspace'?8:event.key==='Delete'?9:event.key==='ArrowLeft'?10:event.key==='ArrowRight'?11:(event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'?12:undefined;
     if(kind!==undefined){event.preventDefault();event.stopPropagation();enqueue({intent:kind});}
   });
   listen(carrier,'blur',()=>{if(snapshot().phase!==0)enqueue({intent:keepOnBlur?14:2});});
@@ -112,6 +112,9 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     // Touch double-taps are already routed through Runtime's pointer path.
     // The browser's compatibility mouse event must not submit them again.
     if(event.sourceCapabilities?.firesTouchEvents)return;
+    // A selected-object click already entered Runtime's editor on release.
+    // Keep that session (and any composition) when the compatibility dblclick arrives.
+    if(snapshot().phase!==0)return;
     const rect=canvas.getBoundingClientRect();finish().then(()=>{
     // Finishing the single-click draft blurs the carrier. Restore canvas focus
     // so sync can hand it to the newly entered editor rather than leaving it on body.

@@ -457,8 +457,13 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       sendPointer(*state, lParam, canvas::input::PointerPhase::kDown, wParam);
       if (!state->mouseKey) releaseHostMouseCapture(*state);
       return 0;
+    case WM_MOUSELEAVE:
+      (void)state->host->publicComposition().hoverSelectionAtViewPoint(-1,-1);
+      return 0;
     case WM_MOUSEMOVE:
       if (!isPromotedPointerMouse() && !state->mouseKey) {
+        TRACKMOUSEEVENT tracking{sizeof(TRACKMOUSEEVENT),TME_LEAVE,window,0};
+        (void)TrackMouseEvent(&tracking);
         const auto surface = state->host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
         if (surface.width != 0U && surface.height != 0U)
           (void)state->host->publicComposition().hoverSelectionAtViewPoint(

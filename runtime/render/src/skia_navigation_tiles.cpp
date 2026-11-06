@@ -47,9 +47,11 @@ bool supported(const ReferenceTraversalEntry& e){
        !std::holds_alternative<CompactStrokeReferenceCommand>(e.command) &&
        !std::holds_alternative<BrushStrokeReferenceCommand>(e.command))return false;
     const bool identity=t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
-    // Nonidentity erased ink retains its existing fail-closed fallback until
-    // its isolated-mask realization is qualified. Plain affine ink is safe.
-    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity||e.record.eraseMasks.empty();
+    // Compact coverage and its local masks share the same object affine in
+    // the isolated source below. Translation/rotation/scale/shear therefore
+    // remain eligible after erasing too; rejecting them forced camera motion
+    // into repeated synchronous whole-stroke canonical rendering.
+    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return true;
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
     if(v&&v->content.get().stroke.snapshot.material_mode==1)return identity;
     return std::holds_alternative<ShapeReferenceCommand>(e.command) ||
@@ -79,6 +81,8 @@ std::pair<std::size_t, std::size_t> compactRange(const ReferenceTraversalEntry& 
 void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
                          SkiaTextResources* textResources, ImageResourceResolver* images,
                          const SkPath* preparedVectorPath=nullptr){
+    SkAutoCanvasRestore isolatedMask(&canvas,false);
+    if(!entry.record.eraseMasks.empty())canvas.saveLayer(nullptr,nullptr);
     const auto& t=entry.record.transform;
     const bool identity=t.a==1.0&&t.b==0.0&&t.c==0.0&&t.d==1.0&&t.tx==0.0&&t.ty==0.0;
     if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources,preparedVectorPath);return;}
@@ -247,7 +251,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const auto u=b->snapshot(resources::ResourceClass::kNavigationTile);w.retainedBytes=u.used;w.stagingBytes=u.staging;w.pendingReleaseBytes=u.pendingRelease;}}} usage{work,budget};
     if(sourcePool)geometry_.setRetentionPool(std::move(sourcePool));
     const auto started=std::chrono::steady_clock::now();
-    const auto before=work;
+    const auto workBefore=work;
     struct Timing {
         NavigationWork& work;const NavigationWork before;std::chrono::steady_clock::time_point started;
         const FrameState& frame;const CanonicalViewportTransform& camera;const RenderCacheOptions& options;
@@ -305,7 +309,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(budget?budget->snapshot(resources::ResourceClass::kNavigationTile).pendingRelease:0));
 #endif
         }
-    } timing{work,before,started,frame,camera,options,geometry_,budget};
+    } timing{work,workBefore,started,frame,camera,options,geometry_,budget};
     work.presented=false;work.pending=false;work.coverageComplete=false;
     if(!query||!options.enabled||!budget||!std::isfinite(camera.scale)||camera.scale<=0||
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||
@@ -718,14 +722,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             const auto range = compactRange(entry);
             std::size_t end=std::min(job.knot+32,range.second);
             if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
-                const bool gpu=context&&!job.cpuCoverage;
-                const auto count=gpu?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
+                const bool gpuCoverage=context&&!job.cpuCoverage;
+                const auto count=gpuCoverage?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
                 const auto demand=SkRect::Make(job.surface->getCanvas()->getDeviceClipBounds());
                 job.primitive=job.geometry->nextVisiblePrimitive(*draw,job.primitive,&demand);
                 const auto drawn=job.geometry->drawContour(*draw,job.primitive,count,&demand);
                 work.contourPrimitivesTested+=drawn.primitivesTested;
                 work.contourPrimitivesDrawn+=drawn.primitivesDrawn;
-                if(gpu){work.gpuContourPrimitives+=drawn.primitivesDrawn;gpuPrimitives+=drawn.primitivesDrawn;}
+                if(gpuCoverage){work.gpuContourPrimitives+=drawn.primitivesDrawn;gpuPrimitives+=drawn.primitivesDrawn;}
                 job.primitive=std::min(job.primitive+count,job.geometry->primitiveCount());
                 if(job.primitive<job.geometry->primitiveCount()){++steps;continue;}
                 end = range.second;
@@ -748,9 +752,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             gpu.touch(true);auto* material=job.surface->getCanvas();material->save();
             const auto& t=entry.record.transform;
             material->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
-            compositeCompactCoverageToSkCanvas(*material,*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
+            // Erase this stroke's isolated coverage before material composition.
+            // Clearing the accumulated tile would also remove shapes/images
+            // already underneath the stroke and expose the white tile backdrop.
             if (!entry.record.eraseMasks.empty())
-                drawEraseMasksToSkCanvas(*material, entry);
+                drawEraseMasksToSkCanvas(*draw, entry);
+            compositeCompactCoverageToSkCanvas(*material,*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             material->restore();
         }else{
 #if defined(AXIOM_ENABLE_FRAME_TIMING)

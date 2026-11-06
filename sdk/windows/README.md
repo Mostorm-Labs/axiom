@@ -10,6 +10,21 @@ Windows x64. `axiom.dll` privately links the locked Runtime, Semantic and Skia
 implementations. Apps link only the small `axiom.lib` import stub. Headers and
 helper JSON code compile inside the application's own CRT; the DLL uses /MT.
 No Semantic/Skia CMake package or component archive is needed by consumers.
+`Runtime::tableTool()` and `Runtime::sectionTool()` arm the shared pointer creation
+presets through the existing Session command boundary. Table creation starts at
+2×2; Section supports click/default and drag/custom sizes. Ordinary byte image
+import uses the current viewport center. Table text can grow its row using one
+local History entry. These additions do not add DLL exports or expose Runtime
+objects; actual Windows ABI and native input qualification remain platform checks.
+Point selection also supports single-click text entry on an already selected
+Shape, RichText, Sticky or Table cell. The shared Runtime opens editing on
+release, preserving drags, handles, Group scope and navigation. This behavior
+uses existing native pointer input and does not introduce a consumer API.
+Mouse movement also feeds shared creation hover previews for Shape, Sticky,
+Table and selected attachment points. Mouse leave/focus loss clears presentation.
+Default click sizes and derived styles share the Runtime creation factories.
+This source change has not been qualified as Windows ABI/native-message evidence
+on the macOS development host.
 The shipped demo and example default to /MT and need no VC redistributable;
 `-DAXIOM_EXAMPLE_CRT=MD` independently exercises a /MD caller against the same DLL.
 
@@ -171,3 +186,16 @@ transport with pressure/contact, thinning, streamline, easing, pressure model,
 taper and caps. Smoothing is fixed at .5. Resource/evaluator binding is selected
 by the preset, not caller-supplied engine IDs. Historical revisions remain valid.
 No DLL ABI changes; native host/Web results do not qualify Windows rendering.
+
+
+Object clipboard v1 reuses the bounded `clipboard` Session command through the
+existing C/POD request/response transport. The caller wrapper provides
+`copySelection`, `cutSelection`, `duplicateSelection`, `pasteObjects`; Copy owns its
+returned bytes and JSON stamp, and Paste borrows input bytes only during the call.
+The same shared Runtime performs identity remapping, scope/lock/stamp validation,
+atomic History and operation publication as Web. Clipboard data contains no Runtime
+pointers or STL objects across the DLL. Hosts own OS clipboard transfer; write must
+succeed before invoking Cut with the captured complete stamp. Refer to the Web
+README/object-clipboard-and-live-erase-v1 contract for v1 format, bounds, placement,
+resource requirements and errors. Windows binary/physical input qualification must
+be performed on Windows; macOS shared Runtime/Web checks do not establish it.

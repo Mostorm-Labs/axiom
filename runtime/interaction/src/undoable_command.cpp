@@ -95,7 +95,8 @@ bool supportsUndoableCommand(OperationKind kind) noexcept {
     return kind == OperationKind::kSetSectionContent || kind == OperationKind::kEditContainerTopology ||
         kind == OperationKind::kInsertObjects || kind == OperationKind::kDeleteObjects ||
         kind == OperationKind::kRestoreObjects || kind == OperationKind::kSetTransforms ||
-        kind == OperationKind::kPatchProperties || kind == OperationKind::kSetDocumentBackground;
+        kind == OperationKind::kPatchProperties || kind == OperationKind::kSetDocumentBackground ||
+        kind == OperationKind::kEditTable;
 }
 bool isContainerCommand(const Operation& op, const ObjectStore& store) noexcept {
     if (op.kind() == OperationKind::kSetSectionContent || op.kind() == OperationKind::kEditContainerTopology) return true;
@@ -184,6 +185,11 @@ std::optional<PreparedUndoableCommand> prepareUndoableCommand(
         RestoreObjectsOp inverse;
         for (const auto& id : plan.deletes) inverse.objects.push_back(*before.find(id));
         u.payload = std::move(inverse);
+    } else if (const auto* table = std::get_if<EditTableOp>(&f.payload)) {
+        auto action=table->action;
+        if(action==TableEditKind::kInsert)action=TableEditKind::kRemove;
+        else if(action==TableEditKind::kRemove)action=TableEditKind::kInsert;
+        u.payload=EditTableOp{table->object_id,action,table->replacement,table->expected};
     } else if (const auto* transforms = std::get_if<SetTransformsOp>(&f.payload)) {
         SetTransformsOp inverse;
         for (const auto& item : transforms->items) inverse.items.push_back({item.object_id, before.find(item.object_id)->transform});

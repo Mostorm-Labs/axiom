@@ -39,6 +39,7 @@ collection. Resizing does not pan/zoom the Runtime camera or change the document
 The SDK clips its display layers to the mount and restores the mount's prior
 inline overflow value on close. A retained frame bridges the buffer replacement
 until qualified presentation; it does not emit a canonical completion receipt.
+
 Its whitelist includes the internal loader; release verification exercises the
 extracted npm package in Chrome as well as the ZIP. The package is named
 `@mostorm/axiom`; `publishConfig` binds it to the private Nearhub registry and the
@@ -49,6 +50,52 @@ The Emscripten loader lives in `internal/axiom.mjs`; applications import only
 the public root `axiom.mjs`. Keep the `internal/` directory, both input modules,
 declarations and the `licenses/` directory alongside them. For bundlers that relocate the
 data/WASM, pass `assetBaseURL` pointing to the deployed engine assets.
+
+The Web Demo groups primary tools in row one, active-tool subtypes (shape, brush,
+selection or eraser mode) as flat buttons in row two, and board actions in row
+three. Both tool rows scroll horizontally when their choices exceed the width. Object
+properties/actions remain contextual. Creation-tool appearance controls update
+new-object defaults even if a previous object remains selected. Object actions
+delegate to the existing root SDK: text/cell Edit, sibling-level front/back,
+Lock/Unlock, and Delete. Front/back currently requires a single selected object
+and retains its parent/group. A locked selection exposes only Unlock in its
+object actions; its editing properties are hidden. Global navigation/history
+are separate board actions. Backspace/Delete invoke `deleteSelection` outside
+text/IME, HTML inputs and modal dialogs, subject to Runtime availability.
+Object Copy/Cut/Duplicate/Paste use shared Runtime clipboard v1. `copySelection()`
+is a synchronous read returning owned `Uint8Array` bytes, object/root counts and
+an owner-bound full selection `Stamp`; it creates no operation or History.
+`cutSelection(capture.stamp)` validates the complete captured basis before one
+atomic canonical deletion; write the OS clipboard successfully before calling it.
+`duplicateSelection({offset:[24,24]})` and `pasteObjects(bytes,{offset:[24,24]})`
+allocate all new identities in Runtime and atomically create/select new roots.
+Offsets are world units; omitted offsets default to `[24,24]`. These queued
+commands resolve after application, without claiming persistence or cloud sync.
+`createController` exposes the same methods asynchronously.
+
+The versioned opaque bundle includes selected subtrees, world root placement,
+local child placement and exact resource descriptors. Internal connector targets
+are remapped; attachments to objects outside the copied subtree become free
+endpoints at their captured positions. Text paragraphs, Table axes and erase
+masks receive fresh identities; sketch/ink seeds and appearance are preserved.
+Paste uses the current group scope; Duplicate retains original parents. Cut uses
+the canonical deletion closure (including dependent connectors); cutting a Section
+removes its subtree, while the existing Delete action releases its boundary.
+Locked/hidden source subtrees, active edits, stale/foreign cut stamps, unsupported
+versions and invalid data reject. Clipboard v1 is bounded to 4096 objects and
+16 MiB. The destination must already have matching active resource descriptors
+through its resource owner. Missing image/font/brush resources reject the entire
+paste with `CLIPBOARD_RESOURCE_UNAVAILABLE`; blobs are not silently substituted.
+No internal object, store, codec or renderer handles cross this interface.
+
+The Demo binds Ctrl/Cmd+C/D/X/V outside native text, HTML inputs, IME and dialogs.
+Copy/Cut events use `application/x-axiom-objects` plus a version-prefixed plain-text
+fallback; buttons use the browser Clipboard API. Clipboard write denial preserves
+the source. Native text clipboard events retain their existing adapter path.
+Cut/duplicate/paste each create one History item and follow existing operation
+publication and backpressure admission. Buffers returned from Copy are independent
+owned copies; Paste copies its input before queueing. All calls retain existing
+owner-thread, callback non-reentrancy and close/lifecycle rules.
 
 To install from the private registry, put the following in your application's
 `.npmrc` and set `NODE_AUTH_TOKEN` in your environment. Do not commit credentials:
@@ -76,6 +123,65 @@ API version 1 uses 32-character lowercase hexadecimal object IDs and decimal
 strings for 64-bit revisions/tokens. Command promises resolve only after the
 Runtime's result is available; this does not acknowledge durable storage.
 Application callbacks are deferred and must not replace native IME results.
+
+Local drawing tools are one-shot for shapes, lines and arrows: a successful
+pointer creation switches to point selection and selects the new object. Sticky
+creation opens its text editor; Table creation opens its first cell. Image import
+selects the image in point mode even if a lasso was used previously. These local
+interaction transitions do not run for restore, remote application or Undo/Redo.
+The Demo chooses its round brush at startup; the SDK's initial brush is unchanged.
+
+With the Text tool, a click opens an empty editor at the default 320 world-unit
+wrap width. A horizontal drag shows a dashed, presentation-only box; release
+opens the editor at the dragged width (minimum 24 world units). Text height grows
+with its layout. Cancelling the drag creates no object or operation. An empty
+editor remains a draft until actual text is inserted, including Sticky text.
+Enter inserts a paragraph; Ctrl+Enter or Cmd+Enter finishes editing. Clicking
+outside finishes and consumes that click. A successful finish switches to point
+selection and selects the text object, Sticky parent or Table. Input-method Enter
+remains owned by the IME, and pending or failed native completion does not count
+as a successful finish. Text still uses the existing incremental History/Operation
+path; finishing an editor does not itself acknowledge persistence.
+
+In point selection mode, the first click selects a text-capable object. A later
+single click on that selected object's body opens its existing text editor on
+release: Shape labels, RichText, Sticky text and the clicked Table cell. Opening
+an empty editor does not publish an operation. A selected Table also supports
+clicking another cell to finish the current editor and select that cell without
+editing it. Click the selected cell again to enter editing. This selection-first
+rule also applies when changing cells while no editor is open. Pending native
+composition must finish successfully before another cell can be selected.
+Stationary clicks and up to 4 logical pixels of pointer jitter do not move or
+snap the object. Dragging, resize handles, connector ports, Shift/multiple selection, locks,
+Group scope and viewport navigation retain their existing priority. A browser
+double-click does not restart an editor already opened by the pointer gesture.
+
+Creation tools show a translucent default object under the mouse before pressing:
+rectangles, ellipses and triangles use 120×80 world units, Sticky uses 200×200,
+and Table uses 2×2 cells. Click creates that default; drag specifies custom size
+or Table counts. The ghost is drawn at 25% of the object's opacity using the same
+shared Skia geometry and style. Runtime reserves the prospective identity/style
+once and reuses them on creation; hovering publishes no operation or History.
+Hovering a selected object's attachment point previews the sibling and connector
+that its existing point action will create. Leaving the canvas/point, changing
+tools, editing text, navigation or stale context removes the preview. Ghosts are
+presentation only and are excluded from snapshots and image export.
+
+`selectShape('table')` and `selectShape('section')` arm shared Runtime creation
+tools. Selecting a tool creates no object. A Table click creates 2×2 cells;
+dragging adds rows and columns in 120×48 world-unit cells, with a 2×2 minimum.
+Creation is bounded by the existing 64-axis/1024-cell limits. Programmatic
+`table.create` defaults to 2×2 when counts are omitted and retains explicit sizes. A Section click creates the
+existing 320×240 default; dragging specifies its range. Preview and cancellation
+are Runtime-owned, and successful creation returns to point selection.
+
+Confirmed Table text edits automatically grow the edited row when required by
+its content and padding. Rows do not automatically shrink. Text and the matching
+row resize use existing operations in one atomic local intent and one Undo entry;
+the existing independent remote-operation protocol and conflict guards remain.
+Ordinary byte image import centers the image on the current mounted viewport,
+including pan and zoom. Explicit prepared source-profile image transforms and
+image replacement retain their existing semantics.
 
 Document backgrounds use complete value DTOs:
 
@@ -242,7 +348,8 @@ methods use `objectId` and the corresponding stable axis ID. Insertion takes
 
 Limits: 1..64 rows/columns, at most 1024 cells, dimensions 24..16384 world units,
 text at most 1 MiB per table; grid width 0..16 and font size 1..512. Cells wrap with
-6-unit padding and clip at fixed row height. The last row/column cannot be removed.
+6-unit padding and clip at the stored row height; confirmed text editing grows
+that height when necessary. The last row/column cannot be removed.
 Select a cell, double-click or press Enter to edit; Tab/Shift+Tab navigates while
 not editing. Drag internal row/column boundaries to preview size, release to
 commit, or cancel the pointer to discard. IME uses the existing native fact lane.
@@ -426,3 +533,11 @@ records replay unchanged; the new immutable evaluator/resource requires a matchi
 reader. No expanded dabs or image masks are persisted. Same-stroke max coverage
 applies opacity once; separate strokes use SrcOver. Watercolor is a procedural
 wash without diffusion, canvas color pickup or fluid simulation.
+
+
+Live partial erasing uses transient per-stroke masks and the existing Skia full-scene
+replacement presenter. Preview and commit share the same object-local swept mask;
+non-ink objects and colored backgrounds remain visible through the cutout. Sparse
+pointer samples are joined geometrically. Canonical state/History/publication change
+only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
+uses conservative bounded candidates; the renderer still clips against actual ink.

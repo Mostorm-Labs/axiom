@@ -40,6 +40,8 @@ struct RenderPreparationBudget final {
     std::size_t maxCoverageSteps=4096;
 };
 struct RenderCacheWork final {
+    // Actual destination area admitted for continuous local-erase feedback.
+    std::uint64_t eraseFullFrames=0,eraseDamageFrames=0,eraseDamagePixels=0;
     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
     std::size_t retainedBytes=0,entries=0;
     std::uint64_t coverageBuilds=0,coverageHits=0,scratchAllocations=0;

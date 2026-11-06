@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/object_clipboard.hpp"
 #include "canvas/ink/laser_trail.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
@@ -164,6 +165,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   virtual ~CanvasEditingRuntime() = default;
   void close() noexcept;
   [[nodiscard]] bool closed() const noexcept { return closed_; }
+  [[nodiscard]] runtime::ClipboardResult clipboardCommand(const runtime::ClipboardRequest&, const runtime::MultiSelectionProjection&);
   [[nodiscard]] bool beginExplicitIntent() noexcept;
   [[nodiscard]] bool prepareExplicitIntent(std::span<const semantic::Operation> operations);
   [[nodiscard]] bool commitExplicitIntent() noexcept;
@@ -185,9 +187,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
   [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                      float x, float y) noexcept;
-  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty(); }
+  [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty() || textCreation_.has_value() || placementCreation_.has_value(); }
   [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
-  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
+  [[nodiscard]] const CreationPreview& creationPreview() const noexcept { if(placementCreation_)return placementCreation_->preview; static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
   [[nodiscard]] std::optional<input::PointerKey> platformKey(
       input::InputSourceId source, input::PointerId pointer) const noexcept {
       return appBinding_ == nullptr ? std::nullopt : appBinding_->keyFor(source, pointer);
@@ -318,7 +320,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // Layout geometry and canonical text remain independent of the blink phase.
   void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
   bool setTextTool(bool value) noexcept {
-    if (textTool_ != value) resetTouchTextTap();
+    if (textTool_ != value) {resetTextTap();(void)clearCreationHover();}
+    if (!value && textCreation_) {textCreation_.reset();canonicalPresentationDirty_=true;}
     textTool_=value;
     return true;
   }
@@ -327,7 +330,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool configureInkBrush(const foundation::InkBrushConfig&) noexcept;
   void advanceLaserPresentation(std::uint64_t monotonicNs) noexcept;
-  [[nodiscard]] bool laserActive()const noexcept{return laserTrails_.activeCount()!=0;}
+  [[nodiscard]] bool laserActive()const noexcept{return transientTrails_.activeCount()!=0;}
   [[nodiscard]] std::optional<foundation::InkBrushConfig> inkBrushConfig() const noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
                                    float alpha, float opacity) noexcept;
@@ -358,6 +361,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
                                   bool renderPreview = true) noexcept;
+  [[nodiscard]] bool partialEraseFeedbackActive() const noexcept { return toolMode_==ToolMode::kPartialEraser && !eraserTraces_.empty(); }
+  [[nodiscard]] bool objectEraseFeedbackActive() const noexcept { return !objectEraseCandidates_.empty(); }
+  void finishObjectEraseFeedback(std::uint64_t pointerId, bool cancel) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserCancel(std::uint64_t pointerId) noexcept;
   [[nodiscard]] ToolMode toolMode() const noexcept { return toolMode_; }
@@ -666,7 +672,21 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ObjectId hitTextAtView(float,float);
   [[nodiscard]] runtime::TableResult tableCommand(const runtime::TableRequest&);
   [[nodiscard]] runtime::TableSnapshot tableSnapshot(semantic::ObjectId = {}) const;
-  bool tableTargetAt(runtime::TextIntent&);
+  runtime::TableResult createTableObject(const runtime::TableRequest&, const semantic::ObjectRecord* preview = nullptr);
+  struct PlacementCreation {
+    input::PointerKey key;
+    CreationPreview preview;
+    std::vector<semantic::ObjectId> rows,columns;
+    std::uint64_t generation=0,camera=0,metrics=0,selection=0;
+    std::optional<semantic::ObjectId> scope;
+    bool dragged=false;
+  };
+  std::optional<PlacementCreation> placementCreation_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> placementPointers_;
+  bool placementPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
+  void cancelPlacementCreation() noexcept;
+  bool growTableTextRow(semantic::ObjectId, const semantic::TableContent&, semantic::TableContent&);
+  bool tableTargetAt(runtime::TextIntent&, bool updateSelection=true);
   bool tablePointer(const input::PointerKey&,input::PointerPhase,float,float);
   semantic::ObjectId tableObject_{},tableRow_{},tableColumn_{};
   struct TableResize {input::PointerKey key;semantic::ObjectId object,row,column;double start=0,size=0,preview=0;std::uint64_t generation=0;};
@@ -674,14 +694,25 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
 
   bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
-  bool observeTouchTextTap(const input::PointerSample&);
-  bool beginShapeTextEditAt(float, float, semantic::ObjectId);
-  void resetTouchTextTap() noexcept;
+  bool observeTextTap(const input::PointerSample&);
+  bool beginSelectedTextEditAt(float, float, semantic::ObjectId);
+  void resetTextTap() noexcept;
+  void selectCreatedObject(semantic::ObjectId, bool editText = false) noexcept;
+  void textFinished(semantic::ObjectId) noexcept override;
+  struct TextCreation {
+    input::PointerKey key;
+    float startX = 0, startY = 0, currentX = 0;
+    bool dragged = false;
+  };
+  std::optional<TextCreation> textCreation_;
+  std::optional<std::array<float,8>> textEditingBox();
   bool shapeExpandPointer(const input::PointerSample&);
   std::optional<semantic::Transform2D> fittedShapeLabelTransform(const semantic::ObjectRecord&);
   std::optional<semantic::ObjectRecord> textPresentation();
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
+  [[nodiscard]] std::optional<std::vector<semantic::EraseMaskAddItem>> partialEraseTargets(std::span<const foundation::WorldPoint>, bool exactHit = true) const;
+  [[nodiscard]] bool applyPartialErasePreview(render::ReferenceDrawList&) const;
   bool textWritable(semantic::ObjectId) const noexcept override;
   semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
@@ -747,7 +778,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
   std::optional<foundation::InkBrushConfig> inkBrushConfig_;
-  ink::LaserTrail laserTrails_;
+  ink::TransientTrails transientTrails_;
   std::uint64_t laserRevision_=0;
   bool panTool_ = false;
   std::uint32_t eraserMode_ = 2U;
@@ -766,6 +797,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   float eraserDiameterLogicalPx_ = 18.0F;
   std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
   std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
+  std::unordered_map<std::uint64_t, std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash>> objectEraseCandidates_;
   std::vector<render::BrushRenderPoint> committedBrushPoints_;
   std::uint64_t brushDigest_ = 0;
   std::uint64_t brushResolvedStateDigest_ = 0;
@@ -807,11 +839,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey textSelectionPointer_{};
   std::uint32_t textSelectionAnchor_=0;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
-  struct TouchTapContact final {
+  struct TextTapContact final {
     semantic::ObjectId object{};
     float x = 0.0F, y = 0.0F;
     std::uint64_t timestampNs = 0;
     bool moved = false;
+    semantic::ObjectId selectedObject{};
+    RegionSelectionContext context{};
+    std::uint64_t generation = 0;
   };
   struct CompletedTouchTap final {
     input::PointerKey key{};
@@ -819,10 +854,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     float x = 0.0F, y = 0.0F;
     std::uint64_t timestampNs = 0;
   };
-  std::unordered_map<input::PointerKey, TouchTapContact, input::PointerKeyHash>
-      touchTapContacts_;
+  std::unordered_map<input::PointerKey, TextTapContact, input::PointerKeyHash>
+      textTapContacts_;
   std::optional<CompletedTouchTap> previousTouchTap_;
-  bool touchTapMultiContact_ = false;
+  bool textTapMultiContact_ = false;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> shapeExpandPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
@@ -840,7 +875,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
   bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
-  runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop) noexcept;
+  runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance = nullptr) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
   void applyAppearancePreview(render::ReferenceDrawList&);
   bool applyAppearanceToRecord(canvas::RuntimeSceneRecord&);
@@ -956,6 +991,29 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::vector<render::SnapGuideGeometry> snapGuides_;
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
+  struct CreationHover final {
+    render::CreationHoverPreview preview;
+    RegionSelectionContext context;
+    runtime::AppearanceValues defaults;
+    std::uint64_t generation=0;
+    CreationPreset preset=CreationPreset::kRectangle;
+    semantic::ConnectorRouting routing=semantic::ConnectorRouting::kStraight;
+    bool toolMode=false;
+    semantic::ObjectId source{};
+    std::uint32_t port=0;
+    float x=0,y=0;
+  };
+  std::optional<CreationHover> creationHover_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> creationClickCandidates_;
+  std::unordered_map<input::PointerKey,semantic::ObjectRecord,input::PointerKeyHash> creationSiblingPrototypes_;
+  semantic::ObjectRecord makeCreationPrototype(CreationPreset,bool linked=false);
+  semantic::ObjectRecord makeConnectorSibling(semantic::ObjectId,std::uint32_t,foundation::WorldPoint,semantic::ObjectRecord={});
+  foundation::WorldPoint defaultAttachmentEnd(const semantic::AttachedEndpoint&) const;
+  static std::uint32_t oppositeAttachmentPort(std::uint32_t) noexcept;
+  bool updateCreationHover(float,float);
+  bool validCreationHover(bool allowContact=false) const;
+  bool clearCreationHover() noexcept;
+  void installCreationHover(render::EditingOverlay&);
   std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
   std::unordered_set<input::PointerKey, input::PointerKeyHash> connectorPointerKeys_;
   struct CreationFence final {

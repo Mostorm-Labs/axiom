@@ -16,6 +16,8 @@
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
+#include "include/core/SkVertices.h"
+#include "include/effects/SkDashPathEffect.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
@@ -37,6 +39,33 @@ SkiaRenderer::~SkiaRenderer(){
 }
 void SkiaRenderer::serviceResourceRetirements()noexcept {if(gpuRetirements_)gpuRetirements_->service();}
 
+// Constant-size validity only. Pixels remain owned by the qualified target;
+// canonical source records and mask-prefix validation stay in RenderGroupManager.
+struct SkiaRenderer::PartialEraseFrame final {
+    FrameState frame;
+    WorldToViewAffine transform;
+    foundation::DocumentBackground background;
+    bool transparent=false,isolate=false;
+    const SkiaSurfaceProvider* provider=nullptr;
+    const SkSurface* surface=nullptr;
+    const internal::SkiaRenderCache* cache=nullptr;
+    std::uint64_t sequence=0,resource=0,presents=0;
+    std::uint32_t contents=0;
+    explicit PartialEraseFrame(const FramePlan& p):frame(p.frame),transform(p.referenceDrawList.worldToView),
+        background(p.background),transparent(p.transparentBackground),isolate(p.isolateEraseMasks){}
+    bool matches(const SkiaSurfaceProvider& target,SkSurface& acquired,const FramePlan& p,
+                 const internal::SkiaRenderCache& current,std::uint64_t epoch)const {
+        const auto& f=p.frame;
+        return provider==&target&&surface==&acquired&&cache==&current&&sequence+1==current.frameSequence()&&
+            presents==target.presentCount()&&contents==acquired.generationID()&&resource==epoch&&
+            frame.viewId==f.viewId&&frame.camera==f.camera&&frame.worldViewport==f.worldViewport&&
+            frame.sceneGeneration==f.sceneGeneration&&frame.sceneReadToken==f.sceneReadToken&&
+            frame.metrics==f.metrics&&frame.metricsGeneration==f.metricsGeneration&&
+            frame.surfaceGeneration==f.surfaceGeneration&&frame.viewportClip==f.viewportClip&&
+            frame.frameId.value()<f.frameId.value()&&transform==p.referenceDrawList.worldToView&&
+            background==p.background&&transparent==p.transparentBackground&&isolate==p.isolateEraseMasks;
+    }
+};
 struct SkiaRenderer::NavigationCache final {
     const void* provider=nullptr;
     sk_sp<SkImage> image;
@@ -71,6 +100,61 @@ struct SkiaRenderer::CompactCache final {
     std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
 };
 namespace {
+// One connected mesh, including its edge fringe and end caps. Adjacent samples
+// share coverage: per-segment round caps would accumulate alpha into dark dots.
+void drawFadingTrail(SkCanvas& canvas,const ink::FadingTrailPreview& input,SkColor4f paintColor){
+    std::vector<ink::FadingTrailPoint> points;points.reserve(input.points.size());
+    for(const auto& point:input.points){
+        if(!points.empty()&&std::hypot(point.x-points.back().x,point.y-points.back().y)<1e-5)points.back()=point;
+        else points.push_back(point);
+    }
+    if(points.empty())return;
+    const auto colorAt=[&](float opacity){auto color=paintColor;color.fA*=std::clamp(opacity,0.0F,1.0F);return color.toSkColor();};
+    SkPaint paint;paint.setAntiAlias(true);paint.setColor(SK_ColorWHITE);
+    if(points.size()==1){paint.setColor(colorAt(points[0].opacity));canvas.drawCircle(float(points[0].x),float(points[0].y),points[0].width*.5F,paint);return;}
+    struct Vertex {SkPoint position;SkColor color;};
+    std::vector<SkPoint> positions;std::vector<SkColor> colors;
+    positions.reserve(points.size()*18+216);colors.reserve(points.size()*18+216);
+    const auto triangle=[&](Vertex a,Vertex b,Vertex c){for(const auto v:{a,b,c}){positions.push_back(v.position);colors.push_back(v.color);}};
+    const auto quad=[&](Vertex a,Vertex b,Vertex c,Vertex d){triangle(a,b,c);triangle(b,d,c);};
+    const auto direction=[&](std::size_t from,std::size_t to){const auto dx=float(points[to].x-points[from].x),dy=float(points[to].y-points[from].y);const auto length=std::hypot(dx,dy);return SkPoint::Make(dx/length,dy/length);};
+    const float fringe=1.0F/std::max(1e-5F,canvas.getTotalMatrix().getMaxScale());
+    std::vector<std::array<Vertex,4>> sections;sections.reserve(points.size());
+    for(std::size_t i=0;i<points.size();++i){
+        const auto previous=direction(i?i-1:i,i?i:i+1);
+        const auto next=direction(i+1<points.size()?i:i-1,i+1<points.size()?i+1:i);
+        float nx=-(previous.y()+next.y()),ny=previous.x()+next.x();
+        const auto length=std::hypot(nx,ny);
+        if(length>1e-5F){nx/=length;ny/=length;}else{nx=-next.y();ny=next.x();}
+        const float miter=1.0F/std::max(.5F,std::abs(nx*-next.y()+ny*next.x()));
+        const auto& point=points[i];const float radius=point.width*.5F;
+        const float inner=std::max(0.0F,radius-fringe*.5F),outer=radius+fringe*.5F;
+        const auto vertex=[&](float offset,SkColor color){return Vertex{SkPoint::Make(float(point.x)+nx*miter*offset,float(point.y)+ny*miter*offset),color};};
+        const auto solid=colorAt(point.opacity*std::min(1.0F,point.width/fringe)),clear=colorAt(0);
+        sections.push_back({vertex(outer,clear),vertex(inner,solid),vertex(-inner,solid),vertex(-outer,clear)});
+        if(i)for(std::size_t j=0;j<3;++j)quad(sections[i-1][j],sections[i-1][j+1],sections[i][j],sections[i][j+1]);
+    }
+    constexpr unsigned capSteps=12;
+    for(const bool head:{false,true}){
+        const auto index=head?points.size()-1:0;const auto& point=points[index];
+        const auto tangent=head?direction(index-1,index):direction(0,1);
+        const float base=std::atan2(tangent.x(),-tangent.y());
+        const auto solid=colorAt(point.opacity*std::min(1.0F,point.width/fringe)),clear=colorAt(0);
+        const Vertex center{SkPoint::Make(float(point.x),float(point.y)),solid};
+        const float inner=std::max(0.0F,point.width*.5F-fringe*.5F),outer=point.width*.5F+fringe*.5F;
+        auto lastInner=sections[index][1],lastOuter=sections[index][0];
+        for(unsigned k=1;k<=capSteps;++k){
+            const float angle=base+(head?-1:1)*3.14159265358979323846F*float(k)/capSteps;
+            Vertex nextInner{SkPoint::Make(float(point.x)+std::cos(angle)*inner,float(point.y)+std::sin(angle)*inner),solid};
+            Vertex nextOuter{SkPoint::Make(float(point.x)+std::cos(angle)*outer,float(point.y)+std::sin(angle)*outer),clear};
+            if(k==capSteps){nextInner=sections[index][2];nextOuter=sections[index][3];}
+            triangle(center,lastInner,nextInner);quad(lastInner,lastOuter,nextInner,nextOuter);
+            lastInner=nextInner;lastOuter=nextOuter;
+        }
+    }
+    const auto mesh=SkVertices::MakeCopy(SkVertices::kTriangles_VertexMode,static_cast<int>(positions.size()),positions.data(),nullptr,colors.data());
+    if(mesh)canvas.drawVertices(mesh,SkBlendMode::kModulate,paint);
+}
 void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
     SkPaint paint;paint.setAntiAlias(true);paint.setStrokeWidth(1.5F);
     const auto drawOutline=[&](const SelectionOutline& outline,bool candidate) {
@@ -99,6 +183,17 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
     canvas.scale(metrics.physicalWidth / metrics.logicalWidth,
                   metrics.physicalHeight / metrics.logicalHeight);
     drawAcquisition(canvas,overlay);
+    if (overlay.textBox) {
+        const auto& q=*overlay.textBox;
+        SkPathBuilder path;path.moveTo(q[0],q[1]);
+        for(std::size_t i=1;i<4;++i)path.lineTo(q[i*2],q[i*2+1]);
+        path.close();
+        SkPaint paint;paint.setAntiAlias(true);paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(1);paint.setColor4f({.50F,.45F,1,.75F},nullptr);
+        constexpr SkScalar dashes[]{7,5};
+        paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(dashes,2),0));
+        canvas.drawPath(path.detach(),paint);
+    }
     if(overlay.textCaret){
         SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
         const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas.drawPath(path.detach(),paint);};
@@ -132,8 +227,8 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
         SkPaint chrome;
         chrome.setAntiAlias(true);
         chrome.setStyle(SkPaint::kStroke_Style);
-        chrome.setStrokeWidth(2.0F);
-        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
+        chrome.setStrokeWidth(1.25F);
+        chrome.setColor(SkColorSetRGB(0x69, 0x65, 0xFF));
         const auto& outline = overlay.selectionOutline();
         SkPathBuilder path;
         path.moveTo(outline.corners[0].x, outline.corners[0].y);
@@ -142,16 +237,29 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
         path.lineTo(outline.corners[3].x, outline.corners[3].y);
         path.close();
         canvas.drawPath(path.detach(), chrome);
-        chrome.setStyle(SkPaint::kFill_Style);
-        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
-                                HandleKind::kTopRight, HandleKind::kRight,
-                                HandleKind::kBottomRight, HandleKind::kBottom,
-                                HandleKind::kBottomLeft, HandleKind::kLeft,
+        // Four quiet corner grips; edge midpoint hit targets retain single-axis
+        // resizing without adding more dots to the selection outline.
+        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTopRight,
+                                HandleKind::kBottomRight, HandleKind::kBottomLeft,
                                 HandleKind::kRotation}) {
             const auto& handle = overlay.handle(kind);
             if (handle.kind == HandleKind::kNone) continue;
-            canvas.drawCircle(handle.center.x, handle.center.y,
-                               handle.visualRadius, chrome);
+            const auto drawGrip = [&](const SkPaint& paint) {
+                if (kind == HandleKind::kRotation) {
+                    canvas.drawCircle(handle.center.x, handle.center.y,
+                                      handle.visualRadius, paint);
+                } else {
+                    const auto bounds = SkRect::MakeLTRB(
+                        handle.center.x - handle.visualRadius, handle.center.y - handle.visualRadius,
+                        handle.center.x + handle.visualRadius, handle.center.y + handle.visualRadius);
+                    canvas.drawRoundRect(bounds, 2.0F, 2.0F, paint);
+                }
+            };
+            SkPaint fill;
+            fill.setAntiAlias(true);
+            fill.setColor(SK_ColorWHITE);
+            drawGrip(fill);
+            drawGrip(chrome);
         }
     }
     canvas.restore();
@@ -161,6 +269,7 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
+    partialEraseFrame_.reset();
     serviceResourceRetirements();
     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
     const auto& metrics=plan.frame.metrics;
@@ -310,6 +419,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if (selectionOverlay->creationPreview()) {
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+        }
+        if (const auto& hover=selectionOverlay->creationHover()) {
+            SkPaint ghostPaint;ghostPaint.setAlphaf(0.25F);
+            canvas->saveLayer(nullptr,&ghostPaint);
+            if(hover->sibling) internal::drawTransientObjectToSkCanvas(*canvas,plan,*hover->sibling);
+            internal::drawTransientObjectToSkCanvas(*canvas,plan,hover->primary,hover->route?&*hover->route:nullptr);
+            canvas->restore();
         }
         internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
     }
@@ -476,13 +592,14 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay) {
+    auto previousErase=std::move(partialEraseFrame_);
     serviceResourceRetirements();
     if (selectionOverlay == nullptr) {
         return clearPreview(provider, SurfaceGeneration{provider.generation()});
@@ -528,10 +645,69 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // plan already contains any transient transform overrides, so render the
     // whole scene first and then add the editing chrome.
     const auto includeInk=!selectionOverlay->creationPreview().has_value();
-    BackendSubmissionResult scene;
-    if(cache){cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk);scene=BackendSubmissionResult::accepted();}
-    else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+    const bool bareOverlay=!selectionOverlay->selectionOutline().visible&&!selectionOverlay->creationPreview()&&
+        !selectionOverlay->creationHover()&&!selectionOverlay->textBox&&!selectionOverlay->textCaret&&
+        selectionOverlay->textSelection.empty()&&selectionOverlay->readOnlyOutlines.empty()&&
+        selectionOverlay->candidateOutlines.empty()&&selectionOverlay->acquisitionOutline.empty()&&
+        selectionOverlay->guides().empty()&&selectionOverlay->attachmentPoints().empty();
+    const bool compactInkOnly=std::none_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& entry){
+        return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabStrokeReferenceCommand>(entry.command)||
+            std::holds_alternative<BrushStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+    });
+    const bool persistentErase=compactInkOnly&&cache&&renderCacheOptions_.enabled&&bareOverlay&&cache->eraseDamage().active&&
+        !renderCacheOptions_.tileCandidate&&canvas->getTotalMatrix().isIdentity()&&
+        canvas->isClipRect()&&canvas->getDeviceClipBounds()==SkIRect::MakeWH(acquired.frame.surface->width(),acquired.frame.surface->height())&&
+        provider.describe().capabilities.supportsPartialUpdate;
+    bool incremental=persistentErase&&cache->eraseDamage().continuous&&previousErase&&
+        previousErase->matches(provider,*acquired.frame.surface,plan,*cache,resourceEpoch_);
+    if(incremental&&!cache->prepareEraseDamage(*canvas))incremental=false;
+    // Preserve the full frame's coverage tile origin and dimensions. A narrow
+    // clip changes how many tiles are needed, never their AA/noise sampling grid.
+    SkIRect originalClip;
+    {SkAutoCanvasRestore restore(canvas,true);
+        const auto& m=plan.frame.metrics;
+        canvas->scale(static_cast<float>(m.physicalWidth)/m.logicalWidth,
+                      static_cast<float>(m.physicalHeight)/m.logicalHeight);
+        const auto& c=plan.referenceDrawList.viewportClip;canvas->clipRect(SkRect::MakeLTRB(c.left,c.top,c.right,c.bottom));
+        originalClip=canvas->getDeviceClipBounds();}
+    const internal::CompactDeviceGrid deviceGrid{originalClip.left(),originalClip.top(),originalClip.right(),originalClip.bottom()};
+    SkAutoCanvasRestore damageRestore(canvas,false);
+    if(incremental) {
+        canvas->save();canvas->resetMatrix();
+        SkIRect clip=SkIRect::MakeEmpty();
+        if(const auto& bounds=cache->eraseDamage().bounds) {
+            const auto& v=plan.referenceDrawList.worldToView;const auto& m=plan.frame.metrics;
+            const double sx=static_cast<float>(m.physicalWidth)/m.logicalWidth;
+            const double sy=static_cast<float>(m.physicalHeight)/m.logicalHeight;
+            SkMatrix matrix;matrix.setAll(static_cast<SkScalar>(v.a*sx),static_cast<SkScalar>(v.c*sx),
+                static_cast<SkScalar>(v.tx*sx),static_cast<SkScalar>(v.b*sy),
+                static_cast<SkScalar>(v.d*sy),static_cast<SkScalar>(v.ty*sy),0,0,1);
+            auto area=matrix.mapRect(SkRect::MakeLTRB(bounds->left,bounds->top,bounds->right,bounds->bottom));
+            area.outset(3,3); // Include stroke AA and inverse-affine rounding.
+            if(!area.isFinite()){damageRestore.restore();incremental=false;}
+            else if(area.intersect(SkRect::Make(canvas->getDeviceClipBounds())))area.roundOut(&clip);
+        }
+        if(incremental)canvas->clipIRect(clip);
+    }
+    if(cache&&cache->eraseDamage().active) {
+        if(incremental){const auto clip=canvas->getDeviceClipBounds();++cache->work.eraseDamageFrames;
+            cache->work.eraseDamagePixels+=std::uint64_t(clip.width())*clip.height();}
+        else ++cache->work.eraseFullFrames;
+    }
+    BackendSubmissionResult scene=BackendSubmissionResult::accepted();
+    const auto sceneSaveCount=canvas->getSaveCount();
+    try {
+        if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
+            if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,incremental?&deviceGrid:nullptr))
+                scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
+            else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+        }
+    }catch(const std::bad_alloc&){
+        canvas->restoreToCount(sceneSaveCount);clearRenderCache();
+        scene=BackendSubmissionResult::retry("transient scene allocation unavailable");
+    }
     if (scene.code != BackendSubmissionCode::kAccepted) {
+        damageRestore.restore();
         provider.release();
         return scene;
     }
@@ -540,62 +716,28 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache,true);
     }
-    canvas->save();
-    canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
-                  plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
-    drawAcquisition(*canvas,*selectionOverlay);
-    SkPaint guidePaint;
-    guidePaint.setAntiAlias(true);
-    guidePaint.setStyle(SkPaint::kStroke_Style);
-    guidePaint.setStrokeWidth(1.0F);
-    guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
-    for (const auto& guide : selectionOverlay->guides()) {
-        canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
-                         guidePaint);
+    if (const auto& hover=selectionOverlay->creationHover()) {
+        SkPaint ghostPaint;ghostPaint.setAlphaf(0.25F);
+        canvas->saveLayer(nullptr,&ghostPaint);
+        if(hover->sibling) internal::drawTransientObjectToSkCanvas(*canvas,plan,*hover->sibling);
+        internal::drawTransientObjectToSkCanvas(*canvas,plan,hover->primary,hover->route?&*hover->route:nullptr);
+        canvas->restore();
     }
-    SkPaint attachmentPaint;
-    attachmentPaint.setAntiAlias(true);
-    attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-    for (const auto& point : selectionOverlay->attachmentPoints()) {
-        if (point.active) {
-            attachmentPaint.setColor4f(point.hovered
-                ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
-                : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-            canvas->drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
-                               attachmentPaint);
-        }
-    }
-    if (selectionOverlay->selectionOutline().visible) {
-        SkPaint chrome;
-        chrome.setAntiAlias(true);
-        chrome.setStyle(SkPaint::kStroke_Style);
-        chrome.setStrokeWidth(2.0F);
-        chrome.setColor4f({0.16F, 0.72F, 0.82F, 0.95F}, nullptr);
-        const auto& outline = selectionOverlay->selectionOutline();
-        SkPathBuilder path;
-        path.moveTo(outline.corners[0].x, outline.corners[0].y);
-        path.lineTo(outline.corners[1].x, outline.corners[1].y);
-        path.lineTo(outline.corners[2].x, outline.corners[2].y);
-        path.lineTo(outline.corners[3].x, outline.corners[3].y);
-        path.close();
-        canvas->drawPath(path.detach(), chrome);
-        chrome.setStyle(SkPaint::kFill_Style);
-        for (const auto kind : {HandleKind::kTopLeft, HandleKind::kTop,
-                                HandleKind::kTopRight, HandleKind::kRight,
-                                HandleKind::kBottomRight, HandleKind::kBottom,
-                                HandleKind::kBottomLeft, HandleKind::kLeft,
-                                HandleKind::kRotation}) {
-            const auto& handle = selectionOverlay->handle(kind);
-            if (handle.kind == HandleKind::kNone) continue;
-            canvas->drawCircle(handle.center.x, handle.center.y,
-                               handle.visualRadius, chrome);
-        }
-    }
-    canvas->restore();
+    internal::drawEditingOverlayToSkCanvas(*canvas, plan.frame.metrics, *selectionOverlay);
+    damageRestore.restore();
+    std::shared_ptr<PartialEraseFrame> candidate;
+    if(persistentErase)try {
+        candidate=std::make_shared<PartialEraseFrame>(plan);candidate->provider=&provider;
+        candidate->surface=acquired.frame.surface;candidate->cache=cache;
+        candidate->sequence=cache->frameSequence();candidate->resource=resourceEpoch_;
+        candidate->contents=acquired.frame.surface->generationID();
+    }catch(const std::bad_alloc&){} // Optional validity; next frame fully replaces.
     provider.release();
     ++submissions_;
     ++rasterizations_;
-    return provider.present();
+    const auto presented=provider.present();
+    if(candidate&&presented.code==BackendSubmissionCode::kAccepted){candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);}
+    return presented;
 }
 
 BackendSubmissionResult SkiaRenderer::renderPreview(
@@ -745,7 +887,30 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             contourPaint.setColor4f({contour.red, contour.green, contour.blue,
                                      effectiveAlpha}, nullptr);
         }
-        if (contour.dabs.empty()) drawOutline(contour.outline, contourPaint);
+        if (contour.fadingTrail) {
+            drawFadingTrail(*canvas,*contour.fadingTrail,
+                {contour.red,contour.green,contour.blue,std::clamp(contour.alpha*contour.opacity,0.0F,1.0F)});
+        } else if (contour.roundStroke) {
+            const auto& stroke = *contour.roundStroke;
+            if (stroke.points.empty() || !std::isfinite(stroke.radius) || stroke.radius <= 0) return;
+            contourPaint.setStyle(SkPaint::kStroke_Style);
+            contourPaint.setStrokeWidth(static_cast<float>(2 * stroke.radius));
+            contourPaint.setStrokeCap(SkPaint::kRound_Cap);
+            contourPaint.setStrokeJoin(SkPaint::kRound_Join);
+            SkPathBuilder path;
+            path.moveTo(static_cast<float>(stroke.points.front().x), static_cast<float>(stroke.points.front().y));
+            bool hasLength = false;
+            for (const auto& point : stroke.points) {
+                path.lineTo(static_cast<float>(point.x), static_cast<float>(point.y));
+                hasLength |= point.x != stroke.points.front().x || point.y != stroke.points.front().y;
+            }
+            if (hasLength) canvas->drawPath(path.detach(), contourPaint);
+            else {
+                contourPaint.setStyle(SkPaint::kFill_Style);
+                canvas->drawCircle(static_cast<float>(stroke.points.front().x),
+                    static_cast<float>(stroke.points.front().y), static_cast<float>(stroke.radius), contourPaint);
+            }
+        } else if (contour.dabs.empty()) drawOutline(contour.outline, contourPaint);
         else drawDabs(contour.dabs, contourPaint);
     };
     if (!geometry.contours.empty()) {

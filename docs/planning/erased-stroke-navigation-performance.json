@@ -1,0 +1,51 @@
+{
+  "task": "erased-stroke-navigation-performance",
+  "task_anchor": {
+    "revision": "bd637539b02a5b49a5afad28efff2c563b25207a",
+    "relation": "ancestor"
+  },
+  "authorization": "User requests committing/pushing prior partial-erase fix, then repairing zoom/two-touch pan after one long stroke is duplicated three times and locally erased about five times.",
+  "owners": {
+    "navigation": "Existing shared Runtime camera/input admission -> SkiaRenderer -> SkiaNavigationTiles / prepared geometry / budgeted tile caches",
+    "canonical": "Existing Semantic/OperationEngine/History unchanged; navigation may not create operations or commit receipts",
+    "public_api": "No consumer API, schema, version, dependency or packaging change"
+  },
+  "finding": "Navigation source eligibility rejects nonidentity CompactStroke entries with canonical erase masks, even though the cooperative tile coverage source applies the object affine and clears masks in that isolated source. Runtime therefore falls back to repeated exact synchronous masked-stroke drawing.",
+  "required_changes": [
+    "Qualify affine compact ink plus local masks on the existing tiled navigation path; keep validation, quotas, ordering, source isolation and canonical fallback semantics.",
+    "Preserve continuous local-erasing feedback and all previous snapshot/history/export semantics.",
+    "Regression fixture: four long strokes, five local-erasing gestures, real Chrome root SDK / two-touch pan and zoom; native affine-mask coverage and cache reuse."
+  ],
+  "verification": {
+    "before": [
+      "Native valid source preflight passes; the restored baseline eligibility gate fails --affine-erased-only at navigation source admission (native-valid-red.log).",
+      "final-before.json: four long strokes, five canonical erase commits, actual two-touch pan/zoom and before-Up pixel probes. Zoom p95 >40ms; masked exact-frame full-stroke coverage dominates matched CPU profile."
+    ],
+    "required": [
+      "Translation, rotation, nonuniform/sheared affine; swept and filled local masks; surviving ink + underlying nonink color at all erase gaps; no false commit receipts; prepared geometry reuse.",
+      "Same external Chrome workload at DPR1 and2; no white overlays or missing ink; compare before/after timing and consumer bytes.",
+      "Affected erasing, navigation, rendering, Runtime and full native regressions; classify unchanged baseline failures by name."
+    ],
+    "evidence_root": "out/erased-navigation",
+    "native_corpus": "9 registered brush/profile revisions x 2 local mask variants x 3 object affines x 3 cameras. 54 source fixtures /162 camera views; all 5 mask gaps and surviving ink checked; geometry reuse and no canonical receipts verified."
+  },
+  "forbidden": [
+    "New Shell renderer or state/history owner",
+    "Public debug/performance APIs",
+    "Semantic/Skia SDK rebuilds or lock changes",
+    "Unrelated historical failure fixes",
+    "Version or release publication"
+  ],
+  "implementation": "Qualify existing finite/validated affine CompactStroke sources with local erase masks. Shared coverage already concatenates the object matrix and clears masks in each isolated source before material composition. No alternate renderer or canonical mutation path.",
+  "final_evidence": {
+    "record": "out/erased-navigation/validation.json",
+    "consumer": "Four 6001-sample long strokes, five actual erase commits. The line extends beyond the initial viewport; two-touch pan reveals real ink. DPR1 and2 live gap/surviving-ink checks and navigation no-mutation checks pass.",
+    "native": "G5RenderCache full suite passes incl 54 affine-mask fixtures; full native194/207 with13 unchanged baseline failures.",
+    "metrics_ms": {
+      "pan_p95_before": 159.28720799999974,
+      "pan_p95_after": 38.03862499999923,
+      "zoom_p95_before": 194.55629200000112,
+      "zoom_p95_after": 35.560749999996915
+    }
+  }
+}

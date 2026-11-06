@@ -50,7 +50,7 @@ enum class HandleKind : std::uint8_t {
 struct HandleGeometry final {
     HandleKind kind = HandleKind::kNone;
     ScreenPoint center{};
-    float visualRadius = 6.0F;
+    float visualRadius = 4.0F;
     float hitRadius = 12.0F;
     bool active = false;
 };
@@ -78,6 +78,15 @@ struct EditingOverlayInput final {
     HandleCapabilities capabilities{};
     std::span<const SnapGuideGeometry> guides{};
     std::span<const AttachmentPointGeometry> attachmentPoints{};
+    // Retain layout clearance while attachment affordances are hidden in a drag.
+    float rotationGap = 32.0F;
+};
+
+// Bounded, presentation-only geometry: one tool object or connector + sibling.
+struct CreationHoverPreview final {
+    semantic::ObjectRecord primary;
+    std::optional<semantic::ObjectRecord> sibling;
+    std::optional<scene::ConnectorGeometry> route;
 };
 
 class EditingOverlay final {
@@ -100,8 +109,13 @@ class EditingOverlay final {
         return creationRoute_?&*creationRoute_:nullptr;
     }
 
+    void setCreationHover(const CreationHoverPreview& value) { creationHover_=value; }
+    void clearCreationHover() noexcept { creationHover_.reset(); }
+    [[nodiscard]] const std::optional<CreationHoverPreview>& creationHover() const noexcept { return creationHover_; }
+
     std::vector<std::array<float,8>> textSelection;
     std::optional<std::array<float,8>> textCaret;
+    std::optional<std::array<float,8>> textBox;
     std::vector<SelectionOutline> readOnlyOutlines;
     std::vector<SelectionOutline> candidateOutlines;
     std::vector<ScreenPoint> acquisitionOutline;
@@ -142,6 +156,7 @@ class EditingOverlay final {
     std::vector<SnapGuideGeometry> guides_{};
     std::vector<AttachmentPointGeometry> attachmentPoints_{};
     std::uint64_t updateCount_ = 0;
+    std::optional<CreationHoverPreview> creationHover_;
     std::optional<semantic::ObjectRecord> creationPreview_;
     std::optional<scene::ConnectorGeometry> creationRoute_;
 };

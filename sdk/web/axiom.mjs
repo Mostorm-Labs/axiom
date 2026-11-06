@@ -180,6 +180,10 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const listen=(name,fn,options)=>{canonical.addEventListener(name,fn,options);events.push([name,fn,options]);};
     listen('dblclick',event=>{const s=call('state').value;if(s.tool!==4 && !(s.tool===1&&s.selectionMode===0))event.stopImmediatePropagation();},true);
     listen('pointermove',e=>{if(e.pointerType==='mouse'&&!e.buttons){const r=canonical.getBoundingClientRect();try{call('hover',{x:e.clientX-r.left,y:e.clientY-r.top});schedule();}catch(error){emitError(error);}}});
+    const clearHover=()=>{try{call('hover',{x:-1,y:-1});schedule();}catch(error){emitError(error);}};
+    listen('pointerleave',clearHover);
+    window.addEventListener('blur',clearHover);
+
     listen('wheel',e=>{e.preventDefault();const r=canonical.getBoundingClientRect();try{
       if(e.ctrlKey){const s=call('state').value;call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale:s.camera.scale*Math.exp(-e.deltaY*.01)});}
       else call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});text.sync();schedule();
@@ -187,7 +191,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const contextLost=e=>{e.preventDefault();retainVisibleFrame();try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
     const contextRestored=()=>{if(!canonical.getContext('webgl2').isContextLost()&&!preview.getContext('webgl2').isContextLost())try{resize();}catch(error){emitError(error);}};
     for(const c of [canonical,preview]){c.addEventListener('webglcontextlost',contextLost);c.addEventListener('webglcontextrestored',contextRestored);}
-    const inputCleanup=disposeInput;disposeInput=()=>{inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
+    const inputCleanup=disposeInput;disposeInput=()=>{window.removeEventListener('blur',clearHover);inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
     observer=new ResizeObserver(requestResize);observer.observe(mount);
     const control=async args=>{
       const selected=['size','transform','delete','lock','visible','unlock','order'].includes(args.kind)||(args.kind==='appearance'&&args.selected!==false);
@@ -218,7 +222,11 @@ export async function createRuntime({mount, documentId, restore, initialResource
     };
     const tableCommand=(action,options={})=>{
       let request;try{request=tableOptions(action,options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}
-      return enqueue(()=>call('table',{...request,action}));
+      return enqueue(()=>{const result=call('table',{...request,action});
+        // Runtime owns editor entry. The adapter only gives that local editor
+        // its native input focus, including programmatic Table creation.
+        if(action==='create'&&text.snapshot().phase!==0){canonical.focus({preventScroll:true});text.sync();}
+        return result;});
     };
     const tableEdit=options=>{
       let request;try{request=tableOptions('select',options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}
@@ -267,6 +275,10 @@ export async function createRuntime({mount, documentId, restore, initialResource
           value.color[3]!==1)throw new AxiomError('INVALID_ARGUMENT');
         return control({kind:'background',value:{mode:value.mode,color:[...value.color],patternColor:[...value.patternColor]}});
       },
+      copySelection:()=>{const result=call('clipboard',{action:'copy'});return {...result.value,stamp:{owner:id,token:result.value.stamp},bytes:module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size())};},
+      cutSelection:stamp=>{let captured;try{captured=structuredClone(owned(stamp).token);}catch(error){return Promise.reject(error instanceof AxiomError?error:new AxiomError('INVALID_ARGUMENT'));}return enqueue(()=>call('clipboard',{action:'cut',stamp:captured}));},
+      duplicateSelection:(options={})=>{let value;try{if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>k!=='offset')||options.offset!==undefined&&!(Array.isArray(options.offset)&&options.offset.length===2&&options.offset.every(n=>typeof n==='number'&&Number.isFinite(n))))throw new AxiomError('INVALID_ARGUMENT');value={...structuredClone(options),stamp:call('multi',{action:'read'}).value.stamp};}catch(error){return Promise.reject(error);}return enqueue(()=>call('clipboard',{...value,action:'duplicate'}));},
+      pasteObjects:(bytes,options={})=>{if(Object.prototype.toString.call(bytes)!=='[object Uint8Array]'||bytes.length>16777216)return Promise.reject(new AxiomError('INVALID_ARGUMENT'));let value;try{if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>k!='offset')||options.offset!==undefined&&!(Array.isArray(options.offset)&&options.offset.length===2&&options.offset.every(n=>typeof n==='number'&&Number.isFinite(n))))throw new AxiomError('INVALID_ARGUMENT');value={...structuredClone(options),stamp:call('multi',{action:'read'}).value.stamp};}catch(error){return Promise.reject(error);}const captured=bytes.slice();return enqueue(()=>call('clipboard',{...value,action:'paste'},captured));},
       readSelection:()=>call('selection').value,
       subscribeOperations:fn=>subscribe('operation',fn),subscribeState:fn=>subscribe('state',fn),
       dispatchEvents:()=>Promise.resolve().then(()=>{if(closed)throw new AxiomError('CLOSED');for(const s of listeners.values())s.paused=false;dispatch();}),
@@ -276,7 +288,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
         release:packet=>{const result=call('data',{action:'release',packet:packetMetadata(owned(packet))});schedule();return result;},
         reportStatus:(packet,localDurable,cloudSynced)=>{const result=call('data',{action:'report',packet:packetMetadata(owned(packet)),localDurable,cloudSynced});schedule();return result;}},
       selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return enqueue(()=>{const result=call('control',{kind:'tool',value});if(name.endsWith('Eraser'))call('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return result;});},
-      selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5},name)}),
+      selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5,table:6,section:7},name)}),
       setSelectionMode:async name=>control({kind:'selectionMode',value:enumValue({point:0,rectangle:1,lasso:2},name)}),
       setInk:options=>control({kind:'ink',...options}),setEraser:options=>control({kind:'eraser',...options}),
       brushPresets:()=>call('presets').value,selectBrush:(profileId,revision)=>control({kind:'preset',profileId,revision}),

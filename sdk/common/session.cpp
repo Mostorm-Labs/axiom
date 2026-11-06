@@ -51,7 +51,7 @@ void validateTransportEnums(const Json& j) {
         if (kind == "tool")
             bounded(j.at("value"), 4);
         else if (kind == "shape")
-            bounded(j.at("value"), 5);
+            bounded(j.at("value"), 7);
         else if (kind == "selectionMode")
             bounded(j.at("value"), 2);
         else if (kind == "fit")
@@ -495,7 +495,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}, {"inkV2",1}, {"compactStroke",1}, {"materialInk",1}, {"simulatedPressure",1}, {"devicePressure",1}, {"laserTransient",1}}},
+                    {"features", {{"objectClipboard", 1}, {"livePartialErase", 1}, {"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}, {"inkV2",1}, {"compactStroke",1}, {"materialInk",1}, {"simulatedPressure",1}, {"devicePressure",1}, {"laserTransient",1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -976,6 +976,22 @@ class Session::Impl {
             const auto p=[](semantic::Vec2 v){return J::array({v.x,v.y});};for(const auto& pathCommand:result.geometry.commands)commands.push_back(std::visit([&](const auto& c)->J{using T=std::decay_t<decltype(c)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)return {{"op","move"},{"point",p(c.point)}};else if constexpr(std::is_same_v<T,semantic::LineTo>)return {{"op","line"},{"point",p(c.end)}};else if constexpr(std::is_same_v<T,semantic::QuadTo>)return {{"op","quad"},{"control",p(c.control)},{"point",p(c.end)}};else if constexpr(std::is_same_v<T,semantic::CubicTo>)return {{"op","cubic"},{"control1",p(c.control1)},{"control2",p(c.control2)},{"point",p(c.end)}};else return {{"op","close"}};},pathCommand));
             return {{"ok",true},{"value",{{"available",result.available},{"objectId",hexId(result.objectId)},{"fillRule",result.geometry.fill_rule==semantic::FillRule::kEvenOdd?"evenodd":"nonzero"},{"commands",commands},{"transform",{result.transform.a,result.transform.b,result.transform.c,result.transform.d,result.transform.tx,result.transform.ty}},{"appearance",appearanceValues(result.appearance)},{"generation",std::to_string(result.generation)}}}};
         }
+        if(command=="clipboard") {
+            const auto action=j.at("action").get<std::string>();
+            const std::map<std::string,runtime::ClipboardAction> actions{{"copy",runtime::ClipboardAction::kCopy},{"cut",runtime::ClipboardAction::kCut},{"duplicate",runtime::ClipboardAction::kDuplicate},{"paste",runtime::ClipboardAction::kPaste}};
+            if(!actions.contains(action))throw std::invalid_argument("clipboard action");
+            const std::set<std::string> fields=action=="copy"?std::set<std::string>{"command","action"}:action=="cut"?std::set<std::string>{"command","action","stamp"}:std::set<std::string>{"command","action","offset","stamp"};
+            for(const auto& f:j.items())if(!fields.contains(f.key()))throw std::invalid_argument("clipboard field");
+            runtime::ClipboardRequest request;request.action=actions.at(action);
+            if(action!="copy")request.stamp=parseStamp(j.at("stamp"));
+            if(action=="paste")request.bytes=bytes;
+            else if(!bytes.empty())throw std::invalid_argument("clipboard bytes");
+            if(j.contains("offset")){const auto& v=j.at("offset");if(!v.is_array()||v.size()!=2||!v[0].is_number()||!v[1].is_number())throw std::invalid_argument("clipboard offset");request.offsetX=v[0].get<double>();request.offsetY=v[1].get<double>();}
+            const auto result=facade().clipboardCommand(request);
+            if(!result.applied)return error(result.error==runtime::ClipboardError::kStale?"STALE_CLIPBOARD":result.error==runtime::ClipboardError::kInvalid?"INVALID_ARGUMENT":result.error==runtime::ClipboardError::kUnsupported?"UNSUPPORTED_CLIPBOARD":result.error==runtime::ClipboardError::kResourceUnavailable?"CLIPBOARD_RESOURCE_UNAVAILABLE":result.error==runtime::ClipboardError::kLocked?"LOCKED":"BUSY");
+            outputBytes=result.bytes;
+            return {{"ok",true},{"applied",true},{"changed",result.changed},{"generation",std::to_string(result.generation)},{"value",{{"version",1},{"stamp",stampJson(result.stamp)},{"roots",ids(result.roots)},{"objectCount",result.objectCount}}}};
+        }
         if(command=="appearance") {
             const auto action=j.at("action").get<std::string>();
             const std::map<std::string,std::set<std::string>> fields{{"read",{}},{"readDefaults",{}},{"patch",{"patch","stamp","eligible"}},{"defaults",{"patch"}},{"begin",{"stamp","eligible"}},{"preview",{"token","patch"}},{"commit",{"token"}},{"cancel",{"token"}}};
@@ -1256,7 +1272,7 @@ class Session::Impl {
             } else if (kind == "shape") {
                 p.kind = K::kSelectCreationPreset;
                 p.creationPreset =
-                    static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 5));
+                    static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 7));
             } else if (kind == "background") {
                 p.kind = K::kDocumentBackground;
                 const auto& value = j.at("value");
@@ -1461,6 +1477,7 @@ class Session::Impl {
                 runtime::ImageImportRequest r;
                 r.bytes = bytes;
                 r.mimeType = j.at("mime");
+                r.centerInViewport = true;
                 result = f.importImage(r);
             } else if (action == "replace") {
                 const auto s = f.readSelectedImage();

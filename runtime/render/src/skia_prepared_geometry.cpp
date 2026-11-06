@@ -193,9 +193,9 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
             constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
             const auto blocks=(count+block-1)/block;
             const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
-            const auto unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
-            if(scratch>cap-base||blocks>(cap-base-scratch)/unit)return denied();
-            const auto replayEstimate=base+scratch+blocks*unit;
+            const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+            if(scratch>cap-base||blocks>(cap-base-scratch)/replayUnit)return denied();
+            const auto replayEstimate=base+scratch+blocks*replayUnit;
             auto token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
             while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
             if(!token)return denied();resources::ResourceLease admission(budget,*token);

@@ -304,11 +304,15 @@ TEST(GeneratedObjectIdentity, StickyRichTextChildrenAreIndependentAcrossWriters)
     ASSERT_EQ(host->owner.controlFacade().createSticky(sticky).state,
               runtime::ConnectorCommandState::kApplied);
     host->text(runtime::TextIntentKind::kEdit, sticky.objectId);
+    // Entering an empty Sticky editor is transient. The first actual input
+    // materializes its independent child identity through the same operation.
+    EXPECT_EQ(host->recorder.operations.size(), 1U);
+    host->replaceText();
     ASSERT_EQ(host->recorder.operations.size(), 2U);
     const auto& child = createdObject(host->recorder.operations.back());
     EXPECT_EQ(child.placement.parent_id, sticky.objectId);
     EXPECT_TRUE(ids.insert(child.id).second);
-    host->replaceText(); host->text(runtime::TextIntentKind::kFinish);
+    host->text(runtime::TextIntentKind::kFinish);
   }
   ASSERT_EQ(first.owner.applyRemoteOperation(second.recorder.operations.front()).disposition,
             semantic::ApplyDisposition::kApplied);

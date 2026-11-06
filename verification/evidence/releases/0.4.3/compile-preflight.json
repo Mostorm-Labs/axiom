@@ -1,0 +1,9 @@
+{
+  "feature_cutoff": "a39a1bdab97564b6e7ffc2b8c57ab9431b665462",
+  "merge": "53193af8ed3f03f9f7b3647755a967e1bf0829e0",
+  "classification": "pre-publication compile readiness",
+  "finding": "implicit double/uint32 conversions at new Render damage bounds and SkMatrix construction",
+  "fix": "explicit casts preserve original evaluation types, rounding, finite checks and fallback",
+  "verification": "new-line float diagnostics zero; four native production TUs shadow/shorten checks pass; full40 native regression groups repeated after fix",
+  "limits": "preexisting float diagnostics unchanged; actual Windows build remains a separate hosted gate"
+}

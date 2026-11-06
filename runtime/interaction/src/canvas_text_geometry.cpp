@@ -358,12 +358,103 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
     }
     return out;
 }
+void CanvasEditingRuntime::selectCreatedObject(semantic::ObjectId id, bool editText) noexcept {
+    if (!setSelectionAcquisitionMode(runtime::CanvasSelectionMode::kPoint)) return;
+    const auto root = resolveSelectionRoot(id);
+    if (!root.isZero()) (void)selection_.click(root);
+    else selection_.cancel();
+    canonicalPresentationDirty_ = true;
+    if (editText) {
+        runtime::TextIntent edit;
+        edit.kind = runtime::TextIntentKind::kEdit;
+        edit.object = id;
+        if (const auto* record = semanticObjects_.find(id))
+            if (const auto* table = std::get_if<semantic::TableContent>(&record->content)) {
+                edit.row = table->rows.front().id;
+                edit.column = table->columns.front().id;
+            }
+        if (auto* editor = interaction_->textSession()) (void)editor->intent(edit);
+    }
+}
+void CanvasEditingRuntime::textFinished(semantic::ObjectId id) noexcept {
+    selectCreatedObject(id);
+}
+std::optional<std::array<float,8>> CanvasEditingRuntime::textEditingBox() {
+    semantic::Transform2D transform;
+    float width = 320, height = 24;
+    if (textCreation_) {
+        transform.tx = std::min(textCreation_->startX, textCreation_->currentX);
+        transform.ty = textCreation_->startY;
+        if (textCreation_->dragged)
+            width = std::max(24.0F, std::abs(textCreation_->currentX-textCreation_->startX));
+    } else {
+        const auto object = textPresentation();
+        if (!object || object->kind != semantic::ObjectKind::kRichText || object->placement.parent_id)
+            return {};
+        const auto* content = std::get_if<semantic::RichTextContent>(&object->content);
+        if (!content || !content->layout) return {};
+        transform = object->transform;
+        width = static_cast<float>(content->layout->wrap_width);
+        if (const auto layout = textLayoutService_->resolve(object->id, *content))
+            height = std::max(height, layout->localBounds.bottom);
+    }
+    const auto view = viewportGesture();
+    std::array<float,8> box{};
+    const std::array<foundation::WorldPoint,4> corners{{{0,0},{width,0},{width,height},{0,height}}};
+    for (std::size_t i=0;i<4;++i) {
+        box[i*2] = static_cast<float>((transform.a*corners[i].x+transform.c*corners[i].y+transform.tx)*view.scale+view.translationX);
+        box[i*2+1] = static_cast<float>((transform.b*corners[i].x+transform.d*corners[i].y+transform.ty)*view.scale+view.translationY);
+    }
+    return box;
+}
 bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
     auto* editor = interaction_->textSession();
     if (!editor)
         return false;
     auto state = editor->read();
     const bool active = state.phase != runtime::TextPhase::kClosed;
+    if (textCreation_) {
+        if (sample.phase == input::PointerPhase::kDown && sample.key != textCreation_->key) {
+            textPointerKeys_.insert(sample.key);
+            textCreation_.reset();
+            transientOverlayDirty_ = false;
+            transientOverlayHandoffPending_ = true;
+            canonicalPresentationDirty_ = true;
+            return true;
+        }
+        if (sample.key == textCreation_->key) {
+            const auto point = viewToContent(sample.x, sample.y);
+            textCreation_->currentX = point.first;
+            if (std::abs(point.first-textCreation_->startX)*viewportGesture().scale >= 4)
+                textCreation_->dragged = true;
+            if (sample.phase == input::PointerPhase::kCancel) textCreation_.reset();
+            else if (sample.phase == input::PointerPhase::kUp) {
+                const auto draft = *textCreation_;
+                textCreation_.reset();
+                runtime::TextIntent create;
+                create.kind = runtime::TextIntentKind::kCreate;
+                const auto view = viewportGesture();
+                create.viewX = std::min(draft.startX,draft.currentX)*view.scale+view.translationX;
+                create.viewY = draft.startY*view.scale+view.translationY;
+                if (editor->intent(create).status == runtime::TextStatus::kApplied && draft.dragged) {
+                    runtime::TextIntent width;
+                    width.kind = runtime::TextIntentKind::kSetWidth;
+                    width.token = editor->read().token;
+                    width.width = std::max(24.0F,std::abs(draft.currentX-draft.startX));
+                    (void)editor->intent(width);
+                }
+            }
+            if (sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel)
+                textPointerKeys_.erase(sample.key);
+            if (textCreation_) (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+            else {
+                transientOverlayDirty_ = false;
+                transientOverlayHandoffPending_ = true;
+            }
+            canonicalPresentationDirty_ = true;
+            return true;
+        }
+    }
     if (sample.phase == input::PointerPhase::kDown && (textTool_ || active)) {
         const float x = sample.x, y = sample.y;
         const auto existing = hitTextAtView(x, y);
@@ -377,10 +468,20 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             }
         }
         textPointerKeys_.insert(sample.key);
-        if (textPointerKeys_.size() > 1)
+        if (textPointerKeys_.size() > 1) {
+            resetTextTap();
             return true;
+        }
         textSelectionPointer_ = sample.key;
         if (!active) {
+            if (textPointerKeys_.size() != 1) return true;
+            if (existing.isZero()) {
+                const auto point = viewToContent(x,y);
+                textCreation_ = TextCreation{sample.key,point.first,point.second,point.first,false};
+                (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+                canonicalPresentationDirty_ = true;
+                return true;
+            }
             runtime::TextIntent create;
             const auto existingForEdit = hitTextAtView(x, y);
             create.kind = existingForEdit.isZero() ? runtime::TextIntentKind::kCreate
@@ -404,7 +505,14 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             if (!inside || state.composition) {
                 // Consume this click. Finishing must not create a new draft;
                 // active native preedit waits for the real platform result.
-                (void)editor->finish();
+                const bool switchCell = !state.composition &&
+                    record->kind==semantic::ObjectKind::kTable &&
+                    selection_.primary()==record->id && hitTextAtView(x,y)==record->id;
+                const auto finished=editor->finish();
+                if (switchCell && finished==runtime::TextStatus::kApplied) {
+                    runtime::TextIntent cell;cell.object=record->id;cell.viewX=x;cell.viewY=y;
+                    (void)tableTargetAt(cell);
+                }
                 textSelectionPointer_ = {};
             } else if (const auto hit = textHit(*record, sample.x, sample.y)) {
                 runtime::TextInputEvent selection;
@@ -441,22 +549,23 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
     return owned || active;
 }
 
-void CanvasEditingRuntime::resetTouchTextTap() noexcept {
-    touchTapContacts_.clear();
+void CanvasEditingRuntime::resetTextTap() noexcept {
+    textTapContacts_.clear();
     previousTouchTap_.reset();
-    touchTapMultiContact_ = false;
+    textTapMultiContact_ = false;
 }
 
-bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
+bool CanvasEditingRuntime::beginSelectedTextEditAt(float x, float y,
                                                 semantic::ObjectId expected) {
     if (!textTool_ && selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint) return false;
     auto* editor = interaction_->textSession();
-    if (!editor || expected.isZero() || selection_.primary() != expected ||
-        !textWritable(expected) || hitTextAtView(x, y) != expected)
+    if (!editor || expected.isZero() || selectedObjectCount()!=1 || selection_.primary() != expected ||
+        !textWritable(expected) || resolveSelectionRoot(hitTextAtView(x, y)) != expected)
         return false;
     const auto* record = semanticObjects_.find(expected);
     if (!record || (record->kind != semantic::ObjectKind::kShape &&
-                    record->kind != semantic::ObjectKind::kSticky && record->kind != semantic::ObjectKind::kTable))
+                    record->kind != semantic::ObjectKind::kSticky && record->kind != semantic::ObjectKind::kTable &&
+                    record->kind != semantic::ObjectKind::kRichText))
         return false;
 
     runtime::TextIntent edit;
@@ -484,7 +593,7 @@ bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
     return true;
 }
 
-bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sample) {
+bool CanvasEditingRuntime::observeTextTap(const input::PointerSample& sample) {
     using input::PointerPhase;
     using input::PointerTool;
     constexpr std::uint64_t kTapDurationNs = 350'000'000U;
@@ -492,15 +601,15 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
     constexpr float kMoveSlop = 24.0F;
     constexpr float kDoubleTapSlop = 36.0F;
 
-    if (sample.capabilities.tool != PointerTool::kFinger || !sample.key.valid())
+    if (sample.predicted || !sample.key.valid())
         return false;
     if (sample.phase == PointerPhase::kDown) {
-        if (!touchTapContacts_.empty()) {
+        if (!textTapContacts_.empty()) {
             // A multi-contact sequence is navigation/selection input, never a
             // text double tap. Discard every candidate until all fingers lift.
-            touchTapMultiContact_ = true;
+            textTapMultiContact_ = true;
             previousTouchTap_.reset();
-            for (auto& [key, contact] : touchTapContacts_) {
+            for (auto& [key, contact] : textTapContacts_) {
                 (void)key;
                 contact.moved = true;
             }
@@ -517,41 +626,76 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
             }
         }
         const auto* record = object.isZero() ? nullptr : semanticObjects_.find(object);
-        touchTapContacts_.insert_or_assign(
-            sample.key, TouchTapContact{record && (grouped || record->kind == semantic::ObjectKind::kShape ||
-                                                   record->kind == semantic::ObjectKind::kSticky || record->kind == semantic::ObjectKind::kTable)
-                                            ? object : semantic::ObjectId{},
-                                        sample.x, sample.y, sample.timestampNs, false});
+        const bool editable = record && (grouped || record->kind==semantic::ObjectKind::kShape ||
+            record->kind==semantic::ObjectKind::kSticky || record->kind==semantic::ObjectKind::kTable ||
+            record->kind==semantic::ObjectKind::kRichText);
+        semantic::ObjectId selectedTarget{};
+        if (editable && !grouped && selectedObjectCount()==1 &&
+            !input::hasShift(sample.modifiers) && resolveSelectionRoot(object)==selection_.primary()) {
+            selectedTarget=selection_.primary();
+            if(record->kind==semantic::ObjectKind::kTable) {
+                runtime::TextIntent cell;cell.object=record->id;cell.viewX=sample.x;cell.viewY=sample.y;
+                if(!tableTargetAt(cell,false) || tableObject_!=record->id ||
+                    tableRow_!=cell.row || tableColumn_!=cell.column) selectedTarget={};
+            }
+            // Handles, connector ports and Table grid resizing keep priority.
+            (void)renderSelectionOverlay();
+            if (const auto* overlay=selectionOverlay()) {
+                if (overlay->hitTest({sample.x,sample.y})!=render::HandleKind::kNone) selectedTarget={};
+                for (const auto& port:overlay->attachmentPoints())
+                    if (std::hypot(port.center.x-sample.x,port.center.y-sample.y)<=16) selectedTarget={};
+            }
+        }
+        textTapContacts_.insert_or_assign(sample.key, TextTapContact{
+            editable ? object : semantic::ObjectId{},sample.x,sample.y,sample.timestampNs,false,
+            selectedTarget,regionContext(),semanticGeneration_.current().value()});
         return false;
     }
 
-    const auto contact = touchTapContacts_.find(sample.key);
-    if (contact == touchTapContacts_.end())
+    const auto contact = textTapContacts_.find(sample.key);
+    if (contact == textTapContacts_.end())
         return false;
     if (sample.phase == PointerPhase::kMove) {
         const auto dx = sample.x - contact->second.x;
         const auto dy = sample.y - contact->second.y;
         if (dx * dx + dy * dy > kMoveSlop * kMoveSlop)
             contact->second.moved = true;
+        if (dx * dx + dy * dy > RegionSelectionSession::kDragThreshold * RegionSelectionSession::kDragThreshold)
+            contact->second.selectedObject = {};
         return false;
     }
     if (sample.phase != PointerPhase::kUp && sample.phase != PointerPhase::kCancel)
         return false;
 
     const auto current = contact->second;
-    touchTapContacts_.erase(contact);
+    textTapContacts_.erase(contact);
     const auto upDx = sample.x - current.x;
     const auto upDy = sample.y - current.y;
     const bool movedOnRelease = upDx * upDx + upDy * upDy > kMoveSlop * kMoveSlop;
-    if (sample.phase == PointerPhase::kCancel || touchTapMultiContact_ || current.moved ||
+    if (sample.phase == PointerPhase::kCancel || textTapMultiContact_ || current.moved ||
         movedOnRelease ||
         current.object.isZero() || sample.timestampNs < current.timestampNs ||
         sample.timestampNs - current.timestampNs > kTapDurationNs) {
         previousTouchTap_.reset();
-        if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+        if (textTapContacts_.empty()) textTapMultiContact_ = false;
         return false;
     }
 
+    const bool selectedClick = !current.selectedObject.isZero() &&
+        upDx*upDx+upDy*upDy <= RegionSelectionSession::kDragThreshold*RegionSelectionSession::kDragThreshold &&
+        current.context==regionContext() && current.generation==semanticGeneration_.current().value() &&
+        !input::hasShift(sample.modifiers);
+    if (selectedClick) {
+        previousTouchTap_.reset();
+        if (textTapContacts_.empty()) textTapMultiContact_=false;
+        return beginSelectedTextEditAt(sample.x,sample.y,current.selectedObject);
+    }
+    // Group scope still uses the existing finger double-tap gesture. Ordinary
+    // pointer clicks never synthesize that navigation action.
+    if (sample.capabilities.tool != PointerTool::kFinger) {
+        previousTouchTap_.reset();
+        return false;
+    }
     const bool isDoubleTap = previousTouchTap_ &&
         previousTouchTap_->key.source == sample.key.source &&
         previousTouchTap_->key != sample.key &&
@@ -562,18 +706,19 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
                 (sample.y - previousTouchTap_->y) * (sample.y - previousTouchTap_->y) <=
             kDoubleTapSlop * kDoubleTapSlop &&
         selection_.primary() == resolveSelectionRoot(current.object);
-    if (isDoubleTap) {
+    if (isDoubleTap && current.context==regionContext() &&
+        current.generation==semanticGeneration_.current().value()) {
         previousTouchTap_.reset();
-        if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+        if (textTapContacts_.empty()) textTapMultiContact_ = false;
         const auto* selected=semanticObjects_.find(selection_.primary());
         if (selected && selected->kind==semantic::ObjectKind::kGroup)
             return enterGroupAtViewPoint(sample.x,sample.y);
-        return beginShapeTextEditAt(sample.x, sample.y, current.object);
+        return false;
     }
 
     previousTouchTap_ = CompletedTouchTap{sample.key, current.object, sample.x, sample.y,
                                           sample.timestampNs};
-    if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+    if (textTapContacts_.empty()) textTapMultiContact_ = false;
     return false;
 }
 } // namespace canvas::interaction

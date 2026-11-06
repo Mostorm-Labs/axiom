@@ -2,7 +2,7 @@
 <style>.mount{width:400px;height:300px;display:inline-block}</style>
 <div id="one" class="mount"></div><div id="two" class="mount"></div><pre id="result">PENDING</pre>
 <script type="module">
-import {createRuntime,AxiomError} from './axiom.mjs';
+import {createRuntime,AxiomError,SDK_VERSION} from './axiom.mjs';
 const results=[], errors=[], operations=[];
 const assert=(v,message)=>{if(!v)throw Error(message);results.push(message);};
 const pause=()=>new Promise(r=>setTimeout(r,50));
@@ -17,7 +17,7 @@ const draw=async(runtime,x=40,y=40,width=100,height=80)=>{
 try {
   const a=await createRuntime({mount:document.getElementById('one'),documentId:'01ff'.padStart(32,'0'),onOperation:b=>operations.push(b),onError:e=>errors.push(e)});
   const b=await createRuntime({mount:document.getElementById('two'),documentId:'02ff'.padStart(32,'0'),onError:e=>errors.push(e)});
-  assert(a.readBuildInfo().sdkVersion===a.version && /^[0-9a-f]{40}$/.test(a.readBuildInfo().sourceRevision),'matching wrapper and engine build identity');
+  assert(a.readBuildInfo().sdkVersion===SDK_VERSION && a.version===SDK_VERSION && /^[0-9a-f]{40}$/.test(a.readBuildInfo().sourceRevision),'matching wrapper and engine build identity');
   const buildInfo=a.readBuildInfo();
   assert(a.readState().documentId!==b.readState().documentId,'independent document identity');
   await a.selectShape('rectangle');await draw(a);

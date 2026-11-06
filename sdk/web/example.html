@@ -20,6 +20,7 @@
   .row-label { flex: 0 0 44px; color: #7b8798; font-size: 12px; }
   .row-content { min-width: 0; flex: 1; display: flex; align-items: center; gap: 16px; overflow-x: auto; padding: 8px 2px; scrollbar-width: thin; }
   .group { display: flex; flex: none; align-items: center; gap: 6px; white-space: nowrap; }
+  #drawing-tools button { padding: 5px 8px; }
   #workspace { position: fixed; inset: 0; overflow: hidden; }
   #properties { position: absolute; z-index: 2; bottom: 44px; left: 16px; right: 16px; max-height: min(38vh, 260px); overflow: auto; border: 1px solid #d7dee8; border-radius: 12px; background: #fffffff2; box-shadow: 0 5px 24px #172c4c1a; }
   #properties .toolbar-row { height: auto; min-height: 48px; }
@@ -57,6 +58,7 @@
 </style>
 <header id="tools" aria-busy="true" inert>
   <nav class="toolbar-row" aria-label="绘制工具"><span class="row-label">工具</span><div id="drawing-tools" class="row-content"></div></nav>
+  <nav id="tool-options-row" class="toolbar-row" aria-label="工具选项"><span class="row-label">选项</span><div id="tool-options" class="row-content"></div></nav>
   <nav class="toolbar-row" aria-label="画板操作"><span class="row-label">画板</span><div id="board-tools" class="row-content"></div></nav>
 </header>
 <main id="workspace">
@@ -89,13 +91,7 @@
   </div>
   <div class="dialog-actions"><button id="export-cancel" type="button">取消</button><button id="export-image" type="button" class="primary">导出图片</button></div>
 </dialog>
-<dialog id="table-panel" aria-labelledby="table-title">
-  <h2 id="table-title">插入表格</h2><div class="settings">
-    <label>行数<input id="table-rows" type="number" value="3" min="1" max="64" step="1"></label>
-    <label>列数<input id="table-columns" type="number" value="3" min="1" max="64" step="1"></label>
-    <span class="hint">最多 1024 个单元格。确认后点击画板放置，Esc 取消。双击单元格编辑文字。</span>
-  </div><div class="dialog-actions"><button id="table-cancel">取消</button><button id="table-place" class="primary">在画板放置</button></div>
-</dialog>
+
 <script type="module">
 import {createRuntime} from './axiom.mjs';
 import {DEMO_BRUSHES, DEMO_DRAWING_TOOLS, DEMO_BOARD_ACTIONS, DEMO_PRESSURE_SOURCES, DEMO_SHAPES, DEMO_SELECTION_MODES, DEMO_ERASER_MODES, resolveDemoBrushChoices} from './api/demo-controls.mjs';
@@ -137,43 +133,38 @@ const rgba = (value, alpha = 1) => [1, 3, 5].map(i => parseInt(value.slice(i, i 
 const setValue = (input, value) => { if (document.activeElement !== input) input.value = value; };
 try {
   sdk = await createRuntime({mount: $('canvas'), permission: 'localSingleUser', onError: fail, onChange: show});
-  const drawing = $('drawing-tools'), context = $('context-tools'), details = $('detail-tools'), board = $('board-tools');
+  const drawing = $('drawing-tools'), toolOptions = $('tool-options'), context = $('context-tools'), details = $('detail-tools'), board = $('board-tools');
   const drawingGroup = group(drawing);
   const toolButtons = [];
   const addTool = (label, key, action, parent = drawingGroup) => {
     const element = button(parent, label, action); element.dataset.tool = key;
     element.setAttribute('aria-pressed', 'false'); toolButtons.push(element);
+    return element;
   };
-  for (const tool of DEMO_DRAWING_TOOLS)
-    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool));
-  DEMO_SHAPES.forEach((shape, code) => addTool(shape.label, `shape:${code}`, () => sdk.selectShape(shape.id)));
-  button(drawingGroup,'表格',()=> $('table-panel').showModal(),'table-open');
+  const addNamedTool = id => { const tool = DEMO_DRAWING_TOOLS.find(tool => tool.id === id); return addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool)); };
+  addNamedTool('select'); addNamedTool('ink');
+  addTool('橡皮擦', 'tool:2', () => sdk.selectTool(sdk.readState().eraserMode === 1 ? 'objectEraser' : 'partialEraser')).id = 'eraser-tool';
+  // Only the last subtype is a UI preference. Active tools/defaults stay in Runtime.
+  let preferredShape = 'rectangle';
+  const shapeTool = button(drawingGroup, '图形', () => sdk.selectShape(preferredShape), 'shape-tool');
+  shapeTool.setAttribute('aria-pressed', 'false');
+  addNamedTool('text');
+  addTool('便签', 'shape:5', () => sdk.selectShape('sticky'));
+  addTool('表格', 'shape:6', () => sdk.selectShape('table')).id = 'table-open';
+  button(drawingGroup, '图片', () => chooseImage(false), 'image-import');
+  addTool('分区', 'shape:7', () => sdk.selectShape('section')).id = 'section-create';
+  addNamedTool('hand');
+  const shapeOptions = group(toolOptions, 'shape-options');
+  DEMO_SHAPES.slice(0, 5).forEach((shape, code) => addTool(shape.label, `shape:${code}`, () => { preferredShape = shape.id; return sdk.selectShape(shape.id); }, shapeOptions));
   const pathSamples={
     hole:[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'},{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],
     curve:[{op:'move',point:[0,50]},{op:'quad',control:[50,-20],point:[100,50]},{op:'cubic',control1:[130,110],control2:[165,-10],point:[200,50]}]
   };
   const addPath=kind=>run(async()=>{await sdk.text.finish();await sdk.selectTool('select');const camera=sdk.readState().camera,rect=sdk.canvas.getBoundingClientRect();await sdk.createVectorPath({commands:pathSamples[kind],fillRule:kind==='hole'?'evenodd':'nonzero',x:(rect.width/2-camera.x)/camera.scale-80,y:(rect.height/2-camera.y)/camera.scale-80});});
-  button(drawingGroup,'带孔路径',()=>addPath('hole'),'path-hole');
-  button(drawingGroup,'开放曲线',()=>addPath('curve'),'path-curve');
-  let tablePlacement=null;
-  $('table-cancel').onclick=()=> $('table-panel').close();
-  $('table-place').onclick=()=>run(async()=>{
-    const rows=Number($('table-rows').value),columns=Number($('table-columns').value);
-    if(!Number.isInteger(rows)||!Number.isInteger(columns)||rows<1||columns<1||rows>64||columns>64||rows*columns>1024)throw Error('请输入有效行列数，总单元格不超过 1024');
-    await sdk.text.finish();await sdk.selectTool('select');tablePlacement={rows,columns};$('table-panel').close();
-    sdk.canvas.style.cursor='crosshair';status.textContent='点击画板放置表格，Esc 取消';
-  });
-  const cancelPlacement=()=>{tablePlacement=null;sdk.canvas.style.cursor='';};
-  $('canvas').addEventListener('pointerdown',event=>{if(tablePlacement){event.preventDefault();event.stopImmediatePropagation();$('canvas').setPointerCapture(event.pointerId);}},true);
-  $('canvas').addEventListener('pointerup',event=>{if(!tablePlacement)return;event.preventDefault();event.stopImmediatePropagation();const placement=tablePlacement;cancelPlacement();const rect=sdk.canvas.getBoundingClientRect(),camera=sdk.readState().camera;
-    void run(()=>sdk.table.create({...placement,x:(event.clientX-rect.left-camera.x)/camera.scale,y:(event.clientY-rect.top-camera.y)/camera.scale}));},true);
-  $('canvas').addEventListener('pointercancel',cancelPlacement,true);
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tablePlacement){cancelPlacement();show();}});
-
-
+  button(shapeOptions,'带孔路径',()=>addPath('hole'),'path-hole');
+  button(shapeOptions,'开放曲线',()=>addPath('curve'),'path-curve');
   const file = $('file'); let replaceImage = false;
   const chooseImage = replace => { replaceImage = replace; file.value = ''; file.click(); };
-  button(group(drawing), '导入图片', () => chooseImage(false), 'image-import');
   file.onchange = () => run(async () => {
     const image = file.files?.[0]; if (!image) return;
     const bytes = new Uint8Array(await image.arrayBuffer());
@@ -181,15 +172,20 @@ try {
   });
 
   const inkGroup = group(context, 'ink-parameters');
+  const inkChoices = group(toolOptions, 'ink-options');
   const presets = [...sdk.brushPresets().reduce((map,preset)=>{
     const previous=map.get(preset.profileId);
     if(!previous||preset.revision>previous.revision)map.set(preset.profileId,preset);
     return map;
   },new Map()).values()];
   const brushChoices = resolveDemoBrushChoices(presets);
-  const brush = select(inkGroup, '笔刷', 'ink-preset', [['', '切换预设…'], ...brushChoices.map((preset, index) => [String(index), preset.label])]);
-  const brushHint=document.createElement('span');brushHint.id='ink-hint';brushHint.className='hint';inkGroup.append(brushHint);
-  brush.onchange = () => run(async () => { if (brush.value !== '') { const preset = brushChoices[Number(brush.value)]; await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); } });
+  const brushFamilies = {round: 1, marker: 2, chalk: 3, crayon: 4, watercolor: 5, laser: 6};
+  const brushButtons = brushChoices.map(preset => {
+    const element = button(inkChoices, preset.label, async () => { await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); });
+    element.dataset.brush = preset.profileId; element.setAttribute('aria-pressed', 'false');
+    return [preset, element];
+  });
+  const brushHint=document.createElement('span');brushHint.id='ink-hint';brushHint.className='hint';inkChoices.append(brushHint);
 
   const pressureMode=select(inkGroup,'压力来源','ink-pressure',DEMO_PRESSURE_SOURCES.map(source=>[String(source.id),source.label]));
   const inkColor=field(inkGroup,'笔迹颜色','color','ink-color');
@@ -212,21 +208,25 @@ try {
   }
   const familyHints={1:'平滑圆头 · 速度模拟粗细',2:'斜切扁头 · 半透明叠色',3:'粉笔颗粒 · 压力控制纸纹覆盖',4:'柔边蜡笔 · 压力控制出墨与纸纹',5:'柔和色洗 · 压力控制浓淡与纸纹',6:'临时光迹 · 自动消退'};
   const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;control.parentElement.hidden=!!c&&!familyControls[c.family]?.includes(key);if(c)control.value=c[key];const output=control.parentElement.querySelector('output');if(output)output.textContent=control.value;}const vector=!!c&&(c.family===1||c.family===2||([3,4,5].includes(c.family)&&c.version===2));
+    for (const [preset, element] of brushButtons) element.setAttribute('aria-pressed', String(brushFamilies[preset.id] === c?.family));
     for(const [control,key] of [[easingMode,'easing'],[pressureModel,'pressureModel'],[startCap,'startCap'],[endCap,'endCap']]){control.parentElement.hidden=!vector;control.disabled=!vector;if(c){if(control.type==='checkbox')control.checked=c[key];else control.value=String(c[key]);}}
     pressureModel.parentElement.hidden=!vector||c?.pressureSource!==1;
     pressureMode.disabled=!c;pressureMode.parentElement.hidden=c?.family===6;inkColor.disabled=!c;if(c){pressureMode.value=String(c.pressureSource);inkColor.value=hex(c.color);}brushHint.textContent=c?(c.family===1&&c.thinning===0?'平滑圆头 · 固定笔宽':familyHints[c.family]):'兼容笔刷';};
-  inkGroup.append(brushHint);
   pressureMode.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,pressureSource:Number(pressureMode.value)});syncBrush();}});
   const initialBrush=new URLSearchParams(location.search).get('brush');
   const initialPreset=brushChoices.find(p=>p.profileId===({crayon:'crayon-wax-v1',chalk:'chalk-compact-v1',watercolor:'watercolor-lite-v1'}[initialBrush]||'round-handdrawn'))||brushChoices[0];
-  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(brushChoices.indexOf(initialPreset));syncBrush();
+  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);syncBrush();
 
-  const selectionGroup = group(context, 'selection-parameters');
-  const selectionMode = select(selectionGroup, '选择方式', 'selection-mode', DEMO_SELECTION_MODES.map(mode => [mode.id, mode.label]));
-  selectionMode.onchange = () => run(() => sdk.setSelectionMode(selectionMode.value));
-  const eraserGroup = group(context, 'eraser-parameters');
-  const eraserMode = select(eraserGroup, '擦除方式', 'eraser-mode', DEMO_ERASER_MODES.map(mode => [mode.id, mode.label]));
-  eraserMode.onchange = () => run(() => sdk.selectTool(eraserMode.value));
+  const selectionGroup = group(toolOptions, 'selection-parameters');
+  const selectionButtons = DEMO_SELECTION_MODES.map((mode, code) => {
+    const element = button(selectionGroup, mode.label, () => sdk.setSelectionMode(mode.id));
+    element.dataset.selection = mode.id; element.setAttribute('aria-pressed', 'false'); return [code, element];
+  });
+  const eraserGroup = group(toolOptions, 'eraser-parameters');
+  const eraserButtons = DEMO_ERASER_MODES.map(mode => {
+    const element = button(eraserGroup, mode.label, () => sdk.selectTool(mode.id));
+    element.dataset.eraser = mode.id; element.setAttribute('aria-pressed', 'false'); return [mode.id, element];
+  });
 
   const appearanceGroup = group(context, 'appearance-parameters');
   const fillEnabled = field(appearanceGroup, '填充', 'checkbox', 'object-fill-enabled');
@@ -260,7 +260,7 @@ try {
   const sketchDetails=group(details,'sketch-details');
   for(const input of [styleOpacity,styleDash,hatchGap,hatchWidth,hatchAngle])sketchDetails.append(input.parentElement);
   let styleDrag=null,styleDragCanceled=false;
-  const editingDefaults=()=>sdk.readSelection().count===0;
+  const editingDefaults=()=>sdk.readState().creationMode||sdk.readSelection().count===0;
   const appearancePatch=patch=>editingDefaults()?sdk.appearance.setDefaults(patch):sdk.appearance.patch(patch);
   quickStyle.onchange=()=>{if(quickStyle.value!=='')void run(()=>appearancePatch({enabled:true,roughness:Number(quickStyle.value)}));};
   sketchEnabled.onchange=()=>run(()=>appearancePatch({enabled:sketchEnabled.checked}));
@@ -348,35 +348,99 @@ try {
   button(cropGroup, '完成裁剪', () => sdk.commitCrop(sdk.readCrop().token), 'crop-done');
   button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
   const objectGroup = group(details, 'object-actions');
+  const editButton = button(objectGroup, '编辑', () => {
+    sdk.canvas.focus({preventScroll: true});
+    return sdk.table.read().available ? sdk.table.edit(tableTarget()) : sdk.text.edit(sdk.readSelection().primary);
+  }, 'object-edit');
+  const clipboardMime = 'application/x-axiom-objects', clipboardPrefix = 'AXIOM_OBJECTS_V1\n';
+  const clipboardText = bytes => {
+    const chunks=[];for(let i=0;i<bytes.length;i+=32768)chunks.push(String.fromCharCode(...bytes.subarray(i,i+32768)));
+    return clipboardPrefix+btoa(chunks.join(''));
+  };
+  const clipboardBytes = value => {
+    if(typeof value!=='string'||!value.startsWith(clipboardPrefix)||value.length>24*1024*1024)throw Error('剪贴板中没有可粘贴的 Axiom 对象');
+    return Uint8Array.from(atob(value.slice(clipboardPrefix.length)),c=>c.charCodeAt(0));
+  };
+  const writeClipboard = async cut => {
+    const capture=sdk.copySelection();
+    await navigator.clipboard.writeText(clipboardText(capture.bytes));
+    if(cut)await sdk.cutSelection(capture.stamp);
+  };
+  const copyButton = button(objectGroup, '拷贝', () => writeClipboard(false), 'object-copy');
+  const duplicateButton = button(objectGroup, '复制副本', () => sdk.duplicateSelection(), 'object-duplicate');
+  const cutButton = button(objectGroup, '剪切', () => writeClipboard(true), 'object-cut');
+  copyButton.title='拷贝对象（Ctrl/Cmd+C）';duplicateButton.title='复制副本（Ctrl/Cmd+D）';cutButton.title='剪切对象（Ctrl/Cmd+X）';
+  const frontButton = button(objectGroup, '置顶', () => sdk.orderSelection(true), 'object-front');
+  const backButton = button(objectGroup, '置底', () => sdk.orderSelection(false), 'object-back');
+  frontButton.title = backButton.title = '调整对象在当前层级中的顺序';
+  const lockButton = button(objectGroup, '锁定', () => sdk.lockSelection(true), 'object-lock');
+  const unlockButton = button(objectGroup, '解锁', () => sdk.unlockSelection(), 'object-unlock');
   const groupButton = button(objectGroup, '组合', () => sdk.group());
   const ungroupButton = button(objectGroup, '取消组合', () => sdk.ungroup());
   const enterGroup = button(objectGroup, '进入组合', () => sdk.enterGroup());
-  const leaveGroup = button(objectGroup, '退出组合', () => sdk.leaveGroup());
-  const deleteButton = button(objectGroup, '删除', () => sdk.deleteSelection());
+  const deleteButton = button(objectGroup, '删除', () => sdk.deleteSelection(), 'object-delete');
+  deleteButton.title = '删除选中对象（Backspace / Delete）';
 
   const historyGroup = group(board);
   const boardLabels = Object.fromEntries(DEMO_BOARD_ACTIONS.map(action => [action.id, action.label]));
   const undo = button(historyGroup, boardLabels.undo, () => sdk.undo(), 'undo');
   const redo = button(historyGroup, boardLabels.redo, () => sdk.redo(), 'redo');
   button(historyGroup, boardLabels.fit, () => sdk.fitContent(), 'fit');
-  const navigationGroup = group(board);
-  for (const tool of DEMO_DRAWING_TOOLS.filter(tool => tool.id === 'select' || tool.id === 'hand'))
-    addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool), navigationGroup);
   const boardGroup = group(board);
-  button(boardGroup, '创建分区', () => sdk.createSection(), 'section-create');
+  const leaveGroup = button(boardGroup, '退出组合', () => sdk.leaveGroup());
   button(boardGroup, boardLabels.background, () => $('background-panel').showModal(), 'background-open');
   button(boardGroup, boardLabels.export, () => $('export-panel').showModal(), 'export-open');
+  const pasteButton = button(boardGroup, '粘贴', async () => sdk.pasteObjects(clipboardBytes(await navigator.clipboard.readText())), 'object-paste');
+  pasteButton.title='粘贴对象（Ctrl/Cmd+V）';
 
   const contextHint = document.createElement('span'); contextHint.className = 'hint'; context.append(contextHint);
   // The v1 actions array follows the SDK SelectionAction order. Availability
   // comes from the Runtime; these names only identify the projected actions.
-  const actionIndex = {delete: 1, size: 6, appearance: 7, group: 9, ungroup: 10};
+  const actionIndex = {delete: 1, lock: 2, unlock: 3, order: 4, transform: 5, size: 6, appearance: 7, group: 9, ungroup: 10};
+  const objectKeyboardContext = event => !event.defaultPrevented && !event.isComposing && event.keyCode!==229 &&
+    sdk.text.read().phase===0 && !document.querySelector('dialog[open]') &&
+    !event.target.closest?.('input,textarea,select,[contenteditable]');
+  for(const action of ['copy','cut'])document.addEventListener(action,event=>{
+    if(!objectKeyboardContext(event)||!sdk.readSelection().count)return;
+    event.preventDefault();
+    try {
+      const capture=sdk.copySelection(),value=clipboardText(capture.bytes);
+      if(!event.clipboardData)throw Error('无法写入系统剪贴板');
+      event.clipboardData.setData(clipboardMime,value);event.clipboardData.setData('text/plain',value);
+      if(action==='cut')void run(async()=>{await navigator.clipboard.writeText(value);await sdk.cutSelection(capture.stamp);});
+    }catch(error){fail(error);}
+  });
+  document.addEventListener('paste',event=>{
+    if(!objectKeyboardContext(event))return;
+    const value=event.clipboardData?.getData(clipboardMime)||event.clipboardData?.getData('text/plain');
+    if(!value?.startsWith(clipboardPrefix))return;
+    event.preventDefault();void run(()=>sdk.pasteObjects(clipboardBytes(value)));
+  });
+  document.addEventListener('keydown',event=>{
+    if(!objectKeyboardContext(event)||!(event.ctrlKey||event.metaKey)||event.altKey||event.shiftKey||event.key.toLowerCase()!=='d'||!sdk.readSelection().count)return;
+    event.preventDefault();void run(()=>sdk.duplicateSelection());
+  });
+
+  // Object shortcuts are Shell bindings to the existing admitted SDK command.
+  // Native text/IME, HTML inputs and dialogs retain their own keyboard behavior.
+  document.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.isComposing || event.keyCode === 229 || event.ctrlKey || event.metaKey || event.altKey ||
+        sdk.text.read().phase !== 0 || document.querySelector('dialog[open]') ||
+        event.target.closest?.('input,textarea,select,[contenteditable]') || !['Backspace', 'Delete'].includes(event.key)) return;
+    const selected = sdk.readSelection();
+    if (!selected.count) return;
+    event.preventDefault();
+    if (selected.actions[actionIndex.delete]?.available) void run(() => sdk.deleteSelection());
+  });
 
   // Visibility and enabled states are projections of the public SDK readback.
   // The Demo does not maintain another selection or editing owner.
   syncContext = state => {
     const selected = sdk.readSelection(), text = sdk.text.read(), image = sdk.readSelectedImage(), cropping = sdk.readCrop();
-    const table=sdk.table.read();tableGroup.hidden=!table.available;
+    const capability = action => selected.actions[actionIndex[action]]?.available === true;
+    const objectContext = !state.creationMode && state.tool === 1 && selected.count > 0;
+    const locked = objectContext && (capability('unlock') || selected.actions[actionIndex.transform]?.reason === 10);
+    const table=sdk.table.read();tableGroup.hidden=!objectContext||locked||!table.available;
     if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
       setValue(cellFont,cell.format.font??'');
       cellName.textContent=`单元格 ${r+1} 行 ${c+1} 列`;
@@ -384,25 +448,28 @@ try {
       for(const input of tableGroup.querySelectorAll('button,input,select'))input.disabled=!table.editable;
       $('table-remove-row').disabled=!table.editable||table.rows.length===1;$('table-remove-column').disabled=!table.editable||table.columns.length===1;
     }
-    const capability = action => selected.actions[actionIndex[action]]?.available === true;
     const activeKey = state.creationMode ? `shape:${state.shape}` : `tool:${state.tool}`;
     for (const element of toolButtons) element.setAttribute('aria-pressed', String(element.dataset.tool === activeKey));
+    shapeTool.setAttribute('aria-pressed', String(state.creationMode && state.shape <= 4));
+    if (state.creationMode && state.shape <= 4) preferredShape = DEMO_SHAPES[state.shape].id;
     const toolName = toolButtons.find(element => element.dataset.tool === activeKey)?.textContent || '工具';
-    $('context-title').textContent = selected.count ? `已选 ${selected.count} 个对象` : toolName;
-    inkGroup.hidden = state.creationMode || state.tool !== 0 || selected.count > 0;
+    $('context-title').textContent = objectContext ? `已选 ${selected.count} 个对象${locked ? ' · 已锁定' : ''}` : toolName;
+    inkChoices.hidden = inkGroup.hidden = state.creationMode || state.tool !== 0;
+    shapeOptions.hidden = !state.creationMode || state.shape > 4;
     selectionGroup.hidden = state.creationMode || state.tool !== 1;
     eraserGroup.hidden = state.creationMode || state.tool !== 2;
-    selectionMode.value = ['point', 'rectangle', 'lasso'][state.selectionMode];
-    eraserMode.value = state.eraserMode === 1 ? 'objectEraser' : 'partialEraser';
-    appearanceGroup.hidden = selected.count !== 1 || !capability('appearance') || !selected.appearance;
+    $('tool-options-row').hidden = Array.from(toolOptions.children).every(element => element.hidden);
+    for (const [code, element] of selectionButtons) element.setAttribute('aria-pressed', String(code === state.selectionMode));
+    for (const [id, element] of eraserButtons) element.setAttribute('aria-pressed', String(id === (state.eraserMode === 1 ? 'objectEraser' : 'partialEraser')));
+    appearanceGroup.hidden = !objectContext || locked || selected.count !== 1 || !capability('appearance') || !selected.appearance;
     if (!appearanceGroup.hidden) {
       const appearance = selected.appearance;
       fillEnabled.checked = appearance.fillEnabled; strokeEnabled.checked = appearance.strokeEnabled;
       setValue(fill, hex(appearance.fill)); setValue(stroke, hex(appearance.stroke)); setValue(strokeWidth, appearance.strokeWidth);
       fill.disabled = !appearance.fillEnabled; stroke.disabled = strokeWidth.disabled = !appearance.strokeEnabled;
     }
-    const defaults=selected.count===0,styleState=defaults?sdk.appearance.readDefaults():sdk.appearance.read();
-    sketchGroup.hidden=defaults?!state.creationMode:styleState.eligible.length===0;
+    const defaults=editingDefaults(),styleState=defaults?sdk.appearance.readDefaults():sdk.appearance.read();
+    sketchGroup.hidden=locked||(defaults?!state.creationMode:!objectContext||styleState.eligible.length===0);
     sketchDetails.hidden=sketchGroup.hidden;
     if(!sketchGroup.hidden){
       const v=styleState.values,mixed=new Set(styleState.mixed);
@@ -425,9 +492,9 @@ try {
       for(const [input,key] of [[styleFill,'fillKind'],[styleColor,'fill'],[styleStroke,'stroke'],[styleWidth,'strokeWidth'],[styleOpacity,'opacity'],[hatchGap,'gap'],[hatchWidth,'hatchWidth'],[hatchAngle,'angle']]){input.title=mixed.has(key)?'多个对象的值不同':'';input.parentElement.dataset.mixed=String(mixed.has(key));}
       appearanceGroup.hidden=true;
     }
-    sizeGroup.hidden = selected.count !== 1 || !capability('size');
+    sizeGroup.hidden = !objectContext || locked || selected.count !== 1 || !capability('size');
     if (!sizeGroup.hidden) { setValue(width, Number(selected.width.toFixed(2))); setValue(height, Number(selected.height.toFixed(2))); }
-    textGroup.hidden = !(state.tool === 4 || text.phase !== 0 || selected.kind === 4);
+    textGroup.hidden = locked || !(state.tool === 4 || text.phase !== 0 || objectContext && selected.kind === 4);
     textDetails.hidden=textGroup.hidden;
     if (!textGroup.hidden) {
       setValue(fontFamily,text.format.font??'');fontFamily.disabled=text.phase===0&&(!text.formatObject||/^0+$/.test(text.formatObject));
@@ -438,15 +505,22 @@ try {
       setValue(fontSize, size ? String(size) : '');
       for (const [name, element] of textButtons) element.setAttribute('aria-pressed', String(Boolean(text.format[name])));
     }
-    imageGroup.hidden = !image.available; crop.disabled = !image.editable || cropping.active;
+    imageGroup.hidden = !objectContext || locked || !image.available; crop.disabled = !image.editable || cropping.active;
     cropGroup.hidden = !cropping.active;
-    objectGroup.hidden = selected.count === 0 && !selected.groupScope;
-    groupButton.hidden = selected.count < 2; groupButton.disabled = !capability('group');
-    ungroupButton.hidden = selected.kind !== 9; ungroupButton.disabled = !capability('ungroup'); deleteButton.disabled = !capability('delete');
-    enterGroup.hidden = selected.kind !== 9; leaveGroup.hidden = !selected.groupScope;
+    objectGroup.hidden = !objectContext || text.phase !== 0 || cropping.active;
+    editButton.hidden = locked || selected.count !== 1 || ![1, 4, 8, 11].includes(selected.kind);
+    editButton.disabled = !capability('transform') || table.available && !table.editable;
+    for (const element of [frontButton, backButton]) { element.hidden = locked; element.disabled = !capability('order'); }
+    lockButton.hidden = locked; lockButton.disabled = !capability('lock');
+    for(const element of [copyButton,duplicateButton,cutButton]){element.hidden=locked;element.disabled=!capability('delete');}
+    unlockButton.hidden = !locked; unlockButton.disabled = !capability('unlock');
+    groupButton.hidden = locked || selected.count < 2; groupButton.disabled = !capability('group');
+    ungroupButton.hidden = locked || selected.kind !== 9; ungroupButton.disabled = !capability('ungroup');
+    deleteButton.hidden = locked; deleteButton.disabled = !capability('delete');
+    enterGroup.hidden = locked || selected.kind !== 9; leaveGroup.hidden = !selected.groupScope;
     undo.disabled = !state.canUndo; redo.disabled = !state.canRedo;
     contextHint.hidden = Array.from(context.children).some(element => element.classList.contains('group') && !element.hidden);
-    contextHint.textContent = state.creationMode ? '拖动绘制，选中对象后可调整样式与尺寸' : state.tool === 3 ? '拖动画板移动视角' : '选择工具或对象以调整参数';
+    contextHint.textContent = locked ? '解锁后可编辑对象' : state.creationMode ? '点击按默认大小创建，拖动可自定范围' : state.tool === 3 ? '拖动画板移动视角' : '选择工具或对象以调整参数';
   };
 
   const backgroundMode = $('background-mode'), backgroundColor = $('background-color'), patternColor = $('background-pattern-color');

@@ -126,7 +126,7 @@ std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
         if ((kind != OperationKind::kSetTransforms && kind != OperationKind::kPatchProperties &&
              kind != OperationKind::kInsertObjects && kind != OperationKind::kRestoreObjects &&
              kind != OperationKind::kDeleteObjects && kind != OperationKind::kSetSectionContent &&
-             kind != OperationKind::kEditContainerTopology) || !ids.insert(operation.id).second) return {};
+             kind != OperationKind::kEditContainerTopology && kind != OperationKind::kEditTable) || !ids.insert(operation.id).second) return {};
         const auto& beforeState = *state->stages.back();
         auto prepared = prepare(operation, {beforeState, applied, &manifest});
         if (prepared.disposition != PrepareDisposition::kPrepared || !prepared.plan ||
@@ -192,7 +192,7 @@ bool admitPlan(OperationAdmission* admission, const PreparedApplyPlan& plan,
         kind != OperationKind::kEditContainerTopology && kind != OperationKind::kInsertObjects &&
         kind != OperationKind::kRestoreObjects && kind != OperationKind::kDeleteObjects &&
         kind != OperationKind::kSetTransforms && kind != OperationKind::kPatchProperties &&
-        kind != OperationKind::kSetDocumentBackground)) return false;
+        kind != OperationKind::kSetDocumentBackground && kind != OperationKind::kEditTable)) return false;
     const auto basisGeneration = generation.current();
     const auto basisOrdinal = clock.lastCommittedOrdinal();
     StagedObjectView after(context.objects);

@@ -773,8 +773,8 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
     }, entry.command);
 }
 
-void eraseMasks(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
-    for (const auto& mask : entry.record.eraseMasks) {
+void eraseMasks(SkCanvas& canvas, std::span<const semantic::EraseMaskRecord> masks) {
+    for (const auto& mask : masks) {
         if (const auto* filled = std::get_if<semantic::FilledPathMask>(&mask.geometry)) {
             SkPaint paint; paint.setAntiAlias(false); paint.setBlendMode(SkBlendMode::kClear); drawPath(canvas, filled->path, paint);
         } else if (const auto* swept = std::get_if<semantic::SweptCircleMask>(&mask.geometry)) {
@@ -798,6 +798,8 @@ void eraseMasks(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
 }
 
 bool isInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    // Compact ink is always a destination-independent source, including
+    // translated copies. Its permanent/transient masks clear only that source.
     return std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<VectorStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<DabStrokeReferenceCommand>(entry.command) ||
@@ -814,6 +816,8 @@ bool isDrawableNonInkReferenceEntry(const ReferenceTraversalEntry& entry) noexce
 }
 
 bool isBrushReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    // Compact ink is always a destination-independent source, including
+    // translated copies. Its permanent/transient masks clear only that source.
     return std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
@@ -904,7 +908,14 @@ bool requiresInkIsolation(const FramePlan& plan) {
 }
 
 void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
-    eraseMasks(canvas, entry);
+    eraseMasks(canvas, entry.record.eraseMasks);
+}
+void drawInkBodyToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
+    ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
+    drawCommand(canvas,entry,images,text,true,false,nullptr,grid);
+}
+void drawPresentationEraseMasksToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
+    eraseMasks(canvas,entry.presentationEraseMasks);
 }
 
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
@@ -929,6 +940,10 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         entry.command = ConnectorReferenceCommand{*connector};
     else if (const auto* sticky = std::get_if<semantic::StickyContent>(&object.content))
         entry.command = StickyReferenceCommand{*sticky, nullptr, false};
+    else if (const auto* table = std::get_if<semantic::TableContent>(&object.content))
+        entry.command = TableReferenceCommand{*table, nullptr};
+    else if (const auto* section = std::get_if<semantic::SectionContent>(&object.content))
+        entry.command = SectionReferenceCommand{*section, nullptr};
     else return;
     drawTransientEntryToSkCanvas(canvas, plan, entry);
 }
@@ -974,7 +989,8 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
         if (!validAffine(transform) || validateProductionCommand(entry) != HeadlessSubmissionIssue::kNone) {
             return BackendSubmissionResult::rejected("unsupported command geometry");
         }
-        for (const auto& mask : entry.record.eraseMasks) {
+        for (const auto masks : {std::span(entry.record.eraseMasks), std::span(entry.presentationEraseMasks)})
+        for (const auto& mask : masks) {
             const bool valid = std::visit([](const auto& geometry) {
                 using T = std::decay_t<decltype(geometry)>;
                 // Object-local erase geometry can be fractional after inverse
@@ -1016,20 +1032,41 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     for (std::size_t index=begin;index<end;++index) {
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
+        if(cache&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&cache->drawDamagedInk(canvas,plan,entry,images,textResources,grid))continue;
+        SkAutoCanvasRestore feedbackRestore(&canvas, false);
+        if (entry.presentationOpacity != 1.0F) {
+            SkPaint feedback; feedback.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
+            canvas.saveLayer(nullptr, &feedback);
+        }
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            entry.presentationEraseActive ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
+        // Clip a disposable object layer, never the composite/backdrop. Keep
+        // canonical source stamps intact as only the presentation trace grows.
+        SkAutoCanvasRestore eraseRestore(&canvas, false);
+        const bool transientErase = !entry.presentationEraseMasks.empty();
+        if (transientErase) canvas.saveLayer(nullptr, nullptr);
+        bool cached = false;
         if (cache) {
-            try {if(cache->draw(canvas,plan,entry,isolatedInk)) continue;}
+            try {cached=cache->draw(canvas,plan,entry,isolatedInk || transientErase);}
             catch(const std::bad_alloc&) {cache->clear();}
         }
-        if (cache) cache->noteDirect();
-        canvas.save();
-        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
-        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
-        drawCommand(canvas, entry, images, textResources, true,false,nullptr,grid);
-        drawEraseMasksToSkCanvas(canvas, entry);
-        if (isolatedInk) canvas.restore();
-        canvas.restore();
+        if (!cached) {
+            if (cache) cache->noteDirect();
+            canvas.save();
+            if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
+            canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+            drawCommand(canvas, entry, images, textResources, true,false,nullptr,grid);
+            drawEraseMasksToSkCanvas(canvas, entry);
+            if (isolatedInk) canvas.restore();
+            canvas.restore();
+        }
+        if (transientErase) {
+            canvas.save();
+            canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+            eraseMasks(canvas, entry.presentationEraseMasks);
+            canvas.restore();
+        }
     }
     canvas.restore();
 }
@@ -1080,6 +1117,7 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!isInkReferenceEntry(entry)) continue;
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            entry.presentationEraseActive ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         if(cache){
             try{if(cache->draw(canvas,plan,entry,isolatedInk))continue;}
@@ -1158,6 +1196,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            entry.presentationEraseActive ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         canvas->save();
         if (isolatedInk) canvas->saveLayer(nullptr, nullptr);

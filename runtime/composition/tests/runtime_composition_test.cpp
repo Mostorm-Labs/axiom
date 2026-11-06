@@ -301,17 +301,25 @@ void logicalInputMatchesCanonicalAndPreviewPixels() {
   request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectTool;
   request.payload.tool = canvas::runtime::CanvasToolKind::kSelect;
   assert(facade.submitCanvasControl(request).state == canvas::runtime::ProductControlState::kQueued);
-  down.samples.front().sequence = 4U; down.samples.front().x = 40.0F; down.samples.front().y = 40.0F;
-  up = down; up.samples.front().sequence = 5U; up.samples.front().phase = canvas::input::PointerPhase::kUp;
-  assert(composition.submit(down) && composition.submit(up));
+  // Creation now selects the object. A stationary second click would enter its
+  // text editor; keep this fixture on the selection/drag path instead.
   assert(facade.readCanvasControlSnapshot(request.target).selectedObjectCount == 1U);
   canvas::runtime::RuntimeFrameOpportunity selected{};
   assert(composition.serviceFrameOpportunity(false, selected));
   assert(composition.readCanonicalRgba(pixels));
   const auto corner = (40U * 256U + 40U) * 4U;
-  // Selection chrome is in the same logical space as the selected object.
-  assert(pixels[corner] < 90U && pixels[corner + 1U] > 140U && pixels[corner + 2U] > 150U);
+  // White corner grip and violet edge in the same logical space as the object.
+  // Its bounds include one unit of stroke and the grip extends four more:
+  // (20 - 1 - 4) * DPR2 places the left edge at x=30px.
+  assert(pixels[corner] > 245U && pixels[corner + 1U] > 245U &&
+         pixels[corner + 2U] > 245U && pixels[corner + 3U] == 255U);
+  const auto edge = (40U * 256U + 30U) * 4U;
+  assert(pixels[edge] >= 90U && pixels[edge] <= 120U &&
+         pixels[edge + 1U] >= 85U && pixels[edge + 1U] <= 115U &&
+         pixels[edge + 2U] >= 245U && pixels[edge + 3U] == 255U);
+  assert(facade.readTextEditor().phase == canvas::runtime::TextPhase::kClosed);
   const auto before = composition.qualificationRuntime().selectedObjectRecord();
+  down.samples.front().x = 40.0F; down.samples.front().y = 40.0F;
   down.samples.front().sequence = 6U;
   move = down; move.samples.front().sequence = 7U; move.samples.front().phase = canvas::input::PointerPhase::kMove;
   move.samples.front().x = 50.0F;
@@ -733,6 +741,8 @@ void fitIncludesEarlierUnchangedObjects() {
   payload.creationPreset=runtime::CanvasCreationPreset::kRectangle; control(payload);
   std::vector<foundation::WorldRect> originals;
   for(unsigned i=0;i<7;++i) {
+    // Creation is one-shot; explicitly rearm before each independent Shape.
+    control(payload);
     const float x=20.0F+180.0F*(i%4),y=40.0F+200.0F*(i/4);
     pointer(input::PointerPhase::kDown,x,y); pointer(input::PointerPhase::kUp,x+90,y+90);
     originals.push_back({x,y,x+90,y+90});
@@ -755,6 +765,7 @@ void fitIncludesEarlierUnchangedObjects() {
 }
 
 int main(int argc, char** argv) {
+  if (argc > 1 && std::string(argv[1]) == "logical-input") { logicalInputMatchesCanonicalAndPreviewPixels(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "native-navigation") { nativeNavigationKeepsBrushPreviewAndCanonicalAligned(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "live-brush-preview") { canonicalFeedbackKeepsAnUnfinishedBrushPreview(); return 0; }
   canonicalFeedbackKeepsAnUnfinishedBrushPreview();

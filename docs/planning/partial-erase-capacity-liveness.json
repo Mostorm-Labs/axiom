@@ -1,0 +1,49 @@
+{
+  "task": "partial-erase-capacity-liveness",
+  "task_anchor": {
+    "revision": "d79bb7fdde43ca99598efe7583dccec0d5665f03",
+    "relation": "ancestor"
+  },
+  "authorization": "User requests committing prior navigation fix, then repairing an unresponsive board after one long stroke is duplicated15 times and locally erased repeatedly.",
+  "owners": {
+    "canonical": "CanvasEditingRuntime -> OperationEngine/History/publication unchanged",
+    "derived_damage": "RenderGroupManager compares immutable canonical sources and append-only presentation masks; SkiaRenderCache/SkiaRenderer own clips, source residency and retained-pixel validity",
+    "platform": "Existing supportsPartialUpdate capability; only qualified persistent contents may be reused. WebGL capability must reflect actual preserveDrawingBuffer.",
+    "public_api": "No JS/DLL business API, schema, identity, operation, version or dependency changes."
+  },
+  "evidence_before": [
+    "16 long strokes at DPR2: five48-move sweeps each took about8.2s; no permanent deadlock observed in this run. Most CPU samples are full-source rasterization inside SkiaRenderCache::draw.",
+    "Native --erase-damage-only uses16 sources and160KiB raster/4KiB entry admission, plus512KiB/128KiB admission. With the former renderer, whole-source rerasterization fails the bounded-work oracle."
+  ],
+  "implementation_contract": [
+    "During a continuous append-only sweep, repaint the conservative newly affected device rectangle using the same ordered per-object painter and complete masks. Do not globally clear an ink composite or alter mask/geometry semantics.",
+    "Use existing retained source records to validate exact mask prefixes. No hash-only identity, no new canonical document or mask owner; unsupported/non-prefix geometry, source/order/style/overlay changes, camera/target/resource/lifecycle changes, failed present or foreign target force a complete replacement.",
+    "Only reuse a successfully presented target that advertises partial updates and still matches provider identity, surface identity/generation/content generation, present count and render-cache sequence. Foreign canvas matrices and host clips (including nonrectangular clips) require complete replacement. No readback or extra framebuffer snapshot.",
+    "Reuse only complete resident source images. Cache misses evaluate new body coverage on the existing charged scratch using the original full device sampling grid; evaluate canonical and presentation masks under the original full scratch clip to preserve AA. Clip only body work and destination composition, never store a cropped feedback image as a complete source.",
+    "Cache/resource limits remain unchanged. Providers without retained contents, new/changed FilledPath feedback, non-prefix masks or unsupported demand retain full replacement; no silent dropping of effects.",
+    "A scratch snapshot/allocation failure retries without presenting incomplete pixels. Damage feedback owns no new persistent framebuffer or canonical state. First feedback and revoked validity use complete replacement. No capacity limit is increased.",
+    "This optimization admits destination-independent CompactStroke sources (the supported brush/version profiles). Legacy non-Compact stroke commands keep complete replacement; their historical destination-dependent erase behavior is not redefined."
+  ],
+  "verification": {
+    "required": [
+      "Real Chrome root SDK:16 long strokes,DPR1/2,successive sweeps,motion latency and heartbeat,pre-Up pixels,atomic commits,cancel/Undo/Redo and post-erase navigation.",
+      "Native capacity-limited full-image oracle:9 brush/version profiles x2 affine cases x2 cache limits; canonical plus presentation masks, append/tap transition, unchanged feedback, cancel, external target writes, capability fallback, mask-prefix shrink, source/order/resource invalidation, failed presentation and FilledPath fallback; max2 channel AA tolerance. Host clip changes that do not dirty SkSurface contents must also invalidate partial feedback.",
+      "Canonical preparation after damage must not reuse incomplete images. Camera/target generations and GPU completion ownership retain their existing render/cache checks; the real consumer verifies repeated erasing followed by two-finger pan/zoom.",
+      "Affected erasing/navigation/material/Runtime tests and full native suite; preserve named baseline failures."
+    ],
+    "evidence_root": "out/erase-freeze",
+    "entrypoints": [
+      "axiom_render_cache_tests --erase-damage-only",
+      "verification/sdk_js/verify_partial_erase_capacity.mjs <matching-sdk-root> <result.json> <dpr>"
+    ],
+    "measurement": "Browser motion times include a real requestAnimationFrame barrier.16-source steady-motion p95 must stay below75ms on this host; separately record cold first-feedback maxima and Up/settlement. Compare premultiplied WebGL pixels composited over the white host: canonical ink-only kClear can legitimately return transparent black, which is not a visible black gap."
+  },
+  "forbidden": [
+    "Increasing memory caps to hide thrashing",
+    "Changing canonical coordinates/masks/History/synchronization",
+    "New Shell renderer or consumer private-state access",
+    "Rebuilding published Semantic/Skia dependencies",
+    "Version/release publication",
+    "Unrelated baseline repairs"
+  ]
+}

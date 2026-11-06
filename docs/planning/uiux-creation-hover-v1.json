@@ -1,0 +1,78 @@
+{
+  "task": "uiux-creation-hover-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "6f9c40a335515ee385efb1e1a3d8edcd1c800e37",
+    "relation": "ancestor"
+  },
+  "authority": "User request 2026-11-06 and supplied 75.605s recording: translucent default previews for Shape, Sticky, Table and selected-object attachment points. Table correction was committed and pushed before implementation.",
+  "owners": {
+    "preview_and_creation": "CanvasEditingRuntime existing creation/placement/attachment owners",
+    "presentation": "EditingOverlay and shared Skia transient object drawing",
+    "canonical": "existing OperationEngine/History/operation publication"
+  },
+  "contract": [
+    "Mouse hover on the mounted board previews the default rectangle/ellipse/triangle (120x80), Sticky (200x200), or Table (2x2, 120x48 cells) at the pointer in world coordinates. Pointer click creates that default; drag retains existing custom size/count behavior.",
+    "Preview uses the same appearance and geometry factories as actual creation, at 25% presentation opacity multiplied by object opacity. Pending IDs/styles/seed/axis identities are reserved once per prospective object in Runtime and reused on click; no canonical object, History or Operation is created by hover.",
+    "Attachment hover shows the same sibling and connector that the existing point-click factory will create, including source geometry dimensions, opposite port and current routing. Refactor/reuse that factory, preserving semantic endpoints and routing validation.",
+    "Hover is not an active editing session and does not block controls. Leave/blur/tool change/Down/drag/text editing/cancel/surface loss/stale basis retire ghost presentation. Guard full context and locks; never commit stale or extra ghost objects.",
+    "The ordinary SDK entry points remain unchanged. Existing private hover transport and native host input feed Runtime; Shell does not draw business geometry. Image export and snapshots exclude all ghosts."
+  ],
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "shared prototype/sibling creation factories and bounded hover cache",
+        "shared EditingOverlay/Skia ghost drawing",
+        "matching Web mouse hover/leave/blur and native leave handling",
+        "consumer documentation and regression evidence"
+      ],
+      "forbidden_changes": [
+        "public API/ABI/data format additions",
+        "Shell canonical/editing owner or a second renderer",
+        "dependency rebuilds/lock/version/release changes",
+        "unrelated baseline fixes"
+      ]
+    },
+    "tests": {
+      "required": [
+        "Native hover is noncanonical; click matches default preview; seed/axis identity reuse and sibling geometry",
+        "Real Chrome copied SDK and actual Demo: translucent/following/clearing previews, defaults/drag, styled determinism, ports and atomic undo, export exclusion, zoom and cancellation",
+        "Table cell selection correction and existing Table/placement/text/default/public SDK regressions",
+        "Affected native tests and full configured CTest with existing baseline failures reported separately",
+        "Runtime boundary and matching JS/types/WASM/resources"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "out/creation-hover-* native/browser results and source/package hashes"
+      ],
+      "corroborative": [
+        "recording contact sheets and actual served Demo"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "requested hover behavior verified",
+        "previous interaction behavior preserved",
+        "rebuilt matching Demo served"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

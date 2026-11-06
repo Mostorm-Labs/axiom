@@ -36,6 +36,8 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 } // namespace
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
+    textBox.reset();
+    creationHover_.reset();
     creationPreview_.reset();
     creationRoute_.reset();
     if (input.selectedObject.isZero() || !input.worldBounds.isFiniteAndOrdered()) {
@@ -65,10 +67,38 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
                              (corners[2].y + corners[3].y) * 0.5F};
     const ScreenPoint left{(corners[3].x + corners[0].x) * 0.5F,
                            (corners[3].y + corners[0].y) * 0.5F};
-    // Keep the rotation affordance clear of the top attachment point.  The
-    // top-right corner gives the user an unambiguous control without
-    // overlapping the semantic top port.
-    const ScreenPoint rotation{corners[1].x + 24.0F, corners[1].y - 24.0F};
+    // Screen-space outward normal keeps the rotation target above the local
+    // top edge after object/camera rotation, at a fixed distance from the box.
+    float nx = corners[1].y - corners[0].y;
+    float ny = corners[0].x - corners[1].x;
+    const float edgeLength = std::hypot(nx, ny);
+    if (edgeLength > 1.0e-5F) {
+        nx /= edgeLength;
+        ny /= edgeLength;
+        if (nx * (top.x - bottom.x) + ny * (top.y - bottom.y) < 0.0F) {
+            nx = -nx;
+            ny = -ny;
+        }
+    } else {
+        nx = 0.0F;
+        ny = -1.0F;
+    }
+    float rotationGap = input.rotationGap;
+    // Connector ports have a 16px hit radius, rotation has 12px. Leave a
+    // further 4px gap so neither visible affordance steals the other's drag.
+    constexpr float kPortClearance = 32.0F;
+    for (const auto& point : attachmentPoints_) {
+        if (!point.active) continue;
+        const float dx = point.center.x - top.x;
+        const float dy = point.center.y - top.y;
+        const float along = dx * nx + dy * ny;
+        const float across = dx * ny - dy * nx;
+        if (std::abs(across) < kPortClearance) {
+            rotationGap = std::max(rotationGap, along +
+                std::sqrt(kPortClearance * kPortClearance - across * across));
+        }
+    }
+    const ScreenPoint rotation{top.x + nx * rotationGap, top.y + ny * rotationGap};
     outline_ = SelectionOutline{corners, rotation, input.selected};
     const std::array<std::pair<HandleKind, ScreenPoint>, kHandleCount> geometry{{
         {HandleKind::kTopLeft, corners[0]},
@@ -92,7 +122,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
               kind == HandleKind::kBottom || kind == HandleKind::kLeft) &&
              input.capabilities.sides);
         handles_[index] = enabled
-                              ? HandleGeometry{kind, geometry[index].second, 6.0F, 12.0F,
+                              ? HandleGeometry{kind, geometry[index].second, 4.0F, 12.0F,
                                                input.active}
                               : HandleGeometry{};
     }
@@ -100,7 +130,9 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 }
 
 void EditingOverlay::clear() noexcept {
+    textBox.reset();
     readOnlyOutlines.clear();candidateOutlines.clear();acquisitionOutline.clear();
+    creationHover_.reset();
     creationPreview_.reset();
     creationRoute_.reset();
     input_ = {};

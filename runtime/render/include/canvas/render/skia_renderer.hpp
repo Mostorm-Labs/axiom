@@ -89,6 +89,8 @@ class SkiaRenderer final {
   private:
     std::shared_ptr<internal::GpuResourceRetirement> gpuRetirements_;
     std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
+    struct PartialEraseFrame;
+    std::shared_ptr<PartialEraseFrame> partialEraseFrame_;
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;

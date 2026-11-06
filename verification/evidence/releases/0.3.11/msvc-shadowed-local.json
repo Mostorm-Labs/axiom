@@ -1,0 +1,37 @@
+{
+  "candidate_source": "7a8f9259a66ace130242ec398ff56b8d7c99f66d",
+  "candidate_tag_object": "b8df320acd53bfd30250772dc4dbfa72a3a3f51d",
+  "version": "0.3.11",
+  "status": "unpublished candidate stopped before tag update",
+  "failure": {
+    "compiler": "MSVC /W4 /WX",
+    "error": "C2220",
+    "warning": "C4456",
+    "source": "runtime/render/src/skia_prepared_geometry.cpp",
+    "inner_line": 231,
+    "outer_line": 207,
+    "message": "declaration of 'unit' hides previous local declaration",
+    "job_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/41976258682/job/127075767823"
+  },
+  "resolution": "Rename only the replay-block byte estimate local to replayUnit; keep arithmetic, budgets, warnings and interfaces unchanged.",
+  "local_oracle": {
+    "translation_unit": "runtime/render/src/skia_prepared_geometry.cpp",
+    "additional_flags": [
+      "-fsyntax-only",
+      "-Wshadow",
+      "-Werror=shadow"
+    ],
+    "red_exit": 1,
+    "green_exit": 0,
+    "red_sha256": "048372ebd3ac07b35921b84b0e901a9cd7214c10d51f1a37b45272e9795e340d",
+    "green_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scope": "Clang production-source shadow diagnostic; corrected MSVC/Windows packaging still requires fresh hosted verification."
+  },
+  "publication_guard": {
+    "github_release": "not found",
+    "sdk_run": "41976258680 completed cancelled; publish and publish-npm cancelled",
+    "rn_run": "41976258682 completed failure; package and publish skipped",
+    "npm": "No publication job executed for the owned candidate."
+  },
+  "tag_update_rule": "The candidate is owned by this release task. Preserve its exact source/evidence, use an exact old-object lease and rerun both complete release workflows. Never rewrite published tags/assets."
+}

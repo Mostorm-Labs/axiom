@@ -1,0 +1,51 @@
+{
+  "task": "multi-stroke-live-erase-performance",
+  "task_anchor": {
+    "revision": "51ad8725b6b0fca20e615fdd88c3abbe0a2a75a6",
+    "relation": "ancestor"
+  },
+  "authorization": "User requests investigating and fixing delayed partial erase after duplicating a long stroke twice. Existing work committed and pushed first.",
+  "owners": {
+    "input_and_mask_commit": "CanvasEditingRuntime; canonical AddEraseMasks via existing OperationEngine/History once at Up",
+    "feedback": "Frame-local ReferenceTraversalEntry + shared Skia rendering/cache; no new document owner",
+    "api_impact": "None; public JS/C ABI/SDK versions unchanged"
+  },
+  "contract": [
+    "Preview masks are derived frame metadata, never canonical scene content or export/history/operation bytes.",
+    "Canonical source cache validity must not change solely because an active erase trace grows. Apply transient masks to an isolated cached source, preserving lower objects/background.",
+    "Translated duplicates and previously erased strokes remain eligible for bounded source reuse; use existing cache budgets and invalidation stamps.",
+    "Retained runs may not hide transient erase metadata. Mask validation, Cancel, Undo, terminal commit and camera/target/content invalidation remain enforced."
+  ],
+  "verification": {
+    "before": "out/erase-multi/actual-before.json: real Chrome, 6001 samples + two duplicates, partialEraser explicitly selected; p95 84.85ms / mean79.44ms, 40ms fixture budget fails; one commit and no mutation during drag pass.",
+    "required": [
+      "Same copied root SDK/Chrome workload after fix, before-Up pixels and commit/export/Undo/Cancel/remote checks.",
+      "Native render source reuse invariant + pixel oracle with translated/previously masked strokes and bounded cache; affected rendering/Runtime regressions.",
+      "Boundary checker and diff hygiene. Full native suite with unchanged failures reported."
+    ],
+    "evidence": "out/erase-multi/",
+    "limitations": [
+      "Host-qualified performance budget is a regression fixture, not a universal platform SLO.",
+      "macOS/native + Web evidence does not certify Windows ABI."
+    ]
+  },
+  "forbidden": [
+    "Dependency stack rebuild/lock changes",
+    "Public debug/perf API",
+    "New Shell rendering/semantic/history owner",
+    "Release or version publication",
+    "Unrelated historical failure repair"
+  ],
+  "implementation": {
+    "derived_state": "ReferenceTraversalEntry.presentationEraseMasks and presentationEraseActive only; excluded from canonical encoding, source revisions and SDK. Active hint is scoped to erasing so normal exact transformed-ink composition retains its original pixel contract.",
+    "render": "SkiaRenderCache source remains unchanged while a disposable isolated presentation layer receives the evolving mask. Existing budget/target/camera/content invalidation and source leases remain in force; retained runs reject clipped entries.",
+    "target_filtering": "Preview uses the existing conservative broad phase and identical local mask generator. Skia clips actual coverage; exact CPU target filtering remains at Up so misses produce no Operation/History.",
+    "canonical": "No canonical state/codec/history/API/version changes. AddEraseMasks and existing publication path remain terminal-only."
+  },
+  "final_evidence": {
+    "record": "out/erase-multi/validation.json",
+    "chrome": "15/15 checks at DPR1 and DPR2; all affected browser regressions pass",
+    "native": "194/207 groups pass; 13 unchanged baseline failures; G5RenderCache and exact affine pass; 10 focused Runtime cases pass",
+    "cold_cache_limit": "First missing source preparation is still visible in the dense stress fixture (55ms DPR1 /182ms DPR2); sustained drag uses cached sources."
+  }
+}

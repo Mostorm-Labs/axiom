@@ -26,7 +26,7 @@ semantic::OrderKey makeOrder(std::uint64_t seed) {
 bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, CreationStyle style,
                             foundation::WorldPoint start, foundation::WorldRect viewport,
                             std::uint64_t objectSeed, semantic::ObjectId objectId) noexcept {
-  if (!pointer.valid() || !finitePoint(start) || !viewport.isFiniteAndOrdered() ||
+  if (preset > CreationPreset::kSticky || !pointer.valid() || !finitePoint(start) || !viewport.isFiniteAndOrdered() ||
       viewport.right <= viewport.left || viewport.bottom <= viewport.top || active()) return false;
   pointer_ = pointer; objectSeed_ = objectSeed; preset_ = preset; style_ = std::move(style); viewport_ = viewport;
   preview_ = {}; preview_.active = true; preview_.preset = preset; preview_.start = start; preview_.end = start; preview_.viewport = viewport;
@@ -165,7 +165,8 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
         {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
                                       : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
         routing_};
-    if (preset_ == CreationPreset::kArrow)
+    if (preset_ == CreationPreset::kArrow && std::none_of(record.properties.entries.begin(),record.properties.entries.end(),
+        [](const auto& property){return property.field_id==0x201U;}))
       record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
   }
   preview_.valid = true;

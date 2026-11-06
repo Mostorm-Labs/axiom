@@ -47,6 +47,8 @@ struct RenderTargetCapabilities final {
     bool supportsHdr = false;
     bool supportsReadback = false;
     bool supportsPresent = false;
+    // Untouched pixels survive present/acquire for the same resource generation.
+    // Unknown/nonpreserving targets require a complete replacement frame.
     bool supportsPartialUpdate = false;
 
     bool operator==(const RenderTargetCapabilities&) const = default;

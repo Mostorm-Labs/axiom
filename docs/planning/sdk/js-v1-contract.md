@@ -70,3 +70,6 @@ facade returns an owned byte copy and value metadata only. Demo Blob/download
 behavior remains in the Shell. This extension adds no canonical operation or
 consumer-visible rendering owner and does not retroactively change published
 preview assets.
+
+
+Object clipboard v1 and live partial erase increment: see `../object-clipboard-and-live-erase-v1.json` and `sdk/web/README.md`. Root JS synchronous Copy returns owned opaque bytes and an owner-bound full Stamp; queued Cut/Duplicate/Paste retain the full captured basis. The shared Runtime owns identity remapping, hierarchy, resource validation, atomic History and publication; the Demo owns OS clipboard/key translation only. No Semantic Operation schema or conflict protocol changes.

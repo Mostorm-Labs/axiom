@@ -11,6 +11,62 @@ std::optional<std::pair<double,double>> localPoint(const semantic::Transform2D& 
 }
 void widths(semantic::TableContent& t){for(std::size_t i=0;i<t.cells.size();++i)t.cells[i].text.layout=semantic::RichTextLayout{t.columns[i%t.columns.size()].size-12};}
 }
+bool CanvasEditingRuntime::growTableTextRow(semantic::ObjectId id,
+    const semantic::TableContent& before, semantic::TableContent& after) {
+  if (!textLayoutService_ || before.cells.size()!=after.cells.size()) return false;
+  std::optional<std::size_t> row;
+  for (std::size_t i=0;i<after.cells.size();++i)
+    if (before.cells[i].text!=after.cells[i].text) {
+      const auto current=i/after.columns.size();
+      if (row && *row!=current) return false;
+      row=current;
+    }
+  if (!row) return true;
+  const auto layout=textLayoutService_->resolveTable(id,after);
+  if (!layout || layout->tableCells.size()!=after.cells.size()) return false;
+  double required=after.rows[*row].size;
+  for (std::size_t c=0;c<after.columns.size();++c) {
+    const auto i=*row*after.columns.size()+c;
+    if (after.cells[i].text.document.paragraphs.empty()) continue;
+    const auto& cell=layout->tableCells[i];
+    if (!cell || !cell->diagnostics.empty()) return false;
+    required=std::max(required,std::ceil(double(cell->localBounds.bottom-cell->localBounds.top)+12));
+  }
+  if (!std::isfinite(required) || required>16384) return false;
+  after.rows[*row].size=required;
+  return true;
+}
+runtime::TableResult CanvasEditingRuntime::createTableObject(const runtime::TableRequest& request,
+    const semantic::ObjectRecord* preview) {
+  using namespace semantic;
+  const auto failure=runtime::TableResult{};
+  if (std::this_thread::get_id()!=ownerThread_ || closed_ || !canonicalWriteAdmission() || !historySceneReady() ||
+      creationActive() || selectionTransformActive() || tableResize_ ||
+      dispatchRuntime_.activeCount()>(preview?1U:0U) ||
+      request.generation!=semanticGeneration_.current().value()) return failure;
+  if(auto* editor=interaction_->textSession();editor&&editor->read().phase!=runtime::TextPhase::kClosed)return failure;
+    if(request.rows<1||request.rows>64||request.columns<1||request.columns>64||request.rows*request.columns>1024||!std::isfinite(request.x)||!std::isfinite(request.y))return failure;
+    ObjectRecord object;object.id=preview?preview->id:allocateTextIdentity();object.kind=ObjectKind::kTable;object.kind_version=1;object.transform.tx=request.x;object.transform.ty=request.y;
+    object.placement.parent_id=selection_.groupScope();
+    if(object.placement.parent_id){const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);Transform2D inverse;if(!parent||!textWritable(parent->objectId)||!scene::inverseTransform(parent->transform,inverse))return failure;object.transform=scene::composeTransform(inverse,object.transform);}
+    std::vector<std::uint8_t> key;for(const auto& existing:semanticObjects_.allObjects())if(existing.placement.parent_id==object.placement.parent_id&&(key.empty()||OrderKey(key)<existing.placement.order_key))key.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());
+    if(key.size()>=OrderKey::kMaxSize)return failure;key.push_back(128);object.placement.order_key=OrderKey(key);
+    TableContent t;
+    if(preview) {
+      const auto* source=std::get_if<TableContent>(&preview->content);
+      if(!source||source->rows.size()!=request.rows||source->columns.size()!=request.columns)return failure;
+      t.rows=source->rows;t.columns=source->columns;
+    } else {
+      for(std::uint32_t i=0;i<request.rows;++i)t.rows.push_back({allocateTextIdentity(),48});
+      for(std::uint32_t i=0;i<request.columns;++i)t.columns.push_back({allocateTextIdentity(),120});
+    }
+    t.cells.resize(request.rows*request.columns);widths(t);object.content=t;if(preview){object.kind_version=preview->kind_version;object.properties=preview->properties;}else materializeStructuralAppearance(object);
+    const auto f=allocateOperationId(),u=allocateOperationId();
+    if(!applyLocalHistoryOperation({f,documentId_,1,1,InsertObjectsOp{{object}}},{u,documentId_,1,1,DeleteObjectsOp{{object.id}}}))return failure;
+    tableObject_=object.id;tableRow_=t.rows.front().id;tableColumn_=t.columns.front().id;
+    selectCreatedObject(object.id, true);
+    return {true,object.id,semanticGeneration_.current().value()};
+}
 runtime::TableSnapshot CanvasEditingRuntime::tableSnapshot(semantic::ObjectId id) const {
   runtime::TableSnapshot out;if(std::this_thread::get_id()!=ownerThread_||closed_||!historySceneReady())return out;
   if(id.isZero()){if(selectedObjectCount()!=1)return out;id=selection_.primary();}
@@ -28,19 +84,7 @@ runtime::TableResult CanvasEditingRuntime::tableCommand(const runtime::TableRequ
   if(auto* editor=interaction_->textSession();editor&&editor->read().phase!=runtime::TextPhase::kClosed){
     const auto finish=editor->finish();if(finish==runtime::TextStatus::kBusy||finish==runtime::TextStatus::kRejected||editor->read().phase!=runtime::TextPhase::kClosed)return failure;
   }
-  if(request.action==A::kCreate){
-    if(request.rows<1||request.rows>64||request.columns<1||request.columns>64||request.rows*request.columns>1024||!std::isfinite(request.x)||!std::isfinite(request.y))return failure;
-    ObjectRecord object;object.id=allocateTextIdentity();object.kind=ObjectKind::kTable;object.kind_version=1;object.transform.tx=request.x;object.transform.ty=request.y;
-    object.placement.parent_id=selection_.groupScope();
-    if(object.placement.parent_id){const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);Transform2D inverse;if(!parent||!textWritable(parent->objectId)||!scene::inverseTransform(parent->transform,inverse))return failure;object.transform=scene::composeTransform(inverse,object.transform);}
-    std::vector<std::uint8_t> key;for(const auto& existing:semanticObjects_.allObjects())if(existing.placement.parent_id==object.placement.parent_id&&(key.empty()||OrderKey(key)<existing.placement.order_key))key.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());
-    if(key.size()>=OrderKey::kMaxSize)return failure;key.push_back(128);object.placement.order_key=OrderKey(key);
-    TableContent t;for(std::uint32_t i=0;i<request.rows;++i)t.rows.push_back({allocateTextIdentity(),48});for(std::uint32_t i=0;i<request.columns;++i)t.columns.push_back({allocateTextIdentity(),120});t.cells.resize(request.rows*request.columns);widths(t);object.content=t;materializeStructuralAppearance(object);
-    const auto f=allocateOperationId(),u=allocateOperationId();
-    if(!applyLocalHistoryOperation({f,documentId_,1,1,InsertObjectsOp{{object}}},{u,documentId_,1,1,DeleteObjectsOp{{object.id}}}))return failure;
-    (void)selection_.click(object.id);tableObject_=object.id;tableRow_=t.rows.front().id;tableColumn_=t.columns.front().id;canonicalPresentationDirty_=true;
-    return {true,object.id,semanticGeneration_.current().value()};
-  }
+  if(request.action==A::kCreate)return createTableObject(request);
   const auto* object=semanticObjects_.find(request.object.isZero()?selection_.primary():request.object);if(!object||object->kind!=ObjectKind::kTable||!textWritable(object->id))return failure;
   const auto before=std::get<TableContent>(object->content);auto next=before;
   const auto index=tableCellIndex(before,request.row,request.column);
@@ -78,10 +122,10 @@ runtime::TableResult CanvasEditingRuntime::tableCommand(const runtime::TableRequ
   if(!applyLocalHistoryOperation({f,documentId_,1,1,EditTableOp{id,action,before,next}},{u,documentId_,1,1,EditTableOp{id,action==TableEditKind::kInsert?TableEditKind::kRemove:action==TableEditKind::kRemove?TableEditKind::kInsert:action,next,before}}))return failure;
   canonicalPresentationDirty_=true;return {true,id,semanticGeneration_.current().value()};
 }
-bool CanvasEditingRuntime::tableTargetAt(runtime::TextIntent& intent){
+bool CanvasEditingRuntime::tableTargetAt(runtime::TextIntent& intent,bool updateSelection){
   const auto* record=semanticObjects_.find(intent.object);if(!record||record->kind!=semantic::ObjectKind::kTable)return false;
   const auto* world=sceneCoordinator_->runtimeScene().find(record->id);if(!world)return false;const auto p=viewToContent(intent.viewX,intent.viewY);const auto local=localPoint(world->transform,p.first,p.second);if(!local)return false;
-  const auto& t=std::get<semantic::TableContent>(record->content);for(std::size_t i=0;i<t.cells.size();++i){const auto r=semantic::tableCellRect(t,i);if(local->first>=r[0]&&local->first<=r[2]&&local->second>=r[1]&&local->second<=r[3]){intent.row=t.rows[i/t.columns.size()].id;intent.column=t.columns[i%t.columns.size()].id;tableObject_=record->id;tableRow_=intent.row;tableColumn_=intent.column;return true;}}return false;
+  const auto& t=std::get<semantic::TableContent>(record->content);for(std::size_t i=0;i<t.cells.size();++i){const auto r=semantic::tableCellRect(t,i);if(local->first>=r[0]&&local->first<=r[2]&&local->second>=r[1]&&local->second<=r[3]){intent.row=t.rows[i/t.columns.size()].id;intent.column=t.columns[i%t.columns.size()].id;if(updateSelection){tableObject_=record->id;tableRow_=intent.row;tableColumn_=intent.column;}return true;}}return false;
 }
 bool CanvasEditingRuntime::tablePointer(const input::PointerKey& key,input::PointerPhase phase,float x,float y){
   if(tableResize_){if(tableResize_->key!=key)return true;auto drag=*tableResize_;const auto* world=sceneCoordinator_->runtimeScene().find(drag.object);const auto p=viewToContent(x,y);const auto local=world?localPoint(world->transform,p.first,p.second):std::nullopt;
@@ -91,7 +135,7 @@ bool CanvasEditingRuntime::tablePointer(const input::PointerKey& key,input::Poin
     if(phase==input::PointerPhase::kCancel){tableResize_.reset();canonicalPresentationDirty_=true;}return true;
   }
   if(phase!=input::PointerPhase::kDown||!selectionMode_||selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint||selectedObjectCount()!=1||!textWritable(selection_.primary()))return false;
-  runtime::TextIntent target;target.object=selection_.primary();target.viewX=x;target.viewY=y;if(!tableTargetAt(target))return false;
+  runtime::TextIntent target;target.object=selection_.primary();target.viewX=x;target.viewY=y;if(!tableTargetAt(target,false))return false;
   const auto* world=sceneCoordinator_->runtimeScene().find(target.object);const auto p=viewToContent(x,y);const auto local=localPoint(world->transform,p.first,p.second);const auto& t=std::get<semantic::TableContent>(world->content.get());const double tolerance=5/std::max(0.01F,viewportGesture().scale);
   double edge=0;for(const auto& col:t.columns){edge+=col.size;if(std::abs(local->first-edge)<tolerance){tableResize_=TableResize{key,target.object,{},col.id,local->first,col.size,col.size,semanticGeneration_.current().value()};return true;}}
   edge=0;for(const auto& row:t.rows){edge+=row.size;if(std::abs(local->second-edge)<tolerance){tableResize_=TableResize{key,target.object,row.id,{},local->second,row.size,row.size,semanticGeneration_.current().value()};return true;}}

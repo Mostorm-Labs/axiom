@@ -43,10 +43,11 @@ inline std::size_t sourceContentBytes(const semantic::ObjectContent& content){re
 inline std::size_t sourceMetadataBytes(const ReferenceTraversalEntry& entry){
     const auto& r=entry.record;std::size_t bytes=r.referenceGeometryDigest.capacity()+1+
         r.properties.entries.capacity()*sizeof(semantic::PropertyEntry)+r.directDependencies.capacity()*sizeof(ObjectId)+
-        r.eraseMasks.capacity()*sizeof(semantic::EraseMaskRecord);
+        (r.eraseMasks.capacity()+entry.presentationEraseMasks.capacity())*sizeof(semantic::EraseMaskRecord);
     for(const auto& p:r.properties.entries)if(const auto* style=std::get_if<semantic::StrokeStyleValue>(&p.value))
         if(const auto* stroke=std::get_if<semantic::SolidStroke>(style))if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke->dash))bytes+=dash->segments.capacity()*sizeof(double);
-    for(const auto& mask:r.eraseMasks)std::visit([&](const auto& g){
+    for(const auto masks:{std::span(r.eraseMasks),std::span(entry.presentationEraseMasks)})
+    for(const auto& mask:masks)std::visit([&](const auto& g){
         if constexpr(requires{g.segments;})bytes+=g.segments.capacity()*sizeof(semantic::EraseCubicSegment);
         if constexpr(requires{g.path.commands;})bytes+=g.path.commands.capacity()*sizeof(typename std::remove_cvref_t<decltype(g.path.commands)>::value_type);
     },mask.geometry);

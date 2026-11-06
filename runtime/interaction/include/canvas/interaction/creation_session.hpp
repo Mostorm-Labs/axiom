@@ -14,7 +14,7 @@
 namespace canvas::interaction {
 
 enum class CreationPreset : std::uint8_t {
-  kRectangle, kEllipse, kTriangle, kLine, kArrow, kSticky
+  kRectangle, kEllipse, kTriangle, kLine, kArrow, kSticky, kTable, kSection
 };
 struct CreationStyle final { semantic::PropertyBag properties{}; bool operator==(const CreationStyle&) const = default; };
 struct CreationPreview final {

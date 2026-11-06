@@ -236,7 +236,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime
 }
 
 runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtime::SectionIntent& intent,
-    const semantic::SetTransformsOp* confirmedDrop) noexcept {
+    const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance) noexcept {
     using A=runtime::SectionAction;using Failure=runtime::SectionFailure;
     const bool groupWrap=intent.action==A::kGroup;
     const bool groupRelease=intent.action==A::kUngroup;
@@ -352,7 +352,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
                 if(wrapper.id.isZero()||semanticObjects_.contains(wrapper.id))return fail(Failure::kInvalidTarget);
                 wrapper.kind=groupWrap?ObjectKind::kGroup:ObjectKind::kSection;wrapper.kind_version=1;wrapper.placement.parent_id=parent;
                 wrapper.transform=(intent.action==A::kWrap||groupWrap)?Transform2D{}:intent.transform;
-                if(groupWrap)wrapper.content=GroupContent{};else {wrapper.content=intent.content;materializeStructuralAppearance(wrapper);}
+                if(groupWrap)wrapper.content=GroupContent{};else {wrapper.content=intent.content;if(appearance)wrapper.properties=*appearance;else materializeStructuralAppearance(wrapper);}
                 result.objectId=wrapper.id;
                 if(intent.action==A::kWrap) {
                     bool have=false;double l=0,t=0,r=0,b=0;

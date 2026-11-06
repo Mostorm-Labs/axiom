@@ -1,0 +1,86 @@
+{
+  "task": "uiux-placement-and-table-fit-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "a79435e4b63eb58a8e49201a8d76662e70a0dc80",
+    "relation": "ancestor"
+  },
+  "authority": "User-authorized image placement, interactive Table/Section creation and Table text row growth, 2026-11-06. Additive interaction contract; existing Table/1 and Section/1 wire semantics remain unchanged.",
+  "owners": {
+    "image_placement": "CanvasRuntimeFacade::importImage after dimensions are resolved",
+    "placement_gesture_and_preview": "CanvasEditingRuntime, existing normalized pointer path and shared Skia creation preview",
+    "table_creation": "existing Table command owner",
+    "section_creation": "executeSectionIntent with SectionAction::kCreate",
+    "table_text_fit": "Runtime text operation owner, shared text layout, existing atomic intent/History/publication"
+  },
+  "contract": {
+    "image": "Ordinary SDK byte import centers the image's geometric center on the mounted viewport center in world coordinates. Preserve existing aspect/size rules. Explicit developer-profile prepared image transforms and replacement remain unchanged.",
+    "creation_presets": "Append Table=6 and Section=7 to the existing creation preset vocabulary. JS selectShape accepts table/section; shared Session and caller-side Windows wrapper adapt the same bounded command. Unknown values still reject. No DLL exports or semantic enum changes.",
+    "table_gesture": "Click creates 2x2 at the pointer. Drag changes counts in 120x48 world-unit cells, with at least 2 rows and 2 columns. Counts ceil the extents; drag direction keeps the initial corner fixed. Bound columns to 64 and rows to min(64,floor(1024/columns)); preview and commit use identical counts. Omitted programmatic Table counts default to 2x2; explicit API sizes retain the existing 1..64 range.",
+    "section_gesture": "Tool selection does not create an object. Click creates the existing default 320x240 Section at the pointer; drag creates a normalized custom boundary with minimum 24x24 world units. Reuse existing hierarchy and selection semantics; do not implicitly wrap existing objects.",
+    "lifecycle": "Transient drag does not mutate canonical state or publish operations. Capture full pointer key, semantic/camera/metrics/selection stamps and scope. Cancel, source retirement, additional touch contacts or stale basis discard the preview. Success returns to point selection; Table opens its first cell.",
+    "row_growth": "Confirmed cell text edits grow the edited row only when its measured content plus 6-unit padding on each side exceeds current height. Measure all cells of that row using shared layout. Do not shrink rows automatically. Honor maximum 16384 height; unavailable layout or exceeding bounds rejects before mutation.",
+    "atomicity": "Table text remains a kText operation with unchanged axes; row growth is a distinct kResize operation. Use existing prepare/commit explicit intent for all-or-nothing local apply and one History entry. Preserve existing independent operation publication/remote conflict semantics; no new remote transaction protocol. Undo/redo restores both text and height."
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "four requested interactions in shared owners",
+        "matching JS/types/shared Session/Windows caller wrapper and documentation",
+        "Web Demo tool buttons with no Shell placement owner"
+      ],
+      "forbidden_changes": [
+        "semantic schema, wire or capability changes",
+        "loosening Table kText structural validation",
+        "dependency rebuilds or lock changes",
+        "internal owner exposure",
+        "fixed-size Table stretching as drag creation",
+        "version bump or release"
+      ]
+    },
+    "tests": {
+      "required": [
+        "Native: Table row growth, one Undo/Redo, stable identities and existing strict semantic validation",
+        "Chrome copied root SDK: viewport-centered image after pan/zoom, min/drag/reverse/zoom Table creation, transient/cancel/stale behavior, Table newline growth and undo/redo/snapshot/remote preservation",
+        "Chrome: Section click/default and dragged/custom range, point selection and cancellation",
+        "Real Web Demo Table/Section tools and image import",
+        "Affected native Table/Section/text/input/history/render tests; public SDK/browser/Table/default-interaction regressions; Runtime boundary check",
+        "Configured full native CTest suite; retain separately established baseline/configuration failures"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "out/placement-* native and Chrome records",
+        "matching built wrapper/types/WASM/resources"
+      ],
+      "corroborative": [
+        "local interactive Demo"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "required behavior verified",
+        "affected regressions pass or unrelated baseline failures identified",
+        "rebuilt Demo served for testing"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

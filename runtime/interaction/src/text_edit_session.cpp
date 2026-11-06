@@ -221,6 +221,11 @@ void TextEditSession::end() noexcept {
     state_.preedit.clear();
     state_.preeditSelection.reset();
 }
+void TextEditSession::finishAndSelect() noexcept {
+    const auto object = base_ ? base_->id : draft_.placement.parent_id.value_or(state_.token.object);
+    end();
+    owner_.textFinished(object);
+}
 void TextEditSession::detach() noexcept {
     end();
     if (attachment_ != std::numeric_limits<std::uint64_t>::max())
@@ -233,8 +238,10 @@ void TextEditSession::refresh() {
         detach();
         return;
     }
-    if (!base_)
+    if (!base_) {
+        if (draft_.placement.parent_id && !owner_.textWritable(*draft_.placement.parent_id)) detach();
         return;
+    }
     const auto* current = owner_.textRecord(base_->id);
     if (!current || !owner_.textWritable(base_->id) || richContent(*current) == nullptr) {
         detach();
@@ -394,7 +401,7 @@ runtime::TextStatus TextEditSession::finish(bool keepEditor) {
         return TextStatus::kQueued;
     }
     state_.exitStatus = TextStatus::kApplied;
-    if(!keepEditor)end();
+    if(!keepEditor)finishAndSelect();
     return TextStatus::kApplied;
 }
 runtime::TextStatus TextEditSession::applyObjectDelta(const ObjectRecord& base, RichTextDelta delta) {
@@ -498,7 +505,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
         if(style_.strikethrough || paragraphStyle_.bulleted)object.kind_version=3;
         std::vector<std::uint8_t> order;
         for (const auto& existing : owner_.textObjects())
-            if (!existing.placement.parent_id &&
+            if (existing.placement.parent_id == object.placement.parent_id &&
                 (order.empty() || OrderKey(order) < existing.placement.order_key))
                 order.assign(existing.placement.order_key.bytes().begin(),
                              existing.placement.order_key.bytes().end());
@@ -745,7 +752,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
             if(value->kind!=ObjectKind::kTable&&(!targetRow_.isZero()||!targetColumn_.isZero()))return outcome(TextStatus::kRejected,request.requestId);
             if (value->kind == ObjectKind::kSticky) {
                 // Sticky text is represented by the existing single RichText
-                // child contract. Create the child lazily on first edit so an
+                // child contract. Create the child lazily on first input so an
                 // empty Sticky remains a single canonical object.
                 for (const auto& candidate : owner_.textObjects()) {
                     if (candidate.kind == ObjectKind::kRichText &&
@@ -768,13 +775,8 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
                     child.transform = {};
                     child.content = RichTextContent{{}, RichTextLayout{
                         std::max(1.0, std::get<StickyContent>(value->content).width - 24.0)}};
-                    const Operation forward{owner_.allocateTextOperation(), owner_.textDocument(), 1, 1,
-                                             InsertObjectsOp{{child}}};
-                    const Operation inverse{owner_.allocateTextOperation(), owner_.textDocument(), 1, 1,
-                                            DeleteObjectsOp{{child.id}}};
-                    if (child.id.isZero() || !owner_.applyTextOperation(forward, inverse))
-                        return outcome(TextStatus::kRejected, request.requestId);
-                    existing = *owner_.textRecord(child.id);
+                    if (child.id.isZero()) return outcome(TextStatus::kRejected, request.requestId);
+                    existing = std::move(child);
                 }
             } else {
                 if (richContent(*value) == nullptr)
@@ -813,7 +815,8 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         terminal_.reset();
         failed_.reset();
         lastComposition_ = acknowledged_ = 0;
-        base_ = existing;
+        base_ = existing && owner_.textRecord(existing->id) ? existing : std::nullopt;
+        if (existing && !base_) draft_ = *existing;
         typingStyle_ = false;
         paragraphStyle_ = {existing && shapeLabelTarget(*existing) ? ParagraphAlignment::kCenter
                                                                    : ParagraphAlignment::kLeft, 1, 0, 0};
@@ -894,7 +897,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
                 state_.phase = TextPhase::kEditing;
                 if (state_.finishEffect) {
                     state_.exitStatus = TextStatus::kApplied;
-                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else end();
+                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else finishAndSelect();
                 }
             }
             return outcome(result, request.requestId);
@@ -1015,7 +1018,7 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
                     static_cast<std::uint32_t>(event.range.start + event.text.size()), 0};
                 if (state_.finishEffect) {
                     state_.exitStatus = TextStatus::kApplied;
-                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else end();
+                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else finishAndSelect();
                 }
             } else {
                 failed_ = event;

@@ -13,7 +13,7 @@
 #include <chrono>
 
 namespace canvas::render::internal {
-void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -65,6 +65,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     if(changed){tileEntries_.clear();if(tiles_)tiles_->invalidate();entries_.clear();work.retainedBytes=0;++targetEpoch_;}
     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
+    eraseDamage_=updates.erase;
     AXIOM_FRAME_TIMING_END(groupTiming);
     // Keep prior source leases until every retained group has rebound. Both
     // generations remain charged throughout this owner-thread transaction.
@@ -418,9 +419,33 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
     if(run.end>plan.referenceDrawList.entries.size()||run.end-run.begin!=run.stamps.size())return false;
     for(std::size_t i=run.begin;i<run.end;++i){
         const auto& entry=plan.referenceDrawList.entries[i];const auto* group=groups_.find(entry.record.objectId);
-        if(!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
+        if(entry.presentationOpacity!=1.0F||!entry.presentationEraseMasks.empty()||!group||run.stamps[i-run.begin]!=RunStamp{entry.record.objectId,group->revisions})return false;
     }
     return true;
+}
+bool SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
+    const ReferenceTraversalEntry& source,ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
+    if(!damageOnly_||!scratch_)return false;
+    auto* isolated=scratch_->getCanvas();isolated->resetMatrix();isolated->clear(SK_ColorTRANSPARENT);
+    const auto transform=entryMatrix(canvas,plan,source);
+    // Reuse a complete resident source when available. A miss never enters the
+    // LRU: only the small damage coverage is evaluated on the existing scratch.
+    isolated->save();isolated->clipIRect(canvas.getDeviceClipBounds());
+    const bool resident=draw(*isolated,plan,source,true);isolated->restore();
+    configureScratch(*isolated,plan,transform);
+    if(!resident) {
+        isolated->save();isolated->resetMatrix();isolated->clipIRect(canvas.getDeviceClipBounds());isolated->setMatrix(transform);
+        drawInkBodyToSkCanvas(*isolated,source,images,text,grid);isolated->restore();
+        // Narrowing this clip changes Skia stroke-mask AA at existing edges.
+        // Keep both mask evaluators on their full original device surface.
+        drawEraseMasksToSkCanvas(*isolated,source);noteDirect();
+    }
+    drawPresentationEraseMasksToSkCanvas(*isolated,source);isolated->restore();
+    SkPaint feedback;feedback.setAlphaf(std::clamp(source.presentationOpacity,0.0F,1.0F));
+    auto image=scratch_->makeImageSnapshot();
+    if(!image){damageFailed_=true;return true;} // Reject this frame; never present missing ink.
+    canvas.save();canvas.resetMatrix();canvas.drawImage(image,0,0,SkSamplingOptions{},&feedback);
+    canvas.restore();return true;
 }
 void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
     // Small scenes already fit the per-object cache. Runs are a bounded
@@ -430,7 +455,7 @@ void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
         const auto& t=entry.record.transform;
         // Identity compact entries have destination-independent isolation in
         // the shared mapping. Legacy destination-clear never enters a run.
-        return entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
+        return entry.presentationOpacity==1.0F&&entry.presentationEraseMasks.empty()&&entry.record.objectId!=activeSource_&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&
             entry.contributesPixels&&entry.record.eraseMasks.empty()&&t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
     };
     std::erase_if(runs_,[&](const auto& run){return !validRun(run,plan);});
@@ -481,16 +506,23 @@ bool SkiaRenderCache::compositeRetainedRun(SkCanvas& canvas,const FramePlan& pla
     }
     return false;
 }
-void SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk){
+bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid){
+    struct Restore {bool& value;bool old;~Restore(){value=old;}} restore{damageOnly_,damageOnly_};
+    damageOnly_=damageOnly;damageFailed_=false;
+    // A transient source may include permanent masks that cooperative exact
+    // preparation routes Direct. Reuse/build its bounded isolated cache here;
+    // never keep an exact-frame admission that forbids that source reuse.
+    resetPreparation();
     drawReferenceBackgroundToSkCanvas(canvas,plan);
     std::size_t begin=0;
     if(includeInk)for(std::size_t i=0;i<plan.referenceDrawList.entries.size();++i){
         const auto found=std::find_if(runs_.begin(),runs_.end(),[&](const auto& run){return run.image&&run.begin==i&&validRun(run,plan);});
         if(found==runs_.end())continue;
-        drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,i,images,text,true,this);
+        drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,i,images,text,true,this,grid);
         (void)compositeRetainedRun(canvas,plan,i);begin=i+1;
     }
-    drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,plan.referenceDrawList.entries.size(),images,text,includeInk,this);
+    drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,plan.referenceDrawList.entries.size(),images,text,includeInk,this,grid);
+    return !damageFailed_;
 }
 void SkiaRenderCache::resetPreparation(){
     pending_.reset();admissions_.clear();admissionReady_=false;preparationCursor_=0;
@@ -606,6 +638,10 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
         if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(found->second.image,static_cast<float>(found->second.bounds.left()),static_cast<float>(found->second.bounds.top()));canvas.restore();}
         found->second.used=tick_;++work.hits;return true;
     }
+    // Damage feedback can reuse a complete resident source, but a miss is
+    // painted directly under the small destination clip. Never cycle the LRU
+    // or create clipped images that could later masquerade as full sources.
+    if(damageOnly_)return false;
     ++work.misses;
     if(found!=entries_.end()){work.retainedBytes-=found->second.bytes;entries_.erase(found);}
     const auto& r=source.record.transform;

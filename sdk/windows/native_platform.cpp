@@ -75,6 +75,8 @@ LRESULT CALLBACK proc(HWND w, UINT m, WPARAM a, LPARAM b) {
              (m >= WM_POINTERUPDATE && m <= WM_POINTERUP) ||
              (m >= WM_IME_STARTCOMPOSITION && m <= WM_IME_COMPOSITION) || m==WM_IME_CHAR))
             return 0;
+        if((m==WM_KILLFOCUS||m==WM_CANCELMODE)&&s->host)
+            (void)s->host->publicComposition().hoverSelectionAtViewPoint(-1,-1);
         const bool hostFocus = m == WM_KILLFOCUS && a &&
                                (reinterpret_cast<HWND>(a) == GetParent(w) ||
                                 IsChild(GetParent(w), reinterpret_cast<HWND>(a)));
@@ -130,12 +132,17 @@ LRESULT CALLBACK proc(HWND w, UINT m, WPARAM a, LPARAM b) {
             if (!s->mouseKey)
                 releaseHostMouseCapture(*s);
             return 0;
+        case WM_MOUSELEAVE:
+            if(s->host)(void)s->host->publicComposition().hoverSelectionAtViewPoint(-1,-1);
+            return 0;
         case WM_MOUSEMOVE:
             if (isPromotedPointerMouse())
                 return 0;
             if (s->mouseKey)
                 sendPointer(*s, b, input::PointerPhase::kMove, a);
             else if (s->host) {
+                TRACKMOUSEEVENT tracking{sizeof(TRACKMOUSEEVENT),TME_LEAVE,w,0};
+                (void)TrackMouseEvent(&tracking);
                 auto metrics = s->host->publicComposition().surfaceMetrics();
                 if (metrics && metrics->width && metrics->height)
                     (void)s->host->publicComposition().hoverSelectionAtViewPoint(

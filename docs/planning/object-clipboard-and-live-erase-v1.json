@@ -1,0 +1,90 @@
+{
+  "task": "object-clipboard-and-live-erase-v1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "b5321f4daa65f4f8910e8a8abfb54a0ecc5371cd",
+    "relation": "ancestor"
+  },
+  "authority": "User 2026-11-06 explicitly requests Copy/Duplicate/Cut implementation and fast partial-erase preview repair, after committing/pushing previous UI work. Incremental consumer contract; historical frozen authority unchanged.",
+  "owners": {
+    "clipboard": "CanvasEditingRuntime via RuntimeFacade and shared SDK Session; ordinary JS and Windows wrappers expose bytes/DTO only",
+    "mutations": "OperationEngine and existing History/publication admission",
+    "preview": "shared Runtime frame presentation/Skia; canonical erase masks only at Up",
+    "shell": "OS clipboard transport, buttons and keyboard focus policy"
+  },
+  "clipboard_v1": {
+    "capture": "Synchronous owned opaque bytes + complete existing 8-field Stamp. Requires coherent idle writable unlocked complete selection/subtree; no canonical change, operation or History.",
+    "format": "AXCB version 1 envelope containing canonical InsertObjects operation bytes and optional resource descriptor operation bytes. These are data, never replayed as source operations. Unsupported version/kind/oversize/malformed/dangling data reject. Max 16 MiB, 4096 object records.",
+    "closure": "Selected roots plus all structural descendants. Copy root transforms in world space; preserve child local transforms and order. Internal connector attachments remap, external attachments detach at resolved endpoint.",
+    "identity": "Runtime allocates fresh object, text paragraph, Table row/column and erase-mask IDs; preserves style seeds, content/resources and descendants.",
+    "placement": "Paste offsets world-space roots by requested finite offset (default 24,24); current group scope is destination parent with inverse conversion. Duplicate preserves selected roots parents and applies same world offset. New roots are selected in point mode.",
+    "cut": "Capture/write OS clipboard first, then cut with captured complete stamp. Any stale/foreign stamp rejects zero-mutation; queued Duplicate/Paste also capture and validate the complete basis. Cut uses canonical delete closure including dependent connectors; History restores full closure. Section Cut removes its subtree (Delete key retains existing release-boundary semantics).",
+    "resources": "Opaque bundle includes exact referenced resource descriptors including fallback closure; target must already have matching active resources through existing external resource owner. No silent substitution or partial paste; no new blob storage/network owner. Same-runtime image/font/brush references remain available.",
+    "platform": "Root JS copySelection/cutSelection/duplicateSelection/pasteObjects, matching declarations and shared Session/Windows caller wrapper. Existing C/POD JSON transport ABI, no C++ internals exposed.",
+    "keyboard": "Ctrl/Cmd+C/D/X/V on canvas outside native text, HTML editable controls, IME and dialogs. Copy/Cut write typed + prefixed plain clipboard data; Paste accepts that versioned format. Clipboard write failure never deletes source.",
+    "paint_order": "Capture current root paint order in detached placement keys before canonical ObjectId sorting; preserve relative stacking on duplicate/paste and all child order keys."
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "Runtime clipboard capture/remap/atomic apply and stale/admission validation",
+        "Web/types/Session/Windows wrappers and contracts",
+        "Web actions/buttons/OS keyboard clipboard",
+        "reproduce and repair live partial erase through shared presentation"
+      ],
+      "forbidden_changes": [
+        "dependency rebuilds/locks",
+        "frozen authority rewrite",
+        "Shell cloning/identity/history owner",
+        "version release/publish",
+        "unrelated baseline failures"
+      ]
+    },
+    "tests": {
+      "required": [
+        "real Chrome copied root SDK: Copy no operation; Duplicate/Paste fresh identity, content and one Undo; Cut stale/foreign/locked rejection, clipboard failure safety and native text focus guards",
+        "native shared Runtime: subtree transforms/IDs/connector references/Table text/masks; atomic History/remote/snapshot",
+        "fast/sparse partial erase before Up with non-ink overlaps, colored backdrop, cancellation and preview/commit consistency",
+        "matching built JS/types/WASM/resources, package/boundary and affected regressions"
+      ],
+      "optional": [
+        "physical Windows ABI/IME qualification on this macOS host"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "out/object-clipboard-*",
+        "out/partial-erase-live-*"
+      ],
+      "corroborative": [
+        "local Demo screenshots"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "previous changes committed and pushed",
+        "three object actions plus usable Paste implemented through public SDK",
+        "reported eraser symptom reproduced and fixed",
+        "required local evidence passes or unchanged historical failures classified",
+        "local Web Demo available"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

@@ -38,6 +38,10 @@ add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
     src/canvas_appearance.cpp
     src/canvas_table.cpp
+    src/canvas_placement.cpp
+    src/canvas_creation_hover.cpp
+    src/canvas_object_clipboard.cpp
+    src/canvas_partial_erase.cpp
     src/canvas_image_export.cpp
     src/canvas_section_commands.cpp
     src/canvas_region_selection.cpp

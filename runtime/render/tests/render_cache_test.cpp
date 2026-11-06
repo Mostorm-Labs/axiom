@@ -1,4 +1,5 @@
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/render/image_resource.hpp"
@@ -1212,9 +1213,216 @@ void checkRetirementCells(){
 }
 #endif
 
+void checkErasedInkOverShapeNavigation() {
+    for(bool filled:{false,true})for(unsigned revision:{2U,4U}){
+        semantic::ObjectRecord object;object.id=ObjectId::fromUint64(99001);
+        object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+        object.content=semantic::ShapeContent{0,256,128};
+        object.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+        const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+        ReferenceTraversalEntry blue{projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+        auto erased=stroke(99002);
+        auto content=std::get<CompactStrokeReferenceCommand>(erased.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",revision).package.compactConfig;
+        erased.record.content=content;erased.command=CompactStrokeReferenceCommand{content};
+        semantic::EraseMaskGeometry mask;
+        if(filled){semantic::FilledPathMask path;path.path.commands={semantic::MoveTo{{80,48}},semantic::LineTo{{120,48}},semantic::LineTo{{120,80}},semantic::LineTo{{80,80}},semantic::ClosePath{}};mask=path;}
+        else {semantic::SweptCircleMask sweep;sweep.segments.push_back({{{80,64},12},{{120,64},12},{93.333333,64},{106.666667,64}});mask=sweep;}
+        erased.record.eraseMasks={{ObjectId::fromUint64(99003),mask}};
+        std::vector entries{blue,erased};const auto frame=plan(99004,entries);
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"mixed mask target");
+        SkiaRenderer renderer;RenderCacheOptions options;options.navigationMaxSteps=256;options.navigationMicroseconds=1000000;renderer.setRenderCacheOptions(options);
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+        for(const CanonicalViewportTransform camera: {CanonicalViewportTransform{1,0,0},{1,9,7},{1.25F,-18,-8}}){
+            for(unsigned i=0;;++i){require(navigate(renderer,target,camera,frame.frame,query,false).code==BackendSubmissionCode::kAccepted,"mixed mask navigation");if(!renderer.navigationWork().pending)break;require(i<127,"mixed mask navigation convergence");}
+            const auto actual=pixels(target);const auto x=unsigned(100*camera.scale+camera.translationX),y=unsigned(64*camera.scale+camera.translationY);const auto index=(y*256+x)*4;
+            require(actual[index]<5&&actual[index+1]<5&&actual[index+2]>250,"navigation erase mask cleared the underlying blue object");
+        }
+        require(renderer.submissionCount()==0,"navigation issued a canonical receipt");
+    }
+}
+
+namespace {
+void checkLiveEraseSourceReuse() {
+    TestSurface target,reference;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"live erase targets");
+    SkiaRenderer cached,oracle;RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    std::vector<ReferenceTraversalEntry> sources;
+    for(unsigned i=0;i<3;++i) {
+        auto entry=stroke(90000+i);auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.config.size=12;content.stroke.config.thinning=.4;content.stroke.config.opacity=.65;content.stroke.knots.clear();
+        for(unsigned j=0;j<1001;++j)content.stroke.knots.push_back({12.+j*.21,55.+30*std::sin(j*.04),static_cast<std::uint16_t>(18000+j%300*100)});
+        entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+        entry.record.transform.tx=i*4;entry.record.transform.ty=i*5;entry.presentationEraseActive=true;sources.push_back(entry);
+    }
+    // Existing canonical erasure must not disable source reuse on the next drag.
+    semantic::FilledPathMask old;old.path.commands={semantic::MoveTo{{38,0}},semantic::LineTo{{43,0}},semantic::LineTo{{43,128}},semantic::LineTo{{38,128}},semantic::ClosePath{}};
+    sources[0].record.eraseMasks={{ObjectId::fromUint64(91000),old}};
+    const auto initial=plan(900,sources);EditingOverlay overlay(initial.frame);
+    require(cached.renderTransientOverlay(target,initial,&overlay).code==BackendSubmissionCode::kAccepted,"live erase warm source");
+    const auto warmed=cached.renderCacheWork();require(warmed.entries==3,"translated/permanently masked sources not admitted");
+    for(unsigned frame=0;frame<8;++frame) {
+        for(auto& source:sources) {
+            semantic::FilledPathMask mask;const double x=70+frame*7;
+            mask.path.commands={semantic::MoveTo{{x,0}},semantic::LineTo{{x+25,0}},semantic::LineTo{{x+25,128}},semantic::LineTo{{x,128}},semantic::ClosePath{}};
+            source.presentationEraseMasks={{ObjectId{},mask}};
+        }
+        auto direct=sources;
+        for(auto& source:direct){source.record.eraseMasks.insert(source.record.eraseMasks.end(),source.presentationEraseMasks.begin(),source.presentationEraseMasks.end());source.presentationEraseMasks.clear();}
+        const auto framePlan=plan(901+frame,sources),expected=plan(901+frame,direct);
+        require(cached.renderTransientOverlay(target,framePlan,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,expected,&overlay).code==BackendSubmissionCode::kAccepted,"live erase frame");
+        const auto actual=pixels(target),wanted=pixels(reference);
+        for(std::size_t k=0;k<actual.size();++k)require(std::abs(int(actual[k])-int(wanted[k]))<=2,"live erase cached pixels differ from canonical oracle");
+        require(cached.renderCacheWork().rasterizedGroups==warmed.rasterizedGroups,"growing erase trace rerasterized canonical stroke bodies");
+        require(cached.renderCacheWork().coverageBuilds==warmed.coverageBuilds,"growing erase trace rebuilt canonical contour coverage");
+    }
+    for(auto& source:sources)source.presentationEraseMasks.clear();
+    require(cached.renderTransientOverlay(target,plan(910,sources),&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,plan(910,sources),&overlay).code==BackendSubmissionCode::kAccepted&&pixels(target)==pixels(reference),"cancel failed to restore canonical cached ink");
+    // A canonical content edit still invalidates that source.
+    auto changed=std::get<CompactStrokeReferenceCommand>(sources[1].command).content.get();changed.stroke.config.color={1,0,0,1};sources[1].command=CompactStrokeReferenceCommand{changed};sources[1].record.content=changed;
+    require(cached.renderTransientOverlay(target,plan(911,sources),&overlay).code==BackendSubmissionCode::kAccepted&&cached.renderCacheWork().rasterizedGroups==warmed.rasterizedGroups+1,"canonical edit failed to invalidate erased source");
+    semantic::SweptCircleMask bad;bad.segments.push_back({{{10,10},-1},{{20,20},-1},{13,13},{17,17}});sources[0].presentationEraseMasks={{ObjectId{},bad}};auto invalid=plan(912,sources);
+    const auto presents=target.presentCount();require(cached.renderTransientOverlay(target,invalid,&overlay).code==BackendSubmissionCode::kRejected&&target.presentCount()==presents,"invalid transient mask presented");
+}
+}
+
+namespace {
+void checkAffineErasedNavigation() {
+    // Public duplication yields translated compact ink; authoring transforms can
+    // also rotate/shear/scale it. Masks remain local and clip this source only.
+    const semantic::Transform2D transforms[]={{1,0,0,1,24,12},{.94,.342,-.342,.94,20,-8},{1.1,.13,.2,.7,2,10}};
+    const std::pair<std::string_view,unsigned> brushes[]={{"round-handdrawn",2},{"round-handdrawn",3},{"round-handdrawn",4},{"marker-compact-v1",2},{"marker-compact-v1",3},{"marker-compact-v1",4},{"crayon-wax-v1",3},{"chalk-compact-v1",3},{"watercolor-lite-v1",3}};
+    for(const auto& [profile,revision]:brushes)for(bool filled:{false,true})for(const auto& transform:transforms) {
+        semantic::ObjectRecord background;background.id=ObjectId::fromUint64(92000);background.kind=semantic::ObjectKind::kShape;background.kind_version=1;background.content=semantic::ShapeContent{0,256,128};
+        background.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+        const auto projected=projectRuntimeScene({&background,1},semantic::SemanticGeneration{1});
+        ReferenceTraversalEntry blue{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(background.content)}};
+        auto erased=stroke(92001);auto content=std::get<CompactStrokeReferenceCommand>(erased.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
+        content.stroke.config.size=24;if(content.stroke.config.algorithmVersion==3||content.stroke.config.algorithmVersion==4)content.stroke.config.thinning=0;content.stroke.config.opacity=1;content.stroke.config.color={0,0,0,1};content.stroke.knots={{30,64,32768},{200,64,32768}};
+        erased.command=CompactStrokeReferenceCommand{content};erased.record.content=content;erased.record.transform=transform;erased.record.worldBounds={0,0,256,128};
+        for(unsigned i=0;i<5;++i) {
+            const double x=65+i*25;semantic::EraseMaskGeometry mask;
+            if(filled){semantic::FilledPathMask path;path.path.commands={semantic::MoveTo{{x-6,34}},semantic::LineTo{{x+6,34}},semantic::LineTo{{x+6,94}},semantic::LineTo{{x-6,94}},semantic::ClosePath{}};mask=path;}
+            else {semantic::SweptCircleMask sweep;sweep.segments.push_back({{{x,34},6},{{x,94},6},{x,54},{x,74}});mask=sweep;}
+            erased.record.eraseMasks.push_back({ObjectId::fromUint64(92100+i),mask});
+        }
+        const std::vector sources{blue,erased};const auto frame=plan(92002,sources);
+        const auto validation=internal::validateReferencePlan(frame);if(validation.code!=BackendSubmissionCode::kAccepted)std::cerr<<"affine erased source validation: "<<validation.message<<'\n';require(validation.code==BackendSubmissionCode::kAccepted,"invalid affine erased fixture");
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine erased target");SkiaRenderer renderer;
+        RenderCacheOptions options;options.navigationMaxSteps=32;options.navigationMicroseconds=1000000;renderer.setRenderCacheOptions(options);
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=sources;return true;};
+        std::uint64_t geometryBuilds=0;
+        for(const CanonicalViewportTransform camera:{CanonicalViewportTransform{1,0,0},{1,9,7},{1.25F,-18,-8}}) {
+            for(unsigned step=0;;++step) {
+                const auto result=navigate(renderer,target,camera,frame.frame,query,false);
+                if(result.code!=BackendSubmissionCode::kAccepted)std::cerr<<"affine erased profile="<<profile<<" revision="<<revision<<" filled="<<filled<<" a="<<transform.a<<" tx="<<transform.tx<<" scale="<<camera.scale<<" step="<<step<<" reason="<<result.message<<'\n';
+                require(result.code==BackendSubmissionCode::kAccepted,"affine erased ink rejected navigation and forced exact fallback");
+                if(!renderer.navigationWork().pending)break;require(step<256,"affine erased navigation failed to converge");
+            }
+            const auto actual=pixels(target);
+            const auto at=[&](double x,double y){const double wx=transform.a*x+transform.c*y+transform.tx,wy=transform.b*x+transform.d*y+transform.ty;return (unsigned(wy*camera.scale+camera.translationY)*256+unsigned(wx*camera.scale+camera.translationX))*4;};
+            for(unsigned cut=0;cut<5;++cut){const auto index=at(65+cut*25,64);require(actual[index]<5&&actual[index+1]<5&&actual[index+2]>250,"affine erase mask exposed white or failed to erase local ink");}
+            const auto ink=at(50,64);require(actual[ink+2]<245,"affine erased navigation omitted surviving ink");
+            if(geometryBuilds)require(renderer.navigationWork().preparedGeometryBuilds==geometryBuilds,"camera change rebuilt erased contour geometry");
+            geometryBuilds=renderer.navigationWork().preparedGeometryBuilds;
+            require(renderer.submissionCount()==0,"affine erased navigation created canonical receipt");
+        }
+    }
+}
+}
+
+namespace {
+// Explicitly qualifies retained pixels for the existing partial-update capability.
+// The independent oracle delegates the same target but disables that capability.
+class PartialUpdateTestSurface final : public SkiaSurfaceProvider {
+    TestSurface target_;
+  public:
+    bool partial=true,failPresent=false;
+    void hostClip(bool enabled){const auto acquired=target_.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"host clip acquire");auto* canvas=acquired.frame.surface->getCanvas();if(enabled){canvas->save();canvas->clipRect(SkRect::MakeLTRB(0,0,230,128));}else canvas->restore();target_.release();}
+    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return target_.gpuCompletionService();}
+    RenderTargetInfo describe()const noexcept override{auto value=target_.describe();value.capabilities.supportsPartialUpdate=partial;return value;}
+    SkiaSurfaceAcquireResult acquire()noexcept override{return target_.acquire();}
+    void release()noexcept override{target_.release();}
+    BackendSubmissionResult present()noexcept override{if(failPresent){failPresent=false;return BackendSubmissionResult::retry("injected present failure");}return target_.present();}
+    BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h)noexcept override{return target_.resize(w,h);}
+    BackendSubmissionResult lose()noexcept override{return target_.lose();}
+    BackendSubmissionResult advanceGeneration()noexcept override{return target_.advanceGeneration();}
+    BackendSubmissionResult readbackRgba(std::span<std::uint8_t> bytes)noexcept override{return target_.readbackRgba(bytes);}
+    std::uint64_t generation()const noexcept override{return target_.generation();}
+    std::uint64_t readbackCount()const noexcept override{return target_.readbackCount();}
+    std::uint64_t cpuCopyCount()const noexcept override{return target_.cpuCopyCount();}
+    std::uint64_t presentCount()const noexcept override{return target_.presentCount();}
+};
+void checkCapacityBoundedEraseDamage() {
+  const std::pair<std::string_view,unsigned> brushes[]={{"round-handdrawn",2},{"round-handdrawn",3},{"round-handdrawn",4},{"marker-compact-v1",2},{"marker-compact-v1",3},{"marker-compact-v1",4},{"crayon-wax-v1",3},{"chalk-compact-v1",3},{"watercolor-lite-v1",3}};
+  for(const auto& [profile,revision]:brushes)for(bool affine:{false,true})for(bool smallEntry:{true,false}) {
+    PartialUpdateTestSurface target,reference;reference.partial=false;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"erase damage targets");
+    SkiaRenderer renderer,oracle;RenderCacheOptions bounded;bounded.maxBytes=smallEntry?160*1024:512*1024;bounded.maxEntryBytes=smallEntry?4096:128*1024;bounded.maxEntries=16;renderer.setRenderCacheOptions(bounded);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    semantic::ObjectRecord background;background.id=ObjectId::fromUint64(93000);background.kind=semantic::ObjectKind::kShape;background.kind_version=1;background.content=semantic::ShapeContent{0,256,128};background.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{.1,.3,.8,1}}}});
+    const auto projected=projectRuntimeScene({&background,1},semantic::SemanticGeneration{1});std::vector<ReferenceTraversalEntry> sources{{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(background.content)}}};
+    for(unsigned i=0;i<16;++i){auto source=stroke(93001+i);auto content=std::get<CompactStrokeReferenceCommand>(source.command).content.get();content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;content.stroke.config.size=12;if(content.stroke.config.algorithmVersion>=3)content.stroke.config.thinning=0;content.stroke.config.opacity=.65;content.stroke.knots.clear();for(unsigned k=0;k<129;++k)content.stroke.knots.push_back({12.+k*210./128,55.+30*std::sin(k*40./128),32768});source.command=CompactStrokeReferenceCommand{content};source.record.content=content;source.record.transform.tx=(i%4)*2;source.record.transform.ty=(i/4)*2;
+        if(affine){source.record.transform.a=1.05;source.record.transform.b=.1;source.record.transform.c=.15;source.record.transform.d=.85;}
+        semantic::SweptCircleMask permanent;permanent.segments.push_back({{{100,15},5},{{100,100},5},{100,40},{100,80}});
+        source.record.eraseMasks.push_back({ObjectId::fromUint64(93500+i),permanent});source.presentationEraseActive=true;sources.push_back(source);}
+    WorldToViewAffine viewTransform;
+    auto demand=[&](unsigned id){FrameState frame{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,256,128},{256,128,256,128,1,1},semantic::SemanticGeneration{930},SceneRevision{930},SurfaceGeneration{target.generation()},MetricsGeneration{1},FrameId{id}};ReferenceDrawList list{frame};list.viewportClip={0,0,256,128};list.worldToView=viewTransform;list.entries=sources;return FramePlan{frame,std::move(list)};};
+    auto append=[&](unsigned step){for(std::size_t i=1;i<sources.size();++i){auto& source=sources[i];const auto& t=source.record.transform;const double determinant=t.a*t.d-t.b*t.c;
+        auto local=[&](double wx,double wy){return semantic::Vec2{(t.d*(wx-t.tx)-t.c*(wy-t.ty))/determinant,(-t.b*(wx-t.tx)+t.a*(wy-t.ty))/determinant};};
+        const auto position=local(75+step*3,50);const auto [x,y]=position;
+        semantic::EraseCubicSegment segment{{local(72+step*3,50),8},{position,8},local(73+step*3,50),local(74+step*3,50)};if(step==0){segment={{{x,y},8},{{x,y},8},{x,y},{x,y}};source.presentationEraseMasks={{ObjectId{},semantic::SweptCircleMask{{segment}}}};}else {auto& sweep=std::get<semantic::SweptCircleMask>(source.presentationEraseMasks[0].geometry);if(step==1)sweep.segments.clear();sweep.segments.push_back(segment);}}};
+    auto compare=[&](unsigned id){const auto frame=demand(id);EditingOverlay overlay(frame.frame);require(renderer.renderTransientOverlay(target,frame,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,frame,&overlay).code==BackendSubmissionCode::kAccepted,"erase damage presentation");const auto actual=pixels(target),expected=pixels(reference);unsigned differences=0,maximum=0;std::size_t first=0;for(std::size_t k=0;k<actual.size();++k){const auto delta=unsigned(std::abs(int(actual[k])-int(expected[k])));if(delta>2){if(!differences)first=k;++differences;maximum=std::max(maximum,delta);}}if(differences)std::cerr<<"erase damage id="<<id<<" small="<<smallEntry<<" first="<<(first/4)%256<<","<<(first/4)/256<<" channel="<<first%4<<" actual="<<int(actual[first])<<" expected="<<int(expected[first])<<" count="<<differences<<" max="<<maximum<<'\n';require(differences==0,"incremental erase differs from full replacement");require(renderer.renderCacheWork().retainedBytes<=bounded.maxBytes,"erase damage exceeded raster cache budget");};
+    append(0);compare(940);const auto warm=renderer.renderCacheWork();
+    for(unsigned step=1;step<=12;++step){append(step);compare(940+step);const auto work=renderer.renderCacheWork();require(work.eraseFullFrames==warm.eraseFullFrames&&work.eraseDamageFrames==warm.eraseDamageFrames+step&&work.eraseDamagePixels<=std::uint64_t(step)*1024,"cache pressure rerasterized full ink outside new erase damage");}
+    const auto beforeIdle=renderer.renderCacheWork();compare(953);require(renderer.renderCacheWork().directGroups==beforeIdle.directGroups&&renderer.renderCacheWork().eraseDamagePixels==beforeIdle.eraseDamagePixels,"unchanged erase feedback repainted sources");
+    // Cancel/reset must repaint the complete source; no previous clip may hide ink.
+    for(auto& source:sources){source.presentationEraseMasks.clear();source.presentationEraseActive=false;}compare(954);
+    append(0);for(std::size_t i=1;i<sources.size();++i)sources[i].presentationEraseActive=true;compare(955);append(1);compare(956);
+    const auto acquired=target.acquire();require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"external paint acquire");acquired.frame.surface->getCanvas()->clear(SK_ColorRED);target.release();require(target.present().code==BackendSubmissionCode::kAccepted,"external paint present");append(2);compare(957);
+    target.partial=false;append(3);compare(958);target.partial=true;
+    // Non-prefix, source/order/resource/camera and failed-presentation changes
+    // must revoke retained-pixel validity even when the next region is tiny.
+    auto mustReplace=[&](unsigned id){const auto before=renderer.renderCacheWork().eraseFullFrames;compare(id);if(renderer.renderCacheWork().eraseFullFrames<=before)std::cerr<<"erase invalidation id="<<id<<" profile="<<profile<<" revision="<<revision<<'\n';require(renderer.renderCacheWork().eraseFullFrames>before,"stale erase target was partially reused");};
+    append(4);compare(959);
+    for(std::size_t i=1;i<sources.size();++i)std::get<semantic::SweptCircleMask>(sources[i].presentationEraseMasks[0].geometry).segments.pop_back();mustReplace(960);
+    std::swap(sources[1],sources[2]);mustReplace(961);
+    auto changed=std::get<CompactStrokeReferenceCommand>(sources[1].command).content.get();changed.stroke.config.color={.6,.1,.2,1};sources[1].command=CompactStrokeReferenceCommand{changed};sources[1].record.content=changed;mustReplace(962);
+    renderer.setImageResolver(nullptr);mustReplace(963);
+    append(5);compare(964);append(6);target.failPresent=true;
+    {const auto failed=demand(965);EditingOverlay overlay(failed.frame);require(renderer.renderTransientOverlay(target,failed,&overlay).code==BackendSubmissionCode::kRetry,"failed erase present was accepted");}
+    append(7);mustReplace(966);
+    for(std::size_t i=1;i<sources.size();++i){semantic::FilledPathMask filled;filled.path.commands={semantic::MoveTo{{65,30}},semantic::LineTo{{120,30}},semantic::LineTo{{120,70}},semantic::LineTo{{65,70}},semantic::ClosePath{}};sources[i].presentationEraseMasks[0].geometry=filled;}mustReplace(967);
+    if(profile=="round-handdrawn"&&revision==4&&!affine&&smallEntry){
+        append(0);compare(968);append(1);compare(969);
+        viewTransform.tx=9;mustReplace(970);append(2);compare(971);
+        require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted&&reference.advanceGeneration().code==BackendSubmissionCode::kAccepted,"advance erase targets");mustReplace(972);
+        append(3);compare(973);
+        // Same-size resize is a no-op by contract. Force a real replacement.
+        require(target.resize(128,128).code==BackendSubmissionCode::kAccepted&&reference.resize(128,128).code==BackendSubmissionCode::kAccepted&&target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"replace erase targets");mustReplace(974);
+        // A host clip changes no SkSurface content generation. Qualify only
+        // the full unmodified device clip, then reject any stale partial frame.
+        target.hostClip(true);reference.hostClip(true);append(4);mustReplace(975);
+        target.hostClip(false);reference.hostClip(false);mustReplace(976);
+    }
+    for(auto& source:sources){source.presentationEraseMasks.clear();source.presentationEraseActive=false;}
+    const auto canonical=demand(977);RenderPreparationBudget slice;slice.maxGroups=4;slice.maxMicroseconds=1000000;
+    for(unsigned attempt=0;;++attempt){const auto result=renderer.renderFrame(target,canonical,nullptr,&slice);if(result.code==BackendSubmissionCode::kAccepted)break;require(result.code==BackendSubmissionCode::kRetry&&attempt<512,"canonical preparation after partial clip stalled");}
+    require(oracle.renderFrame(reference,canonical).code==BackendSubmissionCode::kAccepted,"canonical full oracle");const auto actual=pixels(target),expected=pixels(reference);for(std::size_t k=0;k<actual.size();++k)require(std::abs(int(actual[k])-int(expected[k]))<=2,"canonical preparation reused incomplete clipped source");
+  }
+}
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
+        if(argc==1)checkErasedInkOverShapeNavigation();
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--stream-only"){testing::requireReferenceDrawStream();return finishNative(0);}
 #endif
@@ -1410,6 +1618,23 @@ int main(int argc,char** argv) {
                 require(maximum<=2,"ordered run changes occlusion/erase or excessive quantization");
             }
             require(retained.renderCacheWork().retainedRunBuilds==builds&&retained.renderCacheWork().retainedRunHits>=6,"transform rebuilt static front/back runs");
+            const auto beforeFeedback=pixels(provider);
+            sources[0].presentationOpacity=.2F;
+            const auto dimmed=plan(569,sources);
+            require(retained.renderTransientOverlay(provider,dimmed,&overlay).code==BackendSubmissionCode::kAccepted&&
+                oracle.renderTransientOverlay(reference,dimmed,&overlay).code==BackendSubmissionCode::kAccepted,"feedback opacity presentation");
+            const auto feedbackPixels=pixels(provider),directPixels=pixels(reference);
+            require(feedbackPixels!=beforeFeedback,"cached run ignored candidate opacity");
+            for(std::size_t n=0;n<feedbackPixels.size();++n)
+                require(std::abs(int(feedbackPixels[n])-int(directPixels[n]))<=2,"cached feedback differs from Direct");
+            sources[0].presentationOpacity=1;
+            // A retained run must not conceal frame-only clipping metadata.
+            sources[0].presentationEraseMasks={{ObjectId{},mask}};
+            auto clippedOracle=sources;clippedOracle[0].record.eraseMasks.push_back({ObjectId::fromUint64(31003),mask});clippedOracle[0].presentationEraseMasks.clear();
+            require(retained.renderTransientOverlay(provider,plan(569,sources),&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,plan(569,clippedOracle),&overlay).code==BackendSubmissionCode::kAccepted,"retained run transient erase");
+            const auto clippedPixels=pixels(provider),clippedExpected=pixels(reference);
+            for(std::size_t n=0;n<clippedPixels.size();++n)require(std::abs(int(clippedPixels[n])-int(clippedExpected[n]))<=2,"retained run ignored transient erase");
+            sources[0].presentationEraseMasks.clear();
             // Content, order, camera, target and resource changes must never
             // reuse old pixels, including remove/readd with a repeated ID.
             auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content.get();

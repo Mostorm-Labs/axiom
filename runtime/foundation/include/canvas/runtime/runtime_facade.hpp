@@ -10,6 +10,7 @@
 #include "canvas/runtime/connector_sticky_input.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
+#include "canvas/runtime/object_clipboard.hpp"
 #include "canvas/runtime/vector_path_input.hpp"
 
 #include <utility>
@@ -21,6 +22,7 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual ClipboardResult clipboardCommand(const ClipboardRequest&) { return {}; }
   [[nodiscard]] virtual bool transientInkActive() const noexcept { return false; }
   [[nodiscard]] virtual ImageExportResult exportImage(const ImageExportOptions&) noexcept { return {}; }
   [[nodiscard]] virtual std::optional<foundation::DocumentBackground> readBackground() const noexcept { return std::nullopt; }

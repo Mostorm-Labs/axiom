@@ -40,6 +40,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
  public:
 #endif
   ~CanvasRuntimeFacade() override;
+  [[nodiscard]] ClipboardResult clipboardCommand(const ClipboardRequest&) override;
   [[nodiscard]] ImageExportResult exportImage(const ImageExportOptions&) noexcept override;
   [[nodiscard]] std::optional<foundation::DocumentBackground> readBackground() const noexcept override;
   [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;

@@ -6,7 +6,7 @@ struct TableRequest final {
   TableAction action=TableAction::kCreate;
   foundation::ObjectId object{},row{},column{};
   std::uint64_t generation=0;
-  std::uint32_t rows=3,columns=3,index=0;
+  std::uint32_t rows=2,columns=2,index=0;
   double x=0,y=0,size=48;
   std::optional<std::array<float,4>> fill;
   TextFormatPatch format{};
