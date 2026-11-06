@@ -90,6 +90,52 @@ void replayAdmission(){
     cache.clear();old.reset();replacement.reset();require(owner->used()==0,"changed replay retained unowned storage");
 }
 
+// A DPR4 canonical target can already exceed the optional cache ceiling.
+// Visible preparation still needs a local replay of short strokes, just as it
+// does for long strokes. Optional misses must continue to respect that ceiling.
+void shortCriticalReplayAdmission(){
+    constexpr std::size_t mib=1024*1024;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{mib,4*mib});
+    const auto token=budget->reserve(resources::ResourceClass::kCanonicalFrame,mib,true);
+    require(bool(token),"short replay pressure setup");
+    resources::ResourceLease pressure(budget,*token);
+    PreparedGeometryCache cache;RenderCacheOptions options;
+    for(unsigned variant=0;variant<4;++variant){
+        auto entry=compact(variant);
+        entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
+        require(!cache.get(entry,options,budget)&&budget->used()==mib,"optional short replay escaped soft limit");
+        auto visible=cache.get(entry,options,budget,true);
+        require(visible&&visible->isContour(),"visible short replay denied despite hard-cap headroom");
+        require(budget->used()>mib&&budget->used()<=4*mib&&budget->used(resources::ResourceClass::kScratch)==0,
+                "short replay was not charged or retained optional staging");
+        require(cache.get(entry,options,budget,true)==visible,"short replay was not shared across visible demands");
+        const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+        for(unsigned view=0;view<3;++view){
+            auto actual=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
+            auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
+            for(auto* surface:{actual.get(),oracle.get()}){
+                auto* c=surface->getCanvas();c->clear(SK_ColorBLACK);c->clipRect(SkRect::MakeLTRB(4,3,250,123));
+                if(view==1){c->translate(180,0);c->scale(-1,1);}
+                if(view==2){c->translate(7,-2);c->skew(.2F,-.02F);}
+            }
+            const auto work=visible->drawContour(*actual->getCanvas());
+            drawCompactContourCoverageToSkCanvas(*oracle->getCanvas(),stroke.config,ink::compileCompactContour(stroke.config,stroke.knots));
+            require(pixels(actual)==pixels(oracle),"critical short replay changed full-history contour pixels");
+            require(work.primitivesTested*2<visible->primitiveCount(),"critical short replay did not cull offscreen work");
+        }
+        cache.clear();require(budget->used()>mib,"short replay released a consumer's live source");
+        visible.reset();require(budget->used()==mib,"short replay leaked charged source/checkpoints");
+        options.maxEntryBytes=256;
+        require(!cache.get(entry,options,budget,true)&&budget->used()==mib,"short replay bypassed per-entry denial");
+        options.maxEntryBytes=8*mib;
+    }
+    auto full=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{mib,mib});
+    const auto held=full->reserve(resources::ResourceClass::kCanonicalFrame,mib,true);require(bool(held),"hard-cap fixture");
+    resources::ResourceLease pinned(full,*held);
+    require(!cache.get(compact(),options,full,true)&&full->used()==mib,"critical short replay bypassed shared hard cap");
+    cache.clear();pinned.reset();pressure.reset();require(full->used()==0&&budget->used()==0,"short replay owner cleanup");
+}
+
 void localContourParity(){
     PreparedGeometryCache cache;RenderCacheOptions options;
     auto budget=std::make_shared<resources::ResourceBudgetManager>();
@@ -224,4 +270,4 @@ void stagingAdmission(){
 }
 
 }
-int main(){try{auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requirePreparedAlphaMaskParity(*root);testing::requireExactContourLocality(*root);testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}
+int main(){try{shortCriticalReplayAdmission();auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requirePreparedAlphaMaskParity(*root);testing::requireExactContourLocality(*root);testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}

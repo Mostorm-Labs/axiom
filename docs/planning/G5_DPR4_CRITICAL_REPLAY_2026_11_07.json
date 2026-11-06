@@ -1,0 +1,108 @@
+{
+  "task": "G5-DPR4-CRITICAL-REPLAY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": "1b22b23c8087b1c7cc997706e8154b348d21cc3a",
+  "package_materialization_ref": "refs/heads/codex/geometry-navigation-integration",
+  "authorization": "User explicitly requested continuing the DPR4 coverage-wait repair before admission review on2026-11-07.",
+  "role": "Bounded implementation/test package;not new architecture/schema/Gate authority",
+  "basis": {
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+    "docs/planning/sdk/js-v1-contract.md": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+    "docs/planning/sdk/windows-consumer-v1.md": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+    "docs/planning/sdk/shell-axis-preview-contract.md": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+    "docs/planning/G5_COVERAGE_WORK_REUSE.md": "b11ce98d4741c99a51ca27908c58f24807100a946d09e13ad0930b1cb858a77d",
+    "docs/planning/G5_EXACT_CONTOUR_REPLAY.md": "0a320809befb012b6d93390c3843e11f29cc92169fb17b42ee9acc7221becdc6",
+    "runtime/render/include/canvas/render/render_cache.hpp": "cad17767caddec73b421131173da249f79f0142d6214e53b89cdd8bf78c78f75",
+    "verification/evidence/performance/g5-post-main-followup/dpr4-coverage-finding.json": "7f95a662915aae78301d20fb1613ce826d17388f4dfc403ac3ca2ef5754f9b52",
+    "verification/evidence/performance/g5-post-main-followup/README.md": "5bbbf7e0bdb599bcb3ad633ac90e38d77c4cb623a1a270c0c704a91919982e9c"
+  },
+  "ownership": {
+    "state": "Runtime/OperationEngine/Scene unchanged",
+    "derived": "Render PreparedGeometryCache and SkiaNavigationTiles own source-bound replay/admission;ResourceBudgetManager owns charged soft/hard limits;provider owns present"
+  },
+  "design_preflight": {
+    "flow": "DPR4 mandatory targets cross optional32MiB;small-v4 path staging remains optional, so criticalReplay misses deny geometry and coarse tiles resume full knots across RAFs.100K-knot replay already has hard-cap admission.",
+    "target": "Extend existing source-bound compact replay to short v4 critical misses when optional admission cannot fit, retaining per-entry checks, immutable source identity, replay/cull/order and hard-cap leases. No full-path priority escalation. Optional refinement remains optional.",
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false,
+    "verification_conflict": false,
+    "package_scope_conflict": false
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required_changes": [
+      "Fail-first short-v4 critical replay admission/parity/lifetime test above soft but below hard cap,without pre-retained source workaround",
+      "Preserve optional denial and real hard/per-entry denial;critical replay must be admitted and fully charged before allocation and released after consumers retire",
+      "Real navigation pressure integration:offscreen contour must not force full-knot traversal;bounded coverage submits without canonical receipts;mask/affine output preserved",
+      "Keep existing scalar fallback on denied geometry;do not increase query/step/GPU/time/byte budgets"
+    ],
+    "allowed": [
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp if required",
+      "runtime/render/tests/",
+      "verification/runners/g5/ observation-only changes if needed",
+      "docs/planning/",
+      "verification/evidence/performance/ new bundle"
+    ],
+    "forbidden": [
+      "publicSDK API/ABI/version/release change",
+      "semantic/Brush/codec/admission/lock mutation",
+      "larger budgets/work limits",
+      "early receipt/incomplete coverage present",
+      "platform geometry or new owner",
+      "user4242 modification",
+      "old evidence rewrite"
+    ],
+    "tests": {
+      "blocking": [
+        "Expected RED against old implementation,then GREEN for short critical replay and optional/hard denial",
+        "Contour full-history pixel parity including clipped/affine and erased integration;source replacement and lease retirement",
+        "Prepared/cache/damage/camera CTest and full configured1076 with named comparison against1010pass/66oldfailed",
+        "G5 Node39 and Runtime boundary119;matching ON/OFF root package artifacts"
+      ],
+      "browser_blocking": [
+        "Frozen code and whole package hashes;sequential bounded workers without builds/tests",
+        "Compound post-edit-navigation runner:ON/OFF DPR1/2 andDPR4;two candidateON DPR4 samples plusOFF;oneDPR4 context-restore",
+        "All edit/history/state/identity/receipt/canvas/export checks;ON/OFF equal pixels and baseline canonical export unchanged",
+        "Local engineering endpoint:selected idle-pan GL/accepted gap under150ms in both candidateON samples andOFF;compare current frozen baseline rerun;not a universal/statisticalSLO"
+      ],
+      "corroborative": [
+        "Source-bound trace explains denial/replay/culling reduction;preserve zoom CPU coverage residual",
+        "RootSDK10Kobject andten100K-stroke1Mtotal-point smoke;old blocked tiers remain unchanged"
+      ]
+    },
+    "limits": {
+      "optionalMiB": 32,
+      "sharedMiB": 96,
+      "nativeRssMiB": 2048,
+      "browserRssMiB": 3072,
+      "workerSeconds": 180
+    },
+    "hosted": {
+      "required": [],
+      "optional": [
+        "CI/otherplatforms/physical input"
+      ]
+    },
+    "evidence": {
+      "blocking": "New durable bundle with RED/GREEN,source/package/binarySHA,raw workers,correctness and performance endpoints,named failures;push exact result to branch",
+      "preserve": "Prior evidence,all denied/capped outcomes and userdemo"
+    },
+    "terminal_success": "Implementation+required regressions+frozen paired browser endpoint and durable result complete;return READY_FOR_CONTROL_REVIEW with remaining findings",
+    "terminal_blockers": [
+      "authority/source divergence",
+      "missing lockedartifact/toolchain",
+      "expectedREDnotreproduced",
+      "new correctnessfailure",
+      "bounded corpus endpoint not improved",
+      "hard-cap/resource lifetime violation"
+    ],
+    "return_policy": "Continue all executable required items;no official G5/P34PASS"
+  },
+  "admission_followup": "Review current65535 repeated-field/16MiBobject/262144knot boundaries after this repair;do not change their authority in Render."
+}
