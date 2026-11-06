@@ -1,4 +1,5 @@
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "../src/skia_navigation_tiles.hpp"
@@ -1178,9 +1179,56 @@ void checkLiveEraseSourceReuse() {
 }
 }
 
+namespace {
+void checkAffineErasedNavigation() {
+    // Public duplication yields translated compact ink; authoring transforms can
+    // also rotate/shear/scale it. Masks remain local and clip this source only.
+    const semantic::Transform2D transforms[]={{1,0,0,1,24,12},{.94,.342,-.342,.94,20,-8},{1.1,.13,.2,.7,2,10}};
+    const std::pair<std::string_view,unsigned> brushes[]={{"round-handdrawn",2},{"round-handdrawn",3},{"round-handdrawn",4},{"marker-compact-v1",2},{"marker-compact-v1",3},{"marker-compact-v1",4},{"crayon-wax-v1",3},{"chalk-compact-v1",3},{"watercolor-lite-v1",3}};
+    for(const auto& [profile,revision]:brushes)for(bool filled:{false,true})for(const auto& transform:transforms) {
+        semantic::ObjectRecord background;background.id=ObjectId::fromUint64(92000);background.kind=semantic::ObjectKind::kShape;background.kind_version=1;background.content=semantic::ShapeContent{0,256,128};
+        background.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+        const auto projected=projectRuntimeScene({&background,1},semantic::SemanticGeneration{1});
+        ReferenceTraversalEntry blue{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(background.content)}};
+        auto erased=stroke(92001);auto content=std::get<CompactStrokeReferenceCommand>(erased.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
+        content.stroke.config.size=24;if(content.stroke.config.algorithmVersion==3||content.stroke.config.algorithmVersion==4)content.stroke.config.thinning=0;content.stroke.config.opacity=1;content.stroke.config.color={0,0,0,1};content.stroke.knots={{30,64,32768},{200,64,32768}};
+        erased.command=CompactStrokeReferenceCommand{content};erased.record.content=content;erased.record.transform=transform;erased.record.worldBounds={0,0,256,128};
+        for(unsigned i=0;i<5;++i) {
+            const double x=65+i*25;semantic::EraseMaskGeometry mask;
+            if(filled){semantic::FilledPathMask path;path.path.commands={semantic::MoveTo{{x-6,34}},semantic::LineTo{{x+6,34}},semantic::LineTo{{x+6,94}},semantic::LineTo{{x-6,94}},semantic::ClosePath{}};mask=path;}
+            else {semantic::SweptCircleMask sweep;sweep.segments.push_back({{{x,34},6},{{x,94},6},{x,54},{x,74}});mask=sweep;}
+            erased.record.eraseMasks.push_back({ObjectId::fromUint64(92100+i),mask});
+        }
+        const std::vector sources{blue,erased};const auto frame=plan(92002,sources);
+        const auto validation=internal::validateReferencePlan(frame);if(validation.code!=BackendSubmissionCode::kAccepted)std::cerr<<"affine erased source validation: "<<validation.message<<'\n';require(validation.code==BackendSubmissionCode::kAccepted,"invalid affine erased fixture");
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"affine erased target");SkiaRenderer renderer;
+        RenderCacheOptions options;options.navigationMaxSteps=32;options.navigationMicroseconds=1000000;renderer.setRenderCacheOptions(options);
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=sources;return true;};
+        std::uint64_t geometryBuilds=0;
+        for(const CanonicalViewportTransform camera:{CanonicalViewportTransform{1,0,0},{1,9,7},{1.25F,-18,-8}}) {
+            for(unsigned step=0;;++step) {
+                const auto result=navigate(renderer,target,camera,frame.frame,query,false);
+                if(result.code!=BackendSubmissionCode::kAccepted)std::cerr<<"affine erased profile="<<profile<<" revision="<<revision<<" filled="<<filled<<" a="<<transform.a<<" tx="<<transform.tx<<" scale="<<camera.scale<<" step="<<step<<" reason="<<result.message<<'\n';
+                require(result.code==BackendSubmissionCode::kAccepted,"affine erased ink rejected navigation and forced exact fallback");
+                if(!renderer.navigationWork().pending)break;require(step<256,"affine erased navigation failed to converge");
+            }
+            const auto actual=pixels(target);
+            const auto at=[&](double x,double y){const double wx=transform.a*x+transform.c*y+transform.tx,wy=transform.b*x+transform.d*y+transform.ty;return (unsigned(wy*camera.scale+camera.translationY)*256+unsigned(wx*camera.scale+camera.translationX))*4;};
+            for(unsigned cut=0;cut<5;++cut){const auto index=at(65+cut*25,64);require(actual[index]<5&&actual[index+1]<5&&actual[index+2]>250,"affine erase mask exposed white or failed to erase local ink");}
+            const auto ink=at(50,64);require(actual[ink+2]<245,"affine erased navigation omitted surviving ink");
+            if(geometryBuilds)require(renderer.navigationWork().preparedGeometryBuilds==geometryBuilds,"camera change rebuilt erased contour geometry");
+            geometryBuilds=renderer.navigationWork().preparedGeometryBuilds;
+            require(renderer.submissionCount()==0,"affine erased navigation created canonical receipt");
+        }
+    }
+}
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
         if(argc==1)checkErasedInkOverShapeNavigation();

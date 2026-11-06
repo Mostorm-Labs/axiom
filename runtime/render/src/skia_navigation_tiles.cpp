@@ -47,9 +47,11 @@ bool supported(const ReferenceTraversalEntry& e){
        !std::holds_alternative<CompactStrokeReferenceCommand>(e.command) &&
        !std::holds_alternative<BrushStrokeReferenceCommand>(e.command))return false;
     const bool identity=t.a==1&&t.b==0&&t.c==0&&t.d==1&&t.tx==0&&t.ty==0;
-    // Nonidentity erased ink retains its existing fail-closed fallback until
-    // its isolated-mask realization is qualified. Plain affine ink is safe.
-    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return identity||e.record.eraseMasks.empty();
+    // Compact coverage and its local masks share the same object affine in
+    // the isolated source below. Translation/rotation/scale/shear therefore
+    // remain eligible after erasing too; rejecting them forced camera motion
+    // into repeated synchronous whole-stroke canonical rendering.
+    if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command))return true;
     const auto* v=std::get_if<BrushStrokeReferenceCommand>(&e.command);
     if(v&&v->content.get().stroke.snapshot.material_mode==1)return identity;
     return std::holds_alternative<ShapeReferenceCommand>(e.command) ||
