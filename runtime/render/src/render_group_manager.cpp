@@ -13,7 +13,8 @@ bool addEraseDamage(RenderGroupManager::EraseDamage& damage,
     const double top=std::min({a.y,b.y,segment.control1.y,segment.control2.y})-radius;
     const double bottom=std::max({a.y,b.y,segment.control1.y,segment.control2.y})+radius;
     for(const auto& p:std::array<semantic::Vec2,4>{{{left,top},{right,top},{left,bottom},{right,bottom}}}) {
-        const float x=transform.a*p.x+transform.c*p.y+transform.tx,y=transform.b*p.x+transform.d*p.y+transform.ty;
+        const float x=static_cast<float>(transform.a*p.x+transform.c*p.y+transform.tx);
+        const float y=static_cast<float>(transform.b*p.x+transform.d*p.y+transform.ty);
         if(!std::isfinite(x)||!std::isfinite(y))return false;
         if(!damage.bounds)damage.bounds=foundation::WorldRect{x,y,x,y};
         else {auto& bounds=*damage.bounds;bounds.left=std::min(bounds.left,x);bounds.top=std::min(bounds.top,y);bounds.right=std::max(bounds.right,x);bounds.bottom=std::max(bounds.bottom,y);}

@@ -665,7 +665,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // clip changes how many tiles are needed, never their AA/noise sampling grid.
     SkIRect originalClip;
     {SkAutoCanvasRestore restore(canvas,true);
-        const auto& m=plan.frame.metrics;canvas->scale(m.physicalWidth/m.logicalWidth,m.physicalHeight/m.logicalHeight);
+        const auto& m=plan.frame.metrics;
+        canvas->scale(static_cast<float>(m.physicalWidth)/m.logicalWidth,
+                      static_cast<float>(m.physicalHeight)/m.logicalHeight);
         const auto& c=plan.referenceDrawList.viewportClip;canvas->clipRect(SkRect::MakeLTRB(c.left,c.top,c.right,c.bottom));
         originalClip=canvas->getDeviceClipBounds();}
     const internal::CompactDeviceGrid deviceGrid{originalClip.left(),originalClip.top(),originalClip.right(),originalClip.bottom()};
@@ -675,8 +677,11 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         SkIRect clip=SkIRect::MakeEmpty();
         if(const auto& bounds=cache->eraseDamage().bounds) {
             const auto& v=plan.referenceDrawList.worldToView;const auto& m=plan.frame.metrics;
-            const double sx=m.physicalWidth/m.logicalWidth,sy=m.physicalHeight/m.logicalHeight;
-            SkMatrix matrix;matrix.setAll(v.a*sx,v.c*sx,v.tx*sx,v.b*sy,v.d*sy,v.ty*sy,0,0,1);
+            const double sx=static_cast<float>(m.physicalWidth)/m.logicalWidth;
+            const double sy=static_cast<float>(m.physicalHeight)/m.logicalHeight;
+            SkMatrix matrix;matrix.setAll(static_cast<SkScalar>(v.a*sx),static_cast<SkScalar>(v.c*sx),
+                static_cast<SkScalar>(v.tx*sx),static_cast<SkScalar>(v.b*sy),
+                static_cast<SkScalar>(v.d*sy),static_cast<SkScalar>(v.ty*sy),0,0,1);
             auto area=matrix.mapRect(SkRect::MakeLTRB(bounds->left,bounds->top,bounds->right,bounds->bottom));
             area.outset(3,3); // Include stroke AA and inverse-affine rounding.
             if(!area.isFinite()){damageRestore.restore();incremental=false;}
