@@ -1,0 +1,33 @@
+{
+  "id": "G5-PAUSE-RESUME",
+  "stage": "P35/P36",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "repository": "Mostorm-Labs/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "anchor": "108151fbc5a0b829cfa9c64ecb99ea4872d92416",
+  "earliest_observed_regression": "903761e4b4aad5ab5fd2d630edb232c530c05b41",
+  "user_reproduction": "Mac trackpad zoom in,pause about1000ms,then zoom out or pan;image about2.3MB,rectangle,triangle,ellipse,sticky,table andabout5 longstrokes.",
+  "failure_mode": "Higher resident-density planning exposes loss of prior wide qualified coverage after narrow canonical completion;resumed input is handled but a complete feedback plane waits for cold tile preparation.",
+  "owner": "Shared Render retained display sources and SkiaNavigationTiles coverage partition;not SDK input or semantic document.",
+  "trusted_refs": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/planning/G5_NAVIGATION_QUALITY_AND_CONTINUITY.md": "3e7c88beede15449b541a37031fbc6fb295eb2380d634b44f689a8a7c9776621",
+    ".aegis/packages/G5-RETIREMENT-ARBITRATION/verification.lock.json": "727a8000409f0d5d8d31346f60f458e9878a61b3dee8f89f122f3dd82e739838"
+  },
+  "repair": "Retain at most two existing admitted canonical images with matching frame/provider/scene/surface/metrics identity;partition by source density;release the optional old plane first on mandatory pressure;mark GPU reads only when sampled.",
+  "preserve": [
+    "Brush/Scene/Operation/viewport semantics and exact canonical output",
+    "Existing32/96MiB budgets and work quotas",
+    "Public SDK API/version/normal install boundary",
+    "Old P34/G5 results and previous BLOCKED verdicts"
+  ],
+  "verification": [
+    "Native RED before fix for zoom-in losing wide coverage;GREEN plus unknown-region/scene rejection",
+    "Actual Chrome reentry plus10existing GPU modes",
+    "Full configured native suite with exact existing66failed-name comparison;39Node,16Python,118boundary",
+    "Matching clean-source ON/OFF SDKs,1000ms pause,zoom/pan,delta1/delta4,user-like synthetic2.3MB PNG corpus,final pixel/state/receipt equality",
+    "Frozen existing<=150ms reentry observation guard used as a local software diagnostic;not physical latency or global performance acceptance"
+  ],
+  "terminal": "Repair evidence and runnable manual-test Demo;no official G5/P34 or all-platform PASS."
+}
