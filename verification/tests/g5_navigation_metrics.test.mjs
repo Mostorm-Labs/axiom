@@ -124,3 +124,66 @@ test('navigation components and region compactions preserve old unknown diagnost
   const old=summarizePhase(phase,[{elapsed_ns:0,overlay_ns:0}],[]).navigation;
   assert.equal(old.componentsMs,null);assert.equal(old.regionCompactions,null);
 });
+
+test('v2 starts at real input and separates clear activity,content return and coarse receipt',()=>{
+  const raw={started:0,inputEnded:100,ended:180,samples:[],displayTimes:[10,40,60,90,150],fences:[],longTasks:[],
+    receipts:[{at:150},{at:170}],observationVersion:2,
+    inputEvents:[{id:1,started:20,ended:21,type:'wheel'},{id:2,started:80,ended:81,type:'wheel'}],
+    colorOps:[{kind:'clear',started:9,ended:10},{kind:'content',started:39,ended:40},
+      {kind:'content',started:59,ended:60},{kind:'content',started:89,ended:90}],
+    rafCallbacks:[{id:1,started:65,ended:75,timestamp:64}],nativeRecords:[]};
+  const v=summarizePhase(raw,[],[]).feedbackV2;
+  assert.ok(v,'missing v2 feedback observation');
+  assert.equal(v.preInputWaitMs,20);assert.equal(v.firstContentResponseMs,20);
+  assert.equal(v.lastInputContentResponseMs,10);assert.equal(v.lastInputToCoarseReceiptMs,70);
+  assert.equal(v.lastInputToLastCoarseReceiptMs,90);
+  assert.equal(v.legacyInputEndOffsetMs,20);assert.equal(v.contentGapMs.max,30);
+  assert.equal(v.steadyContentGapMs.max,30);assert.equal(v.clearCalls,1);
+  // Worst interval60..90 includes RAF65..75 and dispatch80..81.
+  assert.equal(v.worstGap.observedCallbackCoveredMs,11);assert.equal(v.worstGap.outsideObservedCallbacksMs,19);
+  assert.equal(v.cameraQualified,false);
+  assert.equal(summarizePhase(raw,[],[]).settle_ms,50,'legacy receipt boundary changed');
+});
+
+test('v2 clear-only work cannot hide a censored content gap',()=>{
+  const v=summarizePhase({started:0,inputEnded:120,ended:160,samples:[],displayTimes:[20,40,60,80,100,120],fences:[],longTasks:[],
+    observationVersion:2,inputEvents:[{id:1,type:'wheel',started:10,ended:11},{id:2,type:'wheel',started:110,ended:111}],
+    colorOps:[20,40,60,80,100,120].map(ended=>({kind:'clear',started:ended-1,ended})),rafCallbacks:[],nativeRecords:[]},[],[]).feedbackV2;
+  assert.ok(v);assert.equal(v.status,'CENSORED');assert.equal(v.firstContentResponseMs,null);
+  assert.equal(v.contentGapMs.max,null);assert.equal(v.censoredContentGapLowerBoundMs,150);
+});
+
+test('v2 legacy timestamps remain unavailable and input callback work is not scheduler delay',()=>{
+  assert.equal(summarizePhase({samples:[],displayTimes:[],fences:[],longTasks:[]},[],[]).feedbackV2,null);
+  const v=summarizePhase({started:0,inputEnded:60,ended:90,samples:[],displayTimes:[],fences:[],longTasks:[{start:20,duration:35}],
+    observationVersion:2,inputEvents:[{id:1,type:'wheel',started:10,ended:50}],
+    colorOps:[{kind:'content',started:50,ended:55}],rafCallbacks:[{id:1,started:30,ended:55,timestamp:29}],nativeRecords:[]},[],[]).feedbackV2;
+  assert.ok(v);assert.equal(v.worstGap.durationMs,45);assert.equal(v.worstGap.observedCallbackCoveredMs,45);
+  assert.equal(v.worstGap.outsideObservedCallbacksMs,0);assert.equal(v.worstGap.longTaskOverlapMs,35);
+});
+
+test('v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not',()=>{
+  const phase={started:0,inputEnded:105,ended:160,observationEnded:160,samples:[],displayTimes:[],fences:[],longTasks:[],
+    observationVersion:2,inputEvents:[{id:1,started:10,ended:11},{id:2,started:100,ended:101}],
+    colorOps:[{kind:'clear',started:49,ended:50}],rafCallbacks:[],
+    nativeRecords:[
+      {at:20,text:'AXIOM_NAVIGATION_TIMING '+JSON.stringify({version:5,scene:'15',surface:'1',presented:true})},
+      {at:30,text:'AXIOM_NAVIGATION_TIMING '+JSON.stringify({version:5,scene:'15',surface:'1',presented:false})},
+      {at:45,text:'AXIOM_FRAME_TIMING '+JSON.stringify({version:1,outcome:'retry'})},
+      {at:60,text:'AXIOM_NAVIGATION_TIMING '+JSON.stringify({version:5,scene:'15',surface:'1',presented:true})},
+      {at:110,text:'AXIOM_FRAME_TIMING '+JSON.stringify({version:1,outcome:'accepted',view:'1',frame:'99',semantic:'3',scene:'15',camera:'80',surface:'1',metrics:'1'})}]};
+  const v=summarizePhase(phase,[],[]).runtimeSubmitV2;
+  assert.ok(v);assert.equal(v.status,'OBSERVED');assert.equal(v.acceptedCalls,3);
+  assert.equal(v.firstAcceptedSubmitMs,10);assert.equal(v.lastInputAcceptedSubmitMs,10);
+  assert.equal(v.acceptedGapMs.max,50);assert.equal(v.cameraQualified,false);
+  assert.equal(summarizePhase({...phase,nativeRecords:[]},[],[]).runtimeSubmitV2.status,'UNAVAILABLE');
+});
+
+test('runtime submit identities reject numeric or overwide IDs rather than losing precision',()=>{
+ const base={started:0,inputEnded:10,ended:20,samples:[],displayTimes:[],fences:[],longTasks:[],observationVersion:2,
+ inputEvents:[{id:1,started:1,ended:2}],colorOps:[],rafCallbacks:[]};
+ for(const frame of [42,'18446744073709551616']){
+  const row={version:1,outcome:'accepted',view:'1',frame,semantic:'3',scene:'15',camera:'80',surface:'1',metrics:'1'};
+  assert.equal(summarizePhase({...base,nativeRecords:[{at:12,text:'AXIOM_FRAME_TIMING '+JSON.stringify(row)}]},[],[]).runtimeSubmitV2.status,'UNAVAILABLE');
+ }
+});

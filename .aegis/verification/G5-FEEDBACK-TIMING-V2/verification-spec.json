@@ -11,7 +11,9 @@
     "verification/evidence/performance/g5-retirement-arbitration/performance-violations.json": "ba02b6bae6e2c6ece8eb31ba16406f03eb98e760c64d1b390af94c5b78740e8a",
     "verification/evidence/performance/g5-retirement-arbitration/checks/g5-retire-aa-result.json": "03ee5940b5066cf2e6c3904c0b04b2a55f882da3cb874f124f0140388e9d490a",
     "verification/runners/g5/navigation_sampling.html": "395b7c78a7396561b6880ecbccb599c536d4319a13943ce36253c2e1a013d332",
-    "verification/runners/g5/navigation_metrics.mjs": "204683a45bfb45175dda3a58e57ba6d309ba0bac00ab4cfd2af0b2bcf0852bbc"
+    "verification/runners/g5/navigation_metrics.mjs": "204683a45bfb45175dda3a58e57ba6d309ba0bac00ab4cfd2af0b2bcf0852bbc",
+    "runtime/render/src/skia_navigation_tiles.cpp": "59c213a5b7b40ae93c06d3a7c67df0822c2c6234bab924b9d7b6e3272b4ae184",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "b8d630951a3cbb6386a7ec99de6c91b8864ad54e5b4923bb3c8e8dea6dfe74f7"
   },
   "scope": [
     "verification/runners/g5",
@@ -41,13 +43,13 @@
     },
     {
       "id": "content-vs-activity",
-      "requirement": "Separate color clears from content draw/blit completion. Preserve default-framebuffer and target-canvas filtering,original calls and idle quiescence.",
+      "requirement": "Separate GL activity from Runtime local accepted submission. Clear-only may be valid empty-view feedback;draw-only absence alone never rejects continuity.",
       "failure_mode": "Clear-only or offscreen work hides missing content feedback;pre-call timestamp masks long GL calls.",
       "impact": "False continuity pass.",
       "existing_independent_coverage": [
         "native presented/coverage diagnostic flags,final pixels"
       ],
-      "residual_proof_gap": "Diagnostics lack public camera-qualified presentation identity;final pixels do not detect transient gaps.",
+      "residual_proof_gap": "Old color-call data cannot distinguish native accepted blank navigation from a clear-only failure. Browser-timestamped native accept logs independently cover local submission cadence;camera-qualified physical display remains outside scope.",
       "oracle": "Deterministic clear/offscreen/call-duration fixtures;real WebGL clear-only interval with two actual draws;no sampler-owned RAF when idle.",
       "evidence": "Pure metric tests and real browser witness.",
       "classification": "blocking",
@@ -62,14 +64,13 @@
         "three old identical-baseline A/A pairs"
       ],
       "residual_proof_gap": "No v2 same-artifact control or counterbalanced same-workload comparison.",
-      "oracle": "Pilot:two AAAA blocks on pan baseline;two ABBA blocks each for DPR2 pan andzoom,all legacy prologue,1s idle,5s freeze,allrawphases retained.",
-      "evidence": "24 bounded180s/3GiB workers,clean source and locked SDK hashes,pixel/state/receipt checks.",
+      "oracle": "Pilot:two AAAA blocks each on pan andzoom baseline;two ABBA blocks each for DPR2 pan andzoom,alllegacy prologue,1s idle,5s freeze,allrawphases retained.",
+      "evidence": "32 bounded180s/3GiB workers,clean source and locked SDK hashes,pixel/state/receipt checks.",
       "classification": "blocking-for-method-qualification",
       "blocking_justification": "Validates observer/run protocol. Pilot effects are corroborative only;insufficient blocks cannot pass Runtime nonregression."
     }
   ],
   "pilot": {
-    "noise_blocks": 2,
     "comparison_blocks_per_case": 2,
     "order_noise": "AAAA",
     "order_comparison": "ABBA",
@@ -77,7 +78,7 @@
       "dpr2-pan",
       "dpr2-zoom"
     ],
-    "workers": 24,
+    "workers": 32,
     "budgets_mib": [
       32,
       96
@@ -86,15 +87,16 @@
     "candidate_source": "3fcf642bbfdda126246e29dd1b32ec7710154f62",
     "sdk_baseline": "out/g5-material-retained-on/js",
     "sdk_candidate": "out/g5-retire-on/js",
-    "no_concurrent_builds_or_tests": true
+    "no_concurrent_builds_or_tests": true,
+    "noise_blocks_per_case": 2
   },
   "successor_P31_protocol": {
     "unit": "one counterbalanced ABBA block;never individual pointer samples or draw calls",
     "minimum_independent_blocks_per_case": 8,
     "primary_endpoints_per_case": [
-      "worst first-content-op response across phases",
-      "worst steady content-op gap after initial response across phases",
-      "worst last-event-to-coarse-onFrame wait across phases",
+      "worst first Runtime-local-accepted-submit after actual input across phases",
+      "worst steady Runtime-local-accepted-submit gap across phases",
+      "worst last-event-to-last-coarse-onFrame wait before observed SDK RAF quiescence",
       "worst phase low-density time fraction"
     ],
     "cases": 2,
@@ -109,5 +111,25 @@
     "safety": "Retain every raw worst stall and existing150ms/global15% targets as separate open results;no retrospective relabeling.",
     "assumptions": "Independent block disturbances with stable common median;counterbalancing removes linear order drift only. Report limitations;observational proxies are not camera-qualified presents or input-to-photon."
   },
-  "terminal": "P20 method ready for new P31 or exact method blocker;no production coverage implementation or Gate PASS in this stage."
+  "terminal": "P20 method ready for new P31 or exact method blocker;no production coverage implementation or Gate PASS in this stage.",
+  "amendments": [
+    {
+      "prior_design_revision": "a513be93a4fe1df3cf6502d8db6148a2e1cc00b4",
+      "reason": "Inspection found that coarse receipt alone can precede outstanding SDK work;qualify phase end with observed SDK RAF quiescence. Also distinguish masked draws without changing browser arguments.",
+      "requirements": [
+        "phase end requires pending SDK RAF count0 and200ms observed quiet,30s bounded;probe RAF tagged and excluded from SDK activity",
+        "record both first and last post-last-event coarse receipt;no camera-qualified claim",
+        "colorMask=false draw remains masked activity;original call arguments forwarded unchanged"
+      ]
+    },
+    {
+      "reason": "Actual unchanged SDK witness has34 accepted local navigation submits during a567ms draw-free empty-view interval. Content-only gaps are not a valid continuity oracle for unknown background.",
+      "requirements": [
+        "Primary v2 cadence uses browser-timestamped Runtime local accepted submission diagnostics,not draw-only gaps.",
+        "Keep content/clear/masked/offscreen activity separate as corroborative;canonical accepted and navigation presented diagnostic flags mean local submission,not physical present.",
+        "Record raw diagnostic identities losslessly;reject numeric or overwide IDs. No private SDK access and no cross-clock-origin inference.",
+        "P20 pilot uses ON artifacts only. OFF diagnostic absence is UNAVAILABLE,never zero."
+      ]
+    }
+  ]
 }

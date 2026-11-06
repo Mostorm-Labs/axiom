@@ -113,6 +113,9 @@ try{
         idleDrawStopped:record.idleBefore.page.stats.draws===record.idleAfter.page.stats.draws,
         semanticAndCamera:record.phases.every(p=>['documentUnchanged','selectionUnchanged','operationUnchanged','cameraReturned'].every(k=>p.raw.checks[k])),
         receiptAfterInput:record.phases.every(p=>p.summary.settle_ms!==null&&p.summary.settle_ms>=0),
+        feedbackObserved:record.phases.every(p=>p.summary.feedbackV2?.status==='OBSERVED'),
+        exactInputLedger:record.phases.every(p=>p.raw.inputEvents.length===(mode==='wheel'?72*4:148)),
+        quiescentPhaseEnd:record.phases.every(p=>p.raw.quiescence?.pending===0&&p.raw.quiescence?.quietMs===200),
         nonblockingFences:record.phases.every(p=>p.summary.maximum_fence_timeout===0)};
       record.status=Object.values(record.checks).every(Boolean)?'MEASURED':'BLOCKED_EVIDENCE';
     }catch(error){record.error=String(error);record.status='BLOCKED_EVIDENCE';
@@ -125,9 +128,9 @@ try{
 }finally{
   if(browser)await browser.close();await new Promise(r=>server.close(r));await fs.rm(temp,{recursive:true,force:true});
   const after=identity(),sourceStable=before.tree_sha256===after.tree_sha256&&before.commit===after.commit,artifactStable=JSON.stringify(artifacts)===JSON.stringify(await hashes(sdk));
-  const summary={schema:'g5-web-navigation-lifecycle-v1',status:sourceStable&&artifactStable&&results.length===modes.length&&results.every(r=>r.status==='MEASURED')?'MEASURED':'BLOCKED_EVIDENCE',
+  const summary={schema:'g5-web-navigation-lifecycle-v2',status:sourceStable&&artifactStable&&results.length===modes.length&&results.every(r=>r.status==='MEASURED')?'MEASURED':'BLOCKED_EVIDENCE',
     sourceBefore:before,sourceAfter:after,sourceStable,artifactStable,artifacts,browserVersion:browser?.version(),idleMs,cycles,editSamples,selected,modes,zoomDelta,qualityEvery,panStep,intrusiveOptical:qualityEvery>0,
-    scope:'Synthetic root SDK input; real Chrome WebGL2; callback wrappers forward calls. UI cost covers public readbacks, not full Demo DOM. CDP frozen/active is not physical sleep, GPU eviction or OS backgrounding. Post-input onFrame is coarse completion, not camera-qualified receipt. No physical input-to-photon or long-term leak claim.',
+    observationVersion:2,scope:'Actual event dispatch and return-side default-target content operation ledger;potential content is not camera-qualified presentation. SDK RAF quiescence is not GPU/physical completion. Legacy fields remain phase-relative. Synthetic root SDK input; real Chrome WebGL2; callback wrappers forward calls. UI cost covers public readbacks, not full Demo DOM. CDP frozen/active is not physical sleep, GPU eviction or OS backgrounding. Post-input onFrame is coarse completion, not camera-qualified receipt. No physical input-to-photon or long-term leak claim.',
     results:results.map(({phases,rows,uiReadTimes,...r})=>({...r,uiReadMaxMs:Math.max(...(uiReadTimes??[])),phases:phases.map(p=>({id:p.id,summary:p.summary,checks:p.raw.checks,pixels:p.raw.pixels}))}))};
   await fs.writeFile(path.join(output,'summary.json'),JSON.stringify(summary,null,2));
   await fs.writeFile(path.join(output,'sha256.json'),JSON.stringify(await hashes(output),null,2));
