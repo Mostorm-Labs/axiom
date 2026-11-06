@@ -16,7 +16,7 @@
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
-#include "include/effects/SkGradient.h"
+#include "include/core/SkVertices.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <optional>
@@ -72,6 +72,61 @@ struct SkiaRenderer::CompactCache final {
     std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
 };
 namespace {
+// One connected mesh, including its edge fringe and end caps. Adjacent samples
+// share coverage: per-segment round caps would accumulate alpha into dark dots.
+void drawFadingTrail(SkCanvas& canvas,const ink::FadingTrailPreview& input,SkColor4f paintColor){
+    std::vector<ink::FadingTrailPoint> points;points.reserve(input.points.size());
+    for(const auto& point:input.points){
+        if(!points.empty()&&std::hypot(point.x-points.back().x,point.y-points.back().y)<1e-5)points.back()=point;
+        else points.push_back(point);
+    }
+    if(points.empty())return;
+    const auto colorAt=[&](float opacity){auto color=paintColor;color.fA*=std::clamp(opacity,0.0F,1.0F);return color.toSkColor();};
+    SkPaint paint;paint.setAntiAlias(true);paint.setColor(SK_ColorWHITE);
+    if(points.size()==1){paint.setColor(colorAt(points[0].opacity));canvas.drawCircle(float(points[0].x),float(points[0].y),points[0].width*.5F,paint);return;}
+    struct Vertex {SkPoint position;SkColor color;};
+    std::vector<SkPoint> positions;std::vector<SkColor> colors;
+    positions.reserve(points.size()*18+216);colors.reserve(points.size()*18+216);
+    const auto triangle=[&](Vertex a,Vertex b,Vertex c){for(const auto v:{a,b,c}){positions.push_back(v.position);colors.push_back(v.color);}};
+    const auto quad=[&](Vertex a,Vertex b,Vertex c,Vertex d){triangle(a,b,c);triangle(b,d,c);};
+    const auto direction=[&](std::size_t from,std::size_t to){const auto dx=float(points[to].x-points[from].x),dy=float(points[to].y-points[from].y);const auto length=std::hypot(dx,dy);return SkPoint::Make(dx/length,dy/length);};
+    const float fringe=1.0F/std::max(1e-5F,canvas.getTotalMatrix().getMaxScale());
+    std::vector<std::array<Vertex,4>> sections;sections.reserve(points.size());
+    for(std::size_t i=0;i<points.size();++i){
+        const auto previous=direction(i?i-1:i,i?i:i+1);
+        const auto next=direction(i+1<points.size()?i:i-1,i+1<points.size()?i+1:i);
+        float nx=-(previous.y()+next.y()),ny=previous.x()+next.x();
+        const auto length=std::hypot(nx,ny);
+        if(length>1e-5F){nx/=length;ny/=length;}else{nx=-next.y();ny=next.x();}
+        const float miter=1.0F/std::max(.5F,std::abs(nx*-next.y()+ny*next.x()));
+        const auto& point=points[i];const float radius=point.width*.5F;
+        const float inner=std::max(0.0F,radius-fringe*.5F),outer=radius+fringe*.5F;
+        const auto vertex=[&](float offset,SkColor color){return Vertex{SkPoint::Make(float(point.x)+nx*miter*offset,float(point.y)+ny*miter*offset),color};};
+        const auto solid=colorAt(point.opacity*std::min(1.0F,point.width/fringe)),clear=colorAt(0);
+        sections.push_back({vertex(outer,clear),vertex(inner,solid),vertex(-inner,solid),vertex(-outer,clear)});
+        if(i)for(std::size_t j=0;j<3;++j)quad(sections[i-1][j],sections[i-1][j+1],sections[i][j],sections[i][j+1]);
+    }
+    constexpr unsigned capSteps=12;
+    for(const bool head:{false,true}){
+        const auto index=head?points.size()-1:0;const auto& point=points[index];
+        const auto tangent=head?direction(index-1,index):direction(0,1);
+        const float base=std::atan2(tangent.x(),-tangent.y());
+        const auto solid=colorAt(point.opacity*std::min(1.0F,point.width/fringe)),clear=colorAt(0);
+        const Vertex center{SkPoint::Make(float(point.x),float(point.y)),solid};
+        const float inner=std::max(0.0F,point.width*.5F-fringe*.5F),outer=point.width*.5F+fringe*.5F;
+        auto lastInner=sections[index][1],lastOuter=sections[index][0];
+        for(unsigned k=1;k<=capSteps;++k){
+            const float angle=base+(head?-1:1)*3.14159265358979323846F*float(k)/capSteps;
+            Vertex nextInner{SkPoint::Make(float(point.x)+std::cos(angle)*inner,float(point.y)+std::sin(angle)*inner),solid};
+            Vertex nextOuter{SkPoint::Make(float(point.x)+std::cos(angle)*outer,float(point.y)+std::sin(angle)*outer),clear};
+            if(k==capSteps){nextInner=sections[index][2];nextOuter=sections[index][3];}
+            triangle(center,lastInner,nextInner);quad(lastInner,lastOuter,nextInner,nextOuter);
+            lastInner=nextInner;lastOuter=nextOuter;
+        }
+    }
+    const auto mesh=SkVertices::MakeCopy(SkVertices::kTriangles_VertexMode,static_cast<int>(positions.size()),positions.data(),nullptr,colors.data());
+    if(mesh)canvas.drawVertices(mesh,SkBlendMode::kModulate,paint);
+}
 void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
     SkPaint paint;paint.setAntiAlias(true);paint.setStrokeWidth(1.5F);
     const auto drawOutline=[&](const SelectionOutline& outline,bool candidate) {
@@ -709,28 +764,8 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
                                      effectiveAlpha}, nullptr);
         }
         if (contour.fadingTrail) {
-            // Captured per-contour paint keeps old laser/eraser tails independent
-            // of the next selected tool's global preview tint.
-            const auto& points = contour.fadingTrail->points;
-            const auto colorAt = [&](float life) {
-                return SkColor4f{contour.red,contour.green,contour.blue,
-                    std::clamp(contour.alpha*contour.opacity*life,0.0F,1.0F)};
-            };
-            SkPaint trailPaint;trailPaint.setAntiAlias(true);
-            trailPaint.setStyle(SkPaint::kStroke_Style);trailPaint.setStrokeCap(SkPaint::kRound_Cap);
-            if (points.size()==1) {
-                trailPaint.setStyle(SkPaint::kFill_Style);trailPaint.setColor4f(colorAt(points[0].opacity),nullptr);
-                canvas->drawCircle(float(points[0].x),float(points[0].y),points[0].width*.5F,trailPaint);
-            }
-            for(std::size_t i=1;i<points.size();++i){
-                const auto& a=points[i-1];const auto& b=points[i];
-                const SkPoint ends[]{SkPoint::Make(float(a.x),float(a.y)),SkPoint::Make(float(b.x),float(b.y))};
-                const SkColor4f colors[]{colorAt(a.opacity),colorAt(b.opacity)};
-                trailPaint.setColor(SK_ColorWHITE);
-                trailPaint.setStrokeWidth(std::max(.05F,(a.width+b.width)*.5F));
-                trailPaint.setShader(SkShaders::LinearGradient(ends,SkGradient{SkGradient::Colors{SkSpan<const SkColor4f>(colors,2),SkTileMode::kClamp},{}}));
-                canvas->drawLine(ends[0],ends[1],trailPaint);
-            }
+            drawFadingTrail(*canvas,*contour.fadingTrail,
+                {contour.red,contour.green,contour.blue,std::clamp(contour.alpha*contour.opacity,0.0F,1.0F)});
         } else if (contour.roundStroke) {
             const auto& stroke = *contour.roundStroke;
             if (stroke.points.empty() || !std::isfinite(stroke.radius) || stroke.radius <= 0) return;

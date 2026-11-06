@@ -79,6 +79,8 @@ std::pair<std::size_t, std::size_t> compactRange(const ReferenceTraversalEntry& 
 void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
                          SkiaTextResources* textResources, ImageResourceResolver* images,
                          const SkPath* preparedVectorPath=nullptr){
+    SkAutoCanvasRestore isolatedMask(&canvas,false);
+    if(!entry.record.eraseMasks.empty())canvas.saveLayer(nullptr,nullptr);
     const auto& t=entry.record.transform;
     const bool identity=t.a==1.0&&t.b==0.0&&t.c==0.0&&t.d==1.0&&t.tx==0.0&&t.ty==0.0;
     if(identity){drawValidatedIsolatedEntryToSkCanvas(canvas,entry,nullptr,nullptr,nullptr,false,nullptr,images,textResources,preparedVectorPath);return;}
@@ -748,9 +750,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             gpu.touch(true);auto* material=job.surface->getCanvas();material->save();
             const auto& t=entry.record.transform;
             material->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
-            compositeCompactCoverageToSkCanvas(*material,*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
+            // Erase this stroke's isolated coverage before material composition.
+            // Clearing the accumulated tile would also remove shapes/images
+            // already underneath the stroke and expose the white tile backdrop.
             if (!entry.record.eraseMasks.empty())
-                drawEraseMasksToSkCanvas(*material, entry);
+                drawEraseMasksToSkCanvas(*draw, entry);
+            compositeCompactCoverageToSkCanvas(*material,*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);
             material->restore();
         }else{
 #if defined(AXIOM_ENABLE_FRAME_TIMING)

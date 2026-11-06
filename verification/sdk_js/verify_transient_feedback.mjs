@@ -42,6 +42,9 @@ try{
  await page.mouse.move(180,450);await page.mouse.down();for(const x of [260,340,420,500,580]){await page.mouse.move(x,450);await page.waitForTimeout(70);}await page.mouse.up();await page.waitForTimeout(60);
  const laser=await sample([[260,450],[540,450]]);result.observations.laserAgeGradient=laser;
  result.checks.laserOlderPartFadesFirst=laser[0][1]>laser[1][1]+30&&laser[1][1]<230;
+ const profile=await sample(Array.from({length:281},(_,i)=>[280+i,450]));
+ const maxRebound=Math.max(...profile.slice(1).map((p,i)=>p[1]-profile[i][1]));
+ result.observations.laserJointMaxRebound=maxRebound;result.checks.noLaserJointDots=maxRebound<=4;
  await page.waitForTimeout(1000);result.checks.laserFullyDisappears=(await sample([[540,450]]))[0][1]>250;const idleBefore=await page.evaluate(()=>({draws:fxDraws,rafs:fxRafs}));await page.waitForTimeout(200);const idleAfter=await page.evaluate(()=>({draws:fxDraws,rafs:fxRafs}));result.observations.idle={idleBefore,idleAfter};result.checks.noIdleRedraw=idleBefore.draws===idleAfter.draws&&idleBefore.rafs===idleAfter.rafs;
  await page.mouse.move(200,450);await page.mouse.down();await page.mouse.move(300,450);await page.waitForTimeout(900);await page.mouse.move(600,450,{steps:5});await page.waitForTimeout(50);
  const resumed=await sample([[570,450]]);result.observations.laserResumed=resumed;result.checks.laserResumesAfterHeldPause=resumed[0][1]<230;

@@ -1104,9 +1104,40 @@ void checkRetirementCells(){
 }
 #endif
 
+void checkErasedInkOverShapeNavigation() {
+    for(bool filled:{false,true})for(unsigned revision:{2U,4U}){
+        semantic::ObjectRecord object;object.id=ObjectId::fromUint64(99001);
+        object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+        object.content=semantic::ShapeContent{0,256,128};
+        object.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+        const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+        ReferenceTraversalEntry blue{projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+        auto erased=stroke(99002);
+        auto content=std::get<CompactStrokeReferenceCommand>(erased.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",revision).package.compactConfig;
+        erased.record.content=content;erased.command=CompactStrokeReferenceCommand{content};
+        semantic::EraseMaskGeometry mask;
+        if(filled){semantic::FilledPathMask path;path.path.commands={semantic::MoveTo{{80,48}},semantic::LineTo{{120,48}},semantic::LineTo{{120,80}},semantic::LineTo{{80,80}},semantic::ClosePath{}};mask=path;}
+        else {semantic::SweptCircleMask sweep;sweep.segments.push_back({{{80,64},12},{{120,64},12},{93.333333,64},{106.666667,64}});mask=sweep;}
+        erased.record.eraseMasks={{ObjectId::fromUint64(99003),mask}};
+        std::vector entries{blue,erased};const auto frame=plan(99004,entries);
+        TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"mixed mask target");
+        SkiaRenderer renderer;RenderCacheOptions options;options.navigationMaxSteps=256;options.navigationMicroseconds=1000000;renderer.setRenderCacheOptions(options);
+        NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=entries;return true;};
+        for(const CanonicalViewportTransform camera: {CanonicalViewportTransform{1,0,0},{1,9,7},{1.25F,-18,-8}}){
+            for(unsigned i=0;;++i){require(navigate(renderer,target,camera,frame.frame,query,false).code==BackendSubmissionCode::kAccepted,"mixed mask navigation");if(!renderer.navigationWork().pending)break;require(i<127,"mixed mask navigation convergence");}
+            const auto actual=pixels(target);const auto x=unsigned(100*camera.scale+camera.translationX),y=unsigned(64*camera.scale+camera.translationY);const auto index=(y*256+x)*4;
+            require(actual[index]<5&&actual[index+1]<5&&actual[index+2]>250,"navigation erase mask cleared the underlying blue object");
+        }
+        require(renderer.submissionCount()==0,"navigation issued a canonical receipt");
+    }
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
+        if(argc==1)checkErasedInkOverShapeNavigation();
 #if defined(G5_TEST_WEBGL)
         if(argc>1&&std::string_view(argv[1])=="--stream-only"){testing::requireReferenceDrawStream();return finishNative(0);}
 #endif

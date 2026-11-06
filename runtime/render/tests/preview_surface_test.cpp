@@ -3,6 +3,7 @@
 #include "canvas/render/skia_surface_provider.hpp"
 
 #include <cassert>
+#include <cstdlib>
 
 namespace {
 void roundSweepPreviewKeepsCapsJoinsAndCancel() {
@@ -31,10 +32,27 @@ void roundSweepPreviewKeepsCapsJoinsAndCancel() {
     assert(provider.readbackRgba(pixels).code == BackendSubmissionCode::kAccepted);
     assert(alpha(15, 32) == 0 && alpha(70, 89) == 0);
 }
+void fadingTrailHasNoJointDots() {
+    using namespace canvas::render;
+    for(bool diagonal:{false,true}){
+    TransparentOverlaySkiaSurfaceProvider provider;
+    assert(provider.resize(128,128).code==BackendSubmissionCode::kAccepted);
+    SkiaRenderer renderer;PreviewSurfaceController controller(renderer,provider);
+    assert(controller.begin(1,42,1,provider.generation()));
+    canvas::ink::BrushPreviewDelta delta;delta.revision=1;delta.hasPaint=true;delta.red=1;delta.green=delta.blue=0;
+    delta.fadingTrail.emplace();
+    for(double x:{16.,40.,64.,88.,112.})delta.fadingTrail->points.push_back({x,diagonal?x:64,12,.4F});
+    assert(controller.update(delta));assert(controller.renderIfDirty());
+    std::vector<std::uint8_t> rgba(128*128*4);
+    assert(provider.readbackRgba(rgba).code==BackendSubmissionCode::kAccepted);
+    for(unsigned x=28;x<100;++x){const auto alpha=rgba[((diagonal?x:64)*128+x)*4+3];assert(std::abs(int(alpha)-102)<=3);}
+    }
+}
 } // namespace
 
 int main() {
     roundSweepPreviewKeepsCapsJoinsAndCancel();
+    fadingTrailHasNoJointDots();
     using namespace canvas::render;
     using canvas::ink::BrushPreviewDelta;
     TransparentOverlaySkiaSurfaceProvider provider;
