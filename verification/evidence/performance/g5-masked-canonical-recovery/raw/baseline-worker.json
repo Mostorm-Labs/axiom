@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/duplicated_erase_navigation.mjs",
+    "out/g5-erase-on/js",
+    "out/g5-masked-baseline-final-on-dpr2",
+    "2",
+    "baseline"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 71.90696037502494,
+  "peak_process_family_rss_kib": 2525904,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "REPRODUCED_CANONICAL_CPU_TAIL"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

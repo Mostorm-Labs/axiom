@@ -1,0 +1,79 @@
+{
+  "command": [
+    "node",
+    "verification/sdk_js/verify_partial_erase_capacity.mjs",
+    "out/g5-masked-off/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-masked-final/capacity.json",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 31.81532337499084,
+  "peak_process_family_rss_kib": 1695728,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "erase",
+    "x": 740,
+    "downMs": 0.8384169999990263,
+    "upMs": 57.57829099999799,
+    "settledMs": 328.42349999999715,
+    "moves": {
+      "meanMs": 46.44300089583339,
+      "p95Ms": 51.06837499999892,
+      "maxMs": 545.4498749999984
+    },
+    "pixels": {
+      "canvas": [
+        2000,
+        1400
+      ],
+      "original": 12321,
+      "preview": 0,
+      "committed": 0,
+      "rawMinAlpha": [
+        255,
+        0
+      ],
+      "maxDelta": 0,
+      "previewFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ],
+      "committedFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}
