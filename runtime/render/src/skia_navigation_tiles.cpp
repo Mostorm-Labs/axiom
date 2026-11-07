@@ -390,7 +390,12 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     std::vector<Patch> patches;std::vector<foundation::WorldRect> missing;
     work.coverageComplete=coverage(visible,scene,patches,retained,&missing);
     if(!work.coverageComplete&&retained&&retained->extend&&retained->extend()){
-        retainedValue.bounds=visible;work.coverageComplete=coverage(visible,scene,patches,retained,&missing);
+        // The callback has proved the entire extended rectangle, including
+        // plain-background exposure. Drop the old invocation-scoped region
+        // restriction too; otherwise the proven strips still remain holes.
+        // A plane with mask holes never has an extend callback.
+        retainedValue.bounds=visible;retainedValue.regions={};
+        work.coverageComplete=coverage(visible,scene,patches,retained,&missing);
     }
     // Compose the highest-density valid sources in disjoint regions. A complete
     // coarse plane must never overwrite sharper valid pixels in the overlap.

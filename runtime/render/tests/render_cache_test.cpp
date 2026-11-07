@@ -1877,7 +1877,7 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
-        if(argc==1||(argc>1&&std::string_view(argv[1])=="--regional-mask-only")){checkRegionalWitnessAdmission();checkRegionalMaskProof();checkRegionalMaskFeedback();checkRegionalMaskFeedback(true);checkRegionalMaskTiles();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--regional-mask-only")){checkRegionalWitnessAdmission();checkRegionalMaskProof();checkRegionalMaskFeedback();checkRegionalMaskFeedback(true);checkRegionalMaskTiles();if(argc>1){TestSurface unused;checkSharedCanonicalNavigation(unused);return finishNative(0);}}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-progress-only")){checkMaskedNavigationLevelProgress();checkMaskedNavigationGpuCoverage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
