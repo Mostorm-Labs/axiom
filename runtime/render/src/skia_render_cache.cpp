@@ -13,6 +13,13 @@
 #include <chrono>
 
 namespace canvas::render::internal {
+bool SkiaRenderCache::canRetainCompact(const SkCanvas& canvas,const ReferenceTraversalEntry& entry) const noexcept {
+    // GPU v4 SrcOver material can be retained after an object affine. Keep
+    // CPU Direct's exact quantization and permanent destination-clear masks.
+    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+    return options.gpuCoverageCandidate&&canvas.recordingContext()&&compact&&
+        compact->content.get().stroke.config.algorithmVersion==4&&entry.record.eraseMasks.empty();
+}
 void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
     entries_.clear();coverage_.clear();runs_.clear();tileEntries_.clear();resetPreparation();
     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
@@ -277,7 +284,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 continue;
             }
             const auto& t=entry.record.transform;
-            if(!isolatedInk&&!cacheIndependentCompact(entry)&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
+            if(!isolatedInk&&!canRetainCompact(canvas,entry)&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
                (t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
                 // Direct transformed ink-only material blends onto the actual
                 // backdrop. A transparent per-object cache adds a quantization

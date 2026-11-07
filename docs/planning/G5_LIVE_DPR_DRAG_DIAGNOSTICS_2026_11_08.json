@@ -28,7 +28,7 @@
         "Repair confirmed scratch/resident transform or self-composition defect in its existing owner",
         "Measure public SDK selected-stroke drag with7200samples and8duplicates; separate input/query, preparation/raster, present and budget effects",
         "Compare existing64/192 against a generous256/768MiB private profile on identical source; retain normal finite safety guards",
-        "Repair confirmed translated maskless v4 cache eligibility in shared preparation and draw paths; retain legacy and destination-dependent permanent-mask behavior; reuse existing bounded GPU/cache owner"
+        "Repair confirmed translated maskless v4 GPU cache eligibility in shared preparation and draw paths; keep CPU Direct byte parity, legacy and destination-dependent permanent-mask behavior; reuse existing bounded GPU/cache owner"
       ],
       "forbidden_changes": [
         "Disable identity, generation, semantic or presentation guards",
@@ -47,7 +47,7 @@
         },
         {
           "id": "translated-v4-drag",
-          "oracle": "Nine translucent overlapping v4 strokes with translated copies atDPR1/2/4: independent CPU non-AA pixels, warm unchanged cache hits, only moved source rebuild, no CPU coverage on supported GPU path; legacy and transformed destination-clear masks unchanged",
+          "oracle": "Nine translucent overlapping v4 strokes with translated copies atDPR1/2/4: independent CPU non-AA pixels, warm unchanged cache hits, only moved source rebuild, no CPU coverage on supported GPU path; legacy and transformed destination-clear masks unchanged; strict CPU affine corpus remains byte-identical (the GPU-only qualification must not widen CPU cache eligibility)",
           "expected": "PASS"
         },
         {

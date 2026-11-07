@@ -1773,10 +1773,12 @@ void checkTranslatedV4Drag() {
             const auto frame=demand(99971+n);const auto before=renderer.renderCacheWork();
             require(renderer.renderTransientOverlay(target,frame,&overlay).code==BackendSubmissionCode::kAccepted,"copy drag feedback");
             compare(frame,overlay);const auto after=renderer.renderCacheWork();
+#if defined(G5_TEST_WEBGL)
             require(after.hits>=before.hits+8&&after.rasterizedGroups==before.rasterizedGroups+1&&after.directGroups==before.directGroups,
                     "translated drag bypassed unchanged caches or rerasterized more than its moved source");
-#if defined(G5_TEST_WEBGL)
             require(after.cpuCoverageTiles==before.cpuCoverageTiles&&after.gpuCoverageTiles>before.gpuCoverageTiles,"translated v4 drag escaped to CPU coverage");
+#else
+            require(after.directGroups==before.directGroups+9,"GPU retention changed the strict CPU Direct path");
 #endif
         }
         // A permanent kClear on a transformed standalone entry remains
@@ -1790,6 +1792,13 @@ void checkTranslatedV4Drag() {
             require(result.code==BackendSubmissionCode::kAccepted,"masked legacy copy");compare(f,overlay);}
     }
 }
+#if !defined(G5_TEST_WEBGL)
+void checkTranslatedV4CpuParity() {
+    TestSurface target,reference;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"copy CPU oracle targets");
+    checkAffineStrokes(target,reference);
+}
+#endif
 void checkBodyMaskReuse() {
     PartialUpdateTestSurface target,reference;reference.partial=false;
     require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"body/mask targets");
@@ -2147,7 +2156,11 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-gpu-miss-only")){checkLiveEraseGpuMiss();if(argc>1)return finishNative(0);}
-        if(argc==1||(argc>1&&std::string_view(argv[1])=="--translated-v4-only")){checkTranslatedV4Drag();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--translated-v4-only")){checkTranslatedV4Drag();
+#if !defined(G5_TEST_WEBGL)
+            checkTranslatedV4CpuParity();
+#endif
+            if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-dpr-only")){checkLiveEraseDpr();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--body-mask-only")){checkBodyMaskReuse();checkBodyMaskTileSeams();
 #if defined(G5_TEST_WEBGL)
