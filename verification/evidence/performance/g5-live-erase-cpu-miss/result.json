@@ -1,0 +1,27 @@
+{
+  "schema": "g5-live-erase-cpu-miss-investigation-v1",
+  "status": "BLOCKED_ENDPOINT",
+  "issueSolved": false,
+  "officialGatePassClaimed": false,
+  "code_revision": "3fc41976fae73f7782b843ad406e7d920e36c5c3",
+  "fixture_revision": "3fc41976fae73f7782b843ad406e7d920e36c5c3",
+  "baseline_code_revision": "e939ccc36147704b35e21c9f85a2b8129ff258fb",
+  "qualified_partial_fix": "The admitted v4 live-erase damage-only nonresident-body path now propagates the existing GPU coverage policy,work and budgeted GPU target pool. ExplicitCPU,raster and other algorithm allocation policy remain unchanged.",
+  "remaining_blocker": "Per-round live frame time and Up latency still rise with permanent mask history. The10round128point corpus does not meet the150ms live p95 target within180s. Do not infer overall issue closure from the GPU-miss fix.",
+  "additional_finding": "An extra previously-unqualified GPU v3 damage matrix reports a failed-present invalidation counter assertion while its image comparison passes. It remains unresolved and is not claimed as passed or pre-existing.",
+  "native": {
+    "passed": 1017,
+    "total": 1083,
+    "existing_failures": 66,
+    "new_failures": []
+  },
+  "public_api_change": false,
+  "budgets": {
+    "optional_mib": 32,
+    "shared_mib": 96,
+    "worker_rss_mib": 3072,
+    "worker_seconds": 180
+  },
+  "demo": "http://127.0.0.1:4272/example.html",
+  "demo_scope": "Partial GPU-miss fix only; cumulative endpoint remains blocked."
+}

@@ -1,0 +1,26 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--erase-damage-only",
+  "g5_coverage_probe.js": "c478d3566668d2d89760bc721afdad97f398e79ee5118025f6600961e28d1de2",
+  "g5_coverage_probe.wasm": "bb65ecaf7c212919921e36722ca1c9b372d923a27c95ab400f50f2b62b700822",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "erase invalidation id=966 profile=round-handdrawn revision=3",
+      "stale erase target was partially reused"
+    ],
+    "code": 1,
+    "nativeDone": true,
+    "processExit": 1
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "FAIL"
+}

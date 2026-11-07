@@ -1,0 +1,276 @@
+{
+  "method": "Unique SHA256 of exact function body bytes (not whole-module index assumption);symbol map binds to same relink output. Code section ordering differs; unknown bodies are not attributed.",
+  "profiles": [
+    {
+      "profile": "out/g5-cumulative-128-data/erase-0.cpu.json.gz",
+      "totalSamples": 42915,
+      "uniquelyMatchedHotBodies": [
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 8488,
+          "selfPercent": 19.778632179890483
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 5600,
+          "selfPercent": 13.04905044856111
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 4542,
+          "selfPercent": 10.583711988815098
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 3825,
+          "selfPercent": 8.912967493883258
+        },
+        {
+          "oldIndex": 4242,
+          "newIndex": 4733,
+          "function": "blit_aaa_trapezoid_row(AdditiveBlitter*, int, int, int, int, int, int, int, unsigned char, unsigned char*, bool)",
+          "selfSamples": 587,
+          "selfPercent": 1.3678201095188163
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 477,
+          "selfPercent": 1.1114994757077945
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 452,
+          "selfPercent": 1.0532447862052894
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 446,
+          "selfPercent": 1.0392636607246883
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 410,
+          "selfPercent": 0.9553769078410813
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 399,
+          "selfPercent": 0.9297448444599791
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 393,
+          "selfPercent": 0.9157637189793778
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 369,
+          "selfPercent": 0.859839217056973
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 293,
+          "selfPercent": 0.6827449609693581
+        },
+        {
+          "oldIndex": 623,
+          "newIndex": 628,
+          "function": "SkRect::Bounds(SkSpan<SkPoint const>)",
+          "selfSamples": 293,
+          "selfPercent": 0.6827449609693581
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 286,
+          "selfPercent": 0.6664336479086567
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 275,
+          "selfPercent": 0.6408015845275544
+        },
+        {
+          "oldIndex": 12141,
+          "newIndex": 10378,
+          "function": "std::__2::__function::__func<SkRasterPipeline::compile() const::$_1, std::__2::allocator<SkRasterPipeline::compile() const::$_1>, void (unsigned long, unsigned long, unsigned long, unsigned long)>::operator()(unsigned long&&, unsigned long&&, unsigned long&&, unsigned long&&)",
+          "selfSamples": 268,
+          "selfPercent": 0.6244902714668531
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 267,
+          "selfPercent": 0.6221600838867529
+        },
+        {
+          "oldIndex": 12141,
+          "newIndex": 10378,
+          "function": "std::__2::__function::__func<SkRasterPipeline::compile() const::$_1, std::__2::allocator<SkRasterPipeline::compile() const::$_1>, void (unsigned long, unsigned long, unsigned long, unsigned long)>::operator()(unsigned long&&, unsigned long&&, unsigned long&&, unsigned long&&)",
+          "selfSamples": 204,
+          "selfPercent": 0.4753582663404404
+        }
+      ]
+    },
+    {
+      "profile": "out/g5-cumulative-128-data/erase-1.cpu.json.gz",
+      "totalSamples": 41582,
+      "uniquelyMatchedHotBodies": [
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 7996,
+          "selfPercent": 19.22947429176086
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 5267,
+          "selfPercent": 12.666538406041076
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 4405,
+          "selfPercent": 10.593526044923284
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 3663,
+          "selfPercent": 8.809100091385694
+        },
+        {
+          "oldIndex": 4242,
+          "newIndex": 4733,
+          "function": "blit_aaa_trapezoid_row(AdditiveBlitter*, int, int, int, int, int, int, int, unsigned char, unsigned char*, bool)",
+          "selfSamples": 564,
+          "selfPercent": 1.356356115626954
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 462,
+          "selfPercent": 1.1110576691837815
+        },
+        {
+          "oldIndex": 12147,
+          "newIndex": 11217,
+          "function": "portable::start_pipeline(unsigned long, unsigned long, unsigned long, unsigned long, SkRasterPipelineStage*, SkSpan<SkRasterPipelineContexts::MemoryCtxPatch>, unsigned char*)",
+          "selfSamples": 462,
+          "selfPercent": 1.1110576691837815
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 440,
+          "selfPercent": 1.058150161127411
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 408,
+          "selfPercent": 0.9811937857726901
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 379,
+          "selfPercent": 0.9114520706074744
+        },
+        {
+          "oldIndex": 12607,
+          "newIndex": 11393,
+          "function": "portable::lighten(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 365,
+          "selfPercent": 0.8777836563897841
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 338,
+          "selfPercent": 0.8128517146842383
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 333,
+          "selfPercent": 0.8008272810350633
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 299,
+          "selfPercent": 0.7190611322206725
+        },
+        {
+          "oldIndex": 12655,
+          "newIndex": 11209,
+          "function": "portable::store_8888(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 273,
+          "selfPercent": 0.6565340772449617
+        },
+        {
+          "oldIndex": 12141,
+          "newIndex": 10378,
+          "function": "std::__2::__function::__func<SkRasterPipeline::compile() const::$_1, std::__2::allocator<SkRasterPipeline::compile() const::$_1>, void (unsigned long, unsigned long, unsigned long, unsigned long)>::operator()(unsigned long&&, unsigned long&&, unsigned long&&, unsigned long&&)",
+          "selfSamples": 268,
+          "selfPercent": 0.6445096435957867
+        },
+        {
+          "oldIndex": 12684,
+          "newIndex": 11576,
+          "function": "portable::clamp_01(portable::Params*, SkRasterPipelineStage*, float, float, float, float)",
+          "selfSamples": 265,
+          "selfPercent": 0.6372949834062815
+        },
+        {
+          "oldIndex": 623,
+          "newIndex": 628,
+          "function": "SkRect::Bounds(SkSpan<SkPoint const>)",
+          "selfSamples": 244,
+          "selfPercent": 0.586792362079746
+        }
+      ]
+    }
+  ]
+}

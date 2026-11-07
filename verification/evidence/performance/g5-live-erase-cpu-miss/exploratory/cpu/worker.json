@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "out/g5-cumulative-erase.mjs",
+    "out/g5-regional-fixed-clean-on/js",
+    "out/g5-cumulative-128-data",
+    "2",
+    "candidate"
+  ],
+  "reason": "timeout",
+  "returncode": -9,
+  "elapsed_s": 180.44119120796677,
+  "peak_process_family_rss_kib": 1737664,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "up-done-2"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

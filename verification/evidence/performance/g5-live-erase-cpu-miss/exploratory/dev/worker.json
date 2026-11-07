@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/cumulative_erase.mjs",
+    "out/g5-live-miss-dev-on/js",
+    "out/g5-live-miss-dev-data",
+    "2",
+    "candidate"
+  ],
+  "reason": "timeout",
+  "returncode": -9,
+  "elapsed_s": 180.48814587498782,
+  "peak_process_family_rss_kib": 1749856,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "erase",
+    "n": 7
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

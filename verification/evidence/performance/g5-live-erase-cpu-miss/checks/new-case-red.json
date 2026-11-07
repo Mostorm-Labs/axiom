@@ -1,0 +1,25 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--live-erase-gpu-miss-only",
+  "g5_coverage_probe.js": "c478d3566668d2d89760bc721afdad97f398e79ee5118025f6600961e28d1de2",
+  "g5_coverage_probe.wasm": "83677a08c44e025587491eb2a71fd54cb7a5711dd7c560c9a31575eea0494160",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "v4 live erase cache miss silently used CPU coverage"
+    ],
+    "code": 1,
+    "nativeDone": true,
+    "processExit": 1
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "FAIL"
+}
