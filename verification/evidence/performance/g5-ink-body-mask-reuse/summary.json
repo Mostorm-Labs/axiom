@@ -1,0 +1,521 @@
+{
+  "scope": "One bounded synthetic run per profile; repeated-until-green sampling is forbidden. Missing final observations from timed-out workers remain explicit. No physical/competitor/scale/Gate acceptance.",
+  "rows": {
+    "off-32-96": {
+      "status": "BLOCKED_ENDPOINT",
+      "runnerStatus": null,
+      "missingFinalObservation": true,
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/cumulative_erase.mjs",
+          "out/g5-live-reclaim-clean-off-32-96/js",
+          "out/g5-live-reclaim-off-32-96-data",
+          "2",
+          "candidate"
+        ],
+        "reason": "timeout",
+        "returncode": -9,
+        "elapsed_s": 180.469004707993,
+        "peak_process_family_rss_kib": 1655184,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "erase",
+          "n": 6
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "rounds": 6,
+      "rows": [
+        {
+          "round": 0,
+          "wholePhaseMs": 9718.600000023842,
+          "upMs": 389.19999998807907,
+          "p95FrameMs": 302.9000000357628,
+          "maxFrameMs": 869.5,
+          "generation": "17",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 1,
+          "wholePhaseMs": 10215.300000011921,
+          "upMs": 461.39999997615814,
+          "p95FrameMs": 314.19999998807907,
+          "maxFrameMs": 800.5999999642372,
+          "generation": "18",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 2,
+          "wholePhaseMs": 11927.600000023842,
+          "upMs": 507.39999997615814,
+          "p95FrameMs": 353.0999999642372,
+          "maxFrameMs": 805,
+          "generation": "19",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 3,
+          "wholePhaseMs": 13417.900000035763,
+          "upMs": 494.10000002384186,
+          "p95FrameMs": 459.89999997615814,
+          "maxFrameMs": 905,
+          "generation": "20",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 4,
+          "wholePhaseMs": 15015.600000023842,
+          "upMs": 484.80000001192093,
+          "p95FrameMs": 485.30000001192093,
+          "maxFrameMs": 869.8999999761581,
+          "generation": "21",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 5,
+          "wholePhaseMs": 15675.800000011921,
+          "upMs": 484.5999999642372,
+          "p95FrameMs": 581.8000000119209,
+          "maxFrameMs": 972.0999999642372,
+          "generation": "22",
+          "checks": true,
+          "oneCommit": true
+        }
+      ],
+      "checks": true,
+      "sourceCommit": "ce5425e08d37384189eef298a7227126ff21ce17",
+      "sourceDirty": false,
+      "buildDirty": false,
+      "sourceStable": true,
+      "artifactStable": true,
+      "maxP95FrameMs": 581.8000000119209,
+      "maxFrameMs": 972.0999999642372,
+      "maxUpMs": 507.39999997615814,
+      "canonicalAttemptCount": 0,
+      "canonicalCounts": null,
+      "errors": null,
+      "navigationGapsMs": null
+    },
+    "on-32-96": {
+      "status": "BLOCKED_ENDPOINT",
+      "runnerStatus": null,
+      "missingFinalObservation": true,
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/cumulative_erase.mjs",
+          "out/g5-live-reclaim-clean-on-32-96/js",
+          "out/g5-live-reclaim-on-32-96-data",
+          "2",
+          "candidate"
+        ],
+        "reason": "timeout",
+        "returncode": -9,
+        "elapsed_s": 180.5817834159825,
+        "peak_process_family_rss_kib": 1850704,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "erase",
+          "n": 7
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "rounds": 7,
+      "rows": [
+        {
+          "round": 0,
+          "wholePhaseMs": 10554.599999964237,
+          "upMs": 400.80000001192093,
+          "p95FrameMs": 320.2999999523163,
+          "maxFrameMs": 876.6999999880791,
+          "generation": "17",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 1,
+          "wholePhaseMs": 10578.199999988079,
+          "upMs": 520.6999999880791,
+          "p95FrameMs": 321,
+          "maxFrameMs": 793.0999999642372,
+          "generation": "18",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 2,
+          "wholePhaseMs": 12143.900000035763,
+          "upMs": 460.89999997615814,
+          "p95FrameMs": 385.39999997615814,
+          "maxFrameMs": 813.3000000119209,
+          "generation": "19",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 3,
+          "wholePhaseMs": 36741.0,
+          "upMs": 1288.199999988079,
+          "p95FrameMs": 1367.800000011921,
+          "maxFrameMs": 3406.599999964237,
+          "generation": "20",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 4,
+          "wholePhaseMs": 25563.80000001192,
+          "upMs": 759.0999999642372,
+          "p95FrameMs": 1307,
+          "maxFrameMs": 1932.6000000238419,
+          "generation": "21",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 5,
+          "wholePhaseMs": 21951.5,
+          "upMs": 709.8000000119209,
+          "p95FrameMs": 1153.7999999523163,
+          "maxFrameMs": 1492.300000011921,
+          "generation": "22",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 6,
+          "wholePhaseMs": 25147.30000001192,
+          "upMs": 1013.8000000119209,
+          "p95FrameMs": 1191.0999999642372,
+          "maxFrameMs": 1933.800000011921,
+          "generation": "23",
+          "checks": true,
+          "oneCommit": true
+        }
+      ],
+      "checks": true,
+      "sourceCommit": "ce5425e08d37384189eef298a7227126ff21ce17",
+      "sourceDirty": false,
+      "buildDirty": false,
+      "sourceStable": true,
+      "artifactStable": true,
+      "maxP95FrameMs": 1367.800000011921,
+      "maxFrameMs": 3406.599999964237,
+      "maxUpMs": 1288.199999988079,
+      "canonicalAttemptCount": 312,
+      "canonicalCounts": {
+        "cpu_coverage_tiles": 0,
+        "gpu_coverage_tiles": 3136,
+        "coverage_no_gpu_context": 0,
+        "coverage_cpu_policy": 0,
+        "coverage_target_fallback": 0
+      },
+      "errors": null,
+      "navigationGapsMs": null
+    },
+    "off-32-192": {
+      "status": "BLOCKED_ENDPOINT",
+      "runnerStatus": "BLOCKED_ENDPOINT",
+      "missingFinalObservation": false,
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/cumulative_erase.mjs",
+          "out/g5-live-reclaim-clean-off-32-192/js",
+          "out/g5-live-reclaim-off-32-192-data",
+          "2",
+          "candidate"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 109.86138833296718,
+        "peak_process_family_rss_kib": 1827920,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "BLOCKED_ENDPOINT"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "rounds": 10,
+      "rows": [
+        {
+          "round": 0,
+          "wholePhaseMs": 5098.899999976158,
+          "upMs": 415.39999997615814,
+          "p95FrameMs": 74.69999998807907,
+          "maxFrameMs": 316.69999998807907,
+          "generation": "17",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 1,
+          "wholePhaseMs": 5569.0,
+          "upMs": 632.6000000238419,
+          "p95FrameMs": 86.40000003576279,
+          "maxFrameMs": 342.7999999523163,
+          "generation": "18",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 2,
+          "wholePhaseMs": 6569.5,
+          "upMs": 711.2000000476837,
+          "p95FrameMs": 151.89999997615814,
+          "maxFrameMs": 415.80000001192093,
+          "generation": "19",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 3,
+          "wholePhaseMs": 8107.0,
+          "upMs": 707.2999999523163,
+          "p95FrameMs": 170.10000002384186,
+          "maxFrameMs": 661.8999999761581,
+          "generation": "20",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 4,
+          "wholePhaseMs": 7003.5,
+          "upMs": 733.6999999880791,
+          "p95FrameMs": 139.60000002384186,
+          "maxFrameMs": 440.4000000357628,
+          "generation": "21",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 5,
+          "wholePhaseMs": 7074.799999952316,
+          "upMs": 791.1999999880791,
+          "p95FrameMs": 121.40000003576279,
+          "maxFrameMs": 477.5999999642372,
+          "generation": "22",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 6,
+          "wholePhaseMs": 8378.399999976158,
+          "upMs": 714.9000000357628,
+          "p95FrameMs": 201.89999997615814,
+          "maxFrameMs": 495,
+          "generation": "23",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 7,
+          "wholePhaseMs": 8982.100000023842,
+          "upMs": 849.3999999761581,
+          "p95FrameMs": 182,
+          "maxFrameMs": 499.39999997615814,
+          "generation": "24",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 8,
+          "wholePhaseMs": 10079.399999976158,
+          "upMs": 854.0999999642372,
+          "p95FrameMs": 255.70000004768372,
+          "maxFrameMs": 494.19999998807907,
+          "generation": "25",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 9,
+          "wholePhaseMs": 10857.100000023842,
+          "upMs": 1545.2000000476837,
+          "p95FrameMs": 260.10000002384186,
+          "maxFrameMs": 523.4000000357628,
+          "generation": "26",
+          "checks": true,
+          "oneCommit": true
+        }
+      ],
+      "checks": true,
+      "sourceCommit": "ce5425e08d37384189eef298a7227126ff21ce17",
+      "sourceDirty": false,
+      "buildDirty": false,
+      "sourceStable": true,
+      "artifactStable": true,
+      "maxP95FrameMs": 260.10000002384186,
+      "maxFrameMs": 661.8999999761581,
+      "maxUpMs": 1545.2000000476837,
+      "canonicalAttemptCount": 0,
+      "canonicalCounts": null,
+      "errors": [],
+      "navigationGapsMs": {
+        "before-erasing": 50.60000002384186,
+        "after-erasing": 879.8000000119209,
+        "after-erasing-hot": 663.5
+      }
+    },
+    "off-64-192": {
+      "status": "MEASURED",
+      "runnerStatus": "MEASURED",
+      "missingFinalObservation": false,
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/cumulative_erase.mjs",
+          "out/g5-live-reclaim-clean-off-64-192/js",
+          "out/g5-live-reclaim-off-64-192-data",
+          "2",
+          "candidate"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 80.02627370797563,
+        "peak_process_family_rss_kib": 1990016,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "rounds": 10,
+      "rows": [
+        {
+          "round": 0,
+          "wholePhaseMs": 3711.2999999523163,
+          "upMs": 390.7999999523163,
+          "p95FrameMs": 31.30000001192093,
+          "maxFrameMs": 294.10000002384186,
+          "generation": "17",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 1,
+          "wholePhaseMs": 3641.300000011921,
+          "upMs": 460.0999999642372,
+          "p95FrameMs": 27.19999998807907,
+          "maxFrameMs": 311,
+          "generation": "18",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 2,
+          "wholePhaseMs": 4291.300000011921,
+          "upMs": 536.5,
+          "p95FrameMs": 52.09999996423721,
+          "maxFrameMs": 330.69999998807907,
+          "generation": "19",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 3,
+          "wholePhaseMs": 4761.800000011921,
+          "upMs": 620.0999999642372,
+          "p95FrameMs": 47.40000003576279,
+          "maxFrameMs": 440.39999997615814,
+          "generation": "20",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 4,
+          "wholePhaseMs": 4234.600000023842,
+          "upMs": 641.2999999523163,
+          "p95FrameMs": 47.299999952316284,
+          "maxFrameMs": 464.80000001192093,
+          "generation": "21",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 5,
+          "wholePhaseMs": 4297.699999988079,
+          "upMs": 629.5,
+          "p95FrameMs": 39.60000002384186,
+          "maxFrameMs": 452.0999999642372,
+          "generation": "22",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 6,
+          "wholePhaseMs": 5516.5,
+          "upMs": 666.5,
+          "p95FrameMs": 89.30000001192093,
+          "maxFrameMs": 448.80000001192093,
+          "generation": "23",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 7,
+          "wholePhaseMs": 5832.0,
+          "upMs": 845.5,
+          "p95FrameMs": 99.10000002384186,
+          "maxFrameMs": 500.80000001192093,
+          "generation": "24",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 8,
+          "wholePhaseMs": 5857.100000023842,
+          "upMs": 778.9000000357628,
+          "p95FrameMs": 88.39999997615814,
+          "maxFrameMs": 510.69999998807907,
+          "generation": "25",
+          "checks": true,
+          "oneCommit": true
+        },
+        {
+          "round": 9,
+          "wholePhaseMs": 7043.699999988079,
+          "upMs": 837.8000000119209,
+          "p95FrameMs": 121,
+          "maxFrameMs": 800.1999999880791,
+          "generation": "26",
+          "checks": true,
+          "oneCommit": true
+        }
+      ],
+      "checks": true,
+      "sourceCommit": "ce5425e08d37384189eef298a7227126ff21ce17",
+      "sourceDirty": false,
+      "buildDirty": false,
+      "sourceStable": true,
+      "artifactStable": true,
+      "maxP95FrameMs": 121,
+      "maxFrameMs": 800.1999999880791,
+      "maxUpMs": 845.5,
+      "canonicalAttemptCount": 0,
+      "canonicalCounts": null,
+      "errors": [],
+      "navigationGapsMs": {
+        "before-erasing": 50.5,
+        "after-erasing": 861.9000000357628,
+        "after-erasing-hot": 679.5999999642372
+      }
+    }
+  }
+}

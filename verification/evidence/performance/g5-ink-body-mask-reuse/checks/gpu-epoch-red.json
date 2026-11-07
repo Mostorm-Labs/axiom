@@ -1,0 +1,26 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--body-mask-only",
+  "g5_coverage_probe.js": "1550b143bdb92f0a225fff834a00ba1e617539d4cbc8aff1a82a3806e84a0699",
+  "g5_coverage_probe.wasm": "15a1d63c44f637576df46cbfa2fd405c55c8cc91879cbbcaef0d45ca95908956",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "AXIOM_INK_CACHE_DENIED {\"stage\":\"layers\",\"painted\":true,\"used\":753793}",
+      "std::bad_alloc"
+    ],
+    "code": 1,
+    "nativeDone": true,
+    "processExit": 1
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "FAIL"
+}

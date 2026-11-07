@@ -1,0 +1,25 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--body-mask-only",
+  "g5_coverage_probe.js": "19c8a62c8240daca4c5b84a161ba9dd772e32d41000e21bf9f9a8e6a32a2d08d",
+  "g5_coverage_probe.wasm": "0c158b81a6e1ac7e611a0a49ee55c879ec24ba3a417c5f28c68adfc00d0e9065",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "live resource denial did not request navigation reclamation"
+    ],
+    "code": 1,
+    "nativeDone": true,
+    "processExit": 0
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "FAIL"
+}
