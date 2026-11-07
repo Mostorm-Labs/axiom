@@ -78,7 +78,9 @@ if(AXIOM_BUILD_G5_COVERAGE_PROBE)
   target_link_libraries(g5_coverage_probe PRIVATE canvas_runtime_render)
   target_include_directories(g5_coverage_probe PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
   target_compile_definitions(g5_coverage_probe PRIVATE G5_TEST_WEBGL=1)
-  target_compile_options(g5_coverage_probe PRIVATE -fexceptions)
+  # The accepted Skia SDK omits RTTI; the private SkNoDrawCanvas oracle
+  # must use the same policy. This target is never a consumer artifact.
+  target_compile_options(g5_coverage_probe PRIVATE -fexceptions -fno-rtti)
   target_compile_features(g5_coverage_probe PRIVATE cxx_std_20)
   target_link_options(g5_coverage_probe PRIVATE -fexceptions -sASYNCIFY=1 -sMODULARIZE=1 -sEXPORT_NAME=createCacheProbe -sENVIRONMENT=web -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXIT_RUNTIME=1)
 endif()
