@@ -1,0 +1,81 @@
+{
+  "task": "G5-LIVE-ERASE-GPU-POLICY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "23d5b2f716bd1998fb4f6ed7b4a1828ca404e531",
+    "relation": "ancestor"
+  },
+  "authorization": "User reports4271 unresponsive after continuing local erasures and asks to investigate CPU render and source rebuild possibilities; existing performance repair authorization continues.",
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+    "docs/planning/sdk/js-v1-contract.md",
+    "docs/planning/G5_V4_GPU_COVERAGE_2026_11_07.json"
+  ],
+  "diagnosis": {
+    "corpus": "7200samples,15near-overlapping duplicates,DPR2;repeat128point live erasures",
+    "red": "First/second live phase53.9/51.8seconds;Up396.7/833.5ms;canonicalCPUcoverage0ms afterUp;180second worker stops during third erase. Exact-byte matched leaf bodies identify portable clamp_01/store_8888/lighten CPU raster pipeline in sampled live phase.",
+    "missing_policy": "drawDamagedInk cache miss ->drawInkBodyToSkCanvas ->drawCommand default compatibleCoverage=false, bypassing already qualified v4 GPU coverage."
+  },
+  "scope": {
+    "owner": "Existing shared SkiaRenderCache damage-only miss and shared private drawing helper",
+    "change": "Propagate existing enabled GPU coverage policy for v4 damage body misses only; reuse existing budgeted coverage target pool and report actualCPU/GPU counters.",
+    "api_impact": "No consumer JS/DLL API,semantic,Brush or operation changes. Private render helper adds optional policy/work arguments.",
+    "preserve": [
+      "ExplicitCPU policy",
+      "raster targets",
+      "v2/v3 policy",
+      "canonicalCPU independent oracle",
+      "original device grid,mask/layer order,bounds and generation",
+      "32MiB soft/96MiB shared limits"
+    ],
+    "deferred": [
+      "Ink preview GPU migration",
+      "Other navigation CPU policies",
+      "Semantic hit-target/no-op redesign"
+    ]
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required": [
+      "ActualChrome/Ganesh RED and GREEN:forced no-resident source during incremental erase; GPUenabled v4 emits GPU tiles,explicitCPU and raster remainCPU;independent geometricAA/backdrop/permanent+transient mask checks",
+      "Public rootSDK cumulative erasure runner:bounded10rounds128samples,navaftererases;phase/move/RAF/Up/canonical/quiescence/state+receipt counters,exact artifact identity and source fingerprint;no intrusive snapshots",
+      "Cold/hot previous two-erase navigation nonregression",
+      "Native full failure-name comparison against1016/1082 and66existing names;G5Node42 and119boundary;actualGPU existing modes",
+      "Clean matching ordinary/diagnostic SDK artifacts,new isolated demo,durable code/evidence commits and push"
+    ],
+    "forbidden": [
+      "GPU semantic hit/no-op decisions",
+      "Changing canonical geometry/masks/IDs",
+      "New platform renderer/cache owner",
+      "Budget expansion",
+      "Descriptor/dependency lock or old Gate edits",
+      "Claiming overall issue solved from one subpath"
+    ],
+    "terminal_success": [
+      "Eligible damage misses avoidCPU coverage;explicitCPU fallback remains correct",
+      "Cumulative corpus finishes180second/3GiB worker;input receipt invariants hold;live RAF p95<150ms",
+      "No new native failures;actualGPU interior/AA qualification holds",
+      "Durable evidence and new demo ready for control review only"
+    ],
+    "terminal_blockers": [
+      "Authority conflict",
+      "GPU correctness regression",
+      "Endpoint remains blocked by separately evidenced semantic/mask/other work",
+      "Locked SDK/environment unavailable"
+    ],
+    "hosted": {
+      "required": [],
+      "optional": [
+        "Physical trackpad acceptance",
+        "Otherplatform ABI",
+        "OfficialGate/P34"
+      ]
+    }
+  }
+}

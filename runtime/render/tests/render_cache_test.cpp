@@ -1584,9 +1584,10 @@ class PartialUpdateTestSurface final : public SkiaSurfaceProvider {
     std::uint64_t cpuCopyCount()const noexcept override{return target_.cpuCopyCount();}
     std::uint64_t presentCount()const noexcept override{return target_.presentCount();}
 };
-void checkCapacityBoundedEraseDamage() {
+void checkCapacityBoundedEraseDamage(bool onlyV3=false) {
   const std::pair<std::string_view,unsigned> brushes[]={{"round-handdrawn",2},{"round-handdrawn",3},{"round-handdrawn",4},{"marker-compact-v1",2},{"marker-compact-v1",3},{"marker-compact-v1",4},{"crayon-wax-v1",3},{"chalk-compact-v1",3},{"watercolor-lite-v1",3}};
   for(const auto& [profile,revision]:brushes)for(bool affine:{false,true})for(bool smallEntry:{true,false}) {
+    if(onlyV3&&(profile!="round-handdrawn"||revision!=3))continue;
     PartialUpdateTestSurface target,reference;reference.partial=false;
     require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"erase damage targets");
     SkiaRenderer renderer,oracle;RenderCacheOptions bounded;bounded.maxBytes=smallEntry?160*1024:512*1024;bounded.maxEntryBytes=smallEntry?4096:128*1024;bounded.maxEntries=16;renderer.setRenderCacheOptions(bounded);
@@ -1614,7 +1615,7 @@ void checkCapacityBoundedEraseDamage() {
     target.partial=false;append(3);compare(958);target.partial=true;
     // Non-prefix, source/order/resource/camera and failed-presentation changes
     // must revoke retained-pixel validity even when the next region is tiny.
-    auto mustReplace=[&](unsigned id){const auto before=renderer.renderCacheWork().eraseFullFrames;compare(id);if(renderer.renderCacheWork().eraseFullFrames<=before)std::cerr<<"erase invalidation id="<<id<<" profile="<<profile<<" revision="<<revision<<'\n';require(renderer.renderCacheWork().eraseFullFrames>before,"stale erase target was partially reused");};
+    auto mustReplace=[&](unsigned id){const auto before=renderer.renderCacheWork().eraseFullFrames;compare(id);if(renderer.renderCacheWork().eraseFullFrames<=before)std::cerr<<"erase invalidation id="<<id<<" profile="<<profile<<" revision="<<revision<<" full_before="<<before<<" full_after="<<renderer.renderCacheWork().eraseFullFrames<<" damage_after="<<renderer.renderCacheWork().eraseDamageFrames<<'\n';require(renderer.renderCacheWork().eraseFullFrames>before,"stale erase target was partially reused");};
     append(4);compare(959);
     for(std::size_t i=1;i<sources.size();++i)std::get<semantic::SweptCircleMask>(sources[i].presentationEraseMasks[0].geometry).segments.pop_back();mustReplace(960);
     std::swap(sources[1],sources[2]);mustReplace(961);
@@ -1685,6 +1686,35 @@ bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std:
     for(std::size_t i=0;i<actual.size();++i)if(!edges[i/4]&&std::abs(int(actual[i])-int(expected[i]))>2){
         if(report)std::cerr<<"non-AA mismatch pixel="<<i/4<<" channel="<<i%4<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';return false;}
     return true;
+}
+void checkLiveEraseGpuMiss() {
+ for(bool gpu:{true,false}) {
+    PartialUpdateTestSurface target,reference;reference.partial=false;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"live GPU miss targets");
+    SkiaRenderer renderer,oracle;RenderCacheOptions opts;opts.maxBytes=160*1024;opts.maxEntryBytes=4096;opts.gpuCoverageCandidate=gpu;renderer.setRenderCacheOptions(opts);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    semantic::ObjectRecord background;background.id=ObjectId::fromUint64(99900);background.kind=semantic::ObjectKind::kShape;background.kind_version=1;background.content=semantic::ShapeContent{0,256,128};background.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+    const auto projected=projectRuntimeScene({&background,1},semantic::SemanticGeneration{1});
+    const ReferenceTraversalEntry blue{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(background.content)}};
+    auto e=stroke(99901);auto content=std::get<CompactStrokeReferenceCommand>(e.command).content.get();content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.config.size=18;content.stroke.config.thinning=0;content.stroke.config.opacity=.65;content.stroke.knots={{10,64,32768},{246,64,32768}};e.record.content=content;e.command=CompactStrokeReferenceCommand{content};e.presentationEraseActive=true;
+    semantic::SweptCircleMask old;old.segments.push_back({{{150,62},7},{{150,66},7},{150,63},{150,65}});e.record.eraseMasks={{ObjectId::fromUint64(99902),old}};
+    semantic::SweptCircleMask live;live.segments.push_back({{{120,64},8},{{120,64},8},{120,64},{120,64}});e.presentationEraseMasks={{{},live}};
+    const auto frame=[&](unsigned id){const auto a=plan(id,{blue,e}).frame;const FrameState f{a.viewId,a.camera,a.worldViewport,a.metrics,semantic::SemanticGeneration{999},SceneRevision{999},a.surfaceGeneration,a.metricsGeneration,a.frameId,a.viewportClip};ReferenceDrawList list{f};list.viewportClip={0,0,256,128};list.entries={blue,e};return FramePlan{f,std::move(list)};};
+    auto warm=frame(99903);EditingOverlay overlay(warm.frame);require(renderer.renderTransientOverlay(target,warm,&overlay).code==BackendSubmissionCode::kAccepted,"live GPU miss warm frame");
+    const auto before=renderer.renderCacheWork();
+    for(unsigned i=1;i<=3;++i){auto& trace=std::get<semantic::SweptCircleMask>(e.presentationEraseMasks[0].geometry);if(i==1)trace.segments.clear();trace.segments.push_back({{{119.+i,64},8},{{120.+i,64},8},{119.3+i,64},{119.7+i,64}});
+        auto next=frame(99903+i);require(renderer.renderTransientOverlay(target,next,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,next,&overlay).code==BackendSubmissionCode::kAccepted,"live GPU miss damage frame");
+        const auto work=renderer.renderCacheWork();require(work.eraseDamageFrames==before.eraseDamageFrames+i&&work.eraseFullFrames==before.eraseFullFrames,"GPU miss lost damage gating");
+#if defined(G5_TEST_WEBGL)
+        if(gpu){require(work.gpuCoverageTiles>before.gpuCoverageTiles&&work.cpuCoverageTiles==before.cpuCoverageTiles,"v4 live erase cache miss silently used CPU coverage");auto boundary=e;boundary.record.eraseMasks.insert(boundary.record.eraseMasks.end(),boundary.presentationEraseMasks.begin(),boundary.presentationEraseMasks.end());require(aaEquivalent(pixels(target),pixels(reference),contourEdgeBand(boundary)),"live GPU miss changed pixels outside geometricAA boundary");}
+        else
+#endif
+        {require(work.cpuCoverageTiles>before.cpuCoverageTiles,"explicit CPU live miss lost actual coverage accounting");require(pixels(target)==pixels(reference),"CPU live miss changed full replacement pixels");}
+        const auto image=pixels(target);require(image[(64*256+121)*4]<5&&image[(64*256+121)*4+2]>250&&image[(64*256+150)*4+2]>250,"live GPU miss erased backdrop or leaked mask ink");
+        require(image[(64*256+40)*4+2]<240,"live GPU miss omitted surviving ink");
+    }
+ }
 }
 #if defined(G5_TEST_WEBGL)
 void checkWhiteCoverageBlend() {
@@ -1875,8 +1905,10 @@ int main(int argc,char** argv) {
 #endif
             checkMaskedCanonicalPreparation(true);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--erase-damage-v3-only"){checkCapacityBoundedEraseDamage(true);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-gpu-miss-only")){checkLiveEraseGpuMiss();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--regional-mask-only")){checkRegionalWitnessAdmission();checkRegionalMaskProof();checkRegionalMaskFeedback();checkRegionalMaskFeedback(true);checkRegionalMaskTiles();if(argc>1){TestSurface unused;checkSharedCanonicalNavigation(unused);return finishNative(0);}}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-progress-only")){checkMaskedNavigationLevelProgress();checkMaskedNavigationGpuCoverage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}

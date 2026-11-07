@@ -911,8 +911,9 @@ void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& e
     eraseMasks(canvas, entry.record.eraseMasks);
 }
 void drawInkBodyToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
-    ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
-    drawCommand(canvas,entry,images,text,true,false,nullptr,grid);
+    ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid,
+    CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
+    drawCommand(canvas,entry,images,text,true,false,nullptr,grid,work,compatibleCoverage,targets);
 }
 void drawPresentationEraseMasksToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas,entry.presentationEraseMasks);

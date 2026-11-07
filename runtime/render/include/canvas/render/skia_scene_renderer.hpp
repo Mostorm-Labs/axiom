@@ -75,7 +75,8 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas&,const FramePlan&,
 void drawEraseMasksToSkCanvas(SkCanvas&, const ReferenceTraversalEntry&);
 // Shared command mapping for isolated damage work; masks are applied with the
 // original full-device clip so their AA evaluator is identical to full painting.
-void drawInkBodyToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
+void drawInkBodyToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*,
+    CompactRasterWork* work=nullptr,bool compatibleCoverage=false,CompactCoverageTargets* targets=nullptr);
 void drawPresentationEraseMasksToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&);
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
