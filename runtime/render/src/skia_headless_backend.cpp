@@ -1042,7 +1042,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
         if (transientErase) canvas.saveLayer(nullptr, nullptr);
         bool cached = false;
         if (cache) {
-            try {cached=cache->draw(canvas,plan,entry,isolatedInk || transientErase);}
+            try {cached=cache->draw(canvas,plan,entry,isolatedInk || transientErase || internal::cacheIndependentCompact(entry));}
             catch(const std::bad_alloc&) {cache->clear();}
         }
         if (!cached) {
@@ -1114,7 +1114,7 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
             entry.presentationEraseActive ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         if(cache){
-            try{if(cache->draw(canvas,plan,entry,isolatedInk))continue;}
+            try{if(cache->draw(canvas,plan,entry,isolatedInk || internal::cacheIndependentCompact(entry)))continue;}
             catch(const std::bad_alloc&){cache->clear();}
             cache->noteDirect();
         }

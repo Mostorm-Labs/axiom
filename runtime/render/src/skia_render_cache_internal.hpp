@@ -14,6 +14,12 @@
 #include <unordered_map>
 
 namespace canvas::render::internal {
+// Maskless v4 material is SrcOver and independent of the destination even
+// after an object affine. Do not extend this to legacy destination-clear ink.
+inline bool cacheIndependentCompact(const ReferenceTraversalEntry& entry) noexcept {
+    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+    return compact&&compact->content.get().stroke.config.algorithmVersion==4&&entry.record.eraseMasks.empty();
+}
 // Immutable completed pixels shared by exact presentation and navigation.
 // Both aliases retain this one charged allocation; no framebuffer recapture.
 struct PreparedFrameImage final {
@@ -32,7 +38,7 @@ class SkiaRenderCache final {
     RenderDamage damage{};
     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {});
     // Called only after full plan validation. False executes permanent Direct.
-    bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true);
+    bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true,bool allowBuild=true);
     enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
     Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*);
     bool compositePreparedFrame(SkCanvas&);

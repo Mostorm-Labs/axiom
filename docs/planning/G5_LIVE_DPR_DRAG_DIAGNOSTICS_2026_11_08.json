@@ -1,0 +1,106 @@
+{
+  "task": "G5-LIVE-DPR-DRAG-DIAGNOSTICS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "14d88b6f879bcb92e97cf8c0dfc5c53ca7f4d3b9",
+    "relation": "ancestor"
+  },
+  "authorization": "User reports transient image corruption in both4273/4274 and dragging one long stroke after8duplicates stalls; requests investigation and reconsideration of memory limits.",
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+    "docs/planning/sdk/js-v1-contract.md"
+  ],
+  "scope": {
+    "owner": "Shared Render scratch/resident composition and existing source cache; public-root SDK diagnostic fixtures",
+    "api_impact": "Private render seam and tests only; no consumer JS/DLL API, semantic mutation, brush geometry, dependency lock or prior evidence edits"
+  },
+  "recording_scope": "User media stays local. Observed transient whole-scene shrink and block artifacts around6/20seconds; recovers after terminal presentation. Recording contains15objects; separately reproduce requested8duplicates.",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Reproduce real GPU transient full/damage frames atDPR1/2/4 against independent full CPU geometry/AA oracle",
+        "Repair confirmed scratch/resident transform or self-composition defect in its existing owner",
+        "Measure public SDK selected-stroke drag with7200samples and8duplicates; separate input/query, preparation/raster, present and budget effects",
+        "Compare existing64/192 against a generous256/768MiB private profile on identical source; retain normal finite safety guards",
+        "Repair confirmed translated maskless v4 cache eligibility in shared preparation and draw paths; retain legacy and destination-dependent permanent-mask behavior; reuse existing bounded GPU/cache owner"
+      ],
+      "forbidden_changes": [
+        "Disable identity, generation, semantic or presentation guards",
+        "Unbounded production allocation or silent default-budget promotion",
+        "New platform renderer, document owner, gesture or brush geometry",
+        "Publish user recording/frames",
+        "Modify dependency locks, semantic/snapshot authority or old Gate/evidence"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "live-dpr",
+          "oracle": "DPR1/2/4 cache-miss, resident-hit, mask append/cancel; transparent opacity and independent background; full/damage geometry and non-AA pixels match independent reference",
+          "expected": "PASS"
+        },
+        {
+          "id": "translated-v4-drag",
+          "oracle": "Nine translucent overlapping v4 strokes with translated copies atDPR1/2/4: independent CPU non-AA pixels, warm unchanged cache hits, only moved source rebuild, no CPU coverage on supported GPU path; legacy and transformed destination-clear masks unchanged",
+          "expected": "PASS"
+        },
+        {
+          "id": "regression",
+          "oracle": "Existing qualified GPU modes, full native failure-name comparison to archived1018/1084 with66 inherited failures, G5 Node and boundary checks",
+          "expected": "No new correctness failure"
+        },
+        {
+          "id": "endpoint",
+          "oracle": "Clean matching SDK builds, actual Chrome/Ganesh, public-root live erasure pixel probes and9-stroke drag; exact artifact/source fingerprints; worker bounds180s/3GiB; preserve raw timing, allocation findings and failures",
+          "expected": "Pixel corruption closed; latency classified honestly rather than inferred from idle memory or a larger cap"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Physical user replay",
+        "Other platform ABI",
+        "Official control review"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "RED/GREEN GPU pixel test",
+        "Exact source/artifact identities",
+        "Raw drag/budget observations and regression comparison"
+      ],
+      "corroborative": [
+        "User recording observations",
+        "CPU profiles",
+        "Browser task-manager memory"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Confirmed transient correctness defect fixed and regressed",
+        "Drag and memory causes measured with a reviewable next-step conclusion",
+        "No new regression; isolated matching demo and durable evidence available"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "LOCKED_SDK_ENVIRONMENT_BLOCKER",
+        "UNRESOLVED_RENDER_CORRECTNESS",
+        "MEASURED_ARCHITECTURAL_PERFORMANCE_BOUNDARY",
+        "NEW_HIGH_IMPACT_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "official_gate_pass_claimed": false
+    }
+  }
+}

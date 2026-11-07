@@ -1698,6 +1698,98 @@ bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std:
         if(report)std::cerr<<"non-AA mismatch pixel="<<i/4<<" channel="<<i%4<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';return false;}
     return true;
 }
+void checkLiveEraseDpr() {
+    for(float dpr:{2.F,1.F,4.F})for(float opacity:{.55F,1.F}) {
+        PartialUpdateTestSurface target,reference;
+        require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"DPR live targets");
+        auto e=stroke(99940);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+        c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        c.stroke.config.size=12/dpr;c.stroke.config.thinning=0;c.stroke.config.opacity=opacity;
+        c.stroke.knots={{20/dpr,64/dpr,32768},{236/dpr,64/dpr,32768}};e.command=CompactStrokeReferenceCommand{c};e.record.content=c;
+        e.presentationEraseActive=true;
+        SkiaRenderer renderer,oracle;RenderCacheOptions limits;
+        // Force the full-device scratch/resident-miss path rather than the
+        // separate128px layers. The small ordinary per-object raster fits.
+        limits.maxBytes=128*1024;limits.maxEntryBytes=64*1024;renderer.setRenderCacheOptions(limits);
+        RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+        const auto demand=[&](unsigned id){
+            const auto a=plan(id,{e},target.generation(),{}, {0,0,256/dpr,128/dpr},{},false,dpr);
+            const FrameState f{a.frame.viewId,a.frame.camera,a.frame.worldViewport,a.frame.metrics,
+                semantic::SemanticGeneration{1},SceneRevision{1},a.frame.surfaceGeneration,a.frame.metricsGeneration,a.frame.frameId};
+            ReferenceDrawList list{f};list.viewportClip={0,0,256/dpr,128/dpr};list.entries={e};return FramePlan{f,std::move(list)};
+        };
+        const auto mask=[&](double x){return semantic::EraseMaskRecord{{},semantic::SweptCircleMask{{{{{x/dpr,35/dpr},4/dpr},{{x/dpr,93/dpr},4/dpr},{x/dpr,50/dpr},{x/dpr,75/dpr}}}}};};
+        const auto compare=[&](unsigned id){const auto f=demand(id);EditingOverlay overlay(f.frame);
+            require(renderer.renderTransientOverlay(target,f,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,f,&overlay).code==BackendSubmissionCode::kAccepted,"DPR live frame");
+            auto edge=e;edge.record.transform={dpr,0,0,dpr,0,0};edge.record.eraseMasks=e.presentationEraseMasks;
+            const auto actual=pixels(target),expected=pixels(reference);
+            if(!aaEquivalent(actual,expected,contourEdgeBand(edge))){std::cerr<<"live DPR="<<dpr<<" opacity="<<opacity<<" frame="<<id<<'\n';require(false,"live resident-miss changed device geometry or opacity");}
+        };
+        compare(99941);
+        e.presentationEraseMasks={mask(80)};compare(99942);
+        e.presentationEraseMasks.push_back(mask(130));compare(99943);
+        e.presentationEraseMasks.clear();compare(99944);
+    }
+}
+void checkTranslatedV4Drag() {
+    for(float dpr:{1.F,2.F,4.F}) {
+        PartialUpdateTestSurface target,reference;reference.partial=false;
+        require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"copy drag targets");
+        std::vector<ReferenceTraversalEntry> sources;
+        for(unsigned n=0;n<9;++n){
+            auto entry=stroke(99960+n);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+            c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+            c.stroke.config.size=12/dpr;c.stroke.config.opacity=.41;c.stroke.config.thinning=.4;c.stroke.knots.clear();
+            for(unsigned i=0;i<64;++i)c.stroke.knots.push_back({(100+68*std::sin(i*.19))/dpr,(60+28*std::cos(i*.27))/dpr,static_cast<std::uint16_t>(10000+(i*677)%50000)});
+            entry.command=CompactStrokeReferenceCommand{c};entry.record.content=c;
+            entry.record.transform.tx=(n+1)/dpr;entry.record.transform.ty=(n+1)/dpr;
+            sources.push_back(std::move(entry));
+        }
+        SkiaRenderer renderer,oracle;RenderCacheOptions limits;limits.maxBytes=8*1024*1024;renderer.setRenderCacheOptions(limits);
+        RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+        const auto demand=[&](unsigned id){return plan(id,sources,target.generation(),{}, {0,0,256/dpr,128/dpr},{},false,dpr);};
+        const auto compare=[&](const FramePlan& f,EditingOverlay& overlay){
+            require(oracle.renderTransientOverlay(reference,f,&overlay).code==BackendSubmissionCode::kAccepted,"copy drag oracle");
+            std::vector<std::uint8_t> edges(256*128);
+            for(auto source:sources){auto& t=source.record.transform;t.a*=dpr;t.b*=dpr;t.c*=dpr;t.d*=dpr;t.tx*=dpr;t.ty*=dpr;
+                const auto edge=contourEdgeBand(source);for(std::size_t i=0;i<edges.size();++i)edges[i]|=edge[i];}
+            require(aaEquivalent(pixels(target),pixels(reference),edges),"translated copy changed opacity, self-crossing or non-AA pixels");
+        };
+        auto initial=demand(99970);EditingOverlay overlay(initial.frame);
+        EditingOverlayInput selection;selection.selectedObject=sources.back().record.objectId;
+        selection.selected=true;selection.worldBounds=sources.back().record.worldBounds;
+        require(overlay.update(selection),"copy drag selection");
+        RenderPreparationBudget slice;slice.maxGroups=64;slice.maxCoverageSteps=4096;slice.maxMicroseconds=1000000;
+        for(unsigned attempt=0;;++attempt){const auto result=renderer.renderFrame(target,initial,&overlay,&slice);
+            if(result.code==BackendSubmissionCode::kAccepted)break;
+            require(result.code==BackendSubmissionCode::kRetry&&attempt<128,"copy drag warmup");
+#if defined(G5_TEST_WEBGL)
+            emscripten_sleep(1);
+#endif
+        }
+        compare(initial,overlay);
+        for(unsigned n=0;n<3;++n){
+            sources.back().record.transform.tx+=3/dpr;
+            const auto frame=demand(99971+n);const auto before=renderer.renderCacheWork();
+            require(renderer.renderTransientOverlay(target,frame,&overlay).code==BackendSubmissionCode::kAccepted,"copy drag feedback");
+            compare(frame,overlay);const auto after=renderer.renderCacheWork();
+            require(after.hits>=before.hits+8&&after.rasterizedGroups==before.rasterizedGroups+1&&after.directGroups==before.directGroups,
+                    "translated drag bypassed unchanged caches or rerasterized more than its moved source");
+#if defined(G5_TEST_WEBGL)
+            require(after.cpuCoverageTiles==before.cpuCoverageTiles&&after.gpuCoverageTiles>before.gpuCoverageTiles,"translated v4 drag escaped to CPU coverage");
+#endif
+        }
+        // A permanent kClear on a transformed standalone entry remains
+        // destination-dependent. This optimization cannot isolate that mask.
+        sources.resize(2);sources.back().record.eraseMasks={{{},semantic::SweptCircleMask{{{{{90/dpr,25/dpr},8/dpr},{{90/dpr,100/dpr},8/dpr},{90/dpr,45/dpr},{90/dpr,80/dpr}}}}}};
+        for(unsigned version:{4U,3U}){auto c=std::get<CompactStrokeReferenceCommand>(sources.back().command).content.get();
+            if(version==3U){c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;c.stroke.config.size=12/dpr;c.stroke.config.opacity=.41;}
+            sources.back().command=CompactStrokeReferenceCommand{c};sources.back().record.content=c;
+            auto f=demand(99978+version);const auto result=renderer.renderTransientOverlay(target,f,&overlay);
+            if(result.code!=BackendSubmissionCode::kAccepted)std::cerr<<"masked version="<<version<<" result="<<result.message<<'\n';
+            require(result.code==BackendSubmissionCode::kAccepted,"masked legacy copy");compare(f,overlay);}
+    }
+}
 void checkBodyMaskReuse() {
     PartialUpdateTestSurface target,reference;reference.partial=false;
     require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"body/mask targets");
@@ -2055,6 +2147,8 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-gpu-miss-only")){checkLiveEraseGpuMiss();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--translated-v4-only")){checkTranslatedV4Drag();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-dpr-only")){checkLiveEraseDpr();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--body-mask-only")){checkBodyMaskReuse();checkBodyMaskTileSeams();
 #if defined(G5_TEST_WEBGL)
             checkBodyMaskBudgetFailure();

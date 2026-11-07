@@ -118,3 +118,22 @@ frame diagnostic，OFF 保持 unavailable，不新增公开调试 API。
 所有 readback/export/snapshot 都在 timed navigation 之外。raw GL 内容调用、
 Runtime accepted-submit、精确 receipt 与物理显示延迟保持独立。计数、失败、worker
 上限、source/artifact 身份与清理结果须一起保留。单次通过不是统计性能资格。
+
+## 复制长线拖动与 live DPR 像素诊断
+
+`drag_copies.mjs` 通过公共 root SDK 画7200个样本，复制8份，拖动最后一份48次。
+`drag` 记录同步输入时间、RAF frame间隔、GPU内容调用和最终Operation/receipt；
+`G5_PROFILE=1` 只对拖动阶段录CPU profile，不能混入普通延迟对照。
+
+```sh
+G5_PROFILE=0 python3.12 verification/runners/g5/bounded_worker.py \
+  --prefix out/copies-drag-worker --timeout 180 --rss-mib 3072 -- \
+  node verification/runners/g5/drag_copies.mjs /absolute/path/to/matching-sdk/js out/copies-drag drag 2
+```
+
+将 `drag` 改为 `pixel` 会使用128样本的小场景，在擦除contact仍按下时读取远离
+擦除区域的ROI，检查原有5×5不透明内部像素保持不变，避免仅在抬笔恢复后验收。
+最后参数可为DPR1/2/4。像素捕获与计时分开；`MEASURED` 只代表观察完成且状态
+检查成立，不代表拖动达到性能目标或任何正式Gate通过。
+私有真实GPU测试 `--live-dpr-only` / `--translated-v4-only` 进一步对比独立CPU
+几何/AA oracle，检查半透明、自交、mask和缓存/coverage计数。

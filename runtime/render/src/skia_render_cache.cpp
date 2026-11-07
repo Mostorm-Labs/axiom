@@ -277,7 +277,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 continue;
             }
             const auto& t=entry.record.transform;
-            if(!isolatedInk&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
+            if(!isolatedInk&&!cacheIndependentCompact(entry)&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
                (t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
                 // Direct transformed ink-only material blends onto the actual
                 // backdrop. A transparent per-object cache adds a quantization
@@ -492,7 +492,10 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
     // Reuse a complete resident source when available. A miss never enters the
     // LRU: only the small damage coverage is evaluated on the existing scratch.
     isolated->save();isolated->clipIRect(canvas.getDeviceClipBounds());
-    const bool resident=draw(*isolated,plan,source,true);isolated->restore();
+    // This canvas is scratch_, in physical pixel coordinates. A miss must not
+    // enter draw's builder: it would omit the destination DPR transform and
+    // composite its result back into the same scratch surface a second time.
+    const bool resident=draw(*isolated,plan,source,true,true,false);isolated->restore();
     configureScratch(*isolated,plan,transform);
     if(!resident) {
         isolated->save();isolated->resetMatrix();isolated->clipIRect(canvas.getDeviceClipBounds());isolated->setMatrix(transform);
@@ -681,7 +684,7 @@ void SkiaRenderCache::noteCoverage(const CompactRasterWork& rasterWork){
     work.coverageTargetAllocations+=rasterWork.allocatedTiles;work.coverageTargetReuses+=rasterWork.targetReuses;
     work.gpuInteriorPixels+=rasterWork.gpuInteriorPixels;work.cpuEdgePixels+=rasterWork.cpuEdgePixels;
 }
-bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite){
+bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite,bool allowBuild){
     AXIOM_FRAME_TIMING_SCOPE(drawTiming,cache_draw);
     if(!sourceAdmission_)return false;
     // A synchronous draw may overwrite the scratch used by suspended work.
@@ -715,7 +718,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     // Damage feedback can reuse a complete resident source, but a miss is
     // painted directly under the small destination clip. Never cycle the LRU
     // or create clipped images that could later masquerade as full sources.
-    if(damageOnly_)return false;
+    if(damageOnly_||!allowBuild)return false;
     ++work.misses;
     if(found!=entries_.end()){work.retainedBytes-=found->second.bytes;entries_.erase(found);}
     const auto& r=source.record.transform;
