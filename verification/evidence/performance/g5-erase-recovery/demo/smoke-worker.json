@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "out/g5-erase-demo-smoke.mjs"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 5.031124041997828,
+  "peak_process_family_rss_kib": 1536304,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "url": "http://127.0.0.1:4261/example.html",
+    "errors": [],
+    "checks": {
+      "strokeRetained": true,
+      "noUiError": true,
+      "noPageError": true
+    },
+    "statusText": "1 objects \u00b7 0 selected \u00b7 Zoom 1.00",
+    "status": "MEASURED"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

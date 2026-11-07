@@ -1,0 +1,23 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/dense_erase.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-dpr4-off/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-final/baseline-off-dpr2",
+    "2",
+    "baseline"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 81.78201195801375,
+  "peak_process_family_rss_kib": 1844128,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_EVIDENCE",
+    "error": "Error: repeated erase is not no-op\n    at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/dense_erase.mjs:78:318"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

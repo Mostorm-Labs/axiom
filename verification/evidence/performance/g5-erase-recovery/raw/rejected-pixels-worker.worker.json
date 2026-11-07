@@ -1,0 +1,34 @@
+{
+  "command": [
+    "node",
+    "out/g5-erase-reject-pixels.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-off/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-final/rejected-pixels.json"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 4.68700145900948,
+  "peak_process_family_rss_kib": 1510496,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "checks": {
+      "rejectedNotCommitted": true,
+      "terminalRetired": true,
+      "snapshotUnchanged": true,
+      "exportUnchanged": true,
+      "compositorRestored": true,
+      "errorReported": true,
+      "samePointerRestarts": true,
+      "retryCommits": true,
+      "retryVisible": true,
+      "noDuplicateOrRetryError": true,
+      "undoPixels": true,
+      "noPageErrors": true
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

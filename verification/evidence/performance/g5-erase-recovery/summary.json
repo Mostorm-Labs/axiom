@@ -1,0 +1,1872 @@
+{
+  "candidate-post-edit-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "edits": 8,
+    "navigation": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.399999976158142,
+          "p99": 17.5,
+          "max": 17.5,
+          "mean": 16.61388888872332
+        },
+        "finalReceiptMs": 167.30000001192093
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 16.900000035762787,
+          "p99": 17.5,
+          "max": 17.599999964237213,
+          "mean": 4.184859154929577
+        },
+        "finalReceiptMs": 148.69999998807907
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.399999976158142,
+          "p99": 17.600000023841858,
+          "max": 17.600000023841858,
+          "mean": 16.501388888392185
+        },
+        "finalReceiptMs": 199.89999997615814
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.5,
+          "p99": 17.69999998807907,
+          "max": 17.69999998807907,
+          "mean": 16.52777777777778
+        },
+        "finalReceiptMs": 233
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.399999976158142,
+          "p99": 17.600000023841858,
+          "max": 17.600000023841858,
+          "mean": 16.490277777943348
+        },
+        "finalReceiptMs": 216.5999999642372
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.799999952316284,
+          "p99": 17.5,
+          "max": 17.600000023841858,
+          "mean": 4.169444444485837
+        },
+        "finalReceiptMs": 216.5999999642372
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17,
+          "p99": 17.5,
+          "max": 17.600000023841858,
+          "mean": 4.122569444278876
+        },
+        "finalReceiptMs": 199.80000001192093
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.80000001192093,
+          "p99": 17.399999976158142,
+          "max": 17.600000023841858,
+          "mean": 4.13784722218083
+        },
+        "finalReceiptMs": 216
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 223,
+          "p50": 0,
+          "p95": 16.599999964237213,
+          "p99": 17.30000001192093,
+          "max": 34.700000047683716,
+          "mean": 1.3399103139548023
+        },
+        "finalReceiptMs": 198.89999997615814
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 377,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 16.899999976158142,
+          "max": 17.399999976158142,
+          "mean": 0.7437665783441983
+        },
+        "finalReceiptMs": 133
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 680,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 17.19999998807907,
+          "mean": 0.4130882352590561
+        },
+        "finalReceiptMs": 198.80000001192093
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 515,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 17.30000001192093,
+          "mean": 0.5481553398289727
+        },
+        "finalReceiptMs": 132.39999997615814
+      }
+    ]
+  },
+  "candidate-off-dpr1": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "dpr": 1,
+    "upMs": [
+      59.59999996423721,
+      75,
+      105.5,
+      139.79999995231628,
+      169.39999997615814,
+      197.30000001192093
+    ],
+    "settledMs": [
+      348.39999997615814,
+      365,
+      398.5,
+      431.5999999642372,
+      464.80000001192093,
+      481.60000002384186
+    ],
+    "cpuTaskDeltaSeconds": [
+      0.293126,
+      0.37028900000000053,
+      0.4041490000000003,
+      0.4433910000000001,
+      0.479946,
+      0.5120819999999995
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": true
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": true,
+      "errorReported": true,
+      "retryAccepted": true,
+      "nextCommit": true
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED",
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 68001.60000002384,
+      "lastInputAt": 69186.40000003576,
+      "lastInputEndedAt": 69186.5,
+      "preInputWaitMs": 0.19999998807907104,
+      "inputDispatchSpanMs": 1184.8999999761581,
+      "legacyInputEndOffsetMs": 16.599999964237213,
+      "firstContentResponseMs": 17.399999976158142,
+      "lastInputContentResponseMs": 16,
+      "lastInputToCoarseReceiptMs": 232.19999998807907,
+      "lastInputToLastCoarseReceiptMs": 232.19999998807907,
+      "contentCalls": 570,
+      "clearCalls": 77,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 564,
+        "p50": 0,
+        "p95": 16.69999998807907,
+        "p99": 17.19999998807907,
+        "max": 17.400000035762787,
+        "mean": 2.1290780142055334
+      },
+      "steadyContentGapMs": {
+        "count": 563,
+        "p50": 0,
+        "p95": 16.69999998807907,
+        "p99": 17.19999998807907,
+        "max": 17.400000035762787,
+        "mean": 2.1019538188912303
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 173,
+        "p50": 0,
+        "p95": 1.5,
+        "p99": 10,
+        "max": 108.39999997615814,
+        "mean": 1.1982658974008065
+      },
+      "worstGap": {
+        "started": 68601.69999998808,
+        "ended": 68619.10000002384,
+        "durationMs": 17.400000035762787,
+        "observedCallbackCoveredMs": 1.2000001072883606,
+        "outsideObservedCallbacksMs": 16.199999928474426,
+        "rafIds": [
+          72,
+          74
+        ],
+        "inputIds": [
+          37
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "UNAVAILABLE",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 0,
+      "recognizedRecords": 0,
+      "observedIdentities": [],
+      "firstAcceptedSubmitMs": null,
+      "lastInputAcceptedSubmitMs": null,
+      "acceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyAcceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredGapLowerBoundMs": 1617.3999999761581,
+      "worstGap": null
+    },
+    "allSweepChecks": true
+  },
+  "candidate-off-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "dpr": 4,
+    "upMs": [
+      72.89999997615814,
+      77.09999996423721,
+      106.60000002384186,
+      139.39999997615814,
+      177,
+      201.9000000357628
+    ],
+    "settledMs": [
+      889.0999999642372,
+      916.1999999880791,
+      954.7000000476837,
+      988.1000000238419,
+      1058.199999988079,
+      1076.800000011921
+    ],
+    "cpuTaskDeltaSeconds": [
+      2.2835949999999983,
+      2.614753999999998,
+      2.6906290000000013,
+      2.8822880000000026,
+      3.078412,
+      3.2636579999999924
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": true
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": true,
+      "errorReported": true,
+      "retryAccepted": true,
+      "nextCommit": true
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED",
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 118161.19999998808,
+      "lastInputAt": 119343.80000001192,
+      "lastInputEndedAt": 119344,
+      "preInputWaitMs": 0.30000001192092896,
+      "inputDispatchSpanMs": 1182.800000011921,
+      "legacyInputEndOffsetMs": 15.699999988079071,
+      "firstContentResponseMs": 237,
+      "lastInputContentResponseMs": 15.099999964237213,
+      "lastInputToCoarseReceiptMs": 832.3999999761581,
+      "lastInputToLastCoarseReceiptMs": 832.3999999761581,
+      "contentCalls": 1074,
+      "clearCalls": 60,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 1068,
+        "p50": 0,
+        "p95": 15.800000011920929,
+        "p99": 17.100000023841858,
+        "max": 237,
+        "mean": 1.121441947554381
+      },
+      "steadyContentGapMs": {
+        "count": 1067,
+        "p50": 0,
+        "p95": 15.799999952316284,
+        "p99": 17.100000023841858,
+        "max": 18.600000023841858,
+        "mean": 0.9003748828379373
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 181,
+        "p50": 0,
+        "p95": 4.099999964237213,
+        "p99": 5.5,
+        "max": 646.1000000238419,
+        "mean": 4.182872927649903
+      },
+      "worstGap": {
+        "started": 118161.19999998808,
+        "ended": 118398.19999998808,
+        "durationMs": 237,
+        "observedCallbackCoveredMs": 53.000000059604645,
+        "outsideObservedCallbacksMs": 183.99999994039536,
+        "rafIds": [
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28
+        ],
+        "inputIds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "UNAVAILABLE",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 0,
+      "recognizedRecords": 0,
+      "observedIdentities": [],
+      "firstAcceptedSubmitMs": null,
+      "lastInputAcceptedSubmitMs": null,
+      "acceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyAcceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredGapLowerBoundMs": 2241.100000023842,
+      "worstGap": null
+    },
+    "allSweepChecks": true
+  },
+  "candidate-off-dpr2": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "dpr": 2,
+    "upMs": [
+      59.40000003576279,
+      75.89999997615814,
+      105.30000001192093,
+      137.60000002384186,
+      170.10000002384186,
+      199
+    ],
+    "settledMs": [
+      465.10000002384186,
+      465,
+      499.60000002384186,
+      547.4000000357628,
+      581.6999999880791,
+      614.5
+    ],
+    "cpuTaskDeltaSeconds": [
+      0.39421500000000087,
+      0.5594649999999994,
+      0.5959000000000003,
+      0.6357269999999993,
+      0.6654979999999995,
+      0.7019999999999982
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": true
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": true,
+      "errorReported": true,
+      "retryAccepted": true,
+      "nextCommit": true
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED",
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 69843.10000002384,
+      "lastInputAt": 71019.90000003576,
+      "lastInputEndedAt": 71020,
+      "preInputWaitMs": 0.30000001192092896,
+      "inputDispatchSpanMs": 1176.8999999761581,
+      "legacyInputEndOffsetMs": 16.599999964237213,
+      "firstContentResponseMs": 10.399999976158142,
+      "lastInputContentResponseMs": 16.5,
+      "lastInputToCoarseReceiptMs": 382.7999999523163,
+      "lastInputToLastCoarseReceiptMs": 382.7999999523163,
+      "contentCalls": 2292,
+      "clearCalls": 95,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 2245,
+        "p50": 0,
+        "p95": 0,
+        "p99": 17.099999964237213,
+        "max": 18.599999964237213,
+        "mean": 0.5315367483349314
+      },
+      "steadyContentGapMs": {
+        "count": 2244,
+        "p50": 0,
+        "p95": 0,
+        "p99": 17.099999964237213,
+        "max": 18.599999964237213,
+        "mean": 0.5271390374490922
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 179,
+        "p50": 0,
+        "p95": 1.899999976158142,
+        "p99": 7.800000011920929,
+        "max": 213.5999999642372,
+        "mean": 1.656983239357698
+      },
+      "worstGap": {
+        "started": 70134.60000002384,
+        "ended": 70153.19999998808,
+        "durationMs": 18.599999964237213,
+        "observedCallbackCoveredMs": 1.899999976158142,
+        "outsideObservedCallbacksMs": 16.69999998807907,
+        "rafIds": [
+          36,
+          38
+        ],
+        "inputIds": [
+          19
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "UNAVAILABLE",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 0,
+      "recognizedRecords": 0,
+      "observedIdentities": [],
+      "firstAcceptedSubmitMs": null,
+      "lastInputAcceptedSubmitMs": null,
+      "acceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyAcceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredGapLowerBoundMs": 1759.8999999761581,
+      "worstGap": null
+    },
+    "allSweepChecks": true
+  },
+  "candidate-on-dpr2": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "dpr": 2,
+    "upMs": [
+      66,
+      78.20000004768372,
+      106.19999998807907,
+      138.10000002384186,
+      168.89999997615814,
+      198.89999997615814
+    ],
+    "settledMs": [
+      464.80000001192093,
+      481.30000001192093,
+      513.8000000119209,
+      547.1000000238419,
+      580.1999999880791,
+      598.2999999523163
+    ],
+    "cpuTaskDeltaSeconds": [
+      0.4073600000000006,
+      0.5629849999999994,
+      0.5903100000000006,
+      0.6256000000000004,
+      0.6626159999999999,
+      0.6980970000000006
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": true
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": true,
+      "errorReported": true,
+      "retryAccepted": true,
+      "nextCommit": true
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED",
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 70004.89999997616,
+      "lastInputAt": 71176.60000002384,
+      "lastInputEndedAt": 71176.69999998808,
+      "preInputWaitMs": 0.2999999523162842,
+      "inputDispatchSpanMs": 1171.800000011921,
+      "legacyInputEndOffsetMs": 15.599999964237213,
+      "firstContentResponseMs": 4.800000011920929,
+      "lastInputContentResponseMs": 15.299999952316284,
+      "lastInputToCoarseReceiptMs": 349.0999999642372,
+      "lastInputToLastCoarseReceiptMs": 349.0999999642372,
+      "contentCalls": 2251,
+      "clearCalls": 94,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 2215,
+        "p50": 0,
+        "p95": 0.09999996423721313,
+        "p99": 17.299999952316284,
+        "max": 18.5,
+        "mean": 0.5358916478555305
+      },
+      "steadyContentGapMs": {
+        "count": 2214,
+        "p50": 0,
+        "p95": 0.09999996423721313,
+        "p99": 17.299999952316284,
+        "max": 18.5,
+        "mean": 0.5339656729846789
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 175,
+        "p50": 0,
+        "p95": 1.9000000357627869,
+        "p99": 7.299999952316284,
+        "max": 212.79999995231628,
+        "mean": 1.7342857142857142
+      },
+      "worstGap": {
+        "started": 70358.60000002384,
+        "ended": 70377.10000002384,
+        "durationMs": 18.5,
+        "observedCallbackCoveredMs": 2.800000011920929,
+        "outsideObservedCallbacksMs": 15.699999988079071,
+        "rafIds": [
+          44,
+          46
+        ],
+        "inputIds": [
+          23
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 2
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 73,
+      "recognizedRecords": 76,
+      "observedIdentities": [
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "navigation",
+          "scene": "14",
+          "surface": "1"
+        },
+        {
+          "kind": "canonical",
+          "view": "1",
+          "frame": "447",
+          "semantic": "14",
+          "scene": "14",
+          "camera": "73",
+          "surface": "1",
+          "metrics": "1"
+        }
+      ],
+      "firstAcceptedSubmitMs": 7.300000011920929,
+      "lastInputAcceptedSubmitMs": 15.5,
+      "acceptedGapMs": {
+        "count": 72,
+        "p50": 16.400000035762787,
+        "p95": 18.5,
+        "p99": 22.400000035762787,
+        "max": 22.400000035762787,
+        "mean": 16.488888889551163
+      },
+      "steadyAcceptedGapMs": {
+        "count": 71,
+        "p50": 16.5,
+        "p95": 18.5,
+        "p99": 22.400000035762787,
+        "max": 22.400000035762787,
+        "mean": 16.61830985965863
+      },
+      "censoredGapLowerBoundMs": null,
+      "worstGap": {
+        "started": 70261.39999997616,
+        "ended": 70283.80000001192,
+        "durationMs": 22.400000035762787,
+        "observedCallbackCoveredMs": 7.600000023841858,
+        "outsideObservedCallbacksMs": 14.800000011920929,
+        "rafIds": [
+          32,
+          34
+        ],
+        "inputIds": [
+          17
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 2
+      }
+    },
+    "allSweepChecks": true
+  },
+  "baseline-off-dpr2": {
+    "status": "REPRODUCED_REJECTION_BUG",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 2,
+    "upMs": [
+      73,
+      1034.300000011921,
+      1755.9000000357628,
+      2461.2000000476837,
+      3160.300000011921,
+      3764.2999999523163
+    ],
+    "settledMs": [
+      465.19999998807907,
+      1431.8999999761581,
+      2148.400000035763,
+      2864.800000011921,
+      3565.199999988079,
+      4164.699999988079
+    ],
+    "cpuTaskDeltaSeconds": [
+      0.4066510000000001,
+      1.517328000000001,
+      2.242155999999998,
+      2.949503,
+      3.655823999999999,
+      4.266950999999999
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": false
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": false,
+      "errorReported": true,
+      "retryAccepted": false,
+      "nextCommit": false
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [
+      "AxiomError: DUPLICATE_CONTACT"
+    ],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 84772.39999997616,
+      "lastInputAt": 85943.09999996424,
+      "lastInputEndedAt": 85943.19999998808,
+      "preInputWaitMs": 0.30000001192092896,
+      "inputDispatchSpanMs": 1170.800000011921,
+      "legacyInputEndOffsetMs": 16.600000023841858,
+      "firstContentResponseMs": 3,
+      "lastInputContentResponseMs": 16.5,
+      "lastInputToCoarseReceiptMs": 366.60000002384186,
+      "lastInputToLastCoarseReceiptMs": 366.60000002384186,
+      "contentCalls": 2251,
+      "clearCalls": 94,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 2245,
+        "p50": 0,
+        "p95": 0,
+        "p99": 16.69999998807907,
+        "max": 17.600000023841858,
+        "mean": 0.5288195991038214
+      },
+      "steadyContentGapMs": {
+        "count": 2244,
+        "p50": 0,
+        "p95": 0,
+        "p99": 16.69999998807907,
+        "max": 17.600000023841858,
+        "mean": 0.5277183600659889
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 177,
+        "p50": 0,
+        "p95": 1.7999999523162842,
+        "p99": 7.400000035762787,
+        "max": 213.10000002384186,
+        "mean": 1.6508474568862699
+      },
+      "worstGap": {
+        "started": 84775.39999997616,
+        "ended": 84793,
+        "durationMs": 17.600000023841858,
+        "observedCallbackCoveredMs": 3,
+        "outsideObservedCallbacksMs": 14.600000023841858,
+        "rafIds": [
+          2,
+          4
+        ],
+        "inputIds": [
+          2
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "UNAVAILABLE",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 0,
+      "recognizedRecords": 0,
+      "observedIdentities": [],
+      "firstAcceptedSubmitMs": null,
+      "lastInputAcceptedSubmitMs": null,
+      "acceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyAcceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredGapLowerBoundMs": 1764.4000000357628,
+      "worstGap": null
+    },
+    "allSweepChecks": true
+  },
+  "baseline-post-edit-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "edits": 8,
+    "navigation": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17,
+          "max": 17,
+          "mean": 16.615277777943348
+        },
+        "finalReceiptMs": 166.39999997615814
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 16.700000047683716,
+          "p99": 16.899999976158142,
+          "max": 16.900000035762787,
+          "mean": 4.198591549211825
+        },
+        "finalReceiptMs": 166.5
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.515277778108914
+        },
+        "finalReceiptMs": 199.5999999642372
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17,
+          "p99": 17.599999964237213,
+          "max": 17.599999964237213,
+          "mean": 16.50833333366447
+        },
+        "finalReceiptMs": 200.5
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.19999998807907,
+          "p99": 17.600000023841858,
+          "max": 17.600000023841858,
+          "mean": 16.602777778274483
+        },
+        "finalReceiptMs": 199.5999999642372
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.80000001192093,
+          "p99": 17.200000047683716,
+          "max": 17.80000001192093,
+          "mean": 4.168055555472772
+        },
+        "finalReceiptMs": 216
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.80000001192093,
+          "p99": 17.399999976158142,
+          "max": 17.599999964237213,
+          "mean": 4.166666666666667
+        },
+        "finalReceiptMs": 200.60000002384186
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.899999976158142,
+          "p99": 17.5,
+          "max": 17.700000047683716,
+          "mean": 4.142013889013065
+        },
+        "finalReceiptMs": 199.80000001192093
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 236,
+          "p50": 0,
+          "p95": 16.30000001192093,
+          "p99": 17.400000035762787,
+          "max": 35.5,
+          "mean": 1.2716101695925504
+        },
+        "finalReceiptMs": 216.19999998807907
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 386,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 16.799999952316284,
+          "max": 17.30000001192093,
+          "mean": 0.730310880767249
+        },
+        "finalReceiptMs": 148.4000000357628
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 696,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 17.400000035762787,
+          "mean": 0.40502873559792835
+        },
+        "finalReceiptMs": 198.10000002384186
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 566,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 17.599999964237213,
+          "mean": 0.49787985867830553
+        },
+        "finalReceiptMs": 132
+      }
+    ]
+  },
+  "candidate-off-dpr2-repeat": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "b47781ccf97fcf21d92d72b983ec41aecd57c94d"
+    },
+    "dpr": 2,
+    "upMs": [
+      65.80000001192093,
+      75.30000001192093,
+      105.60000002384186,
+      136.89999997615814,
+      169.29999995231628,
+      199.5999999642372
+    ],
+    "settledMs": [
+      463.5,
+      466.39999997615814,
+      498.4000000357628,
+      531.1999999880791,
+      581.8999999761581,
+      614.8999999761581
+    ],
+    "cpuTaskDeltaSeconds": [
+      0.4031299999999991,
+      0.5565379999999998,
+      0.5893300000000004,
+      0.6273710000000001,
+      0.6621140000000025,
+      0.6974310000000017
+    ],
+    "history": {
+      "undo": true,
+      "redo": true
+    },
+    "noop": {
+      "transientOnly": true,
+      "terminalRetired": true,
+      "receipt": true,
+      "objectsStable": true,
+      "noOperation": true
+    },
+    "cancel": [
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      },
+      {
+        "terminalRetired": true,
+        "noMutation": true,
+        "pixels": true
+      }
+    ],
+    "recovery": {
+      "rejectedNotCommitted": true,
+      "retired": true,
+      "errorReported": true,
+      "retryAccepted": true,
+      "nextCommit": true
+    },
+    "expectedFailureErrors": [
+      "AxiomError: INPUT_REJECTED",
+      "AxiomError: INPUT_REJECTED"
+    ],
+    "retryErrors": [],
+    "feedback": {
+      "version": 2,
+      "status": "OBSERVED",
+      "cameraQualified": false,
+      "eventCount": 72,
+      "firstInputAt": 69815.30000001192,
+      "lastInputAt": 70988.30000001192,
+      "lastInputEndedAt": 70988.5,
+      "preInputWaitMs": 0.19999998807907104,
+      "inputDispatchSpanMs": 1173.199999988079,
+      "legacyInputEndOffsetMs": 16.69999998807907,
+      "firstContentResponseMs": 6.699999988079071,
+      "lastInputContentResponseMs": 0,
+      "lastInputToCoarseReceiptMs": 366,
+      "lastInputToLastCoarseReceiptMs": 366,
+      "contentCalls": 2292,
+      "clearCalls": 95,
+      "maskedCalls": 0,
+      "contentGapMs": {
+        "count": 2205,
+        "p50": 0,
+        "p95": 0,
+        "p99": 16.700000047683716,
+        "max": 17.700000047683716,
+        "mean": 0.5319727891156463
+      },
+      "steadyContentGapMs": {
+        "count": 2204,
+        "p50": 0,
+        "p95": 0,
+        "p99": 16.700000047683716,
+        "max": 17.700000047683716,
+        "mean": 0.5291742286805449
+      },
+      "censoredContentGapLowerBoundMs": null,
+      "rafCallbackMs": {
+        "count": 177,
+        "p50": 0,
+        "p95": 1.699999988079071,
+        "p99": 7.100000023841858,
+        "max": 210.79999995231628,
+        "mean": 1.6418079087289714
+      },
+      "worstGap": {
+        "started": 70387.5,
+        "ended": 70405.20000004768,
+        "durationMs": 17.700000047683716,
+        "observedCallbackCoveredMs": 1.800000011920929,
+        "outsideObservedCallbacksMs": 15.900000035762787,
+        "rafIds": [
+          70,
+          72
+        ],
+        "inputIds": [
+          36
+        ],
+        "longTaskOverlapMs": 0,
+        "enclosingNativeRecords": 0
+      }
+    },
+    "runtime": {
+      "version": 2,
+      "status": "UNAVAILABLE",
+      "cameraQualified": false,
+      "source": "Runtime local accepted submission diagnostic",
+      "acceptedCalls": 0,
+      "recognizedRecords": 0,
+      "observedIdentities": [],
+      "firstAcceptedSubmitMs": null,
+      "lastInputAcceptedSubmitMs": null,
+      "acceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "steadyAcceptedGapMs": {
+        "count": 0,
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "mean": null
+      },
+      "censoredGapLowerBoundMs": 1765,
+      "worstGap": null
+    },
+    "allSweepChecks": true
+  }
+}

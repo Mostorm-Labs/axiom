@@ -1,0 +1,27 @@
+{
+  "command": [
+    "python3.12",
+    "verification/runners/g5/dense_erase_native.py",
+    "out/host/sdk/common/axiom_native_transport_host",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-final/candidate-native.json",
+    "--expect-repair"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 6.543528417008929,
+  "peak_process_family_rss_kib": 135232,
+  "rss_limit_kib": 2097152,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "checks": {
+      "sixSweeps": true,
+      "accepted": true,
+      "lastUpUnder250ms": true,
+      "worstUpUnder500ms": true
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

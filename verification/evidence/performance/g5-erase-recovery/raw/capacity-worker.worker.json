@@ -1,0 +1,79 @@
+{
+  "command": [
+    "node",
+    "verification/sdk_js/verify_partial_erase_capacity.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-off/js",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/g5-erase-final/capacity.json",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 38.80478483304614,
+  "peak_process_family_rss_kib": 1701648,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "erase",
+    "x": 740,
+    "downMs": 0.9071660000008706,
+    "upMs": 55.70995799999946,
+    "settledMs": 657.5409160000017,
+    "moves": {
+      "meanMs": 50.98027343749974,
+      "p95Ms": 50.69270899999901,
+      "maxMs": 597.4492910000008
+    },
+    "pixels": {
+      "canvas": [
+        2000,
+        1400
+      ],
+      "original": 12399,
+      "preview": 0,
+      "committed": 0,
+      "rawMinAlpha": [
+        255,
+        0
+      ],
+      "maxDelta": 0,
+      "previewFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ],
+      "committedFirst": [
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

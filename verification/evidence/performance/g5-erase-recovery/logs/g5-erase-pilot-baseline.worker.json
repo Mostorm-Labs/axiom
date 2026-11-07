@@ -1,0 +1,23 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/dense_erase.mjs",
+    "out/g5-dpr4-off/js",
+    "out/g5-erase-pilot-baseline-data",
+    "2",
+    "baseline"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 96.59842900000513,
+  "peak_process_family_rss_kib": 1876992,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_EVIDENCE",
+    "error": "Error: unexpected input errors\n    at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/dense_erase.mjs:84:101"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}
