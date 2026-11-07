@@ -1442,9 +1442,74 @@ void checkCapacityBoundedEraseDamage() {
 }
 }
 
+
+namespace {
+void checkMaskedCanonicalPreparation() {
+    for(unsigned affine=0;affine<4;++affine)for(unsigned backdrop=0;backdrop<3;++backdrop)
+    for(bool smallCache:{false,true}) {
+        TestSurface target,reference;
+        require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"masked preparation targets");
+        SkiaRenderer renderer,oracle;RenderCacheOptions options;
+        if(smallCache){options.maxBytes=160*1024;options.maxEntryBytes=4096;}
+        renderer.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+        auto source=stroke(95000);auto content=std::get<CompactStrokeReferenceCommand>(source.command).content.get();
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.config.size=13;content.stroke.config.opacity=.67;content.stroke.knots.clear();
+        for(unsigned i=0;i<513;++i)content.stroke.knots.push_back({128.+94*std::sin(i*.075),64.+39*std::cos(i*.11),static_cast<std::uint16_t>(2000+(i*173)%62000)});
+        source.command=CompactStrokeReferenceCommand{content};source.record.content=content;
+        if(affine==1)source.record.transform={1,0,0,1,8.3,-3.7};
+        if(affine==2)source.record.transform={.91,.22,-.17,.96,17,-13};
+        if(affine==3)source.record.transform={-1,.11,.23,.83,240,2};
+        semantic::FilledPathMask cut;cut.path.commands={semantic::MoveTo{{105,0}},semantic::LineTo{{135,0}},semantic::LineTo{{135,128}},semantic::LineTo{{105,128}},semantic::ClosePath{}};
+        source.record.eraseMasks={{ObjectId::fromUint64(95001),cut}};
+        std::vector<ReferenceTraversalEntry> entries;
+        if(backdrop==1){
+            semantic::ObjectRecord shape;shape.id=ObjectId::fromUint64(95002);shape.kind=semantic::ObjectKind::kShape;shape.kind_version=1;shape.content=semantic::ShapeContent{0,256,128};shape.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{.1,.3,.8,1}}}});
+            const auto projection=projectRuntimeScene({&shape,1},semantic::SemanticGeneration{1});entries.push_back({projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(shape.content)}});
+        }
+        entries.push_back(source);
+        const auto demand=[&](unsigned frame){const auto p=plan(frame,entries,target.generation());return FramePlan{p.frame,p.referenceDrawList,p.background,backdrop==2,backdrop==2};};
+        RenderPreparationBudget slice;slice.maxGroups=1;slice.maxCoverageSteps=1;
+        const auto first=demand(98000);const auto before=target.presentCount();
+        require(renderer.renderFrame(target,first,nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                "masked v4 bypassed cooperative coverage and synchronously presented");
+        require(target.presentCount()==before,"partial masked coverage presented");
+        const auto finish=[&](const FramePlan& frame){
+            for(unsigned i=0;;++i){
+#if defined(G5_TEST_WEBGL)
+                emscripten_sleep(1);
+#endif
+                const auto result=renderer.renderFrame(target,frame,nullptr,&slice);
+                if(result.code==BackendSubmissionCode::kAccepted)break;
+                require(result.code==BackendSubmissionCode::kRetry&&i<2048,"masked preparation failed to converge");
+            }
+            require(oracle.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted,"masked Direct oracle");
+            const auto actual=pixels(target),expected=pixels(reference);
+            for(std::size_t k=0;k<actual.size();++k)if(std::abs(int(actual[k])-int(expected[k]))>2){
+                std::cerr<<"masked parity affine="<<affine<<" backdrop="<<backdrop<<" small="<<smallCache<<" at="<<k<<" actual="<<int(actual[k])<<" wanted="<<int(expected[k])<<'\n';
+                require(false,"cooperative masked coverage differs from Direct");
+            }
+            require(renderer.renderCacheWork().retainedBytes<=options.maxBytes,"masked coverage exceeded cache budget");
+        };
+        finish(first);
+        require(renderer.renderCacheWork().preparationDirectEntries==(backdrop==1?1U:0U),"masked compact source still prepared Direct");
+        // A changed mask revokes both cached pixels and an incomplete demand.
+        semantic::SweptCircleMask second;second.segments.push_back({{{40,54},7},{{210,78},7},{95,62},{155,70}});
+        entries.back().record.eraseMasks.push_back({ObjectId::fromUint64(95003),second});
+        const auto changed=demand(98001);const auto presents=target.presentCount();
+        require(renderer.renderFrame(target,changed,nullptr,&slice).code==BackendSubmissionCode::kRetry&&target.presentCount()==presents,"mask change reused or presented incomplete source");
+        entries.back().record.eraseMasks.push_back({ObjectId::fromUint64(95004),cut});
+        finish(demand(98002));
+        require(renderer.renderFrame(target,plan(98003,entries,target.generation()+1),nullptr,&slice).code==BackendSubmissionCode::kRejected,"stale masked surface accepted");
+    }
+    std::cout<<"masked v4 cooperative yield,Direct parity,mask invalidation and bounded source admission PASS\n";
+}
+}
+
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}

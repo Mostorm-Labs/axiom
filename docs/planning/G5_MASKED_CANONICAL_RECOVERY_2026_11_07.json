@@ -1,0 +1,86 @@
+{
+  "task": "G5-MASKED-V4-CANONICAL-RECOVERY",
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": "137e70af294107c4de23a62051d103be30d14e20",
+  "authorization": "User reproduces20s default variable-speed round stroke,duplicate15times,partial erase then immediate pinch/pan;second erase CPU100 and delayed recovery.Fix existing shared Render path,retain previous contact repair.",
+  "authority_basis": {
+    "repository_instructions": "AGENTS.md",
+    "authority_locator": "docs/notion/manifest.yaml",
+    "consumer_contracts": [
+      "docs/planning/sdk/js-v1-contract.md",
+      "docs/planning/sdk/windows-consumer-v1.md",
+      "docs/planning/sdk/shell-axis-preview-contract.md"
+    ],
+    "preserve": "Canonical state/history/Brush/IDs/eraser semantics remain Runtime owned;only shared private Render derived work changes."
+  },
+  "diagnosis": "Profiled real root SDK:default4800raw variable-speed samples,15duplicates,erase and immediately48wheel events. Second Up53.7ms but CPUcoverage6817ms,RAF995ms. skia_render_cache prepare explicitly classifies permanently masked compact entries as Direct,whose synchronous reference drawing bypasses coverage quantum and pinned v4 indexed replay.",
+  "design": {
+    "owner": "Existing SkiaRenderCache preparation and CompactStrokeRasterJob",
+    "change": "Admit masked algorithm4 compact strokes to existing cooperative coverage;apply original masks exactly once after body completion,on the same isolated scratch or ordered composite required by existing Direct semantics.Keep masks full-grid and object affine.Keep other brush algorithms and non-ink Direct contracts unchanged.",
+    "transaction": "prepare offscreen body incrementally,apply masks,store/compose,publish only complete frame;camera/source/mask/target changes invalidate pending demand as before",
+    "public_api_impact": "none",
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required": [
+      "RED native oracle:masked v4 must yield under one coverage step without present,then converge to independent Direct pixels",
+      "Native parity under identity/translation/rotation/shear,background/transparent/export-isolation,low cache admission/mask changes;retain destination-dependent legacy clear where applicable",
+      "Sequential root SDK fixture:20s-like variable speed/self-crossing stroke,15duplicates,twoerasures,immediate wheel zoom/pan,quiescence;no waiting/capture between Up and navigation",
+      "Matching clean ON/OFF SDK packages and complete source/artifact hashes;baseline profile is diagnostic,final unprofiled paired corpus and canonical export/snapshot/history/recovery correctness",
+      "Local engineering endpoint:canonical CPUcoverage after each erase below1500ms and final exact receipt/recovery below2000ms after last navigation input;no more than500ms single Runtime canonical attempt in this frozen corpus.No universal CPU-percent or competitor-equivalence claim",
+      "Preserve pixel and document/operation/receipt semantics;existing dense erase,capacity/history/collector/G5Node/boundary regressions and full CTest prior66name comparison",
+      "DefaultDPR2 and corroborativeDPR1/4;fixed separateDemo;preserve4260/4261 user documents",
+      "Durable new evidence,exact revision/hash,commit/push;implementation returns READY_FOR_CONTROL_REVIEW only"
+    ],
+    "forbidden": [
+      "SDK API/ABI/version changes",
+      "semantic/schema/codec/authority/descriptor/lock changes",
+      "Brush geometry approximation",
+      "larger memory/step/time/GPU budgets",
+      "second renderer or state/cache owner",
+      "rewriting old evidence",
+      "mutating user pages/documents"
+    ],
+    "scope": [
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/tests/render_cache_test.cpp and narrow oracle/header/CMake tests",
+      "verification/runners/g5 sequential rootSDK fixture",
+      "docs/planning task package",
+      "new verification/evidence/performance bundle"
+    ],
+    "bounds": {
+      "optionalMiB": 32,
+      "sharedMiB": 96,
+      "browserFamilyRssMiB": 3072,
+      "nativeRssMiB": 2048,
+      "workerSeconds": 180
+    },
+    "hosted": {
+      "required": [],
+      "optional": [
+        "physicalMacInput",
+        "otherplatforms",
+        "formalGate"
+      ]
+    },
+    "terminal_success": "Required native/correctness/rootSDK engineering endpoints pass,existing failure list unchanged,reviewer-accessible code/evidence,newDemo",
+    "terminal_blockers": [
+      "authority/repository divergence",
+      "missing lockedSDK",
+      "oracle conflict",
+      "new correctness failure",
+      "bounded corpus fails required performance after root cause repair"
+    ],
+    "return_policy": "Continue authorized closure;do not declare official G5/P34 PASS"
+  },
+  "basis_sha256": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/planning/sdk/js-v1-contract.md": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+    "docs/planning/sdk/windows-consumer-v1.md": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+    "docs/planning/sdk/shell-axis-preview-contract.md": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+  }
+}
