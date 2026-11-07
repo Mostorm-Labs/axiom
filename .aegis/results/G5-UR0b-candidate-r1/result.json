@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "phase": "UR0b_P31_CANDIDATE_ONLY",
+  "package_ref": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/packages/G5-UR0b-candidate-r1/package.json",
+    "sha256": "9f82895e2dbe8b84d62ab557adf87396fca7ff1ce245794fa3205bad987777c9"
+  },
+  "starting_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "result_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "manifest_ref": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b-candidate-r1/output-sha256.json",
+    "sha256": "e714e73386b7c64b6c22a4fa1d1e79076d410ca128be52c47b3e3f5799fe28fe"
+  },
+  "review_request_ref": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b-candidate-r1/review-request.json",
+    "sha256": "97c77655c795ad63d004a1e6f38ecc69d38277ef791dd44df27bbc6d7f652736"
+  },
+  "validation_ref": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b-candidate-r1/validation.json",
+    "sha256": "80b880aa002abe85f5618fa6bfa355a3d2525923f4cc97f2e10ee9b6748d2697"
+  },
+  "validation_summary": {
+    "structure": "PASS",
+    "package_local_hash_refs": 6,
+    "source_refs_verified": 69,
+    "ur0a_preserved_outputs": 13,
+    "frozen_obligation_ids": [
+      "UR0b-PRIVATE",
+      "UR0b-CLOCK-INPUT",
+      "UR0b-COMMIT-SCENE",
+      "UR0b-ROUTES-TARGETS",
+      "UR0b-WORK-COUNTERS",
+      "UR0b-GPU-QUEUE",
+      "UR0b-FIXTURE",
+      "UR0b-PIXEL-SEMANTICS",
+      "UR0b-OVERHEAD",
+      "UR0b-MATRIX",
+      "UR0b-REGRESSION"
+    ],
+    "policy_counterexamples_rejected": 8,
+    "execution_admission_negative_check": {
+      "status": "PASS",
+      "expected_exit_code": 3,
+      "observed_exit_code": 3
+    }
+  },
+  "production_diff_empty": true,
+  "worktree_dirty_paths": [
+    ".aegis/packages/G5-UR0a/authority.lock.json",
+    ".aegis/packages/G5-UR0a/evidence-contract.json",
+    ".aegis/packages/G5-UR0a/execution-contract.json",
+    ".aegis/packages/G5-UR0a/implementation-context.md",
+    ".aegis/packages/G5-UR0a/package.json",
+    ".aegis/packages/G5-UR0a/verification.lock.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/authority.lock.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/execution-contract.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/implementation-context.md",
+    ".aegis/packages/G5-UR0b-candidate-r1/package.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/scope-contract.json",
+    ".aegis/packages/G5-UR0b-candidate-r1/verification.lock.json",
+    ".aegis/results/G5-UR0a/advisory-inputs.json",
+    ".aegis/results/G5-UR0a/output-sha256.json",
+    ".aegis/results/G5-UR0a/preflight.json",
+    ".aegis/results/G5-UR0a/result.json",
+    ".aegis/results/G5-UR0a/validation-first.json",
+    ".aegis/results/G5-UR0a/validation.json",
+    ".aegis/results/G5-UR0b-candidate-r1/execution-admission.json",
+    ".aegis/results/G5-UR0b-candidate-r1/output-sha256.json",
+    ".aegis/results/G5-UR0b-candidate-r1/review-request.json",
+    ".aegis/results/G5-UR0b-candidate-r1/ur0a-reconciliation.json",
+    ".aegis/results/G5-UR0b-candidate-r1/validation.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+    "docs/planning/g5-unified-render/design-r3/amendment.json",
+    "docs/planning/g5-unified-render/design-r3/preserved-inputs.json",
+    "docs/planning/g5-unified-render/design-r3/validation.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json",
+    "docs/planning/g5-unified-render/ur0a/matrix.json",
+    "docs/planning/g5-unified-render/ur0a/metrics.schema.json",
+    "docs/planning/g5-unified-render/ur0a/protocol.md",
+    "docs/planning/g5-unified-render/ur0a/review.md",
+    "docs/planning/g5-unified-render/ur0a/routes.json",
+    "docs/planning/g5-unified-render/ur0a/schema-examples.json",
+    "docs/planning/g5-unified-render/ur0a/validate.py",
+    "docs/planning/g5-unified-render/ur0b-candidate-r1/plan.md",
+    "docs/planning/g5-unified-render/ur0b-candidate-r1/validate.py"
+  ],
+  "new_browser_or_runtime_runs": 0,
+  "can_execute": false,
+  "pending": [
+    "Independent UR0a review with exact manifest/result identity",
+    "Control acceptance of this concrete candidate scope/verification/evidence",
+    "Separate design/materialization commit and executable G5-UR0b package binding actual independent activation"
+  ],
+  "not_performed": [
+    "production instrumentation",
+    "builds/dependency setup",
+    "browser/performance sampling",
+    "commit/push",
+    "outbound thread messages",
+    "official Gate review/PASS"
+  ],
+  "limitations": [
+    "UR0a static checks and new candidate validation are producer-side integrity only",
+    "No claim UR0b implementation or baseline is complete",
+    "Existing fixed fixture/runtime oracle and same-binary overhead work remains planned, not measured"
+  ],
+  "official_gate_pass": false
+}

@@ -1,0 +1,3309 @@
+{
+  "status": "SYNTHETIC_SCHEMA_TESTS_ONLY",
+  "valid": [
+    {
+      "case_id": "complete",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-complete",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "rejected",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-rejected",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "FAILED",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "REJECTED",
+                "reason": "fixture-reject",
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "REJECTED",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "UNCOMMITTED"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          },
+          {
+            "observation_id": "o2",
+            "metric_id": "FIRST_FEEDBACK",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "103",
+            "end_ns": null,
+            "status": "FAILED",
+            "value_ns": null,
+            "lower_bound_ns": null,
+            "reason": "Down admission rejected; expected feedback failed, not zero latency"
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          },
+          {
+            "metric_id": "FIRST_FEEDBACK",
+            "planned_count": 1,
+            "complete_count": 0,
+            "failed_count": 1,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": null,
+            "p95_ns": null,
+            "p99_ns": null,
+            "max_ns": null,
+            "population": "complete_samples_only",
+            "tail_status": "INCOMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": "input rejected"
+      }
+    },
+    {
+      "case_id": "timeout",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-timeout",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "TIMEOUT",
+        "evidence_status": "INCOMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "FIRST_FEEDBACK",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": null,
+            "status": "RIGHT_CENSORED",
+            "value_ns": null,
+            "lower_bound_ns": "20",
+            "reason": "deadline"
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "FIRST_FEEDBACK",
+            "planned_count": 1,
+            "complete_count": 0,
+            "failed_count": 0,
+            "censored_count": 1,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": null,
+            "p95_ns": null,
+            "p99_ns": null,
+            "max_ns": null,
+            "population": "complete_samples_only",
+            "tail_status": "INCOMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": "no effective submit before deadline"
+      }
+    },
+    {
+      "case_id": "missing-submit",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-missing-submit",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "TIMEOUT",
+        "evidence_status": "INCOMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "FIRST_FEEDBACK",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": null,
+            "status": "RIGHT_CENSORED",
+            "value_ns": null,
+            "lower_bound_ns": "20",
+            "reason": "deadline"
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "FIRST_FEEDBACK",
+            "planned_count": 1,
+            "complete_count": 0,
+            "failed_count": 0,
+            "censored_count": 1,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": null,
+            "p95_ns": null,
+            "p99_ns": null,
+            "max_ns": null,
+            "population": "complete_samples_only",
+            "tail_status": "INCOMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": "no effective submit before deadline"
+      }
+    },
+    {
+      "case_id": "navigation",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-navigation",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "navigation",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "noop",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-noop",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NO_OP",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": "1",
+              "after_generation": "1",
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NO_OP"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "qualified-chain",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-qualified-chain",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "up",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "116",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "APPLIED",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": "2",
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": "110",
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "COMMITTED"
+            },
+            "scene": {
+              "state": "PUBLISHED",
+              "start_ns": "110",
+              "published_ns": "112",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2"
+            },
+            "submits": [
+              {
+                "submit_id": "sub1",
+                "purpose": "canonical",
+                "at_ns": "114",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "demand_id": "i1",
+                "requested_revision": "2",
+                "submitted_revision": "2",
+                "pose_id": "pose1",
+                "valid_region_proof": "FULL",
+                "qualification": "EFFECTIVE",
+                "representation": "GPU_COVERAGE",
+                "target_ids": [
+                  "t1"
+                ]
+              }
+            ],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "118",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": true
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [
+          {
+            "job_id": "j1",
+            "interaction_id": "i1",
+            "purpose": "canonical",
+            "fidelity": "exact",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "8",
+              "commit_revision": "2",
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "body_id": null,
+              "mask_basis": null
+            },
+            "attempts": [
+              {
+                "attempt_id": "a1",
+                "route_id": "CAN-PREP-V4",
+                "start_ns": "112",
+                "end_ns": "114",
+                "decision": {
+                  "decision_id": "d1",
+                  "origin": "CURRENT_BRANCH",
+                  "outcome": "PreparedGpuDraw",
+                  "reason": "synthetic positive schema chain, not a run"
+                },
+                "leaves": [
+                  {
+                    "leaf_id": "l1",
+                    "route_id": "CAN-PREP-V4",
+                    "decision_id": "d1",
+                    "actual_target": "GPU",
+                    "target_id": "t1",
+                    "work_kind": "coverage"
+                  }
+                ],
+                "outcome": "Submitted",
+                "reason": null
+              }
+            ],
+            "final_state": "Completed"
+          }
+        ],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "case_id": "lossy-generation",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": 1,
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "negative-duration",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "90",
+            "status": "COMPLETE",
+            "value_ns": "0",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "invented-navigation-receipt",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "navigation",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "119",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "1",
+                  "scene_generation": "1",
+                  "scene_revision": "1",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": null,
+                  "commit_revision": null,
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": null,
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": true
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "missing-treated-as-zero",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": null,
+            "status": "RIGHT_CENSORED",
+            "value_ns": "0",
+            "lower_bound_ns": "20",
+            "reason": "deadline"
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "noop-new-operation",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NO_OP",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": null,
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NO_OP"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "dropped-critical-claimed-complete",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 1,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "nan-p99-placeholder",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "NaN",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "failure-removed-from-denominator",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "drag",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "NOT_APPLICABLE",
+              "operation_id": null,
+              "commit_revision": null,
+              "before_generation": null,
+              "after_generation": null,
+              "commit_ns": null,
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "NOT_APPLICABLE"
+            },
+            "scene": {
+              "state": "NOT_APPLICABLE",
+              "start_ns": null,
+              "published_ns": null,
+              "committed_generation": null,
+              "scene_generation": null,
+              "scene_revision": null
+            },
+            "submits": [],
+            "canonical_receipts": [],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 0,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "gpu-request-cpu-result",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-qualified-chain",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "APPLIED",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": "2",
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": "110",
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "COMMITTED"
+            },
+            "scene": {
+              "state": "PUBLISHED",
+              "start_ns": "110",
+              "published_ns": "112",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2"
+            },
+            "submits": [
+              {
+                "submit_id": "sub1",
+                "purpose": "canonical",
+                "at_ns": "114",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "demand_id": "i1",
+                "requested_revision": "2",
+                "submitted_revision": "2",
+                "pose_id": "pose1",
+                "valid_region_proof": "FULL",
+                "qualification": "EFFECTIVE",
+                "representation": "GPU_COVERAGE",
+                "target_ids": [
+                  "t1"
+                ]
+              }
+            ],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "118",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": true
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [
+          {
+            "job_id": "j1",
+            "interaction_id": "i1",
+            "purpose": "canonical",
+            "fidelity": "exact",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "8",
+              "commit_revision": "2",
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "body_id": null,
+              "mask_basis": null
+            },
+            "attempts": [
+              {
+                "attempt_id": "a1",
+                "route_id": "CAN-PREP-V4",
+                "start_ns": "112",
+                "end_ns": "114",
+                "decision": {
+                  "decision_id": "d1",
+                  "origin": "CURRENT_BRANCH",
+                  "outcome": "PreparedGpuDraw",
+                  "reason": "synthetic positive schema chain, not a run"
+                },
+                "leaves": [
+                  {
+                    "leaf_id": "l1",
+                    "route_id": "CAN-PREP-V4",
+                    "decision_id": "d1",
+                    "actual_target": "CPU",
+                    "target_id": "t1",
+                    "work_kind": "coverage"
+                  }
+                ],
+                "outcome": "Submitted",
+                "reason": null
+              }
+            ],
+            "final_state": "Completed"
+          }
+        ],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "foreign-decision-link",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-qualified-chain",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "APPLIED",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": "2",
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": "110",
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "COMMITTED"
+            },
+            "scene": {
+              "state": "PUBLISHED",
+              "start_ns": "110",
+              "published_ns": "112",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2"
+            },
+            "submits": [
+              {
+                "submit_id": "sub1",
+                "purpose": "canonical",
+                "at_ns": "114",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "demand_id": "i1",
+                "requested_revision": "2",
+                "submitted_revision": "2",
+                "pose_id": "pose1",
+                "valid_region_proof": "FULL",
+                "qualification": "EFFECTIVE",
+                "representation": "GPU_COVERAGE",
+                "target_ids": [
+                  "t1"
+                ]
+              }
+            ],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "118",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": true
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [
+          {
+            "job_id": "j1",
+            "interaction_id": "i1",
+            "purpose": "canonical",
+            "fidelity": "exact",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "8",
+              "commit_revision": "2",
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "body_id": null,
+              "mask_basis": null
+            },
+            "attempts": [
+              {
+                "attempt_id": "a1",
+                "route_id": "CAN-PREP-V4",
+                "start_ns": "112",
+                "end_ns": "114",
+                "decision": {
+                  "decision_id": "d1",
+                  "origin": "CURRENT_BRANCH",
+                  "outcome": "PreparedGpuDraw",
+                  "reason": "synthetic positive schema chain, not a run"
+                },
+                "leaves": [
+                  {
+                    "leaf_id": "l1",
+                    "route_id": "CAN-PREP-V4",
+                    "decision_id": "foreign",
+                    "actual_target": "GPU",
+                    "target_id": "t1",
+                    "work_kind": "coverage"
+                  }
+                ],
+                "outcome": "Submitted",
+                "reason": null
+              }
+            ],
+            "final_state": "Completed"
+          }
+        ],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "stale-qualified-completion",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-qualified-chain",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": null,
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "APPLIED",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": "2",
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": "110",
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "COMMITTED"
+            },
+            "scene": {
+              "state": "PUBLISHED",
+              "start_ns": "110",
+              "published_ns": "112",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2"
+            },
+            "submits": [
+              {
+                "submit_id": "sub1",
+                "purpose": "canonical",
+                "at_ns": "114",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "demand_id": "i1",
+                "requested_revision": "2",
+                "submitted_revision": "2",
+                "pose_id": "pose1",
+                "valid_region_proof": "FULL",
+                "qualification": "EFFECTIVE",
+                "representation": "GPU_COVERAGE",
+                "target_ids": [
+                  "t1"
+                ]
+              }
+            ],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "118",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": false
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [
+          {
+            "job_id": "j1",
+            "interaction_id": "i1",
+            "purpose": "canonical",
+            "fidelity": "exact",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "8",
+              "commit_revision": "2",
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "body_id": null,
+              "mask_basis": null
+            },
+            "attempts": [
+              {
+                "attempt_id": "a1",
+                "route_id": "CAN-PREP-V4",
+                "start_ns": "112",
+                "end_ns": "114",
+                "decision": {
+                  "decision_id": "d1",
+                  "origin": "CURRENT_BRANCH",
+                  "outcome": "PreparedGpuDraw",
+                  "reason": "synthetic positive schema chain, not a run"
+                },
+                "leaves": [
+                  {
+                    "leaf_id": "l1",
+                    "route_id": "CAN-PREP-V4",
+                    "decision_id": "d1",
+                    "actual_target": "GPU",
+                    "target_id": "t1",
+                    "work_kind": "coverage"
+                  }
+                ],
+                "outcome": "Submitted",
+                "reason": null
+              }
+            ],
+            "final_state": "Completed"
+          }
+        ],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    },
+    {
+      "case_id": "u64-overflow",
+      "record": {
+        "schema_version": "g5-ur0-metrics-v1",
+        "record_origin": "SCHEMA_EXAMPLE",
+        "run_id": "example-qualified-chain",
+        "row_id": "SCHEMA_ONLY",
+        "repetition": 1,
+        "fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "source_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+        "artifacts": [],
+        "clock": {
+          "clock_id": "browser1",
+          "origin": "browser_run_performance_now",
+          "unit": "ns_decimal_string",
+          "reported_resolution_ns": "100000",
+          "wasm_mode": "LOCAL_DURATIONS_ONLY",
+          "calibration_error_ns": null
+        },
+        "run_outcome": "COMPLETE",
+        "evidence_status": "COMPLETE",
+        "performance_status": "NOT_EVALUATED_UR0a",
+        "interactions": [
+          {
+            "interaction_id": "i1",
+            "kind": "partial_erase",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "1",
+              "scene_generation": "1",
+              "scene_revision": "1",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "18446744073709551616",
+              "commit_revision": null,
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": null,
+              "body_id": null,
+              "mask_basis": null
+            },
+            "events": [
+              {
+                "event_id": "e1",
+                "batch_id": "b1",
+                "phase": "down",
+                "sample_ids": [
+                  "s0"
+                ],
+                "confirmation": "confirmed",
+                "planned_ns": "100",
+                "producer_send_ns": "102",
+                "handler_enter_ns": "103",
+                "handler_exit_ns": "109",
+                "admission_end_ns": "108",
+                "admission": "ACCEPTED",
+                "reason": null,
+                "content_timestamp_ns": "1000000000",
+                "source_id": "1",
+                "pointer_id": "1",
+                "pointer_generation": "1",
+                "catch_up": false
+              }
+            ],
+            "commit": {
+              "state": "APPLIED",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "commit_revision": "2",
+              "before_generation": "1",
+              "after_generation": "2",
+              "commit_ns": "110",
+              "publication_prepare_ns": null,
+              "history_prepare_ns": null,
+              "history_finalize_ns": null,
+              "observer_ns": null,
+              "return_class": "COMMITTED"
+            },
+            "scene": {
+              "state": "PUBLISHED",
+              "start_ns": "110",
+              "published_ns": "112",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2"
+            },
+            "submits": [
+              {
+                "submit_id": "sub1",
+                "purpose": "canonical",
+                "at_ns": "114",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "demand_id": "i1",
+                "requested_revision": "2",
+                "submitted_revision": "2",
+                "pose_id": "pose1",
+                "valid_region_proof": "FULL",
+                "qualification": "EFFECTIVE",
+                "representation": "GPU_COVERAGE",
+                "target_ids": [
+                  "t1"
+                ]
+              }
+            ],
+            "canonical_receipts": [
+              {
+                "completion_id": "c1",
+                "at_ns": "118",
+                "kind": "CANONICAL_QUALIFIED",
+                "basis": {
+                  "runtime_instance": "1",
+                  "document_epoch": "1",
+                  "view_id": "1",
+                  "lifetime_generation": "1",
+                  "attachment_epoch": "1",
+                  "committed_generation": "2",
+                  "scene_generation": "2",
+                  "scene_revision": "2",
+                  "surface_generation": "1",
+                  "metrics_generation": "1",
+                  "resource_generation": "1",
+                  "camera_generation": "1",
+                  "frame_id": "8",
+                  "commit_revision": "2",
+                  "preview_revision": null,
+                  "document_id": "99999999999999999999999999999999",
+                  "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "body_id": null,
+                  "mask_basis": null
+                },
+                "qualification": "QUALIFIED",
+                "matches_current_basis": true
+              }
+            ],
+            "resource_completions": [],
+            "spans": []
+          }
+        ],
+        "jobs": [
+          {
+            "job_id": "j1",
+            "interaction_id": "i1",
+            "purpose": "canonical",
+            "fidelity": "exact",
+            "basis": {
+              "runtime_instance": "1",
+              "document_epoch": "1",
+              "view_id": "1",
+              "lifetime_generation": "1",
+              "attachment_epoch": "1",
+              "committed_generation": "2",
+              "scene_generation": "2",
+              "scene_revision": "2",
+              "surface_generation": "1",
+              "metrics_generation": "1",
+              "resource_generation": "1",
+              "camera_generation": "1",
+              "frame_id": "8",
+              "commit_revision": "2",
+              "preview_revision": null,
+              "document_id": "99999999999999999999999999999999",
+              "operation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "body_id": null,
+              "mask_basis": null
+            },
+            "attempts": [
+              {
+                "attempt_id": "a1",
+                "route_id": "CAN-PREP-V4",
+                "start_ns": "112",
+                "end_ns": "114",
+                "decision": {
+                  "decision_id": "d1",
+                  "origin": "CURRENT_BRANCH",
+                  "outcome": "PreparedGpuDraw",
+                  "reason": "synthetic positive schema chain, not a run"
+                },
+                "leaves": [
+                  {
+                    "leaf_id": "l1",
+                    "route_id": "CAN-PREP-V4",
+                    "decision_id": "d1",
+                    "actual_target": "GPU",
+                    "target_id": "t1",
+                    "work_kind": "coverage"
+                  }
+                ],
+                "outcome": "Submitted",
+                "reason": null
+              }
+            ],
+            "final_state": "Completed"
+          }
+        ],
+        "metrics": [
+          {
+            "observation_id": "o1",
+            "metric_id": "INPUT_QUEUE",
+            "interaction_id": "i1",
+            "event_id": "e1",
+            "start_ns": "100",
+            "end_ns": "103",
+            "status": "COMPLETE",
+            "value_ns": "3",
+            "lower_bound_ns": null,
+            "reason": null
+          }
+        ],
+        "summaries": [
+          {
+            "metric_id": "INPUT_QUEUE",
+            "planned_count": 1,
+            "complete_count": 1,
+            "failed_count": 0,
+            "censored_count": 0,
+            "missing_count": 0,
+            "not_applicable_count": 0,
+            "p50_ns": "3",
+            "p95_ns": "3",
+            "p99_ns": "3",
+            "max_ns": "3",
+            "population": "complete_samples_only",
+            "tail_status": "COMPLETE"
+          }
+        ],
+        "loss": {
+          "critical_dropped": 0,
+          "statistical_dropped": 0,
+          "unknown_routes": 0,
+          "identity_link_failures": 0
+        },
+        "observed_until_ns": "120",
+        "error": null
+      }
+    }
+  ]
+}

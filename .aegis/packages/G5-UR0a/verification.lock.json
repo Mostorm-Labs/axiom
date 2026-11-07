@@ -1,0 +1,48 @@
+{
+  "obligations": [
+    {
+      "id": "UR0a-PROTOCOL",
+      "requirement": "Freeze clocks, event identity, metric windows, quantile method, failure/censoring and continuous-input schedule.",
+      "oracle": "Review protocol.md against supplemental measurement clauses; validate metrics schema examples including rejected/timeout/missing-submit records.",
+      "acceptance": "Explicit planned/arrival/dispatch/commit/Scene/submit/completion distinctions; navigation has no fake canonical receipt; accelerated setup distinguished from real-time delivery; no settle gate in immediate sequences.",
+      "evidence_required": [
+        "protocol.md",
+        "metrics.schema.json",
+        "review.md"
+      ]
+    },
+    {
+      "id": "UR0a-ROUTES",
+      "requirement": "Bidirectional static route inventory including Direct, preview, edit, erase, navigation, resource recovery and retained paths.",
+      "oracle": "Source path/symbol/branch references at recorded starting SHA, inventory completeness checked against design seed branches.",
+      "acceptance": "Stable route IDs with owner, public entry, current branch, classification, target package, expected outcomes, planned identity links, positive/negative cases; static evidence distinct from dynamic coverage (unrun rows MISSING).",
+      "evidence_required": [
+        "routes.json",
+        "review.md"
+      ]
+    },
+    {
+      "id": "UR0a-MATRIX",
+      "requirement": "Freeze bounded minimal rows and fixtures for UR0b, keeping historic anchors separate from new immediate tests.",
+      "oracle": "Cross-check matrix rows and deadlines with corpus/worker policy in design revision2.",
+      "acceptance": "9-object drag and16-object erase DPR2 at32/96 and64/192 anchors;16-object two-erase immediate reerase/navigation and masked-drag branches; specify total-vs-copy counts, cadence/seed/durations, repeats, setup/measurement limits, cleanup, batch stop rules. No performance values fabricated.",
+      "evidence_required": [
+        "matrix.json",
+        "protocol.md"
+      ]
+    },
+    {
+      "id": "UR0a-READINESS",
+      "requirement": "Make next-phase observability gaps, oracle availability and overhead qualification explicit.",
+      "oracle": "Review review.md and lightweight schema/link/cross-reference validation.",
+      "acceptance": "List existing/missing observation seams, required UR0b instrumentation and oracle gaps, overhead on/off experiment, unresolved blockers; no claims that code is migrated or measured.",
+      "evidence_required": [
+        "review.md",
+        "validation output",
+        "artifact SHA256 manifest"
+      ]
+    }
+  ],
+  "scope": "Static protocol verification only; baseline measurement, observed overhead and downstream performance threshold acceptance belong to UR0b/UR0c.",
+  "existing_evidence": "verification/evidence/performance/g5-live-dpr-drag/README.md is corroborative only; preserve original metric meanings."
+}

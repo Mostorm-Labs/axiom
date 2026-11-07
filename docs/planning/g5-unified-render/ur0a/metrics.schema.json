@@ -1,0 +1,1682 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:axiom:g5:ur0a:metrics:v1",
+  "title": "UR0 private metrics records; no public SDK ABI",
+  "description": "Shape plus validate.py semantic joins are normative. Examples are synthetic schema data, never measured evidence. Navigation canonical receipts prohibited; a resource retirement is separate. Timings are browser-origin decimal ns strings or calibrated/local durations.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "g5-ur0-metrics-v1"
+    },
+    "record_origin": {
+      "type": "string",
+      "enum": [
+        "SCHEMA_EXAMPLE",
+        "OBSERVATION"
+      ]
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "row_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repetition": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fixture_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "runner",
+              "js",
+              "wasm",
+              "resource",
+              "declaration",
+              "provider"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "required": [
+          "role",
+          "path",
+          "sha256"
+        ]
+      }
+    },
+    "clock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "clock_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "const": "browser_run_performance_now"
+        },
+        "unit": {
+          "const": "ns_decimal_string"
+        },
+        "reported_resolution_ns": {
+          "$ref": "#/$defs/u64"
+        },
+        "wasm_mode": {
+          "type": "string",
+          "enum": [
+            "LOCAL_DURATIONS_ONLY",
+            "CALIBRATED"
+          ]
+        },
+        "calibration_error_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "clock_id",
+        "origin",
+        "unit",
+        "reported_resolution_ns",
+        "wasm_mode",
+        "calibration_error_ns"
+      ]
+    },
+    "run_outcome": {
+      "type": "string",
+      "enum": [
+        "COMPLETE",
+        "FAILED",
+        "TIMEOUT",
+        "MEMORY_LIMIT",
+        "MISSING"
+      ]
+    },
+    "evidence_status": {
+      "type": "string",
+      "enum": [
+        "COMPLETE",
+        "INCOMPLETE",
+        "MISSING"
+      ]
+    },
+    "performance_status": {
+      "const": "NOT_EVALUATED_UR0a"
+    },
+    "interactions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/interaction"
+      }
+    },
+    "jobs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/job"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metric"
+      }
+    },
+    "summaries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stat"
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "critical_dropped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "statistical_dropped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown_routes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "identity_link_failures": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "critical_dropped",
+        "statistical_dropped",
+        "unknown_routes",
+        "identity_link_failures"
+      ]
+    },
+    "observed_until_ns": {
+      "$ref": "#/$defs/u64"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "u64": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,19})$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runtime_instance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "document_epoch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "view_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifetime_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attachment_epoch": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "committed_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scene_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scene_revision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "surface_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metrics_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resource_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "camera_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "frame_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commit_revision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "preview_revision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{32}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{32}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "body_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mask_basis": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "runtime_instance",
+        "document_epoch",
+        "view_id",
+        "lifetime_generation",
+        "attachment_epoch",
+        "committed_generation",
+        "scene_generation",
+        "scene_revision",
+        "surface_generation",
+        "metrics_generation",
+        "resource_generation",
+        "camera_generation",
+        "frame_id",
+        "commit_revision",
+        "preview_revision",
+        "document_id",
+        "operation_id",
+        "body_id",
+        "mask_basis"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "batch_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "down",
+            "move",
+            "up",
+            "cancel",
+            "wheel",
+            "source_lost"
+          ]
+        },
+        "sample_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "confirmation": {
+          "type": "string",
+          "enum": [
+            "confirmed",
+            "predicted",
+            "none"
+          ]
+        },
+        "planned_ns": {
+          "$ref": "#/$defs/u64"
+        },
+        "producer_send_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handler_enter_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handler_exit_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "admission_end_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "admission": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "REJECTED",
+            "MISSING"
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content_timestamp_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pointer_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pointer_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "catch_up": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event_id",
+        "batch_id",
+        "phase",
+        "sample_ids",
+        "confirmation",
+        "planned_ns",
+        "producer_send_ns",
+        "handler_enter_ns",
+        "handler_exit_ns",
+        "admission_end_ns",
+        "admission",
+        "reason",
+        "content_timestamp_ns",
+        "source_id",
+        "pointer_id",
+        "pointer_generation",
+        "catch_up"
+      ]
+    },
+    "commit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "APPLIED",
+            "NO_OP",
+            "REJECTED",
+            "MISSING",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{32}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commit_revision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "before_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "after_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "commit_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "publication_prepare_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history_prepare_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "history_finalize_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observer_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "return_class": {
+          "type": "string",
+          "enum": [
+            "COMMITTED",
+            "UNCOMMITTED",
+            "NO_OP",
+            "POST_COMMIT_ERROR",
+            "MISSING",
+            "NOT_APPLICABLE"
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "operation_id",
+        "commit_revision",
+        "before_generation",
+        "after_generation",
+        "commit_ns",
+        "publication_prepare_ns",
+        "history_prepare_ns",
+        "history_finalize_ns",
+        "observer_ns",
+        "return_class"
+      ]
+    },
+    "scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "PUBLISHED",
+            "RECOVERING",
+            "FAILED",
+            "MISSING",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "start_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "published_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "committed_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scene_generation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scene_revision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "start_ns",
+        "published_ns",
+        "committed_generation",
+        "scene_generation",
+        "scene_revision"
+      ]
+    },
+    "submit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submit_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "stroke_preview",
+            "edit_feedback",
+            "navigation",
+            "canonical",
+            "export_oracle"
+          ]
+        },
+        "at_ns": {
+          "$ref": "#/$defs/u64"
+        },
+        "basis": {
+          "$ref": "#/$defs/identity"
+        },
+        "demand_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requested_revision": {
+          "$ref": "#/$defs/u64"
+        },
+        "submitted_revision": {
+          "$ref": "#/$defs/u64"
+        },
+        "pose_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valid_region_proof": {
+          "type": "string",
+          "enum": [
+            "FULL",
+            "REGIONAL",
+            "MISSING"
+          ]
+        },
+        "qualification": {
+          "type": "string",
+          "enum": [
+            "EFFECTIVE",
+            "STALE",
+            "EMPTY",
+            "REJECTED",
+            "MISSING"
+          ]
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "PIXEL_REUSE",
+            "GPU_COVERAGE",
+            "CPU_COVERAGE",
+            "MIXED",
+            "MISSING"
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "submit_id",
+        "purpose",
+        "at_ns",
+        "basis",
+        "demand_id",
+        "requested_revision",
+        "submitted_revision",
+        "pose_id",
+        "valid_region_proof",
+        "qualification",
+        "representation",
+        "target_ids"
+      ]
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "completion_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "at_ns": {
+          "$ref": "#/$defs/u64"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "CANONICAL_QUALIFIED",
+            "PREVIEW_QUALIFIED",
+            "GPU_RETIREMENT"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/identity"
+        },
+        "qualification": {
+          "type": "string",
+          "enum": [
+            "QUALIFIED",
+            "STALE",
+            "REJECTED",
+            "MISSING"
+          ]
+        },
+        "matches_current_basis": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "completion_id",
+        "at_ns",
+        "kind",
+        "basis",
+        "qualification",
+        "matches_current_basis"
+      ]
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "span_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "exact_prepare",
+            "pathops",
+            "publication_prepare",
+            "history_prepare",
+            "semantic_apply",
+            "history_finalize",
+            "observer_publication",
+            "scene_apply",
+            "reference_build",
+            "coverage",
+            "material",
+            "provider_submit"
+          ]
+        },
+        "clock_domain": {
+          "type": "string",
+          "enum": [
+            "browser",
+            "wasm_local_duration"
+          ]
+        },
+        "start_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "inclusive_ns": {
+          "$ref": "#/$defs/u64"
+        },
+        "exclusive_ns": {
+          "$ref": "#/$defs/u64"
+        }
+      },
+      "required": [
+        "span_id",
+        "parent_id",
+        "stage",
+        "clock_domain",
+        "start_ns",
+        "end_ns",
+        "inclusive_ns",
+        "exclusive_ns"
+      ]
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "interaction_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "stroke",
+            "partial_erase",
+            "masked_drag",
+            "drag",
+            "navigation",
+            "history",
+            "resource_recovery",
+            "cancel"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/identity"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/input"
+          }
+        },
+        "commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "scene": {
+          "$ref": "#/$defs/scene"
+        },
+        "submits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/submit"
+          }
+        },
+        "canonical_receipts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/completion"
+          }
+        },
+        "resource_completions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/completion"
+          }
+        },
+        "spans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/span"
+          }
+        }
+      },
+      "required": [
+        "interaction_id",
+        "kind",
+        "basis",
+        "events",
+        "commit",
+        "scene",
+        "submits",
+        "canonical_receipts",
+        "resource_completions",
+        "spans"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "navigation"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "canonical_receipts": {
+                "maxItems": 0
+              },
+              "commit": {
+                "properties": {
+                  "state": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "CURRENT_BRANCH",
+            "UNIFIED_POLICY",
+            "MISSING"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ReusePixels",
+            "PreparedGpuDraw",
+            "BoundedCpuDraw",
+            "Pending",
+            "Unsupported",
+            "ResourceUnavailable",
+            "DeviceLost",
+            "Invalid",
+            "Stale",
+            "MISSING"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "decision_id",
+        "origin",
+        "outcome",
+        "reason"
+      ]
+    },
+    "leaf": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "leaf_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actual_target": {
+          "type": "string",
+          "enum": [
+            "GPU",
+            "CPU",
+            "RECORDING",
+            "NONE",
+            "UNKNOWN",
+            "MISSING"
+          ]
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "work_kind": {
+          "type": "string",
+          "enum": [
+            "coverage",
+            "material",
+            "composite",
+            "query",
+            "none",
+            "recording"
+          ]
+        }
+      },
+      "required": [
+        "leaf_id",
+        "route_id",
+        "decision_id",
+        "actual_target",
+        "target_id",
+        "work_kind"
+      ]
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "route_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decision": {
+          "$ref": "#/$defs/decision"
+        },
+        "leaves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/leaf"
+          }
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "Prepared",
+            "Pending",
+            "Submitted",
+            "Completed",
+            "Cancelled",
+            "Stale",
+            "Failed",
+            "MISSING"
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "attempt_id",
+        "route_id",
+        "start_ns",
+        "end_ns",
+        "decision",
+        "leaves",
+        "outcome",
+        "reason"
+      ]
+    },
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "interaction_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "stroke_preview",
+            "edit_feedback",
+            "navigation",
+            "canonical",
+            "export_oracle",
+            "exact_query"
+          ]
+        },
+        "fidelity": {
+          "type": "string",
+          "enum": [
+            "exact",
+            "preview_mutable_tail",
+            "navigation_lod"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/identity"
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/attempt"
+          }
+        },
+        "final_state": {
+          "type": "string",
+          "enum": [
+            "Completed",
+            "Cancelled",
+            "Stale",
+            "Failed",
+            "RIGHT_CENSORED",
+            "MISSING"
+          ]
+        }
+      },
+      "required": [
+        "job_id",
+        "interaction_id",
+        "purpose",
+        "fidelity",
+        "basis",
+        "attempts",
+        "final_state"
+      ]
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric_id": {
+          "type": "string",
+          "enum": [
+            "INPUT_QUEUE",
+            "PRODUCER_LATE",
+            "DISPATCH_DOWN",
+            "DISPATCH_MOVE",
+            "DISPATCH_UP",
+            "DISPATCH_CANCEL",
+            "NEXT_DOWN_ADMISSION",
+            "NEXT_DOWN_PLANNED_TO_FEEDBACK",
+            "NEXT_DOWN_ENTER_TO_FEEDBACK",
+            "UP_TO_COMMIT",
+            "COMMIT_TO_SCENE",
+            "SCENE_TO_SUBMIT",
+            "UP_TO_CANONICAL",
+            "UP_RETURN_TO_CANONICAL",
+            "COMMIT_TO_CANONICAL",
+            "FIRST_FEEDBACK",
+            "EFFECTIVE_SUBMIT_GAP",
+            "RAF_INTERVAL",
+            "QUIESCENCE"
+          ]
+        },
+        "interaction_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "FAILED",
+            "RIGHT_CENSORED",
+            "MISSING",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "value_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lower_bound_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "observation_id",
+        "metric_id",
+        "interaction_id",
+        "event_id",
+        "start_ns",
+        "end_ns",
+        "status",
+        "value_ns",
+        "lower_bound_ns",
+        "reason"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COMPLETE"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "start_ns": {
+                "$ref": "#/$defs/u64"
+              },
+              "end_ns": {
+                "$ref": "#/$defs/u64"
+              },
+              "value_ns": {
+                "$ref": "#/$defs/u64"
+              },
+              "lower_bound_ns": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "RIGHT_CENSORED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "start_ns": {
+                "$ref": "#/$defs/u64"
+              },
+              "end_ns": {
+                "type": "null"
+              },
+              "value_ns": {
+                "type": "null"
+              },
+              "lower_bound_ns": {
+                "$ref": "#/$defs/u64"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "metric_id": {
+          "type": "string",
+          "enum": [
+            "INPUT_QUEUE",
+            "PRODUCER_LATE",
+            "DISPATCH_DOWN",
+            "DISPATCH_MOVE",
+            "DISPATCH_UP",
+            "DISPATCH_CANCEL",
+            "NEXT_DOWN_ADMISSION",
+            "NEXT_DOWN_PLANNED_TO_FEEDBACK",
+            "NEXT_DOWN_ENTER_TO_FEEDBACK",
+            "UP_TO_COMMIT",
+            "COMMIT_TO_SCENE",
+            "SCENE_TO_SUBMIT",
+            "UP_TO_CANONICAL",
+            "UP_RETURN_TO_CANONICAL",
+            "COMMIT_TO_CANONICAL",
+            "FIRST_FEEDBACK",
+            "EFFECTIVE_SUBMIT_GAP",
+            "RAF_INTERVAL",
+            "QUIESCENCE"
+          ]
+        },
+        "planned_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "censored_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_applicable_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "p50_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "p95_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "p99_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "max_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/u64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "population": {
+          "const": "complete_samples_only"
+        },
+        "tail_status": {
+          "type": "string",
+          "enum": [
+            "COMPLETE",
+            "INCOMPLETE",
+            "NO_SAMPLES"
+          ]
+        }
+      },
+      "required": [
+        "metric_id",
+        "planned_count",
+        "complete_count",
+        "failed_count",
+        "censored_count",
+        "missing_count",
+        "not_applicable_count",
+        "p50_ns",
+        "p95_ns",
+        "p99_ns",
+        "max_ns",
+        "population",
+        "tail_status"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "record_origin",
+    "run_id",
+    "row_id",
+    "repetition",
+    "fixture_sha256",
+    "source_revision",
+    "artifacts",
+    "clock",
+    "run_outcome",
+    "evidence_status",
+    "performance_status",
+    "interactions",
+    "jobs",
+    "metrics",
+    "summaries",
+    "loss",
+    "observed_until_ns",
+    "error"
+  ]
+}

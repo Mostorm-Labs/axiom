@@ -1,0 +1,52 @@
+{
+  "status": "CURRENT_FOR_UR0a_ONLY",
+  "design_revision": 2,
+  "approved_scope": "用户明确要求实现会话执行UR0a；不授权UR0b或后续生产改造。",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "sources": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+      "sha256": "0153d425d2b6160d5c3ef07a0ebad02a2302ea332cda3c168d966dccd5b25140",
+      "revision": "design-revision-2-content-addressed-local"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+      "sha256": "d616fe1db3c0e36d11a3a192ab67657e1ccf51f6f70407a5a7d1c3cf383cb599",
+      "revision": "design-revision-2-content-addressed-local"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+      "sha256": "fea82b3d62abe251ae3c9079dad13c45daaf986afb17d93b72a2a48aa7c9e326",
+      "revision": "design-revision-2-content-addressed-local"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    }
+  ],
+  "statements": [
+    "Existing Runtime owners, OperationEngine, SDK and dependency contracts remain unchanged.",
+    "This is a measurement-protocol task, not a new semantic or public API authority.",
+    "Baseline performance failure does not block subsequent optimization; correctness and evidence status remain separate.",
+    "Design documents remain proposals outside the expressly authorized UR0a scope."
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": "g5-ur0a-static-validation-v1",
+  "execution_kind": "STATIC_DATA_ONLY",
+  "status": "FAIL",
+  "checks": [
+    {
+      "id": "package_and_scope",
+      "status": "FAIL",
+      "error": "unreconciled untracked paths: ['docs/planning/g5-unified-render/design-r3/preserved-inputs.json', 'docs/planning/g5-unified-render/design-r3/validation.json']"
+    },
+    {
+      "id": "metrics_schema_examples",
+      "status": "PASS",
+      "details": {
+        "schema_vocabulary": "bounded supported subset",
+        "accepted": 7,
+        "rejected": 12,
+        "cases": [
+          {
+            "case_id": "complete",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "rejected",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "timeout",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "missing-submit",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "navigation",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "noop",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "qualified-chain",
+            "expected": "ACCEPT",
+            "result": "PASS",
+            "rejection": null
+          },
+          {
+            "case_id": "lossy-generation",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "$.interactions[0].basis.surface_generation no anyOf alternative: $.interactions[0].basis.surface_generation expected string; $.interactions[0].basis.surface_generation expected null"
+          },
+          {
+            "case_id": "negative-duration",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "negative duration"
+          },
+          {
+            "case_id": "invented-navigation-receipt",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "$.interactions[0].canonical_receipts too many items"
+          },
+          {
+            "case_id": "missing-treated-as-zero",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "$.metrics[0].value_ns expected null"
+          },
+          {
+            "case_id": "noop-new-operation",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "no-op allocated new Operation/commit"
+          },
+          {
+            "case_id": "dropped-critical-claimed-complete",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "dropped/unknown evidence claimed COMPLETE"
+          },
+          {
+            "case_id": "nan-p99-placeholder",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "$.summaries[0].p99_ns no anyOf alternative: $.summaries[0].p99_ns pattern mismatch; $.summaries[0].p99_ns expected null"
+          },
+          {
+            "case_id": "failure-removed-from-denominator",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "failure removed from denominator"
+          },
+          {
+            "case_id": "gpu-request-cpu-result",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "GPU request recorded as actual CPU coverage"
+          },
+          {
+            "case_id": "foreign-decision-link",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "foreign decision-to-leaf link"
+          },
+          {
+            "case_id": "stale-qualified-completion",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "stale completion qualified current basis"
+          },
+          {
+            "case_id": "u64-overflow",
+            "expected": "REJECT",
+            "result": "PASS",
+            "rejection": "$.interactions[0].basis.frame_id no anyOf alternative: $.interactions[0].basis.frame_id u64 overflow; $.interactions[0].basis.frame_id expected null"
+          }
+        ]
+      }
+    },
+    {
+      "id": "source_routes_and_factories",
+      "status": "PASS",
+      "details": {
+        "routes": 43,
+        "source_refs": 107,
+        "factory_sites": 36,
+        "source_files": 31,
+        "new_dynamic_runs": 0,
+        "covered_routes": 0,
+        "scope": "explicit lexical source factories/caller families, not whole-program proof"
+      }
+    },
+    {
+      "id": "matrix_and_literal_fixtures",
+      "status": "PASS",
+      "details": {
+        "mandatory_rows": 10,
+        "independent_repetitions": 3,
+        "planned_runs": 30,
+        "executed_runs": 0,
+        "literal_samples": 7200,
+        "literal_content_span_ns": "30000000000",
+        "action_event_counts": {
+          "reerase": 387,
+          "navigation": 330,
+          "masked_drag": 309
+        },
+        "primary_batch_bound_seconds": 6480,
+        "with_optional_diagnostic_bound_seconds": 7560
+      }
+    },
+    {
+      "id": "required_artifacts_links_obligations",
+      "status": "PASS",
+      "details": {
+        "required_review_artifacts": [
+          "protocol.md",
+          "metrics.schema.json",
+          "routes.json",
+          "matrix.json",
+          "review.md"
+        ],
+        "obligations": [
+          "UR0a-PROTOCOL",
+          "UR0a-ROUTES",
+          "UR0a-MATRIX",
+          "UR0a-READINESS"
+        ],
+        "dynamic_evidence": "MISSING; static checks do not qualify Runtime/platform performance"
+      }
+    }
+  ],
+  "new_runtime_or_browser_runs": 0
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "PENDING_INDEPENDENT_CONTROL_REVIEW",
+  "not_a_review_verdict": true,
+  "role": "implementation producer preparing reviewable request",
+  "to_existing_control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "from_implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "outbound_message_sent": false,
+  "ur0a_materialized_ref": {
+    "path": ".aegis/results/G5-UR0a/output-sha256.json",
+    "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29",
+    "identity_kind": "local-content-addressed"
+  },
+  "ur0a_result_ref": {
+    "path": ".aegis/results/G5-UR0a/result.json",
+    "sha256": "54e41722ac282c5efdfeb199094360184ff425ad4898869807ec0f6678142ee4",
+    "identity_kind": "local-content-addressed"
+  },
+  "ur0b_candidate_ref": {
+    "path": ".aegis/packages/G5-UR0b-candidate-r1/package.json",
+    "sha256": "9f82895e2dbe8b84d62ab557adf87396fca7ff1ce245794fa3205bad987777c9"
+  },
+  "checks_requested": [
+    "Independently resolve UR0a exact package/result/13-output manifest and frozen4 obligations; do not add R3 retroactive requirements.",
+    "Review frozen input schedules, schema failure/censoring definitions, fixture unresolved runtime qualification and static/dynamic split.",
+    "Accept/repair this UR0b instrumentation-only scope, private SDK transport/non-install boundary and all frozen obligations before source writes.",
+    "Review R3 GPU/encoding/lookup counters as observation; leave policy/History/feedback implementation to UR1/UR2.",
+    "Record real independent review provenance, accepted hashes and separate design materialization commit; only then activate this candidate.",
+    "After acceptance materialize a distinct G5-UR0b executable package bound to immutable candidate and real activation; this candidate validator never authorizes execution."
+  ],
+  "readable_plan": "docs/planning/g5-unified-render/ur0b-candidate-r1/plan.md",
+  "scope_today": "candidate documents and static checks only",
+  "production_changed": false,
+  "dynamic_runs": 0,
+  "official_gate_pass": false
+}

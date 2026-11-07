@@ -1,0 +1,103 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "allowed_write_roots": [
+        "docs/planning/g5-unified-render/ur0a/",
+        ".aegis/results/G5-UR0a/"
+      ],
+      "required_changes": [
+        "protocol.md",
+        "metrics.schema.json",
+        "routes.json",
+        "matrix.json",
+        "review.md",
+        "bounded lightweight validation and SHA256 manifest for outputs"
+      ],
+      "forbidden_changes": [
+        "runtime/sdk/apps/debug_ui production source",
+        "build/CI/dependency locks/semantic schema",
+        "GPU/CPU routing, budget, scheduler, History or receipt semantics",
+        "UR0b telemetry/runner implementation and formal browser performance sampling",
+        "changes to design revision2 or historical evidence",
+        "automatic execution of UR0b/UR1",
+        "commit/push unless separately authorized"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "UR0a-PROTOCOL",
+          "command_or_oracle": "Review protocol.md against supplemental measurement clauses; validate metrics schema examples including rejected/timeout/missing-submit records.",
+          "expected_result": "Explicit planned/arrival/dispatch/commit/Scene/submit/completion distinctions; navigation has no fake canonical receipt; accelerated setup distinguished from real-time delivery; no settle gate in immediate sequences.",
+          "blocking_reason": "Freeze clocks, event identity, metric windows, quantile method, failure/censoring and continuous-input schedule."
+        },
+        {
+          "id": "UR0a-ROUTES",
+          "command_or_oracle": "Source path/symbol/branch references at recorded starting SHA, inventory completeness checked against design seed branches.",
+          "expected_result": "Stable route IDs with owner, public entry, current branch, classification, target package, expected outcomes, planned identity links, positive/negative cases; static evidence distinct from dynamic coverage (unrun rows MISSING).",
+          "blocking_reason": "Bidirectional static route inventory including Direct, preview, edit, erase, navigation, resource recovery and retained paths."
+        },
+        {
+          "id": "UR0a-MATRIX",
+          "command_or_oracle": "Cross-check matrix rows and deadlines with corpus/worker policy in design revision2.",
+          "expected_result": "9-object drag and16-object erase DPR2 at32/96 and64/192 anchors;16-object two-erase immediate reerase/navigation and masked-drag branches; specify total-vs-copy counts, cadence/seed/durations, repeats, setup/measurement limits, cleanup, batch stop rules. No performance values fabricated.",
+          "blocking_reason": "Freeze bounded minimal rows and fixtures for UR0b, keeping historic anchors separate from new immediate tests."
+        },
+        {
+          "id": "UR0a-READINESS",
+          "command_or_oracle": "Review review.md and lightweight schema/link/cross-reference validation.",
+          "expected_result": "List existing/missing observation seams, required UR0b instrumentation and oracle gaps, overhead on/off experiment, unresolved blockers; no claims that code is migrated or measured.",
+          "blocking_reason": "Make next-phase observability gaps, oracle availability and overhead qualification explicit."
+        }
+      ],
+      "not_required": [
+        "full CTest",
+        "new browser performance matrix",
+        "hosted CI"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "all five review artifacts",
+        "validation output with source/package/output SHA256 identities",
+        "explicit observation gaps and next-phase boundaries"
+      ],
+      "corroborative": [
+        "existing G5 archived results, unchanged"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "all four static obligations satisfied",
+        "reviewer-accessible local artifacts with exact hashes",
+        "production diff empty relative to recorded starting revision",
+        "return READY_FOR_CONTROL_REVIEW for UR0a only"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "FROZEN_VERIFICATION_FAILURE",
+        "ENVIRONMENT_BLOCKER",
+        "TASK_PACKAGE_DEFECT"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "stop_after": "UR0a",
+      "official_gate_pass": false
+    }
+  },
+  "scope_notes": [
+    "Read existing production code and runners to map real paths; no production writer activity in this task.",
+    "Routine measurement choices such as quantile algorithm may be specified and justified in protocol. New product acceptance thresholds remain proposals for UR0c; missing dynamic data is expected, not fabricated."
+  ]
+}

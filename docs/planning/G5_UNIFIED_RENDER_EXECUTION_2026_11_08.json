@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "task": "G5-UNIFIED-RENDER-EXECUTION",
+  "status": "DESIGN_PROPOSAL",
+  "date": "2026-11-08",
+  "blueprint": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+  "execution": {
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "base_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "started": false
+  },
+  "roles": {
+    "design_review_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+    "production_code_single_writer": true,
+    "benchmarks_serial": true
+  },
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+    "docs/planning/sdk/js-v1-contract.md"
+  ],
+  "scope": {
+    "first_vertical": "Web round-handdrawn revision4 duplicate/transform -> repeated local erase -> immediate erase/navigation -> Undo/Redo",
+    "api_impact": "none planned; admission/sync changes require explicit contract",
+    "dependency_locks_and_historical_evidence": "preserve"
+  },
+  "metrics": {
+    "accepted_direction": {
+      "interaction_frame_p95_ms": 33
+    },
+    "proposed_for_UR0": {
+      "worst_interaction_or_submission_gap_ms": 100,
+      "synchronous_up_and_next_down_p95_ms": 50,
+      "synchronous_up_and_next_down_max_ms": 100,
+      "canonical_deadline": "freeze by workload before implementation"
+    },
+    "minimum_independent_primary_runs": 3,
+    "physical_latency_claim": false,
+    "measurement_protocol": {
+      "clock": "Browser monotonic domain; explicit WASM clock calibration or local durations.",
+      "planned_input": "Record planned time, actual handler arrival, late/catch-up batches and dispatch return.",
+      "frame_gap": "Separate RAF from effective revision/pose submit; measure first-demand gap and inter-submit gaps only while demand is pending.",
+      "next_down": "planned -> handler entry -> admission -> first valid feedback",
+      "canonical": "Up start/end, commit and exact qualified completion tracked separately.",
+      "failures": "Rejected input, timeout and missing submit are failure/censored observations, not omitted latency samples.",
+      "navigation": "No canonical completion receipt invented for feedback.",
+      "quantile_method": "Freeze in UR0a, report per-run sample counts and p50/p95/p99/max.",
+      "real_time_vs_fixture": "30-second content timestamps are distinct from wall-time input; accelerated setup not a real-time performance run.",
+      "immediate": "Next scheduled task/at most one refresh-period planned gap; no wait for settle/receipt/quiescence."
+    }
+  },
+  "corpus": {
+    "duration_seconds": 30,
+    "samples": 7200,
+    "total_strokes": [
+      1,
+      8,
+      16,
+      32
+    ],
+    "existing_anchor_total_strokes": 9,
+    "dpr": [
+      1,
+      2,
+      4
+    ],
+    "erase_round_checkpoints": [
+      1,
+      2,
+      5,
+      10
+    ],
+    "scenes": [
+      "ink-only",
+      "fixed mixed"
+    ],
+    "budgets_mib": [
+      {
+        "cache": 32,
+        "shared": 96,
+        "kind": "default"
+      },
+      {
+        "cache": 64,
+        "shared": 192,
+        "kind": "diagnostic"
+      }
+    ],
+    "execution_tiers": [
+      {
+        "tier": "UR0 anchors",
+        "cases": [
+          "existing 9-object drag DPR2",
+          "16-object cumulative erase DPR2"
+        ],
+        "profiles": [
+          "32/96",
+          "64/192"
+        ]
+      },
+      {
+        "tier": "UR0 immediate",
+        "cases": [
+          "16-object two-erase -> immediate next erase",
+          "16-object two-erase -> immediate navigation",
+          "masked object drag"
+        ],
+        "fixture_reset": "same qualified initial state per branch"
+      },
+      {
+        "tier": "per-package smoke",
+        "cases": [
+          "changed routes",
+          "correctness",
+          "denial/recovery"
+        ]
+      },
+      {
+        "tier": "UR5 primary",
+        "cases": [
+          "frozen 1/8/16/32 and DPR1/2/4 combinations"
+        ],
+        "repetitions": 3
+      },
+      {
+        "tier": "fault correctness",
+        "cases": [
+          "scene failure",
+          "allocation denial",
+          "delayed retirement",
+          "out-of-order completion",
+          "context loss",
+          "close/reopen"
+        ],
+        "include_in_normal_latency": false
+      }
+    ],
+    "worker_policy": {
+      "setup_and_measurement_deadlines": "separate, frozen per row",
+      "existing_reference": "180s / 3GiB process-family RSS is a harness bound, not product memory policy",
+      "long_setup": "32 independent real-time 30-second strokes require separate bounded preparation or a longer declared setup budget",
+      "stop": "Retain timeout/OOM-protection results; stop that tier for diagnosis instead of unlimited retries",
+      "full_cartesian_required_for_UR0": false
+    }
+  },
+  "packages": [
+    {
+      "id": "UR0",
+      "depends_on": [],
+      "output": "route inventory; bottom-level counters; phase timing; continuous baseline; frozen thresholds",
+      "scope": "instrumentation/verification, no routing change while measuring baseline",
+      "exit": "BASELINE_READY with explicit correctness/performance status; no need to meet 33ms before optimization."
+    },
+    {
+      "id": "UR1",
+      "depends_on": [
+        "UR0"
+      ],
+      "output": "private execution decisions/capabilities/shared geometry; canonical/edit feedback migrated",
+      "additional_output": "Route identities, owner-thread and lease contracts; workers not prerequisite."
+    },
+    {
+      "id": "UR2",
+      "depends_on": [
+        "UR1"
+      ],
+      "output": "exact geometry locality, incremental masks, mask-only Scene, next-contact handoff",
+      "subpackages_required": true,
+      "subpackages": [
+        "precommit History reservation",
+        "exact geometry locality",
+        "incremental mask and mask-only Scene",
+        "independent Scene recovery and feedback handoff",
+        "immediate reentry endpoint"
+      ]
+    },
+    {
+      "id": "UR3",
+      "depends_on": [
+        "UR1",
+        "UR2"
+      ],
+      "output": "v4 preview, masked transforms, navigation and canonical recovery route coverage"
+    },
+    {
+      "id": "UR4",
+      "depends_on": [
+        "UR2",
+        "UR3"
+      ],
+      "output": "measured residency/peak/inflight policy; conditional ordered composition/damage"
+    },
+    {
+      "id": "UR5",
+      "depends_on": [
+        "UR4"
+      ],
+      "output": "full continuous matrix, matching demo, independent evidence review"
+    }
+  ],
+  "per_package_handoff": [
+    "design_revision",
+    "base_sha",
+    "head_sha",
+    "owner_paths",
+    "invariants",
+    "baseline_red",
+    "diff",
+    "failures_by_name",
+    "raw_measurements",
+    "artifact_sha256",
+    "rollback_commit",
+    "open_boundaries"
+  ],
+  "invariants": [
+    "exact queries cannot consume navigation LOD",
+    "geometry hit != pixel hit",
+    "no implicit whole-frame synchronous CPU fallback for supported GPU interaction",
+    "no infinite Retry under unsatisfiable resources",
+    "GPU charged until actual retirement",
+    "mask-only preserves proven unchanged body",
+    "commit != present != durable",
+    "no stale receipt/repeated Operation",
+    "Direct included in telemetry",
+    "Current Scene required for hit-dependent next gesture",
+    "Old completion cannot retire a newer feedback session",
+    "History fallible preparation precedes canonical apply",
+    "Const prepared geometry is not assumed thread-safe",
+    "GPU-only old helper bypass is detected by route identity",
+    "Oracle cannot consume candidate cache pixels"
+  ],
+  "terminal_labels": [
+    "READY_FOR_REVIEW",
+    "BLOCKED_CORRECTNESS",
+    "BLOCKED_PERFORMANCE",
+    "BLOCKED_EVIDENCE"
+  ],
+  "official_gate_pass": false,
+  "notes": [
+    "Detailed packages freeze exact paths/thresholds before implementation.",
+    "Only p95 direction accepted by user; new numeric targets remain proposals.",
+    "No implementation message sent in this design turn."
+  ],
+  "design_revision": 2,
+  "supplemental_contracts": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+  "baseline_gate": {
+    "steps": [
+      "UR0a freeze measurement protocol and required rows",
+      "UR0b instrumentation-only baseline reproduction",
+      "UR0c evidence review and downstream threshold freeze"
+    ],
+    "performance_failure_blocks_optimization": false,
+    "requires": [
+      "trustworthy identities and measurement",
+      "reproducible baseline or explicit RED",
+      "overhead qualification",
+      "frozen downstream acceptance"
+    ],
+    "result_axes": [
+      "baseline_evidence_status",
+      "correctness_status",
+      "performance_status"
+    ]
+  },
+  "migration_registry": {
+    "required_fields": [
+      "route_id",
+      "public_entry",
+      "callsite_and_branch",
+      "owner",
+      "classification",
+      "target_package",
+      "allowed_outcomes",
+      "job_decision_leaf_identity",
+      "positive_case",
+      "negative_case",
+      "evidence_status"
+    ],
+    "classifications": [
+      "MIGRATE",
+      "KEEP_ORACLE",
+      "KEEP_LEGACY",
+      "KEEP_NON_INK",
+      "DEFERRED"
+    ],
+    "evidence_states": [
+      "COVERED",
+      "MISSING",
+      "DEFERRED"
+    ],
+    "seed_branches": [
+      "canonical prepared/direct",
+      "ordinary edit and masked transforms",
+      "creation ink second draw",
+      "live partial erase damage hit/miss",
+      "preview stable prefix/mutable tail/large viewport",
+      "navigation prepared/unprepared/coarse/fine",
+      "GPU target denial/no context/rebind",
+      "CPU export/oracle",
+      "legacy algorithms",
+      "non-ink drawing"
+    ],
+    "completion": "Every MIGRATE row has public-entry reachability and a matching decision-to-leaf identity; GPU execution alone is insufficient. New callsites require registry update."
+  },
+  "temporal_contract": {
+    "generations": [
+      "committed",
+      "scene",
+      "presented"
+    ],
+    "next_input": "Hit-dependent input requires current Scene or proven current projection; display availability alone does not authorize old-state queries.",
+    "feedback_states": [
+      "ActiveFeedback",
+      "SealedAwaitingReplacement",
+      "Retired"
+    ],
+    "partial_erase_has_existing_arc_token": false,
+    "no_op": "No new Operation; retire feedback against its existing committed basis.",
+    "job_states": [
+      "Queued",
+      "CpuRunning",
+      "Prepared",
+      "GpuSubmitted",
+      "Completed",
+      "Cancelled",
+      "Stale"
+    ],
+    "latest_wins_only": [
+      "replaceable preview demands",
+      "navigation demands"
+    ],
+    "never_drop": [
+      "confirmed input",
+      "Up",
+      "Cancel",
+      "source-lost",
+      "accepted Operations"
+    ],
+    "required_cases": [
+      "A-Up/B-Down/A-completion",
+      "A-Up/immediate navigation",
+      "commit/unpresented/Undo/Redo/old completion",
+      "Scene failure/immediate erase",
+      "no-op/cancel/source loss/pointer ID reuse"
+    ],
+    "feedback_owner": "Existing Runtime/Interaction owns gesture and handoff; Render consumes stamped immutable demands and retains derived resources; Provider reports completion. No new SDK token.",
+    "feedback_basis": [
+      "document/view/lifetime",
+      "gesture/commit",
+      "surface/metrics",
+      "Scene/mask"
+    ],
+    "stale_job_rule": "Any derived job, including canonical, may stop publication when stale; retain valid immutable body/checkpoints, never retract accepted Operations or issue receipts for a newer basis."
+  },
+  "commit_linearization": {
+    "before_apply": [
+      "publication reservation",
+      "existing EditorHistory.prepareRecord"
+    ],
+    "after_apply": [
+      "EditorHistory.commitPrepared without further fallible allocation",
+      "publication association",
+      "derived Scene/presentation"
+    ],
+    "invariant": "An accepted Operation cannot be returned as not committed because History allocation or derived presentation failed.",
+    "scope": "Reuse existing owners; no new canonical transaction layer. No-fail finalization applies to required internal History/publication work, not allocation by external callbacks.",
+    "observer_order_review": "Freeze History finalization versus observer order; audit observeApplied commit-record copies, selection updates and no-DataPort SDK encoding. Observer failure cannot reverse accepted commit."
+  },
+  "geometry_lease_contract": {
+    "current_thread": "owner thread; existing const geometry has mutable replay scratch and non-atomic accounting",
+    "future_workers": "Separate immutable source/checkpoint from per-job scratch; revalidate and publish on owner",
+    "pins": [
+      "query",
+      "resume job",
+      "GPU use as needed"
+    ],
+    "eviction": "Remove discoverability, retain live leases until users finish",
+    "cross_generation": "Old in-flight allocations remain charged across owner/context/view changes until actual retirement",
+    "callbacks": "Retirement callbacks cannot retain destroyed Runtime/provider"
+  },
+  "telemetry_qualification": {
+    "bounded_buffer": true,
+    "dropped_events_counted": true,
+    "critical_event_loss": "blocks coverage proof",
+    "attempt_job_separation": true,
+    "leaf_reconciliation": true,
+    "nested_spans": "inclusive/exclusive declared, no double-counting",
+    "paired_overhead": "same build/config on/off observation; acceptable overhead fixed before use",
+    "primary_run": "no profiling/readback/screenshots"
+  }
+}

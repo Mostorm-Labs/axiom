@@ -1,0 +1,26 @@
+{
+  "profile": "local design handoff, not platform or Gate qualification",
+  "materialization": "shared controlled worktree, content-addressed output manifest; remote publication not required for UR0a",
+  "blocking_obligations": [
+    "UR0a-PROTOCOL",
+    "UR0a-ROUTES",
+    "UR0a-MATRIX",
+    "UR0a-READINESS"
+  ],
+  "result_fields": [
+    "status",
+    "package_sha256",
+    "starting_revision",
+    "result_revision",
+    "worktree_dirty_paths",
+    "output_sha256",
+    "validation_results",
+    "production_diff_empty",
+    "open_boundaries",
+    "next_phase_prerequisites"
+  ],
+  "limitations": [
+    "result_revision is current Git HEAD, not a claim that uncommitted outputs are in that commit; hashes identify exact outputs",
+    "No dynamic baseline PASS, platform PASS or P34/G5 PASS."
+  ]
+}

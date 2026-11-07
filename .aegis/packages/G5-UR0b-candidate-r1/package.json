@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b",
+  "candidate_id": "G5-UR0b-candidate-r1",
+  "status": "FROZEN_CANDIDATE_PENDING_CONTROL_REVIEW",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authorization": {
+    "current_turn": "P30/P31 concrete candidate preparation and review handoff",
+    "production_execution": false,
+    "performance_sampling": false,
+    "commit_push": false,
+    "activation": "requires separately independently reviewed activation bound to exact package hash; not granted by this file"
+  },
+  "source_plan_ref": {
+    "path": "docs/planning/g5-unified-render/ur0b-candidate-r1/plan.md",
+    "sha256": "ccd2d9a6205ddff94003071567609e59a76fc90f51205fcfe3e72316d865b827",
+    "identity_kind": "local-content-addressed"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "fddc2a295d64fa18be1467ea9a6df3c5f70abd604bfa26ca880de1743200df47"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "ca11def651691932a6dbbaf4c1e8e9b1404a3c7188fbba0b0309864054f14a45"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "7dfd69b042b8689d45318202c63c5f5636232d02247e40902542971a45f73af7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "91a9d9fd151433678ed5cadc7f49ac222cea1dc131c67a8e1b850524ba4f768f"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "2c6821ee1a0b79b24b8a2c7c6bf2efc402f6ef01aebc2277e9509d3ff5442194"
+  },
+  "scope_contract_ref": {
+    "path": "scope-contract.json",
+    "sha256": "0663b7200135bac62ae15fea5b54021f98918edadc38c7c3c2923268924c1615"
+  },
+  "activation_requirements": {
+    "status": "PENDING",
+    "reviewer_surface": "independent control review, producer != reviewer",
+    "ur0a_package_ref": {
+      "path": ".aegis/packages/G5-UR0a/package.json",
+      "sha256": "cbbeec9c87fcd67f67498011c910778060dd2d893fa821b094d09f02e708905f",
+      "identity_kind": "local-content-addressed"
+    },
+    "ur0a_result_ref": {
+      "path": ".aegis/results/G5-UR0a/result.json",
+      "sha256": "54e41722ac282c5efdfeb199094360184ff425ad4898869807ec0f6678142ee4",
+      "identity_kind": "local-content-addressed"
+    },
+    "ur0a_manifest_ref": {
+      "path": ".aegis/results/G5-UR0a/output-sha256.json",
+      "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29",
+      "identity_kind": "local-content-addressed"
+    },
+    "future_record_path": ".aegis/results/G5-UR0b/control-activation.json",
+    "required_record_fields": [
+      "independent_review_provenance",
+      "reviewer_identity",
+      "accepted_ur0a_result_sha256",
+      "accepted_ur0a_manifest_sha256",
+      "accepted_package_sha256",
+      "design_materialization_revision",
+      "authorized_scope",
+      "review_verdict",
+      "official_gate_pass"
+    ],
+    "cannot_substitute": "producer self-check, a generic approved boolean, edited authority lock or a send-message receipt is not an independent review",
+    "materialize_executable_package_after_acceptance": ".aegis/packages/G5-UR0b/package.json; must bind this candidate hash and actual independent acceptance/activation identity, preserving candidate files unchanged"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "design_review_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "stop_after": "UR0b"
+}

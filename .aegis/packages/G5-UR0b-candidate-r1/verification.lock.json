@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "status": "CANDIDATE_REQUIRES_CONTROL_ACCEPTANCE",
+  "verification_spec": {
+    "path": "docs/planning/g5-unified-render/ur0a/protocol.md",
+    "sha256": "f69e5d8250eaf06324c6827032447a21ba17ae2af16f7f5cf0b9014e0a6207f6",
+    "identity_kind": "local-content-addressed"
+  },
+  "trusted_basis": {
+    "path": ".aegis/results/G5-UR0a/output-sha256.json",
+    "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligation_set": [
+    {
+      "id": "UR0b-PRIVATE",
+      "requirement": "Private bounded collector and qualification-only transport, OFF/ON same binary, no normal SDK exposure.",
+      "oracle": "Native g5 observation tests plus normal/qualifier symbol/install/JS export inspections and real root consumer smoke.",
+      "acceptance": "Bounded16MiB including1MiB critical reserve; no hot JSON/readback/profile; normal build has no new private exports, installed SDK unchanged; borrowed buffer/thread rules tested.",
+      "evidence_required": [
+        "collector-tests.json",
+        "normal-qualification-boundary.json",
+        "normal-artifact-manifest.json"
+      ],
+      "blocking_reason": "Prevent shipped debug surface or instrumentation changing consumer behavior."
+    },
+    {
+      "id": "UR0b-CLOCK-INPUT",
+      "requirement": "Original planned/catch-up input times, actual handler/admission and lossless identity.",
+      "oracle": "Deterministic fake-clock Node tests, delayed-handler and coalesced/terminal traces,16-bracket calibration before/after.",
+      "acceptance": "No schedule drift/drop of confirmed/terminal;60/120/240 real-time calibration runs labeled separately; missing/incompatible clock marks affected cross-domain metric MISSING, never subtract clocks directly.",
+      "evidence_required": [
+        "driver-tests.json",
+        "clock-calibration.json",
+        "input-plan-and-delivery.jsonl"
+      ],
+      "blocking_reason": "Closed-loop load or clock mixing hides actual queueing."
+    },
+    {
+      "id": "UR0b-COMMIT-SCENE",
+      "requirement": "Observe Up exact query/publication/History/apply/observer/Scene and next Down without changing ordering.",
+      "oracle": "Trace identity model tests; real public partial erase stages; existing eraser/History/contact tests.",
+      "acceptance": "Commit records/stamps and before/after gens preserved; no-op no new Operation; reject vs POST_COMMIT_ERROR truthful; stage duration nesting nonduplicating; Scene failure remains existing recovery.",
+      "evidence_required": [
+        "stage-trace.jsonl",
+        "commit-scene-reconciliation.json"
+      ],
+      "blocking_reason": "A committed mutation must not be measured as uncommitted reject; otherwise attribution and receipt timing are false."
+    },
+    {
+      "id": "UR0b-ROUTES-TARGETS",
+      "requirement": "Link observed CURRENT_BRANCH decision/leaf or qualified pixel hit, actual GPU/CPU/recording target/fallback and leases.",
+      "oracle": "UR0a source inventory cross-reference, trace join validator and modeled foreign/stale/unknown links, qualified Web target observations.",
+      "acceptance": "Every observed main-workload leaf has exact same-demand decision/basis; actual target recorded, no implied UNIFIED_POLICY. Conditional/unreached routes remain MISSING;17 matrix routes are candidate set, not all must artificially execute.",
+      "evidence_required": [
+        "routes-observed.json",
+        "target-leaf-reconciliation.json",
+        "raw-trace.jsonl"
+      ],
+      "blocking_reason": "A GPU request or isolated helper test cannot establish public path or actual raster target."
+    },
+    {
+      "id": "UR0b-WORK-COUNTERS",
+      "requirement": "Separate reference encoding/discard, lookup pointer/hash/deep compare/copy from geometry/replay and pixels.",
+      "oracle": "Known-size model tests and scoped counters at existing work points, transient root independent of canonical.",
+      "acceptance": "Capability tags EXACT/UPPER_BOUND/UNSUPPORTED/MISSING; no added point scan just to count; no encoding elimination/shortcut in UR0b; missing counters block only dependent attribution.",
+      "evidence_required": [
+        "work-counter-capabilities.json",
+        "work-costs.json"
+      ],
+      "blocking_reason": "Avoid interpreting cache-hit geometry counts as absence of linear lookup/encoding cost."
+    },
+    {
+      "id": "UR0b-GPU-QUEUE",
+      "requirement": "Nonblocking per-context submitted/completed/ordered-retirement and post-input convergence diagnostics.",
+      "oracle": "Existing GPU completion/retirement callbacks, deterministic delayed/abandon/loss tests, actual qualified Web group timeline.",
+      "acceptance": "Groups not instruction counts; no ticket counted submitted before real submit; observed completion not physical/pureGPU time; navigation consumes no canonical slot; unsafe callbacks/unknown capability explicit.",
+      "evidence_required": [
+        "gpu-queue-timeline.jsonl",
+        "gpu-retirement-tests.json",
+        "gpu-convergence.json"
+      ],
+      "blocking_reason": "Normal submit cadence and memory limits can conceal an unbounded GPU completion backlog."
+    },
+    {
+      "id": "UR0b-FIXTURE",
+      "requirement": "Qualify public-root9/16-object documents, package/config/seed, E0/E1 and fixed drag target.",
+      "oracle": "Opaque snapshot decoded offline with accepted Semantic SDK; independent exact query oracle, original seed/config and normalized history checked.",
+      "acceptance": "Literal corpus hashes unchanged;1+8 and1+15 total counts correct;7200 confirmed points and actual seed recorded. Wrong fixed target/selection or unsupported snapshot stops to fixture/package owner, never adaptive timed search.",
+      "evidence_required": [
+        "fixture-qualification.json",
+        "snapshot-inputs.json",
+        "exact-query-oracle.json"
+      ],
+      "blocking_reason": "A no-op, wrong object or altered brush workload is not the reported dense-erase baseline."
+    },
+    {
+      "id": "UR0b-PIXEL-SEMANTICS",
+      "requirement": "Keep independent CPU strict/GPU geometry-AA, semantic state, masks and receipt rules.",
+      "oracle": "Existing independent render_cache/erase component oracles plus6 bounded correctness workers: lower-z translucent drag;permanent+live mask;transparent/color BG;warm-miss-pressure;DPR switch;feedback-canonical.",
+      "acceptance": "Reference never uses candidate prepared/cache pixels; only accepted geometric AA boundary differences; failures retained as independent product RED if also normal/OFF; new instrumentation-caused failures block.",
+      "evidence_required": [
+        "pixel-oracle.json",
+        "semantic-state.json",
+        "receipt-oracle.json"
+      ],
+      "blocking_reason": "Speed of incorrect geometry/masks/z-order or receipt is not a usable baseline."
+    },
+    {
+      "id": "UR0b-OVERHEAD",
+      "requirement": "Qualify low-cost observation on the same diagnostic binary before primary latency conclusions.",
+      "oracle": "6AB/BA pairs in UR0a frozen order and reset fixture, full artifact hashes; no profiler/readback in timing.",
+      "acceptance": "Paired median p95 increment<=max(1ms,5%OFFmedian),wall<=max(20ms,5%OFFmedian);OFF MAD policy unchanged;critical loss rejects qualification;one explained diagnostic rerun max, original retained.",
+      "evidence_required": [
+        "overhead-pairs.json",
+        "overhead-qualification.json"
+      ],
+      "blocking_reason": "Unqualified observation overhead can itself generate the supposed product stall."
+    },
+    {
+      "id": "UR0b-MATRIX",
+      "requirement": "Account for10 fixed main rows x3 independent planned repetitions, original deadlines/budgets, rejects/censoring.",
+      "oracle": "New bounded parent/worker runner + UR0a metric schema/semantic checks, fixed plans and raw traces.",
+      "acceptance": "All planned run IDs have executed outcome or frozen-stop MISSING reason. Timeout/RSS stops tier without success-selection. Per-run nearest-rank completed-only quantiles alongside failures/censoring. Slow baseline permitted; no product threshold PASS.",
+      "evidence_required": [
+        "matrix-ledger.json",
+        "raw-runs/",
+        "metrics/",
+        "baseline-summary.json"
+      ],
+      "blocking_reason": "Dropped failed input, hidden waits or success-only tails conceal recurrence."
+    },
+    {
+      "id": "UR0b-REGRESSION",
+      "requirement": "Preserve affected runtime/public consumer semantics and package boundaries.",
+      "oracle": "Frozen relevant CTest, Node/Python G5/driver suites, runtime boundary checker and normal root JS/WASM consumer call/install checks.",
+      "acceptance": "Required new tests and affected regressions pass; unrelated historical failures kept exact, not fixed/filtered to claim full native green; artifacts match source/tree and source only allowed observation diff.",
+      "evidence_required": [
+        "regression.json",
+        "ctest.log",
+        "node.log",
+        "python.log",
+        "boundary.log",
+        "source-scope-audit.json"
+      ],
+      "blocking_reason": "Cross-module diagnostic seams must not leak public APIs or alter commit/presentation lifecycle."
+    }
+  ],
+  "oracle_policy": "Independent references and existing contracts preserved. Static sample records or engineering traces do not issue Gate PASS.",
+  "not_blocking": [
+    "achieving33ms or any newly invented product speed threshold",
+    "executing all43 static routes or every budget/DPR/family/platform combination",
+    "repairing UR1/UR2 product defects during baseline",
+    "full CTest or hosted CI",
+    "detailed CPU profiler traces"
+  ]
+}

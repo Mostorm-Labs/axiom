@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0a",
+  "status": "AUTHORIZED_UR0a_ONLY",
+  "authorization": "User in control thread: 先让实现会话执行 UR0a",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "task_anchor": {
+    "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "56a3ded1ddaf6154fa8dc234add1dfcc368eacfb9de9712931b8254997188c80"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "4764342738468b698a739447bf3832b6db6fa4b5299d35b7f92176cf7872ad3a"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e63d58b5c6185403ca15283d1a041f3a3cbc45f54c5f082e53d1ded1759ee096"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "9744b181daad869d3631e9d78828c25b2c92e6fed068bbfea3c34c173a7bc37e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "58c4af82f7a80be560106b0d03e163bc7755102ae9dd451fd7e473dade5389c0"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "design_review_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03"
+}

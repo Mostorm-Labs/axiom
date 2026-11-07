@@ -1,0 +1,214 @@
+{
+  "schema_version": "g5-ur0a-execution-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "phase": "UR0a",
+  "terminal_reason": "All four frozen static obligations have reviewable artifacts and validation; no production or UR0b activity.",
+  "package_sha256": "cbbeec9c87fcd67f67498011c910778060dd2d893fa821b094d09f02e708905f",
+  "starting_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "result_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "result_revision_contains_uncommitted_outputs": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration"
+  },
+  "materialized_ref": {
+    "kind": "shared_local_worktree_content_addressed",
+    "manifest_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0a/output-sha256.json",
+    "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29"
+  },
+  "worktree_dirty_paths": [
+    ".aegis/packages/G5-UR0a/authority.lock.json",
+    ".aegis/packages/G5-UR0a/evidence-contract.json",
+    ".aegis/packages/G5-UR0a/execution-contract.json",
+    ".aegis/packages/G5-UR0a/implementation-context.md",
+    ".aegis/packages/G5-UR0a/package.json",
+    ".aegis/packages/G5-UR0a/verification.lock.json",
+    ".aegis/results/G5-UR0a/advisory-inputs.json",
+    ".aegis/results/G5-UR0a/output-sha256.json",
+    ".aegis/results/G5-UR0a/preflight.json",
+    ".aegis/results/G5-UR0a/result.json",
+    ".aegis/results/G5-UR0a/validation-first.json",
+    ".aegis/results/G5-UR0a/validation.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+    "docs/planning/g5-unified-render/design-r3/amendment.json",
+    "docs/planning/g5-unified-render/design-r3/preserved-inputs.json",
+    "docs/planning/g5-unified-render/design-r3/validation.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json",
+    "docs/planning/g5-unified-render/ur0a/matrix.json",
+    "docs/planning/g5-unified-render/ur0a/metrics.schema.json",
+    "docs/planning/g5-unified-render/ur0a/protocol.md",
+    "docs/planning/g5-unified-render/ur0a/review.md",
+    "docs/planning/g5-unified-render/ur0a/routes.json",
+    "docs/planning/g5-unified-render/ur0a/schema-examples.json",
+    "docs/planning/g5-unified-render/ur0a/validate.py"
+  ],
+  "execution_owned_dirty_paths": [
+    ".aegis/results/G5-UR0a/advisory-inputs.json",
+    ".aegis/results/G5-UR0a/output-sha256.json",
+    ".aegis/results/G5-UR0a/preflight.json",
+    ".aegis/results/G5-UR0a/result.json",
+    ".aegis/results/G5-UR0a/validation-first.json",
+    ".aegis/results/G5-UR0a/validation.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+    "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json",
+    "docs/planning/g5-unified-render/ur0a/matrix.json",
+    "docs/planning/g5-unified-render/ur0a/metrics.schema.json",
+    "docs/planning/g5-unified-render/ur0a/protocol.md",
+    "docs/planning/g5-unified-render/ur0a/review.md",
+    "docs/planning/g5-unified-render/ur0a/routes.json",
+    "docs/planning/g5-unified-render/ur0a/schema-examples.json",
+    "docs/planning/g5-unified-render/ur0a/validate.py"
+  ],
+  "control_owned_preserved_dirty_paths": [
+    ".aegis/packages/G5-UR0a/authority.lock.json",
+    ".aegis/packages/G5-UR0a/evidence-contract.json",
+    ".aegis/packages/G5-UR0a/execution-contract.json",
+    ".aegis/packages/G5-UR0a/implementation-context.md",
+    ".aegis/packages/G5-UR0a/package.json",
+    ".aegis/packages/G5-UR0a/verification.lock.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+    "docs/planning/g5-unified-render/design-r3/amendment.json",
+    "docs/planning/g5-unified-render/design-r3/preserved-inputs.json",
+    "docs/planning/g5-unified-render/design-r3/validation.json"
+  ],
+  "output_sha256": {
+    ".aegis/results/G5-UR0a/advisory-inputs.json": "f3984f4417e61b4a1cb669965bc402465aef0dfb8aba0341e88dd998b58a6055",
+    ".aegis/results/G5-UR0a/preflight.json": "33ba7a729ce725ef9fe67df3c49723bee51a5813028090423211d3340da1746b",
+    ".aegis/results/G5-UR0a/validation-first.json": "8b27f68e0415c80761798c9c2417c056cadf1e9813ada69fbdde7b0c2c109fd8",
+    ".aegis/results/G5-UR0a/validation.json": "38dd14d8781de34feddc1e0fe25ea48bad7445e0522403498437e4a868f7711c",
+    "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json": "b604377ff64982570de61bc9d085f1d9c891e89406af715b2aa6711a25572f69",
+    "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json": "185b01bb95a4e57a76c668cc3f6851c4899bd692f307276eda0fef227959a6e8",
+    "docs/planning/g5-unified-render/ur0a/matrix.json": "519ac706e0a6e8b71085adfc2d7c1cb9f5885b552a0a8fddb13ec4814438de5c",
+    "docs/planning/g5-unified-render/ur0a/metrics.schema.json": "ce4bbe957ea5cf50264b777deafbe62d7cf5c620b3d52e9eee802975b38a237b",
+    "docs/planning/g5-unified-render/ur0a/protocol.md": "f69e5d8250eaf06324c6827032447a21ba17ae2af16f7f5cf0b9014e0a6207f6",
+    "docs/planning/g5-unified-render/ur0a/review.md": "2b88b058c8f3d3b875368d1000be09a9a1e47afc85bbe3d763d8fbd8f6ddac22",
+    "docs/planning/g5-unified-render/ur0a/routes.json": "d9282cd2a4ad82e44cfee1b003823aab11e0643489e08c3e94a0f550b2f92456",
+    "docs/planning/g5-unified-render/ur0a/schema-examples.json": "eb2743f4b3cc1ae9348b479b04dc34df28d0353e22b1a9420ad5ff885a55854e",
+    "docs/planning/g5-unified-render/ur0a/validate.py": "ae537888081c79500d1ac2dafb4c10b74fbe2b384aaff42d98253e9ec50e0d5b"
+  },
+  "validation_results": {
+    "status": "PASS",
+    "path": ".aegis/results/G5-UR0a/validation.json",
+    "sha256": "38dd14d8781de34feddc1e0fe25ea48bad7445e0522403498437e4a868f7711c",
+    "checks": [
+      {
+        "id": "package_and_scope",
+        "status": "PASS"
+      },
+      {
+        "id": "metrics_schema_examples",
+        "status": "PASS"
+      },
+      {
+        "id": "source_routes_and_factories",
+        "status": "PASS"
+      },
+      {
+        "id": "matrix_and_literal_fixtures",
+        "status": "PASS"
+      },
+      {
+        "id": "required_artifacts_links_obligations",
+        "status": "PASS"
+      }
+    ],
+    "schema_examples": {
+      "valid_accepted": 7,
+      "invalid_rejected": 12
+    },
+    "static_inventory": {
+      "routes": 43,
+      "source_refs": 107,
+      "explicit_factory_sites": 36
+    },
+    "matrix": {
+      "mandatory_rows": 10,
+      "planned_repetitions_each": 3,
+      "new_runs_executed": 0
+    },
+    "git_diff_check": "PASS",
+    "untracked_text_trailing_whitespace": "PASS"
+  },
+  "frozen_obligations": {
+    "UR0a-PROTOCOL": {
+      "status": "STATIC_CHECK_PASS",
+      "dynamic_status": "MISSING"
+    },
+    "UR0a-ROUTES": {
+      "status": "STATIC_CHECK_PASS",
+      "dynamic_status": "MISSING"
+    },
+    "UR0a-MATRIX": {
+      "status": "STATIC_CHECK_PASS",
+      "dynamic_status": "MISSING"
+    },
+    "UR0a-READINESS": {
+      "status": "STATIC_CHECK_PASS",
+      "dynamic_status": "MISSING"
+    }
+  },
+  "production_diff_empty": true,
+  "preserved_inputs_sha256": {
+    ".aegis/packages/G5-UR0a/authority.lock.json": "56a3ded1ddaf6154fa8dc234add1dfcc368eacfb9de9712931b8254997188c80",
+    ".aegis/packages/G5-UR0a/evidence-contract.json": "58c4af82f7a80be560106b0d03e163bc7755102ae9dd451fd7e473dade5389c0",
+    ".aegis/packages/G5-UR0a/execution-contract.json": "e63d58b5c6185403ca15283d1a041f3a3cbc45f54c5f082e53d1ded1759ee096",
+    ".aegis/packages/G5-UR0a/implementation-context.md": "9744b181daad869d3631e9d78828c25b2c92e6fed068bbfea3c34c173a7bc37e",
+    ".aegis/packages/G5-UR0a/package.json": "cbbeec9c87fcd67f67498011c910778060dd2d893fa821b094d09f02e708905f",
+    ".aegis/packages/G5-UR0a/verification.lock.json": "4764342738468b698a739447bf3832b6db6fa4b5299d35b7f92176cf7872ad3a",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json": "fea82b3d62abe251ae3c9079dad13c45daaf986afb17d93b72a2a48aa7c9e326",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md": "0153d425d2b6160d5c3ef07a0ebad02a2302ea332cda3c168d966dccd5b25140",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md": "d616fe1db3c0e36d11a3a192ab67657e1ccf51f6f70407a5a7d1c3cf383cb599"
+  },
+  "advisory_read_only_inputs_sha256": {
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json": "ddeddab997c18e2a8e7bda084831a87030bc921f12e5ed30f5c382e636f8cd8a",
+    "docs/planning/g5-unified-render/design-r3/amendment.json": "7bf58fbf5c5187c208ad6c0afdebd21293cb6f3de4c6dfb7b0d6544bf5524b07",
+    "docs/planning/g5-unified-render/design-r3/preserved-inputs.json": "fdab60b44c94032fdec2eb418891d5cf5cefec545c5aee84637265bab2561a74",
+    "docs/planning/g5-unified-render/design-r3/validation.json": "fc9b37963397c37689ddec66d3492e05fadc8275e2a7c5ad8420997d14e772ab"
+  },
+  "initial_validation_reconciliation": "First static check detected two concurrent R3 control audit files outside initial snapshot; archived validation-first.json, verified/snapshotted them read-only, active R2 locks unchanged. Final validation passes.",
+  "new_dynamic_evidence_status": "MISSING",
+  "open_boundaries": [
+    "No new Runtime/browser performance measurement, no route dynamically COVERED.",
+    "UR0b event/clock calibration, commit/Scene/submit/completion identity and job/decision/leaf/target/lease observation not implemented.",
+    "Public fixture seed/config/snapshot, exact E0/E1 targets and masked-drag fixed point still need independent Runtime oracle qualification.",
+    "Same-binary OFF/ON overhead experiment and private toggle not implemented or measured.",
+    "Minimal pixel combinations and post-commit/Scene/History/feedback fault timelines need their own dynamic evidence.",
+    "Axiom GPU target evidence would not prove no hidden software coverage in locked Skia; latter UNKNOWN.",
+    "R3 supplemental groups/encoding/lookup/fork/superseding-frame items are advisory, not a rebound UR0a closure.",
+    "Lexical factories/caller families and bounded schema validator are scoped static checks, not whole-program or generic metaschema proof."
+  ],
+  "next_phase_prerequisites": [
+    "Control review of this exact UR0a output manifest.",
+    "Explicit UR0b authorization and frozen implementation/evidence package, with exact accepted protocol/fixture/source hashes.",
+    "UR0b fills diagnostics/runner/oracle/overhead gaps before accepted baseline conclusions; slower baseline itself is not a blocker to optimization.",
+    "UR0c reviews evidence completeness/attribution and freezes later performance thresholds;33ms remains direction only.",
+    "Production optimization, budgets, routing, History, receipts and later UR1/UR2 changes require their owning packages."
+  ],
+  "not_executed": [
+    "UR0b",
+    "UR1",
+    "production edits",
+    "formal performance matrix",
+    "full CTest",
+    "hosted CI",
+    "commit",
+    "push",
+    "outbound thread message"
+  ],
+  "official_gate_pass": false
+}

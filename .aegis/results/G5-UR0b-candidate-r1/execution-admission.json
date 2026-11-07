@@ -1,0 +1,75 @@
+{
+  "status": "BLOCKED_CONTROL_REVIEW",
+  "phase": "UR0b_P31_CANDIDATE",
+  "candidate_structure": "PASS",
+  "package_local_hash_refs": 6,
+  "source_refs_verified": 69,
+  "ur0a_preserved_outputs": 13,
+  "preserved_input_files": 30,
+  "frozen_obligations": [
+    "UR0b-PRIVATE",
+    "UR0b-CLOCK-INPUT",
+    "UR0b-COMMIT-SCENE",
+    "UR0b-ROUTES-TARGETS",
+    "UR0b-WORK-COUNTERS",
+    "UR0b-GPU-QUEUE",
+    "UR0b-FIXTURE",
+    "UR0b-PIXEL-SEMANTICS",
+    "UR0b-OVERHEAD",
+    "UR0b-MATRIX",
+    "UR0b-REGRESSION"
+  ],
+  "main_matrix_rows": 10,
+  "main_planned_runs": 30,
+  "conditional_candidate_routes": 17,
+  "policy_negative_cases": [
+    {
+      "case": "premature-write",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "premature production authorization"
+    },
+    {
+      "case": "sampling",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "premature sampling authorization"
+    },
+    {
+      "case": "public-api",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "public SDK change"
+    },
+    {
+      "case": "optimization",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "optimization mixed into baseline"
+    },
+    {
+      "case": "unbounded-ring",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "unbounded/mismatched diagnostic capacity"
+    },
+    {
+      "case": "budget-change",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "baseline budget changed"
+    },
+    {
+      "case": "overlapping-workers",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "overlapping performance workers"
+    },
+    {
+      "case": "self-gate",
+      "result": "REJECTED_AS_EXPECTED",
+      "reason": "Gate/phase expansion"
+    }
+  ],
+  "production_diff_empty": true,
+  "new_browser_or_runtime_runs": 0,
+  "activation_status": "PENDING_INDEPENDENT_CONTROL_REVIEW",
+  "can_execute": false,
+  "official_gate_pass": false,
+  "head": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "candidate_package_sha256": "9f82895e2dbe8b84d62ab557adf87396fca7ff1ce245794fa3205bad987777c9",
+  "reason": "No independently verified activation; no production mutation, build or sampling started."
+}

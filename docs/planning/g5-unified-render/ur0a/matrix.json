@@ -1,0 +1,761 @@
+{
+  "schema_version": "g5-ur0a-matrix-v1",
+  "status": "STATIC_PLAN_ONLY",
+  "starting_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "scope": "bounded minimal UR0b cohort, not all route coverage and not UR5 scale/Gate acceptance",
+  "protocol": "protocol.md",
+  "metrics_schema": "metrics.schema.json",
+  "fixtures": {
+    "LEGACY_28_796": {
+      "source_refs": [
+        {
+          "path": "verification/runners/g5/drag_copies.mjs",
+          "sha256": "a744dd1bf931f0138867b36d552750aab21da93602f2150fa443c9935dee0ac6",
+          "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+        },
+        {
+          "path": "verification/runners/g5/cumulative_erase.mjs",
+          "sha256": "59f9f865ea550a239f784a45bc3273bafde46da8e187524c6524d5b8cc52c122",
+          "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+        },
+        {
+          "path": "verification/runners/g5/navigation_sampling.html",
+          "sha256": "9e9a5687473b6ab1ba4faf6fa9b18bd0864cf53f3fe15e18baebbab1a18d9b7e",
+          "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+        },
+        {
+          "path": "verification/runners/g5/feedback_metrics.mjs",
+          "sha256": "0aca7a7fbe97b2c2e785a2189cf12d513dc42bb41fd2c7d6ffb8570af0900580",
+          "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+        },
+        {
+          "path": "verification/runners/g5/erase_recovery_metrics.mjs",
+          "sha256": "0827db96d0a2bc9a46d1c7bd739069c4b697d21dcff9e86f6cfd632a837f5c9e",
+          "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+        }
+      ],
+      "raw_samples": 7200,
+      "content_timestamp_step_ns": "4000000",
+      "first_content_timestamp_ns": "1004000000",
+      "last_content_timestamp_ns": "29800000000",
+      "content_span_ns": "28796000000",
+      "setup_cadence": "each16 samples await RAF, settle canonical after original and each duplicate; preserve exact old runner",
+      "not_literal_30s": true,
+      "measurement_quantile_legacy": "floor(p*N) zero-based; archive unchanged, new summaries nearest-rank separately",
+      "legacy9_drag": "select original head, duplicate8 with offsets[1,1], selected lastcopy, drag48moves (dx=48*i/47,dy=20*i/47), await RAF per Move, then Up and wait for qualified completion/quiescence; optical reads outside timed window",
+      "legacy16_erase": "15 copies, zoomAt(400,250,2), setup waits1200ms; before-erasing navigation probe;10 rounds128points using original formula, RAF per sample, Up then quiescence200ms before next round; preserve original navigation before/after/hot phases and their state identities"
+    },
+    "CONTINUOUS_30S": {
+      "path": "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+      "sha256": "b604377ff64982570de61bc9d085f1d9c891e89406af715b2aa6711a25572f69",
+      "raw_samples": 7200,
+      "content_span_ns": "30000000000",
+      "quantization_logical_px": 0.001,
+      "setup_cadence": "accelerated public SDK corpus, up to16 Move samples/task, no claim of30s real-time; qualify full snapshot state outside timing",
+      "package": "round-handdrawn",
+      "revision": 4
+    },
+    "IMMEDIATE_ACTIONS": {
+      "path": "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json",
+      "sha256": "185b01bb95a4e57a76c668cc3f6851c4899bd692f307276eda0fef227959a6e8",
+      "quantization_logical_px": 0.001,
+      "plans": [
+        "reerase",
+        "navigation",
+        "masked_drag"
+      ],
+      "all_planned_before_measurement": true,
+      "immediate_gap_ns": "8333333",
+      "await_between_measured_events": false,
+      "forbidden_gates": [
+        "receipt",
+        "settle",
+        "quiescence",
+        "RAF",
+        "prior handler return schedule recompute"
+      ],
+      "catchup_max_batches_per_task": 8,
+      "after_each_catchup_chunk": "yield one task, retain original planned times and ordered confirmed/terminal events"
+    }
+  },
+  "environment": {
+    "browser": "one pinned installed Chrome revision per paired cohort, exact executable/build/GPU identity and flags archived by UR0b",
+    "window_css": [
+      900,
+      650
+    ],
+    "mount_css": [
+      800,
+      500
+    ],
+    "builtin_fonts": false,
+    "background": "opaque default white; ink-only minimal cohort",
+    "device_pixel_ratio": 2,
+    "refresh_condition": "record measured refresh period;8,333,333ns immediate gap must not exceed one measured period; if ineligible report fixture qualification MISSING, do not silently lengthen gap",
+    "gpu_load": "serial runs, no competing build/perf/matrix workloads; record other known GPU tabs/processes",
+    "artifact_identity": "matching root JS/types/WASM/resources; full before/after SHA256, BuildInfo and source tree digest; dynamic hashes MISSING in UR0a",
+    "document_id": "99999999999999999999999999999999",
+    "entropy_seed": "xorshift32-0x12345678, controlled fixture setup identity entropy only, not a public brush seed selector",
+    "brush_profile": "round-handdrawn",
+    "brush_revision": 4,
+    "brush_config": {
+      "color": [
+        0.05000000074505806,
+        0.10000000149011612,
+        0.20000000298023224,
+        1
+      ],
+      "density": 0.65,
+      "deposition": 0.8,
+      "easing": 1,
+      "endCap": true,
+      "endTaper": 0,
+      "family": 1,
+      "laserFadeMs": 1000,
+      "laserTailLength": 300,
+      "markerAngle": 0.7853981633974483,
+      "markerFlatness": 0.25,
+      "opacity": 1,
+      "pressureModel": 2,
+      "pressureSource": 1,
+      "roundMode": 2,
+      "size": 16,
+      "smoothing": 0.61,
+      "startCap": true,
+      "startTaper": 0,
+      "streamline": 0.13,
+      "textureScale": 8,
+      "thinning": 0.99,
+      "version": 2,
+      "wetEdge": 0.4
+    },
+    "brush_seed_policy": {
+      "source_ref": "routes.json#source_refs/R_BRUSH_SEED",
+      "derivation": "0x4500 + Runtime brush session identifier",
+      "fixed_numeric_seed": null,
+      "gap": "session ID not exposed as a public seed API; UR0b independent snapshot decode must record actual seed and normalized config; no hidden access added to public SDK"
+    },
+    "cache_start": "fresh Runtime/provider per row repetition; original+copies drawn/committed during setup; no unrecorded cache eviction; within-row2-erases and following action retain current caches"
+  },
+  "new_fixture_setup": {
+    "original_strokes": 1,
+    "copies": 15,
+    "total_objects": 16,
+    "duplicate_offset": [
+      1,
+      1
+    ],
+    "selection": "last copy selected before switching to partialEraser; selected ObjectId recorded",
+    "zoom": "public zoomAt(400,250,2), observe actual camera; no platform viewport mirror",
+    "eraser": {
+      "public_select_tool": "partialEraser",
+      "mode": 2,
+      "diameter": 32
+    },
+    "premeasurement_settle_allowed": true,
+    "preconditions": [
+      "exactly16 objects and no active contact",
+      "same7200 confirmed history and canonical config/seed recorded",
+      "all copies retain shared logical body data; snapshot object transforms independently checked",
+      "E0 and E1 hit expected objects with independent exact oracle; no no-op silently counted as erase",
+      "masked_drag fixed[400,120] Down must hit selected lastcopy and be outside E0/E1 erased regions under true camera",
+      "if any precondition fails, preserve fixture failure; change fixture only in a versioned protocol correction before performance sampling, no adaptive point search in timed run"
+    ],
+    "masked_drag_tool_transition": "preplanned selectTool(select) midway between E1-Up and D-Down; promise completion recorded separately, not awaited by producer; late/non-admitted action preserved as failure"
+  },
+  "rows": [
+    {
+      "row_id": "LEGACY9_DRAG_DPR2_32_96",
+      "case": "legacy9_drag",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 9,
+      "original_strokes": 1,
+      "copies": 8,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "LEGACY_28_796",
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "dpr": 2,
+      "initial_scale": 1,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "legacy_per_move_raf",
+      "immediate_plan_branch": null,
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "EDIT-PLAIN",
+        "EDIT-ORDERED-RUN",
+        "CAN-PREP-V4",
+        "CAN-DIRECT"
+      ]
+    },
+    {
+      "row_id": "LEGACY16_ERASE_DPR2_32_96",
+      "case": "legacy16_erase",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "LEGACY_28_796",
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "legacy_round_quiescence",
+      "immediate_plan_branch": null,
+      "settle_between_measured_gestures": true,
+      "measured_rounds": 10,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_REERASE_DPR2_32_96",
+      "case": "immediate_reerase",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "reerase",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_32_96",
+      "case": "immediate_navigation",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "navigation",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN",
+        "NAV-RETAINED",
+        "NAV-COARSE-GPU",
+        "NAV-COARSE-CPU",
+        "NAV-UNPREPARED"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96",
+      "case": "immediate_masked_drag",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "masked_drag",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN",
+        "EDIT-MASK-ISOLATED",
+        "EDIT-MASK-DIRECT",
+        "EDIT-ORDERED-RUN"
+      ]
+    },
+    {
+      "row_id": "LEGACY9_DRAG_DPR2_64_192",
+      "case": "legacy9_drag",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 9,
+      "original_strokes": 1,
+      "copies": 8,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "LEGACY_28_796",
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "dpr": 2,
+      "initial_scale": 1,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "legacy_per_move_raf",
+      "immediate_plan_branch": null,
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "EDIT-PLAIN",
+        "EDIT-ORDERED-RUN",
+        "CAN-PREP-V4",
+        "CAN-DIRECT"
+      ]
+    },
+    {
+      "row_id": "LEGACY16_ERASE_DPR2_64_192",
+      "case": "legacy16_erase",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "LEGACY_28_796",
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "legacy_round_quiescence",
+      "immediate_plan_branch": null,
+      "settle_between_measured_gestures": true,
+      "measured_rounds": 10,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_REERASE_DPR2_64_192",
+      "case": "immediate_reerase",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "reerase",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_64_192",
+      "case": "immediate_navigation",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "navigation",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN",
+        "NAV-RETAINED",
+        "NAV-COARSE-GPU",
+        "NAV-COARSE-CPU",
+        "NAV-UNPREPARED"
+      ]
+    },
+    {
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192",
+      "case": "immediate_masked_drag",
+      "mandatory": true,
+      "repetitions": 3,
+      "independent_reset_each_repetition": true,
+      "total_objects": 16,
+      "original_strokes": 1,
+      "copies": 15,
+      "copy_offset_logical": [
+        1,
+        1
+      ],
+      "fixture_id": "CONTINUOUS_30S",
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "dpr": 2,
+      "initial_scale": 2,
+      "setup_mode": "accelerated_public_sdk",
+      "measurement_schedule": "preplanned_independent_tasks",
+      "immediate_plan_branch": "masked_drag",
+      "settle_between_measured_gestures": false,
+      "measured_rounds": 1,
+      "limits_seconds": {
+        "setup": 45,
+        "measurement": 120,
+        "cleanup": 15,
+        "worker_total": 180
+      },
+      "rss_process_family_limit_bytes": 3221225472,
+      "evidence_status": "MISSING",
+      "measurements": null,
+      "fixture_precondition_status": "MISSING",
+      "correctness_oracle_status": "MISSING",
+      "required_routes": [
+        "ERASE-FEEDBACK",
+        "ERASE-LAYERS",
+        "ERASE-RESIDENT",
+        "ERASE-MISS",
+        "ERASE-UP-EXACT",
+        "ERASE-COMMIT-SCENE",
+        "ERASE-NEXT-DOWN",
+        "EDIT-MASK-ISOLATED",
+        "EDIT-MASK-DIRECT",
+        "EDIT-ORDERED-RUN"
+      ]
+    }
+  ],
+  "metrics_required": [
+    "INPUT_QUEUE",
+    "PRODUCER_LATE",
+    "DISPATCH_DOWN",
+    "DISPATCH_MOVE",
+    "DISPATCH_UP",
+    "NEXT_DOWN_ADMISSION",
+    "NEXT_DOWN_PLANNED_TO_FEEDBACK",
+    "NEXT_DOWN_ENTER_TO_FEEDBACK",
+    "UP_TO_COMMIT",
+    "COMMIT_TO_SCENE",
+    "SCENE_TO_SUBMIT",
+    "UP_TO_CANONICAL",
+    "UP_RETURN_TO_CANONICAL",
+    "COMMIT_TO_CANONICAL",
+    "FIRST_FEEDBACK",
+    "EFFECTIVE_SUBMIT_GAP",
+    "RAF_INTERVAL",
+    "QUIESCENCE"
+  ],
+  "required_stage_spans": [
+    "exact_prepare",
+    "pathops",
+    "publication_prepare",
+    "history_prepare",
+    "semantic_apply",
+    "history_finalize",
+    "observer_publication",
+    "scene_apply",
+    "reference_build",
+    "coverage",
+    "material",
+    "provider_submit"
+  ],
+  "required_auxiliary_counts": [
+    "reference encoded/discarded bytes",
+    "lookup pointer-fast-hit/deep-equality/hash/metadata-scan/copy work separate from geometry build",
+    "prepared geometry/body/mask cache hit/miss/build/replay work",
+    "actual CPU/GPU/recording target and fallback reason",
+    "budget live/inflight/retiring/staging/optional bytes and lease retirement",
+    "critical/statistical dropped event counts"
+  ],
+  "overhead_qualification": {
+    "state": "MISSING",
+    "toggle": "same diagnostic-capable binary OFF minimal external wrapper / ON additional bounded internal observation",
+    "pairs": 6,
+    "order": [
+      "AB",
+      "BA",
+      "BA",
+      "AB",
+      "AB",
+      "BA"
+    ],
+    "A": "OFF",
+    "B": "ON",
+    "fixture": "16-object CONTINUOUS_30S, E0/E1 then navigation, DPR2,64/192",
+    "reset_per_run": true,
+    "per_run_limit_seconds": 90,
+    "main_qualification_attempts": 1,
+    "diagnostic_rerun_limit": 1,
+    "diagnostic_rerun_requires": "specific noise cause and separate retained result; no replacing original cohort",
+    "max_optional_diagnostic_seconds": 1080,
+    "decision": "protocol section7; no product threshold acceptance",
+    "limits_seconds": {
+      "setup": 45,
+      "measurement": 30,
+      "cleanup": 15,
+      "worker_total": 90
+    }
+  },
+  "batch_policy": {
+    "main_rows": 10,
+    "mandatory_independent_repetitions": 3,
+    "main_runs": 30,
+    "main_max_seconds": 5400,
+    "overhead_max_seconds": 1080,
+    "primary_batch_max_seconds": 6480,
+    "optional_diagnostic_rerun_max_seconds": 1080,
+    "total_including_optional_diagnostic_max_seconds": 7560,
+    "hard_stop": "one worker hard timeout or process-family3GiB guard stops that budget tier; preserve failed/censored sample, mark remaining affected rows MISSING, do not rerun until three successes",
+    "correctness_red": "archive independent RED; do not stamp performance PASS; optimization may proceed after separate owner review",
+    "evidence_missing": "clock/identity/artifact/oracle gap blocks affected conclusion; not evidence of product slowness",
+    "cleanup": "bounded15s close Runtime, close browser, kill worker process family if needed; archive last heartbeat and partial output from parent outside wedged page; no row starts before cleanup finishes",
+    "performance_acceptance": "NOT_EVALUATED_UR0a;UR0c owns thresholds beyond accepted33ms direction",
+    "oracle_time_accounting": "Fixture qualification and readback/reference work stay outside measurement, inside setup45s/cleanup15s row bounds; exhausted deadline is a retained failure/MISSING oracle, no unbounded extra pass."
+  },
+  "separate_cohorts": [
+    {
+      "id": "REALTIME_INPUT_CALIBRATION",
+      "state": "MISSING",
+      "plan": "60/120/240Hz independent task delivery of same30s literal corpus; nominal grouping4/2/1 Move samples max, Down/Up separate, preserve all confirmed, record planned/arrival/backlog; own90s worker; qualify UR0b before adding timing claims",
+      "required_before_claim": "any real-time brush latency claim; not required to rename accelerated main rows as real-time"
+    },
+    {
+      "id": "FAULT_CORRECTNESS",
+      "state": "DEFERRED",
+      "cases": [
+        "allocation denial",
+        "Scene recovery failure then next Down",
+        "post-commit History/observer failure",
+        "A-Up B-Down A-completion",
+        "stale/foreign completion",
+        "resource close/rebind and delayed retirement",
+        "body fork mask/transform/Undo isolation"
+      ],
+      "reason": "UR0b observation package must list necessary diagnostic seams; future production fault policy requires its owning UR1/UR2 package. Not mixed into normal p95."
+    },
+    {
+      "id": "UR5_SCALE",
+      "state": "DEFERRED",
+      "objects": [
+        1,
+        8,
+        16,
+        32
+      ],
+      "dpr": [
+        1,
+        2,
+        4
+      ],
+      "reason": "freeze selected combinations later, no full Cartesian run;32 independent30s wall-time strokes require >=960s and cannot fit180s worker"
+    }
+  ]
+}
