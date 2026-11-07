@@ -49,10 +49,10 @@ Object.assign(window.probe,{
   const oldErrors=errors.splice(0);sdk.data.attach({capacity:1});await sdk.selectTool('ink');
   let prior=frames.length;pointer('pointerdown',600,50);pointer('pointermove',660,110);pointer('pointerup',660,110);await settle(prior);
   await sdk.setEraser({mode:2,diameter:28});await sdk.selectTool('partialEraser');
-  const before=sdk.readState();pointer('pointerdown',620,40);pointer('pointermove',620,130);await raf();pointer('pointerup',620,130);
+  const before=sdk.readState();pointer('pointerdown',620,40);pointer('pointermove',620,130);await raf();pointer('pointerup',620,130);await Promise.resolve();
   const rejected=sdk.readState(),failureErrors=errors.splice(0),packet=sdk.data.readNext();if(!packet)throw Error('capacity packet missing');sdk.data.release(packet);
   const checks={rejectedNotCommitted:rejected.generation===before.generation&&rejected.lastCommit.operationId===before.lastCommit.operationId,retired:rejected.activeContacts===0,errorReported:failureErrors.some(e=>e.includes('INPUT_REJECTED'))};
-  pointer('pointerdown',625,40);const retry=sdk.readState();checks.retryAccepted=retry.activeContacts===1&&errors.length===0;
+  pointer('pointerdown',625,40);await Promise.resolve();const retry=sdk.readState();checks.retryAccepted=retry.activeContacts===1&&errors.length===0;
   if(checks.retired&&checks.retryAccepted){pointer('pointermove',625,130);pointer('pointerup',625,130);for(let i=0;i<16;++i)await raf();const p=sdk.data.readNext();if(p)sdk.data.release(p);}
   const after=sdk.readState();checks.nextCommit=after.generation!==before.generation&&after.activeContacts===0;
   const retryErrors=errors.splice(0);return {before,rejected,retry,after,checks,oldErrors,failureErrors,retryErrors};
