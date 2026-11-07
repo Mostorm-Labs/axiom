@@ -1,0 +1,83 @@
+{
+  "task": "G5-ERASE-TERMINAL-AND-LOCAL-HIT",
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": "797345f113c1e25fd80261cbc55bec2b7d8830d8",
+  "authorization": "User reported partial eraser unusable with DUPLICATE_CONTACT after dense erase,CPU100 after Up and navigationCPU35;fix existing functionality before further scale work.",
+  "basis": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/planning/sdk/js-v1-contract.md": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+    "docs/planning/sdk/windows-consumer-v1.md": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+    "docs/planning/sdk/shell-axis-preview-contract.md": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+    "docs/planning/object-clipboard-and-live-erase-v1.json": "51123d6b239f027f1a0791fea21cb308f166db21f3c3a3a1382c9d1ce96030a4"
+  },
+  "owners": {
+    "canonical": "Runtime/OperationEngine/History",
+    "input": "Runtime ingress and InteractionDispatchRuntime own generation/session;Session and DOM keep transport collection only",
+    "geometry": "Shared Render exact Brush/Skia geometry;no platform algorithm"
+  },
+  "diagnosis": [
+    "Session retains contact on rejected Up;DOM forgets it. Runtime dispatch also retains rejected terminal sessions. Real publication-capacity rejection reproduces activeContacts1 then DUPLICATE_CONTACT.",
+    "Existing erase exact-hit eagerly subtracts all historical masks from all full-stroke decorations before testing the new mask.6x1500-knot dense corpus,6x60-point sweeps:Up93.6ms to3574.7ms."
+  ],
+  "scope": [
+    "sdk/common/session.cpp and new native transport regression test/CMake",
+    "sdk/web/axiom.mjs existing pointer rejection schedules derived cleanup;no new API",
+    "verification/sdk_web_external/consumer/pointer_input.mjs and test",
+    "runtime/interaction/src/interaction_dispatch_runtime.cpp and existing tests;terminal trace cleanup if needed",
+    "runtime/render/src/selection_region_geometry.cpp and geometry tests",
+    "verification/runners/g5 and new evidence/docs"
+  ],
+  "design_preflight": {
+    "input": "Rejected fresh terminal still returns rejection but exact generation/session must be cancelled/retired;stale or foreign terminal must not cancel a reused contact. Rejected Move collector explicitly cancels its last accepted contact before forgetting/capture release.",
+    "geometry": "For erase-hit only,intersect original components with the new mask first,then apply historical masks only to remaining nonempty components,removing empty components after each mask.Exact set equivalence:(component minus oldMasks) intersect newMask=(component intersect newMask) minus oldMasks.Selection caller retains full-geometry path;unsupported/invalid inputs remain fail closed.No persistent query cache or Brush algorithm change.",
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required": [
+      "Observe RED for SDK rejected-Up contact recovery,Runtime terminal-session retirement and collector rejected-Move cancellation",
+      "Fix cleanup without accepting a failed semantic operation,rolling back a committed operation,masking errors,clearing unrelated pointers or changing generation allocation",
+      "Native exact-hit positive/no-op/fully erased/boundary/affine tests and before/after dense erase regression;shared rendering geometry only",
+      "Matching default and diagnostic Web SDKs,whole artifact/source hashes;real rootSDK dense streamed scribbles,repeat/overlapping/no-op erases,successful next Down after controlled rejection,cancel/blur/capture,Undo/Redo and post-erase wheel navigation",
+      "Frozen6x1500-knot native,6x60-point sweep endpoint:last Up<250ms and worst<500ms on this local corpus;Web correctness and Up/settle improvements;no universal CPU-percent or latencySLO",
+      "Full configured CTest with prior66failed/not-built name comparison;pointer collector tests,G5Node,boundaries,SDKconsumer tests appropriate to private transport change",
+      "Preserve4260and4242;new separately servedfixedDemo;durable evidence and branch push"
+    ],
+    "forbidden": [
+      "semantic schema/codec/locks/admission limits",
+      "SDK API/ABI/version/release change",
+      "new geometry/renderer/document owner",
+      "larger byte/time/work/GPU budgets",
+      "approximate erase/no-op or accepting rejected commits",
+      "user document/tab mutation",
+      "old Gate evidence rewrite"
+    ],
+    "bounds": {
+      "nativeRssMiB": 2048,
+      "browserFamilyRssMiB": 3072,
+      "workerSeconds": 180,
+      "renderOptionalMiB": 32,
+      "renderSharedMiB": 96
+    },
+    "hosted": {
+      "required": [],
+      "optional": [
+        "otherplatforms",
+        "physical input",
+        "formalGate"
+      ]
+    },
+    "terminal_success": "Implementation,requiredcorrectness/performance/regressions,reviewable exact artifacts/evidence andrunnableDemo;returnREADY_FOR_CONTROL_REVIEW only",
+    "terminal_blockers": [
+      "authority or repository divergence",
+      "missing lockedtoolchain",
+      "new correctnessfailure",
+      "REDoracle conflict",
+      "bounded corpus no improvement"
+    ],
+    "return_policy": "continueuntilterminalstate,noofficialG5/P34PASS"
+  }
+}

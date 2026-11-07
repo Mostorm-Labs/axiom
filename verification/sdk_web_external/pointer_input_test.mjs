@@ -59,4 +59,16 @@ const beforeLate=lateFacts.length;lateSend('pointerup',120);
 assert.equal(lateFacts.length,beforeLate,'a delayed terminal event must not close a reused pointer contact');
 lateSend('pointermove',210);assert.equal(lateFacts.at(-1).phase,1);
 disposeLate();
+// A rejected Move must terminate the last accepted native contact before
+// forgetting the DOM collector state; otherwise the reused pointer is stuck.
+const rejectedTarget=new Target(),rejectedFacts=[];let nativeActive=false;
+const disposeRejected=installPointerInput({canvas:rejectedTarget,logicalSize:()=>[200,100],lifecycle,
+  submit:fact=>{rejectedFacts.push(fact);if(fact.phase===0){assert.equal(nativeActive,false,'native contact stranded');nativeActive=true;return true;}if(fact.phase===3){nativeActive=false;return true;}return false;}});
+const rejectSend=(type,timeStamp)=>{const e=new Event(type,{cancelable:true});for(const [k,v]of Object.entries({...base,timeStamp}))Object.defineProperty(e,k,{value:v});rejectedTarget.dispatchEvent(e);};
+rejectSend('pointerdown',300);rejectSend('pointermove',310);
+assert.equal(nativeActive,false,'rejected move must cancel the accepted contact');
+assert.equal(rejectedFacts.at(-1).phase,3);
+assert.equal(rejectedTarget.hasPointerCapture(base.pointerId),false);
+rejectSend('pointerdown',320);assert.equal(nativeActive,true);
+disposeRejected();assert.equal(nativeActive,false);
 console.log('pointer input tests PASS');

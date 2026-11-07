@@ -52,23 +52,25 @@ int main() {
 
   struct DispatchPort final : InteractionDispatchPort {
     DispatchMode mode = DispatchMode::kBrush;
+    bool rejectUp = false;
+    bool rejectCancel = false;
     struct Event final { DispatchEvent kind; std::uint64_t session; canvas::input::PointerKey key; };
     std::vector<Event> events;
     DispatchMode dispatchMode() const noexcept override { return mode; }
     bool selection(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
-      events.push_back({DispatchEvent::kSelection, id, sample.key}); return true;
+      events.push_back({DispatchEvent::kSelection, id, sample.key}); return !(rejectUp && sample.phase == PointerPhase::kUp);
     }
     bool creation(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
-      events.push_back({DispatchEvent::kCreation, id, sample.key}); return true;
+      events.push_back({DispatchEvent::kCreation, id, sample.key}); return !(rejectUp && sample.phase == PointerPhase::kUp);
     }
     bool pan(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
-      events.push_back({DispatchEvent::kPan, id, sample.key}); return true;
+      events.push_back({DispatchEvent::kPan, id, sample.key}); return !(rejectUp && sample.phase == PointerPhase::kUp);
     }
     bool brush(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
-      events.push_back({DispatchEvent::kBrush, id, sample.key}); return true;
+      events.push_back({DispatchEvent::kBrush, id, sample.key}); return !(rejectUp && sample.phase == PointerPhase::kUp);
     }
     bool eraser(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
-      events.push_back({DispatchEvent::kEraser, id, sample.key}); return true;
+      events.push_back({DispatchEvent::kEraser, id, sample.key}); return !(rejectUp && sample.phase == PointerPhase::kUp);
     }
     bool cancel(DispatchMode dispatchMode, const canvas::input::PointerSample& sample,
                 std::uint64_t id) noexcept override {
@@ -77,7 +79,7 @@ int main() {
                         dispatchMode == DispatchMode::kPan ? DispatchEvent::kPan :
                         dispatchMode == DispatchMode::kObjectEraser || dispatchMode == DispatchMode::kPartialEraser
                             ? DispatchEvent::kEraser : DispatchEvent::kBrush,
-                        id, sample.key}); return true;
+                        id, sample.key}); return !rejectCancel;
     }
   } port;
   InteractionDispatchRuntime dispatch(port);
@@ -100,5 +102,29 @@ int main() {
   assert(dispatch.cancel(sample(a, PointerPhase::kCancel, 3.0F, 4.0F, 13)));
   assert(dispatch.activeCount() == 0U);
   assert(!dispatch.cancel(sample(a, PointerPhase::kCancel, 3.0F, 4.0F, 14)));
+  for (const auto mode : {DispatchMode::kBrush, DispatchMode::kPartialEraser,
+                         DispatchMode::kObjectEraser, DispatchMode::kCreation,
+                         DispatchMode::kSelection, DispatchMode::kPan}) {
+    port.mode = mode;port.rejectUp = true;port.rejectCancel = true;
+    assert(dispatch.submit(sample(a, PointerPhase::kDown, 1, 2, 20)));
+    assert(dispatch.submit(sample(b, PointerPhase::kDown, 3, 4, 21)));
+    assert(!dispatch.submit(sample(a, PointerPhase::kUp, 1, 2, 22)));
+    assert(dispatch.activeCount() == 1U); // failure is not acceptance or a live gesture
+    assert(port.events.back().key == a);
+    assert(dispatch.submit(sample(b, PointerPhase::kMove, 4, 4, 23)));
+    (void)dispatch.cancel(sample(b, PointerPhase::kCancel, 4, 4, 24));
+    assert(dispatch.activeCount() == 0U);
+    const PointerKey reused{a.source, a.pointer, a.generation + 1};
+    assert(dispatch.submit(sample(reused, PointerPhase::kDown, 1, 2, 25)));
+    assert(!dispatch.submit(sample(a, PointerPhase::kUp, 1, 2, 26)));
+    assert(dispatch.activeCount() == 1U); // old generation cannot close the new one
+    (void)dispatch.cancel(sample(reused, PointerPhase::kCancel, 1, 2, 27));
+  }
+  port.mode = DispatchMode::kBrush;
+  assert(dispatch.submit(sample(a, PointerPhase::kDown, 1, 2, 30)));
+  const PointerSample terminalBatch[]{sample(a, PointerPhase::kMove, 2, 2, 31),
+                                      sample(a, PointerPhase::kUp, 3, 2, 32)};
+  assert(!dispatch.submitBatch(terminalBatch));
+  assert(dispatch.activeCount() == 0U);
   return 0;
 }
