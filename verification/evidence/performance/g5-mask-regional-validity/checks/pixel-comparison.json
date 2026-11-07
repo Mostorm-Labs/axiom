@@ -1,0 +1,33 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "scope": "Separate raw GPU RGBA corroboration, not primary latency data or an independent geometry oracle. Existing user-authorized AA edge allowance plus independent geometric-AA and mask tests applies. Main readback hashes remain nonidentical.",
+  "rows": [
+    {
+      "label": "before-erasing",
+      "width": 1600,
+      "height": 1000,
+      "changed": 1,
+      "offBaselineImageEdge": 0,
+      "alphaChanged": 0,
+      "maximumChannelDifference": 61
+    },
+    {
+      "label": "after-erasing",
+      "width": 1600,
+      "height": 1000,
+      "changed": 1,
+      "offBaselineImageEdge": 0,
+      "alphaChanged": 0,
+      "maximumChannelDifference": 45
+    },
+    {
+      "label": "after-erasing-hot",
+      "width": 1600,
+      "height": 1000,
+      "changed": 0,
+      "offBaselineImageEdge": 0,
+      "alphaChanged": 0,
+      "maximumChannelDifference": 0
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/masked_navigation_reentry.mjs",
+    "out/g5-regional-diag-on/js",
+    "out/g5-regional-reasons-data",
+    "2",
+    "candidate"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 34.705643374996725,
+  "peak_process_family_rss_kib": 1744768,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_ENDPOINT"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

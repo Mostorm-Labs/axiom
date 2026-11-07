@@ -1,0 +1,30 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--v4-gpu-only",
+  "g5_coverage_probe.js": "e13cdb4a0d82e7d119514008c9ec66cb7759e4497acec1bc1caccff325fd86d3",
+  "g5_coverage_probe.wasm": "5f2c6acc64dbb43ff51950b7295be32d77645a29b57d2aca19ed10852f657126",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [
+      "CPU default coverage retains pinned Lighten bytes PASS",
+      "v4 raster fallback remains CPU A8 PASS",
+      "white v4 coverage uses fixed-function SrcOver PASS",
+      "v4 offset-grid GPU tile seam and CPU silhouette PASS",
+      "masked v4 cooperative yield,geometric AA-boundary parity,mask invalidation and bounded source admission PASS",
+      "v4 GPU coverage tiles=204 CPU tiles=0 CPU edge pixels=0"
+    ],
+    "errors": [],
+    "code": 0,
+    "nativeDone": true,
+    "processExit": 0
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "PASS"
+}

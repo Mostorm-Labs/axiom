@@ -1,0 +1,23 @@
+{
+  "schema": "g5-mask-regional-validity-evidence-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "officialGatePassClaimed": false,
+  "pixel_acceptance": {
+    "classification": "PASS_WITH_FINDINGS",
+    "authority": "User explicitly permits AA edge pixel differences; preserve outline,width,pressure,opacity,self-intersection,erasures and seams",
+    "finding": "Main latency readback hashes differ; separate raw optical lane has1/1/0edge pixel changes and no alpha/interior changes. Image-neighbor check is corroborative, not an independent geometry oracle; five actual Ganesh probes required."
+  },
+  "code_revision": "e939ccc36147704b35e21c9f85a2b8129ff258fb",
+  "fixture_revision": "e939ccc36147704b35e21c9f85a2b8129ff258fb",
+  "baseline_code_revision": "d3960d6b1990fdf088325888a2277f348dce6905",
+  "target_max_gap_ms": 300,
+  "native": {
+    "passed": 1016,
+    "total": 1082,
+    "existing_failures": 66,
+    "new_failures": []
+  },
+  "scope": "Local mask-damage validity of derived navigation planes/tiles only. Canonical Frame identity and receipts unchanged. Shared hard96MiB and soft32MiB constants unchanged. Evidence does not assert a competitor CPU percentage or complete G5/P34 acceptance.",
+  "package": "docs/planning/G5_MASK_REGIONAL_VALIDITY_2026_11_07.json",
+  "demo": "http://127.0.0.1:4271/example.html"
+}
