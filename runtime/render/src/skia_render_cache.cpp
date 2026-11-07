@@ -238,7 +238,11 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             // entryMatrix already contains the object affine. A moved stroke
             // needs the same bounded preparation as identity ink; routing it
             // Direct makes every camera update synchronously raster it again.
-            if(!compact||!entry.contributesPixels||!entry.record.eraseMasks.empty()){
+            // V4 masks affect completed material, not the pinned body evaluator.
+            // Keep its body cooperative; applying masks via Direct here made
+            // an individual entry bypass the owner's coverage quantum.
+            if(!compact||!entry.contributesPixels||(!entry.record.eraseMasks.empty()&&
+               compact->content.get().stroke.config.algorithmVersion!=4)){
                 admissions_.insert_or_assign(entry.record.objectId,Admission{{},AdmissionKind::kDirect});
                 AXIOM_FRAME_TIMING_ADD(prepare_direct,1);
                 ++work.preparationDirectEntries;continue;
@@ -261,7 +265,8 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 continue;
             }
             const auto& t=entry.record.transform;
-            if(!isolatedInk&&(t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
+            if(!isolatedInk&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
+               (t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
                 // Direct transformed ink-only material blends onto the actual
                 // backdrop. A transparent per-object cache adds a quantization
                 // pass. Stream into the bounded full-frame composite instead.
@@ -384,6 +389,13 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             }
             if(!complete&&exhausted())return yield();
         }while(!complete);
+        // Match Direct's original destination and complete viewport clip.
+        // Isolated entries clear scratch only; legacy transformed ink-only
+        // entries clear the ordered composite, preserving existing semantics.
+        if(!entry.record.eraseMasks.empty()){
+            configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+            drawEraseMasksToSkCanvas(*target,entry);target->restore();
+        }
         const auto crop=pending_->crop;pending_.reset();
         if(directComposite){++work.rasterizedGroups;++built;continue;}
         const bool stored=raster&&store(canvas,entry,validity,crop,false,true);
