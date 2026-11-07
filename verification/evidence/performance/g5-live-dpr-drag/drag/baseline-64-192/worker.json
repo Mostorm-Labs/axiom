@@ -1,0 +1,39 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/drag_copies.mjs",
+    "out/g5-live-reclaim-clean-off-64-192/js",
+    "out/g5-live-dpr-drag-baseline-64-192-data",
+    "drag",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 79.27604887500638,
+  "peak_process_family_rss_kib": 1584128,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "summary": {
+      "downMs": 0.7000000476837158,
+      "p95FrameMs": 1402.5,
+      "maxFrameMs": 1485.300000011921,
+      "upMs": 1.5,
+      "wholePhaseMs": 65986.5,
+      "checks": {
+        "generationDuringInput": true,
+        "operationDuringInput": true,
+        "oneCommit": true,
+        "objects": true,
+        "selection": true,
+        "terminal": true,
+        "presented": true,
+        "camera": true
+      }
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

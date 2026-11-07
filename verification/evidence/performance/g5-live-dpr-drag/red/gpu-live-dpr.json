@@ -1,0 +1,27 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--live-dpr-only",
+  "g5_coverage_probe.js": "ef1cb0b66e8e60e28a37770ed595b98b421a117a18ca0e054607dd4d72726ae1",
+  "g5_coverage_probe.wasm": "8cb97c78c9303177f39541ce92e1ddd9c2c2d50eb2d837643850854f3b47aca2",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "non-AA mismatch pixel=7432 channel=0 actual=124 expected=255",
+      "live DPR=2 opacity=0.55 frame=99941",
+      "live resident-miss changed device geometry or opacity"
+    ],
+    "code": 1,
+    "nativeDone": true,
+    "processExit": 1
+  },
+  "gl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "timings": [],
+  "status": "FAIL"
+}

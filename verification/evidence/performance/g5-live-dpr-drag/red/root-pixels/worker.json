@@ -1,0 +1,38 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/drag_copies.mjs",
+    "out/g5-live-reclaim-clean-off-64-192/js",
+    "out/g5-dpr-root-red-roi-data",
+    "pixel",
+    "2"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 6.436496249982156,
+  "peak_process_family_rss_kib": 1600288,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_EVIDENCE",
+    "optical": {
+      "roiLogical": [
+        140,
+        180,
+        240,
+        260
+      ],
+      "interior": 10506,
+      "lost": 10506,
+      "changed": 10506,
+      "maxDelta": 242,
+      "beforeSha256": "76654197eb4b7e305712eb3f296ea3a257c2b6c9d8e5033b8367b6a9590a51a8",
+      "duringSha256": "46ab6c72e3d4f9745d5477d4a4a66b35edf97dc029e55ae36e6838b4ebcd1780",
+      "ok": false
+    },
+    "error": "Error: live erase changed remote non-AA pixels\n    at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/drag_copies.mjs:107:31"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

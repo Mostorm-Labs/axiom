@@ -1,0 +1,39 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/drag_copies.mjs",
+    "out/g5-live-dpr-final-off-256-768/js",
+    "out/g5-live-dpr-drag-256-768-r2-data",
+    "drag",
+    "2"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 13.175495041999966,
+  "peak_process_family_rss_kib": 1508096,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "summary": {
+      "downMs": 0.6000000238418579,
+      "p95FrameMs": 25,
+      "maxFrameMs": 30,
+      "upMs": 1.699999988079071,
+      "wholePhaseMs": 1026.4000000357628,
+      "checks": {
+        "generationDuringInput": true,
+        "operationDuringInput": true,
+        "oneCommit": true,
+        "objects": true,
+        "selection": true,
+        "terminal": true,
+        "presented": true,
+        "camera": true
+      }
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

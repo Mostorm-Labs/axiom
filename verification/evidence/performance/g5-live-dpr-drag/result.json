@@ -1,0 +1,50 @@
+{
+  "schema": "g5-live-dpr-drag-engineering-result-v1",
+  "status": "FIXES_VERIFIED_WITH_KNOWN_BASELINE_FAILURES",
+  "code_revision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+  "branch": "codex/geometry-navigation-integration",
+  "officialGatePassClaimed": false,
+  "defaultBudgetMiB": {
+    "cache": 32,
+    "shared": 96
+  },
+  "fixes": [
+    "Damage resident lookup cannot enter its builder on the identity scratch canvas; prevents lost DPR and self-composition.",
+    "Maskless transformed v4 material can use the existing bounded GPU source cache in both cooperative preparation and transient draw; unchanged copies are retained.",
+    "CPU Direct byte parity, legacy/destination-clear masks and disabled-GPU policy remain qualified separately."
+  ],
+  "verification": {
+    "nativePassed": 1020,
+    "nativeTotal": 1086,
+    "inheritedFailures": 66,
+    "newFailures": 0,
+    "gpuModes": 9,
+    "nodeTests": 42,
+    "boundaryContracts": 119,
+    "pixelDpr": [
+      1,
+      2,
+      4
+    ],
+    "dragFixture": {
+      "samples": 7200,
+      "duplicates": 8,
+      "objects": 9,
+      "moves": 48,
+      "dpr": 2
+    }
+  },
+  "findings": [
+    "Unprofiled prior64/192 p95=1402.5ms; fixed64/192 two runs23.6/24ms.",
+    "Fixed256/768 two runs24.2/25ms, with identical final pixels to64/192. No demonstrated gain from the larger cap in this workload.",
+    "LiveDPR2 far-field interior loss changes from10506 to0 while contact remains down.",
+    "Renderer shared budget is not the total tab/GPU allocation; keep a finite configurable limit rather than an unbounded cache."
+  ],
+  "notClaimed": [
+    "Physical display latency or physical input acceptance",
+    "Other platform ABI/device evidence",
+    "All cumulative erase/DPR4 latency or100K/1M qualification",
+    "Official G5/P34 PASS"
+  ],
+  "recommendation": "Use the repaired64/192 local demo for the reported scenario;256/768 is an explicit comparison profile. Do not promote repository defaults from this small matrix."
+}

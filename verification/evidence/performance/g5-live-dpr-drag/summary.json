@@ -1,0 +1,343 @@
+{
+  "schema": "g5-live-dpr-drag-comparison-v1",
+  "code_revision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+  "dragRows": [
+    {
+      "label": "baseline-64-192",
+      "package": "baseline-64-192",
+      "sourceRevision": "ce5425e08d37384189eef298a7227126ff21ce17",
+      "summary": {
+        "downMs": 0.7000000476837158,
+        "p95FrameMs": 1402.5,
+        "maxFrameMs": 1485.300000011921,
+        "upMs": 1.5,
+        "wholePhaseMs": 65986.5,
+        "checks": {
+          "generationDuringInput": true,
+          "operationDuringInput": true,
+          "oneCommit": true,
+          "objects": true,
+          "selection": true,
+          "terminal": true,
+          "presented": true,
+          "camera": true
+        }
+      },
+      "pixels": {
+        "sha256": "eea31766470feae46d1cc7ece0aa11e268ebfb603bb824f2a73c5e51ea0b234b",
+        "width": 1600,
+        "height": 1000,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/drag_copies.mjs",
+          "out/g5-live-reclaim-clean-off-64-192/js",
+          "out/g5-live-dpr-drag-baseline-64-192-data",
+          "drag",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 79.27604887500638,
+        "peak_process_family_rss_kib": 1584128,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED",
+          "summary": {
+            "downMs": 0.7000000476837158,
+            "p95FrameMs": 1402.5,
+            "maxFrameMs": 1485.300000011921,
+            "upMs": 1.5,
+            "wholePhaseMs": 65986.5,
+            "checks": {
+              "generationDuringInput": true,
+              "operationDuringInput": true,
+              "oneCommit": true,
+              "objects": true,
+              "selection": true,
+              "terminal": true,
+              "presented": true,
+              "camera": true
+            }
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "label": "64-192-r1",
+      "package": "64-192",
+      "sourceRevision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+      "summary": {
+        "downMs": 0.699999988079071,
+        "p95FrameMs": 24,
+        "maxFrameMs": 29.400000035762787,
+        "upMs": 1.5,
+        "wholePhaseMs": 1026.800000011921,
+        "checks": {
+          "generationDuringInput": true,
+          "operationDuringInput": true,
+          "oneCommit": true,
+          "objects": true,
+          "selection": true,
+          "terminal": true,
+          "presented": true,
+          "camera": true
+        }
+      },
+      "pixels": {
+        "sha256": "6edfb57f3b6ca9651fbc5297e81ab8e7cdf248a0db2c6114eaf83cfbdc55a703",
+        "width": 1600,
+        "height": 1000,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/drag_copies.mjs",
+          "out/g5-live-dpr-final-off-64-192/js",
+          "out/g5-live-dpr-drag-64-192-r1-data",
+          "drag",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.196381999994628,
+        "peak_process_family_rss_kib": 1491856,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED",
+          "summary": {
+            "downMs": 0.699999988079071,
+            "p95FrameMs": 24,
+            "maxFrameMs": 29.400000035762787,
+            "upMs": 1.5,
+            "wholePhaseMs": 1026.800000011921,
+            "checks": {
+              "generationDuringInput": true,
+              "operationDuringInput": true,
+              "oneCommit": true,
+              "objects": true,
+              "selection": true,
+              "terminal": true,
+              "presented": true,
+              "camera": true
+            }
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "label": "256-768-r1",
+      "package": "256-768",
+      "sourceRevision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+      "summary": {
+        "downMs": 0.699999988079071,
+        "p95FrameMs": 24.200000047683716,
+        "maxFrameMs": 31,
+        "upMs": 1.5,
+        "wholePhaseMs": 1027.800000011921,
+        "checks": {
+          "generationDuringInput": true,
+          "operationDuringInput": true,
+          "oneCommit": true,
+          "objects": true,
+          "selection": true,
+          "terminal": true,
+          "presented": true,
+          "camera": true
+        }
+      },
+      "pixels": {
+        "sha256": "6edfb57f3b6ca9651fbc5297e81ab8e7cdf248a0db2c6114eaf83cfbdc55a703",
+        "width": 1600,
+        "height": 1000,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/drag_copies.mjs",
+          "out/g5-live-dpr-final-off-256-768/js",
+          "out/g5-live-dpr-drag-256-768-r1-data",
+          "drag",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.285654167004395,
+        "peak_process_family_rss_kib": 1504160,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED",
+          "summary": {
+            "downMs": 0.699999988079071,
+            "p95FrameMs": 24.200000047683716,
+            "maxFrameMs": 31,
+            "upMs": 1.5,
+            "wholePhaseMs": 1027.800000011921,
+            "checks": {
+              "generationDuringInput": true,
+              "operationDuringInput": true,
+              "oneCommit": true,
+              "objects": true,
+              "selection": true,
+              "terminal": true,
+              "presented": true,
+              "camera": true
+            }
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "label": "64-192-r2",
+      "package": "64-192",
+      "sourceRevision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+      "summary": {
+        "downMs": 0.800000011920929,
+        "p95FrameMs": 23.599999964237213,
+        "maxFrameMs": 25.200000047683716,
+        "upMs": 1.5,
+        "wholePhaseMs": 1021.8999999761581,
+        "checks": {
+          "generationDuringInput": true,
+          "operationDuringInput": true,
+          "oneCommit": true,
+          "objects": true,
+          "selection": true,
+          "terminal": true,
+          "presented": true,
+          "camera": true
+        }
+      },
+      "pixels": {
+        "sha256": "6edfb57f3b6ca9651fbc5297e81ab8e7cdf248a0db2c6114eaf83cfbdc55a703",
+        "width": 1600,
+        "height": 1000,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/drag_copies.mjs",
+          "out/g5-live-dpr-final-off-64-192/js",
+          "out/g5-live-dpr-drag-64-192-r2-data",
+          "drag",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.06041404203279,
+        "peak_process_family_rss_kib": 1498368,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED",
+          "summary": {
+            "downMs": 0.800000011920929,
+            "p95FrameMs": 23.599999964237213,
+            "maxFrameMs": 25.200000047683716,
+            "upMs": 1.5,
+            "wholePhaseMs": 1021.8999999761581,
+            "checks": {
+              "generationDuringInput": true,
+              "operationDuringInput": true,
+              "oneCommit": true,
+              "objects": true,
+              "selection": true,
+              "terminal": true,
+              "presented": true,
+              "camera": true
+            }
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "label": "256-768-r2",
+      "package": "256-768",
+      "sourceRevision": "aff81fc12a6e6ab994d30a5f1e11049c3e9e5535",
+      "summary": {
+        "downMs": 0.6000000238418579,
+        "p95FrameMs": 25,
+        "maxFrameMs": 30,
+        "upMs": 1.699999988079071,
+        "wholePhaseMs": 1026.4000000357628,
+        "checks": {
+          "generationDuringInput": true,
+          "operationDuringInput": true,
+          "oneCommit": true,
+          "objects": true,
+          "selection": true,
+          "terminal": true,
+          "presented": true,
+          "camera": true
+        }
+      },
+      "pixels": {
+        "sha256": "6edfb57f3b6ca9651fbc5297e81ab8e7cdf248a0db2c6114eaf83cfbdc55a703",
+        "width": 1600,
+        "height": 1000,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+      },
+      "worker": {
+        "command": [
+          "node",
+          "verification/runners/g5/drag_copies.mjs",
+          "out/g5-live-dpr-final-off-256-768/js",
+          "out/g5-live-dpr-drag-256-768-r2-data",
+          "drag",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.175495041999966,
+        "peak_process_family_rss_kib": 1508096,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "complete",
+          "status": "MEASURED",
+          "summary": {
+            "downMs": 0.6000000238418579,
+            "p95FrameMs": 25,
+            "maxFrameMs": 30,
+            "upMs": 1.699999988079071,
+            "wholePhaseMs": 1026.4000000357628,
+            "checks": {
+              "generationDuringInput": true,
+              "operationDuringInput": true,
+              "oneCommit": true,
+              "objects": true,
+              "selection": true,
+              "terminal": true,
+              "presented": true,
+              "camera": true
+            }
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ],
+  "fixedBudgetFinalPixelsEqual": true,
+  "timing_scope": "48 pointer moves with per-event RAF waits. Not physical display latency. All captures outside timed loop; unprofiled rows only. The profiled exploratory row is excluded."
+}

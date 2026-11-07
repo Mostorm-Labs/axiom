@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/drag_copies.mjs",
+    "out/g5-live-reclaim-clean-off-64-192/js",
+    "out/g5-dpr-root-red-data",
+    "pixel",
+    "2"
+  ],
+  "reason": "rss_limit",
+  "returncode": -9,
+  "elapsed_s": 20.8979869580362,
+  "peak_process_family_rss_kib": 3159200,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "setup",
+    "kind": "pixel"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

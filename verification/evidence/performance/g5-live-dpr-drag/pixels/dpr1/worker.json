@@ -1,0 +1,37 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/drag_copies.mjs",
+    "out/g5-live-dpr-final-off-64-192/js",
+    "out/g5-live-dpr-root-green-1-data",
+    "pixel",
+    "1"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 9.386881416023243,
+  "peak_process_family_rss_kib": 1277584,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "MEASURED",
+    "optical": {
+      "roiLogical": [
+        140,
+        180,
+        240,
+        260
+      ],
+      "interior": 2359,
+      "lost": 0,
+      "changed": 0,
+      "maxDelta": 0,
+      "beforeSha256": "a48532e23c9407bc376abc2d85fb9cab1f6363695ade9496343a633b27b5bef7",
+      "duringSha256": "d32fb5922db1fc2b602b50822eea5da6ff6bc9aff6e94718a365b1c20179eb91",
+      "ok": true
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

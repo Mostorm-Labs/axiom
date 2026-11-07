@@ -1,0 +1,25 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--regional-mask-only",
+  "g5_coverage_probe.js": "21482bf50483bbcf129115e3caeba3b7e9d1dcca8421f9b142bdca05e09b9a64",
+  "g5_coverage_probe.wasm": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "wasm streaming compile failed: CompileError: WebAssembly.instantiateStreaming(): section (code 10, \"Code\") extends past end of the module (length 10562699, remaining bytes 964131) @+35288",
+      "falling back to ArrayBuffer instantiation",
+      "failed to asynchronously prepare wasm: CompileError: WebAssembly.instantiate(): section (code 10, \"Code\") extends past end of the module (length 10562699, remaining bytes 1394211) @+35288",
+      "CompileError: WebAssembly.instantiate(): section (code 10, \"Code\") extends past end of the module (length 10562699, remaining bytes 1394211) @+35288",
+      "Aborted(CompileError: WebAssembly.instantiate(): section (code 10, \"Code\") extends past end of the module (length 10562699, remaining bytes 1394211) @+35288)",
+      "RuntimeError: Aborted(CompileError: WebAssembly.instantiate(): section (code 10, \"Code\") extends past end of the module (length 10562699, remaining bytes 1394211) @+35288). Build with -sASSERTIONS for more info."
+    ],
+    "code": 1
+  },
+  "gl": null,
+  "timings": [],
+  "status": "FAIL"
+}

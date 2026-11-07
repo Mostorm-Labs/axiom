@@ -1,0 +1,57 @@
+{
+  "rows": [
+    {
+      "mode": "live-dpr-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "translated-v4-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "body-mask-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "regional-mask-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "live-erase-gpu-miss-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "v4-gpu-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "masked-progress-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "masked-mixed-only",
+      "exit": 0,
+      "status": "PASS"
+    },
+    {
+      "mode": "affine-erased-only",
+      "exit": 0,
+      "status": "PASS"
+    }
+  ],
+  "before": {
+    "g5_coverage_probe.js": "21482bf50483bbcf129115e3caeba3b7e9d1dcca8421f9b142bdca05e09b9a64",
+    "g5_coverage_probe.wasm": "3a829f077b5bf7c386734885a2ebc174ea988f4f21698aed7c77f34737dd48bf"
+  },
+  "after": {
+    "g5_coverage_probe.js": "21482bf50483bbcf129115e3caeba3b7e9d1dcca8421f9b142bdca05e09b9a64",
+    "g5_coverage_probe.wasm": "3a829f077b5bf7c386734885a2ebc174ea988f4f21698aed7c77f34737dd48bf"
+  }
+}

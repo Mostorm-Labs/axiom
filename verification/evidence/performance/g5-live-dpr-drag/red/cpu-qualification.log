@@ -1,0 +1,73 @@
+Test project /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host
+      Start   1: G5ScaleFixtureContract
+ 1/26 Test   #1: G5ScaleFixtureContract ...........   Passed    6.44 sec
+      Start 830: G5GeometryChunkLocality
+ 2/26 Test #830: G5GeometryChunkLocality ..........   Passed    0.02 sec
+      Start 894: G5EraseExactHit
+ 3/26 Test #894: G5EraseExactHit ..................   Passed    0.19 sec
+      Start 895: G5RenderCache
+ 4/26 Test #895: G5RenderCache ....................Subprocess aborted***Exception: 173.16 sec
+masked v4 cooperative yield,strict Direct parity,mask invalidation and bounded source admission PASS
+dense frontier first feedback opportunity=7
+dense frontier first feedback opportunity=7
+large navigation legacy=0 first feedback opportunity=1
+large navigation legacy=1 first feedback opportunity=391
+pixel 50,39 actual=169 expected=170
+pixel 53,39 actual=44 expected=43
+pixel 83,39 actual=197 expected=196
+pixel 107,39 actual=75 expected=74
+affine mixed=0 a=1 b=0 tx=12 differences=74 max=1
+libc++abi: terminating due to uncaught exception of type std::runtime_error: affine cached/direct pixels differ
+
+      Start 896: G5LiveEraseGpuMiss
+ 5/26 Test #896: G5LiveEraseGpuMiss ...............   Passed    0.05 sec
+      Start 897: G5LiveEraseDpr
+ 6/26 Test #897: G5LiveEraseDpr ...................   Passed    0.10 sec
+      Start 898: G5TranslatedV4Drag
+ 7/26 Test #898: G5TranslatedV4Drag ...............   Passed    0.25 sec
+      Start 899: G5InkBodyMaskReuse
+ 8/26 Test #899: G5InkBodyMaskReuse ...............   Passed    0.13 sec
+      Start 900: G5RegionalMaskValidity
+ 9/26 Test #900: G5RegionalMaskValidity ...........   Passed    0.23 sec
+      Start 901: G5MaskedNavigationProgress
+10/26 Test #901: G5MaskedNavigationProgress .......   Passed    0.04 sec
+      Start 902: G5V4CoverageFallback
+11/26 Test #902: G5V4CoverageFallback .............   Passed    0.04 sec
+      Start 903: G5MaskedCanonicalRecovery
+12/26 Test #903: G5MaskedCanonicalRecovery ........   Passed    1.62 sec
+      Start 904: G5ErasedMixedNavigation
+13/26 Test #904: G5ErasedMixedNavigation ..........   Passed    0.32 sec
+      Start 905: G5RetainedZoomReentry
+14/26 Test #905: G5RetainedZoomReentry ............   Passed    0.17 sec
+      Start 906: G5MixedNavigationReentry
+15/26 Test #906: G5MixedNavigationReentry .........   Passed    0.14 sec
+      Start 907: G5TileWork
+16/26 Test #907: G5TileWork .......................   Passed    0.05 sec
+      Start 908: G5RenderDamage
+17/26 Test #908: G5RenderDamage ...................   Passed    0.03 sec
+      Start 943: G5SkiaChunkRangeEntry
+18/26 Test #943: G5SkiaChunkRangeEntry ............   Passed    0.14 sec
+      Start 944: G5PreparedGeometry
+19/26 Test #944: G5PreparedGeometry ...............   Passed    3.47 sec
+      Start 956: G5SharedScenePayload
+20/26 Test #956: G5SharedScenePayload .............   Passed    0.08 sec
+      Start 957: G5SharedSceneSnapshot
+21/26 Test #957: G5SharedSceneSnapshot ............   Passed    0.07 sec
+      Start 958: G5SharedSceneIndex
+22/26 Test #958: G5SharedSceneIndex ...............   Passed    0.14 sec
+      Start 959: G5SharedSceneReaders
+23/26 Test #959: G5SharedSceneReaders .............   Passed    0.08 sec
+      Start 960: G5SharedSceneRetention
+24/26 Test #960: G5SharedSceneRetention ...........   Passed    0.07 sec
+      Start 961: G5SharedSceneParity
+25/26 Test #961: G5SharedSceneParity ..............   Passed    0.14 sec
+      Start 995: G5Navigation
+26/26 Test #995: G5Navigation .....................   Passed    3.03 sec
+
+96% tests passed, 1 tests failed out of 26
+
+Total Test time (real) = 190.23 sec
+
+The following tests FAILED:
+	895 - G5RenderCache (Subprocess aborted)
+Errors while running CTest

@@ -1,0 +1,25 @@
+{
+  "pageErrors": [],
+  "input": "private C++ production renderer probe on actual Chrome WebGL/Ganesh",
+  "deadlineMs": 240000,
+  "argument": "--body-mask-only",
+  "g5_coverage_probe.js": "21482bf50483bbcf129115e3caeba3b7e9d1dcca8421f9b142bdca05e09b9a64",
+  "g5_coverage_probe.wasm": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "browser": "156.0.8078.81",
+  "result": {
+    "done": true,
+    "logs": [],
+    "errors": [
+      "wasm streaming compile failed: CompileError: WebAssembly.instantiateStreaming(): expected 4 bytes, fell off end @+0",
+      "falling back to ArrayBuffer instantiation",
+      "failed to asynchronously prepare wasm: CompileError: WebAssembly.instantiate(): BufferSource argument is empty",
+      "CompileError: WebAssembly.instantiate(): BufferSource argument is empty",
+      "Aborted(CompileError: WebAssembly.instantiate(): BufferSource argument is empty)",
+      "RuntimeError: Aborted(CompileError: WebAssembly.instantiate(): BufferSource argument is empty). Build with -sASSERTIONS for more info."
+    ],
+    "code": 1
+  },
+  "gl": null,
+  "timings": [],
+  "status": "FAIL"
+}
