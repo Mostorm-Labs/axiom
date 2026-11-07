@@ -134,6 +134,7 @@
     "geometry": "Existing PreparedGeometryCache reuses full equal immutable commands across object/mask identities",
     "mask_invalidation": "Exact primitive prefix proof; append only; replace/cancel/Undo rebuild masks from body;source/matrix/viewport/target generation invalidates body",
     "resources": "Retire legacy masked material/navigation residency before GPU read epoch;working-set admission;physically bounded targets;expected allocation failure propagates explicit Retry and aborts scene traversal;no exception-policy or default budget change",
-    "exact_query": "Factor query-minus-history once; bounded8MiB fully geometric mask-path memo using same sharedResourceBudget;full geometry equality and in-flight pins;original component oracle and exact fallback preserved"
+    "exact_query": "Factor query-minus-history once; bounded8MiB fully geometric mask-path memo using same sharedResourceBudget;full geometry equality and in-flight pins;original component oracle and exact fallback preserved",
+    "navigation_nonregression": "Live erasure must preserve qualified navigation planes/tiles and regional witnesses; obsolete masked material retires before the GPU scope, while mandatory preparation reclaims navigation only on actual admission denial. Regional tests must include live feedback before each canonical mask commit."
   }
 }

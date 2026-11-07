@@ -1352,8 +1352,19 @@ void checkRegionalMaskFeedback(bool mixed=false) {
     require(renderer.renderFrame(target,make(1,99701,1)).code==BackendSubmissionCode::kAccepted,"regional wide capture");
     require(renderer.renderFrame(target,make(1,99702,2)).code==BackendSubmissionCode::kAccepted,"regional narrow capture");
     auto mask=[](unsigned id,double x){semantic::SweptCircleMask m;m.segments.push_back({{{x,62},7},{{x,66},7},{x,63},{x,65}});return semantic::EraseMaskRecord{ObjectId::fromUint64(id),m};};
+    const auto liveErase=[&](unsigned scene,unsigned id,double x){
+        e.presentationEraseActive=true;e.presentationEraseMasks={mask(0,x)};
+        const auto live=make(scene,id,2);EditingOverlay overlay(live.frame);
+        require(renderer.renderTransientOverlay(target,live,&overlay).code==BackendSubmissionCode::kAccepted,"regional live erase");
+        e.presentationEraseMasks.clear();e.presentationEraseActive=false;
+    };
+    // Real input produces live feedback before the canonical mask commit.
+    // Optional body/mask admission must not unconditionally discard the wide
+    // plane and its unchanged-region witness during that intervening frame.
+    liveErase(1,99731,120);
     e.record.eraseMasks.push_back(mask(99710,120));
     require(renderer.renderFrame(target,make(2,99703,2)).code==BackendSubmissionCode::kAccepted,"regional first erase");
+    liveErase(2,99732,150);
     e.record.eraseMasks.push_back(mask(99711,150));
     require(renderer.renderFrame(target,make(3,99704,2)).code==BackendSubmissionCode::kAccepted,"regional second erase");
     const auto canonical=renderer.submissionCount(),presents=target.presentCount();

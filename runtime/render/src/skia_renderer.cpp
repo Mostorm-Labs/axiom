@@ -682,10 +682,11 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     const auto validation=internal::validateReferencePlan(plan);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     if(renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;})){
-        // Reclaim obsolete material/navigation residency before starting a GPU
-        // read epoch. Dropping it after begin() pins the old32MiB sources while
-        // new body/mask tiles are admitted and can exhaust the same hard cap.
-        navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();
+        // Retire obsolete masked material before starting a GPU read epoch.
+        // Keep navigation planes/tiles and their regional validity witnesses:
+        // live feedback does not invalidate pixels outside the changed mask.
+        // Mandatory preparation already reclaims navigation on actual denial;
+        // optional body layers must yield rather than destroy that coverage.
         if(renderCache_)renderCache_->releaseMaterialSources(!previousErase);
     }
     try{
