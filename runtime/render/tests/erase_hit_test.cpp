@@ -20,6 +20,8 @@ int main(){try{
     auto r=dot();const auto center=box(95,95,10,10),outside=box(150,150,5,5);
     require(render::intersectEraseGeometry(r,center)==Hit::kHit,"visible dot intersection");
     require(render::intersectEraseGeometry(r,outside)==Hit::kMiss,"outside dot intersection");
+    require(render::intersectEraseGeometry(r,box(110,95,10,10))==Hit::kMiss,"tangent-only erase removed no area");
+    require(render::intersectEraseGeometry(r,box(109.99,99.99,1,.02))==Hit::kHit,"small positive intersection was culled");
     r.eraseMasks={{ObjectId::fromUint64(2),center}};
     require(render::intersectEraseGeometry(r,center)==Hit::kMiss,"repeated erase must be no-op");
     require(render::intersectEraseGeometry(r,box(99,92,9,16))==Hit::kHit,"unerased side was lost");
@@ -27,6 +29,9 @@ int main(){try{
     require(render::intersectEraseGeometry(r,center)==Hit::kMiss,"fully erased source still hit");
     r=dot();r.eraseMasks={{ObjectId::fromUint64(2),box(80,80,20,40)}};
     require(render::intersectEraseGeometry(r,center)==Hit::kHit,"partially erased source missed visible side");
+    r.eraseMasks.push_back({ObjectId::fromUint64(3),box(100,80,20,40)});
+    require(render::intersectEraseGeometry(r,center)==Hit::kMiss,"combined historical masks left a false hit");
+    r.eraseMasks.pop_back();
     r.transform={1,.2,.3,1.1,80,-30};
     require(render::intersectEraseGeometry(r,center)==Hit::kHit,"object-local hit changed with world affine");
     require(render::intersectEraseGeometry(r,box(90,94,8,12))==Hit::kMiss,"old local mask was ignored");

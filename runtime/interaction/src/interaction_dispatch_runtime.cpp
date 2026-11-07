@@ -36,7 +36,7 @@ bool InteractionDispatchRuntime::submit(const input::PointerSample& sample) noex
       accepted = port_.brush(sample, id); break;
   }
   if (!accepted) {
-    if (sample.phase == input::PointerPhase::kDown) {
+    if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp) {
       input::PointerSample cancelled = sample;
       cancelled.phase = input::PointerPhase::kCancel;
       (void)port_.cancel(mode, cancelled, id);
@@ -79,8 +79,8 @@ bool InteractionDispatchRuntime::submitBatch(
     const auto id = it->second.id;
     const bool accepted = port_.brushBatch(samples.subspan(begin, end - begin), id);
     if (!accepted) {
-      if (startsSession) {
-        auto cancelled = first;
+      if (startsSession || samples[end - 1U].phase == input::PointerPhase::kUp) {
+        auto cancelled = startsSession ? first : samples[end - 1U];
         cancelled.phase = input::PointerPhase::kCancel;
         (void)port_.cancel(mode, cancelled, id);
         sessions_.erase(first.key);

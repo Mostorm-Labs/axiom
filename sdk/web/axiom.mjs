@@ -175,7 +175,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     canonical.addEventListener('pointerdown',inputSize,true);
     events.push(['pointerdown',inputSize,true]);
     disposeInput=installPointerInput({canvas:canonical,logicalSize:()=>[boundWidth,boundHeight],submit:fact=>{
-      try{call('pointer',fact);text.sync();if(pendingResize&&fact.phase>=2)resize();changed();schedule();return true;}catch(error){emitError(error);return false;}
+      try{call('pointer',fact);text.sync();if(pendingResize&&fact.phase>=2)resize();changed();schedule();return true;}catch(error){emitError(error);schedule();return false;}
     }});
     const listen=(name,fn,options)=>{canonical.addEventListener(name,fn,options);events.push([name,fn,options]);};
     listen('dblclick',event=>{const s=call('state').value;if(s.tool!==4 && !(s.tool===1&&s.selectionMode===0))event.stopImmediatePropagation();},true);

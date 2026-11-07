@@ -40,7 +40,7 @@ bool fillVisible(const RuntimeSceneRecord& r) {
     }
     return r.kind!=semantic::ObjectKind::kVectorPath || std::none_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;});
 }
-Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations) {
+Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations,bool applyMasks=true) {
     switch(r.kind) {
     case semantic::ObjectKind::kVectorPath: {
         const auto* c=std::get_if<semantic::VectorPathContent>(&r.content.get());if(!c)return Hit::kInvalid;
@@ -209,7 +209,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         if(width>0&&!roundedConnector)decorations.push_back(stroke(internal::semanticPath(sketch->outline),width));
         if(width>0&&!sketch->arrowFill.commands.empty())decorations.push_back(internal::semanticPath(sketch->arrowFill));
     }
-    for(const auto& mask:r.eraseMasks) {
+    if(applyMasks)for(const auto& mask:r.eraseMasks) {
         const auto built=erasePath(mask.geometry);if(!built)return Hit::kInvalid;
         const auto& eraser=*built;
         const auto subtract=[&](SkPath& candidate){auto remaining=Op(candidate,eraser,kDifference_SkPathOp);if(!remaining)return false;candidate=*remaining;return true;};
@@ -222,9 +222,33 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
 SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
     try {
         SkPath visible;std::vector<SkPath> decorations;
-        const auto status=geometry(record,visible,decorations);if(status!=Hit::kHit)return status;
-        const auto eraser=erasePath(mask);if(!eraser)return Hit::kInvalid;
-        const auto intersects=[&](const SkPath& body){const auto overlap=Op(body,*eraser,kIntersect_SkPathOp);return !overlap?Hit::kInvalid:overlap->isEmpty()?Hit::kMiss:Hit::kHit;};
+        const auto status=geometry(record,visible,decorations,false);if(status!=Hit::kHit)return status;
+        const auto eraser=erasePath(mask);if(!eraser||!eraser->isFinite())return Hit::kInvalid;
+        // Query only the new intersection. Subtraction distributes over the
+        // component union, so a visible hit need not prepare unrelated parts.
+        // Paths are query-local and built lazily once, never retained in Scene.
+        std::vector<SkPath> previousMasks;
+        const auto disjoint=[](const SkPath& a,const SkPath& b){
+            const auto x=a.getBounds(),y=b.getBounds();
+            return x.isFinite()&&y.isFinite()&&!x.isEmpty()&&!y.isEmpty()&&!SkRect::Intersects(x,y);
+        };
+        const auto intersects=[&](const SkPath& body){
+            if(body.isEmpty()||disjoint(body,*eraser))return Hit::kMiss;
+            auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return Hit::kInvalid;
+            if(overlap->isEmpty())return Hit::kMiss;
+            for(std::size_t i=0;i<record.eraseMasks.size();++i){
+                if(i==previousMasks.size()){
+                    const auto built=erasePath(record.eraseMasks[i].geometry);
+                    if(!built||!built->isFinite())return Hit::kInvalid;
+                    previousMasks.push_back(*built);
+                }
+                if(disjoint(*overlap,previousMasks[i]))continue;
+                overlap=Op(*overlap,previousMasks[i],kDifference_SkPathOp);
+                if(!overlap)return Hit::kInvalid;
+                if(overlap->isEmpty())return Hit::kMiss;
+            }
+            return Hit::kHit;
+        };
         const auto body=intersects(visible);if(body==Hit::kHit)return body;
         bool invalid=body==Hit::kInvalid;
         for(const auto& part:decorations){const auto hit=intersects(part);if(hit==Hit::kHit)return hit;invalid=invalid||hit==Hit::kInvalid;}

@@ -899,6 +899,9 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   const auto flushInk = [&]() {
     if (inkBatch.empty()) return true;
     const bool accepted = dispatchRuntime_.submitBatch(inkBatch);
+    if (!accepted) for (const auto& sample : inkBatch)
+      if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel)
+        baselineDownTimestamps_.erase(sample.key);
     inkBatch.clear();
     return accepted;
   };
@@ -948,6 +951,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     }
     if (routing.cancelsInk && sample.phase != input::PointerPhase::kUp) {
       (void)dispatchRuntime_.cancel(sample);
+      baselineDownTimestamps_.erase(sample.key);
       continue;
     }
     if (sample.phase == input::PointerPhase::kDown) {

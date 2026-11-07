@@ -33,6 +33,8 @@ export function installPointerInput({canvas, logicalSize, submit, lifecycle = gl
         historical: i < history.length, shift: !!s.shiftKey};
       if (!submit(fact)) {
         active.delete(key);
+        if (previous && phase !== 3)
+          submit({...previous.fact, phase: 3, timestampNs: Math.max(timestamp, time) + 1, historical: false});
         if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
         return;
       }

@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstring>
 #include <map>
+#include <limits>
 #include <set>
 #include <stdexcept>
 #include <thread>
@@ -1240,10 +1241,22 @@ class Session::Impl {
                     ok = true;
                 }
             } else if (auto it = contacts.find(id); it != contacts.end()) {
+                // A late terminal from an older contact must not close a
+                // reused native pointer. The DOM collector enforces this too.
+                if (phase >= 2 && p.timestampNs < contactTimes.at(id))
+                    return error("INPUT_REJECTED");
                 ok = owner->submitContact(it->second, batch);
                 if (ok)
                     contactTimes[id] = p.timestampNs;
-                if (phase >= 2 && ok) {
+                if (phase >= 2) {
+                    // Tool/commit rejection is distinct from pointer lifetime.
+                    // Ingress may already have retired Up. If it has not,
+                    // cancel this exact generation without accepting the edit.
+                    if (!ok && sequence < std::numeric_limits<std::uint64_t>::max()) {
+                        const auto last = std::max(contactTimes.at(id), p.timestampNs);
+                        const auto time = last == std::numeric_limits<std::uint64_t>::max() ? last : last + 1;
+                        (void)owner->cancelContact(it->second, ++sequence, time);
+                    }
                     contacts.erase(it);
                     contactTimes.erase(id);
                 }
