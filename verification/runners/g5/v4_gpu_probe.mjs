@@ -7,9 +7,12 @@ import http from 'node:http';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 const root=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]);
+const argument=process.argv[4]??'--v4-gpu-only';
+if(!['--v4-gpu-only','--masked-progress-only','--masked-mixed-only','--affine-erased-only'].includes(argument))throw Error('invalid GPU probe mode');
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const observation={pageErrors:[],input:'private C++ production renderer probe on actual Chrome WebGL/Ganesh',deadlineMs:240000};
-const html='<script>window.result={done:false,logs:[],errors:[]};</script><script src="g5_coverage_probe.js"></script><script>createCacheProbe({arguments:["--v4-gpu-only"],print:s=>result.logs.push(s),printErr:s=>result.errors.push(s),onExit:code=>{result.processExit=code;result.done=true;},onAbort:s=>{result.errors.push(String(s));result.code=1;result.done=true;}}).catch(e=>{result.errors.push(String(e));result.code=1;result.done=true;});</script>';
+const htmlTemplate='<script>window.result={done:false,logs:[],errors:[]};</script><script src="g5_coverage_probe.js"></script><script>createCacheProbe({arguments:["--v4-gpu-only"],print:s=>result.logs.push(s),printErr:s=>result.errors.push(s),onExit:code=>{result.processExit=code;result.done=true;},onAbort:s=>{result.errors.push(String(s));result.code=1;result.done=true;}}).catch(e=>{result.errors.push(String(e));result.code=1;result.done=true;});</script>';
+const html=htmlTemplate.replace('["--v4-gpu-only"]',JSON.stringify([argument]));observation.argument=argument;
 const server=http.createServer(async(req,res)=>{try{
  const u=new URL(req.url,'http://localhost').pathname,file=path.resolve(root,'.'+u);
  if(u!=='/'&&!file.startsWith(root+path.sep))throw Error('path');
@@ -28,7 +31,14 @@ try{
  await page.waitForFunction(()=>result.done,null,{timeout:observation.deadlineMs});
  observation.result=await page.evaluate(()=>window.result);
  observation.gl=await page.evaluate(()=>window.glObservation??null);
- observation.status=gpuProbeStatus(observation.result,observation.pageErrors);
+ // Raw stderr stays in the artifact. Valid versioned timings are diagnostics;
+ // malformed records, unknown versions and actual native errors fail closed.
+ observation.timings=[];
+ const errors=observation.result.errors.filter(line=>{
+   if(!line.startsWith('AXIOM_NAVIGATION_TIMING '))return true;
+   try{const row=JSON.parse(line.slice(24));if(row.version!==5||!Number.isFinite(row.elapsed_ns))return true;observation.timings.push(row);return false;}catch{return true;}
+ });
+ observation.status=gpuProbeStatus({...observation.result,errors},observation.pageErrors);
 }catch(error){observation.status='ERROR';observation.error=String(error.stack||error);}
 finally{
  if(browser)await browser.close();if(server.listening)await new Promise(r=>server.close(r));

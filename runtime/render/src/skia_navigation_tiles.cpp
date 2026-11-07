@@ -376,8 +376,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             std::find(parents.begin(),parents.end(),key)!=parents.end() ||
             std::find(overscanKeys.begin(),overscanKeys.end(),key)!=overscanKeys.end();
     };
-    if(job_&&!required(job_->key)&&(!job_->prewarm||demandChanged))cancelJob(job_);
-    if(refinement_&&!required(refinement_->key))cancelJob(refinement_);
+    // A scale level is a request, not the identity of already admitted world
+    // work. A critical source still covering visible pixels must finish rather
+    // than restart at every coarse-parent transition. Scene/provider/resource
+    // invalidation above and real offscreen demand still retire it normally.
+    const auto visibleProgress=[&](const Job& job){return job.coveragePriority&&
+        !job.prewarm&&job.sources->scene==scene&&intersects(job.demand,visible);};
+    if(job_&&!required(job_->key)&&!visibleProgress(*job_)&&(!job_->prewarm||demandChanged))cancelJob(job_);
+    if(refinement_&&!required(refinement_->key)&&!visibleProgress(*refinement_))cancelJob(refinement_);
     auto acquired=provider.acquire();
     if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return BackendSubmissionResult::retry("world navigation target unavailable");
     struct Release {SkiaSurfaceProvider& provider;bool active=true;~Release(){if(active)provider.release();}} release{provider};
@@ -414,7 +420,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // A newly exposed frontier owns priority over disposable refinement.
     // Preserve coarse jobs across camera movement inside their world region;
     // GPU batches keep their existing bounded completion/backpressure policy.
-    if(!work.coverageComplete&&job_&&job_->key.scale>parents.front().scale){
+    const auto fillsMissing=[&](const Job& job){return visibleProgress(job)&&
+        std::any_of(missing.begin(),missing.end(),[&](const auto& area){return intersects(job.demand,area);});};
+    if(!work.coverageComplete&&job_&&job_->key.scale>parents.front().scale&&!fillsMissing(*job_)){
         if(!refinement_){refinement_=std::move(job_);++work.suspendedRefinements;}
         else cancelJob(job_);
     }
@@ -423,7 +431,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const auto queryLimit=work.presented?std::min(std::size_t(1),options.navigationMaxQueries):options.navigationMaxQueries;
     const auto initializationLimit=std::max(std::size_t(1),queryLimit);
     std::size_t steps=0,queries=0,initializations=0,gpuPrimitives=0;bool deferred=false;
-    const auto gpuLimit=std::max(std::size_t(1),options.navigationMaxGpuContourPrimitives);
+    const auto fineGpuLimit=std::max(std::size_t(1),options.navigationMaxGpuContourPrimitives);
+    const auto coarseGpuLimit=std::max(std::size_t(1),options.navigationMaxGpuCoarseContourPrimitives);
+    const auto gpuLimit=std::max(fineGpuLimit,coarseGpuLimit);
     const auto expired=[&]{return std::chrono::steady_clock::now()-started>=std::chrono::microseconds(options.navigationMicroseconds);};
     std::map<TileKey,std::shared_ptr<const Sources>> desired;
     auto load=[&](TileKey key)->bool{
@@ -548,18 +558,26 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(!token){deferred=true;break;}
             const auto initStart=std::chrono::steady_clock::now();
             auto job=std::make_unique<Job>();job->key=*next;job->sources=desired.at(*next);job->prewarm=prewarm;
+            job->coveragePriority=!work.coverageComplete;
             job->lease=resources::ResourceLease(budget,*token);
             gpu.touch(true);job->surface=target->makeSurface(acquired.frame.surface->imageInfo().makeWH(extent,extent));
-            // Coarse cells collect whole strokes, including many overlapping
-            // Lighten ribbons. Rasterize this bounded coverage mask in Skia
-            // CPU memory and upload the completed mask; otherwise a small CPU
-            // opportunity can enqueue enough GPU path work to stall RAF itself.
-            // The material, scene tile and final presentation stay on the GPU.
             const auto coverageInfo=SkImageInfo::MakeN32Premul(extent,extent);
-            job->cpuCoverage=next->scale<level&&std::all_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& entry){
+            const bool coarseV4=next->scale<level&&std::all_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& entry){
                 const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
                 return !compact||compact->content.get().stroke.config.algorithmVersion==4;
             });
+            // Permanent masks invalidate old wide feedback. Preparing their
+            // replacement on CPU kept replaying dense ribbons during gestures.
+            // Use the same qualified GPU SrcOver contour as canonical, with
+            // independently bounded submissions. No second geometry/edge pass.
+            job->gpuCoarse=coarseV4&&context&&options.gpuCoverageCandidate&&
+                std::any_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& e){return !e.record.eraseMasks.empty();});
+            for(std::size_t i=0;i<job->sources->entries.size()&&job->gpuCoarse;++i)
+                if(std::holds_alternative<CompactStrokeReferenceCommand>(job->sources->entries[i].command))
+                    job->gpuCoarse=job->sources->geometry[i]&&job->sources->geometry[i]->isContour();
+            // Unprepared, raster-only, unmasked and explicit CPU-policy work
+            // retain the established bounded CPU coarse path.
+            job->cpuCoverage=coarseV4&&!job->gpuCoarse;
             // Reuse canonical's qualified single-channel encoding for v4
             // white CPU masks. Geometry/order/grid stay shared and unchanged;
             // unsupported materials/targets retain the original N32 fallback.
@@ -650,6 +668,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 // must not make this strip depend on the rest of the cell.
                 job->valid.reset(repaint);demand=repaint;
             }
+            job->demand=demand;
             const auto deviceRect=[&](foundation::WorldRect r){return SkRect::MakeLTRB(
                 gutter+(r.left-b.left)*s-gutter,gutter+(r.top-b.top)*s-gutter,
                 gutter+(r.right-b.left)*s+gutter,gutter+(r.bottom-b.top)*s+gutter);};
@@ -723,7 +742,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             std::size_t end=std::min(job.knot+32,range.second);
             if(stroke.config.algorithmVersion==4 && job.geometry&&job.geometry->isContour()){
                 const bool gpuCoverage=context&&!job.cpuCoverage;
-                const auto count=gpuCoverage?std::min(std::size_t(32),gpuLimit-gpuPrimitives):std::size_t(32);
+                const auto limit=job.gpuCoarse?coarseGpuLimit:fineGpuLimit;
+                if(gpuCoverage&&gpuPrimitives>=limit){deferred=true;break;}
+                // Prepared coarse paths have fixed-size ribbon primitives. A
+                // 32-index checkpoint spent the64step ceiling mostly on culled
+                // ribbons, yielding below1ms before its GPU quota was reached.
+                // Keep fine/CPU checkpoints unchanged and the same2ms deadline.
+                const auto quantum=std::size_t(job.gpuCoarse?128:32);
+                const auto count=gpuCoverage?std::min(quantum,limit-gpuPrimitives):std::size_t(32);
                 const auto demand=SkRect::Make(job.surface->getCanvas()->getDeviceClipBounds());
                 job.primitive=job.geometry->nextVisiblePrimitive(*draw,job.primitive,&demand);
                 const auto drawn=job.geometry->drawContour(*draw,job.primitive,count,&demand);

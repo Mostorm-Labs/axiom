@@ -76,7 +76,9 @@ class SkiaNavigationTiles final {
         std::shared_ptr<const PreparedNavigationGeometry> geometry;
         std::uint64_t id=0,steps=0;
         bool prewarm=false;
-        bool cpuCoverage=false;
+        bool coveragePriority=false;
+        foundation::WorldRect demand{};
+        bool cpuCoverage=false,gpuCoarse=false;
         resources::ResourceLease lease;
         ValidRegions valid;
     };

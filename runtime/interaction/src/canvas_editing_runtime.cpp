@@ -4248,7 +4248,10 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
   // of feedback opportunities. Exact preparation remains cooperative and no
   // incomplete feedback pixels or canonical receipts are published here.
   if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100)){
-      skiaRenderer_.cancelNavigationWork();
+      // Pause feedback while exact preparation converges. Keep admitted world
+      // progress for the next gesture; Render may reclaim it if exact buffers
+      // actually need the space. Invalid scene/surface/source guards still
+      // cancel, and no incomplete navigation pixels or receipts are published.
       navigationActive_=false;navigationExactPreparation_=true;return false;
   }
   const bool idlePrewarm=!coordinator_->viewportClaimed()&&

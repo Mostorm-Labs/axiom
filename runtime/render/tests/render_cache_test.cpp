@@ -1280,6 +1280,63 @@ void checkErasedInkOverShapeNavigation() {
 }
 
 namespace {
+void checkMaskedNavigationGpuCoverage() {
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"masked GPU nav target");
+    auto e=stroke(99620);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;c.stroke.knots.clear();
+    for(unsigned i=0;i<512;++i)c.stroke.knots.push_back({128.+100*std::sin(i*.07),64.+50*std::cos(i*.051),32768});
+    e.record.content=c;e.command=CompactStrokeReferenceCommand{c};semantic::SweptCircleMask mask;
+    mask.segments.push_back({{{80,64},5},{{160,64},5},{100,64},{140,64}});
+    e.record.eraseMasks.push_back({ObjectId::fromUint64(99621),mask});
+    const auto frame=plan(99620,{e});internal::SkiaNavigationTiles nav;RenderCacheOptions options;options.navigationMicroseconds=1000000;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={e};return true;};
+    for(unsigned i=0;i<128;++i){
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        const auto before=nav.work.gpuContourPrimitives;
+        require(nav.render(target,{.5,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"masked GPU nav render");
+        require(nav.work.gpuContourPrimitives-before<=1024,"masked GPU nav submission cap");
+        if(!nav.work.pending)break;require(i<127,"masked GPU nav convergence");
+    }
+#if defined(G5_TEST_WEBGL)
+    require(nav.work.coarseMaskStarts==0&&nav.work.gpuContourPrimitives>0,"masked v4 coarse navigation still rasterized on CPU");
+#else
+    require(nav.work.coarseMaskStarts>0,"masked nav lost its CPU fallback");
+#endif
+}
+void checkMaskedNavigationLevelProgress() {
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"level-progress target");
+    auto e=stroke(99610);auto content=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.knots.clear();
+    for(unsigned i=0;i<4096;++i)content.stroke.knots.push_back({128.+100*std::sin(i*.07),64.+50*std::cos(i*.051),32768});
+    e.record.content=content;e.command=CompactStrokeReferenceCommand{content};
+    semantic::SweptCircleMask mask;mask.segments.push_back({{{80,64},5},{{160,64},5},{100,64},{140,64}});
+    e.record.eraseMasks.push_back({ObjectId::fromUint64(99611),mask});
+    const auto frame=plan(99610,{e});internal::SkiaNavigationTiles nav;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();RenderCacheOptions options;
+    options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out={e};return true;};
+    auto tick=[&](CanonicalViewportTransform camera){
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        require(nav.render(target,camera,frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"level-progress navigation");
+    };
+    tick({1,0,0});require(nav.work.pending&&nav.work.tilesBuilt==0,"level-progress must start unfinished");
+    tick({.5,0,0});tick({.25,0,0});
+    require(nav.work.cancelledJobs==0,"visible masked coverage discarded at a scale-level change");
+    for(unsigned i=0;nav.work.tilesBuilt==0;++i){tick({.25,0,0});require(i<512,"retained level-progress never published");}
+    require(nav.work.sourceSteps>0,"level-progress did not finish an isolated source");
+    internal::SkiaNavigationTiles offscreen;
+    require(offscreen.render(target,{1,0,0},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"offscreen progress setup");
+    require(offscreen.work.pending,"offscreen progress must start unfinished");
+    require(offscreen.render(target,{.25,-10000,-10000},frame.frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"offscreen progress move");
+    require(offscreen.work.cancelledJobs>0,"offscreen level-progress must retire");
+    nav.cancelWork();require(budget->used()<=options.sharedMaxBytes,"level-progress exceeded shared budget");
+}
 void checkLiveEraseSourceReuse() {
     TestSurface target,reference;
     require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"live erase targets");
@@ -1685,6 +1742,7 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-progress-only")){checkMaskedNavigationLevelProgress();checkMaskedNavigationGpuCoverage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}
         if(argc==1)checkErasedInkOverShapeNavigation();

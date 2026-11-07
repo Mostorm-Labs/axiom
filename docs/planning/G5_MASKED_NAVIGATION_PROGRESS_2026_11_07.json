@@ -1,0 +1,63 @@
+{
+  "task": "G5-MASKED-NAVIGATION-PROGRESS",
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": "542864d7",
+  "authorization": "User reports recurrent pan/zoom stalls after two erasures of a30second line duplicated15times; preserve existing Runtime/Render owners and diagnose/fix repeated coverage work.",
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/planning/sdk/js-v1-contract.md",
+    "docs/planning/sdk/windows-consumer-v1.md",
+    "docs/planning/sdk/shell-axis-preview-contract.md"
+  ],
+  "baseline": {
+    "artifact": "out/g5-repeat-on/js",
+    "source_revision": "10a9a0f0dafc362c1e589c03e73069740eaf9ae7",
+    "raw": "out/g5-masked-nav-focus-data",
+    "observed": "7200samples,15offset[1,1]duplicates,two25point permanent erasures at2x; settled zoom-out/re-entry twice. Before gap68.6ms; after881.3ms; hot872.7ms. Both masked phases built0navigation cells, cancelled4jobs, CPUcoarse coverage120.6/135.2ms."
+  },
+  "scope": {
+    "owner": "Shared private SkiaNavigationTiles work scheduling and existing CanvasEditingRuntime quiet-navigation transition",
+    "public_api_impact": "none",
+    "preserve": [
+      "OperationEngine/document/history/input/Brush geometry",
+      "complete source isolation, mask semantics and canonical receipts",
+      "32MiB optional /96MiB shared budget",
+      "current CPU/GPU policy and bounded quanta initially unchanged"
+    ],
+    "change": "Preserve already-admitted useful visible jobs across level changes and quiet exact preparation. Allow existing memory-pressure reclaimer and scene/provider/resource invalidation to cancel; never present partially drawn sources."
+  },
+  "closure": {
+    "required": [
+      "Independent native RED for unfinished masked coverage retained across changing levels; invalidation/offscreen cancellation still closes",
+      "Public-rootSDK paired cold/hot after-erase navigation fixture, exact fixed inputs, no private SDK access",
+      "Measure actual display gaps, cancelled/discarded work, completed cells, CPU/GPU counters and quiescence",
+      "Document/selection/lastCommit unchanged during nav; no canonical receipt during active input; settled camera and pixels correct",
+      "Target cold/hot display gap below300ms; if not met report BLOCKED_ENDPOINT and retain evidence, do not claim closed",
+      "Native Render/Runtime relevant tests, G5 Node and boundary checks, matching JS/WASM build identity",
+      "Durable result/evidence and new isolated Demo; preserve4267andoldrecords"
+    ],
+    "forbidden": [
+      "Budget increase",
+      "New geometry or document owner",
+      "Dropping/approximating masks",
+      "Presenting unrendered regions as complete",
+      "Schema/SDK/dependency lock change",
+      "Claiming physical/competitor/Gate performance from synthetic evidence"
+    ],
+    "terminal_blockers": [
+      "Authority conflict",
+      "New correctness failure",
+      "Bounded experiment cannot establish safe improvement",
+      "Missing locked SDK"
+    ]
+  },
+  "amendment": {
+    "observed": "Level-progress RED/GREEN closes cancellation; complete rootSDK sampler still cold869ms/hot809ms. Preserving work alone is insufficient. Capturing CPU export at every sample exhausted3GiB process-family bound; remove intrusive repeated exports from latency runner, retain snapshots and separate pixel oracle.",
+    "scope": "Existing Skia GPU white SrcOver coverage for masked v4 coarse cells with admitted prepared contour only; raster/denied/unmasked paths retain CPU policy. Fine GPU cap128 unchanged; separate coarse GPU safety cap1024, same2ms owner allowance, same step/query/memory budgets.",
+    "required": "Actual GPU RED for CPU coarse work then GREEN; independent GPU silhouette/mask/AA tests and monotonic cold/hot display evidence. No claim from provider labels alone.",
+    "checkpoint": "Masked GPU coarse-only prepared checkpoint128indices instead of32;fine/CPU32 unchanged;wall2ms,step64 andGPUquota1024 unchanged. Trace showed step ceiling yielding at0.8-1.0ms with<804actualGPUdraws and repeated cold gap859ms. Third bounded throughput experiment; no budget increase.",
+    "latency_worker_scope": "No intrusive CPU image exports or History operations in the latency worker. Snapshot identity and independent Render geometry/mask/GPU-AA and Runtime History regressions own correctness. Prior variants reaching RSS bound remain blocked evidence, never relabeled complete."
+  }
+}
