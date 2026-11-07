@@ -142,15 +142,15 @@ void drawContourCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& conf
         canvas.drawCircle(0,0,static_cast<SkScalar>(cap.radius),paint);canvas.restore();}
 }
 }
-void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
+void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour,bool gpuWhiteCoverage){
     drawContourCoverage(canvas,config,contour,
-        canvas.imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten);
+        (gpuWhiteCoverage||canvas.recordingContext()||canvas.imageInfo().colorType()==kAlpha_8_SkColorType)?SkBlendMode::kSrcOver:SkBlendMode::kLighten);
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed,
-                                  bool allowStartCap,bool allowEndCap){
+                                  bool allowStartCap,bool allowEndCap,bool gpuWhiteCoverage){
     if(config.algorithmVersion==5||config.algorithmVersion==6){drawPressureMaterialCoverage(canvas,config,knots,0,knots.size(),startDistance,totalDistance,seed);return;}
-    if(config.algorithmVersion==4){drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots));return;}
+    if(config.algorithmVersion==4){drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots),gpuWhiteCoverage);return;}
     if(config.algorithmVersion!=3){drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());return;}
     if(knots.empty())return;
     const auto points=ink::compactCoverage(config,knots,startDistance,totalDistance);
@@ -552,7 +552,8 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)++work->scalarCoverageTiles;}
         if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)AXIOM_FRAME_TIMING_ADD(scalar_coverage_tiles,1);
         AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
-        const auto blend=tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SkBlendMode::kSrcOver:SkBlendMode::kLighten;
+        const auto blend=tile_->imageInfo().colorType()==kAlpha_8_SkColorType||
+            (config.algorithmVersion==4&&tile_->getCanvas()->recordingContext())?SkBlendMode::kSrcOver:SkBlendMode::kLighten;
         // A target-format fallback must not replay pictures recorded with a
         // different coverage encoding. The exact checkpoints remain valid.
         if(recordComplete_&&blend!=contourBlend_)abandonPictures();

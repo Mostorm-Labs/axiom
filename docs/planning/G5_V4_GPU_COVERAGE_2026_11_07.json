@@ -14,7 +14,7 @@
     ],
     "preserve": "Canonical state/history/Brush/IDs/eraser semantics remain Runtime owned;only shared private Render derived work changes."
   },
-  "diagnosis": "v4 cooperative coverage explicitly requests CPU A8 even on Ganesh; existing GPU counters count material/present separately. INPUT_REJECTED is generic across owner admission/exact-hit/semantic/history and is not yet reproduced by the sequential fixture.",
+  "diagnosis": "v4 cooperative coverage explicitly requests CPU A8 even on Ganesh; existing GPU counters count material/present separately. INPUT_REJECTED is generic across owner admission/exact-hit/semantic/history and is not yet reproduced by the sequential fixture. The first actual-GPU prototype passed geometric correctness but failed latency:121point erasures spent30.6s/24.1s in whole phase with cache_prepare23.6s/15.3s but GPU command recording only~0.44s,782/753GPU tiles and0CPU tiles. White coverage Lighten retains destination-dependent GPU work; GPU-only SrcOver trial reduced first exact-attempt peak597ms to14.9ms without CPU branch change.",
   "design": {
     "owner": "Existing CompactStrokeRasterJob / SkiaRenderCache; existing CanvasEditingRuntime and input owners for diagnostics only",
     "change": "Use compatible Skia GPU N32 targets for v4 coverage, same pinned contour compiler/checkpoints and max coverage; no CPU edge correction. Preserve CPU fallback for raster/denied targets and report actual execution. Instrument existing rejection seams only in compile-time diagnostics; fix only if reproduced by an independent RED oracle.",
@@ -22,7 +22,8 @@
     "unresolved_semantic_decisions": [],
     "authority_conflict": false,
     "pixel_policy": "AA boundary differences allowed by user; support/interior alpha/pressure/self-intersection/erase/seams must remain correct. CPU canonical document/export snapshots unchanged.",
-    "pixel_oracle": "Pinned contour primitive and mask boundaries transformed to device space; only their 1px geometric AA band may differ. Outside band tolerance2; transparent premultiplied color and maximum opacity strict, self-intersections cannot apply material twice; independent CPU target and offset-grid seam oracle."
+    "pixel_oracle": "Pinned contour primitive and mask boundaries transformed to device space; only their 1px geometric AA band may differ. Outside band tolerance2; transparent premultiplied color and maximum opacity strict, self-intersections cannot apply material twice; independent CPU target and offset-grid seam oracle.",
+    "gpu_white_recording": "A GPU coverage recording has no recordingContext; carry its target realization into the existing shared helper. Use fixed-function SrcOver only for GPU white contour coverage; preserve CPU Direct Lighten and its exact bytes. Prepared GPU contour draw and cooperative GPU records use the same blend. Geometry, material alpha and colored paint blend do not change."
   },
   "execution_closure_contract": {
     "continue_until_terminal_state": true,
@@ -33,7 +34,9 @@
       "Diagnose INPUT_REJECTED at existing ingress/tool/exact-hit/publication/apply/history boundaries; reproduce dense repeated/loopy erases. If not reproduced, retain diagnostic Demo and explicitly mark user rejection unresolved instead of claiming fixed",
       "Existing renderer CPU parity/native tests,rootSDK collector/contact recovery,G5 Node,boundary and full native failure-name comparison",
       "Matching clean diagnostic and ordinary installed Web SDK packages,artifact/source SHA256,new4263 Demo,preserve4260/4261/4262",
-      "Durable new code/tests/evidence commit and push; return READY_FOR_CONTROL_REVIEW only if all required obligations satisfied"
+      "Durable new code/tests/evidence commit and push; return READY_FOR_CONTROL_REVIEW only if all required obligations satisfied",
+      "Prototype GPU Lighten load reproduced BLOCKED_ENDPOINT; GPU white recording fixed-function blend guard RED/GREEN and CPU default coverage pinned-byte oracle",
+      "Final performance required after native/build workers quiesce; preserve failed prototype evidence and distinguish GPU submit/flush CPU-wall time from hardware completion"
     ],
     "forbidden": [
       "SDK API/ABI/version changes",
@@ -53,7 +56,8 @@
       "runtime/composition and sdk/common existing input rejection diagnostics only",
       "verification/runners/g5 and new evidence bundle",
       "docs/planning task package",
-      "sdk/web private probe and runtime/render CMake test registration only; no consumer export/install changes"
+      "sdk/web private probe and runtime/render CMake test registration only; no consumer export/install changes",
+      "runtime/render/src/skia_prepared_geometry.cpp and existing shared coverage recording helper signature; private GPU target-mode argument only"
     ],
     "bounds": {
       "optionalMiB": 32,

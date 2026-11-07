@@ -9,6 +9,7 @@
 #include "../src/compact_contour_skia_path.hpp"
 #include "../src/skia_geometry_internal.hpp"
 #include "include/core/SkPathUtils.h"
+#include "include/utils/SkNoDrawCanvas.h"
 #include "include/core/SkCanvas.h"
 #include <type_traits>
 #include <iostream>
@@ -1485,7 +1486,51 @@ bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std:
         if(report)std::cerr<<"non-AA mismatch pixel="<<i/4<<" channel="<<i%4<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';return false;}
     return true;
 }
+#if defined(G5_TEST_WEBGL)
+void checkWhiteCoverageBlend() {
+    class Recorder final:public SkNoDrawCanvas {
+      public:
+        Recorder():SkNoDrawCanvas(256,128){}
+        unsigned fixed=0,destinationRead=0;
+        void inspect(const SkPaint& p){
+            if(p.asBlendMode()==SkBlendMode::kSrcOver)++fixed;
+            else ++destinationRead;
+        }
+        void onDrawPath(const SkPath&,const SkPaint& p)override{inspect(p);}
+        void onDrawOval(const SkRect&,const SkPaint& p)override{inspect(p);}
+    } canvas;
+    const auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    const std::vector<foundation::InkKnot> knots{{20,64,12000},{120,30,45000},{230,64,30000}};
+    internal::drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots),true);
+    require(canvas.fixed>0&&canvas.destinationRead==0,"white v4 coverage retained destination-read Lighten blending");
+    std::cout<<"white v4 coverage uses fixed-function SrcOver PASS\n";
+}
+#endif
+void checkCpuCoverageStillExact() {
+    const auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    std::vector<foundation::InkKnot> knots;
+    for(unsigned i=0;i<513;++i)knots.push_back({128.+94*std::sin(i*.075),64.+39*std::cos(i*.11),static_cast<std::uint16_t>(2000+(i*173)%62000)});
+    const auto contour=ink::compileCompactContour(config,knots);
+    for(unsigned affine=0;affine<4;++affine){
+        std::vector<std::uint8_t> expected;
+        for(const auto blend:{SkBlendMode::kLighten,SkBlendMode::kSrcOver}){
+            auto surface=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));auto* canvas=surface->getCanvas();canvas->clear(SK_ColorBLACK);
+            if(affine==1)canvas->translate(8.3,-3.7);
+            if(affine==2)canvas->concat(SkMatrix::MakeAll(.91,-.17,17,.22,.96,-13,0,0,1));
+            if(affine==3)canvas->concat(SkMatrix::MakeAll(-1,.23,240,.11,.83,2,0,0,1));
+            SkPaint p;p.setAntiAlias(true);p.setColor(SK_ColorWHITE);p.setBlendMode(blend);
+            if(blend==SkBlendMode::kLighten){
+                for(std::size_t i=0;i+1<contour.patches.size();++i)canvas->drawPath(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)),p);
+                for(const auto& cap:contour.caps){canvas->save();canvas->translate(float(cap.x),float(cap.y));canvas->drawCircle(0,0,float(cap.radius),p);canvas->restore();}
+            }else internal::drawCompactContourCoverageToSkCanvas(*canvas,config,contour);
+            std::vector<std::uint8_t> bytes(256*128*4);require(surface->readPixels(SkImageInfo::MakeN32Premul(256,128),bytes.data(),256*4,0,0),"white coverage equation readback");
+            if(blend==SkBlendMode::kLighten)expected=bytes;else require(bytes==expected,"CPU default coverage changed from pinned Lighten");
+        }
+    }
+    std::cout<<"CPU default coverage retains pinned Lighten bytes PASS\n";
+}
 void checkV4RasterFallback() {
+    checkCpuCoverageStillExact();
     auto surface=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
     require(bool(surface),"v4 raster fallback target");
     auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
@@ -1613,11 +1658,14 @@ void checkMaskedCanonicalPreparation(bool gpuV4=false) {
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+#if defined(G5_TEST_WEBGL)
+        if(argc>1&&std::string_view(argv[1])=="--v4-blend-only"){checkWhiteCoverageBlend();return finishNative(0);}
+#endif
         if(argc>1&&std::string_view(argv[1])=="--v4-fallback-only"){checkV4RasterFallback();return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--v4-gpu-only"){
             checkV4RasterFallback();
 #if defined(G5_TEST_WEBGL)
-            checkV4GpuTileSeam();
+            checkWhiteCoverageBlend();checkV4GpuTileSeam();
 #endif
             checkMaskedCanonicalPreparation(true);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}

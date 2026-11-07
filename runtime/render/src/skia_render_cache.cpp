@@ -149,7 +149,11 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
     const auto admitted=scheduler_.take();if(!admitted||admitted->id!=job)return nullptr;
     SkPictureRecorder recorder;
     auto* canvas=recorder.beginRecording(support.makeOutset(2,2));
-    drawCompactCoverageToSkCanvas(*canvas,stroke.config,stroke.knots,0,-1,stroke.seed);
+    // Recording has no GPU context. Carry the target realization explicitly;
+    // white GPU coverage uses fixed-function SrcOver rather than destination-
+    // reading Lighten. CPU recordings keep the pinned evaluator unchanged.
+    drawCompactCoverageToSkCanvas(*canvas,stroke.config,stroke.knots,0,-1,stroke.seed,true,true,
+        options.gpuCoverageCandidate&&surface_->recordingContext());
     auto picture=recorder.finishRecordingAsPicture();(void)scheduler_.finish(job,1);if(!picture)return nullptr;
     const auto bytes=std::max<std::size_t>(picture->approximateBytesUsed(),estimate);
     if(bytes>options.maxEntryBytes || bytes>options.maxBytes)return nullptr;
@@ -583,6 +587,7 @@ bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& targ
     return true;
 }
 void SkiaRenderCache::flushPreparation(){
+    AXIOM_FRAME_TIMING_SCOPE(flushTiming,coverage_flush);
     // Submit bounded offscreen work without presenting or a CPU fence. Leaving
     // all GL work queued until the final present merely moves the long stall.
     if(auto* context=GrAsDirectContext(surface_->recordingContext())){

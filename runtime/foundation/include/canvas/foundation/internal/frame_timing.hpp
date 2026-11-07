@@ -13,14 +13,14 @@ enum class Stage : std::size_t {
     attempt, visibility, reference_build, reference_entries, reference_encode,
     reference_digest, presentation_adapt, frame_plan, render, acquire,
     validation, cache_begin, group_update, damage, cache_prepare, prepare_scan,
-    cache_draw, coverage_record, scratch_draw, coverage_select, contour_compile, contour_record, contour_replay, contour_draw, cpu_coverage, gpu_coverage_submit, material_submit,
+    cache_draw, coverage_record, scratch_draw, coverage_select, contour_compile, contour_record, contour_replay, contour_draw, cpu_coverage, gpu_coverage_submit, coverage_flush, material_submit,
     raster_snapshot, scene_draw, navigation_snapshot, provider_present, count
 };
 inline constexpr const char* names[]{
     "attempt","visibility","reference_build","reference_entries","reference_encode",
     "reference_digest","presentation_adapt","frame_plan","render","acquire",
     "validation","cache_begin","group_update","damage","cache_prepare","prepare_scan",
-    "cache_draw","coverage_record","scratch_draw","coverage_select","contour_compile","contour_record","contour_replay","contour_draw","cpu_coverage","gpu_coverage_submit","material_submit",
+    "cache_draw","coverage_record","scratch_draw","coverage_select","contour_compile","contour_record","contour_replay","contour_draw","cpu_coverage","gpu_coverage_submit","coverage_flush","material_submit",
     "raster_snapshot","scene_draw","navigation_snapshot","provider_present"
 };
 enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
