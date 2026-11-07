@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b",
+  "status": "CURRENT_UR0b_OBSERVATION_ONLY",
+  "design_revision": 3,
+  "user_scope": "User authorized independent review and implementation start; active package only UR0b observation and baseline.",
+  "current_contracts_unchanged": true,
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/semantic-sdk-store.md",
+      "sha256": "8a3294f29aa72c51a836f7a8c6e428bd01eca8ce33abde20bdfe5e6bc2a51853",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/architecture/SKIA_SDK_SUPPLY_CHAIN.md",
+      "sha256": "4dc03b9ea2ac1f4b63281a16f049d5d2bbd025c94dc319c8cf1daccfda965656",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+      "sha256": "0153d425d2b6160d5c3ef07a0ebad02a2302ea332cda3c168d966dccd5b25140",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+      "sha256": "d616fe1db3c0e36d11a3a192ab67657e1ccf51f6f70407a5a7d1c3cf383cb599",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+      "sha256": "fea82b3d62abe251ae3c9079dad13c45daaf986afb17d93b72a2a48aa7c9e326",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json",
+      "sha256": "ddeddab997c18e2a8e7bda084831a87030bc921f12e5ed30f5c382e636f8cd8a",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/design-r3/amendment.json",
+      "sha256": "7bf58fbf5c5187c208ad6c0afdebd21293cb6f3de4c6dfb7b0d6544bf5524b07",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+      "sha256": "b604377ff64982570de61bc9d085f1d9c891e89406af715b2aa6711a25572f69",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/fixtures/immediate-actions-v1.json",
+      "sha256": "185b01bb95a4e57a76c668cc3f6851c4899bd692f307276eda0fef227959a6e8",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/matrix.json",
+      "sha256": "519ac706e0a6e8b71085adfc2d7c1cb9f5885b552a0a8fddb13ec4814438de5c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/metrics.schema.json",
+      "sha256": "ce4bbe957ea5cf50264b777deafbe62d7cf5c620b3d52e9eee802975b38a237b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/protocol.md",
+      "sha256": "f69e5d8250eaf06324c6827032447a21ba17ae2af16f7f5cf0b9014e0a6207f6",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/review.md",
+      "sha256": "2b88b058c8f3d3b875368d1000be09a9a1e47afc85bbe3d763d8fbd8f6ddac22",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/routes.json",
+      "sha256": "d9282cd2a4ad82e44cfee1b003823aab11e0643489e08c3e94a0f550b2f92456",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/schema-examples.json",
+      "sha256": "eb2743f4b3cc1ae9348b479b04dc34df28d0353e22b1a9420ad5ff885a55854e",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/validate.py",
+      "sha256": "ae537888081c79500d1ac2dafb4c10b74fbe2b384aaff42d98253e9ec50e0d5b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/packages/G5-UR0a/package.json",
+      "sha256": "cbbeec9c87fcd67f67498011c910778060dd2d893fa821b094d09f02e708905f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0a/output-sha256.json",
+      "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0a/result.json",
+      "sha256": "54e41722ac282c5efdfeb199094360184ff425ad4898869807ec0f6678142ee4",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "implementation_reality": [
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "verification/sdk_web_external/consumer/pointer_input.mjs",
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "sha256": "5a49e81bb76c1e14eeedf2fbdff17718941036868a2ba495e310ed8b58ae7bb6",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/web/bridge.cpp",
+      "sha256": "c9d6efad0e895a1fc4becd937a598dfaf4a092e03398046d5028f911a5f11c30",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "8c2a2f0330b181950a17dca04c0ab2cfb202115f4f61571a7d10fbb14069a89e",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "81defb92818cebc1d47f099e966b586b14b7496a71d61d688f0a74ef9d67e880",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_partial_erase.cpp",
+      "sha256": "ac8f5b41a2d3af2f3bab393199a896ace773bdbd522012437043d75d625d8266",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "0adc9c8282054b77cb88b79382c8332bc1f2b28db55a04dda57ec7ca383d8f38",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "b8c1a39c7040bfae1bae46374ac02de6ba1b8e228e0e67fe32d2b53ce9557d86",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "3b7cf438bc9be42889838df52d7490096c00e008d40b28b078cbe71de6cf3f5d",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/scene/src/runtime_scene_projection.cpp",
+      "sha256": "cbdbe61d07142e9b50242c78bc9efb9e0611995cbc2d0db6956876c4c06253c1",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/direct_reference_source.cpp",
+      "sha256": "ec17061e0cb96b3af7fb478413bfe1cf80fff07e19fcc5d08e099d98459e5e06",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "7b63a97ff8fa27957d313fc29736b2d80b9b534111329072883aac5aec7ba8dc",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "635408565a10b23ce4d643b5557af0fec433818e40ee37b232b3126f24f7b8b5",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "a7160e4b2575b87110b20e2f5b4fcd1d01648b450ec4e62f92afd64cf2e6c7c0",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "sha256": "219dd04d1ae8312382bb2d1853e272310131876acfbc9a675377d5d79e657461",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "652b709e4ff2bcf6299003a1f2754ad01b0ea9d7cc6808ca9709562d770196cc",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "21cf4e4c2a1c6c845e9e6a6777a8bdfe02f6f61f3fec6f57a1acb2a2538ba741",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "2945d975d44ebc5f0ccd223cef72e45e4d93c5c2b71d343e07069ae3905d6416",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "31890fd324d9c2535947543b2cd7d64757e1f9dc5b11c4e64cafb8eccc79bb94",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7b18e9ceefde8b35a88ff638baf43fef76511b0aa6b783d8f3c4a89bb487aad5",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_surface_provider.cpp",
+      "sha256": "27665a63eae3a5a43bd403b0df4c411ff0fcd8f23126e86bff3c67307eb33191",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_image_export.cpp",
+      "sha256": "c3ffe2d3e97a531ff8adb67120ef4c377d5714f51b3a38503f970805f4d2eff4",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "f964042da7d6ba4c1ad00799af4ae5c8dd5a03cad1993745e9e5e54693f58a08",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/windows/include/axiom/api.h",
+      "sha256": "f13abed4c7e12a7aef9739c61f12088ddae8fe96f950c0acfe80ec08149901cf",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/native/src/android_surface.cpp",
+      "sha256": "60fa35f3aeda67b73a36c743533fb7220102d81451118f5cf9d7216456383f38",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/native/src/metal_surface.mm",
+      "sha256": "02630a26db1be170c8edda845653398eee9447c834d5e46c3523722922c392c6",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_d3d12_surface_provider.cpp",
+      "sha256": "d4187ca5f2774b629a335fa3c5e8e5e77644baf40ca9848deb41535cfaf30f4a",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/shared_scene_value.hpp",
+      "sha256": "6a0a7bf6bba3d687b80399b82d9dd2568ed4a373295f962c71bf965a1e32edcf",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "6d13f56e4da25db4459e2248ab657c84257081967106be9c4aad0e78c0b2261b",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp",
+      "sha256": "a1c900e9543221b10db48a4a4cb004534545b4b59e30daab67b00d23269041cc",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+      "sha256": "63f2484fa7ae91b3d870c8ed1d6790e6c1c45ae3685332de1995dfbf946cd47d",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "runtime/foundation/CMakeLists.txt",
+      "sha256": "472d99cc45704d058c820797b84d1f05b702c162ef24a32031aa34e2cc711f3b",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "sdk/web/CMakeLists.txt",
+      "sha256": "5f68cd815482870d8fb7186742b6716c5da618ba62de21b66293d1e97f4d75be",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "verification/runners/g5/fixture_modules.mjs",
+      "sha256": "0019d236f5d0c96fc20590a85a9a19a8bb65726b33128a8cd66032fa640966aa",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "tools/check_runtime_boundaries.py",
+      "sha256": "f0521c06c0f5e5b589ad161916f80a5ebf5ca126be80bbe86711f5886d7e5653",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "verification/evidence/performance/g5-live-dpr-drag/README.md",
+      "sha256": "9f1f30e53882fbf426b19a3614e7bfa53ba17123740919ceaa225fdd36607f88",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    },
+    {
+      "path": "verification/evidence/performance/g5-live-dpr-drag/checks/native-comparison.json",
+      "sha256": "f38945c9df5975847bac65f155549356feea25a9c314ef2f4dfec683009245ac",
+      "identity_kind": "git-and-content",
+      "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e"
+    }
+  ],
+  "frozen_statements": [
+    "Existing owners/public SDK and Operation/Scene/receipt semantics unchanged.",
+    "UR0b diagnoses CURRENT_BRANCH only; UNIFIED_POLICY begins in later authorized packages.",
+    "R3-2/R3-3 telemetry included, GPU admission/transient encoding removal/fork implementation not included.",
+    "UR0a protocol, fixtures, primary matrix, overhead and failure denominators immutable.",
+    "GPU target evidence is not proof of absence of Skia software coverage.",
+    "No official Gate/P34/platform PASS from this producer."
+  ],
+  "pending_external_decisions": [],
+  "control_activation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-activation.json",
+    "sha256": "da0918fc537ee13a73cd3bc626db2ea6eebad9f585e1ed39078ef3a83d3ea9a2",
+    "identity_kind": "local-content-addressed"
+  },
+  "design_materialization_revision": "92a67b1484d9d3407a6cb2a3db3d917061a81683"
+}
