@@ -1797,6 +1797,40 @@ void checkBodyMaskBudgetFailure(){
     emscripten_sleep(2);source.presentationEraseActive=false;const auto before=renderer.renderCacheWork().gpuCoverageTiles;
     require(renderer.renderFrame(target,demand(99872)).code==BackendSubmissionCode::kAccepted,"budget recovery frame");
     require(renderer.renderCacheWork().gpuCoverageTiles>before,"failed layer admission orphaned the GPU epoch and forced CPU recovery");
+
+    // A real live miss must ask its owner to reclaim optional navigation quota.
+    // Keeping all old navigation indefinitely starves body tiles just as surely
+    // as clearing every navigation witness on every input destroys reentry.
+    internal::SkiaRenderCache cache;limits.sharedMaxBytes=1280*1024;
+    cache.options=limits;cache.budget=std::make_shared<resources::ResourceBudgetManager>(
+        resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
+    cache.sourcePool=std::make_shared<internal::SourceRetentionPool>();
+    const auto held=cache.budget->reserve(resources::ResourceClass::kNavigationTile,512*1024,true);
+    require(bool(held),"live navigation quota setup");resources::ResourceLease navigation(cache.budget,*held);
+    unsigned reclaims=0;cache.reclaimPreparation=[&](std::size_t bytes){
+        require(bytes>0&&bytes<=limits.sharedMaxBytes,"live reclaim request");++reclaims;navigation.reset();
+    };
+    source.presentationEraseActive=true;const auto live=demand(99873);auto acquired=target.acquire();
+    require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"live quota target");
+    const internal::CompactDeviceGrid grid{0,0,512,128};
+    internal::GpuResourceRetirement retirement;
+    const auto draw=[&]{
+        bool accepted=false;
+        {internal::SkiaGpuLifetime gpu(retirement,cache.budget,target,GrAsDirectContext(acquired.frame.surface->recordingContext()),
+            internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+            require(gpu.ready(),"live quota GPU scope");gpu.touch();
+            cache.begin(live,&target,*acquired.frame.surface,1);
+            accepted=cache.drawTransientScene(*acquired.frame.surface->getCanvas(),live,nullptr,nullptr,true,false,&grid);
+        }
+        for(unsigned i=0;cache.budget->pendingGpuEpochCount();++i){emscripten_sleep(1);retirement.service();require(i<128,"live quota GPU retirement");}
+        return accepted;
+    };
+    const auto first=draw();
+    require(!first&&reclaims>0,"live resource denial did not request navigation reclamation");
+    require(draw(),"live quota failed to recover after navigation reclamation");
+    const auto count=reclaims;
+    require(draw()&&reclaims==count,"live cache hit unnecessarily reclaimed navigation");
+    target.release();
 }
 #endif
 void checkLiveEraseGpuMiss() {

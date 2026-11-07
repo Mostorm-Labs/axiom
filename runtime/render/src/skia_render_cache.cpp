@@ -450,6 +450,9 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
 SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
     const ReferenceTraversalEntry& source,ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
+    const bool gpuLive=options.enabled&&options.gpuCoverageCandidate&&canvas.recordingContext()&&
+        (damageOnly_||source.presentationEraseActive)&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+    if(gpuLive&&!ensureScratch(canvas,true)){damageFailed_=true;return InkDraw::kRetry;}
     constexpr auto edge=SkiaInkLayers::tileSize,guard=SkiaInkLayers::maskGuard;
     const auto layerTileBytes=std::size_t(edge)*std::min(edge,surface_->height())*4U;
     const auto inkSources=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
@@ -464,8 +467,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
     // narrow direct path when this demand cannot retain all affected sources.
     const auto tilePeak=layerTileBytes+std::size_t(edge+2*guard)*(std::min(edge,surface_->height())+2*guard)*4U+1024;
     const bool fits=tiles&&tiles<=options.maxBytes/tilePeak&&std::size_t(inkSources)<=options.maxBytes/(tilePeak*tiles);
-    if(options.enabled&&options.gpuCoverageCandidate&&canvas.recordingContext()&&sourceAdmission_&&(damageOnly_||source.presentationEraseActive)&&compact&&compact->content.get().stroke.config.algorithmVersion==4&&
-       options.maxEntryBytes>=layerTileBytes&&fits&&ensureScratch(canvas)){
+    if(gpuLive&&sourceAdmission_&&options.maxEntryBytes>=layerTileBytes&&fits){
         // Body layers have no permanent/transient masks in their identity.
         // All masks retain the original full viewport/device grid.
         const auto transform=entryMatrix(canvas,plan,source);
@@ -479,9 +481,12 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         // An allocation miss after any composite must reject this entire
         // disposable frame; replaying Direct would blend already drawn ink.
         // Reuse denial is otherwise safe because the provider is not presented.
-        if(painted||resourcePending){damageFailed_=true;return InkDraw::kRetry;}
+        if(painted||resourcePending){
+            if(resourcePending&&reclaimPreparation)reclaimPreparation(tilePeak);
+            damageFailed_=true;return InkDraw::kRetry;
+        }
     }
-    if(!damageOnly_||!scratch_)return InkDraw::kSkipped;
+    if((!damageOnly_&&!gpuLive)||!scratch_)return InkDraw::kSkipped;
     auto* isolated=scratch_->getCanvas();isolated->resetMatrix();isolated->clear(SK_ColorTRANSPARENT);
     const auto transform=entryMatrix(canvas,plan,source);
     // Reuse a complete resident source when available. A miss never enters the
@@ -499,7 +504,10 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         CompactRasterWork rasterWork;
         drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr,true);
         noteCoverage(rasterWork);isolated->restore();
-        if(rasterWork.resourcePending){isolated->restore();damageFailed_=true;return InkDraw::kRetry;}
+        if(rasterWork.resourcePending){
+            isolated->restore();if(reclaimPreparation)reclaimPreparation(256U*256U*4U);
+            damageFailed_=true;return InkDraw::kRetry;
+        }
         // Narrowing this clip changes Skia stroke-mask AA at existing edges.
         // Keep both mask evaluators on their full original device surface.
         drawEraseMasksToSkCanvas(*isolated,source);noteDirect();

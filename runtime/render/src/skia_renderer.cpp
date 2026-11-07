@@ -681,7 +681,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     const auto validation=internal::validateReferencePlan(plan);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
-    if(renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;})){
+    const bool gpuLiveV4=renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;});
+    if(gpuLiveV4){
         // Retire obsolete masked material before starting a GPU read epoch.
         // Keep navigation planes/tiles and their regional validity witnesses:
         // live feedback does not invalidate pixels outside the changed mask.
@@ -710,6 +711,20 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();
+        if(gpuLiveV4){
+            const auto navigation=std::weak_ptr<internal::SkiaNavigationTiles>(navigationTiles_);
+            cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t bytes){
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
+                // Live feedback reclaims only after a real admission denial.
+                // Prefer disposable tiles to qualified wide-view planes.
+                if(const auto tiles=navigation.lock())tiles->reclaimForExact(resourceBudget_,
+                    renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
+                navigationFallback_.reset();
+                if(internal::releasedQuotaSatisfies(*resourceBudget_,renderCacheOptions_.sharedMaxBytes,bytes))return;
+                navigationCache_.reset();
+            };
+        }
     }catch(const std::bad_alloc&){clearRenderCache();}
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
@@ -733,7 +748,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         provider.describe().capabilities.supportsPartialUpdate;
     bool incremental=persistentErase&&cache->eraseDamage().continuous&&previousErase&&
         previousErase->matches(provider,*acquired.frame.surface,plan,*cache,resourceEpoch_);
-    if(incremental&&!cache->prepareEraseDamage(*canvas))incremental=false;
+    if(incremental&&!cache->prepareEraseDamage(*canvas,gpuLiveV4)){
+        if(gpuLiveV4){provider.release();return BackendSubmissionResult::retry("live erase work surface unavailable");}
+        incremental=false;
+    }
     // Preserve the full frame's coverage tile origin and dimensions. A narrow
     // clip changes how many tiles are needed, never their AA/noise sampling grid.
     SkIRect originalClip;

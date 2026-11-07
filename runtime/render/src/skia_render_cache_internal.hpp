@@ -42,7 +42,7 @@ class SkiaRenderCache final {
     bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
     [[nodiscard]] std::uint64_t frameSequence()const noexcept{return tick_;}
-    bool prepareEraseDamage(SkCanvas& canvas){return sourceAdmission_&&ensureScratch(canvas);}
+    bool prepareEraseDamage(SkCanvas& canvas,bool mandatory=false){return (sourceAdmission_||mandatory)&&ensureScratch(canvas,mandatory);}
     enum class InkDraw {kSkipped,kDrawn,kRetry};
     InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
