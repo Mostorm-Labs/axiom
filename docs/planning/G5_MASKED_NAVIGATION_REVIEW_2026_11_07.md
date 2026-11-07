@@ -7,7 +7,8 @@ The fixed public-root-SDK corpus has 7200 confirmed samples (4ms timestamps),
 15 duplicates offset by [1,1], two25point erasures at2x, a2second quiet wait,
 and two identical zoom-out/pan/re-entry phases. Ordinary navigation before erase
 has a roughly68ms maximum content-submit gap. The original masked cold/hot gaps
-are roughly875/877ms. The last diagnostic candidate measured683/587ms. It
+are roughly882/870ms. The clean diagnostic candidate measured683/595ms; the
+ordinary candidate measured678/602ms with identical settled GPU readback hashes. It
 preserves document/selection/commit snapshots, makes actual GPU contour
 submissions, and avoids Axiom's CPU coarse-mask path for admitted masked v4
 sources. The300ms target is not met. Headless Chrome on this Apple M2 is an

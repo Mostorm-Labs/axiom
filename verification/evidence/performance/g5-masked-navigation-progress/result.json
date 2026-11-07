@@ -1,0 +1,37 @@
+{
+  "status": "BLOCKED_ENDPOINT",
+  "officialGatePassClaimed": false,
+  "code_revision": "d3960d6b1990fdf088325888a2277f348dce6905",
+  "scope": "Masked navigation latency and repeat work, shared Runtime/Render only",
+  "target_max_gap_ms": 300,
+  "next_design_review": "docs/planning/G5_MASKED_NAVIGATION_REVIEW_2026_11_07.md",
+  "exploratory_note": "Dirty development artifacts and partial workers are not clean final verification. RSS/timeout-bounded partial cases retain their failure classifications.",
+  "verification_fixture_revision": "a5746d1306410dda834ff65e5fbd6c162dc949c6",
+  "native": {
+    "total": 1081,
+    "passed": 1015,
+    "newFailures": 0,
+    "existingFailuresOrNotBuilt": 66
+  },
+  "snapshot_qualification": "BLOCKED_EVIDENCE: intrusive capture workers exceeded3GiB; not claimed from latency lane",
+  "physical_trackpad_qualification": "NOT_RUN",
+  "latency_scope": "Single paired engineering corpus, no intrusive capture/profiling, not a percentile/SLO or competitor comparison",
+  "ordinary_pixel_parity": [
+    {
+      "label": "before-erasing",
+      "sameCamera": true,
+      "exactGpuReadback": true
+    },
+    {
+      "label": "after-erasing",
+      "sameCamera": true,
+      "exactGpuReadback": true
+    },
+    {
+      "label": "after-erasing-hot",
+      "sameCamera": true,
+      "exactGpuReadback": true
+    }
+  ],
+  "next_action": "Architecture/verification review for damage-localized navigation cache validity; no fourth speculative implementation change in this closure."
+}

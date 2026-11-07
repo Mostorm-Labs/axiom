@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "out/g5-masked-pixel-capture.mjs",
+    "out/g5-repeat-on/js",
+    "out/g5-masked-pixels-red-data",
+    "2",
+    "baseline"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 35.46299845800968,
+  "peak_process_family_rss_kib": 1726224,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "REPRODUCED_MASKED_NAVIGATION_STALL"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

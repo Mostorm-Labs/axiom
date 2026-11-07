@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: a partial process, wrong axis count or component cannot qualify root SDK
+ok 1 - a partial process, wrong axis count or component cannot qualify root SDK
+  ---
+  duration_ms: 0.440667
+  ...
+# Subtest: point tiers count canonical points rather than objects or input samples
+ok 2 - point tiers count canonical points rather than objects or input samples
+  ---
+  duration_ms: 0.071125
+  ...
+# Subtest: resource caps preserve the last stage and never manufacture success
+ok 3 - resource caps preserve the last stage and never manufacture success
+  ---
+  duration_ms: 0.101875
+  ...
+# Subtest: tier coverage requires an honest outcome for every declared tier
+ok 4 - tier coverage requires an honest outcome for every declared tier
+  ---
+  duration_ms: 0.242458
+  ...
+# Subtest: cache occupancy is a peak gauge; absent diagnostics stay unavailable
+ok 5 - cache occupancy is a peak gauge; absent diagnostics stay unavailable
+  ---
+  duration_ms: 1.326458
+  ...
+# Subtest: a leaked worker or wrong DPR remains blocked despite a good object count
+ok 6 - a leaked worker or wrong DPR remains blocked despite a good object count
+  ---
+  duration_ms: 0.090959
+  ...
+# Subtest: nested contour scopes do not make coverage CPU disappear or double count
+ok 7 - nested contour scopes do not make coverage CPU disappear or double count
+  ---
+  duration_ms: 0.474792
+  ...
+# Subtest: unavailable diagnostics are not measured zero CPU
+ok 8 - unavailable diagnostics are not measured zero CPU
+  ---
+  duration_ms: 0.060125
+  ...
+# Subtest: canonical attempts before pointer Up stay outside recovery totals
+ok 9 - canonical attempts before pointer Up stay outside recovery totals
+  ---
+  duration_ms: 0.071083
+  ...
+# Subtest: ABBA separates a10ms source effect from linear2ms order drift
+ok 10 - ABBA separates a10ms source effect from linear2ms order drift
+  ---
+  duration_ms: 1.188833
+  ...
+# Subtest: a short pilot cannot establish nonregression even with perfect signs
+ok 11 - a short pilot cannot establish nonregression even with perfect signs
+  ---
+  duration_ms: 0.224958
+  ...
+# Subtest: eight independent signs distinguish nonregression,regression and ties
+ok 12 - eight independent signs distinguish nonregression,regression and ties
+  ---
+  duration_ms: 0.115125
+  ...
+# Subtest: all local sampler imports can be fetched as JavaScript modules
+ok 13 - all local sampler imports can be fetched as JavaScript modules
+  ---
+  duration_ms: 33.711959
+  ...
+# Subtest: fixture routing does not expose the SDK or an arbitrary local path
+ok 14 - fixture routing does not expose the SDK or an arbitrary local path
+  ---
+  duration_ms: 0.169084
+  ...
+# Subtest: an early process exit cannot qualify unfinished native GPU work
+ok 15 - an early process exit cannot qualify unfinished native GPU work
+  ---
+  duration_ms: 0.348291
+  ...
+# Subtest: stderr rejection cannot be hidden by a zero process exit
+ok 16 - stderr rejection cannot be hidden by a zero process exit
+  ---
+  duration_ms: 0.05925
+  ...
+# Subtest: only completed native work without browser or native errors passes
+ok 17 - only completed native work without browser or native errors passes
+  ---
+  duration_ms: 0.052458
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 0
+ok 18 - navigation corroboration rejects unsupported DPR 0
+  ---
+  duration_ms: 239.699833
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 5
+ok 19 - navigation corroboration rejects unsupported DPR 5
+  ---
+  duration_ms: 237.694375
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR not-a-number
+ok 20 - navigation corroboration rejects unsupported DPR not-a-number
+  ---
+  duration_ms: 234.467417
+  ...
+# Subtest: exact coverage metadata and replay counts are separate and missing counters stay unknown
+ok 21 - exact coverage metadata and replay counts are separate and missing counters stay unknown
+  ---
+  duration_ms: 1.258792
+  ...
+# Subtest: navigation summary retains tails and sums diagnostic deltas
+ok 22 - navigation summary retains tails and sums diagnostic deltas
+  ---
+  duration_ms: 0.373167
+  ...
+# Subtest: missing diagnostic rows remain unavailable rather than invented zero
+ok 23 - missing diagnostic rows remain unavailable rather than invented zero
+  ---
+  duration_ms: 0.068792
+  ...
+# Subtest: input display gap includes the first response and excludes exact settle
+ok 24 - input display gap includes the first response and excludes exact settle
+  ---
+  duration_ms: 0.077042
+  ...
+# Subtest: prepared geometry deltas are summed while resident bytes are a peak gauge
+ok 25 - prepared geometry deltas are summed while resident bytes are a peak gauge
+  ---
+  duration_ms: 0.177
+  ...
+# Subtest: an interrupted selection receipt cannot qualify navigation settlement
+ok 26 - an interrupted selection receipt cannot qualify navigation settlement
+  ---
+  duration_ms: 0.27025
+  ...
+# Subtest: GPU admission deltas remain separate from CPU and unknown old counters
+ok 27 - GPU admission deltas remain separate from CPU and unknown old counters
+  ---
+  duration_ms: 0.110792
+  ...
+# Subtest: presented source quality uses gauges and observed time, including unrecovered debt
+ok 28 - presented source quality uses gauges and observed time, including unrecovered debt
+  ---
+  duration_ms: 0.842875
+  ...
+# Subtest: old or incomplete source quality diagnostics remain unavailable
+ok 29 - old or incomplete source quality diagnostics remain unavailable
+  ---
+  duration_ms: 0.674666
+  ...
+# Subtest: shared-source gauges and query deltas stay distinct from historical missing rows
+ok 30 - shared-source gauges and query deltas stay distinct from historical missing rows
+  ---
+  duration_ms: 1.05175
+  ...
+# Subtest: coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+ok 31 - coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+  ---
+  duration_ms: 0.397334
+  ...
+# Subtest: navigation components and region compactions preserve old unknown diagnostics
+ok 32 - navigation components and region compactions preserve old unknown diagnostics
+  ---
+  duration_ms: 0.285542
+  ...
+# Subtest: v2 starts at real input and separates clear activity,content return and coarse receipt
+ok 33 - v2 starts at real input and separates clear activity,content return and coarse receipt
+  ---
+  duration_ms: 0.697125
+  ...
+# Subtest: v2 clear-only work cannot hide a censored content gap
+ok 34 - v2 clear-only work cannot hide a censored content gap
+  ---
+  duration_ms: 0.23375
+  ...
+# Subtest: v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+ok 35 - v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+  ---
+  duration_ms: 0.725917
+  ...
+# Subtest: v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+ok 36 - v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+  ---
+  duration_ms: 0.402375
+  ...
+# Subtest: runtime submit identities reject numeric or overwide IDs rather than losing precision
+ok 37 - runtime submit identities reject numeric or overwide IDs rather than losing precision
+  ---
+  duration_ms: 0.103041
+  ...
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 38 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 17.160791
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 39 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 0.442583
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 40 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.106958
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 41 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.261834
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 42 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.096125
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 769.174875

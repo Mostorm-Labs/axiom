@@ -1,0 +1,51 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/masked_navigation_reentry.mjs",
+    "out/g5-repeat-on/js",
+    "out/g5-masked-red-data",
+    "2",
+    "baseline"
+  ],
+  "reason": "rss_limit",
+  "returncode": -9,
+  "elapsed_s": 77.45720037497813,
+  "peak_process_family_rss_kib": 3157520,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "after-erasing-hot-complete",
+    "duration": 1984.4000000357628,
+    "intervalMax": 19.299999952316284,
+    "gap": 877.1999999880791,
+    "navCalls": 77,
+    "canonical": 27,
+    "checks": {
+      "documentUnchanged": true,
+      "selectionUnchanged": true,
+      "operationUnchanged": true,
+      "noCanonicalReceiptDuringInput": true,
+      "cameraReturned": true
+    },
+    "navTotals": {
+      "elapsed_ns": 157700000,
+      "query_ns": 0,
+      "contour_ns": 136100000,
+      "material_ns": 15400000,
+      "other_draw_ns": 0,
+      "queries": 1,
+      "knots": 158378,
+      "contour_tested": 94320,
+      "contour_drawn": 35902,
+      "gpu_contours": 0,
+      "coarse_masks": 27,
+      "built": 0,
+      "fallback": 964,
+      "prepared_builds": 0,
+      "prepared_hits": 0,
+      "source_steps": 0
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

@@ -1,0 +1,51 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/masked_navigation_reentry.mjs",
+    "out/g5-masked-candidate-on/js",
+    "out/g5-masked-green2-data",
+    "2",
+    "candidate"
+  ],
+  "reason": "rss_limit",
+  "returncode": -9,
+  "elapsed_s": 69.83532883401494,
+  "peak_process_family_rss_kib": 3176352,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "after-erasing-hot-complete",
+    "duration": 1984.6000000238419,
+    "intervalMax": 18.900000035762787,
+    "gap": 809.3000000119209,
+    "navCalls": 78,
+    "canonical": 26,
+    "checks": {
+      "documentUnchanged": true,
+      "selectionUnchanged": true,
+      "operationUnchanged": true,
+      "noCanonicalReceiptDuringInput": true,
+      "cameraReturned": true
+    },
+    "navTotals": {
+      "elapsed_ns": 135500000,
+      "query_ns": 100000,
+      "contour_ns": 65000000,
+      "material_ns": 57700000,
+      "other_draw_ns": 0,
+      "queries": 14,
+      "knots": 1482994,
+      "contour_tested": 68645,
+      "contour_drawn": 7237,
+      "gpu_contours": 427,
+      "coarse_masks": 190,
+      "built": 24,
+      "fallback": 2131,
+      "prepared_builds": 0,
+      "prepared_hits": 32,
+      "source_steps": 0
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

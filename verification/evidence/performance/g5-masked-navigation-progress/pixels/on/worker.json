@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "out/g5-masked-pixel-capture.mjs",
+    "out/g5-masked-clean-on/js",
+    "out/g5-masked-pixels-on-data",
+    "2",
+    "candidate"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 35.8163612090284,
+  "peak_process_family_rss_kib": 1723056,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "BLOCKED_ENDPOINT"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}
