@@ -241,6 +241,28 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
             const auto x=a.getBounds(),y=b.getBounds();
             return x.isFinite()&&y.isFinite()&&!x.isEmpty()&&!y.isEmpty()&&!SkRect::Intersects(x,y);
         };
+        // A repeat/no-op must not exhaust every brush ribbon. This is only
+        // a proof of an empty query, never an approximate positive hit. Keep
+        // source/new-mask validation above, including invalid-source handling.
+        if(!record.eraseMasks.empty()){
+            auto remaining=*eraser;
+            // Optional proofs are bounded; a long mask history keeps the
+            // existing lazy component query rather than front-loading it.
+            constexpr std::size_t proofMasks=8;
+            for(std::size_t i=0;i<std::min(record.eraseMasks.size(),proofMasks);++i){
+                if(record.eraseMasks[i].geometry==mask)return Hit::kMiss;
+                const auto built=erasePath(record.eraseMasks[i].geometry);
+                // Failure of this optional proof is not itself rejection:
+                // the original component query below still owns the result.
+                if(!built||!built->isFinite())break;
+                previousMasks.push_back(*built);
+                if(disjoint(remaining,*built))continue;
+                auto next=Op(remaining,*built,kDifference_SkPathOp);
+                if(!next)break;
+                remaining=*next;
+                if(remaining.isEmpty())return Hit::kMiss;
+            }
+        }
         const auto intersects=[&](const SkPath& body){
             if(body.isEmpty()||disjoint(body,*eraser))return Hit::kMiss;
             auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return invalidGeometry("component_intersection");

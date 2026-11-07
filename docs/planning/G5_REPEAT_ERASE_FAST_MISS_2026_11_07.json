@@ -2,7 +2,7 @@
   "task": "G5-EXACT-REPEAT-ERASE-FAST-MISS",
   "repository": "github.com/Mostorm-Labs/axiom",
   "execution_ref": "refs/heads/codex/geometry-navigation-integration",
-  "task_anchor": "9f3177f7",
+  "task_anchor": "9f3177f7eaad6c9db9e8e3d6b08e19f33481ace2",
   "authorization": "User reports second dense erase CPU100/input rejection; actual repeat121point erasure of a4800sample stroke duplicated15times is a non-mutating accepted no-op but Up takes9021ms. Fix the demonstrated CPU tail without claiming the still-unreproduced INPUT_REJECTED is fixed.",
   "authority_basis": {
     "repository_instructions": "AGENTS.md",
@@ -17,7 +17,7 @@
   "design": {
     "owner": "Existing pure Render intersectEraseGeometry query; existing Runtime eraser/OperationEngine unchanged",
     "current": "Compile pinned geometry,intersect every body component with query,subtract historical masks per component; full no-op must exhaust thousands of components",
-    "change": "After existing source/new-mask validation,try exact query-minus-historical-masks once. Only a valid empty result permits early Miss. Nonempty or failed optional proof retains original per-component intersection/fail-closed path. Reuse query-local old mask paths; no retained cache or mutable state.",
+    "change": "After existing source and new-mask validation,identical semantic mask geometry proves coverage directly;otherwise try exact query-minus-historical-masks once. Only a valid empty result permits early Miss. Nonempty or failed optional proof retains original per-component intersection/fail-closed path. Reuse query-local old mask paths; no retained cache or mutable state. The optional proof examines at most8 historical masks in original order; later/failed/nonempty cases fall back, preserving long-history admission and validation.",
     "identity": "(union(body_parts) intersect query) minus oldMasks is empty when query minus oldMasks is empty",
     "public_api_impact": "none",
     "unresolved_semantic_decisions": [],
