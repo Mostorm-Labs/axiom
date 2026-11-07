@@ -1466,7 +1466,10 @@ std::vector<std::uint8_t> contourEdgeBand(const ReferenceTraversalEntry& entry) 
     const auto contour=ink::compileCompactContour(stroke.config,stroke.knots);
     for(std::size_t i=0;i+1<contour.patches.size();++i)
         draw(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));
-    for(const auto& cap:contour.caps){SkPathBuilder b;b.addCircle(cap.x,cap.y,cap.radius);draw(b.detach());}
+    for(const auto& cap:contour.caps){SkPathBuilder b;b.addCircle(0,0,float(cap.radius));
+        SkMatrix nib;nib.setTranslate(float(cap.x),float(cap.y));
+        if(stroke.config.family==foundation::InkFamily::kMarker){nib.preRotate(float(stroke.config.markerAngle*57.29577951308232));nib.preScale(1,float(stroke.config.markerFlatness));}
+        draw(b.detach().makeTransform(nib));}
     for(const auto& mask:entry.record.eraseMasks){
         if(const auto* f=std::get_if<semantic::FilledPathMask>(&mask.geometry))draw(internal::semanticPath(f->path));
         else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask.geometry))
@@ -1573,6 +1576,7 @@ void checkV4GpuTileSeam() {
 #endif
 void checkMaskedCanonicalPreparation(bool gpuV4=false) {
     std::uint64_t gpuTiles=0,cpuTiles=0,edgePixels=0;
+    for(const std::string_view profile:{"round-handdrawn","round-regular","marker-compact-v1"})
     for(unsigned affine=0;affine<4;++affine)for(unsigned backdrop=0;backdrop<3;++backdrop)
     for(bool smallCache:{false,true}) {
         TestSurface target,reference;
@@ -1582,7 +1586,7 @@ void checkMaskedCanonicalPreparation(bool gpuV4=false) {
         options.gpuCoverageCandidate=gpuV4;
         renderer.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
         auto source=stroke(95000);auto content=std::get<CompactStrokeReferenceCommand>(source.command).content.get();
-        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,4).package.compactConfig;
         content.stroke.config.size=13;content.stroke.config.opacity=.67;content.stroke.knots.clear();
         for(unsigned i=0;i<513;++i)content.stroke.knots.push_back({128.+94*std::sin(i*.075),64.+39*std::cos(i*.11),static_cast<std::uint16_t>(2000+(i*173)%62000)});
         source.command=CompactStrokeReferenceCommand{content};source.record.content=content;
@@ -1591,6 +1595,11 @@ void checkMaskedCanonicalPreparation(bool gpuV4=false) {
         if(affine==3)source.record.transform={-1,.11,.23,.83,240,2};
         semantic::FilledPathMask cut;cut.path.commands={semantic::MoveTo{{105,0}},semantic::LineTo{{135,0}},semantic::LineTo{{135,128}},semantic::LineTo{{105,128}},semantic::ClosePath{}};
         source.record.eraseMasks={{ObjectId::fromUint64(95001),cut}};
+        // Re-project the mutated fixture. A stale two-knot world's bounds
+        // would silently crop most of this long contour in both renderers.
+        semantic::ObjectRecord object;object.id=source.record.objectId;object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
+        object.content=content;object.transform=source.record.transform;object.erase_masks=source.record.eraseMasks;
+        source.record=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1}).records.front();
         std::vector<ReferenceTraversalEntry> entries;
         if(backdrop==1){
             semantic::ObjectRecord shape;shape.id=ObjectId::fromUint64(95002);shape.kind=semantic::ObjectKind::kShape;shape.kind_version=1;shape.content=semantic::ShapeContent{0,256,128};shape.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{.1,.3,.8,1}}}});
@@ -1618,7 +1627,7 @@ void checkMaskedCanonicalPreparation(bool gpuV4=false) {
 #if defined(G5_TEST_WEBGL)
                 EM_ASM({window.result.failedPixels=Object();window.result.failedPixels.actual=Array.from(HEAPU8.subarray($0,$0+$2));window.result.failedPixels.expected=Array.from(HEAPU8.subarray($1,$1+$2));},actual.data(),expected.data(),actual.size());
 #endif
-                std::cerr<<"GPU case affine="<<affine<<" backdrop="<<backdrop<<" small="<<smallCache<<'\n';
+                std::cerr<<"GPU case profile="<<profile<<" affine="<<affine<<" backdrop="<<backdrop<<" small="<<smallCache<<'\n';
                 require(false,"GPU v4 changed interior/geometry/mask beyond AA boundary");}
             else if(!gpuV4) for(std::size_t k=0;k<actual.size();++k)
                 require(std::abs(int(actual[k])-int(expected[k]))<=2,"cooperative masked coverage differs from Direct");
