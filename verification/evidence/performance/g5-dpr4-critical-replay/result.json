@@ -1,0 +1,180 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "officialGatePassClaimed": false,
+  "scope": "DPR4 critical replay admission and local engineering corpus;not universal/statistical/physical/platform/G5/P34 PASS",
+  "codeRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03",
+  "packageRevision": "4d665c233b71adc0548f9661d3a2ff185a3c28c0",
+  "productionFiles": [
+    "runtime/render/src/skia_prepared_geometry.cpp"
+  ],
+  "native": {
+    "passed": 1010,
+    "total": 1076,
+    "failed_names": [
+      "FC00XRuntimeComposition",
+      "FC01Creation-width-style",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "G3HeadlessCanvasDemo",
+      "G45BrushRuntimePipeline",
+      "G46BQueryStructure",
+      "G46CQualificationBehavior",
+      "G46CQualificationBundle",
+      "G46PlaygroundTransform",
+      "G47TextHost",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4InkPlaygroundSurface",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "InkV2NativeSession",
+      "SketchSemantic",
+      "canvas_fc02_shape_label_scene",
+      "canvas_rf01_full_rebuild",
+      "canvas_semantic_connector_stateful_validation_test_NOT_BUILT",
+      "canvas_semantic_object_store_differential_test_NOT_BUILT",
+      "canvas_semantic_stateful_kind_applicability_test_NOT_BUILT",
+      "canvas_semantic_stateful_validation_differential_test_NOT_BUILT",
+      "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/41",
+      "fc08.section_b.SectionAllocation.IndexedOwnerRejectsPostInitializationAllocationFailures",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithGroupWrapper",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithSectionFill",
+      "fc08.section_b.SectionAllocation.IndexedOwnerWithSetSectionContent",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerRejectsPostInitializationAllocationFailures",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithGroupWrapper",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithSectionFill",
+      "fc08.section_b.SectionAllocation.ReferenceOwnerWithSetSectionContent",
+      "fc08.section_b.SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3",
+      "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4",
+      "fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.ContentUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.DeleteUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.InsertUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.MoveUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.PropertyUndo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.RejectedForwardPreservesExistingRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyForward",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyRedo",
+      "fc08.section_c_allocation.SectionHistoryAllocation.TopologyUndo"
+    ],
+    "new_failed_names": [],
+    "resolved_names": []
+  },
+  "otherChecks": {
+    "g5Node": 39,
+    "boundaries": 119
+  },
+  "browserWorkers": 10,
+  "allWorkerCleanup": true,
+  "localEndpoint": "candidateDPR4selectedidlepan<150ms in twoON samples,OFF andrestore;all met",
+  "pixelPairs": {
+    "baseline-off-dpr4__candidate-off-dpr4": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    },
+    "baseline-on-dpr4__candidate-on-dpr4": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    },
+    "baseline-on-dpr4__candidate-on-dpr4-repeat": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    },
+    "candidate-on-dpr4__candidate-off-dpr4": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    },
+    "candidate-on-dpr1__candidate-off-dpr1": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    },
+    "candidate-on-dpr2__candidate-off-dpr2": {
+      "edits": true,
+      "navigationCanvas": true,
+      "finalExport": true
+    }
+  },
+  "dpr1Dpr2NonregressionGuards": [
+    {
+      "id": "candidate-on-dpr1",
+      "oldObservedMaxMs": 18.5,
+      "newObservedMaxMs": 18.69999998807907,
+      "allowedEngineeringMarginMs": 30,
+      "note": "single-worker local guard,not statistical nonregression"
+    },
+    {
+      "id": "candidate-on-dpr2",
+      "oldObservedMaxMs": 59.89999997615814,
+      "newObservedMaxMs": 34.39999997615814,
+      "allowedEngineeringMarginMs": 30,
+      "note": "single-worker local guard,not statistical nonregression"
+    },
+    {
+      "id": "candidate-off-dpr1",
+      "oldObservedMaxMs": 18.19999998807907,
+      "newObservedMaxMs": 18.69999998807907,
+      "allowedEngineeringMarginMs": 30,
+      "note": "single-worker local guard,not statistical nonregression"
+    },
+    {
+      "id": "candidate-off-dpr2",
+      "oldObservedMaxMs": 35.80000001192093,
+      "newObservedMaxMs": 35.30000001192093,
+      "allowedEngineeringMarginMs": 30,
+      "note": "single-worker local guard,not statistical nonregression"
+    }
+  ],
+  "budgetsMiB": {
+    "optional": 32,
+    "shared": 96
+  },
+  "workLimitsChanged": false,
+  "sourceArtifactStable": true,
+  "admissionBoundaryChanged": false,
+  "remaining": [
+    "No formal scale/physical/Gate acceptance",
+    "66existing native failed/not-built cases",
+    "100K/1Mobject admission/containment scope requires Semantic/product authority",
+    "Possible residual zoom CPU coverage and other cold paths remain separately measured"
+  ],
+  "admissionReview": {
+    "path": "docs/planning/G5_LARGE_DOCUMENT_ADMISSION_REVIEW_2026_11_07.md",
+    "sha256": "aee21593eacea73f619a6fd6614854b3649223e35b5345de7e4bd184f9d44be8"
+  },
+  "packageRef": {
+    "revision": "4d665c233b71adc0548f9661d3a2ff185a3c28c0",
+    "path": "docs/planning/G5_DPR4_CRITICAL_REPLAY_2026_11_07.json"
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4260/example.html",
+    "sdkDirectory": "out/g5-dpr4-off/js",
+    "codeRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03",
+    "scope": "local development convenience;older4242unchanged"
+  }
+}

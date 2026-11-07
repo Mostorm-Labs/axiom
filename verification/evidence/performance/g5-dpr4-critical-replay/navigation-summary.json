@@ -1,0 +1,5313 @@
+{
+  "baseline-on-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "c05d3a2f54fcb44c771d797bbe3255f46dcac962"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.400000035762787,
+          "p95": 17.900000035762787,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.61944444477558
+        },
+        "firstContentResponseMs": 14.699999988079071,
+        "finalReceiptWaitMs": 150.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.5,
+          "p95": 17.80000001192093,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.61944444477558
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.6
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.30000001192093,
+          "p99": 18.099999964237213,
+          "max": 18.399999976158142,
+          "mean": 4.216197183224517
+        },
+        "firstContentResponseMs": 14.699999988079071,
+        "finalReceiptWaitMs": 182.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 18,
+          "p99": 18.899999976158142,
+          "max": 18.899999976158142,
+          "mean": 16.631944444444443
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.3
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.599999964237213,
+          "p99": 18,
+          "max": 18,
+          "mean": 16.54027777744664
+        },
+        "firstContentResponseMs": 7.399999976158142,
+        "finalReceiptWaitMs": 216.4000000357628,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.600000023841858,
+          "p99": 18,
+          "max": 18,
+          "mean": 16.541666666666668
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 68.4,
+        "canonicalCpuCoverageMs": 65.1
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.900000035762787,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.520833333333332
+        },
+        "firstContentResponseMs": 5.5,
+        "finalReceiptWaitMs": 199.30000001192093,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 17.899999976158142,
+          "p99": 18.400000035762787,
+          "max": 18.400000035762787,
+          "mean": 16.520833333333332
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 65.3,
+        "canonicalCpuCoverageMs": 62.3
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.19999998807907,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.48611111111111
+        },
+        "firstContentResponseMs": 2.5,
+        "finalReceiptWaitMs": 200.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.200000047683716,
+          "p99": 18.599999964237213,
+          "max": 18.599999964237213,
+          "mean": 16.48750000033114
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.8,
+        "canonicalCpuCoverageMs": 63.4
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17.099999964237213,
+          "p99": 18.19999998807907,
+          "max": 18.5,
+          "mean": 4.168750000082785
+        },
+        "firstContentResponseMs": 18.5,
+        "finalReceiptWaitMs": 216.89999997615814,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.200000047683716,
+          "p99": 19.100000023841858,
+          "max": 19.100000023841858,
+          "mean": 16.67638888872332
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 70.7,
+        "canonicalCpuCoverageMs": 65.5
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 285,
+          "p50": 0,
+          "p95": 17.600000023841858,
+          "p99": 18.599999964237213,
+          "max": 18.69999998807907,
+          "mean": 4.2140350877192985
+        },
+        "firstContentResponseMs": 17.600000023841858,
+        "finalReceiptWaitMs": 200.4000000357628,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.799999952316284,
+          "p95": 18.400000035762787,
+          "p99": 18.80000001192093,
+          "max": 18.80000001192093,
+          "mean": 16.68194444477558
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.3,
+        "canonicalCpuCoverageMs": 63.7
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17.30000001192093,
+          "p99": 18.399999976158142,
+          "max": 18.400000035762787,
+          "mean": 4.13229166654249
+        },
+        "firstContentResponseMs": 5.899999976158142,
+        "finalReceiptWaitMs": 216.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.400000035762787,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.52916666616996
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 68.7,
+        "canonicalCpuCoverageMs": 65.6
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 223,
+          "p50": 0,
+          "p95": 16.19999998807907,
+          "p99": 17.69999998807907,
+          "max": 186.60000002384186,
+          "mean": 2.013901345398394
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 217.30000001192093,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.399999976158142,
+          "p95": 187,
+          "p99": 187,
+          "max": 187,
+          "mean": 24.97222222222222
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 2,
+        "coverageIncomplete": 6,
+        "maxCanonicalAttemptMs": 68.9,
+        "canonicalCpuCoverageMs": 65.3
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 43,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 316.9000000357628,
+          "max": 316.9000000357628,
+          "mean": 8.867441860742348
+        },
+        "firstContentResponseMs": 1.0999999642372131,
+        "finalReceiptWaitMs": 132.60000002384186,
+        "acceptedGapMs": {
+          "count": 6,
+          "p50": 14.800000011920929,
+          "p95": 317,
+          "p99": 317,
+          "max": 317,
+          "mean": 63.583333333333336
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 4,
+        "coverageIncomplete": 18,
+        "maxCanonicalAttemptMs": 0.8,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 339,
+          "p50": 0,
+          "p95": 12.600000023841858,
+          "p99": 18.599999964237213,
+          "max": 181,
+          "mean": 1.3132743362480208
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 197.19999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.100000023841858,
+          "p95": 181.29999995231628,
+          "p99": 181.29999995231628,
+          "max": 181.29999995231628,
+          "mean": 24.755555553568733
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 6,
+        "maxCanonicalAttemptMs": 66.1,
+        "canonicalCpuCoverageMs": 62.1
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 273,
+          "p50": 0,
+          "p95": 1.100000023841858,
+          "p99": 18.30000001192093,
+          "max": 83.80000001192093,
+          "mean": 1.0326007325133997
+        },
+        "firstContentResponseMs": 1.100000023841858,
+        "finalReceiptWaitMs": 149.0999999642372,
+        "acceptedGapMs": {
+          "count": 14,
+          "p50": 16.600000023841858,
+          "p95": 83.69999998807907,
+          "p99": 83.69999998807907,
+          "max": 83.69999998807907,
+          "mean": 20.15000000170299
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 4,
+        "maxCanonicalAttemptMs": 1.2,
+        "canonicalCpuCoverageMs": 0.0
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 69965192,
+      "peakRecordedBytes": 337304
+    },
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/baseline-on-dpr4/observation.json.gz"
+  },
+  "candidate-off-dpr1": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 1,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 1964,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17.30000001192093,
+          "max": 18.30000001192093,
+          "mean": 0.6093686354439516
+        },
+        "firstContentResponseMs": 15.400000035762787,
+        "finalReceiptWaitMs": 133.19999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "07b8ecff80120bdb2ec4398ef2bcd91083cdb7ba4c9ab09e63b4e3e13fe5186b",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 1594,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 17.69999998807907,
+          "max": 18.399999976158142,
+          "mean": 0.7499372647278282
+        },
+        "firstContentResponseMs": 12.799999952316284,
+        "finalReceiptWaitMs": 133.70000004768372,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "7977061df9026378e5cfe763990de1ef3fb1e08f69e851cd39f651d003cc7c52",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 1370,
+          "p50": 0,
+          "p95": 15.100000023841858,
+          "p99": 17.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 0.8743065693517671
+        },
+        "firstContentResponseMs": 16.100000023841858,
+        "finalReceiptWaitMs": 132.29999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "ca960f758bd46ba0418a174a1214fb23e54d4003bdd4b08108e514572d0d24ca",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 1347,
+          "p50": 0,
+          "p95": 15.200000047683716,
+          "p99": 17.600000023841858,
+          "max": 18.099999964237213,
+          "mean": 0.8682999257786502
+        },
+        "firstContentResponseMs": 3,
+        "finalReceiptWaitMs": 150.29999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "ce23fe98b5c965cad6eb08287547facfaeff06dde0d12b591f427f8cef8b15b4",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 1349,
+          "p50": 0,
+          "p95": 15.199999988079071,
+          "p99": 17.5,
+          "max": 18.600000023841858,
+          "mean": 0.8727205337375248
+        },
+        "firstContentResponseMs": 9.200000047683716,
+        "finalReceiptWaitMs": 133,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "2595901827ac6ad6db5617f90b42d5c6e63a507cb758f9683f929f4ae3e366b6",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 1750,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17.19999998807907,
+          "max": 18.19999998807907,
+          "mean": 0.6837714285850525
+        },
+        "firstContentResponseMs": 13.100000023841858,
+        "finalReceiptWaitMs": 149.30000001192093,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "69e624d6f6c6562066471411788b01a975dba838c44cf6f63c532af8266586a9",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 1777,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 17.19999998807907,
+          "max": 18.400000035762787,
+          "mean": 0.6737197523849628
+        },
+        "firstContentResponseMs": 14.399999976158142,
+        "finalReceiptWaitMs": 150.19999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "f1a8972c1dbe3ec95fb21ffd35af2abda4ed650b7d21abd1959f621df3619300",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 2158,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17,
+          "max": 18.19999998807907,
+          "mean": 0.544763670075923
+        },
+        "firstContentResponseMs": 8.800000011920929,
+        "finalReceiptWaitMs": 150.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "f90c8bada7179d4e8883fb563369c1d1103e8f9482393d691b07d4c25f370248",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 499,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.30000001192093,
+          "max": 18.69999998807907,
+          "mean": 0.5623246493463765
+        },
+        "firstContentResponseMs": 1.600000023841858,
+        "finalReceiptWaitMs": 166.5,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "f637d45707381b25e866a4b9cb9255986508c4ee885216460e42491e9e4c71be",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 280,
+          "p50": 0,
+          "p95": 15.700000047683716,
+          "p99": 17.5,
+          "max": 18.5,
+          "mean": 1.0010714284011295
+        },
+        "firstContentResponseMs": 1.0999999642372131,
+        "finalReceiptWaitMs": 133.10000002384186,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "d964320421bd47ad951a40ae141b4531631109edf40f4fd20c86e6d5eca0d249",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 476,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17,
+          "max": 17.80000001192093,
+          "mean": 0.5882352941176471
+        },
+        "firstContentResponseMs": 1.399999976158142,
+        "finalReceiptWaitMs": 130.5999999642372,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "92395f73b1ba3a3324d3f01a7c70c9ee57669c818604648ac69ae8854859a7e4",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 291,
+          "p50": 0,
+          "p95": 15.599999964237213,
+          "p99": 17.100000023841858,
+          "max": 17.899999976158142,
+          "mean": 0.9635738830795813
+        },
+        "firstContentResponseMs": 0.8999999761581421,
+        "finalReceiptWaitMs": 132.9000000357628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "1ce912115b7bd8a89ec7b166987914506b9f5bd01a85f2dc01e2c71011f78612",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      }
+    ],
+    "cache": null,
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-off-dpr1/observation.json.gz"
+  },
+  "candidate-on-dpr1": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 1,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 1969,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.100000023841858,
+          "max": 18.599999964237213,
+          "mean": 0.6037074657125846
+        },
+        "firstContentResponseMs": 3.800000011920929,
+        "finalReceiptWaitMs": 166.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.099999964237213,
+          "p99": 21.600000023841858,
+          "max": 21.600000023841858,
+          "mean": 16.51111111127668
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "07b8ecff80120bdb2ec4398ef2bcd91083cdb7ba4c9ab09e63b4e3e13fe5186b",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.6
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 1581,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 17.600000023841858,
+          "max": 18.399999976158142,
+          "mean": 0.7571157495256167
+        },
+        "firstContentResponseMs": 13.600000023841858,
+        "finalReceiptWaitMs": 131.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 18.400000035762787,
+          "p99": 22.69999998807907,
+          "max": 22.69999998807907,
+          "mean": 16.626388889220024
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "7977061df9026378e5cfe763990de1ef3fb1e08f69e851cd39f651d003cc7c52",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.2,
+        "canonicalCpuCoverageMs": 0.8
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 1357,
+          "p50": 0,
+          "p95": 15.5,
+          "p99": 17.600000023841858,
+          "max": 18.30000001192093,
+          "mean": 0.8845246868179226
+        },
+        "firstContentResponseMs": 17.700000047683716,
+        "finalReceiptWaitMs": 150.29999995231628,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 18.099999964237213,
+          "p99": 18.399999976158142,
+          "max": 18.399999976158142,
+          "mean": 16.67222222271893
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "ca960f758bd46ba0418a174a1214fb23e54d4003bdd4b08108e514572d0d24ca",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 10.5,
+        "canonicalCpuCoverageMs": 8.5
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 1372,
+          "p50": 0,
+          "p95": 15.200000047683716,
+          "p99": 17.200000047683716,
+          "max": 18.30000001192093,
+          "mean": 0.8714285714459489
+        },
+        "firstContentResponseMs": 12.300000011920929,
+        "finalReceiptWaitMs": 165.69999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.799999952316284,
+          "p95": 18,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.606944444278877
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "ce23fe98b5c965cad6eb08287547facfaeff06dde0d12b591f427f8cef8b15b4",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 11.6,
+        "canonicalCpuCoverageMs": 9.5
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 1377,
+          "p50": 0,
+          "p95": 15.199999988079071,
+          "p99": 17.5,
+          "max": 18.400000035762787,
+          "mean": 0.8668845315817568
+        },
+        "firstContentResponseMs": 10.299999952316284,
+        "finalReceiptWaitMs": 133.0999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.100000023841858,
+          "p99": 18.400000035762787,
+          "max": 18.400000035762787,
+          "mean": 16.58055555489328
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "2595901827ac6ad6db5617f90b42d5c6e63a507cb758f9683f929f4ae3e366b6",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 10.6,
+        "canonicalCpuCoverageMs": 8.6
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 1748,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 17.19999998807907,
+          "max": 18,
+          "mean": 0.6832951945284684
+        },
+        "firstContentResponseMs": 12,
+        "finalReceiptWaitMs": 149.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.099999964237213,
+          "p99": 19.69999998807907,
+          "max": 19.69999998807907,
+          "mean": 16.59027777777778
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "69e624d6f6c6562066471411788b01a975dba838c44cf6f63c532af8266586a9",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 14.1,
+        "canonicalCpuCoverageMs": 11.1
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 1777,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17.19999998807907,
+          "max": 18.69999998807907,
+          "mean": 0.669274057406821
+        },
+        "firstContentResponseMs": 6.199999988079071,
+        "finalReceiptWaitMs": 132.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.899999976158142,
+          "p99": 18.80000001192093,
+          "max": 18.80000001192093,
+          "mean": 16.518055555721123
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "f1a8972c1dbe3ec95fb21ffd35af2abda4ed650b7d21abd1959f621df3619300",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 11.7,
+        "canonicalCpuCoverageMs": 9.5
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 2189,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.900000035762787,
+          "max": 18.600000023841858,
+          "mean": 0.5435815441003942
+        },
+        "firstContentResponseMs": 7.199999988079071,
+        "finalReceiptWaitMs": 131.9000000357628,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.52777777777778
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "f90c8bada7179d4e8883fb563369c1d1103e8f9482393d691b07d4c25f370248",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 12.8,
+        "canonicalCpuCoverageMs": 10.5
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 499,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.5,
+          "max": 18.100000023841858,
+          "mean": 0.5629258517750757
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 148.39999997615814,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.5,
+          "p95": 18.19999998807907,
+          "p99": 18.19999998807907,
+          "max": 18.19999998807907,
+          "mean": 15.61111111111111
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "f637d45707381b25e866a4b9cb9255986508c4ee885216460e42491e9e4c71be",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 11.7,
+        "canonicalCpuCoverageMs": 9.2
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 280,
+          "p50": 0,
+          "p95": 15.800000011920929,
+          "p99": 17.30000001192093,
+          "max": 17.700000047683716,
+          "mean": 1
+        },
+        "firstContentResponseMs": 0.9000000357627869,
+        "finalReceiptWaitMs": 133.39999997615814,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 17.80000001192093,
+          "p99": 17.80000001192093,
+          "max": 17.80000001192093,
+          "mean": 15.56111111243566
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "d964320421bd47ad951a40ae141b4531631109edf40f4fd20c86e6d5eca0d249",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.9,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 476,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 17.599999964237213,
+          "mean": 0.5888655462435314
+        },
+        "firstContentResponseMs": 1.4000000357627869,
+        "finalReceiptWaitMs": 165.30000001192093,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 17.69999998807907,
+          "p99": 17.69999998807907,
+          "max": 17.69999998807907,
+          "mean": 15.572222222884497
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "92395f73b1ba3a3324d3f01a7c70c9ee57669c818604648ac69ae8854859a7e4",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 11.4,
+        "canonicalCpuCoverageMs": 9.1
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 291,
+          "p50": 0,
+          "p95": 16.5,
+          "p99": 16.80000001192093,
+          "max": 17.19999998807907,
+          "mean": 0.9635738830795813
+        },
+        "firstContentResponseMs": 0.800000011920929,
+        "finalReceiptWaitMs": 149.4000000357628,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 17.200000047683716,
+          "p99": 17.200000047683716,
+          "max": 17.200000047683716,
+          "mean": 15.583333333333334
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "1ce912115b7bd8a89ec7b166987914506b9f5bd01a85f2dc01e2c71011f78612",
+          "width": 800,
+          "height": 500,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.7,
+        "canonicalCpuCoverageMs": 0.0
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 19505842,
+      "peakRecordedBytes": 1032514
+    },
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-on-dpr1/observation.json.gz"
+  },
+  "candidate-on-dpr4-restore": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 13,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.80000001192093,
+          "max": 16.80000001192093,
+          "mean": 16.656944444610012
+        },
+        "firstContentResponseMs": 16.599999964237213,
+        "finalReceiptWaitMs": 166.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.80000001192093,
+          "max": 16.80000001192093,
+          "mean": 16.658333333002197
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.5,
+        "canonicalCpuCoverageMs": 0.6
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 282,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 16.899999976158142,
+          "max": 16.900000035762787,
+          "mean": 4.23758865248227
+        },
+        "firstContentResponseMs": 11.800000011920929,
+        "finalReceiptWaitMs": 149.69999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 19.400000035762787,
+          "max": 19.400000035762787,
+          "mean": 16.598611110614407
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.2
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17.5,
+          "max": 17.5,
+          "mean": 16.62777777761221
+        },
+        "firstContentResponseMs": 13.900000035762787,
+        "finalReceiptWaitMs": 199.80000001192093,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17.5,
+          "max": 17.5,
+          "mean": 16.629166666832234
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 65.1,
+        "canonicalCpuCoverageMs": 61.6
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17.899999976158142,
+          "max": 17.899999976158142,
+          "mean": 16.490277777115505
+        },
+        "firstContentResponseMs": 2.699999988079071,
+        "finalReceiptWaitMs": 216.5999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17.900000035762787,
+          "max": 17.900000035762787,
+          "mean": 16.49166666633553
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.6,
+        "canonicalCpuCoverageMs": 63.1
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 18.19999998807907,
+          "max": 18.19999998807907,
+          "mean": 16.48611111111111
+        },
+        "firstContentResponseMs": 2.400000035762787,
+        "finalReceiptWaitMs": 216.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 18.100000023841858,
+          "max": 18.100000023841858,
+          "mean": 16.48750000033114
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 69.2,
+        "canonicalCpuCoverageMs": 65.6
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 18.399999976158142,
+          "p99": 18.69999998807907,
+          "max": 18.80000001192093,
+          "mean": 4.130902777943346
+        },
+        "firstContentResponseMs": 4.5,
+        "finalReceiptWaitMs": 216.39999997615814,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.600000023841858,
+          "p99": 20.399999976158142,
+          "max": 20.399999976158142,
+          "mean": 16.523611111773384
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 71.4,
+        "canonicalCpuCoverageMs": 66.2
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 286,
+          "p50": 0,
+          "p95": 16.80000001192093,
+          "p99": 17.19999998807907,
+          "max": 17.30000001192093,
+          "mean": 4.178321678321678
+        },
+        "firstContentResponseMs": 11.899999976158142,
+        "finalReceiptWaitMs": 216.30000001192093,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.19999998807907,
+          "p99": 17.30000001192093,
+          "max": 17.30000001192093,
+          "mean": 16.598611110614407
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.9,
+        "canonicalCpuCoverageMs": 64.3
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.900000035762787,
+          "p99": 17.30000001192093,
+          "max": 17.700000047683716,
+          "mean": 4.169444444485837
+        },
+        "firstContentResponseMs": 17.700000047683716,
+        "finalReceiptWaitMs": 199.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.299999952316284,
+          "p99": 17.80000001192093,
+          "max": 17.80000001192093,
+          "mean": 16.679166667163372
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.3,
+        "canonicalCpuCoverageMs": 62.9
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 236,
+          "p50": 0,
+          "p95": 16.599999964237213,
+          "p99": 17.400000035762787,
+          "max": 34.89999997615814,
+          "mean": 1.2724576271691566
+        },
+        "firstContentResponseMs": 1.600000023841858,
+        "finalReceiptWaitMs": 231.39999997615814,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 35,
+          "p99": 35,
+          "max": 35,
+          "mean": 16.68888889087571
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 1,
+        "maxCanonicalAttemptMs": 68.3,
+        "canonicalCpuCoverageMs": 65.3
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 367,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 16.80000001192093,
+          "max": 17.30000001192093,
+          "mean": 0.7629427792915532
+        },
+        "firstContentResponseMs": 0.8999999761581421,
+        "finalReceiptWaitMs": 132.60000002384186,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 17.299999952316284,
+          "p99": 17.299999952316284,
+          "max": 17.299999952316284,
+          "mean": 15.572222219573128
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.6,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 680,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.700000047683716,
+          "max": 17.700000047683716,
+          "mean": 0.4147058823529412
+        },
+        "firstContentResponseMs": 1.4000000357627869,
+        "finalReceiptWaitMs": 215.80000001192093,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 17.69999998807907,
+          "p99": 17.69999998807907,
+          "max": 17.69999998807907,
+          "mean": 15.683333333995607
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 64.9,
+        "canonicalCpuCoverageMs": 62.1
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 534,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 16.80000001192093,
+          "max": 17.30000001192093,
+          "mean": 0.5267790262395523
+        },
+        "firstContentResponseMs": 0.800000011920929,
+        "finalReceiptWaitMs": 133.19999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.69999998807907,
+          "p95": 17.399999976158142,
+          "p99": 17.399999976158142,
+          "max": 17.399999976158142,
+          "mean": 15.63888888888889
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 2.0,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "after-context-restore",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17.400000035762787,
+          "p99": 17.600000023841858,
+          "max": 17.600000023841858,
+          "mean": 16.59722222222222
+        },
+        "firstContentResponseMs": 11.900000035762787,
+        "finalReceiptWaitMs": 199.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.400000035762787,
+          "p99": 17.599999964237213,
+          "max": 17.599999964237213,
+          "mean": 16.59722222222222
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "99224b102779ac8b6154cf505abc28bf5ab156065ad986addc795984890d336c",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 69.4,
+        "canonicalCpuCoverageMs": 65.8
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 79252104,
+      "peakRecordedBytes": 400792
+    },
+    "restore": {
+      "firstReceiptWaitMs": 122.5,
+      "completeMs": 398.69999998807907,
+      "checks": {
+        "unavailableWhenLost": true,
+        "recovered": true,
+        "documentUnchanged": true,
+        "pixels": true
+      },
+      "surfaceDiagnostic": {
+        "before": "1",
+        "after": "2"
+      }
+    },
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-on-dpr4-restore/observation.json.gz"
+  },
+  "candidate-on-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 17.80000001192093,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.55694444477558
+        },
+        "firstContentResponseMs": 10.900000035762787,
+        "finalReceiptWaitMs": 165.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.80000001192093,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.558333333167766
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.5
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.599999964237213,
+          "p99": 18.5,
+          "max": 18.69999998807907,
+          "mean": 4.227816901576351
+        },
+        "firstContentResponseMs": 17,
+        "finalReceiptWaitMs": 184.80000001192093,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.400000035762787,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.677777777943348
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.8
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 17.900000035762787,
+          "p99": 18.400000035762787,
+          "max": 18.400000035762787,
+          "mean": 16.541666666666668
+        },
+        "firstContentResponseMs": 6.699999988079071,
+        "finalReceiptWaitMs": 216.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.899999976158142,
+          "p99": 18.30000001192093,
+          "max": 18.30000001192093,
+          "mean": 16.541666666666668
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.2,
+        "canonicalCpuCoverageMs": 64.2
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.400000035762787,
+          "p99": 18.599999964237213,
+          "max": 18.599999964237213,
+          "mean": 16.55000000033114
+        },
+        "firstContentResponseMs": 7.899999976158142,
+        "finalReceiptWaitMs": 217.0999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.400000035762787,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.55000000033114
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 68.9,
+        "canonicalCpuCoverageMs": 65.2
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.700000047683716,
+          "p95": 18.19999998807907,
+          "p99": 18.399999976158142,
+          "max": 18.399999976158142,
+          "mean": 16.595833333002197
+        },
+        "firstContentResponseMs": 11.799999952316284,
+        "finalReceiptWaitMs": 218,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.200000047683716,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.59722222222222
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.6,
+        "canonicalCpuCoverageMs": 63.4
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17.5,
+          "p99": 18.399999976158142,
+          "max": 18.5,
+          "mean": 4.131597222139438
+        },
+        "firstContentResponseMs": 5.599999964237213,
+        "finalReceiptWaitMs": 217,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.80000001192093,
+          "p95": 18.30000001192093,
+          "p99": 18.599999964237213,
+          "max": 18.599999964237213,
+          "mean": 16.52638888855775
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 70.2,
+        "canonicalCpuCoverageMs": 64.2
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17,
+          "p99": 18.099999964237213,
+          "max": 18.19999998807907,
+          "mean": 4.138194444278876
+        },
+        "firstContentResponseMs": 8.599999964237213,
+        "finalReceiptWaitMs": 231.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.100000023841858,
+          "p99": 18.19999998807907,
+          "max": 18.19999998807907,
+          "mean": 16.552777777115505
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 70.2,
+        "canonicalCpuCoverageMs": 66.3
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 285,
+          "p50": 0,
+          "p95": 17.100000023841858,
+          "p99": 18.399999976158142,
+          "max": 18.600000023841858,
+          "mean": 4.167719298287442
+        },
+        "firstContentResponseMs": 3.300000011920929,
+        "finalReceiptWaitMs": 215,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.19999998807907,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.498611111607815
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.4,
+        "canonicalCpuCoverageMs": 64.1
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 236,
+          "p50": 0,
+          "p95": 15.899999976158142,
+          "p99": 17.69999998807907,
+          "max": 34.59999996423721,
+          "mean": 1.2618644065776115
+        },
+        "firstContentResponseMs": 1.5999999642372131,
+        "finalReceiptWaitMs": 197.69999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 34.69999998807907,
+          "p99": 34.69999998807907,
+          "max": 34.69999998807907,
+          "mean": 16.549999998675453
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 1,
+        "maxCanonicalAttemptMs": 65.0,
+        "canonicalCpuCoverageMs": 61.6
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 357,
+          "p50": 0,
+          "p95": 1,
+          "p99": 18.5,
+          "max": 18.600000023841858,
+          "mean": 0.7837535014339522
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 151,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.30000001192093,
+          "p95": 18.69999998807907,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 15.56111111243566
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.8,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 696,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.30000001192093,
+          "max": 18.400000035762787,
+          "mean": 0.4020114942700013
+        },
+        "firstContentResponseMs": 1.399999976158142,
+        "finalReceiptWaitMs": 232.89999997615814,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.69999998807907,
+          "p95": 18.399999976158142,
+          "p99": 18.399999976158142,
+          "max": 18.399999976158142,
+          "mean": 15.566666666004393
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.1,
+        "canonicalCpuCoverageMs": 62.7
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 570,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 18.600000023841858,
+          "mean": 0.4903508771929825
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 148.80000001192093,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 18.599999964237213,
+          "p99": 18.599999964237213,
+          "max": 18.599999964237213,
+          "mean": 15.538888888226616
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 1.3,
+        "canonicalCpuCoverageMs": 0.0
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 80337800,
+      "peakRecordedBytes": 400984
+    },
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-on-dpr4/observation.json.gz"
+  },
+  "baseline-off-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "c05d3a2f54fcb44c771d797bbe3255f46dcac962"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.400000035762787,
+          "p95": 18.600000023841858,
+          "p99": 18.700000047683716,
+          "max": 18.700000047683716,
+          "mean": 16.60422535261638
+        },
+        "firstContentResponseMs": 13.400000035762787,
+        "finalReceiptWaitMs": 183.0999999642372,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 281,
+          "p50": 0,
+          "p95": 18.19999998807907,
+          "p99": 18.5,
+          "max": 18.599999964237213,
+          "mean": 4.249466192043549
+        },
+        "firstContentResponseMs": 12.699999988079071,
+        "finalReceiptWaitMs": 150,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.599999964237213,
+          "p95": 18.400000035762787,
+          "p99": 18.69999998807907,
+          "max": 18.69999998807907,
+          "mean": 16.681690140509268
+        },
+        "firstContentResponseMs": 17.600000023841858,
+        "finalReceiptWaitMs": 215.4000000357628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.600000023841858,
+          "p95": 18.30000001192093,
+          "p99": 19.200000047683716,
+          "max": 19.200000047683716,
+          "mean": 16.674647887827646
+        },
+        "firstContentResponseMs": 19.200000047683716,
+        "finalReceiptWaitMs": 234.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 18.19999998807907,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.60694444510672
+        },
+        "firstContentResponseMs": 10.800000011920929,
+        "finalReceiptWaitMs": 217.5,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 17.899999976158142,
+          "p99": 18.19999998807907,
+          "max": 18.30000001192093,
+          "mean": 4.134374999958608
+        },
+        "firstContentResponseMs": 7.800000011920929,
+        "finalReceiptWaitMs": 215.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.80000001192093,
+          "p99": 18.100000023841858,
+          "max": 18.19999998807907,
+          "mean": 4.140845070422535
+        },
+        "firstContentResponseMs": 8.800000011920929,
+        "finalReceiptWaitMs": 233.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 285,
+          "p50": 0,
+          "p95": 17.700000047683716,
+          "p99": 17.899999976158142,
+          "max": 18.200000047683716,
+          "mean": 4.180000000041828
+        },
+        "firstContentResponseMs": 7.700000047683716,
+        "finalReceiptWaitMs": 200.29999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 228,
+          "p50": 0,
+          "p95": 16.19999998807907,
+          "p99": 17.69999998807907,
+          "max": 183.5999999642372,
+          "mean": 1.9622807016498165
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 199.5,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 46,
+          "p50": 0,
+          "p95": 16.400000035762787,
+          "p99": 333.80000001192093,
+          "max": 333.80000001192093,
+          "mean": 8.645652174949646
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 150.10000002384186,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 336,
+          "p50": 0,
+          "p95": 13.100000023841858,
+          "p99": 17.400000035762787,
+          "max": 202.60000002384186,
+          "mean": 1.3863095238450027
+        },
+        "firstContentResponseMs": 1.399999976158142,
+        "finalReceiptWaitMs": 233.79999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 273,
+          "p50": 0,
+          "p95": 1.100000023841858,
+          "p99": 17.30000001192093,
+          "max": 84.20000004768372,
+          "mean": 1.0322344322780987
+        },
+        "firstContentResponseMs": 1.100000023841858,
+        "finalReceiptWaitMs": 148.5,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      }
+    ],
+    "cache": null,
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/baseline-off-dpr4/observation.json.gz"
+  },
+  "candidate-off-dpr4": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18.399999976158142,
+          "p99": 18.700000047683716,
+          "max": 18.700000047683716,
+          "mean": 16.616666667163372
+        },
+        "firstContentResponseMs": 12.700000047683716,
+        "finalReceiptWaitMs": 149.10000002384186,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.69999998807907,
+          "p99": 17.899999976158142,
+          "max": 18.399999976158142,
+          "mean": 4.2228873239856375
+        },
+        "firstContentResponseMs": 16.19999998807907,
+        "finalReceiptWaitMs": 150.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.69999998807907,
+          "p95": 17.80000001192093,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.697183098591548
+        },
+        "firstContentResponseMs": 17.69999998807907,
+        "finalReceiptWaitMs": 216.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.599999964237213,
+          "p95": 18.099999964237213,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.49154929627835
+        },
+        "firstContentResponseMs": 3.5,
+        "finalReceiptWaitMs": 216.5,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 71,
+          "p50": 16.600000023841858,
+          "p95": 18.19999998807907,
+          "p99": 18.400000035762787,
+          "max": 18.400000035762787,
+          "mean": 16.456338028672715
+        },
+        "firstContentResponseMs": 1.9000000357627869,
+        "finalReceiptWaitMs": 218.5999999642372,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.30000001192093,
+          "p99": 17.900000035762787,
+          "max": 18.900000035762787,
+          "mean": 4.176056338028169
+        },
+        "firstContentResponseMs": 18.900000035762787,
+        "finalReceiptWaitMs": 216.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.19999998807907,
+          "p99": 18,
+          "max": 18.5,
+          "mean": 4.13943661980226
+        },
+        "firstContentResponseMs": 9.5,
+        "finalReceiptWaitMs": 217.30000001192093,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 17.200000047683716,
+          "p99": 18.19999998807907,
+          "max": 18.5,
+          "mean": 4.161619718435785
+        },
+        "firstContentResponseMs": 16.100000023841858,
+        "finalReceiptWaitMs": 199.79999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 236,
+          "p50": 0,
+          "p95": 16.400000035762787,
+          "p99": 17.100000023841858,
+          "max": 35.09999996423721,
+          "mean": 1.2652542371365985
+        },
+        "firstContentResponseMs": 1.800000011920929,
+        "finalReceiptWaitMs": 216.19999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 384,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17,
+          "max": 18.100000023841858,
+          "mean": 0.7317708333333334
+        },
+        "firstContentResponseMs": 1.0999999642372131,
+        "finalReceiptWaitMs": 132.19999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 672,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 18.099999964237213,
+          "mean": 0.4172619047264258
+        },
+        "firstContentResponseMs": 1.399999976158142,
+        "finalReceiptWaitMs": 200,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 553,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.80000001192093,
+          "max": 18.5,
+          "mean": 0.5072332730560579
+        },
+        "firstContentResponseMs": 1.300000011920929,
+        "finalReceiptWaitMs": 132.10000002384186,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      }
+    ],
+    "cache": null,
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-off-dpr4/observation.json.gz"
+  },
+  "candidate-off-dpr2": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 2,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 3183,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.600000023841858,
+          "max": 18.399999976158142,
+          "mean": 0.37715991203267357
+        },
+        "firstContentResponseMs": 17.799999952316284,
+        "finalReceiptWaitMs": 167,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "1d2ba9d6914262cf7cae6ebc70d1c73c269160ee5bb3c62176426e5494c247e2",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 367,
+          "p50": 0,
+          "p95": 17.30000001192093,
+          "p99": 18.100000023841858,
+          "max": 18.19999998807907,
+          "mean": 3.2509536785390787
+        },
+        "firstContentResponseMs": 8.300000011920929,
+        "finalReceiptWaitMs": 150,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "3563c009b6a1f0bcf04ffae0bdb29c2059daf60f51657884c3e3b9abfca65bbe",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 2163,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17,
+          "max": 18.69999998807907,
+          "mean": 0.547572815522958
+        },
+        "firstContentResponseMs": 15.699999988079071,
+        "finalReceiptWaitMs": 150,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "658cd1459b95a939073665721d7e80e321db99720cd754d7c626952cbb85a6e5",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 901,
+          "p50": 0,
+          "p95": 16.30000001192093,
+          "p99": 17.80000001192093,
+          "max": 18.399999976158142,
+          "mean": 1.3196448390677025
+        },
+        "firstContentResponseMs": 4.699999988079071,
+        "finalReceiptWaitMs": 167.89999997615814,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "3e92db7120823e26be0ca240fff9a2bdc6e016725b34cc7ab5796a0f6322616f",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 2642,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.700000047683716,
+          "max": 18.599999964237213,
+          "mean": 0.4533686601104924
+        },
+        "firstContentResponseMs": 14.5,
+        "finalReceiptWaitMs": 148.89999997615814,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "91297e699f746e09255f5312c36d55dd7e64e3284fbfffb2975ef6470ce9b499",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 2133,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17,
+          "max": 18.69999998807907,
+          "mean": 0.5593061415846226
+        },
+        "firstContentResponseMs": 10.600000023841858,
+        "finalReceiptWaitMs": 150,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "9292eeaf50a4e5ec67313f559d88b2fc1714b67b154b5f020c0f190eb1537d94",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 2475,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 18.599999964237213,
+          "mean": 0.4813737373641043
+        },
+        "firstContentResponseMs": 6.800000011920929,
+        "finalReceiptWaitMs": 164.60000002384186,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "a8fa893c544e866e9fcf2369329b37661accf00ff4437d9b4e129dcf03c23348",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 2804,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.600000023841858,
+          "max": 18.19999998807907,
+          "mean": 0.4190798858858209
+        },
+        "firstContentResponseMs": 8.100000023841858,
+        "finalReceiptWaitMs": 165.29999995231628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "f32b40e53f7463165046a21ec0e1f9985e1a250f497590da6a3737dcf5612a25",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 825,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.80000001192093,
+          "max": 35.30000001192093,
+          "mean": 0.36387878786433825
+        },
+        "firstContentResponseMs": 1.399999976158142,
+        "finalReceiptWaitMs": 161.4000000357628,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "4d9b3a4372a88a33398b7e476ed58fa55f2b05c61658926e67af747503949015",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 437,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17.19999998807907,
+          "max": 18.30000001192093,
+          "mean": 0.6432494279721782
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 149.69999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "ad9ed94512f9ec96c208268dfc639bde76b47ab473f079ffcde14dc545c51f75",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 966,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.600000023841858,
+          "max": 17.899999976158142,
+          "mean": 0.29037267080745344
+        },
+        "firstContentResponseMs": 1.699999988079071,
+        "finalReceiptWaitMs": 148.80000001192093,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "6757885ef67770a8cc384c01b78dfcb52c864582126f3aa502a812a987db110c",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 442,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 16.799999952316284,
+          "max": 17.900000035762787,
+          "mean": 0.6343891402175523
+        },
+        "firstContentResponseMs": 1.100000023841858,
+        "finalReceiptWaitMs": 149.19999998807907,
+        "acceptedGapMs": {
+          "count": 0,
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "max": null,
+          "mean": null
+        },
+        "acceptedStatus": "UNAVAILABLE",
+        "canvasPixels": {
+          "sha256": "49370d7b10d167a3f1e64b21fc128a0c83f44c43c0e9d7c0ba6b694d61750462",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": null,
+        "preparedDenied": null,
+        "coverageIncomplete": null,
+        "maxCanonicalAttemptMs": null,
+        "canonicalCpuCoverageMs": null
+      }
+    ],
+    "cache": null,
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-off-dpr2/observation.json.gz"
+  },
+  "candidate-on-dpr2": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 2,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 3188,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.600000023841858,
+          "max": 18.599999964237213,
+          "mean": 0.37245922207533194
+        },
+        "firstContentResponseMs": 3.199999988079071,
+        "finalReceiptWaitMs": 167.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.5,
+          "p95": 18,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.493055555555557
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "1d2ba9d6914262cf7cae6ebc70d1c73c269160ee5bb3c62176426e5494c247e2",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.6
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 367,
+          "p50": 0,
+          "p95": 17.19999998807907,
+          "p99": 17.899999976158142,
+          "max": 18.099999964237213,
+          "mean": 3.2501362398144984
+        },
+        "firstContentResponseMs": 10.399999976158142,
+        "finalReceiptWaitMs": 148.39999997615814,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.5,
+          "p95": 17.900000035762787,
+          "p99": 20.5,
+          "max": 20.5,
+          "mean": 16.56805555522442
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "3563c009b6a1f0bcf04ffae0bdb29c2059daf60f51657884c3e3b9abfca65bbe",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.2,
+        "canonicalCpuCoverageMs": 0.3
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 2185,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.100000023841858,
+          "max": 17.80000001192093,
+          "mean": 0.5444851258526677
+        },
+        "firstContentResponseMs": 7.800000011920929,
+        "finalReceiptWaitMs": 149.70000004768372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.69999998807907,
+          "p99": 21.399999976158142,
+          "max": 21.399999976158142,
+          "mean": 16.526388889385593
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "658cd1459b95a939073665721d7e80e321db99720cd754d7c626952cbb85a6e5",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 24.2,
+        "canonicalCpuCoverageMs": 21.5
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 901,
+          "p50": 0,
+          "p95": 16.200000047683716,
+          "p99": 17.5,
+          "max": 18.5,
+          "mean": 1.3226415094207316
+        },
+        "firstContentResponseMs": 10.199999988079071,
+        "finalReceiptWaitMs": 149.89999997615814,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 18.19999998807907,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.552777777115505
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "3e92db7120823e26be0ca240fff9a2bdc6e016725b34cc7ab5796a0f6322616f",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 23.9,
+        "canonicalCpuCoverageMs": 21.2
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 2652,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.900000035762787,
+          "max": 18.299999952316284,
+          "mean": 0.44868024131831
+        },
+        "firstContentResponseMs": 4.599999964237213,
+        "finalReceiptWaitMs": 166.4000000357628,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.80000001192093,
+          "p99": 18,
+          "max": 18,
+          "mean": 16.530555555389988
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "91297e699f746e09255f5312c36d55dd7e64e3284fbfffb2975ef6470ce9b499",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 27.7,
+        "canonicalCpuCoverageMs": 24.5
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 2083,
+          "p50": 0,
+          "p95": 0.09999996423721313,
+          "p99": 17.100000023841858,
+          "max": 18.5,
+          "mean": 0.570523283742565
+        },
+        "firstContentResponseMs": 3.700000047683716,
+        "finalReceiptWaitMs": 166.69999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.5,
+          "p95": 18.099999964237213,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.50833333366447
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "9292eeaf50a4e5ec67313f559d88b2fc1714b67b154b5f020c0f190eb1537d94",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 25.4,
+        "canonicalCpuCoverageMs": 21.6
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 2493,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.899999976158142,
+          "max": 18.30000001192093,
+          "mean": 0.47625350980839
+        },
+        "firstContentResponseMs": 2.299999952316284,
+        "finalReceiptWaitMs": 148.5999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 18,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 16.49166666633553
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "a8fa893c544e866e9fcf2369329b37661accf00ff4437d9b4e129dcf03c23348",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 24.9,
+        "canonicalCpuCoverageMs": 22.5
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 2857,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 18.599999964237213,
+          "mean": 0.41925096255229993
+        },
+        "firstContentResponseMs": 14.5,
+        "finalReceiptWaitMs": 165,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.599999964237213,
+          "p95": 18.399999976158142,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 16.637500000496704
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "f32b40e53f7463165046a21ec0e1f9985e1a250f497590da6a3737dcf5612a25",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 27.7,
+        "canonicalCpuCoverageMs": 24.8
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 819,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 34.39999997615814,
+          "mean": 0.36385836385836384
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 159.19999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.80000001192093,
+          "p95": 30.19999998807907,
+          "p99": 30.19999998807907,
+          "max": 30.19999998807907,
+          "mean": 16.572222222884495
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "4d9b3a4372a88a33398b7e476ed58fa55f2b05c61658926e67af747503949015",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 1,
+        "maxCanonicalAttemptMs": 27.1,
+        "canonicalCpuCoverageMs": 24.2
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 432,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 16.899999976158142,
+          "max": 18.30000001192093,
+          "mean": 0.6472222222774117
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 132.4000000357628,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.5,
+          "p95": 18.400000035762787,
+          "p99": 18.400000035762787,
+          "max": 18.400000035762787,
+          "mean": 15.538888888226616
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "ad9ed94512f9ec96c208268dfc639bde76b47ab473f079ffcde14dc545c51f75",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.8,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 1015,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.5,
+          "max": 18.100000023841858,
+          "mean": 0.27674876844941687
+        },
+        "firstContentResponseMs": 1.600000023841858,
+        "finalReceiptWaitMs": 165.20000004768372,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 18.30000001192093,
+          "p99": 18.30000001192093,
+          "max": 18.30000001192093,
+          "mean": 15.622222221559948
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "6757885ef67770a8cc384c01b78dfcb52c864582126f3aa502a812a987db110c",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 24.4,
+        "canonicalCpuCoverageMs": 22.2
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 467,
+          "p50": 0,
+          "p95": 0,
+          "p99": 17.100000023841858,
+          "max": 18.19999998807907,
+          "mean": 0.5974304068522484
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 132.60000002384186,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.69999998807907,
+          "p95": 18.100000023841858,
+          "p99": 18.100000023841858,
+          "max": 18.100000023841858,
+          "mean": 15.5
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "49370d7b10d167a3f1e64b21fc128a0c83f44c43c0e9d7c0ba6b694d61750462",
+          "width": 1600,
+          "height": 1000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 298346,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 0.7,
+        "canonicalCpuCoverageMs": 0.0
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 47345126,
+      "peakRecordedBytes": 1454010
+    },
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-on-dpr2/observation.json.gz"
+  },
+  "candidate-on-dpr4-repeat": {
+    "status": "MEASURED",
+    "build": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "appearancePreview": 1,
+        "compactStroke": 1,
+        "devicePressure": 1,
+        "documentBackground": 1,
+        "fontFallback": 2,
+        "imageExport": 1,
+        "inkV2": 1,
+        "laserTransient": 1,
+        "livePartialErase": 1,
+        "materialInk": 1,
+        "objectClipboard": 1,
+        "patternFill": 1,
+        "resourceCustody": 1,
+        "roundedCorners": 1,
+        "shellAxis": 1,
+        "simulatedPressure": 1,
+        "sketchExtended": 1,
+        "sketchStyle": 1,
+        "table": 1,
+        "vectorPath": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "0.4.3",
+      "sourceRevision": "5ab41d5f8782958f8bdcbf329f81929da55c2f03"
+    },
+    "dpr": 4,
+    "browser": "156.0.8078.81",
+    "edits": 8,
+    "navigationPhases": 12,
+    "rows": [
+      {
+        "id": "0-copy",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.899999976158142,
+          "max": 16.899999976158142,
+          "mean": 16.65138888855775
+        },
+        "firstContentResponseMs": 16.099999964237213,
+        "finalReceiptWaitMs": 149.5999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.65277777777778
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72fe73c92f8f3bd8da22a7f98b2cd90167c13684b3f502dac7a13c3481455662",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.4,
+        "canonicalCpuCoverageMs": 0.4
+      },
+      {
+        "id": "1-transform",
+        "contentGapMs": {
+          "count": 284,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 16.900000035762787,
+          "max": 18.5,
+          "mean": 4.2316901408870455
+        },
+        "firstContentResponseMs": 18.5,
+        "finalReceiptWaitMs": 149.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 17,
+          "p99": 19.600000023841858,
+          "max": 19.600000023841858,
+          "mean": 16.691666666832234
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "bc7b7cf69ad713de59d65472ae8e1b8fd86a639a9f78b6cf6f1539d0d8d49e93",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 9.3,
+        "canonicalCpuCoverageMs": 0.3
+      },
+      {
+        "id": "2-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.899999976158142,
+          "max": 16.899999976158142,
+          "mean": 16.575000000496704
+        },
+        "firstContentResponseMs": 10.300000011920929,
+        "finalReceiptWaitMs": 199.69999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.57638888888889
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "c3b57059e8d53ce2d4bd438b8a54bc0202de383235f2c27fdc27006569a0c652",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.6,
+        "canonicalCpuCoverageMs": 63.8
+      },
+      {
+        "id": "3-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.540277778274483
+        },
+        "firstContentResponseMs": 7.700000047683716,
+        "finalReceiptWaitMs": 199.5999999642372,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17,
+          "max": 17,
+          "mean": 16.540277778274483
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "7efeb0619f4db384f9fd43e4808f805967e6eeec10697ccc50184053ad3cd6e9",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 66.6,
+        "canonicalCpuCoverageMs": 63.6
+      },
+      {
+        "id": "4-erase",
+        "contentGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.899999976158142,
+          "p99": 17.100000023841858,
+          "max": 17.100000023841858,
+          "mean": 16.577777778108914
+        },
+        "firstContentResponseMs": 10.300000011920929,
+        "finalReceiptWaitMs": 233.19999998807907,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 17.200000047683716,
+          "max": 17.200000047683716,
+          "mean": 16.5791666665011
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "cdb4b9312aed7604b925bafd5540b311746b7b306557f43f6b298572d2f6bc91",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.0,
+        "canonicalCpuCoverageMs": 63.7
+      },
+      {
+        "id": "5-text",
+        "contentGapMs": {
+          "count": 285,
+          "p50": 0,
+          "p95": 16.700000047683716,
+          "p99": 17,
+          "max": 17.5,
+          "mean": 4.1680701753549405
+        },
+        "firstContentResponseMs": 3.799999952316284,
+        "finalReceiptWaitMs": 233,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.600000023841858,
+          "p95": 17.100000023841858,
+          "p99": 19.100000023841858,
+          "max": 19.100000023841858,
+          "mean": 16.5
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "78c187f5dada0d9f82531b426a01d5b42797020dfa17b2a87c9efdf2e44de768",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 68.8,
+        "canonicalCpuCoverageMs": 63.1
+      },
+      {
+        "id": "6-table",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.69999998807907,
+          "p99": 16.80000001192093,
+          "max": 16.900000035762787,
+          "mean": 4.138888888888889
+        },
+        "firstContentResponseMs": 8.800000011920929,
+        "finalReceiptWaitMs": 216.5,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.899999976158142,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.555555555555557
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "82685a8ac054840966e98a80aa6f8d672666383e41116d484aa59a2c0db13a15",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 69.8,
+        "canonicalCpuCoverageMs": 66.1
+      },
+      {
+        "id": "7-resource",
+        "contentGapMs": {
+          "count": 288,
+          "p50": 0,
+          "p95": 16.700000047683716,
+          "p99": 16.80000001192093,
+          "max": 16.900000035762787,
+          "mean": 4.143055555514163
+        },
+        "firstContentResponseMs": 9.899999976158142,
+        "finalReceiptWaitMs": 216.60000002384186,
+        "acceptedGapMs": {
+          "count": 72,
+          "p50": 16.69999998807907,
+          "p95": 16.80000001192093,
+          "p99": 16.900000035762787,
+          "max": 16.900000035762787,
+          "mean": 16.57361111127668
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "42779ce5faec6e72cb1c78b3fdd233b9bd477a33eadd05c236a3259623b1f5bb",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "operationUnchanged": true,
+          "noCanonicalReceiptDuringInput": true,
+          "cameraReturned": true
+        },
+        "preparedBytes": 0,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 68.9,
+        "canonicalCpuCoverageMs": 65.2
+      },
+      {
+        "id": "idle-selected-zoom",
+        "contentGapMs": {
+          "count": 236,
+          "p50": 0,
+          "p95": 16.600000023841858,
+          "p99": 16.69999998807907,
+          "max": 35.299999952316284,
+          "mean": 1.2724576269165944
+        },
+        "firstContentResponseMs": 1.5999999642372131,
+        "finalReceiptWaitMs": 198.60000002384186,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 35.39999997615814,
+          "p99": 35.39999997615814,
+          "max": 35.39999997615814,
+          "mean": 16.688888887564342
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "05061384c06cf49608bd747804787d545fd88753647eafaa8e2133972b89cd8d",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 1,
+        "maxCanonicalAttemptMs": 67.2,
+        "canonicalCpuCoverageMs": 63.5
+      },
+      {
+        "id": "idle-selected-pan",
+        "contentGapMs": {
+          "count": 386,
+          "p50": 0,
+          "p95": 0.10000002384185791,
+          "p99": 17.19999998807907,
+          "max": 18.5,
+          "mean": 0.7290155439796843
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 151.19999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.600000023841858,
+          "p95": 18.5,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 15.644444445768992
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "751091d47896a785b02cdcff80ea434c71465488c78a0ed5fdd5c7b0fca8c862",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 1.0,
+        "canonicalCpuCoverageMs": 0.0
+      },
+      {
+        "id": "idle-unselected-zoom",
+        "contentGapMs": {
+          "count": 660,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.69999998807907,
+          "max": 18.5,
+          "mean": 0.425
+        },
+        "firstContentResponseMs": 1.5,
+        "finalReceiptWaitMs": 216.0999999642372,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.5,
+          "p95": 18.600000023841858,
+          "p99": 18.600000023841858,
+          "max": 18.600000023841858,
+          "mean": 15.600000000662273
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "72c99539fc9404535111f9ed89a5e950c91780df3ab251bf90111e56ce86d20b",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 67.0,
+        "canonicalCpuCoverageMs": 63.8
+      },
+      {
+        "id": "idle-unselected-pan",
+        "contentGapMs": {
+          "count": 570,
+          "p50": 0,
+          "p95": 0,
+          "p99": 16.899999976158142,
+          "max": 18.399999976158142,
+          "mean": 0.4921052631578947
+        },
+        "firstContentResponseMs": 1,
+        "finalReceiptWaitMs": 148.19999998807907,
+        "acceptedGapMs": {
+          "count": 18,
+          "p50": 16.69999998807907,
+          "p95": 18.5,
+          "p99": 18.5,
+          "max": 18.5,
+          "mean": 15.594444443782171
+        },
+        "acceptedStatus": "OBSERVED",
+        "canvasPixels": {
+          "sha256": "4de4b14fd4f438c78ab6f9452a60d6165eb88be238336c6fdcaf4368ed0e71db",
+          "width": 3200,
+          "height": 2000,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+        },
+        "checks": {
+          "documentUnchanged": true,
+          "selectionUnchanged": true,
+          "pixels": true,
+          "selected": true
+        },
+        "preparedBytes": 104336,
+        "preparedDenied": 0,
+        "coverageIncomplete": 0,
+        "maxCanonicalAttemptMs": 1.2,
+        "canonicalCpuCoverageMs": 0.0
+      }
+    ],
+    "cache": {
+      "peakUsedBytes": 79794952,
+      "peakRecordedBytes": 400856
+    },
+    "restore": null,
+    "finalExport": {
+      "sha256": "6000a7c573dc8cae1d43cd13b58b48aeb70e8b463222e3050d3a396c35721732",
+      "width": 800,
+      "height": 500
+    },
+    "endpoint": true,
+    "raw": "raw/candidate-on-dpr4-repeat/observation.json.gz"
+  }
+}
