@@ -10,6 +10,7 @@
 #include "skia_navigation_tiles.hpp"
 #include "navigation_source_snapshot.hpp"
 #include "skia_gpu_lifetime.hpp"
+#include "selection_region_geometry_internal.hpp"
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkBlendMode.h"
@@ -650,7 +651,13 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
+SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+    if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
+    if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+    const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
+    return eraseQueries_->query(record,geometry,resourceBudget_,capacity);
+}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
@@ -674,6 +681,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     const auto validation=internal::validateReferencePlan(plan);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    if(renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;})){
+        // Reclaim obsolete material/navigation residency before starting a GPU
+        // read epoch. Dropping it after begin() pins the old32MiB sources while
+        // new body/mask tiles are admitted and can exhaust the same hard cap.
+        navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();
+        if(renderCache_)renderCache_->releaseMaterialSources(!previousErase);
+    }
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
@@ -756,7 +770,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     const auto sceneSaveCount=canvas->getSaveCount();
     try {
         if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
-            if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,incremental?&deviceGrid:nullptr))
+            if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
             else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
         }

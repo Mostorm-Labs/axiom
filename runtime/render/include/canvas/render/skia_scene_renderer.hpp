@@ -20,6 +20,7 @@ class SkiaRenderCache;
 void drawEditingOverlayToSkCanvas(SkCanvas&, const SurfaceMetrics&, const EditingOverlay&);
 struct CompactRasterWork;
 class CompactCoverageTargets;
+class PreparedNavigationGeometry;
 struct CompactDeviceGrid final {int left=0,top=0,right=0,bottom=0;};
 struct CompactStrokeRange final {
     std::size_t begin = 0;
@@ -33,6 +34,9 @@ struct CompactStrokeRange final {
 // geometry implementation is owned by the cache materializer.
 void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr, CompactRasterWork* work = nullptr, bool compatibleCoverage = false, CompactCoverageTargets* targets = nullptr, ImageResourceResolver* images = nullptr, SkiaTextResources* textResources = nullptr, const SkPath* preparedVectorPath = nullptr);
 struct CompactRasterWork final {
+    // Live owners may explicitly yield expected quota denial without throwing
+    // through a platform library that disables exception unwinding.
+    bool resourcePending=false;
     std::uint64_t allocatedTiles = 0;
     std::uint64_t allocatedPixels = 0;
     std::uint64_t compositedPixels = 0;
@@ -45,7 +49,7 @@ struct CompactRasterWork final {
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 std::span<const foundation::InkKnot>,std::uint64_t seed=0,
                                 CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr,bool compatibleCoverage=false, CompactCoverageTargets* targets=nullptr,
-                                const CompactStrokeRange* range=nullptr);
+                                const CompactStrokeRange* range=nullptr,const PreparedNavigationGeometry* prepared=nullptr,bool yieldOnAllocation=false);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactContourCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,const ink::CompactContour&,bool gpuWhiteCoverage=false);
@@ -76,7 +80,7 @@ void drawEraseMasksToSkCanvas(SkCanvas&, const ReferenceTraversalEntry&);
 // Shared command mapping for isolated damage work; masks are applied with the
 // original full-device clip so their AA evaluator is identical to full painting.
 void drawInkBodyToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*,
-    CompactRasterWork* work=nullptr,bool compatibleCoverage=false,CompactCoverageTargets* targets=nullptr);
+    CompactRasterWork* work=nullptr,bool compatibleCoverage=false,CompactCoverageTargets* targets=nullptr,bool yieldOnAllocation=false);
 void drawPresentationEraseMasksToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&);
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,

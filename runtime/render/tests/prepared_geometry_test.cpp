@@ -226,6 +226,7 @@ void sharingAndLifetime(){
     options.maxEntries=1;
     auto old=cache.get(entry,options,budget);old.reset();
     auto other=entry;other.record.objectId=ObjectId::fromUint64(32);
+    std::get<CompactStrokeReferenceCommand>(other.command).content.update([](auto& c){c.stroke.knots[3].y+=40;});
     auto replacement=cache.get(other,options,budget);
     require(replacement&&cache.statistics().evictions>0,"unused geometry not evicted");
     auto denied=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
@@ -236,6 +237,18 @@ void sharingAndLifetime(){
     auto latest=constrained.get(changed,options,budget);
     require(latest&&latest!=recovered&&constrained.statistics().builds==2,"content change reused stale geometry");
     constrained.clear();recovered.reset();latest.reset();replacement.reset();cache.clear();require(budget->used()==0,"geometry cleanup leaked reservation");
+}
+void duplicateBodySharing(){
+    PreparedGeometryCache cache;RenderCacheOptions limits;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();auto source=compact();
+    auto first=cache.get(source,limits,budget);require(bool(first),"duplicate source fixture");
+    auto copy=source;copy.record.objectId=ObjectId::fromUint64(32);copy.record.transform.tx=19;
+    semantic::SweptCircleMask mask;mask.segments.push_back({{{10,0},5},{{10,100},5},{10,30},{10,70}});copy.record.eraseMasks={{{},mask}};
+    auto shared=cache.get(copy,limits,budget);
+    require(shared==first&&cache.statistics().builds==1,"duplicate transform/mask rebuilt immutable body geometry");
+    std::get<CompactStrokeReferenceCommand>(copy.command).content.update([](auto& c){c.stroke.config.size+=1;});
+    require(cache.get(copy,limits,budget)!=shared,"different brush body reused duplicate geometry");
+    cache.clear();first.reset();shared.reset();require(budget->used()==0,"duplicate geometry lease leaked");
 }
 void budgetOwnerChange(){
     PreparedGeometryCache cache;RenderCacheOptions options;auto entry=compact();
@@ -270,4 +283,4 @@ void stagingAdmission(){
 }
 
 }
-int main(){try{shortCriticalReplayAdmission();auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requirePreparedAlphaMaskParity(*root);testing::requireExactContourLocality(*root);testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}
+int main(){try{duplicateBodySharing();shortCriticalReplayAdmission();auto root=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(512,384));testing::requirePreparedAlphaMaskParity(*root);testing::requireExactContourLocality(*root);testing::requireExactContourReplay(*root);replayAdmission();replayGeometryParity();localContourParity();vectorPathParity();smallCapAtLargeOrigin();sharingAndLifetime();budgetOwnerChange();stagingAdmission();testing::requireReferenceDrawStream();std::cout<<"prepared geometry parity/locality/lifetime PASS\n";}catch(const std::exception& e){std::cerr<<e.what()<<"\n";return 1;}}

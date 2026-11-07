@@ -1,5 +1,6 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
+#include "../src/selection_region_geometry_internal.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
@@ -56,6 +57,35 @@ int main(){try{
     require(render::intersectEraseGeometry(dense,sweep)==Hit::kMiss,"dense identical swept erase was not a no-op");
     dense.eraseMasks={{ObjectId::fromUint64(10),box(0,0,100,200)},{ObjectId::fromUint64(11),box(100,0,100,200)}};
     require(render::intersectEraseGeometry(dense,box(90,90,20,20))==Hit::kMiss,"dense combined masks left a hit");
+    dense.eraseMasks.clear();for(unsigned i=0;i<8;++i)dense.eraseMasks.push_back({ObjectId::fromUint64(20+i),box(400+i*30,400,20,20)});
+    dense.eraseMasks.push_back({ObjectId::fromUint64(28),box(85,85,30,30)});
+    render::EraseGeometryWork work;
+    require(render::intersectEraseGeometry(dense,box(90,90,20,20),&work)==Hit::kMiss,"late historical mask failed exact no-op");
+    require(work.historicalDifferences<=1,"pointer-up repeated historical mask subtraction for each body component");
+    {
+        render::internal::EraseMaskPathCache cache;auto quota=std::make_shared<resources::ResourceBudgetManager>();
+        for(unsigned n=0;n<6;++n){dense.eraseMasks.push_back({ObjectId::fromUint64(100+n),box(300+n*20,300,10,10)});
+            const auto q=box(90+n*.1,90,20,20);
+            require(cache.query(dense,q,quota,1024*1024)==render::intersectEraseGeometry(dense,q),"cached exact query changed result");}
+        const auto first=cache.work();const auto q=box(90.5,90,20,20);
+        require(cache.query(dense,q,quota,1024*1024)==Hit::kMiss,"cached repeat query changed no-op");
+        require(cache.work().hits>first.hits&&cache.work().builds==first.builds,"pointer-up rebuilt unchanged mask paths");
+        cache.clear();require(quota->used()==0,"exact mask paths leaked retained quota");
+        auto denied=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
+        require(cache.query(dense,q,denied,1024*1024)==Hit::kMiss&&denied->used()==0,"mask cache denial changed exact result");
+    }
+    // Cross-check the reordered exact query against the retained component
+    // oracle, with visible slivers, overlapping histories and cancellation.
+    auto corpus=dot();auto ink=std::get<semantic::CompactStrokeContent>(corpus.content.get());ink.stroke.knots.clear();
+    for(unsigned k=0;k<73;++k)ink.stroke.knots.push_back({100+40*std::sin(k*.31),100+35*std::cos(k*.47),static_cast<std::uint16_t>(12000+k*600)});
+    corpus.content=ink;
+    render::internal::EraseMaskPathCache corpusCache;auto corpusQuota=std::make_shared<resources::ResourceBudgetManager>();
+    for(unsigned n=0;n<96;++n){corpus.eraseMasks.clear();
+        for(unsigned h=0;h<n%11;++h)corpus.eraseMasks.push_back({ObjectId::fromUint64(50+h),box(60+(h*17+n*7)%75,60+(h*11+n*13)%75,10+h%9,12+h%7)});
+        const auto query=box(65+(n*19)%80,65+(n*23)%80,n%3?.02:20,n%4?.03:15);
+        require(render::intersectEraseGeometry(corpus,query)==render::internal::intersectEraseGeometryComponentOracle(corpus,query),"shared erase query disagreed with component oracle");
+        require(corpusCache.query(corpus,query,corpusQuota,1024*1024)==render::internal::intersectEraseGeometryComponentOracle(corpus,query),"cached erase paths disagreed with component oracle");
+    }
     // An invalid optional proof must preserve the original result. A mask
     // outside the body cannot turn an unrelated invalid history into a hit.
     r=dot();r.eraseMasks={{ObjectId::fromUint64(12),box(std::numeric_limits<double>::quiet_NaN(),0,20,20)}};

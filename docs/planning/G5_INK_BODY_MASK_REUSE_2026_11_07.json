@@ -1,0 +1,139 @@
+{
+  "task": "G5-INK-BODY-MASK-REUSE",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "02f87dd8a7937f4478d5b69ec4f62261e60ab901",
+    "relation": "ancestor"
+  },
+  "authorization": "User explicitly requests separating body/mask invalidation, prepared geometry reuse, incremental masks, then a separate exact pointer-up query optimization.",
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+    "docs/planning/sdk/js-v1-contract.md",
+    "docs/planning/G5_V4_GPU_COVERAGE_2026_11_07.json"
+  ],
+  "scope": {
+    "owner": "Shared Render disposable prepared geometry, device body/mask tiles; shared exact erase query owner for pointer-up",
+    "api_impact": "Private C++ render/query seams and diagnostic counters only; no JS/DLL consumer API, schema, Operation, receipt or history changes",
+    "body_identity": "Full immutable command equality, target/resource epoch, device matrix and original viewport/grid; masks excluded",
+    "mask_identity": "Ordered exact primitive sequence; append suffix only after complete prefix proof; replacement/removal/cancel rebuilds from retained body",
+    "budget": "Existing 32MiB optional capacity and 96MiB shared hard cap; all retained payloads, pixels and metadata admitted; misses retain correctness fallback"
+  },
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Reuse existing immutable prepared contour owner across identical bodies including duplicates",
+        "Separate bounded device body tiles from mask-versioned results; apply only exact appended mask primitives",
+        "Fail closed on source/target/resource/viewport changes; rebuild masks on non-prefix/Undo/Redo/cancel",
+        "Separately localize exact pointer-up erase queries without approximate positives or new canonical state"
+      ],
+      "forbidden_changes": [
+        "New platform brush/cache owner",
+        "Budget expansion",
+        "Approximate GPU semantic hit/no-op decisions",
+        "Brush/mask geometry or operation changes",
+        "Removal of Scene/receipt/generation guards",
+        "Dependency locks or previous evidence/Gate edits"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "body-mask",
+          "command_or_oracle": "Native and actual Chrome/Ganesh focused regression: body build unchanged after mask append; mask suffix work; independent backdrop and direct pixel/AA oracle; non-prefix/cancel/Undo/Redo, transforms, stale target and allocation denial",
+          "expected_result": "PASS",
+          "blocking_reason": "Cache reuse must not hide stale ink or repeat body preparation"
+        },
+        {
+          "id": "exact-up",
+          "command_or_oracle": "Exact hit/miss/invalid and repeated/multi-history masks versus uncached query, tiny visible hits and no-op preserved",
+          "expected_result": "PASS",
+          "blocking_reason": "Canonical target selection unchanged"
+        },
+        {
+          "id": "regression",
+          "command_or_oracle": "Full native failure-name comparison against archived 1017/1083 with66 inherited names; G5 Node and runtime boundary checks; six qualified GPU modes",
+          "expected_result": "No new failures",
+          "blocking_reason": "Shared render and interaction safety"
+        },
+        {
+          "id": "endpoint",
+          "command_or_oracle": "Clean matching ordinary/diagnostic root SDKs; bounded cumulative_erase 7200samples/15duplicates/DPR2/10rounds128points, plus settled navigation nonregression; record move/RAF/Up/canonical/quiescence and identities",
+          "expected_result": "10rounds within180s/3GiB, live RAF p95<150ms, no input/receipt failures; otherwise explicit endpoint blocker",
+          "blocking_reason": "Physical repro load must be represented, improvements alone do not imply closure"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Physical trackpad acceptance",
+        "Other platform ABI",
+        "Official control review"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "Frozen RED/GREEN output",
+        "Source/artifact fingerprints",
+        "Raw bounded workload phases and native comparison"
+      ],
+      "corroborative": [
+        "CPU profiles",
+        "Browser task-manager observations"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Body and mask reuse invariants verified",
+        "Exact pointer-up behavior preserved and redundant query preparation reduced",
+        "Endpoint and regression obligations satisfied",
+        "Durable code/evidence and isolated Web demo ready for control review"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "LOCKED_SDK_ENVIRONMENT_BLOCKER",
+        "GPU_CORRECTNESS_REGRESSION",
+        "ENDPOINT_REMAINS_BLOCKED_BY_MEASURED_DISTINCT_WORK",
+        "NEW_HIGH_IMPACT_FAILURE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "official_gate_pass_claimed": false
+    }
+  },
+  "budget_comparison_amendment": {
+    "authorization": "User asks whether96MiB is necessary and whether increasing it can relieve this workload; compare existing private source-build policies without changing product defaults.",
+    "profiles": [
+      {
+        "optional_mib": 32,
+        "shared_mib": 96
+      },
+      {
+        "optional_mib": 32,
+        "shared_mib": 192
+      },
+      {
+        "optional_mib": 64,
+        "shared_mib": 192
+      }
+    ],
+    "scope": "Corroborative comparison only; same source and workload, exact artifacts, memory/latency/fallback observations. Production default remains32/96 until a separate default decision.",
+    "forbidden": "Do not relabel failure-induced CPU fallback or receipt failures as performance success."
+  },
+  "implementation_details": {
+    "body_mask_tiles": "128pixel device tiles; original256pixel coverage/material grid preserved;8pixel guarded mask result, interior-only composition;qualifiedGPUv4 only",
+    "geometry": "Existing PreparedGeometryCache reuses full equal immutable commands across object/mask identities",
+    "mask_invalidation": "Exact primitive prefix proof; append only; replace/cancel/Undo rebuild masks from body;source/matrix/viewport/target generation invalidates body",
+    "resources": "Retire legacy masked material/navigation residency before GPU read epoch;working-set admission;physically bounded targets;expected allocation failure propagates explicit Retry and aborts scene traversal;no exception-policy or default budget change",
+    "exact_query": "Factor query-minus-history once; bounded8MiB fully geometric mask-path memo using same sharedResourceBudget;full geometry equality and in-flight pins;original component oracle and exact fallback preserved"
+  }
+}

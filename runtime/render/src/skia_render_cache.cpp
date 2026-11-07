@@ -13,7 +13,12 @@
 #include <chrono>
 
 namespace canvas::render::internal {
-void SkiaRenderCache::clear() noexcept {entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
+    entries_.clear();coverage_.clear();runs_.clear();tileEntries_.clear();resetPreparation();
+    if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
+    work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+}
+void SkiaRenderCache::clear() noexcept {inkLayers_.clear();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -27,6 +32,7 @@ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const Wor
 }
 void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& surface,std::uint64_t resourceEpoch,foundation::ObjectId activeSource){
     const auto& f=plan.frame;
+    if(resourceEpoch_!=resourceEpoch){inkLayers_.clear();work.inkLayerBytes=0;}
     resourceEpoch_=resourceEpoch;
     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
@@ -58,6 +64,8 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
         frame_->surfaceGeneration!=f.surfaceGeneration||frame_->metrics!=f.metrics||
         frame_->metricsGeneration!=f.metricsGeneration;
     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
+    if(changed){inkLayers_.clear();work.inkLayerBytes=0;}
+    else inkLayers_.prune(plan.referenceDrawList.entries);
     coverageTargets_.budget=budget;
     if(targetChanged){coverageTargets_.clear();coverage_.clear();scratch_.reset();scratchLease_.reset();work.coverageBytes=0;}
     const auto previous=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
@@ -439,9 +447,41 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
     }
     return true;
 }
-bool SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
+SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
     const ReferenceTraversalEntry& source,ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
-    if(!damageOnly_||!scratch_)return false;
+    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
+    constexpr auto edge=SkiaInkLayers::tileSize,guard=SkiaInkLayers::maskGuard;
+    const auto layerTileBytes=std::size_t(edge)*std::min(edge,surface_->height())*4U;
+    const auto inkSources=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
+    const auto original=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):canvas.getDeviceClipBounds();
+    auto demand=canvas.getDeviceClipBounds();const bool visible=demand.intersect(original);
+    const auto columns=visible?std::size_t((demand.right()-1-original.left())/edge-(demand.left()-original.left())/edge+1):0;
+    const auto rows=visible?std::size_t((demand.bottom()-1-original.top())/edge-(demand.top()-original.top())/edge+1):0;
+    const auto tiles=columns*rows;
+    // Evicted images remain charged until GPU completion. A synchronous live
+    // frame cannot stream a working set larger than optional residency: it
+    // would restart the same incomplete frame on every RAF. Keep the existing
+    // narrow direct path when this demand cannot retain all affected sources.
+    const auto tilePeak=layerTileBytes+std::size_t(edge+2*guard)*(std::min(edge,surface_->height())+2*guard)*4U+1024;
+    const bool fits=tiles&&tiles<=options.maxBytes/tilePeak&&std::size_t(inkSources)<=options.maxBytes/(tilePeak*tiles);
+    if(options.enabled&&options.gpuCoverageCandidate&&canvas.recordingContext()&&sourceAdmission_&&(damageOnly_||source.presentationEraseActive)&&compact&&compact->content.get().stroke.config.algorithmVersion==4&&
+       options.maxEntryBytes>=layerTileBytes&&fits&&ensureScratch(canvas)){
+        // Body layers have no permanent/transient masks in their identity.
+        // All masks retain the original full viewport/device grid.
+        const auto transform=entryMatrix(canvas,plan,source);
+        const auto& v=plan.referenceDrawList.viewportClip;const auto& m=plan.frame.metrics;
+        SkIRect viewport;
+        if(grid)viewport=SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom);
+        else {SkMatrix scale=SkMatrix::Scale(float(m.physicalWidth)/m.logicalWidth,float(m.physicalHeight)/m.logicalHeight);
+            scale.mapRect(SkRect::MakeLTRB(v.left,v.top,v.right,v.bottom)).roundOut(&viewport);viewport.intersect(SkIRect::MakeWH(surface_->width(),surface_->height()));}
+        bool painted=false,resourcePending=false;
+        if(inkLayers_.draw(canvas,*scratch_,source,transform,viewport,grid,options,budget,sourcePool,coverageTargets_,work,painted,resourcePending))return InkDraw::kDrawn;
+        // An allocation miss after any composite must reject this entire
+        // disposable frame; replaying Direct would blend already drawn ink.
+        // Reuse denial is otherwise safe because the provider is not presented.
+        if(painted||resourcePending){damageFailed_=true;return InkDraw::kRetry;}
+    }
+    if(!damageOnly_||!scratch_)return InkDraw::kSkipped;
     auto* isolated=scratch_->getCanvas();isolated->resetMatrix();isolated->clear(SK_ColorTRANSPARENT);
     const auto transform=entryMatrix(canvas,plan,source);
     // Reuse a complete resident source when available. A miss never enters the
@@ -457,8 +497,9 @@ bool SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
         const bool gpuV4=options.gpuCoverageCandidate&&compact&&compact->content.get().stroke.config.algorithmVersion==4&&isolated->recordingContext();
         CompactRasterWork rasterWork;
-        drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr);
+        drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr,true);
         noteCoverage(rasterWork);isolated->restore();
+        if(rasterWork.resourcePending){isolated->restore();damageFailed_=true;return InkDraw::kRetry;}
         // Narrowing this clip changes Skia stroke-mask AA at existing edges.
         // Keep both mask evaluators on their full original device surface.
         drawEraseMasksToSkCanvas(*isolated,source);noteDirect();
@@ -466,9 +507,9 @@ bool SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
     drawPresentationEraseMasksToSkCanvas(*isolated,source);isolated->restore();
     SkPaint feedback;feedback.setAlphaf(std::clamp(source.presentationOpacity,0.0F,1.0F));
     auto image=scratch_->makeImageSnapshot();
-    if(!image){damageFailed_=true;return true;} // Reject this frame; never present missing ink.
+    if(!image){damageFailed_=true;return InkDraw::kRetry;} // Reject this frame; never present missing ink.
     canvas.save();canvas.resetMatrix();canvas.drawImage(image,0,0,SkSamplingOptions{},&feedback);
-    canvas.restore();return true;
+    canvas.restore();return InkDraw::kDrawn;
 }
 void SkiaRenderCache::planRuns(SkCanvas& canvas,const FramePlan& plan){
     // Small scenes already fit the per-object cache. Runs are a bounded
@@ -542,6 +583,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
         const auto found=std::find_if(runs_.begin(),runs_.end(),[&](const auto& run){return run.image&&run.begin==i&&validRun(run,plan);});
         if(found==runs_.end())continue;
         drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,i,images,text,true,this,grid);
+        if(damageFailed_)return false;
         (void)compositeRetainedRun(canvas,plan,i);begin=i+1;
     }
     drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,plan.referenceDrawList.entries.size(),images,text,includeInk,this,grid);

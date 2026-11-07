@@ -27,7 +27,7 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         auto mask=partialEraseGeometry(trace,record.transform,radius);
         if(!mask)return std::nullopt;
         if(exactHit) {
-            const auto hit=render::intersectEraseGeometry(record,*mask);
+            const auto hit=skiaRenderer_.intersectEraseGeometry(record,*mask);
             if(hit==render::SelectionGeometryHit::kInvalid){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
                 std::fprintf(stderr,"AXIOM_ERASE_REJECT stage=exact_geometry trace=%zu old_masks=%zu\n",trace.size(),record.eraseMasks.size());

@@ -1,4 +1,5 @@
 #include "canvas/foundation/internal/frame_timing.hpp"
+#include "skia_erase_mask.hpp"
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
@@ -384,7 +385,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
-                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr, const SkPath* preparedVectorPath = nullptr) {
+                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr, const SkPath* preparedVectorPath = nullptr,bool yieldOnAllocation = false) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -607,7 +608,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
         } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
-            internal::drawCompactStrokeToSkCanvas(canvas,command.content.get().stroke.config,command.content.get().stroke.knots,command.content.get().stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets,range);
+            internal::drawCompactStrokeToSkCanvas(canvas,command.content.get().stroke.config,command.content.get().stroke.knots,command.content.get().stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets,range,nullptr,yieldOnAllocation);
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.get().stroke;
             if (stroke.vector_output.outline.empty()) return;
@@ -776,22 +777,10 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
 void eraseMasks(SkCanvas& canvas, std::span<const semantic::EraseMaskRecord> masks) {
     for (const auto& mask : masks) {
         if (const auto* filled = std::get_if<semantic::FilledPathMask>(&mask.geometry)) {
-            SkPaint paint; paint.setAntiAlias(false); paint.setBlendMode(SkBlendMode::kClear); drawPath(canvas, filled->path, paint);
+            internal::drawErasePrimitive(canvas,*filled);
         } else if (const auto* swept = std::get_if<semantic::SweptCircleMask>(&mask.geometry)) {
-            SkPaint paint;
-            paint.setAntiAlias(true);
-            paint.setBlendMode(SkBlendMode::kClear);
-            paint.setStyle(SkPaint::kStroke_Style);
-            paint.setStrokeCap(SkPaint::kRound_Cap);
-            paint.setStrokeJoin(SkPaint::kRound_Join);
             for (const auto& segment : swept->segments) {
-                paint.setStrokeWidth(static_cast<float>(2.0 * std::max(segment.p0.radius, segment.p1.radius)));
-                SkPathBuilder path;
-                path.moveTo(static_cast<float>(segment.p0.position.x), static_cast<float>(segment.p0.position.y));
-                path.cubicTo(static_cast<float>(segment.control1.x), static_cast<float>(segment.control1.y),
-                             static_cast<float>(segment.control2.x), static_cast<float>(segment.control2.y),
-                             static_cast<float>(segment.p1.position.x), static_cast<float>(segment.p1.position.y));
-                canvas.drawPath(path.detach(), paint);
+                internal::drawErasePrimitive(canvas,segment);
             }
         }
     }
@@ -912,8 +901,8 @@ void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& e
 }
 void drawInkBodyToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
     ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid,
-    CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
-    drawCommand(canvas,entry,images,text,true,false,nullptr,grid,work,compatibleCoverage,targets);
+    CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets,bool yieldOnAllocation) {
+    drawCommand(canvas,entry,images,text,true,false,nullptr,grid,work,compatibleCoverage,targets,nullptr,nullptr,yieldOnAllocation);
 }
 void drawPresentationEraseMasksToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas,entry.presentationEraseMasks);
@@ -1033,7 +1022,11 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     for (std::size_t index=begin;index<end;++index) {
         const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
-        if(cache&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)&&cache->drawDamagedInk(canvas,plan,entry,images,textResources,grid))continue;
+        if(cache&&std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)){
+            const auto ink=cache->drawDamagedInk(canvas,plan,entry,images,textResources,grid);
+            if(ink==SkiaRenderCache::InkDraw::kRetry)break;
+            if(ink==SkiaRenderCache::InkDraw::kDrawn)continue;
+        }
         SkAutoCanvasRestore feedbackRestore(&canvas, false);
         if (entry.presentationOpacity != 1.0F) {
             SkPaint feedback; feedback.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));

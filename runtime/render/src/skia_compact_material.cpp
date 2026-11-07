@@ -3,6 +3,7 @@
 #include "canvas/ink/compact_geometry.hpp"
 #include "compact_raster_internal.hpp"
 #include "compact_contour_skia_path.hpp"
+#include "skia_prepared_geometry.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
@@ -253,7 +254,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
 void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                 std::span<const foundation::InkKnot> knots,std::uint64_t seed,
                                 CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid,bool compatibleCoverage,CompactCoverageTargets* targets,
-                                const CompactStrokeRange* range){
+                                const CompactStrokeRange* range,const PreparedNavigationGeometry* prepared,bool yieldOnAllocation){
     if(knots.empty())return;
     std::vector<foundation::InkKnot> selected;
     double rangeStartDistance = 0.0;
@@ -282,7 +283,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         // Legacy synchronous callers have no resumable owner. Preserve their
         // explicit allocation failure instead of spinning on a denied token.
         while(!job.step(canvas,config,knots,seed,*targets,true,work))
-            if(job.resourcePending())throw std::bad_alloc();
+            if(job.resourcePending()){
+                if(yieldOnAllocation&&work){work->resourcePending=true;return;}
+                throw std::bad_alloc();
+            }
         return;
     }
     // V4 keeps the pinned contour; only per-pixel AA moves to Skia's GPU.
@@ -320,17 +324,21 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         if(!targets){tile=compatibleCoverage?canvas.makeSurface(SkImageInfo::MakeN32Premul(w,h)):nullptr;
             if(!tile)tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
             if(work&&tile){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}}
+        if(!tile){
+            if(yieldOnAllocation&&work){work->resourcePending=true;return;}
+            if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");
+        }
         if(tile&&tile->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
         else {AXIOM_FRAME_TIMING_ADD(cpu_coverage_tiles,1);
             if(!canvas.recordingContext())AXIOM_FRAME_TIMING_ADD(coverage_no_gpu_context,1);
             else if(!compatibleCoverage)AXIOM_FRAME_TIMING_ADD(coverage_cpu_policy,1);
             else AXIOM_FRAME_TIMING_ADD(coverage_target_fallback,1);}
         if(work){if(tile&&tile->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;}
-        if(!tile){if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");}
 
         auto* target=tile->getCanvas();target->resetMatrix();target->clear(SK_ColorBLACK);
         target->translate(float(-x),float(-y));target->concat(matrix);
-        if(coverage)target->drawPicture(coverage);
+        if(prepared&&config.algorithmVersion==4)prepared->drawContour(*target);
+        else if(coverage)target->drawPicture(coverage);
         else drawCompactCoverageToSkCanvas(*target,config,knots,
                                             range ? rangeStartDistance : 0.0,
                                             range ? rangeTotalDistance : -1.0,

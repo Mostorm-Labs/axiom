@@ -1651,8 +1651,8 @@ namespace {
 // each pinned primitive boundary in device space: dense self-crossings can
 // contain partial AA pixels even when all neighboring CPU pixels are dark.
 // A channel-neighborhood range would incorrectly reject those boundary values.
-std::vector<std::uint8_t> contourEdgeBand(const ReferenceTraversalEntry& entry) {
-    auto surface=SkSurfaces::Raster(SkImageInfo::MakeA8(256,128));
+std::vector<std::uint8_t> contourEdgeBand(const ReferenceTraversalEntry& entry,int width=256,int height=128) {
+    auto surface=SkSurfaces::Raster(SkImageInfo::MakeA8(width,height));
     require(bool(surface),"AA boundary oracle allocation");
     auto* canvas=surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
     const auto& t=entry.record.transform;
@@ -1676,8 +1676,8 @@ std::vector<std::uint8_t> contourEdgeBand(const ReferenceTraversalEntry& entry) 
                 SkPaint p;p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(2*std::max(part.p0.radius,part.p1.radius));p.setStrokeCap(SkPaint::kRound_Cap);
                 draw(skpathutils::FillPathWithPaint(b.detach(),p));}
     }
-    std::vector<std::uint8_t> band(256*128);
-    require(surface->readPixels(SkImageInfo::MakeA8(256,128),band.data(),256,0,0),"AA boundary oracle readback");
+    std::vector<std::uint8_t> band(width*height);
+    require(surface->readPixels(SkImageInfo::MakeA8(width,height),band.data(),width,0,0),"AA boundary oracle readback");
     return band;
 }
 bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std::uint8_t>& expected,
@@ -1687,6 +1687,107 @@ bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std:
         if(report)std::cerr<<"non-AA mismatch pixel="<<i/4<<" channel="<<i%4<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';return false;}
     return true;
 }
+void checkBodyMaskReuse() {
+    PartialUpdateTestSurface target,reference;reference.partial=false;
+    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"body/mask targets");
+    SkiaRenderer renderer,oracle;RenderCacheOptions opts;opts.maxBytes=4*1024*1024;renderer.setRenderCacheOptions(opts);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    auto e=stroke(99801);auto content=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    content.stroke.config.size=18;content.stroke.config.thinning=0;content.stroke.config.opacity=.65;
+    content.stroke.knots={{10,64,32768},{246,64,32768}};e.record.content=content;e.command=CompactStrokeReferenceCommand{content};e.presentationEraseActive=true;
+    const auto mask=[](double x){return semantic::SweptCircleMask{{{{{x,20},7},{{x,108},7},{x,40},{x,80}}}};};
+    auto compare=[&](unsigned id){const auto f=plan(id,{e});EditingOverlay overlay(f.frame);
+        require(renderer.renderTransientOverlay(target,f,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,f,&overlay).code==BackendSubmissionCode::kAccepted,"body/mask presentation");
+        auto boundary=e;boundary.record.eraseMasks.insert(boundary.record.eraseMasks.end(),boundary.presentationEraseMasks.begin(),boundary.presentationEraseMasks.end());
+#if defined(G5_TEST_WEBGL)
+        require(aaEquivalent(pixels(target),pixels(reference),contourEdgeBand(boundary)),"body/mask reuse changed non-AA pixels");
+#else
+        require(pixels(target)==pixels(reference),"body/mask reuse changed CPU pixels");
+#endif
+    };
+    compare(99802);const auto warm=renderer.renderCacheWork();
+    for(unsigned i=0;i<4;++i){e.record.eraseMasks.push_back({ObjectId::fromUint64(99810+i),mask(70+i*30)});compare(99803+i);}
+    const auto after=renderer.renderCacheWork();
+#if defined(G5_TEST_WEBGL)
+    require(after.gpuCoverageTiles+after.cpuCoverageTiles==warm.gpuCoverageTiles+warm.cpuCoverageTiles,"mask append rebuilt unchanged body coverage");
+    require(after.maskPrimitiveDraws-warm.maskPrimitiveDraws==5,"mask append replayed the historical prefix");
+#else
+    require(after.bodyTileBuilds==0,"GPU layer policy changed the explicit CPU path");
+#endif
+    e.presentationEraseMasks={{{},mask(210)}};compare(99820);
+    auto& live=std::get<semantic::SweptCircleMask>(e.presentationEraseMasks[0].geometry);
+    const auto beforeAppend=renderer.renderCacheWork().maskPrimitiveDraws;
+    live.segments.push_back({{{210,108},7},{{225,108},7},{215,108},{220,108}});compare(99824);
+#if defined(G5_TEST_WEBGL)
+    require(renderer.renderCacheWork().maskPrimitiveDraws==beforeAppend+1,"live prefix append replayed old mask segments");
+#else
+    (void)beforeAppend;
+#endif
+    e.presentationEraseMasks.clear();compare(99821); // cancel restores body under transient mask
+    e.record.eraseMasks.pop_back();compare(99822); // undo cannot keep an appended clear
+    e.record.eraseMasks.push_back({ObjectId::fromUint64(99823),mask(160)});compare(99823);
+#if defined(G5_TEST_WEBGL)
+    require(renderer.renderCacheWork().gpuCoverageTiles+renderer.renderCacheWork().cpuCoverageTiles==warm.gpuCoverageTiles+warm.cpuCoverageTiles,"mask reset discarded reusable body");
+#else
+    (void)warm;
+#endif
+}
+void checkBodyMaskTileSeams() {
+    constexpr int width=768,height=256;
+    PartialUpdateTestSurface target,reference;reference.partial=false;
+    require(target.resize(width,height).code==BackendSubmissionCode::kAccepted&&reference.resize(width,height).code==BackendSubmissionCode::kAccepted,"layer seam targets");
+    auto source=stroke(99840);auto c=std::get<CompactStrokeReferenceCommand>(source.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;c.stroke.config.opacity=.61;c.stroke.knots.clear();
+    for(unsigned k=0;k<700;++k)c.stroke.knots.push_back({15.+k,126.+40*std::sin(k*.067),static_cast<std::uint16_t>(10000+(k*177)%50000)});
+    source.command=CompactStrokeReferenceCommand{c};source.record.content=c;source.presentationEraseActive=true;
+    source.record.transform={1,.02,.04,.91,3,2};source.record.worldBounds={0,0,width,height};
+    SkiaRenderer renderer,oracle;RenderCacheOptions opts;opts.maxBytes=4*1024*1024;renderer.setRenderCacheOptions(opts);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    const auto read=[](SkiaSurfaceProvider& p){auto a=p.acquire();require(a.code==SkiaSurfaceAcquireCode::kAcquired,"seam read acquire");
+        const auto info=a.frame.surface->imageInfo().makeColorType(kRGBA_8888_SkColorType);std::vector<std::uint8_t> out(width*height*4);
+        const bool ok=a.frame.surface->readPixels(info,out.data(),width*4,0,0);p.release();require(ok,"seam read");return out;};
+    const auto demand=[&](unsigned id){FrameState f{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,width,height},{width,height,width,height,1,1},semantic::SemanticGeneration{id},SceneRevision{id},SurfaceGeneration{target.generation()},MetricsGeneration{1},FrameId{id}};
+        ReferenceDrawList list{f};list.viewportClip={0,0,width,height};list.entries={source};return FramePlan{f,std::move(list)};};
+    auto compare=[&](unsigned id){const auto f=demand(id);EditingOverlay overlay(f.frame);
+        require(renderer.renderTransientOverlay(target,f,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,f,&overlay).code==BackendSubmissionCode::kAccepted,"seam draw");
+        auto edge=source;edge.record.eraseMasks.insert(edge.record.eraseMasks.end(),edge.presentationEraseMasks.begin(),edge.presentationEraseMasks.end());
+#if defined(G5_TEST_WEBGL)
+        require(aaEquivalent(read(target),read(reference),contourEdgeBand(edge,width,height)),"layer tile seam changed interior pixels");
+#else
+        require(read(target)==read(reference),"CPU layer tile seam changed pixels");
+#endif
+    };
+    compare(99841);const auto warm=renderer.renderCacheWork();
+    semantic::SweptCircleMask sweep;sweep.segments.push_back({{{250,40},12},{{520,200},12},{300,50},{460,190}});
+    source.presentationEraseMasks={{{},sweep}};compare(99842);
+    source.record.eraseMasks=source.presentationEraseMasks;source.presentationEraseMasks.clear();compare(99843);
+    require(renderer.renderCacheWork().bodyTileBuilds==warm.bodyTileBuilds,"seam masks invalidated body tiles");
+    source.record.eraseMasks.clear();compare(99844);
+    require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted&&reference.advanceGeneration().code==BackendSubmissionCode::kAccepted,"layer generation");compare(99845);
+#if defined(G5_TEST_WEBGL)
+    require(renderer.renderCacheWork().bodyTileBuilds>warm.bodyTileBuilds,"surface generation reused stale body tiles");
+#endif
+}
+#if defined(G5_TEST_WEBGL)
+void checkBodyMaskBudgetFailure(){
+    PartialUpdateTestSurface target;require(target.resize(512,128).code==BackendSubmissionCode::kAccepted,"budget target");
+    auto source=stroke(99870);auto c=std::get<CompactStrokeReferenceCommand>(source.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.knots={{10,64,32768},{500,64,32768}};source.command=CompactStrokeReferenceCommand{c};source.record.content=c;source.presentationEraseActive=true;
+    const auto demand=[&](unsigned id){FrameState f{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,512,128},{512,128,512,128,1,1},semantic::SemanticGeneration{id},SceneRevision{id},SurfaceGeneration{target.generation()},MetricsGeneration{1},FrameId{id}};
+        ReferenceDrawList list{f};list.viewportClip={0,0,512,128};list.entries={source};return FramePlan{f,std::move(list)};};
+    SkiaRenderer renderer;RenderCacheOptions limits;limits.maxBytes=4*1024*1024;limits.sharedMaxBytes=800*1024;renderer.setRenderCacheOptions(limits);
+    auto frame=demand(99871);EditingOverlay overlay(frame.frame);
+    const auto failed=renderer.renderTransientOverlay(target,frame,&overlay);
+    require(failed.code==BackendSubmissionCode::kRetry&&target.presentCount()==0,"partial layer admission escaped retry or presented incomplete ink");
+    // Failed cache admission is normal control flow. It must end the GPU scope
+    // even in the ordinary Render library (which has no Emscripten EH catches).
+    emscripten_sleep(2);source.presentationEraseActive=false;const auto before=renderer.renderCacheWork().gpuCoverageTiles;
+    require(renderer.renderFrame(target,demand(99872)).code==BackendSubmissionCode::kAccepted,"budget recovery frame");
+    require(renderer.renderCacheWork().gpuCoverageTiles>before,"failed layer admission orphaned the GPU epoch and forced CPU recovery");
+}
+#endif
 void checkLiveEraseGpuMiss() {
  for(bool gpu:{true,false}) {
     PartialUpdateTestSurface target,reference;reference.partial=false;
@@ -1909,6 +2010,11 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-gpu-miss-only")){checkLiveEraseGpuMiss();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--body-mask-only")){checkBodyMaskReuse();checkBodyMaskTileSeams();
+#if defined(G5_TEST_WEBGL)
+            checkBodyMaskBudgetFailure();
+#endif
+            if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--regional-mask-only")){checkRegionalWitnessAdmission();checkRegionalMaskProof();checkRegionalMaskFeedback();checkRegionalMaskFeedback(true);checkRegionalMaskTiles();if(argc>1){TestSurface unused;checkSharedCanonicalNavigation(unused);return finishNative(0);}}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-progress-only")){checkMaskedNavigationLevelProgress();checkMaskedNavigationGpuCoverage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}

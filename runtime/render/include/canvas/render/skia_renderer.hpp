@@ -8,6 +8,7 @@
 #include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_cache.hpp"
+#include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/render/navigation_sources.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/damage_tracker.hpp"
@@ -20,7 +21,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class GpuResourceRetirement;}
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class GpuResourceRetirement;class EraseMaskPathCache;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -84,6 +85,10 @@ class SkiaRenderer final {
     void setRenderCacheOptions(RenderCacheOptions options);
     void clearRenderCache() noexcept;
     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
+    // Owner-thread derived exact-query reuse. Returns only a value decision;
+    // canonical target selection still belongs to the interaction owner.
+    [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
+        const semantic::EraseMaskGeometry&) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
@@ -95,6 +100,7 @@ class SkiaRenderer final {
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;
     std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
+    mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
     std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;

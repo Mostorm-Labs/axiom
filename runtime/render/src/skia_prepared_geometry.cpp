@@ -168,6 +168,11 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;return found->second.geometry;}
         entries_.erase(found);
     }
+    // Object transforms and masks do not change immutable brush geometry.
+    // Share only the prepared body; device pixels stay independently keyed.
+    for(auto& [id,cached]:entries_)if(cached.geometry->source_==entry.command){
+        (void)id;cached.used=++tick_;++work_.hits;return cached.geometry;
+    }
     while(entries_.size()>=limits.maxEntries)if(!evictUnused())return denied();
     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
     const std::size_t unit=compact?16:64;

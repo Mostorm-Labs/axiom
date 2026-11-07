@@ -1,4 +1,5 @@
 #include "canvas/render/selection_region_geometry.hpp"
+#include "selection_region_geometry_internal.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #if CANVAS_RENDER_HAS_SKIA
@@ -18,6 +19,14 @@
 #include <cstdio>
 #endif
 namespace canvas::render {
+namespace internal {
+struct ErasePathUsage {std::size_t bytes=0;};
+struct EraseMaskPathCache::Entry {
+    semantic::EraseMaskGeometry geometry;SkPath path;resources::ResourceLease lease;
+    std::shared_ptr<ErasePathUsage> usage;std::size_t bytes=0;std::uint64_t used=0;
+    ~Entry(){if(usage)usage->bytes-=bytes;}
+};
+}
 namespace {
 using Hit=SelectionGeometryHit;
 float f(double v){return static_cast<float>(v);}
@@ -222,8 +231,14 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
     return path.isFinite()&&std::all_of(decorations.begin(),decorations.end(),[](const auto& p){return p.isFinite();})?Hit::kHit:Hit::kInvalid;
 }
 }
-SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
+namespace {
+SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr) noexcept {
     try {
+        std::vector<std::shared_ptr<const internal::EraseMaskPathCache::Entry>> pins;
+        const auto pathFor=[&](const semantic::EraseMaskGeometry& geometry){
+            if(pathCache)if(auto entry=pathCache->get(geometry)){pins.push_back(entry);return std::optional<SkPath>{entry->path};}
+            return erasePath(geometry);
+        };
         const auto invalidGeometry=[]([[maybe_unused]]const char* stage){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             std::fprintf(stderr,"AXIOM_ERASE_PATHOPS_FAILURE stage=%s\n",stage);
@@ -232,7 +247,7 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
         };
         SkPath visible;std::vector<SkPath> decorations;
         const auto status=geometry(record,visible,decorations,false);if(status!=Hit::kHit)return status;
-        const auto eraser=erasePath(mask);if(!eraser||!eraser->isFinite())return invalidGeometry("new_mask_path");
+        const auto eraser=pathFor(mask);if(!eraser||!eraser->isFinite())return invalidGeometry("new_mask_path");
         // Query only the new intersection. Subtraction distributes over the
         // component union, so a visible hit need not prepare unrelated parts.
         // Paths are query-local and built lazily once, never retained in Scene.
@@ -241,6 +256,35 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
             const auto x=a.getBounds(),y=b.getBounds();
             return x.isFinite()&&y.isFinite()&&!x.isEmpty()&&!y.isEmpty()&&!SkRect::Intersects(x,y);
         };
+        // Factor history out of the component loop:
+        // (body intersect query) minus history == body intersect (query minus history).
+        // This remains an exact PathOps query, never a raster/GPU hit test.
+        // Retain the original component query below as the failure oracle:
+        // a failed optional PathOps proof cannot reject an otherwise valid hit.
+        if(shareQuery&&!record.eraseMasks.empty()){
+            const auto sharedQuery=[&]()->std::optional<Hit>{
+                if((visible.isEmpty()||disjoint(visible,*eraser))&&std::all_of(decorations.begin(),decorations.end(),[&](const auto& part){return part.isEmpty()||disjoint(part,*eraser);}))return Hit::kMiss;
+                auto remaining=*eraser;
+                for(const auto& maskRecord:record.eraseMasks){
+                    if(maskRecord.geometry==mask)return Hit::kMiss;
+                    const auto old=pathFor(maskRecord.geometry);if(!old||!old->isFinite())return {};
+                    if(disjoint(remaining,*old))continue;
+                    if(work)++work->historicalDifferences;
+                    auto next=Op(remaining,*old,kDifference_SkPathOp);if(!next)return {};
+                    remaining=*next;if(remaining.isEmpty())return Hit::kMiss;
+                }
+                const auto hit=[&](const SkPath& part)->std::optional<Hit>{
+                    if(part.isEmpty()||disjoint(part,remaining))return Hit::kMiss;
+                    if(work)++work->componentIntersections;
+                    const auto result=Op(part,remaining,kIntersect_SkPathOp);if(!result)return {};
+                    return result->isEmpty()?Hit::kMiss:Hit::kHit;
+                };
+                const auto body=hit(visible);if(!body||*body==Hit::kHit)return body;
+                for(const auto& part:decorations){const auto result=hit(part);if(!result||*result==Hit::kHit)return result;}
+                return Hit::kMiss;
+            };
+            if(const auto result=sharedQuery())return *result;
+        }
         // A repeat/no-op must not exhaust every brush ribbon. This is only
         // a proof of an empty query, never an approximate positive hit. Keep
         // source/new-mask validation above, including invalid-source handling.
@@ -251,12 +295,13 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
             constexpr std::size_t proofMasks=8;
             for(std::size_t i=0;i<std::min(record.eraseMasks.size(),proofMasks);++i){
                 if(record.eraseMasks[i].geometry==mask)return Hit::kMiss;
-                const auto built=erasePath(record.eraseMasks[i].geometry);
+                const auto built=pathFor(record.eraseMasks[i].geometry);
                 // Failure of this optional proof is not itself rejection:
                 // the original component query below still owns the result.
                 if(!built||!built->isFinite())break;
                 previousMasks.push_back(*built);
                 if(disjoint(remaining,*built))continue;
+                if(work)++work->historicalDifferences;
                 auto next=Op(remaining,*built,kDifference_SkPathOp);
                 if(!next)break;
                 remaining=*next;
@@ -265,15 +310,17 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
         }
         const auto intersects=[&](const SkPath& body){
             if(body.isEmpty()||disjoint(body,*eraser))return Hit::kMiss;
+            if(work)++work->componentIntersections;
             auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return invalidGeometry("component_intersection");
             if(overlap->isEmpty())return Hit::kMiss;
             for(std::size_t i=0;i<record.eraseMasks.size();++i){
                 if(i==previousMasks.size()){
-                    const auto built=erasePath(record.eraseMasks[i].geometry);
+                    const auto built=pathFor(record.eraseMasks[i].geometry);
                     if(!built||!built->isFinite())return invalidGeometry("previous_mask_path");
                     previousMasks.push_back(*built);
                 }
                 if(disjoint(*overlap,previousMasks[i]))continue;
+                if(work)++work->historicalDifferences;
                 overlap=Op(*overlap,previousMasks[i],kDifference_SkPathOp);
                 if(!overlap)return invalidGeometry("previous_mask_difference");
                 if(overlap->isEmpty())return Hit::kMiss;
@@ -285,6 +332,58 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
         for(const auto& part:decorations){const auto hit=intersects(part);if(hit==Hit::kHit)return hit;invalid=invalid||hit==Hit::kInvalid;}
         return invalid?Hit::kInvalid:Hit::kMiss;
     }catch(const std::bad_alloc&){return Hit::kInvalid;}
+}
+}
+SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work) noexcept {
+    return eraseGeometryQuery(record,mask,work,true);
+}
+namespace internal {
+struct EraseMaskPathCache::Impl {
+    Work stats;std::shared_ptr<ErasePathUsage> usage=std::make_shared<ErasePathUsage>();
+    std::shared_ptr<resources::ResourceBudgetManager> budget;
+    std::vector<std::shared_ptr<Entry>> entries;
+    std::size_t capacity=0;std::uint64_t tick=0;
+    bool evict(){
+        auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
+            if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
+        if(victim==entries.end())return false;entries.erase(victim);return true;
+    }
+};
+EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
+EraseMaskPathCache::~EraseMaskPathCache()=default;
+void EraseMaskPathCache::clear()noexcept{std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;return v;}
+std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry){
+    auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
+    for(auto& entry:state.entries)if(entry->geometry==geometry){entry->used=++state.tick;++state.stats.hits;return entry;}
+    const auto units=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry);
+    const auto raw=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
+    const auto base=sizeof(Entry)+raw+65536;
+    if(!state.budget||base>state.capacity||units>(state.capacity-base)/4096)return denied();
+    const auto estimate=base+units*4096;
+    std::optional<std::uint64_t> token;
+    for(;;){
+        if(state.entries.size()<512&&state.usage->bytes<=state.capacity-estimate)
+            token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);
+        if(token)break;if(!state.evict())return denied();
+    }
+    resources::ResourceLease lease(state.budget,*token);
+    const auto path=erasePath(geometry);if(!path||!path->isFinite())return denied();
+    auto candidate=std::make_shared<Entry>();candidate->geometry=geometry;candidate->path=*path;
+    const auto bytes=sizeof(Entry)+raw+256+path->approximateBytesUsed();
+    if(bytes>estimate||!lease.shrink(bytes))return denied();
+    candidate->lease=std::move(lease);candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
+    state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;return candidate;
+}
+SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,
+    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity)noexcept{
+    capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+    if(impl_->budget!=budget||impl_->capacity!=capacity){clear();impl_->budget=std::move(budget);impl_->capacity=capacity;}
+    return eraseGeometryQuery(record,mask,nullptr,true,this);
+}
+SelectionGeometryHit intersectEraseGeometryComponentOracle(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
+    return eraseGeometryQuery(record,mask,nullptr,false);
+}
 }
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {
     try {
@@ -324,7 +423,7 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
 }
 #else
 namespace canvas::render {
-SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&) noexcept {return SelectionGeometryHit::kUnsupported;}
+SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&,EraseGeometryWork*) noexcept {return SelectionGeometryHit::kUnsupported;}
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>) noexcept {return SelectionGeometryHit::kUnsupported;}
 }
 #endif

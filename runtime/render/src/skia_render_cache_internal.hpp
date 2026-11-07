@@ -9,6 +9,7 @@
 #include "include/core/SkPicture.h"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "source_retention.hpp"
+#include "skia_ink_layers.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include <unordered_map>
 
@@ -42,9 +43,13 @@ class SkiaRenderCache final {
     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
     [[nodiscard]] std::uint64_t frameSequence()const noexcept{return tick_;}
     bool prepareEraseDamage(SkCanvas& canvas){return sourceAdmission_&&ensureScratch(canvas);}
-    bool drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
+    enum class InkDraw {kSkipped,kDrawn,kRetry};
+    InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
+    // Entering live erasure changes the useful representation. Retire old
+    // complete masked sources before the next GPU epoch pins their leases.
+    void releaseMaterialSources(bool releaseWorkSurfaces=true)noexcept;
     // Keep matching exact work resumable; obsolete camera/target work cannot
     // reserve the buffers needed by a renewed navigation demand.
     bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,
@@ -79,6 +84,7 @@ class SkiaRenderCache final {
     struct Coverage {RenderGroupRevisions revisions;sk_sp<SkPicture> picture;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
     std::unordered_map<foundation::ObjectId,Coverage,foundation::ObjectIdHash> coverage_;
     CompactCoverageTargets coverageTargets_;
+    SkiaInkLayers inkLayers_;
     struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
     std::unique_ptr<Pending> pending_;
     enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
