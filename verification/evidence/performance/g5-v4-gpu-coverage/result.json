@@ -1,0 +1,47 @@
+{
+  "status": "BLOCKED_REPRODUCTION",
+  "gpu_coverage": "READY_FOR_CONTROL_REVIEW",
+  "repeat_noop": "READY_FOR_CONTROL_REVIEW",
+  "dpr4": "BLOCKED_EVIDENCE_TIMEOUT",
+  "scope": "Local Web/Ganesh engineering evidence, not physical input, competitor, full scale, P34 or release acceptance",
+  "code_revision": "10a9a0f0dafc362c1e589c03e73069740eaf9ae7",
+  "verification_revision": "10a9a0f0dafc362c1e589c03e73069740eaf9ae7",
+  "input_rejection": "The reported second-erase INPUT_REJECTED was not reproduced. No semantic rejection bypass or claimed fix. Diagnostic-only stage logs added to existing owners.",
+  "runtime_cpu_still_owns": [
+    "input normalization",
+    "pinned contour compilation",
+    "exact erase hit/no-op filtering",
+    "OperationEngine/History/Scene"
+  ],
+  "budgets_MiB": {
+    "optional": 32,
+    "shared": 96
+  },
+  "preserved": [
+    "Brush algorithm and semantic document/Operations",
+    "CPU Direct bytes",
+    "SDK public APIs/ABI/version",
+    "dependency locks",
+    "old P34 evidence",
+    "old user pages"
+  ],
+  "gpu_layer_revision": "86367caec3341c5e3aa1c1682abde4f0ddb632f0",
+  "package_refs": [
+    {
+      "repository": "github.com/Mostorm-Labs/axiom",
+      "revision": "86367caec3341c5e3aa1c1682abde4f0ddb632f0",
+      "path": "docs/planning/G5_V4_GPU_COVERAGE_2026_11_07.json",
+      "sha256": "9153433f42ab746ad9acfc02d5182d81639dd6e5b5710830bef92cd9999f5ca0"
+    },
+    {
+      "repository": "github.com/Mostorm-Labs/axiom",
+      "revision": "10a9a0f0dafc362c1e589c03e73069740eaf9ae7",
+      "path": "docs/planning/G5_REPEAT_ERASE_FAST_MISS_2026_11_07.json",
+      "sha256": "4d70cf9860905b50b2dc77d3b29da8040561d85e308b866dc307154091886039"
+    }
+  ],
+  "demo": {
+    "ordinary": "http://127.0.0.1:4267/example.html",
+    "diagnostic": "http://127.0.0.1:4268/example.html"
+  }
+}

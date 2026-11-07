@@ -1,0 +1,44 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/duplicated_erase_navigation.mjs",
+    "out/g5-v4-final-on/js",
+    "out/g5-v4-measure-gpu-on-dpr4",
+    "4",
+    "candidate"
+  ],
+  "reason": "timeout",
+  "returncode": -9,
+  "elapsed_s": 180.52815129200462,
+  "peak_process_family_rss_kib": 2761872,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "erase-complete",
+    "n": 1,
+    "upMs": 827.6999999880791,
+    "diagnosticCanonicalAttempts": 66,
+    "cpuCoverageMs": 0,
+    "cpuCoverageExclusiveMs": 0,
+    "maxCanonicalAttemptMs": 14.1,
+    "recoveryAfterInputMs": 557.4000000357628,
+    "wholePhaseMs": 20043.80000001192,
+    "endpoint": true,
+    "gap": {
+      "count": 1853,
+      "p50": 0,
+      "p95": 94.69999998807907,
+      "p99": 195.79999995231628,
+      "max": 2176.7999999523163,
+      "mean": 10.680032379937314
+    },
+    "checks": {
+      "oneCommit": true,
+      "terminalRetired": true,
+      "canonicalPresented": true,
+      "cameraReturned": true
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

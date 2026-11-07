@@ -1,0 +1,22 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/duplicated_erase_navigation.mjs",
+    "out/g5-masked-on/js",
+    "out/g5-v4-reject-repro-data",
+    "2",
+    "baseline"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 69.39177516603377,
+  "peak_process_family_rss_kib": 2598848,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 180.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "ORACLE_CONFLICT"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

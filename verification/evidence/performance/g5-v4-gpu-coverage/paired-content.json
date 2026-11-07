@@ -1,0 +1,56 @@
+{
+  "cpu-on-dpr2 vs gpu-on-dpr2": [
+    {
+      "checkpoint": "initial",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "erase0",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "erase1",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "undo",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "redo",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    }
+  ],
+  "cpu-off-dpr2 vs gpu-off-dpr2": [
+    {
+      "checkpoint": "initial",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "erase0",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "erase1",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "undo",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    },
+    {
+      "checkpoint": "redo",
+      "snapshotEqual": true,
+      "cpuExportEqual": true
+    }
+  ]
+}

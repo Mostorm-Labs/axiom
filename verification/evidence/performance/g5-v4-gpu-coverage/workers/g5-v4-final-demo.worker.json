@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "out/g5-v4-final-demo-smoke.mjs"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 6.428300875006244,
+  "peak_process_family_rss_kib": 1561584,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 120.0,
+  "last_stage": {
+    "stage": "complete",
+    "url": "http://127.0.0.1:4265/example.html",
+    "errors": [],
+    "checks": {
+      "strokeRetained": true,
+      "noUiError": true,
+      "noPageError": true
+    },
+    "statusText": "16 objects \u00b7 1 selected \u00b7 Zoom 1.13",
+    "status": "MEASURED"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}
