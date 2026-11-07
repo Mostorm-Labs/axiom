@@ -456,6 +456,11 @@ void checkAffineStrokes(TestSurface& target,TestSurface& reference){
             const auto projection=projectRuntimeScene({&o,1},semantic::SemanticGeneration{1});
             entries.insert(entries.begin(),{projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(o.content)}});}
         const auto frame=plan(810,entries);SkiaRenderer cached,direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
+#if defined(G5_TEST_WEBGL)
+        // This existing oracle freezes strict CPU bytes. Canonical GPU AA is
+        // covered separately by the three-profile geometric-boundary oracle.
+        RenderCacheOptions cpuParity;cpuParity.gpuCoverageCandidate=false;cached.setRenderCacheOptions(cpuParity);
+#endif
         RenderPreparationBudget budget;budget.maxCoverageSteps=1;budget.maxGroups=1;budget.maxMicroseconds=1000000;
         const auto presents=target.presentCount();
         require(cached.renderFrame(target,frame,nullptr,&budget).code==BackendSubmissionCode::kRetry&&target.presentCount()==presents,
@@ -483,8 +488,8 @@ void checkAffineStrokes(TestSurface& target,TestSurface& reference){
         const auto feedback=pixels(target);
         auto geometryOracle=actual;
 #if defined(G5_TEST_WEBGL)
-        // Navigation deliberately uses Ganesh coverage, whereas canonical v4
-        // retains pinned CPU AA. Compare its geometry with an independent full
+        // The strict parity section above intentionally uses CPU coverage.
+        // Compare GPU navigation geometry with an independent full
         // Ganesh contour stream, not a CPU/GPU edge-color equality assumption.
         auto background=entries;background.pop_back();
         require(direct.renderFrame(reference,plan(812,background)).code==BackendSubmissionCode::kAccepted,"affine geometry oracle background");
