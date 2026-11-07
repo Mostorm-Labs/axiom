@@ -95,23 +95,6 @@ void drawNavigationEntry(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
     canvas.restore();
 }
 }
-bool SkiaNavigationTiles::ValidRegions::add(foundation::WorldRect r){
-    // Merge only exact rectangular unions; never fill the unrendered inside
-    // corner of an L-shaped frontier. Revisit after a merge enables another.
-    for(std::size_t i=0;i<count;){
-        const auto a=areas[i];
-        if(a.left<=r.left&&a.top<=r.top&&a.right>=r.right&&a.bottom>=r.bottom)return true;
-        const bool contains=r.left<=a.left&&r.top<=a.top&&r.right>=a.right&&r.bottom>=a.bottom;
-        const bool horizontal=a.top==r.top&&a.bottom==r.bottom&&a.left<=r.right&&r.left<=a.right;
-        const bool vertical=a.left==r.left&&a.right==r.right&&a.top<=r.bottom&&r.top<=a.bottom;
-        if(contains||horizontal||vertical){
-            r={std::min(a.left,r.left),std::min(a.top,r.top),std::max(a.right,r.right),std::max(a.bottom,r.bottom)};
-            areas[i]=areas[--count];i=0;
-        }else ++i;
-    }
-    if(count==areas.size())return false;
-    areas[count++]=r;return true;
-}
 void SkiaNavigationTiles::cancelJob(std::unique_ptr<Job>& job){
     if(job){(void)scheduler_.cancel(job->id,1);++work.cancelledJobs;work.discardedKnotSteps+=job->steps;}
     job.reset();
@@ -190,8 +173,10 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
     // world bounds; the normal disjoint partition still picks sharper pixels.
     auto* source=retained;
     for(unsigned i=0;source&&i<2;++i,source=source->fallback)
-        if(source->draw&&source->density>0&&source->bounds.isFiniteAndOrdered())
-            candidates.push_back({{},source->bounds,source->density,source});
+        if(source->draw&&source->density>0&&source->bounds.isFiniteAndOrdered()){
+            if(source->regions.empty())candidates.push_back({{},source->bounds,source->density,source});
+            else for(const auto& r:source->regions)if(intersects(r,visible))candidates.push_back({{},r,source->density,source});
+        }
     std::stable_sort(candidates.begin(),candidates.end(),[](const auto& a,const auto& b){
         return a.density!=b.density?a.density>b.density:a.retained&&!b.retained;});
     std::vector<foundation::WorldRect> holes{visible};patches.clear();
@@ -264,7 +249,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(std::uint64_t(elapsed)>options.navigationMicroseconds*1000)++work.overBudget;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             std::fprintf(stderr,"AXIOM_NAVIGATION_TIMING {\"version\":5,\"start_ns\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"scale\":%.6f,\"level\":%d,\"elapsed_ns\":%llu,\"query_ns\":%llu,\"initialization_ns\":%llu,\"queries\":%llu,\"initialized\":%llu,\"knots\":%llu,\"cancelled\":%llu,\"discarded_knots\":%llu,\"throttled\":%llu,\"prewarm\":%llu,\"built\":%llu,\"fallback\":%llu,\"prefix_knots\":%llu,\"overlay_ns\":%llu,"
-                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"alpha_masks\":%llu,\"region_compactions\":%llu,\"reclaim_skips_total\":%llu,\"tile_evictions\":%llu,\"partition_ns\":%llu,\"contour_ns\":%llu,\"material_ns\":%llu,\"other_draw_ns\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu,\"navigation_staging_bytes\":%llu,\"navigation_pending_release_bytes\":%llu}\n",
+                "\"prepared_builds\":%llu,\"prepared_hits\":%llu,\"prepared_denied\":%llu,\"prepared_bytes\":%llu,\"contour_tested\":%llu,\"contour_drawn\":%llu,\"vector_prepared\":%llu,\"gpu_contours\":%llu,\"coarse_masks\":%llu,\"alpha_masks\":%llu,\"region_compactions\":%llu,\"reclaim_skips_total\":%llu,\"tile_evictions\":%llu,\"partition_ns\":%llu,\"contour_ns\":%llu,\"material_ns\":%llu,\"other_draw_ns\":%llu,\"presented\":%s,\"coverage\":%s,\"maximum_upscale\":%.6f,\"low_resolution_fraction\":%.6f,\"retained_fraction\":%.6f,\"suspended\":%llu,\"resumed\":%llu,\"chunk_candidates\":%llu,\"index_nodes\":%llu,\"index_fallbacks\":%llu,\"source_copy_bytes\":%llu,\"source_aliases\":%llu,\"source_queries_observed\":%llu,\"source_bytes\":%llu,\"source_hits\":%llu,\"budget_available\":%s,\"budget_used_bytes\":%llu,\"budget_recorded_bytes\":%llu,\"navigation_tile_bytes\":%llu,\"navigation_staging_bytes\":%llu,\"navigation_pending_release_bytes\":%llu,\"regional_plane_queries_total\":%llu,\"regional_plane_proofs_total\":%llu,\"regional_plane_rejects_total\":%llu,\"retained_valid_regions\":%zu,\"regional_tile_proofs\":%llu,\"regional_plane_body_rejects_total\":%llu,\"regional_plane_admission_rejects_total\":%llu}\n",
                 static_cast<unsigned long long>(std::chrono::duration_cast<std::chrono::nanoseconds>(started.time_since_epoch()).count()),
                 static_cast<unsigned long long>(frame.sceneReadToken.value()),static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                 double(camera.scale),work.selectedLevel,static_cast<unsigned long long>(elapsed),
@@ -306,7 +291,11 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(budget?budget->used(resources::ResourceClass::kRecorded):0),
                 static_cast<unsigned long long>(budget?budget->used(resources::ResourceClass::kNavigationTile):0),
                 static_cast<unsigned long long>(budget?budget->snapshot(resources::ResourceClass::kNavigationTile).staging:0),
-                static_cast<unsigned long long>(budget?budget->snapshot(resources::ResourceClass::kNavigationTile).pendingRelease:0));
+                static_cast<unsigned long long>(budget?budget->snapshot(resources::ResourceClass::kNavigationTile).pendingRelease:0),
+                static_cast<unsigned long long>(work.regionalPlaneQueries),static_cast<unsigned long long>(work.regionalPlaneProofs),
+                static_cast<unsigned long long>(work.regionalPlaneRejects),work.retainedValidRegions,
+                static_cast<unsigned long long>(work.regionalTileProofs-before.regionalTileProofs),
+                static_cast<unsigned long long>(work.regionalPlaneBodyRejects),static_cast<unsigned long long>(work.regionalPlaneAdmissionRejects));
 #endif
         }
     } timing{work,workBefore,started,frame,camera,options,geometry_,budget};
@@ -443,6 +432,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         ++queries;++work.queries;const auto start=std::chrono::steady_clock::now();
         std::vector<ReferenceTraversalEntry> sources;NavigationSourceDiagnostics diagnostics;
         const bool ok=query(expanded(grid_.bounds(key),std::ldexp(double(gutter),-key.scale)),sources,diagnostics);
+        if(diagnostics.sceneStamped&&(diagnostics.semanticGeneration!=frame.sceneGeneration.value()||diagnostics.sceneRevision!=frame.sceneReadToken.value()))return false;
         work.chunkCandidates+=diagnostics.chunkCandidates;work.indexNodes+=diagnostics.indexNodes;work.indexFallbacks+=diagnostics.indexFallbacks;
         work.payloadCopyBytes+=diagnostics.payloadCopyBytes;work.payloadAliases+=diagnostics.payloadAliases;work.observedSourceQueries+=diagnostics.observed;
         work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
@@ -477,15 +467,28 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         }
         if(!token){deferred=true;return false;}
         if(sources_.size()>=options.maxEntries)sources_.erase(sources_.begin());
-        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),std::move(geometry),resources::ResourceLease(budget,*token),std::move(sourceLeases),bytes});
+        auto source=std::make_shared<const Sources>(Sources{scene,std::move(sources),std::move(geometry),resources::ResourceLease(budget,*token),std::move(sourceLeases),bytes,diagnostics.sceneStamped});
         sources_.insert_or_assign(key,source);desired.emplace(key,std::move(source));return true;
     };
     // Revalidate only possible visible fallback cells, at the same query budget.
     for(auto it=tiles_.begin();it!=tiles_.end();){
         if(it->second.checkedScene==scene||!intersects(grid_.bounds(it->first),visible)){++it;continue;}
         if(!load(it->first)){if(deferred)break;return BackendSubmissionResult::retry("world navigation revalidation failed");}
-        if(it->second.sources->entries!=desired.at(it->first)->entries){it=tiles_.erase(it);dirty_=true;}
-        else{it->second.checkedScene=scene;++it;}
+        auto& tile=it->second;const auto& fresh=desired.at(it->first);
+        auto validity=tile.valid;
+        const auto difference=maskPixelDifference(tile.sources->entries,fresh->entries);
+        bool qualified=difference.compatible;
+        if(qualified&&difference.damage){
+            // Localization needs an explicitly Scene-bound query. Legacy
+            // queries retain their old exact-equality revalidation only.
+            // The load above validates binding when it is present; fresh
+            // Sources carries that evidence for this comparison.
+            const auto damage=maskSamplingDamage(*difference.damage,std::ldexp(1.,it->first.scale),grid_.bounds(it->first));
+            qualified=fresh->stamped&&damage&&validity.subtract(*damage);
+        }
+        if(!qualified||!validity.count){it=tiles_.erase(it);dirty_=true;}
+        else{if(difference.damage){++work.regionalTileProofs;dirty_=true;}
+            tile.valid=validity;tile.sources=fresh;tile.checkedScene=scene;++it;}
     }
     const bool gpuBlocked=context&&gpuRetirements_->preparationCount()>=2;
     if(gpuBlocked)++work.gpuThrottles;

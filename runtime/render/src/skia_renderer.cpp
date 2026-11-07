@@ -8,6 +8,7 @@
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "skia_render_cache_internal.hpp"
 #include "skia_navigation_tiles.hpp"
+#include "navigation_source_snapshot.hpp"
 #include "skia_gpu_lifetime.hpp"
 
 #include "include/core/SkCanvas.h"
@@ -74,15 +75,21 @@ struct SkiaRenderer::NavigationCache final {
     resources::ResourceLease lease;
     std::shared_ptr<const internal::PreparedFrameImage> prepared;
     SkColor background=SK_ColorWHITE;
+    std::shared_ptr<const internal::NavigationSourceSnapshot> sources;
+    internal::NavigationRegions valid;
+    std::uint64_t proofSemantic=0,proofScene=0,resource=0;
+    bool isolate=false;
     std::optional<CanonicalViewportTransform> feedbackCamera;
     bool backgroundProofRejected=false;
-    bool matches(const void* target,const FrameState& current)const noexcept {
+    bool sameTarget(const void* target,const FrameState& current)const noexcept {
         return image&&frame&&provider==target&&frame->viewId==current.viewId&&
-            frame->sceneGeneration==current.sceneGeneration&&frame->sceneReadToken==current.sceneReadToken&&
             frame->metrics==current.metrics&&frame->metricsGeneration==current.metricsGeneration&&
             frame->surfaceGeneration==current.surfaceGeneration&&frame->viewportClip==current.viewportClip&&
             transform.a>0&&std::isfinite(transform.a)&&transform.d==transform.a&&transform.b==0&&transform.c==0&&
             std::isfinite(transform.tx)&&std::isfinite(transform.ty);
+    }
+    bool matches(const void* target,const FrameState& current)const noexcept {
+        return sameTarget(target,current)&&valid.count&&proofSemantic==current.sceneGeneration.value()&&proofScene==current.sceneReadToken.value();
     }
     foundation::WorldRect worldBounds()const noexcept {
         return {float(-transform.tx/transform.a),float(-transform.ty/transform.a),
@@ -398,12 +405,18 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                     candidate->transform=plan.referenceDrawList.worldToView;
                     const auto& color=plan.background.color;
                     candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
+                    candidate->valid.reset(candidate->worldBounds());
+                    candidate->proofSemantic=plan.frame.sceneGeneration.value();candidate->proofScene=plan.frame.sceneReadToken.value();
+                    candidate->resource=resourceEpoch_;candidate->isolate=plan.isolateEraseMasks;
+                    if(SkColorGetA(candidate->background)==255&&plan.referenceDrawList.viewportClip==foundation::WorldRect{0,0,metrics.logicalWidth,metrics.logicalHeight})
+                        candidate->sources=internal::NavigationSourceSnapshot::capture(plan.referenceDrawList.entries,renderCacheOptions_,resourceBudget_,sourceRetention_);
                     // Keep one previous qualified plane for a resumed gesture.
                     // A narrow sharp zoom-in must not erase all wider coverage.
                     // These are existing admitted images, never another copy or pool.
                     std::shared_ptr<NavigationCache> fallback;
                     const auto consider=[&](const std::shared_ptr<NavigationCache>& old){
-                        if(old&&old->matches(&provider,plan.frame)&&old->transform!=candidate->transform&&
+                        if(old&&old->valid.count&&old->sameTarget(&provider,plan.frame)&&old->resource==resourceEpoch_&&old->background==candidate->background&&old->isolate==candidate->isolate&&
+                           (old->matches(&provider,plan.frame)||old->sources)&&old->transform!=candidate->transform&&
                            old->worldBounds().intersects(candidate->worldBounds())&&
                            (!fallback||old->worldArea()>fallback->worldArea()))fallback=old;
                     };
@@ -508,14 +521,59 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         {camera.scale,0,0,camera.scale,camera.translationX,camera.translationY},&provider,resourceEpoch_);
     auto options=renderCacheOptions_;
     internal::RetainedNavigationSource retained,fallback;
+    const auto proofStart=std::chrono::steady_clock::now();
+    const auto revalidate=[&](const std::shared_ptr<NavigationCache>& cache){
+        if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_)return;
+        if(cache->matches(&provider,current))return;
+        // A completed current plane supplies the current background/isolation
+        // policy. Without it, a source-only comparison cannot certify pixels.
+        const auto basis=navigationCache_;
+        if(!basis||!basis->matches(&provider,current)||basis->background!=cache->background||basis->isolate!=cache->isolate)return;
+        if(!cache->sources||cache->proofSemantic>current.sceneGeneration.value()||cache->proofScene>current.sceneReadToken.value()||
+           !query||!options.navigationMaxQueries||
+           std::chrono::steady_clock::now()-proofStart>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return;
+        --options.navigationMaxQueries;++navigationTiles_->work.queries;++navigationTiles_->work.regionalPlaneQueries;
+        try{
+        std::vector<ReferenceTraversalEntry> entries;NavigationSourceDiagnostics diagnostics;
+        const auto start=std::chrono::steady_clock::now();
+        const bool queried=query(cache->worldBounds(),entries,diagnostics);
+        navigationTiles_->work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
+        const auto reject=[&]{++navigationTiles_->work.regionalPlaneRejects;};
+        if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){reject();return;}
+        ReferenceDrawList validation{.frame=current,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip=current.viewportClip.isFiniteAndOrdered()?current.viewportClip:foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight};
+        validation.entries=entries;
+        if(internal::validateReferencePlan(FramePlan{current,std::move(validation)}).code!=BackendSubmissionCode::kAccepted){reject();return;}
+        const auto difference=internal::maskPixelDifference(cache->sources->entries,entries);
+        if(!difference.compatible){++navigationTiles_->work.regionalPlaneBodyRejects;reject();return;}
+        auto regions=cache->valid;
+        if(difference.damage){
+            const auto density=cache->transform.a*std::min(current.metrics.physicalWidth/current.metrics.logicalWidth,current.metrics.physicalHeight/current.metrics.logicalHeight);
+            const auto damage=internal::maskSamplingDamage(*difference.damage,density,cache->worldBounds());
+            if(!damage||!regions.subtract(*damage)){reject();return;}
+        }
+        auto sources=internal::NavigationSourceSnapshot::capture(entries,renderCacheOptions_,resourceBudget_,sourceRetention_);
+        if(!sources){++navigationTiles_->work.regionalPlaneAdmissionRejects;reject();return;}
+        cache->sources=std::move(sources);cache->valid=regions;
+        // Captured FrameState stays immutable. Only this derived region proof
+        // advances; it never enters canonical presentation/receipt tracking.
+        cache->proofSemantic=current.sceneGeneration.value();cache->proofScene=current.sceneReadToken.value();
+        cache->backgroundProofRejected=false;++navigationTiles_->work.regionalPlaneProofs;
+        }catch(const std::bad_alloc&){++navigationTiles_->work.regionalPlaneRejects;}
+    };
+    revalidate(navigationCache_);revalidate(navigationFallback_);
+    const auto proofUs=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-proofStart).count();
+    options.navigationMicroseconds=proofUs>=std::int64_t(options.navigationMicroseconds)?0:options.navigationMicroseconds-proofUs;
+    navigationTiles_->work.retainedValidRegions=0;
     const auto bindRetained=[&](const std::shared_ptr<NavigationCache>& cache,internal::RetainedNavigationSource& retained){
       if(cache&&cache->matches(&provider,current)){
         const auto& old=cache->transform;
         retained.bounds={float(-old.tx/old.a),float(-old.ty/old.a),
             float((cache->frame->metrics.logicalWidth-old.tx)/old.a),float((cache->frame->metrics.logicalHeight-old.ty)/old.a)};
+        retained.regions={cache->valid.areas.data(),cache->valid.count};
+        navigationTiles_->work.retainedValidRegions+=cache->valid.count;
         retained.density=old.a*std::min(current.metrics.physicalWidth/current.metrics.logicalWidth,
             current.metrics.physicalHeight/current.metrics.logicalHeight);
-        retained.extend=[&,cache]{
+        if(cache->valid.full(cache->worldBounds()))retained.extend=[&,cache]{
             const auto& old=cache->transform;
         const double ratio=camera.scale/old.a;
         const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;

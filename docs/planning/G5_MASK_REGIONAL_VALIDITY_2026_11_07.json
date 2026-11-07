@@ -1,0 +1,70 @@
+{
+  "task": "G5-MASK-REGIONAL-CACHE-VALIDITY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "eb237df6af41e30525e02eb086cbdd53e8a20473",
+    "relation": "ancestor"
+  },
+  "authorization": "User: \u5f00\u59cb\u4e0b\u4e00\u6b65\u5427, accepting the previous local-invalidation review as the next bounded implementation step.",
+  "primary_owner": "aegis-implementation; architecture reconciliation within existing derived Render owners",
+  "authority_basis": [
+    "AGENTS.md",
+    "docs/notion/manifest.yaml",
+    "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+    "docs/planning/sdk/js-v1-contract.md",
+    "docs/planning/sdk/windows-consumer-v1.md",
+    "docs/planning/sdk/shell-axis-preview-contract.md"
+  ],
+  "review_decision": {
+    "canonical_owner": "OperationEngine and RuntimeScene unchanged",
+    "derived_owner": "Existing SkiaRenderer retained planes and SkiaNavigationTiles source-query/revalidation seams",
+    "public_api_impact": "none; private source-query diagnostics gain explicit Scene binding",
+    "proof": "Compare complete ordered validated immutable source bodies/effects except permanent erase masks. Only v4 compact/vector-outline changed masks qualify; unchanged other entries must compare exactly. Ignore chunk locality hints only for full-geometry v4/outline consumers. Compute conservative affine control-hull bounds for changed/added/removed masks; subtract with source-AA/filter padding from bounded valid regions. Keep captured Frame identity immutable and store current Scene proof separately.",
+    "resource_policy": "Retained source metadata/payload leases use existing SourceRetentionPool and the same critical kRecorded admission as navigation tile source proofs, bounded by existing per-entry/maxBytes and shared96MiB hard cap. This supports already admitted pixels; no new image pool. Optional proof denial fails closed. Fixed8region metadata; overflow invalidates. Existing32MiB optional/96MiB shared constants, CPU2ms and GPU quotas unchanged.",
+    "fail_closed": [
+      "content/order/transform/opacity/dependency/background changes",
+      "failed/foreign/missing Scene-bound query",
+      "invalid/unbounded geometry or proof work",
+      "provider/resource/metrics/surface mismatch",
+      "region/admission exhaustion"
+    ],
+    "admission_evidence": "Exploratory Chrome run g5-regional-reasons: compatible source bodies but155 source-witness admissions denied above32MiB global soft usage. Native RED g5-regional-admission-red proves soft-pressure proof loss. Critical recorded admission matches existing tile source witness policy; hard-cap denial/release is separately tested."
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required": [
+      "Native RED: two mask commits invalidate wide retained feedback; first post-erase navigation cannot present without regeneration",
+      "Exact mask-delta/region tests: addition/removal/replacement, affine control bounds, finite/outward rounding, changes beyond masks, region overflow",
+      "Shared renderer integration: immediate qualified outside-mask reuse, mask pixels correct over independent backdrop, Undo/Redo-equivalent states, no stale/source/receipt promotion",
+      "Tile revalidation preserves unaffected valid regions and regenerates damage",
+      "Same7200sample/15duplicate/two25point erasure/2x quiet cold-hot public-rootSDK corpus; actual content gaps, CPU/GPU work, quiescence and unchanged DTO/receipt checks",
+      "Independent geometric-AA/shared GPU probes and ordinary final GPU-readback parity; full native failure-name comparison, G5 Node and119boundary checks",
+      "Matching clean-source ordinary/diagnostic WASM packages; new isolated Demo; durable source/evidence commit and push; old demos untouched"
+    ],
+    "forbidden": [
+      "canonical mutation or Scene semantic authority changes",
+      "relabelling captured old Frame as current canonical frame",
+      "public SDK/ABI/version/dependency/schema lock changes",
+      "another Brush/mask evaluator or renderer",
+      "budget expansion or partial-source present",
+      "editing historical evidence/P34 verdicts"
+    ],
+    "blocking_evidence": "Native correctness and actual Chrome/Ganesh shared Runtime evidence; no private SDK escape",
+    "optional_evidence": [
+      "physical trackpad acceptance",
+      "non-Web real platforms",
+      "hosted Gate review"
+    ],
+    "terminal_success": "Cold/hot gaps below300ms with correctness/receipt closure and durable materialization, implementation READY_FOR_CONTROL_REVIEW only",
+    "terminal_blockers": [
+      "authority conflict",
+      "new correctness failure",
+      "locked SDK unavailable",
+      "valid regional proof but frozen performance endpoint still unmet"
+    ]
+  }
+}

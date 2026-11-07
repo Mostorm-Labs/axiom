@@ -4,6 +4,8 @@
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "../src/skia_navigation_tiles.hpp"
+#include "../src/navigation_pixel_validity.hpp"
+#include "../src/navigation_source_snapshot.hpp"
 #include "../src/skia_render_cache_internal.hpp"
 #include "../src/compact_raster_internal.hpp"
 #include "../src/compact_contour_skia_path.hpp"
@@ -1280,6 +1282,139 @@ void checkErasedInkOverShapeNavigation() {
 }
 
 namespace {
+void checkRegionalWitnessAdmission() {
+    const std::vector entries{stroke(99820)};RenderCacheOptions options;
+    auto pool=std::make_shared<internal::SourceRetentionPool>();
+    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1024,128*1024});
+    auto pressure=budget->reserve(resources::ResourceClass::kCanonicalFrame,1024,true);require(bool(pressure),"regional witness pressure setup");
+    resources::ResourceLease lease(budget,*pressure);
+    {const auto witness=internal::NavigationSourceSnapshot::capture(entries,options,budget,pool);
+        require(bool(witness),"admitted navigation pixels lost proof metadata solely at soft pressure");
+        require(budget->used()>1024&&budget->used()<=128*1024,"regional witness bypassed hard accounting");}
+    require(budget->used()==1024,"regional witness leaked admitted metadata/payload");
+    auto full=budget->reserve(resources::ResourceClass::kCanonicalFrame,127*1024,true);require(bool(full),"regional hard-pressure setup");
+    resources::ResourceLease hard(budget,*full);
+    require(!internal::NavigationSourceSnapshot::capture(entries,options,budget,pool),"regional witness bypassed hard denial");
+}
+void checkRegionalMaskProof() {
+    auto e=stroke(99800);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;e.record.content=c;e.command=CompactStrokeReferenceCommand{c};
+    const std::vector old{e};semantic::SweptCircleMask m;m.segments.push_back({{{80,50},4},{{100,50},8},{85,90},{95,10}});
+    e.record.eraseMasks={{ObjectId::fromUint64(99801),m}};std::vector changed{e};
+    const auto delta=internal::maskPixelDifference(old,changed);require(delta.compatible&&delta.damage,"regional addition proof");
+    require(delta.damage->left<72&&delta.damage->right>108&&delta.damage->top<2&&delta.damage->bottom>98,"regional control hull/radius not conservative");
+    require(internal::maskPixelDifference(changed,old).damage==delta.damage,"regional removal differs from addition bounds");
+    auto replace=changed;std::get<semantic::SweptCircleMask>(replace[0].record.eraseMasks[0].geometry).segments[0].p0.radius=16;
+    require(internal::maskPixelDifference(changed,replace).compatible,"regional replacement proof");
+    for(unsigned kind=0;kind<5;++kind){auto bad=changed;
+        if(kind==0)bad[0].record.transform.tx+=1;
+        if(kind==1)bad[0].presentationOpacity=.5;
+        if(kind==2)bad[0].record.objectId=ObjectId::fromUint64(99802);
+        if(kind==3)bad[0].record.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{1,0,0,1}}}});
+        if(kind==4){auto content=c;content.stroke.knots[0].x+=1;bad[0].command=CompactStrokeReferenceCommand{content};}
+        require(!internal::maskPixelDifference(old,bad).compatible,"regional proof accepted a non-mask change");
+    }
+    auto invalid=changed;std::get<semantic::SweptCircleMask>(invalid[0].record.eraseMasks[0].geometry).segments[0].control1.x=std::numeric_limits<double>::quiet_NaN();
+    require(!internal::maskPixelDifference(old,invalid).compatible,"regional nonfinite proof");
+    auto affineOld=old,affineNew=changed;for(auto* v:{&affineOld,&affineNew})(*v)[0].record.transform={-2,.5,.25,1,300,-20};
+    require(internal::maskPixelDifference(affineOld,affineNew).compatible,"regional affine proof rejected");
+    internal::NavigationRegions r;r.reset({0,0,100,100});require(r.subtract({20,20,40,40})&&r.count==4,"regional rectangle subtraction");
+    for(std::size_t i=0;i<r.count;++i)require(!r.areas[i].intersects({21,21,39,39}),"regional subtraction filled a hole");
+    for(unsigned i=0;i<10&&r.count;++i)(void)r.subtract({float(45+i*3),10,float(46+i*3),90});
+    require(r.count==0,"regional metadata overflow retained unknown pixels");
+    require(!internal::maskSamplingDamage({0,0,1,1},0),"regional zero-density proof");
+    auto filled=old;semantic::FilledPathMask path;path.path.commands={semantic::MoveTo{{10,20}},semantic::QuadTo{{-30,70},{40,25}},semantic::CubicTo{{80,-50},{90,120},{15,30}},semantic::ClosePath{}};
+    filled[0].record.eraseMasks={{ObjectId::fromUint64(99803),path}};
+    const auto bounds=internal::maskPixelDifference(old,filled);require(bounds.compatible&&bounds.damage&&bounds.damage->left<-30&&bounds.damage->bottom>120,"regional filled control hull");
+    auto hugeOld=old,hugeNew=changed;for(auto* x:{&hugeOld,&hugeNew})(*x)[0].record.transform.tx=1e8;
+    const auto huge=internal::maskPixelDifference(hugeOld,hugeNew);require(huge.compatible&&huge.damage->left<1e8+70&&huge.damage->right>1e8+110,"regional outward rounding at large origin");
+    auto duplicate=changed;duplicate[0].record.eraseMasks.push_back(duplicate[0].record.eraseMasks[0]);
+    require(!internal::maskPixelDifference(old,duplicate).compatible,"regional duplicate mask ID proof");
+}
+void checkRegionalMaskFeedback(bool mixed=false) {
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"regional target");
+    auto e=stroke(99700);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.config.size=18;c.stroke.config.opacity=mixed?.55:1;c.stroke.knots={{10,64,32768},{246,64,32768}};
+    e.record.content=c;e.command=CompactStrokeReferenceCommand{c};
+    semantic::ObjectRecord backdrop;backdrop.id=ObjectId::fromUint64(99740);backdrop.kind=semantic::ObjectKind::kShape;backdrop.kind_version=1;
+    backdrop.content=semantic::ShapeContent{0,256,128};backdrop.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
+    const auto projected=projectRuntimeScene({&backdrop,1},semantic::SemanticGeneration{1});
+    const ReferenceTraversalEntry blue{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(backdrop.content)}};
+    const auto sources=[&]{return mixed?std::vector<ReferenceTraversalEntry>{blue,e}:std::vector<ReferenceTraversalEntry>{e};};
+    auto make=[&](unsigned scene,unsigned id,double zoom){
+        const auto a=plan(id,{e}).frame;const FrameState f{a.viewId,a.camera,a.worldViewport,a.metrics,semantic::SemanticGeneration{scene},SceneRevision{scene},a.surfaceGeneration,a.metricsGeneration,a.frameId,a.viewportClip};
+        auto list=ReferenceDrawList{f};list.viewportClip={0,0,256,128};list.entries=sources();
+        list.worldToView={zoom,0,0,zoom,zoom==1?0.:-128.,zoom==1?0.:-64.};return FramePlan{f,std::move(list),{},false,mixed};
+    };
+    SkiaRenderer renderer;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+    renderer.setRenderCacheOptions(options);
+    require(renderer.renderFrame(target,make(1,99701,1)).code==BackendSubmissionCode::kAccepted,"regional wide capture");
+    require(renderer.renderFrame(target,make(1,99702,2)).code==BackendSubmissionCode::kAccepted,"regional narrow capture");
+    auto mask=[](unsigned id,double x){semantic::SweptCircleMask m;m.segments.push_back({{{x,62},7},{{x,66},7},{x,63},{x,65}});return semantic::EraseMaskRecord{ObjectId::fromUint64(id),m};};
+    e.record.eraseMasks.push_back(mask(99710,120));
+    require(renderer.renderFrame(target,make(2,99703,2)).code==BackendSubmissionCode::kAccepted,"regional first erase");
+    e.record.eraseMasks.push_back(mask(99711,150));
+    require(renderer.renderFrame(target,make(3,99704,2)).code==BackendSubmissionCode::kAccepted,"regional second erase");
+    const auto canonical=renderer.submissionCount(),presents=target.presentCount();
+    unsigned activeScene=3;
+    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out,NavigationSourceDiagnostics& d){out=sources();d.sceneStamped=true;d.semanticGeneration=activeScene;d.sceneRevision=activeScene;return true;};
+    const auto current=make(3,99705,2);
+    require(navigate(renderer,target,{1,0,0},current.frame,query,false).code==BackendSubmissionCode::kAccepted,"regional navigation request");
+    require(target.presentCount()==presents+1&&renderer.navigationWork().presented,
+        "local erasures discarded unchanged wide-view pixels before first navigation");
+    const auto image=pixels(target);auto rgb=[&](unsigned x,unsigned y){return image[(y*256+x)*4+(mixed?2:0)];};
+    require(rgb(120,64)>250&&rgb(150,64)>250,"regional reuse leaked pre-erase ink");
+    require(rgb(40,64)<(mixed?240:80),"regional reuse lost surviving ink");
+    require(renderer.submissionCount()==canonical,"regional feedback manufactured canonical receipt");
+    // Compensating remove/re-add operations keep current Scene identity. The
+    // old plane's holes may stay conservative; the new canonical plane owns
+    // restored/erased pixels, never the original image's obsolete mask state.
+    for(unsigned scene=4;scene<=5;++scene){
+        if(scene==4)e.record.eraseMasks.pop_back();else e.record.eraseMasks.push_back(mask(99711,150));
+        activeScene=scene;const auto next=make(scene,99706+scene,2);
+        require(renderer.renderFrame(target,next).code==BackendSubmissionCode::kAccepted,"regional undo/redo canonical");
+        const auto count=renderer.submissionCount(),before=target.presentCount();
+        require(navigate(renderer,target,{1,0,0},next.frame,query,false).code==BackendSubmissionCode::kAccepted&&target.presentCount()==before+1,"regional undo/redo feedback stalled");
+        const auto image=pixels(target);require((image[(64*256+150)*4+(mixed?2:0)]>250)==(scene==5),"regional undo/redo used obsolete pixels");
+        require(renderer.submissionCount()==count,"regional undo/redo feedback created receipt");
+    }
+    require(renderer.navigationWork().regionalPlaneProofs>0,"regional navigation did not exercise its proof");
+    // Missing or foreign query identities cannot qualify the original plane.
+    e.record.eraseMasks.push_back(mask(99712,170));activeScene=6;const auto sixth=make(6,99730,2);
+    require(renderer.renderFrame(target,sixth).code==BackendSubmissionCode::kAccepted,"regional negative canonical");
+    for(bool foreign:{false,true}){
+        NavigationSourceQuery bad=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out,NavigationSourceDiagnostics& d){out=sources();d.sceneStamped=foreign;d.semanticGeneration=5;d.sceneRevision=5;return true;};
+        const auto before=target.presentCount();(void)navigate(renderer,target,{1,0,0},sixth.frame,bad,false);
+        require(target.presentCount()==before,"regional stale/unstamped query presented unproved pixels");
+    }
+    const auto before=target.presentCount();require(navigate(renderer,target,{1,0,0},sixth.frame,query,false).code==BackendSubmissionCode::kAccepted&&target.presentCount()==before+1,"regional recovery from failed proof");
+    const auto final=pixels(target);require(final[(64*256+170)*4+(mixed?2:0)]>250,"regional recovery leaked the third mask");
+}
+void checkRegionalMaskTiles() {
+    TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"regional tile target");
+    auto e=stroke(99760);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.config.size=18;c.stroke.config.opacity=1;c.stroke.knots={{10,64,32768},{246,64,32768}};
+    e.record.content=c;e.command=CompactStrokeReferenceCommand{c};
+    unsigned scene=1;NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out,NavigationSourceDiagnostics& d){out={e};d.sceneStamped=true;d.semanticGeneration=scene;d.sceneRevision=scene;return true;};
+    internal::SkiaNavigationTiles nav;auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    RenderCacheOptions options;options.navigationMicroseconds=1000000;
+    const auto tick=[&](CanonicalViewportTransform camera){
+#if defined(G5_TEST_WEBGL)
+        emscripten_sleep(1);
+#endif
+        const auto f=plan(scene,{e});require(nav.render(target,camera,f.frame,query,1,options,budget,false).code==BackendSubmissionCode::kAccepted,"regional tile render");
+    };
+    for(unsigned i=0;;++i){tick({1,0,0});if(!nav.work.pending)break;require(i<128,"regional tile setup stalled");}
+    const auto built=nav.work.tilesBuilt;
+    semantic::SweptCircleMask mask;mask.segments.push_back({{{120,62},7},{{120,66},7},{120,63},{120,65}});
+    e.record.eraseMasks={{ObjectId::fromUint64(99761),mask}};scene=2;options.navigationMaxSteps=1;
+    const auto before=target.presentCount();tick({4,0,-192});
+    require(nav.work.regionalTileProofs>0&&target.presentCount()==before+1&&nav.work.tilesBuilt==built,"local mask change discarded unaffected navigation tile pixels");
+    for(unsigned i=0;;++i){tick({1,0,0});if(!nav.work.pending)break;require(i<128,"regional damaged tile stalled");}
+    const auto image=pixels(target);require(image[(64*256+120)*4]>250&&image[(64*256+40)*4]<80,"regional tile revalidation leaked obsolete mask pixels");
+}
 void checkMaskedNavigationGpuCoverage() {
     TestSurface target;require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"masked GPU nav target");
     auto e=stroke(99620);auto c=std::get<CompactStrokeReferenceCommand>(e.command).content.get();
@@ -1742,6 +1877,7 @@ int main(int argc,char** argv) {
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}
+        if(argc==1||(argc>1&&std::string_view(argv[1])=="--regional-mask-only")){checkRegionalWitnessAdmission();checkRegionalMaskProof();checkRegionalMaskFeedback();checkRegionalMaskFeedback(true);checkRegionalMaskTiles();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-progress-only")){checkMaskedNavigationLevelProgress();checkMaskedNavigationGpuCoverage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--live-erase-only")){checkLiveEraseSourceReuse();if(argc>1)return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--masked-mixed-only"){checkErasedInkOverShapeNavigation();return finishNative(0);}

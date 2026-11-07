@@ -7,6 +7,7 @@
 #include "canvas/render/skia_text_resources.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "skia_prepared_geometry.hpp"
+#include "navigation_pixel_validity.hpp"
 #include "gpu_resource_retirement.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
@@ -24,6 +25,7 @@ namespace canvas::render::internal {
 // frame/provider stamp. Outside bounds requires a Runtime background proof.
 struct RetainedNavigationSource final {
     foundation::WorldRect bounds{};
+    std::span<const foundation::WorldRect> regions{};
     double density=0;
     std::function<bool()> extend;
     std::function<void(SkCanvas&,const foundation::WorldRect&)> draw;
@@ -42,14 +44,7 @@ class SkiaNavigationTiles final {
         ImageResourceResolver* images=nullptr,
         const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={});
  private:
-    // Fixed-size metadata: no unadmitted region growth on long diagonal pans.
-    struct ValidRegions {
-        std::array<foundation::WorldRect,8> areas{};
-        std::size_t count=0;
-        void reset(foundation::WorldRect r){areas[0]=r;count=1;}
-        bool full(foundation::WorldRect r)const{return count==1&&areas[0]==r;}
-        bool add(foundation::WorldRect);
-    };
+    using ValidRegions=NavigationRegions;
     struct Sources {
         std::uint64_t scene=0;
         std::vector<ReferenceTraversalEntry> entries;
@@ -57,6 +52,7 @@ class SkiaNavigationTiles final {
         resources::ResourceLease lease;
         SourceRetentions sourceLeases;
         std::size_t admittedBytes=0;
+        bool stamped=false;
     };
     struct Tile {
         std::shared_ptr<const Sources> sources;

@@ -9,6 +9,10 @@ namespace canvas::render {
 struct NavigationSourceDiagnostics final {
     std::uint64_t chunkCandidates=0,indexNodes=0,indexFallbacks=0,payloadCopyBytes=0,payloadAliases=0;
     bool observed=false;
+    // Authoritative Runtime query binding. Legacy unstamped internal queries
+    // remain usable for same-Scene regeneration, never cross-Scene pixel proof.
+    bool sceneStamped=false;
+    std::uint64_t semanticGeneration=0,sceneRevision=0;
 };
 class NavigationSourceQuery final {
     std::function<bool(const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&,NavigationSourceDiagnostics&)> query_;
@@ -50,5 +54,9 @@ struct NavigationWork final {
     std::uint64_t suspendedRefinements=0,resumedRefinements=0;
     std::uint64_t chunkCandidates=0,indexNodes=0,indexFallbacks=0,payloadCopyBytes=0,payloadAliases=0,observedSourceQueries=0;
     std::uint64_t sourcePayloadHits=0;std::size_t sourcePayloadBytes=0;
+    std::uint64_t regionalPlaneQueries=0,regionalPlaneProofs=0,regionalPlaneRejects=0;
+    std::uint64_t regionalTileProofs=0;
+    std::uint64_t regionalPlaneBodyRejects=0,regionalPlaneAdmissionRejects=0;
+    std::size_t retainedValidRegions=0;
 };
 }

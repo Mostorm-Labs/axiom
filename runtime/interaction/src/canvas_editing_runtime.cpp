@@ -4280,6 +4280,9 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       const auto& work=sources.value().diagnostics;
       diagnostics={work.chunkCandidatesExamined,work.chunkIndexNodesVisited,work.chunkIndexFallbacks,
           work.payloadCopyBytes,work.payloadAliases,true};
+      diagnostics.sceneStamped=true;
+      diagnostics.semanticGeneration=chunkFrame.sceneGeneration.value();
+      diagnostics.sceneRevision=chunkFrame.sceneReadToken.value();
       entries=std::move(sources.value().entries);return true;
   };
   // Prove exposed strips using the authoritative Scene object query, not
