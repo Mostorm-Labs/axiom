@@ -1,0 +1,90 @@
+{
+  "task": "G5-V4-GPU-COVERAGE-AND-ERASE-DIAGNOSIS",
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": "71a6af1a2b2780f3c377704466947df32e7c9325",
+  "authorization": "User accepts AA edge pixel differences; preserve contour,width,pressure,alpha,self-intersection,erase and seams. Investigate second erase INPUT_REJECTED separately; no assumed causal link to CPU coverage.",
+  "authority_basis": {
+    "repository_instructions": "AGENTS.md",
+    "authority_locator": "docs/notion/manifest.yaml",
+    "consumer_contracts": [
+      "docs/planning/sdk/js-v1-contract.md",
+      "docs/planning/sdk/windows-consumer-v1.md",
+      "docs/planning/sdk/shell-axis-preview-contract.md"
+    ],
+    "preserve": "Canonical state/history/Brush/IDs/eraser semantics remain Runtime owned;only shared private Render derived work changes."
+  },
+  "diagnosis": "v4 cooperative coverage explicitly requests CPU A8 even on Ganesh; existing GPU counters count material/present separately. INPUT_REJECTED is generic across owner admission/exact-hit/semantic/history and is not yet reproduced by the sequential fixture.",
+  "design": {
+    "owner": "Existing CompactStrokeRasterJob / SkiaRenderCache; existing CanvasEditingRuntime and input owners for diagnostics only",
+    "change": "Use compatible Skia GPU N32 targets for v4 coverage, same pinned contour compiler/checkpoints and max coverage; no CPU edge correction. Preserve CPU fallback for raster/denied targets and report actual execution. Instrument existing rejection seams only in compile-time diagnostics; fix only if reproduced by an independent RED oracle.",
+    "public_api_impact": "none",
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false,
+    "pixel_policy": "AA boundary differences allowed by user; support/interior alpha/pressure/self-intersection/erase/seams must remain correct. CPU canonical document/export snapshots unchanged.",
+    "pixel_oracle": "Pinned contour primitive and mask boundaries transformed to device space; only their 1px geometric AA band may differ. Outside band tolerance2; transparent premultiplied color and maximum opacity strict, self-intersections cannot apply material twice; independent CPU target and offset-grid seam oracle."
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "required": [
+      "RED actual Ganesh oracle must detect absence of v4 GPU coverage; positive eligible GPU tiles and zero CPU coverage tiles/edge correction, explicit raster fallback test",
+      "Geometry oracle: independent CPU silhouette with bounded AA-neighborhood differences; interior alpha, self-crossing, caps, pressure, affine transforms, erase masks and tile seams; document snapshots/Undo/Redo unchanged",
+      "20s-like 4800sample v4 stroke,15duplicates,2erasures followed immediately by wheel input; DPR2 required,DPR1/4 corroborative; actual GPU/CPU counters and inclusive stage timings",
+      "Diagnose INPUT_REJECTED at existing ingress/tool/exact-hit/publication/apply/history boundaries; reproduce dense repeated/loopy erases. If not reproduced, retain diagnostic Demo and explicitly mark user rejection unresolved instead of claiming fixed",
+      "Existing renderer CPU parity/native tests,rootSDK collector/contact recovery,G5 Node,boundary and full native failure-name comparison",
+      "Matching clean diagnostic and ordinary installed Web SDK packages,artifact/source SHA256,new4263 Demo,preserve4260/4261/4262",
+      "Durable new code/tests/evidence commit and push; return READY_FOR_CONTROL_REVIEW only if all required obligations satisfied"
+    ],
+    "forbidden": [
+      "SDK API/ABI/version changes",
+      "semantic/schema/codec/authority/descriptor/lock changes",
+      "larger memory/step/time/GPU budgets",
+      "second renderer or state/cache owner",
+      "rewriting old evidence",
+      "mutating user pages/documents",
+      "Changing pinned Brush geometry or semantic eraser/no-op/history policy",
+      "Inferring GPU coverage from GLES output alone",
+      "Claiming user INPUT_REJECTED fixed without reproduction"
+    ],
+    "scope": [
+      "runtime/render existing compact coverage/cache owners and tests",
+      "runtime/foundation private compile-time timing counters",
+      "runtime/interaction existing eraser/input rejection diagnostics; production behavior only with reproduced RED test",
+      "runtime/composition and sdk/common existing input rejection diagnostics only",
+      "verification/runners/g5 and new evidence bundle",
+      "docs/planning task package",
+      "sdk/web private probe and runtime/render CMake test registration only; no consumer export/install changes"
+    ],
+    "bounds": {
+      "optionalMiB": 32,
+      "sharedMiB": 96,
+      "browserFamilyRssMiB": 3072,
+      "nativeRssMiB": 2048,
+      "workerSeconds": 180
+    },
+    "hosted": {
+      "required": [],
+      "optional": [
+        "physicalMacInput",
+        "otherplatforms",
+        "formalGate"
+      ]
+    },
+    "terminal_success": "Verified actual v4 GPU coverage correctness and paired rootSDK evidence,required regressions,matching Demo and durable branch; input rejection either independently fixed or explicitly unresolved terminal evidence blocker",
+    "terminal_blockers": [
+      "authority/repository divergence",
+      "missing locked SDK",
+      "GPU geometry/interior/erase/seam correctness failure",
+      "new regression",
+      "user rejection not reproducible in bounded corpus: deliver diagnostics and report BLOCKED_REPRODUCTION,not fixed"
+    ],
+    "return_policy": "Continue authorized closure;do not declare official G5/P34 PASS"
+  },
+  "basis_sha256": {
+    "AGENTS.md": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+    "docs/notion/manifest.yaml": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+    "docs/planning/sdk/js-v1-contract.md": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+    "docs/planning/sdk/windows-consumer-v1.md": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+    "docs/planning/sdk/shell-axis-preview-contract.md": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+  }
+}

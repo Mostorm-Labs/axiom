@@ -37,6 +37,11 @@
 #include <climits>
 #define AXIOM_ANDROID_DIAG(...) std::fprintf(stderr, "[axiom] " __VA_ARGS__), std::fputc('\n', stderr)
 
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+#define AXIOM_ERASE_REJECT(stage) std::fprintf(stderr,"AXIOM_ERASE_REJECT stage=%s session=%llu\n",stage,static_cast<unsigned long long>(pointerId))
+#else
+#define AXIOM_ERASE_REJECT(stage) ((void)0)
+#endif
 namespace canvas::interaction {
 namespace {
 class PublicationReservation final {
@@ -3074,8 +3079,8 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
   if(objectEraser)finishObjectEraseFeedback(pointerId,false);
   const auto it = eraserTraces_.find(pointerId);
-  if (it == eraserTraces_.end()) return false;
-  if (!canonicalWriteAdmission()) return false;
+  if (it == eraserTraces_.end()) {AXIOM_ERASE_REJECT("missing_trace");return false;}
+  if (!canonicalWriteAdmission()) {AXIOM_ERASE_REJECT("write_admission");return false;}
   if (it->second.empty() || runtimeSceneHost_ == nullptr) {
     eraserTraces_.erase(it);
     eraserPreviewRevisions_.erase(pointerId);
@@ -3085,7 +3090,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   std::optional<std::vector<semantic::EraseMaskAddItem>> partial;
   if(!objectEraser) {
     partial=partialEraseTargets(it->second);
-    if(!partial){(void)eraserCancel(pointerId);return false;}
+    if(!partial){AXIOM_ERASE_REJECT("exact_targets");(void)eraserCancel(pointerId);return false;}
     for(const auto& item:*partial)hit.insert(item.object_id);
   } else {
   for (const auto& point : it->second) {
@@ -3152,6 +3157,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   }
   PublicationReservation publication(localOperationSink_, operation);
   if (!publication) {
+      AXIOM_ERASE_REJECT("publication_reservation");
       (void)eraserCancel(pointerId);
       return false;
   }
@@ -3159,9 +3165,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   eraserTraces_.erase(it);
   eraserPreviewRevisions_.erase(pointerId);
-  if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) {AXIOM_ERASE_REJECT("semantic_apply");return false;}
   observeApplied(operation, applied);
-  if (!history_.record(operation, {std::move(inverse)})) return false;
+  if (!history_.record(operation, {std::move(inverse)})) {AXIOM_ERASE_REJECT("history_record");return false;}
   ++submittedOperationCount_;
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());

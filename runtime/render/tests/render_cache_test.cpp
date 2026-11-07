@@ -5,6 +5,10 @@
 #include "canvas/render/image_resource.hpp"
 #include "../src/skia_navigation_tiles.hpp"
 #include "../src/skia_render_cache_internal.hpp"
+#include "../src/compact_raster_internal.hpp"
+#include "../src/compact_contour_skia_path.hpp"
+#include "../src/skia_geometry_internal.hpp"
+#include "include/core/SkPathUtils.h"
 #include "include/core/SkCanvas.h"
 #include <type_traits>
 #include <iostream>
@@ -1444,13 +1448,93 @@ void checkCapacityBoundedEraseDamage() {
 
 
 namespace {
-void checkMaskedCanonicalPreparation() {
+// Geometric AA oracle, independent of the GPU coverage evaluator. Stroke
+// each pinned primitive boundary in device space: dense self-crossings can
+// contain partial AA pixels even when all neighboring CPU pixels are dark.
+// A channel-neighborhood range would incorrectly reject those boundary values.
+std::vector<std::uint8_t> contourEdgeBand(const ReferenceTraversalEntry& entry) {
+    auto surface=SkSurfaces::Raster(SkImageInfo::MakeA8(256,128));
+    require(bool(surface),"AA boundary oracle allocation");
+    auto* canvas=surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+    const auto& t=entry.record.transform;
+    const auto matrix=SkMatrix::MakeAll(t.a,t.c,t.tx,t.b,t.d,t.ty,0,0,1);
+    SkPaint edge;edge.setColor(SK_ColorWHITE);edge.setStyle(SkPaint::kStroke_Style);
+    edge.setStrokeWidth(2);edge.setAntiAlias(true);
+    const auto draw=[&](const SkPath& path){canvas->drawPath(path.makeTransform(matrix),edge);};
+    const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+    const auto contour=ink::compileCompactContour(stroke.config,stroke.knots);
+    for(std::size_t i=0;i+1<contour.patches.size();++i)
+        draw(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));
+    for(const auto& cap:contour.caps){SkPathBuilder b;b.addCircle(cap.x,cap.y,cap.radius);draw(b.detach());}
+    for(const auto& mask:entry.record.eraseMasks){
+        if(const auto* f=std::get_if<semantic::FilledPathMask>(&mask.geometry))draw(internal::semanticPath(f->path));
+        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask.geometry))
+            for(const auto& part:swept->segments){SkPathBuilder b;
+                b.moveTo(part.p0.position.x,part.p0.position.y);b.cubicTo(part.control1.x,part.control1.y,part.control2.x,part.control2.y,part.p1.position.x,part.p1.position.y);
+                SkPaint p;p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(2*std::max(part.p0.radius,part.p1.radius));p.setStrokeCap(SkPaint::kRound_Cap);
+                draw(skpathutils::FillPathWithPaint(b.detach(),p));}
+    }
+    std::vector<std::uint8_t> band(256*128);
+    require(surface->readPixels(SkImageInfo::MakeA8(256,128),band.data(),256,0,0),"AA boundary oracle readback");
+    return band;
+}
+bool aaEquivalent(const std::vector<std::uint8_t>& actual,const std::vector<std::uint8_t>& expected,
+                  const std::vector<std::uint8_t>& edges,bool report=true) {
+    if(actual.size()!=expected.size()||actual.size()!=edges.size()*4)return false;
+    for(std::size_t i=0;i<actual.size();++i)if(!edges[i/4]&&std::abs(int(actual[i])-int(expected[i]))>2){
+        if(report)std::cerr<<"non-AA mismatch pixel="<<i/4<<" channel="<<i%4<<" actual="<<int(actual[i])<<" expected="<<int(expected[i])<<'\n';return false;}
+    return true;
+}
+void checkV4RasterFallback() {
+    auto surface=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));
+    require(bool(surface),"v4 raster fallback target");
+    auto config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    const std::vector<foundation::InkKnot> knots{{20,64,12000},{120,30,45000},{230,64,30000}};
+    internal::CompactCoverageTargets targets;internal::CompactRasterWork work;
+    internal::CompactStrokeRasterJob job(*surface->getCanvas(),config,knots,nullptr,true);
+    for(unsigned i=0;!job.step(*surface->getCanvas(),config,knots,0,targets,true,&work);++i)
+        require(i<64,"v4 raster fallback stalled");
+    const std::vector<std::uint8_t> expected(16,128),edges(4,0);
+    auto corrupted=expected;corrupted[0]=0;
+    require(aaEquivalent(expected,expected,edges,false)&&!aaEquivalent(corrupted,expected,edges,false),"AA oracle accepted an interior mutation");
+    require(work.gpuTiles==0&&work.cpuTiles>0&&work.scalarCoverageTiles==work.cpuTiles,
+        "GPU policy changed raster fallback away from CPU A8");
+    std::cout<<"v4 raster fallback remains CPU A8 PASS\n";
+}
+#if defined(G5_TEST_WEBGL)
+void checkV4GpuTileSeam() {
+    TestSurface target,reference;target.resize(256,128);reference.resize(256,128);
+    auto entry=stroke(95500);auto c=std::get<CompactStrokeReferenceCommand>(entry.command).content.get();
+    c.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    c.stroke.config.size=24;c.stroke.config.opacity=.55;c.stroke.knots.clear();
+    for(unsigned i=0;i<129;++i)c.stroke.knots.push_back({20.+i*1.6,64.+20*std::sin(i*.05),static_cast<std::uint16_t>(15000+i*300)});
+    entry.command=CompactStrokeReferenceCommand{c};entry.record.content=c;
+    const internal::CompactDeviceGrid grid{-128,0,384,128};
+    for(bool gpu:{true,false}){
+        auto& provider=gpu?target:reference;auto acquired=provider.acquire();
+        require(acquired.code==SkiaSurfaceAcquireCode::kAcquired,"v4 seam acquire");
+        auto* canvas=acquired.frame.surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+        internal::CompactCoverageTargets tiles;internal::CompactRasterWork work;
+        internal::CompactStrokeRasterJob job(*canvas,c.stroke.config,c.stroke.knots,&grid,gpu);
+        for(unsigned i=0;!job.step(*canvas,c.stroke.config,c.stroke.knots,0,tiles,gpu,&work);++i)
+            require(i<256,"v4 seam job stalled");
+        if(gpu)require(work.gpuTiles>=2&&work.cpuTiles==0,"v4 seam test did not execute two GPU tiles");
+        else require(work.cpuTiles>=2&&work.gpuTiles==0,"v4 seam CPU oracle not independent");
+        provider.release();require(provider.present().code==BackendSubmissionCode::kAccepted,"v4 seam present");
+    }
+    require(aaEquivalent(pixels(target),pixels(reference),contourEdgeBand(entry)),"GPU v4 tile seam changed interior");
+    std::cout<<"v4 offset-grid GPU tile seam and CPU silhouette PASS\n";
+}
+#endif
+void checkMaskedCanonicalPreparation(bool gpuV4=false) {
+    std::uint64_t gpuTiles=0,cpuTiles=0,edgePixels=0;
     for(unsigned affine=0;affine<4;++affine)for(unsigned backdrop=0;backdrop<3;++backdrop)
     for(bool smallCache:{false,true}) {
         TestSurface target,reference;
         require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"masked preparation targets");
         SkiaRenderer renderer,oracle;RenderCacheOptions options;
         if(smallCache){options.maxBytes=160*1024;options.maxEntryBytes=4096;}
+        options.gpuCoverageCandidate=gpuV4;
         renderer.setRenderCacheOptions(options);RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
         auto source=stroke(95000);auto content=std::get<CompactStrokeReferenceCommand>(source.command).content.get();
         content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
@@ -1485,13 +1569,31 @@ void checkMaskedCanonicalPreparation() {
             }
             require(oracle.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted,"masked Direct oracle");
             const auto actual=pixels(target),expected=pixels(reference);
-            for(std::size_t k=0;k<actual.size();++k)if(std::abs(int(actual[k])-int(expected[k]))>2){
-                std::cerr<<"masked parity affine="<<affine<<" backdrop="<<backdrop<<" small="<<smallCache<<" at="<<k<<" actual="<<int(actual[k])<<" wanted="<<int(expected[k])<<'\n';
-                require(false,"cooperative masked coverage differs from Direct");
+            if(gpuV4&&!aaEquivalent(actual,expected,contourEdgeBand(entries.back()))){
+#if defined(G5_TEST_WEBGL)
+                EM_ASM({window.result.failedPixels=Object();window.result.failedPixels.actual=Array.from(HEAPU8.subarray($0,$0+$2));window.result.failedPixels.expected=Array.from(HEAPU8.subarray($1,$1+$2));},actual.data(),expected.data(),actual.size());
+#endif
+                std::cerr<<"GPU case affine="<<affine<<" backdrop="<<backdrop<<" small="<<smallCache<<'\n';
+                require(false,"GPU v4 changed interior/geometry/mask beyond AA boundary");}
+            else if(!gpuV4) for(std::size_t k=0;k<actual.size();++k)
+                require(std::abs(int(actual[k])-int(expected[k]))<=2,"cooperative masked coverage differs from Direct");
+            if(gpuV4&&backdrop==2){
+                const auto& config=std::get<CompactStrokeReferenceCommand>(entries.back().command).content.get().stroke.config;
+                for(std::size_t i=0;i<actual.size();i+=4){
+                    require(actual[i+3]<=std::ceil(255*config.opacity*config.color[3])+2,"GPU self-crossing accumulated paint opacity");
+                    for(unsigned c=0;c<3;++c)require(std::abs(actual[i+c]-config.color[c]*actual[i+3])<=2,"GPU material changed premultiplied color/alpha");
+                }
             }
             require(renderer.renderCacheWork().retainedBytes<=options.maxBytes,"masked coverage exceeded cache budget");
         };
         finish(first);
+#if defined(G5_TEST_WEBGL)
+        if(gpuV4){const auto w=renderer.renderCacheWork();
+            require(w.gpuCoverageTiles>0,"v4 canonical never executed GPU coverage");
+            require(w.cpuCoverageTiles==0&&w.cpuEdgePixels==0,"v4 GPU coverage used CPU tiles or edge correction");}
+#else
+        (void)gpuV4;
+#endif
         require(renderer.renderCacheWork().preparationDirectEntries==(backdrop==1?1U:0U),"masked compact source still prepared Direct");
         // A changed mask revokes both cached pixels and an incomplete demand.
         semantic::SweptCircleMask second;second.segments.push_back({{{40,54},7},{{210,78},7},{95,62},{155,70}});
@@ -1501,14 +1603,23 @@ void checkMaskedCanonicalPreparation() {
         entries.back().record.eraseMasks.push_back({ObjectId::fromUint64(95004),cut});
         finish(demand(98002));
         require(renderer.renderFrame(target,plan(98003,entries,target.generation()+1),nullptr,&slice).code==BackendSubmissionCode::kRejected,"stale masked surface accepted");
+        const auto work=renderer.renderCacheWork();gpuTiles+=work.gpuCoverageTiles;cpuTiles+=work.cpuCoverageTiles;edgePixels+=work.cpuEdgePixels;
     }
-    std::cout<<"masked v4 cooperative yield,Direct parity,mask invalidation and bounded source admission PASS\n";
+    std::cout<<"masked v4 cooperative yield,"<<(gpuV4?"geometric AA-boundary parity":"strict Direct parity")<<",mask invalidation and bounded source admission PASS\n";
+    if(gpuV4)std::cout<<"v4 GPU coverage tiles="<<gpuTiles<<" CPU tiles="<<cpuTiles<<" CPU edge pixels="<<edgePixels<<'\n';
 }
 }
 
 int main(int argc,char** argv) {
     const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
+        if(argc>1&&std::string_view(argv[1])=="--v4-fallback-only"){checkV4RasterFallback();return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--v4-gpu-only"){
+            checkV4RasterFallback();
+#if defined(G5_TEST_WEBGL)
+            checkV4GpuTileSeam();
+#endif
+            checkMaskedCanonicalPreparation(true);return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--masked-canonical-only")){checkMaskedCanonicalPreparation();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--erase-damage-only")){checkCapacityBoundedEraseDamage();if(argc>1)return finishNative(0);}
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--affine-erased-only")){checkAffineErasedNavigation();if(argc>1)return finishNative(0);}

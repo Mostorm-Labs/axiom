@@ -285,9 +285,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
             if(job.resourcePending())throw std::bad_alloc();
         return;
     }
-    // V3 keeps its qualified hybrid/CPU path. V5/V6 own target-compatible
-    // procedural coverage; do not substitute it for other evaluators' AA.
-    compatibleCoverage=config.algorithmVersion==5||config.algorithmVersion==6;
+    // V4 keeps the pinned contour; only per-pixel AA moves to Skia's GPU.
+    // CPU Direct remains an independent geometry/interior oracle. V3 keeps
+    // its exact hybrid policy and V5/V6 retain procedural coverage.
+    compatibleCoverage=(compatibleCoverage&&canvas.recordingContext()&&config.algorithmVersion==4)||config.algorithmVersion==5||config.algorithmVersion==6;
     // Tiles are device-clipped; no allocation scales with a long stroke AABB.
     const auto deviceClip=canvas.getDeviceClipBounds();
     const auto clip=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip;const auto matrix=canvas.getTotalMatrix();
@@ -319,6 +320,11 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         if(!targets){tile=compatibleCoverage?canvas.makeSurface(SkImageInfo::MakeN32Premul(w,h)):nullptr;
             if(!tile)tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
             if(work&&tile){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}}
+        if(tile&&tile->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
+        else {AXIOM_FRAME_TIMING_ADD(cpu_coverage_tiles,1);
+            if(!canvas.recordingContext())AXIOM_FRAME_TIMING_ADD(coverage_no_gpu_context,1);
+            else if(!compatibleCoverage)AXIOM_FRAME_TIMING_ADD(coverage_cpu_policy,1);
+            else AXIOM_FRAME_TIMING_ADD(coverage_target_fallback,1);}
         if(work){if(tile&&tile->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;}
         if(!tile){if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");}
 
@@ -531,11 +537,17 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         tileInterior_=interior_;tileInterior_.op(SkIRect::MakeXYWH(x_,y_,w,h),SkRegion::kIntersect_Op);
         hybrid_=compatible&&canvas.recordingContext()&&config.algorithmVersion==3&&!tileInterior_.isEmpty();
         tileInterior_.translate(-x_,-y_);
-        // Legacy coverage is a continuous gradient throughout its body;
-        // its exact GPU execution is unqualified and stays CPU-backed.
-        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
+        // V4 reuses the same contour/checkpoints on a GPU N32 target. No
+        // CPU edge correction. Legacy continuous-gradient coverage keeps its
+        // separately qualified hybrid/CPU policy.
+        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&((config.algorithmVersion==4&&canvas.recordingContext())||config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
         if(!tile_){resourcePending_=true;return false;}
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
+        if(tile_->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
+        else {AXIOM_FRAME_TIMING_ADD(cpu_coverage_tiles,1);
+            if(!canvas.recordingContext())AXIOM_FRAME_TIMING_ADD(coverage_no_gpu_context,1);
+            else if(!compatible)AXIOM_FRAME_TIMING_ADD(coverage_cpu_policy,1);
+            else if(config.algorithmVersion==4)AXIOM_FRAME_TIMING_ADD(coverage_target_fallback,1);}
         if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;
             if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)++work->scalarCoverageTiles;}
         if(tile_->imageInfo().colorType()==kAlpha_8_SkColorType)AXIOM_FRAME_TIMING_ADD(scalar_coverage_tiles,1);

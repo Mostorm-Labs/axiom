@@ -2,6 +2,9 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "partial_erase_geometry.hpp"
 #include <algorithm>
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+#include <cstdio>
+#endif
 
 namespace canvas::interaction {
 std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::partialEraseTargets(
@@ -25,7 +28,12 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         if(!mask)return std::nullopt;
         if(exactHit) {
             const auto hit=render::intersectEraseGeometry(record,*mask);
-            if(hit==render::SelectionGeometryHit::kInvalid)return std::nullopt;
+            if(hit==render::SelectionGeometryHit::kInvalid){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+                std::fprintf(stderr,"AXIOM_ERASE_REJECT stage=exact_geometry trace=%zu old_masks=%zu\n",trace.size(),record.eraseMasks.size());
+#endif
+                return std::nullopt;
+            }
             if(hit==render::SelectionGeometryHit::kMiss)continue;
         }
         // Textured materials have no exact opaque-coverage hit oracle. Their

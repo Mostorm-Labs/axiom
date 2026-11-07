@@ -27,13 +27,15 @@ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entr
     prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels,
     prepare_direct, prepare_budget, exact_demand_reuse, source_points,
     compiled_contour_knots,record_candidates,record_replays,record_rejected,record_groups,record_selection_yields,
-    checkpoint_replays,checkpoint_replay_knots,scalar_coverage_tiles,count };
+    checkpoint_replays,checkpoint_replay_knots,scalar_coverage_tiles,
+    gpu_coverage_tiles,cpu_coverage_tiles,coverage_no_gpu_context,coverage_cpu_policy,coverage_target_fallback,count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
     "prepare_direct","prepare_budget","exact_demand_reuse","source_points",
     "compiled_contour_knots","record_candidates","record_replays","record_rejected","record_groups","record_selection_yields",
-    "checkpoint_replays","checkpoint_replay_knots","scalar_coverage_tiles"};
+    "checkpoint_replays","checkpoint_replay_knots","scalar_coverage_tiles",
+    "gpu_coverage_tiles","cpu_coverage_tiles","coverage_no_gpu_context","coverage_cpu_policy","coverage_target_fallback"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;

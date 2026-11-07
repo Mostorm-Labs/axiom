@@ -8,6 +8,9 @@
 #include <canvas/semantic/codec.hpp>
 #include <cmath>
 #include <cstring>
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+#include <cstdio>
+#endif
 #include <map>
 #include <limits>
 #include <set>
@@ -1261,6 +1264,10 @@ class Session::Impl {
                     contactTimes.erase(id);
                 }
             }
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            if(!ok)std::fprintf(stderr,"AXIOM_INPUT_REJECT phase=%u source=%llu pointer=%llu sequence=%llu\n",phase,
+                static_cast<unsigned long long>(p.source),static_cast<unsigned long long>(p.pointer),static_cast<unsigned long long>(p.sequence));
+#endif
             return {{"ok", ok}, {"code", "INPUT_REJECTED"}};
         }
         if (command == "hover")

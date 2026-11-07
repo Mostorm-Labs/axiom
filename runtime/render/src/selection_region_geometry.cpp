@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <cmath>
 #include <new>
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+#include <cstdio>
+#endif
 namespace canvas::render {
 namespace {
 using Hit=SelectionGeometryHit;
@@ -221,9 +224,15 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
 }
 SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
     try {
+        const auto invalidGeometry=[]([[maybe_unused]]const char* stage){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            std::fprintf(stderr,"AXIOM_ERASE_PATHOPS_FAILURE stage=%s\n",stage);
+#endif
+            return Hit::kInvalid;
+        };
         SkPath visible;std::vector<SkPath> decorations;
         const auto status=geometry(record,visible,decorations,false);if(status!=Hit::kHit)return status;
-        const auto eraser=erasePath(mask);if(!eraser||!eraser->isFinite())return Hit::kInvalid;
+        const auto eraser=erasePath(mask);if(!eraser||!eraser->isFinite())return invalidGeometry("new_mask_path");
         // Query only the new intersection. Subtraction distributes over the
         // component union, so a visible hit need not prepare unrelated parts.
         // Paths are query-local and built lazily once, never retained in Scene.
@@ -234,17 +243,17 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
         };
         const auto intersects=[&](const SkPath& body){
             if(body.isEmpty()||disjoint(body,*eraser))return Hit::kMiss;
-            auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return Hit::kInvalid;
+            auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return invalidGeometry("component_intersection");
             if(overlap->isEmpty())return Hit::kMiss;
             for(std::size_t i=0;i<record.eraseMasks.size();++i){
                 if(i==previousMasks.size()){
                     const auto built=erasePath(record.eraseMasks[i].geometry);
-                    if(!built||!built->isFinite())return Hit::kInvalid;
+                    if(!built||!built->isFinite())return invalidGeometry("previous_mask_path");
                     previousMasks.push_back(*built);
                 }
                 if(disjoint(*overlap,previousMasks[i]))continue;
                 overlap=Op(*overlap,previousMasks[i],kDifference_SkPathOp);
-                if(!overlap)return Hit::kInvalid;
+                if(!overlap)return invalidGeometry("previous_mask_difference");
                 if(overlap->isEmpty())return Hit::kMiss;
             }
             return Hit::kHit;

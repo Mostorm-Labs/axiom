@@ -21,7 +21,8 @@ struct RenderCacheOptions final {
     // CPU time alone does not bound queued GPU paths. Coarse masks use CPU
     // Skia coverage; fine GPU contours have a separate per-opportunity quota.
     std::size_t navigationMaxGpuContourPrimitives=128;
-    // V3 GPU saturated interior + pinned CPU exact edge; legacy stays CPU.
+    // V4 pinned contour with GPU AA (no CPU edge correction); V3 retains
+    // its saturated-interior/exact-edge hybrid; legacy stays CPU.
     bool gpuCoverageCandidate=true;
     // Navigation admission policies, internal only; neither preempts a query
     // nor promises a display deadline. Prewarm is optional and never pins demand.
