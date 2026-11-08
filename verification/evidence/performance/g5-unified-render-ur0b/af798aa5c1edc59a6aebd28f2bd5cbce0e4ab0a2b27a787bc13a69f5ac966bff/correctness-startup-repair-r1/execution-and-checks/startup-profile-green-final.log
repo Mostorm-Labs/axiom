@@ -1,0 +1,155 @@
+TAP version 13
+# Subtest: STARTUP RED witness and corrected delayed boundary: generation0/disabled pending_gpu0 cannot drain a late accepted frame
+ok 1 - STARTUP RED witness and corrected delayed boundary: generation0/disabled pending_gpu0 cannot drain a late accepted frame
+  ---
+  duration_ms: 2.700375
+  ...
+# Subtest: EARLY-DELAYED/OFF-ON: early callbacks survive createRuntime return and both fresh pages use the same frontier
+ok 2 - EARLY-DELAYED/OFF-ON: early callbacks survive createRuntime return and both fresh pages use the same frontier
+  ---
+  duration_ms: 0.589625
+  ...
+# Subtest: FALSE-FRONTIERS and deadlines: idle queue, fixed10ticks and generation equality alone never qualify
+ok 3 - FALSE-FRONTIERS and deadlines: idle queue, fixed10ticks and generation equality alone never qualify
+  ---
+  duration_ms: 1.868167
+  ...
+# Subtest: PENDING-RETRY: positive onFrame still waits for SDK-owned retry queue to drain
+ok 4 - PENDING-RETRY: positive onFrame still waits for SDK-owned retry queue to drain
+  ---
+  duration_ms: 0.303416
+  ...
+# Subtest: ERROR-TIMEOUT-FOREIGN: wrong page/stale callback, SDK errors and foreign/nonempty state fail before collector mutation
+ok 5 - ERROR-TIMEOUT-FOREIGN: wrong page/stale callback, SDK errors and foreign/nonempty state fail before collector mutation
+  ---
+  duration_ms: 0.898958
+  ...
+# Subtest: PRIMARY-UNCHANGED: measured bodies stay byte-identical and correctness startup requires a gated init
+ok 6 - PRIMARY-UNCHANGED: measured bodies stay byte-identical and correctness startup requires a gated init
+  ---
+  duration_ms: 0.600459
+  ...
+# Subtest: ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+ok 7 - ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+  ---
+  duration_ms: 1637.714041
+  ...
+# Subtest: INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+ok 8 - INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+  ---
+  duration_ms: 92.87375
+  ...
+# Subtest: MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+ok 9 - MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+  ---
+  duration_ms: 123.896958
+  ...
+# Subtest: RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+ok 10 - RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+  ---
+  duration_ms: 330.818708
+  ...
+# Subtest: CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+ok 11 - CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+  ---
+  duration_ms: 69.616125
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+ok 12 - LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+  ---
+  duration_ms: 66.497458
+  ...
+# Subtest: FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+ok 13 - FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+  ---
+  duration_ms: 310.805458
+  ...
+# Subtest: DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+ok 14 - DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+  ---
+  duration_ms: 54.132334
+  ...
+# Subtest: NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+ok 15 - NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+  ---
+  duration_ms: 33.066667
+  ...
+# Subtest: MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+ok 16 - MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+  ---
+  duration_ms: 562.996125
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+ok 17 - LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+  ---
+  duration_ms: 37.006791
+  ...
+# Subtest: NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+ok 18 - NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+  ---
+  duration_ms: 52.636333
+  ...
+# Subtest: OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+ok 19 - OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+  ---
+  duration_ms: 14.116583
+  ...
+# Subtest: CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+ok 20 - CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+  ---
+  duration_ms: 88.079375
+  ...
+# Subtest: CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+ok 21 - CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+  ---
+  duration_ms: 444.290417
+  ...
+# Subtest: PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+ok 22 - PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+  ---
+  duration_ms: 9.3665
+  ...
+# Subtest: LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+ok 23 - LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+  ---
+  duration_ms: 382.7075
+  ...
+# Subtest: LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+ok 24 - LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+  ---
+  duration_ms: 6.18475
+  ...
+# Subtest: LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+ok 25 - LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+  ---
+  duration_ms: 181.617667
+  ...
+# Subtest: LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+ok 26 - LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+  ---
+  duration_ms: 60.042167
+  ...
+# Subtest: LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+ok 27 - LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+  ---
+  duration_ms: 15.517375
+  ...
+# Subtest: STARTUP-PROFILE: third exact correctness-only profile needs two positive host frontiers; historic profiles stay literal
+ok 28 - STARTUP-PROFILE: third exact correctness-only profile needs two positive host frontiers; historic profiles stay literal
+  ---
+  duration_ms: 200.608
+  ...
+# Subtest: STARTUP-PROFILE: missing/forged/stale frontier or unknown helper never qualifies, independent of pixel green
+ok 29 - STARTUP-PROFILE: missing/forged/stale frontier or unknown helper never qualifies, independent of pixel green
+  ---
+  duration_ms: 81.705042
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5175.444125

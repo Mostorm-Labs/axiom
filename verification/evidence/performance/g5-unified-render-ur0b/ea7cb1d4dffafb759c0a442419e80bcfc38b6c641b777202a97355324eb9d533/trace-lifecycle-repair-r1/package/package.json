@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-trace-lifecycle-repair-r1",
+  "status": "AUTHORIZED_OFFLINE_REPAIR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "accepted_predecessor_source_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+    "completed_through": "r5 one real worker completed with all4pixels/subjects QUALIFIED, admission rejected solely for cross-page initialization alias; original window CLOSED.",
+    "next_action": "Freeze P31 and repair the scoped proof/readers, historical test contexts, actual-r5 derivation and17 invariance."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "09442367a388b071749e9847e31c227145378f839704282b77eefc85ad932974"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "7a5faaea9726e467512cc735532e6712d2e57d121baefc527224974cb57554e5"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ddf537c36a3473a3da6c679ad7717f0f7b4fa56927963b3fbae8b941fa157c5e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "9df23f2bd643cb87dbdbead825113fe7689213b7af31f67fa6b6b7bb116e5933"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "e0f52f04795ce02a00d8716cb7406daf744bd37d5870a45f7d39cb124d75cf96"
+  }
+}

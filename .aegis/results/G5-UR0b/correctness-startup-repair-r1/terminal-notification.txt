@@ -1,0 +1,11 @@
+G5-UR0b-correctness-startup-repair-r1 已收尾为 READY_FOR_CONTROL_REVIEW。
+
+包 .aegis/packages/G5-UR0b-correctness-startup-repair-r1/package.json SHA256 8add8e7c3d624ace9e09ea032e3e27b008a1bc34c505e6a6ba2da67ab83ebd89；P20 SHA256 7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534。
+result: .aegis/results/G5-UR0b/correctness-startup-repair-r1/result.json，SHA256 965eedb2e39e09860a0e69915741de0849bc8139e4f11e03dd1fb0114c6bd424。
+源码 SHA256 af798aa5c1edc59a6aebd28f2bd5cbce0e4ab0a2b27a787bc13a69f5ac966bff；执行基线 a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7 + dirty，10/11 允许源码路径有变更；r4测试上下文原已正确而未改。
+内容归档 verification/evidence/performance/g5-unified-render-ur0b/af798aa5c1edc59a6aebd28f2bd5cbce0e4ab0a2b27a787bc13a69f5ac966bff/correctness-startup-repair-r1，manifest SHA256 60a99911f85ed4b3ac7877149f1e500cab0c52f3528f110b4196ca3a2680406d，184份payload已复核。
+
+真实旧启动边界模型 RED 已复现；离线历史读取73项通过。本次提交前又完整复跑 Node127、Python96、边界120均通过；19份离线派生中17+1保留 canonical/decoded/metrics等原身份和结果不变，实际r6仍为7=1初始化+5committed+1unresolved，work1/seq22未被补造或丢弃，严格读取仍MISSING。
+新profile仅适用于未来correctness启动协议，未授权主矩阵/新窗口。历史35starts/1276秒不变，新浏览器0、新构建0、未启动r7，UR0b仍BLOCKED_EVIDENCE，不声称G5/P34/performance PASS。
+
+已收到 UR1a transient-reference 包。独立生产性能小包不以完整UR0b/UR0c通过为前提，本轮工具修复已按窄范围停止扩展。当前实现会话用户最新直接请求“提交并推送”，因此现在先提交/推送已完成UR0b修复和归档；该直接授权覆盖旧包仅禁止提交推送的边界。尚未执行或纳入新UR1a产品变更，其暂存输入保持原样。

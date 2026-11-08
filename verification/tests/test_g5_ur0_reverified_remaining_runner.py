@@ -1,7 +1,10 @@
-import copy,hashlib,importlib.util,json,multiprocessing,tempfile,unittest
+import copy,hashlib,importlib.util,json,multiprocessing,subprocess,tempfile,unittest
 from pathlib import Path
 from types import SimpleNamespace
 ROOT=Path(__file__).resolve().parents[2]
+class HistoricalSourceRoot(type(ROOT)):
+ def __truediv__(self,name):
+  return self.source_files.get(str(name),Path(self).joinpath(name))
 def module():
  p=ROOT/'verification/runners/g5/ur0/reverified_remaining_runner.py'
  if not p.is_file():raise AssertionError('r5 bounded continuation runner missing')
@@ -14,6 +17,22 @@ def competitor(state,out,queue):
 def guard(reason='completed',code=0,elapsed=1.1,cleanup=True):
  return {'reason':reason,'returncode':code,'elapsed_s':elapsed,'cleanup_complete':cleanup,'remaining_owned_pids':[],'rss_limit_kib':3145728,'peak_process_family_rss_kib':100,'timeout_s':90}
 class ReverifiedRemainingTest(unittest.TestCase):
+ def historical_module(self):
+  m=module();old=m.HERE;oldroot=m.ROOT;temporary=tempfile.TemporaryDirectory(prefix='ur0b-r5-historical-compiler-')
+  self.addCleanup(temporary.cleanup);self.addCleanup(setattr,m,'HERE',old);self.addCleanup(setattr,m,'ROOT',oldroot)
+  m.HERE=Path(temporary.name)
+  packet=m.acceptance()
+  for name,expected in packet['compiler_file_sha256'].items():
+   data=subprocess.check_output(['git','show','a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7:verification/runners/g5/ur0/'+name],cwd=ROOT)
+   self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name);(m.HERE/name).write_bytes(data)
+  overlay=HistoricalSourceRoot(oldroot);overlay.source_files={}
+  for name,expected in packet['repaired_worker_and_helpers'].items():
+   data=subprocess.check_output(['git','show','a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7:'+name],cwd=ROOT);self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name)
+   path=m.HERE/Path(name).name;path.write_bytes(data);overlay.source_files[name]=path
+  # Only historical source-file lookup changes. Bound evidence paths and every
+  # real validator still resolve against the original repository and hashes.
+  m.ROOT=overlay
+  return m
  def test_exact36_order_and_limits_do_not_repeat_RT_or_expand_allowance(self):
   m=module();rows=m.plan();self.assertEqual(len(rows),36);self.assertEqual(sum(r['limit_seconds'] for r in rows),5940);self.assertTrue(all(r['mode']=='correctness' for r in rows[:6]));self.assertTrue(all(r['phase']=='main' for r in rows[6:]));self.assertFalse(any(r['run_id'].startswith('realtime-') for r in rows))
   m.validate_plan(rows)
@@ -25,14 +44,14 @@ class ReverifiedRemainingTest(unittest.TestCase):
   old=m.bound(m.request()['historical_ledger_ref']);old['charged_seconds']=0
   with self.assertRaises(RuntimeError):m.verify_history(old)
  def test_new_exact_acceptance_keeps_all17_original_sources_and_OFFLINE_modes(self):
-  m=module();a=m.acceptance();r=m.accepted_reuse(a)
+  m=self.historical_module();a=m.acceptance();r=m.accepted_reuse(a)
   self.assertEqual(len(r['records']),17);self.assertEqual(len({x['run_id'] for x in r['records']}),17);self.assertEqual({x['mode'] for x in r['records']},{'OFFLINE_REVERIFICATION'})
   sources={x['run_id']:x['recording_source_tree_sha256'] for x in r['records']}
   self.assertEqual(sources['realtime-120'],'d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a');self.assertNotEqual(sources['realtime-120'],sources['realtime-60'])
   stale=m.load(ROOT/'.aegis/packages/G5-UR0b-resume-r4/reuse-inputs.json')
   with self.assertRaises(RuntimeError):m.accepted_reuse(stale)
  def test_record_source_input_artifact_compiler_counts_and_proof_are_not_interchangeable(self):
-  m=module();a=m.acceptance();row=next(r for r in a['records'] if r['run_id']=='realtime-120');summary=m.bound(row['summary_ref']);chain=m.bound(row['proof_ref']);m.admit_record(row,summary,chain,a)
+  m=self.historical_module();a=m.acceptance();row=next(r for r in a['records'] if r['run_id']=='realtime-120');summary=m.bound(row['summary_ref']);chain=m.bound(row['proof_ref']);m.admit_record(row,summary,chain,a)
   for change in [lambda s:s['analysis'].update(mode='WORKER_COMPILE'),lambda s:s['analysis'].update(input_source_tree_sha256=a['records'][0]['recording_source_tree_sha256']),lambda s:s['analysis'].update(raw_trace_sha256='0'*64),lambda s:s['analysis']['compiler_files'].update({'decode_trace.mjs':'f'*64}),lambda s:s.update(artifact_identity={}),lambda s:s['canonical_chain'].update(metric_receipt_count=0),lambda s:s.update(clock='MISSING')]:
    bad=copy.deepcopy(summary);change(bad)
    with self.assertRaises(RuntimeError):m.admit_record(row,bad,chain,a)
@@ -41,7 +60,7 @@ class ReverifiedRemainingTest(unittest.TestCase):
   bad=copy.deepcopy(a);bad['records'].pop()
   with self.assertRaises(RuntimeError):m.accepted_reuse(bad)
  def test_foreign_compiler_and_worker_profile_fail_without_starting_a_browser(self):
-  m=module();a=m.acceptance();old=m.HERE
+  m=self.historical_module();a=m.acceptance();old=m.HERE
   with tempfile.TemporaryDirectory() as tmp:
    m.HERE=Path(tmp)
    for name in a['compiler_file_sha256']:(m.HERE/name).write_bytes((old/name).read_bytes())
@@ -96,7 +115,7 @@ class ReverifiedRemainingTest(unittest.TestCase):
     with self.assertRaises(RuntimeError):
      with m.Window(state,target,'new-proof'):pass
  def test_main_waits_for_all_six_admitted_correctness_rows_and_exact_reuse(self):
-  m=module();rows=m.plan();reused=m.accepted_reuse(m.acceptance())
+  m=self.historical_module();rows=m.plan();reused=m.accepted_reuse(m.acceptance())
   with self.assertRaises(RuntimeError):m.require_phase('main',rows,reused)
   for row in rows[:6]:row.update(status='COMPLETED',admission_status='ADMITTED',correctness_status='QUALIFIED')
   rows[0]['correctness_status']='PRODUCT_RED_IN_BOTH_OFF_ON';m.require_phase('main',rows,reused)
@@ -110,4 +129,11 @@ class ReverifiedRemainingTest(unittest.TestCase):
    m.STATE=Path(tmp)/'state';m.STATE.mkdir();p=m.STATE/'window.json';p.write_text('{"status":"CLOSED"}');before=p.read_bytes();out=Path(tmp)/'elsewhere'
    with self.assertRaisesRegex(RuntimeError,'claimed|closed'):m.run(SimpleNamespace(output=out))
    self.assertEqual(p.read_bytes(),before);self.assertFalse(out.exists())
+ def test_actual_current_compiler_still_rejects_the_unchanged_r5_acceptance(self):
+  m=module();self.assertEqual(m.HERE,ROOT/'verification/runners/g5/ur0')
+  self.assertTrue(any(m.sha(m.HERE/name)!=expected for name,expected in m.acceptance()['compiler_file_sha256'].items()))
+  with self.assertRaisesRegex(RuntimeError,'compiler'):m.accepted_reuse(m.acceptance())
+ def test_actual_current_worker_profile_is_rejected_even_with_historical_compiler(self):
+  m=self.historical_module();m.ROOT=ROOT
+  with self.assertRaisesRegex(RuntimeError,'profile'):m.verify_profiles(m.acceptance())
 if __name__=='__main__':unittest.main()

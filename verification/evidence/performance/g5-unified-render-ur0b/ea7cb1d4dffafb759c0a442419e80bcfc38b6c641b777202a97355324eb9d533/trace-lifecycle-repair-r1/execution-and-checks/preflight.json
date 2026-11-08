@@ -1,0 +1,45 @@
+{
+  "status": "PACKAGE_AND_EVIDENCE_CONTRACT_PREFLIGHT_PASS",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/package.json",
+    "sha256": "f187fa6ead75bc6eddca92f7bbc1e76862be7060b89cbc279816c577b3ec3d71",
+    "identity_kind": "local-content-addressed"
+  },
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/implementation-request.json",
+    "sha256": "53985e867abf682fb6fbbaed9c6e16f82d7f763a34904d08c653df7439c3ecf8",
+    "identity_kind": "local-content-addressed"
+  },
+  "exact_p20_refs": {
+    ".aegis/results/G5-UR0b/resume-r5/result.json": "bf1ee511aa71ec587462d33938608fecc076d17e083313278f35f0201e627be3",
+    "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/manifest.json": "f91e6f1b29039e6675f55b72fe4261ceebea6394f46855a3dc1b13a82a7e0739",
+    ".aegis/results/G5-UR0b/resume-r5/blocker-analysis.json": "7008f4bbb690a93e6e21accfa431227e7f082b023d96d411c01620542e7903c5",
+    "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/raw-trace.jsonl": "6d8fed248cd40cf723bd428954ff5823d70815399833a560b31accac046b948c",
+    "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/worker-result.json": "1232a4a5c56bc597eddf1de2c8d10445b4d7e9c6d3f78f8a71f2a35ea4e5eca2",
+    "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/run-inputs.json": "099c7bd40258286345e8b21e12dd533c28aeac08762da56e0d6c9018957f8085",
+    ".aegis/results/G5-UR0b/control-review-correctness-final/reuse-acceptance.json": "9fb07bc5798cd455d9a98a3b8b8cf23d7eb42b7c6e68c51edd3adf50f1e4798d",
+    ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+    "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/canonical-chain.json": "b57979a7446aaf650c2fd385dd31f03db9521ccd3b90d16b7b5e456e6711e4a1",
+    "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+    "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/oracle-cases.json": "2fe494a6443b48d7f1b923e2423d8f8ed61c792a2d5052417c0f6a3e4a79917a",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json": "1aac426127a22c3cb1c366aac0260c8a288ac1f05e83a100ec75589c6fe0942d",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd"
+  },
+  "exact_reference_occurrences": 19,
+  "approved_source_paths": [
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_reverified_remaining_runner.py"
+  ],
+  "baseline_source_tree_sha256": "eb4983f524366ca278de99ebac90dec34bba3b477aa99fc0c0826e8b9fb02ec8",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "new_browser_workers": 0
+}

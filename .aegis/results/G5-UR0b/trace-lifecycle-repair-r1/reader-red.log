@@ -1,0 +1,30 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py:126: SyntaxWarning: invalid escape sequence '\/'
+  const dir=inputs.r5_worker_inputs[0].path.replace(/\/raw-trace.jsonl$/,'');
+E...E...........
+======================================================================
+ERROR: test_actual_js_producer_and_python_reader_share_exact_profile_and_bound_recorded_states (test_g5_ur0_repair_runner.RepairRunnerTest.test_actual_js_producer_and_python_reader_share_exact_profile_and_bound_recorded_states)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 137, in test_actual_js_producer_and_python_reader_share_exact_profile_and_bound_recorded_states
+    summary={'critical_loss':0,'identity_errors':[],'canonical_chain':value['proof']};m.require_canonical_chain(summary,require_metrics=False)
+                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 90, in require_canonical_chain
+    if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or not valid_initialization_profile(origin,basis) or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+                                                                                                                                                                                                                                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical initialization recording/source/input basis missing
+
+======================================================================
+ERROR: test_lifecycle_reader_keeps_equal_cross_page_states_but_rejects_unknown_forged_or_duplicate_scope (test_g5_ur0_repair_runner.RepairRunnerTest.test_lifecycle_reader_keeps_equal_cross_page_states_but_rejects_unknown_forged_or_duplicate_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 157, in test_lifecycle_reader_keeps_equal_cross_page_states_but_rejects_unknown_forged_or_duplicate_scope
+    m.require_canonical_chain(s,require_positive=True)
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 90, in require_canonical_chain
+    if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or not valid_initialization_profile(origin,basis) or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+                                                                                                                                                                                                                                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical initialization recording/source/input basis missing
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.666s
+
+FAILED (errors=2)

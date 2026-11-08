@@ -1,0 +1,143 @@
+{
+  "status": "INDEPENDENT_RECORD_AND_LIFECYCLE_AUDIT_PASS",
+  "subject_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/result.json",
+    "sha256": "fd38c6a1be1411eb57b5618396c689a548d3a9ec2c06378f22a5815934d4a1c5",
+    "identity_kind": "local-content-addressed"
+  },
+  "manifest_ref": {
+    "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/manifest.json",
+    "sha256": "5b1de8cc05585f271b0137a8518953e50e16137553cd657247607d8e8486136c",
+    "identity_kind": "local-content-addressed"
+  },
+  "payload_files": 194,
+  "current_source_sha256": "ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533",
+  "compiler_files": {
+    "compile_run.mjs": "2f121b5cb69d36706b5e5f79d98283f8bd70bf75fec9f4a89ebb3e3b17749ac5",
+    "decode_trace.mjs": "26eeb2ef7fd4f009cea90321e9c53a1c8d5b85b91dc1b35f76cefa2ccf5e1ba8",
+    "metrics_compiler.mjs": "201d3a144aed8ef3d0dce1687f15df6de29801e58bd626f52877b5e123e058c0",
+    "canonical_chain.mjs": "415c8e1346ffb8ad0d190ba8e1f0dfd4e567bf5420578cf1f99dae5d80b3ff26",
+    "external_metrics.mjs": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+    "schedule.mjs": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+    "validate_metrics.py": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad",
+    "initialization_basis.mjs": "7ef2ba6941b3787d66f105c944a129b48f28cd95b8734522849a744824ca923f"
+  },
+  "old17_invariance_verified": true,
+  "r5_independent_compilation_equal": true,
+  "raw_accepted_set_preserved": true,
+  "five_committed_chains_preserved": true,
+  "actual_case": {
+    "case_id": "lower_z_translucent_drag",
+    "status": "ACCEPTED_RECORDED_CORRECTNESS_AFTER_SCOPED_OFFLINE_REVERIFICATION",
+    "fresh": false,
+    "recording_mode": "WORKER_COMPILE",
+    "derived_mode": "OFFLINE_REVERIFICATION",
+    "recording_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "recording_source_tree_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+    "input_refs": [
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/raw-trace.jsonl",
+        "sha256": "6d8fed248cd40cf723bd428954ff5823d70815399833a560b31accac046b948c",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/worker-result.json",
+        "sha256": "1232a4a5c56bc597eddf1de2c8d10445b4d7e9c6d3f78f8a71f2a35ea4e5eca2",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/run-inputs.json",
+        "sha256": "099c7bd40258286345e8b21e12dd533c28aeac08762da56e0d6c9018957f8085",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "summary_ref": {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/actual-r5-lower-z/compiled-summary.json",
+      "sha256": "b0c2adfaaee8df23a64ebb17e80081ee6ab47628b44407bee0392d150f7829ab",
+      "identity_kind": "local-content-addressed"
+    },
+    "proof_ref": {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/actual-r5-lower-z/canonical-chain.json",
+      "sha256": "1459a12f24211e9cee1f3d0e90874d05c1962f810eefa58fc017c4825fb3bb55",
+      "identity_kind": "local-content-addressed"
+    },
+    "counts": {
+      "accepted_raw_count": 6,
+      "qualified_initialization_count": 1,
+      "qualified_committed_count": 5,
+      "qualified_decoded_count": 5,
+      "metric_receipt_count": null,
+      "unresolved_accepted_count": 0
+    },
+    "canonical_scope": "NATIVE_ONLY",
+    "metrics_not_applicable": true,
+    "trace_scope": {
+      "scheme": "CORRECTNESS_FINAL_ON_PAGE_V1",
+      "qualifying_state_path": "worker-result.json/paired_init/state",
+      "off_page_time_origin_ms": 1794125448546.5,
+      "trace_page_time_origin_ms": 1794125452313.2,
+      "verification_spec_ref": {
+        "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+        "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a"
+      }
+    },
+    "pixel_status": "QUALIFIED",
+    "subject_status": "QUALIFIED",
+    "guard": {
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/worker.mjs",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192/sdk/web",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag",
+        "correctness",
+        "lower_z_translucent_drag",
+        "ON"
+      ],
+      "reason": "completed",
+      "returncode": 0,
+      "elapsed_s": 12.645439916988835,
+      "peak_process_family_rss_kib": 1667616,
+      "rss_limit_kib": 3145728,
+      "timeout_s": 90,
+      "last_stage": {
+        "stage": "complete",
+        "status": "OBSERVED",
+        "trace": {
+          "loss": {
+            "statistical": 0,
+            "critical": 0
+          },
+          "pending_gpu": 0,
+          "records": 2575
+        }
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    "old_window_ref": {
+      "path": ".aegis/results/G5-UR0b/resume-r5/window.json",
+      "sha256": "2cc5de5d4dce51651ecf6c273a6136c60bb4e32fd7e649e7d1b310a12844dc3f"
+    },
+    "old_admission_remains": "REJECTED"
+  },
+  "independent_source_delta": [
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/authority.lock.json",
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/execution-contract.json",
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/implementation-context.md",
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/package.json",
+    ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/verification.lock.json",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/implementation-request.json",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/oracle-cases.json",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/prepare-design.py",
+    ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_reverified_remaining_runner.py"
+  ],
+  "new_browser_workers": 0,
+  "native_qualification_probes": 0
+}

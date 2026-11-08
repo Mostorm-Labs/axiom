@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r6",
+  "stage": "P36_BOUNDED_REAL_BROWSER_REVERIFICATION",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "dirty": true,
+  "dirty_scope": "Accepted prior dirty work preserved; two new authorized source files and package plus excluded outputs.",
+  "source_tree_sha256": "a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r6/package.json",
+    "sha256": "0dc1abe9149759d25bbea9b37565094e943b23fd583f995194324818de44f920"
+  },
+  "continuation_request_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/continuation-request.json",
+    "sha256": "bfaa5b13023b0ebb37dc9d68e47947e9381a869d4df777e19248646784ae5c73"
+  },
+  "mechanism_proofs_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/mechanism-proofs.json",
+    "sha256": "a63508c6a6de806419d485c9eb38f0aaf91447253eb511d2fa001b5569195503"
+  },
+  "source_scope_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/source-scope-audit.json",
+    "sha256": "c5b3e06e06a50424b0a55b8b54964b9971e5bc093c8fd99cf0c5132b1dcd743b"
+  },
+  "regression_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/regression.json",
+    "sha256": "7f9a45888e15147d4f5db18f4eedcc37c1b44b5260d93ccfb57c31c2d9c51299"
+  },
+  "blocker_analysis_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/blocker-analysis.json",
+    "sha256": "8807e26f6c9e9df255a211bd5eafad49da8f43bc70ab7c6a8f9fab49edaaa234"
+  },
+  "guard_ref": {
+    "path": "out/ur0b/resume-r6/execution/guards/correctness-permanent_live_mask.worker.json",
+    "sha256": "1a4c7456121e35299d4bb11549b669c2282284458e5a68357dcd19b9ba334040"
+  },
+  "cleanup_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/process-cleanup.json",
+    "sha256": "bc69fdd43f275b933fa8d17199b9a0bd5d25782fe66bc6d4ea59b5d30b15bf03"
+  },
+  "window_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/window.json",
+    "sha256": "e017264ae65d947e6865df4e67d889516e0fc432fab471d8e6f43a681505c30b"
+  },
+  "accounting_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/terminal-accounting.json",
+    "sha256": "02487032d46ce71d1a226b413c126398df91ad67b1f5981ac6f91af0cd31a640"
+  },
+  "correctness_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/correctness-observation.json",
+    "sha256": "1dada2b2c8556466a815c86afb2aa81ab80ac10f4b6a2565d00459afc5acb2b8"
+  },
+  "canonical_chain_ref": {
+    "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/canonical-chain.json",
+    "sha256": "89da7326812faacaa29f6c9165ecf99a77da9b11371776a313768ab27c068a15"
+  },
+  "compiled_summary_ref": {
+    "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/compiled-summary.json",
+    "sha256": "a832f73c455e1d7fc389ff6d16bb81776d67b4ff8b8c53134dbc6b12e5d99b9a"
+  },
+  "exact17_plus_one_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/reused-prerequisites.json",
+    "sha256": "e0841c3fcd7a03f4818f61cc888bc57a58bfb2c48e29b019d4047838a188c0f8"
+  },
+  "input_reference_audit_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/input-reference-audit.json",
+    "sha256": "547126b79314e5821fee745ae9cb2361ffdd59c83888b5d83d87155c3fa8b267"
+  },
+  "source_identity_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/execution-source-identity.json",
+    "sha256": "05d6a9252699d9ad8e3b1d93d59a265b6d2231b89e757059e6345df688219489"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_BUNDLE",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4/resume-r6",
+    "manifest_sha256": "64192659caae1c732c426432141eb53e3b5c18d92bec883c85e5ce8a6cf60c95",
+    "payload_files": 162
+  },
+  "planned_ids": [
+    "correctness-permanent_live_mask",
+    "correctness-transparent_color_bg",
+    "correctness-warm_miss_pressure",
+    "correctness-dpr_switch",
+    "correctness-feedback_canonical",
+    "LEGACY9_DRAG_DPR2_32_96-r1",
+    "LEGACY9_DRAG_DPR2_32_96-r2",
+    "LEGACY9_DRAG_DPR2_32_96-r3",
+    "LEGACY16_ERASE_DPR2_32_96-r1",
+    "LEGACY16_ERASE_DPR2_32_96-r2",
+    "LEGACY16_ERASE_DPR2_32_96-r3",
+    "IMMEDIATE_REERASE_DPR2_32_96-r1",
+    "IMMEDIATE_REERASE_DPR2_32_96-r2",
+    "IMMEDIATE_REERASE_DPR2_32_96-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+    "LEGACY9_DRAG_DPR2_64_192-r1",
+    "LEGACY9_DRAG_DPR2_64_192-r2",
+    "LEGACY9_DRAG_DPR2_64_192-r3",
+    "LEGACY16_ERASE_DPR2_64_192-r1",
+    "LEGACY16_ERASE_DPR2_64_192-r2",
+    "LEGACY16_ERASE_DPR2_64_192-r3",
+    "IMMEDIATE_REERASE_DPR2_64_192-r1",
+    "IMMEDIATE_REERASE_DPR2_64_192-r2",
+    "IMMEDIATE_REERASE_DPR2_64_192-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3"
+  ],
+  "executed_ids": [
+    "correctness-permanent_live_mask"
+  ],
+  "admitted_ids": [],
+  "missing_ids": [
+    "correctness-transparent_color_bg",
+    "correctness-warm_miss_pressure",
+    "correctness-dpr_switch",
+    "correctness-feedback_canonical",
+    "LEGACY9_DRAG_DPR2_32_96-r1",
+    "LEGACY9_DRAG_DPR2_32_96-r2",
+    "LEGACY9_DRAG_DPR2_32_96-r3",
+    "LEGACY16_ERASE_DPR2_32_96-r1",
+    "LEGACY16_ERASE_DPR2_32_96-r2",
+    "LEGACY16_ERASE_DPR2_32_96-r3",
+    "IMMEDIATE_REERASE_DPR2_32_96-r1",
+    "IMMEDIATE_REERASE_DPR2_32_96-r2",
+    "IMMEDIATE_REERASE_DPR2_32_96-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+    "LEGACY9_DRAG_DPR2_64_192-r1",
+    "LEGACY9_DRAG_DPR2_64_192-r2",
+    "LEGACY9_DRAG_DPR2_64_192-r3",
+    "LEGACY16_ERASE_DPR2_64_192-r1",
+    "LEGACY16_ERASE_DPR2_64_192-r2",
+    "LEGACY16_ERASE_DPR2_64_192-r3",
+    "IMMEDIATE_REERASE_DPR2_64_192-r1",
+    "IMMEDIATE_REERASE_DPR2_64_192-r2",
+    "IMMEDIATE_REERASE_DPR2_64_192-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3"
+  ],
+  "fresh_browser_starts": 1,
+  "new_charged_seconds": 12,
+  "total_starts": 35,
+  "total_charged_seconds": 1276,
+  "window_closed": true,
+  "outstanding_reservations": 0,
+  "retry_authorized": false,
+  "blocker_classification": "BLOCKED_EVIDENCE",
+  "next_action": "Independent control/Verification review of accepted work1 completion outside observed frame/work. r6 remains closed.",
+  "performance_or_official_gate_PASS": false
+}

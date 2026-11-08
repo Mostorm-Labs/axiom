@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3.12",
+    "verification/runners/g5/ur0/scoped_remaining_runner.py",
+    "--sdk64",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192/sdk/web",
+    "--sdk32",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r3/build-qualified-32-96/sdk/web",
+    "--proofs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/resume-r6/mechanism-proofs.json",
+    "--output",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r6/execution"
+  ],
+  "single_window": true,
+  "new_worker_plan_count": 35,
+  "no_hidden_smoke": true
+}

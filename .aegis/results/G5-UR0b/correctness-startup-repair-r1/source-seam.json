@@ -1,0 +1,38 @@
+{
+  "status": "STARTUP_SEAM_CONFIRMED",
+  "source_refs": [
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c"
+    },
+    {
+      "path": "sdk/web/bridge.cpp",
+      "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9"
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+    },
+    {
+      "path": "verification/runners/g5/ur0/consumer.mjs",
+      "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7"
+    },
+    {
+      "path": "verification/runners/g5/ur0/worker.mjs",
+      "sha256": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735"
+    }
+  ],
+  "accepted_sdk_wrapper_ref": {
+    "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/axiom.mjs",
+    "sha256": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638"
+  },
+  "sdk_render_block_matches_accepted_artifact": true,
+  "onFrame": "SDK render queues onFrame only when positive native presented counter changes; native adapter increments it only after receivePlatformPresented succeeds.",
+  "sdk_queue": "render reschedules pending/retry; consumer already tracks SDK-owned RAFs and excludes marked host probes.",
+  "startup_fault": "createRuntime can return with initial fence pending; old consumer resets collector before accepted callback and driver later enables, so completion may cross the left boundary.",
+  "no_runtime_or_sdk_mutation": true
+}

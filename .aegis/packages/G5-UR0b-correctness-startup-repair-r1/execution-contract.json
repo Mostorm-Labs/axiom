@@ -1,0 +1,113 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/consumer.mjs",
+      "verification/runners/g5/ur0/worker.mjs",
+      "verification/runners/g5/ur0/correctness_startup.mjs",
+      "verification/runners/g5/ur0/initialization_basis.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/tests/g5_ur0_correctness_startup.test.mjs",
+      "verification/tests/g5_ur0_initialization.test.mjs",
+      "verification/tests/test_g5_ur0_repair_runner.py",
+      "verification/tests/test_g5_ur0_remaining_runner.py",
+      "verification/tests/test_g5_ur0_reverified_remaining_runner.py",
+      "verification/tests/test_g5_ur0_scoped_remaining_runner.py"
+    ],
+    "authorized_control_paths": [
+      ".aegis/verification/G5-UR0b-correctness-startup-v1/**",
+      ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/**"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/correctness-startup-repair-r1/**",
+      "out/ur0b/correctness-startup-repair-r1/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<source>/correctness-startup-repair-r1/**"
+    ],
+    "required_changes": [
+      "Use a correctness-only startup quiescence frontier after createRuntime but BEFORE collector reset/enable or fixture mutations, applied symmetrically on OFF and reloaded ON pages. Existing public onFrame is emitted only after native accepted canonical presentation; SDK render schedules RAF again while frame.pending/retry. Use actual startup presentation plus SDK-owned RAF quiescence rather than a fixed sleep/ten RAFs/generation0 alone. Confirm this seam from source before freezing the P20 design.",
+      "Await actual initial public onFrame in this fresh isolated Runtime and the existing SDK RAF queue becoming quiescent, under the unchanged setup/correctness deadlines. Preserve errors and fail explicitly if it never converges; do not turn idle/public generation equality or diagnostic pending_gpu=0 while OFF into a proof of completion.",
+      "Do not enable earlier before document open without reviewing newly captured initial Scene/setup observations. Preferred minimal design keeps startup outside this cold correctness observation window after positively draining it. It adds no Operation, extra frame request, private Runtime accessor, force-finish, GPU synchronization or new SDK API.",
+      "Keep non-correctness init/worker/measurement scheduling and OFF/ON timed toggle behavior identical. Cold correctness OFF and ON follow the same startup path before fixture work; final ON-page lifecycle binding and full owner/sequence/native checks remain.",
+      "Publish any startup evidence as host protocol/observation-boundary facts with real page/time/callback/queue values, not a native ID or a synthetic canonical frame. Freeze exact new correctness-only worker/consumer/helper profile; retain both existing literal profiles and their behavior. Never authorize arbitrary recordings by reading current files at validation time.",
+      "P20/P31 are required internal checkpoints for this earlier-layer correction. If the above seam is proven by source and offline test, freeze and implement continuously without another approval. A genuine conflict with this scope returns a concrete blocker; do not wait merely for a separate generic Verification prompt."
+    ],
+    "required_tests": [
+      "Deterministic Node offline RED reproduces createRuntime returning with initial canonical work still in flight, accepted completion arriving after old reset/enable. Corrected protocol waits for actual acceptance/SDK queue drain before recording. Test both early and delayed completion without opening any browser/native sample.",
+      "Test OFF-close/reload-ON symmetry, wrong page/stale callback, nonempty/foreign state, pending/retry callbacks, startup timeout/error and that fixed sleep/ten RAF/generation0/disabled pending_gpu0 alone cannot satisfy frontier.",
+      "Default non-correctness path unchanged; measurement init/toggle and original seven helper behavior preserved except exact correctness branch and optional helper. Explain source diff rather than claiming identical entire files.",
+      "Current all-accepted native rules stay. Actual archived r6 independently recompiled must REMAIN MISSING with 7=1+5+1, seq22 unresolved; no offline invented work1. The accepted17 metrics/native recordings plus one recorded lower-z correctness keep their canonical/decoded/metric/pixel identities and recorded status.",
+      "Both historical initialization profiles remain literal and unchanged. New correctness-only profile is exact/literal; unknown or forged startup/profile/lifecycle remains rejected by JS and Python. Current bound-compilation reconstructs actual protocol inputs.",
+      "Historical positive runner tests use their exact accepted compiler context from immutable commit or manifest-bound r6 source archive. Do not weaken actual-current compiler/source/profile mismatch negatives to make old packet tests green. The scope explicitly includes all three affected historical runner test files.",
+      "Run full existing UR0b Node/Python tests, the120 boundary contracts and git diff --check. Record actual counts/commands. Two already-existing malformed native unit invocations may run under original separate unit accounting; no new build, native probe, browser smoke or hidden qualification.",
+      "Archive exact repaired source/result and evidence hashes; distinguish current source from recording source and OFFLINE_REVERIFICATION from fresh WORKER_COMPILE."
+    ],
+    "read_only": [
+      "runtime/**",
+      "sdk/**",
+      "all accepted SDK artifacts and locks",
+      "all previous verification specs/packages/results/windows/ledgers and raw recordings",
+      "all other existing harness/compiler/pixel/corpus/threshold code"
+    ],
+    "forbidden": [
+      "Any browser/native sampling, probe, smoke or retry; no r7 yet",
+      "Any build/dependency/SDK/collector/public API/product change",
+      "Changing 3GiB RSS, phases30s/outer90s, main180s, original8370s cap or timed primary protocol",
+      "Dropping/relabelling r6 work1, rewriting CLOSED r6 or lower-z evidence, fake Operation/Scene/native IDs",
+      "Commit/push, UR0c/UR1, performance/platform/P34 PASS"
+    ],
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "Old exact createRuntime-return/reset/enable ordering permits delayed initial accepted completion with no observed predecessor chain",
+      "observation_seam": "Deterministic offline scheduler with controlled callback and SDK RAF queue"
+    },
+    "blocking_evidence": [
+      "Deterministic Node offline RED reproduces createRuntime returning with initial canonical work still in flight, accepted completion arriving after old reset/enable. Corrected protocol waits for actual acceptance/SDK queue drain before recording. Test both early and delayed completion without opening any browser/native sample.",
+      "Test OFF-close/reload-ON symmetry, wrong page/stale callback, nonempty/foreign state, pending/retry callbacks, startup timeout/error and that fixed sleep/ten RAF/generation0/disabled pending_gpu0 alone cannot satisfy frontier.",
+      "Default non-correctness path unchanged; measurement init/toggle and original seven helper behavior preserved except exact correctness branch and optional helper. Explain source diff rather than claiming identical entire files.",
+      "Current all-accepted native rules stay. Actual archived r6 independently recompiled must REMAIN MISSING with 7=1+5+1, seq22 unresolved; no offline invented work1. The accepted17 metrics/native recordings plus one recorded lower-z correctness keep their canonical/decoded/metric/pixel identities and recorded status.",
+      "Both historical initialization profiles remain literal and unchanged. New correctness-only profile is exact/literal; unknown or forged startup/profile/lifecycle remains rejected by JS and Python. Current bound-compilation reconstructs actual protocol inputs.",
+      "Historical positive runner tests use their exact accepted compiler context from immutable commit or manifest-bound r6 source archive. Do not weaken actual-current compiler/source/profile mismatch negatives to make old packet tests green. The scope explicitly includes all three affected historical runner test files.",
+      "Run full existing UR0b Node/Python tests, the120 boundary contracts and git diff --check. Record actual counts/commands. Two already-existing malformed native unit invocations may run under original separate unit accounting; no new build, native probe, browser smoke or hidden qualification.",
+      "Archive exact repaired source/result and evidence hashes; distinguish current source from recording source and OFFLINE_REVERIFICATION from fresh WORKER_COMPILE."
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "terminal_success": "READY_FOR_CONTROL_REVIEW with complete offline source/proof/tests and explicit future sampling applicability; no automatic new sample window.",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "sampling": {
+      "starts": 35,
+      "charged_seconds": 1276,
+      "outstanding_reservations": 0,
+      "unknown_starts": 0,
+      "new_browser_starts_authorized": 0
+    },
+    "notify_terminal": {
+      "required": true,
+      "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit blocker"
+      ],
+      "include": [
+        "Exact task/package/result/bundle/source/manifest SHA256",
+        "Root-cause model RED and corrected offline tests",
+        "Actual regression commands/counts",
+        "r6 still unresolved and17+1 identity invariance",
+        "No new browser starts;35starts/1276s retained; remaining baseline work",
+        "Any scope/authority conflict with concrete path/rule"
+      ],
+      "delivery_failure": "Save exact notification and failure; never pretend sent."
+    }
+  }
+}

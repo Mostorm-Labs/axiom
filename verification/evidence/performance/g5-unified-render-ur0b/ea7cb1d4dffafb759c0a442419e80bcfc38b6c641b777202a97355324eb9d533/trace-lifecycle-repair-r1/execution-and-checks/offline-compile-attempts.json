@@ -1,0 +1,22 @@
+{
+  "record": "qualification-p1-A",
+  "first_attempt": {
+    "status": "OFFLINE_COMPILER_TIMEOUT",
+    "limit_seconds": 120,
+    "partial_output": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/offline-attempts/qualification-p1-A-first-timeout",
+    "log": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/derivation.log",
+    "partial_files": {
+      "external-metrics.json": "40786391e12977f14d11950619344120a001f053a4b484ea994e4dc4758e45e9",
+      "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d"
+    }
+  },
+  "second_attempt": {
+    "status": "COMPLETED",
+    "compiler_and_input_unchanged": true,
+    "log": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/offline-attempts-q1A.log",
+    "output": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/recompiled-recordings/qualification-p1-A"
+  },
+  "orchestration_followup": "Resume verified complete local derivations without replacing their outputs; close irrelevant outer stdin for remaining offline compiler processes.",
+  "new_browser_workers": 0,
+  "native_qualification_probes": 0
+}

@@ -1,0 +1,983 @@
+{
+  "status": "17_PLUS_ONE_INVARIANT_AND_R6_STILL_MISSING",
+  "rows": [
+    {
+      "record_id": "diagnostic-OFF",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/worker-result.json",
+          "sha256": "f75c5d2946028c3aca112562c0d16a215dd08730816f543ed30fba323422959e",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/diagnostic-OFF/compiled-summary.json",
+        "sha256": "ba4b4415e1d34e217266eb9924ac1369b93dc9382c8f0f579b5d7a9a5f22f59b",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/diagnostic-OFF/compiled-summary.json",
+        "sha256": "f386a8b3c7c2a1899e6e4f64cb91c3c44e5a9f7983a4552a8af1647a941b7d20"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/diagnostic-OFF/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "b7218f000620791a20e62dac58c4137ddd2874954a6958d3f9f9e66bfcee14f2",
+        "external-metrics.json": "f84d63045a8a4a68d546b82ff56638b0d7bc62b5545bf28659473e61b7755ded",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "diagnostic-ON",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/raw-trace.jsonl",
+          "sha256": "a54e5299a5520cc35e4545e3506e04a3b07638a94f7452585c9c07623eb2132a",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/worker-result.json",
+          "sha256": "31f7a653ef3ea4c27675f248c05db490b69aa4276868a3838d58047b0c1d61f6",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/diagnostic-ON/compiled-summary.json",
+        "sha256": "eaaa2a86c4455aca2ee3d708ad80656e0ea3d76a99c8dda2f4e8f757c7e8fc79",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/diagnostic-ON/compiled-summary.json",
+        "sha256": "a05b08d2ed134aa90770f3f60e0f7432f892de29fdb2494ba5e8ed09b3ad0d24"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/diagnostic-ON/canonical-chain.json",
+        "sha256": "a82b188f1f4a52067b886e1a569a780cf4f1a9f52a2f9e102c4a242d5a0025db"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "bef044747cf29bd4f8b35a501c419fc6020aa6698a2c93bf1093c27e6667260a",
+        "canonical-chain.json": "a82b188f1f4a52067b886e1a569a780cf4f1a9f52a2f9e102c4a242d5a0025db",
+        "metrics.json": "742c35e7192656dc55ce94ace424d46e3c1c23e05d5cc1623f79086fcd064c12",
+        "external-metrics.json": "bfb92a06a2c5428a87f35802c95d380b66b9735a2e7832bde5f1c9f672e67086",
+        "compiler-provenance.json": "9204b8b104269c09f6148943ace3ef40a5f662d73eaa20bc204f0bee0059cf81"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p1-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/worker-result.json",
+          "sha256": "9a04d9f965773f99c1645b78c270251832c0d512ae92871b8e3cd9ce30e1d796",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p1-A/compiled-summary.json",
+        "sha256": "d2fe916028a6e5d89e9ba44956256a6ae7a17ffab0502567cbaab1fb08676c0e",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p1-A/compiled-summary.json",
+        "sha256": "df4ac575a696406b52d0004191a4ce68e8e8a99d449e2ce2cbbf957998c51029"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p1-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "592950680466149f1f33e6792b6d3c307157193a27b5074144681e1f32dadc1b",
+        "external-metrics.json": "40786391e12977f14d11950619344120a001f053a4b484ea994e4dc4758e45e9",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p1-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/raw-trace.jsonl",
+          "sha256": "d25f1e9e1b3ea2a73baaf18ddcf9c66a334e6785436ba670857066c963922499",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/worker-result.json",
+          "sha256": "02526fa47378ad3afff9e163f260d9803a6efda1a5b8435d13d899c6b74fc183",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p1-B/compiled-summary.json",
+        "sha256": "61106b8c86de9861e123879ac874cf6565183b54ae28996fdc8bef3ac38d2a55",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p1-B/compiled-summary.json",
+        "sha256": "2a85c17fa0dd5c9d18df916cc083579c972db9194cede06f845f1f583e5e8360"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p1-B/canonical-chain.json",
+        "sha256": "cbb1820be54ab5b24dc8af4d2ab797872a99916b96a7702b9034deee2df084e6"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "3368d6a6accc78d6e90e24596365ad0597565e3d10a0a83ca50318113ad7fbe3",
+        "canonical-chain.json": "cbb1820be54ab5b24dc8af4d2ab797872a99916b96a7702b9034deee2df084e6",
+        "metrics.json": "1f130732873e00366ba66d5c072544c555f263066b620951b86c1427d57e05c4",
+        "external-metrics.json": "543e44468113637ddf27a505da3ddd49066a1c3473ccfe1ee7dba72eda6c6751",
+        "compiler-provenance.json": "4143447bdc6d7da6e004247ce2cb19bf16525caf988ee56b827e85217324fae5"
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 2,
+        "metric_receipt_count": 2,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p2-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/worker-result.json",
+          "sha256": "7701f28d1d201ddf647fdf5b42a4f6dd5bb788cf3aa2593fabeeb4b330ed7a92",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p2-A/compiled-summary.json",
+        "sha256": "e6052ca7078f50df292f61dd798dbe155def36426e61010f5654e6392ad343c9",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p2-A/compiled-summary.json",
+        "sha256": "f32b33a1cf239175164c435aee70164c01c2338ddee7a0cce2a1d495cc36216a"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p2-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "113d3b253e9058df6fafe6de97218c39f454da33f70981ad336d1336a7a9a668",
+        "external-metrics.json": "bccbf5f38cbb157c3658adec0ef39a317c463dd6ed644d377b1ac74a4fe17df4",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p2-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/raw-trace.jsonl",
+          "sha256": "cdd091ec1f3eb2a96abf055658468e4b04585fd9e9ca86673057fe4c699806ed",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/worker-result.json",
+          "sha256": "d5c484899bb2b6128cf258459ea9518b01bc173707450b9ccc0146c1f6f96366",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p2-B/compiled-summary.json",
+        "sha256": "4a227720e9d5acd117b0b7a36895a8f1ef4ce1ded9f8dd4b6819f322deb610a4",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p2-B/compiled-summary.json",
+        "sha256": "2bb64bed69f0f279bdbf659dc04e2e755cda92e823fd59c31a3ac2d76445e424"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p2-B/canonical-chain.json",
+        "sha256": "0216e743009ed56f005007d285994206d102fe043aeca03bad5cc195a64fd63d"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "acac47946e8725a91f43ba7034364aa43776b6642ba9e6fe21ac53f9ac155ce1",
+        "canonical-chain.json": "0216e743009ed56f005007d285994206d102fe043aeca03bad5cc195a64fd63d",
+        "metrics.json": "437e346c48e9f9c750c2421a108c8edfc3fdb7d2ec642d81712f04441e9ae96d",
+        "external-metrics.json": "9006e2ca7b04953c518f0377f4e43845b7705db8fefe98e601cc2f598cf11a30",
+        "compiler-provenance.json": "03e2edfbe284bda16ea85a0467404a0e961c39be9810b8104f2b626e88a93ecb"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p3-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/worker-result.json",
+          "sha256": "28299a798ef059f618b9261701b3a6988f00ba0d38ce5573afcc1a38b51edcb9",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p3-A/compiled-summary.json",
+        "sha256": "4cb6358c7c32117a1b8bc31d5dff8a6101551e2e7d096340b65d8f2e15285e6c",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p3-A/compiled-summary.json",
+        "sha256": "493d4c1c418af981e4f035e1d23be6c29a4cb7977e7b114f936f8af05ef51c52"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p3-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "ccf91b1f9ff3d69685af8596fc4183e8dd928c6ddebdb75d9a93d614dfcb5a35",
+        "external-metrics.json": "8988bc1363b396254f98ef9a13dea068879e521c8cc137e732b1ab87f11e6552",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p3-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/raw-trace.jsonl",
+          "sha256": "6c5c2ef4c6d03225d7bcd92564adbd510a1def04b091b2fada2308bec3a6bf0d",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/worker-result.json",
+          "sha256": "3d84ac30b511d6345b234b61e164b4773124082da5b0cd79cbc446df9cdb44b7",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p3-B/compiled-summary.json",
+        "sha256": "80c5f6a2b8a77b9d132920fecae42a974c8e5e24eabab54e12a54672f20ebd6c",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p3-B/compiled-summary.json",
+        "sha256": "69d64f11f8c82bd63fd4956745635131f9c4442f204992b749694af3d4648bd5"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p3-B/canonical-chain.json",
+        "sha256": "5ae1fc7930b944215f534efc72c17e2f93be2b9fe2745abb1a2c8b6ec7455309"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "6c97af1cff04b20c41145d114793e88c39dd8f410e71fc76c36aba4a8ae0ee47",
+        "canonical-chain.json": "5ae1fc7930b944215f534efc72c17e2f93be2b9fe2745abb1a2c8b6ec7455309",
+        "metrics.json": "7941c786b4ac94a7d1765c56c98fb7b04241b574324444d09f843c4c6985a663",
+        "external-metrics.json": "bdf0d5823d905172e2546d8a18ede4fa8e1fdd9c81dc60f8c43ab60b9c27b130",
+        "compiler-provenance.json": "5d34e71c24ba37fe9621bc037b689dd86235167cd62f532eb8e8f782b0862330"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p4-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/worker-result.json",
+          "sha256": "7b5423df8794d21ebe6f0e872ce417c63a9a1baac5582c252a704dfb6034a669",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p4-A/compiled-summary.json",
+        "sha256": "d6646edbe1e1546cb79e854c4c5063cca28a7c6b67127a585d846c61b203f8d0",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p4-A/compiled-summary.json",
+        "sha256": "17dd5a4715d67237bd62f1891a06159d0223486f1d168f59610bb66c1d6b74f3"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p4-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "6f728fa7f11df8c0eabea6674f48e7eec0d8b1ee90c2f5bdbf5fdc8fbd4256c1",
+        "external-metrics.json": "20c0c81159c8b49917fdd987577f179d782860e01613610789390b8bda770915",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p4-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/raw-trace.jsonl",
+          "sha256": "9c46d734f10c7ecf727a9f832877113af06efc86f9f6dd334c9b075874653829",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/worker-result.json",
+          "sha256": "de3f0548db1c1f45d4a610a287e568b4272ce3cbfd80a3c766b304c62a4fc249",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p4-B/compiled-summary.json",
+        "sha256": "5ad78f0a989fe2fba5543cae19e65a46624304460872091962eb72a34aaa64e5",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p4-B/compiled-summary.json",
+        "sha256": "d6fd4fe2f73fb26217fe20ae8625db4dc50f3ecba1ecf41ee074cc154b21debf"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p4-B/canonical-chain.json",
+        "sha256": "34aa489732213f83b6a6fa14c198dee97019cad4c8f93a097af2939dd01491c4"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "c9a7fdf1a44611dbdf4daf1781bcce39f5b204720db94846a40b6140db152608",
+        "canonical-chain.json": "34aa489732213f83b6a6fa14c198dee97019cad4c8f93a097af2939dd01491c4",
+        "metrics.json": "09d82a38c863b75c23de5aa77c0219d670075b8ff28fa80267df96769fcc1292",
+        "external-metrics.json": "2722bed1ccb883b6cdc6a2b44d376e28b2297b88431cc3be2340987f43c7fce9",
+        "compiler-provenance.json": "d793482e84e50706e9af015c3a89718e8b8da1a0c243534f031b0fd0ee223aed"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p5-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/worker-result.json",
+          "sha256": "62d0996783155676dc9248d95f3a83a5b91fdd6e3b9553b204fdbe97efcd0daf",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p5-A/compiled-summary.json",
+        "sha256": "bb89a2f1f710ccec94f5839d4ae1fb36b21278dce7e9a11ba516c022cf7e332c",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p5-A/compiled-summary.json",
+        "sha256": "8d2014d1e12ab143e2fa10a029ff59090a9a8fecf0219dab32e7974e8f79503f"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p5-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "ac613e6d087b2663830b2a0d5ac5b51731ec910be44b6c44f29ac3bd6f680a4b",
+        "external-metrics.json": "2154f3dc3ff086e0175f510293af0973d222570b8599b1b66513b092fdd0130b",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p5-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/raw-trace.jsonl",
+          "sha256": "bffefac34a96af4d49e39289761cc50104798043e8394a2bf53c2aa4245e6314",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/worker-result.json",
+          "sha256": "8d68ab03f90df60d220e6e39da9ee1dce19ffe04708419ead221b57e4e9669c5",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p5-B/compiled-summary.json",
+        "sha256": "cd3679fc9fb9421c7d1d5c8006c7ce453f38342de396a26f717308153069dc9e",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p5-B/compiled-summary.json",
+        "sha256": "64cae7b30b1d30e4e6d1f0c8bb17684a6cd1fb7a5e13a48a173148affe0325f3"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p5-B/canonical-chain.json",
+        "sha256": "0be227264b53cacff58dbe9b32de70b102b9d7773f005a2a0f2ac59a193aa604"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "51e9b3bd9574016008d1f3e8e3ff4f5c5db757bcdd29a5f26819c29ce2fac6c6",
+        "canonical-chain.json": "0be227264b53cacff58dbe9b32de70b102b9d7773f005a2a0f2ac59a193aa604",
+        "metrics.json": "8c93a44a4a0b1a399fe66015264540af6fdd317b484001f60d2db20363590118",
+        "external-metrics.json": "a240c74682f0bfe7aa996f0e3070a8062190d28a454c51b18d692b1a85ef61ec",
+        "compiler-provenance.json": "49df254329d5a2d514e4d22a98623d9f2f04b9e73010e76a28e00f2a687857e8"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p6-A",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/worker-result.json",
+          "sha256": "91d3985195aeff030912a077db062a526dbdfc7fcd2ae368d89319eb8b0c1923",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p6-A/compiled-summary.json",
+        "sha256": "a09833d4579e510d4dcac6f7603fb3ba5d9fbfa967e8f229a29affdd4f974ef4",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p6-A/compiled-summary.json",
+        "sha256": "2c9e33011129758f4e7ec7cbdebe5cf869bbf35156d41e62e66316589b36ebfc"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p6-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "772cd73c09fb8698660cf5633b3e87b966d0244eb29961e8c6bc3fe9f3b20c8d",
+        "canonical-chain.json": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8",
+        "metrics.json": "e811696ec60670aa918b59e326427698ad97c0dcf5000c2fcbc50eb1896e413b",
+        "external-metrics.json": "87f011e203d09f6f49af6b80464e1070e26af162075548f5bdf6d0cdf4834a3e",
+        "compiler-provenance.json": "c22aa41d2bc78bad8d70a7e8661c3a21a53fd04d7d36756ba3079c7518dd764d"
+      },
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "qualification-p6-B",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/raw-trace.jsonl",
+          "sha256": "c5d4b9289473a10a015293a3af5f0df5d4d13ceb16495de20e7589e7333fa1bc",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/worker-result.json",
+          "sha256": "88c27e6329f777489f2f1df92a9d61bdc3871c793e62811c37ab293ddadfda85",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/qualification-p6-B/compiled-summary.json",
+        "sha256": "fa0dc7ffea89fd67fe58d61a8a9939331d1f8c19eadc8f8cf07bc863e7e59cb0",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p6-B/compiled-summary.json",
+        "sha256": "6a1309e4941a3da5c1a67532ad2a0235e3acb5ac04810d5331a5e60faa8e84ab"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/qualification-p6-B/canonical-chain.json",
+        "sha256": "cc5a3ff27bd3cc2d7518cbcbbc8be666148fe393f962d9237b1afd1a8a51b2c0"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "370a818b9c055f31688395a9f46dd055fbb7c65a44695b759af68821b9a3d707",
+        "canonical-chain.json": "cc5a3ff27bd3cc2d7518cbcbbc8be666148fe393f962d9237b1afd1a8a51b2c0",
+        "metrics.json": "a1871bf971b6858a2c04e2d4b1f79cf6201d112c224583f49cc7d04ea23b52ac",
+        "external-metrics.json": "6e00d3650d5b089b858cd3763c0f3bbc05a3eee16e13b99324da6e5234908707",
+        "compiler-provenance.json": "cdda890e067fe3160addec3309ec18ecbbc7e9ac69a0c43bfacd2d213a39055e"
+      },
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "realtime-60",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/raw-trace.jsonl",
+          "sha256": "8561e0d73918a00d9100c64c51e9fe0db9eef72c2e4a17f7d60f5b52449d8fa7",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/worker-result.json",
+          "sha256": "32114d1cca7fcd35282979b331ded6bcacca5ba1ac5c52df3c21db7d995eff62",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/run-inputs.json",
+          "sha256": "d14b2ef8876034491391aae36ae2c68719b9c0cca001ec77472cb8875558a3a6",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/realtime-60/compiled-summary.json",
+        "sha256": "d26c4337cfcb277101c8c418fcf6a02e4e2b1fde0547295f0db87c6fccf0d9cc",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-60/compiled-summary.json",
+        "sha256": "80793844e72a4ede0f94b3d302d3860a2bbf8adfbe7c9d5af06b91cac0a041b4"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-60/canonical-chain.json",
+        "sha256": "e07d20cac8ba6196dbeb70989954b75c8744a6deeaaf68b432f6c8d471cd9728"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "c6fd14e03804bfd14dce761fdd25ec4571a08ec117aab8fefb5d15e312cbeff9",
+        "canonical-chain.json": "e07d20cac8ba6196dbeb70989954b75c8744a6deeaaf68b432f6c8d471cd9728",
+        "metrics.json": "3f912ddb7b029e26393ca2019d3f7daaa821f513ffa43af2e94ddd654195a0e7",
+        "external-metrics.json": "d6661c2dd965f4488e5f318a1010d4436f80a5523a456223599e1af941528975",
+        "compiler-provenance.json": "187021c84934f171cebef27c4fbf5f9130551398df83462252ce439f7e92887c"
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "realtime-120",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/raw-trace.jsonl",
+          "sha256": "e009ff785573b2cfba4aca87c71fcc57b8d4d63d4d06a39419913dc3ed209eed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/worker-result.json",
+          "sha256": "f500dd5c854bdf0a928f645ba667bc2cb288ebc4f0f34fa77741ecedb8ba52e1"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/run-inputs.json",
+          "sha256": "b86c78a678b7f6ef701d1f205c3317741cb0e34e41bcf7edc05e554f846e157f"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/realtime-120/compiled-summary.json",
+        "sha256": "3b08437b66f01e6ad2954032d9be9257b8346a3dbb6b3fe48eec35a8820e5f29",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-120/compiled-summary.json",
+        "sha256": "95e75c983542f9f2060bdb66f8961aeabfff8f5d75a05223d9d351772cab2e77"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-120/canonical-chain.json",
+        "sha256": "3b0a210fddca85d47293392688c13831de56a35da79ca5a2c39b3ee929e2a3c1"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "72ce103d56a652ebac6fd9a7a1805d9871ebdd5acf07c720f4ba9852b725bd08",
+        "canonical-chain.json": "3b0a210fddca85d47293392688c13831de56a35da79ca5a2c39b3ee929e2a3c1",
+        "metrics.json": "40029c38eee72674468020c4e391382109c8063abe92c7e9d0d157d4bc3c7d02",
+        "external-metrics.json": "e9786e32c54cbdefa3d3ffd2dfa07d5ae35191b2e441e7e53dec6211b15b86c6",
+        "compiler-provenance.json": "f46facd0b608348b1fa63824c7cd5ab035c92367c36076bf1d591d3c1578e70f"
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "realtime-240",
+      "kind": "METRICS_PREREQUISITE",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/raw-trace.jsonl",
+          "sha256": "56edb6b8b9a7c794971c3949251c4aaf200e285c9449d53ddf66ffb873cfe992"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/worker-result.json",
+          "sha256": "6656c11c40cab493ae38389d95a3e23956d5c14cdd12293119491239c58733a2"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/run-inputs.json",
+          "sha256": "da7437cd325d552562427a4bf0fb3107c431f44a0814d15c48909c69696dce8a"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/realtime-240/compiled-summary.json",
+        "sha256": "2ca49a03e1c2169f869451e44ff9d03ae295c81971aefafed47fba8f8efafc61",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-240/compiled-summary.json",
+        "sha256": "66779b3e94b391ad9e932051690df7d5c77a845a1a7bd23f3d6a6f8ef4e65755"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/realtime-240/canonical-chain.json",
+        "sha256": "5e120fb7ae5a06e50b4a10813504b417eade58b9c6abd057b6d8a99dd37c93ea"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "1b5c76a6dc8e166ea5e4407e83168d4fe4ec09cf5a47409a8a0d80718222e11f",
+        "canonical-chain.json": "5e120fb7ae5a06e50b4a10813504b417eade58b9c6abd057b6d8a99dd37c93ea",
+        "metrics.json": "3f76069da76cdc3c3e8ed07302c15f3ab0df11ac308e0142f4a373ff8a5a2847",
+        "external-metrics.json": "6370c8e9ec6848dd48edcbb44d08d581e2a131e61324ea44e10683c948323126",
+        "compiler-provenance.json": "187021c84934f171cebef27c4fbf5f9130551398df83462252ce439f7e92887c"
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "recorded-lower-z",
+      "kind": "NATIVE_ONLY_CORRECTNESS",
+      "status": "INVARIANT_EXCEPT_COMPILER_PROVENANCE",
+      "original_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/raw-trace.jsonl",
+          "sha256": "6d8fed248cd40cf723bd428954ff5823d70815399833a560b31accac046b948c",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/worker-result.json",
+          "sha256": "1232a4a5c56bc597eddf1de2c8d10445b4d7e9c6d3f78f8a71f2a35ea4e5eca2",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/run-inputs.json",
+          "sha256": "099c7bd40258286345e8b21e12dd533c28aeac08762da56e0d6c9018957f8085",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "original_mode": "OFFLINE_REVERIFICATION",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1/execution-and-checks/recompiled-recordings/actual-r5-lower-z/compiled-summary.json",
+        "sha256": "b0c2adfaaee8df23a64ebb17e80081ee6ab47628b44407bee0392d150f7829ab",
+        "identity_kind": "local-content-addressed"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/recorded-lower-z/compiled-summary.json",
+        "sha256": "160934f4ede0361551e966da7c61dc9f452ea758102959d2edd04e72e2b00ff8"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/recorded-lower-z/canonical-chain.json",
+        "sha256": "1459a12f24211e9cee1f3d0e90874d05c1962f810eefa58fc017c4825fb3bb55"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "7386fa08595ed54be029ed903176a6fecd40619b8b9d45e0aa906cc88b1a1bff",
+        "canonical-chain.json": "1459a12f24211e9cee1f3d0e90874d05c1962f810eefa58fc017c4825fb3bb55"
+      },
+      "counts": {
+        "accepted_raw_count": 6,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 5,
+        "metric_receipt_count": null,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "record_id": "actual-r6-preserved-missing",
+      "kind": "PRESERVED_MISSING",
+      "status": "PRESERVED_MISSING",
+      "original_input_refs": [
+        {
+          "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/raw-trace.jsonl",
+          "sha256": "f78f4f7b02bb005ec27dc7dec0f54a5c42a97a83d9a3d163ca7d8271a6451ca3"
+        },
+        {
+          "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/worker-result.json",
+          "sha256": "30cc1bf9581961cdf4da57b9c2c75a513b10c647bd73a7fa8e91a0138f3f5685"
+        },
+        {
+          "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/run-inputs.json",
+          "sha256": "132c1b12cbb2d533af0ec4dcfe8b1e4c70457b28e87e1bff192cd5f101ad87d0"
+        }
+      ],
+      "original_mode": "WORKER_COMPILE",
+      "derived_mode": "OFFLINE_REVERIFICATION",
+      "recording_source_tree_sha256": "a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4",
+      "baseline_summary_ref": {
+        "path": "out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/compiled-summary.json",
+        "sha256": "a832f73c455e1d7fc389ff6d16bb81776d67b4ff8b8c53134dbc6b12e5d99b9a"
+      },
+      "derived_summary_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/actual-r6-preserved-missing/compiled-summary.json",
+        "sha256": "117e145824b0fdc66f822872994c1a5df2f94674f330a5ab7b8cbc0baa30421f"
+      },
+      "derived_proof_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/recompiled-recordings/actual-r6-preserved-missing/canonical-chain.json",
+        "sha256": "89da7326812faacaa29f6c9165ecf99a77da9b11371776a313768ab27c068a15"
+      },
+      "unchanged_file_sha256": {
+        "decoded.json": "fe65a5f69c20cc01e7ed72c240f642fa447117bcd7010c6ee9fc7abd3fb99b8b",
+        "canonical-chain.json": "89da7326812faacaa29f6c9165ecf99a77da9b11371776a313768ab27c068a15"
+      },
+      "counts": {
+        "accepted_raw_count": 7,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 5,
+        "metric_receipt_count": null,
+        "unresolved_accepted_count": 1
+      }
+    }
+  ],
+  "new_browser_starts": 0,
+  "new_builds": 0,
+  "old_windows": "CLOSED_UNCHANGED",
+  "historical_starts": 35,
+  "historical_seconds": 1276,
+  "new_profile_sampling_qualification": "NOT_PERFORMED_OR_AUTHORIZED"
+}

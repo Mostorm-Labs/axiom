@@ -1,0 +1,18 @@
+{"schema":"OFFLINE_STARTUP_CAUSAL_MODEL","old_source_sha256":"4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7","accepted_after_enable":1,"orphaned_completions":1,"public_generation":"0","disabled_pending_gpu":0,"new_browser_starts":0}
+node:internal/modules/run_main:122
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: startup boundary must be closed; old createRuntime-return/reset/enable leaks a delayed completion
+
+1 !== 0
+
+    at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/correctness-startup-repair-r1/startup-model-red.mjs:14:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 1,
+  expected: 0,
+  operator: 'strictEqual'
+}
+
+Node.js v22.14.0

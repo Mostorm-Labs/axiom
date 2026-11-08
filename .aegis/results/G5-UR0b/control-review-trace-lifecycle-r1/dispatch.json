@@ -1,0 +1,29 @@
+{
+  "status": "REPAIR_REVIEW_AND_REMAINING35_CONTINUATION_SENT",
+  "target_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "hostId": "local",
+  "review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/result.json",
+    "sha256": "b038efaee241ba9729d7c2e851f977c235177fab73477543f8182a09ae0e2702"
+  },
+  "reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/reuse-acceptance.json",
+    "sha256": "f76c8b5249efc4b1e3a908e2ee19cc94461cd5592f9856518b9073c289404135"
+  },
+  "continuation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/continuation-request.json",
+    "sha256": "bfaa5b13023b0ebb37dc9d68e47947e9381a869d4df777e19248646784ae5c73"
+  },
+  "actual_r5_recorded_case_accepted": true,
+  "old_r5_rejected_and_closed_unchanged": true,
+  "historical_starts": 34,
+  "historical_seconds": 1264,
+  "new_worker_limit": 35,
+  "fresh_correctness": 5,
+  "main": 30,
+  "new_nominal_seconds": 5850,
+  "cumulative_nominal_seconds": 7114,
+  "terminal_notification_required": true,
+  "tool": "mcp__codex_app__send_message_to_thread",
+  "tool_return_threadId": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c"
+}

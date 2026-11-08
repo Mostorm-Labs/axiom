@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "actual_record_red_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/red-precondition.json",
+    "sha256": "ff3f07e1c343ece3907e35caa59d3069f6f26fe4fabca5595019616d83ad642a"
+  },
+  "node_full": {
+    "tests": 119,
+    "passed": 119,
+    "failed": 0,
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/node.log",
+      "sha256": "769be31cd2d14868d67c35ddb37853b35ba18f2eac41dad54075995a5cf732f1"
+    }
+  },
+  "python_full": {
+    "tests": 76,
+    "passed": 76,
+    "failed": 0,
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/python.log",
+      "sha256": "2668e29cc6badaaf928d441911a46d8a54d92cba0e0beee21231ff13c012dcfd"
+    }
+  },
+  "boundary": {
+    "contracts": 120,
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  },
+  "targeted": {
+    "node_initialization": 21,
+    "python_reader": 16,
+    "python_historical_context": 14
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  },
+  "native_unit_invocations": {
+    "count": 2,
+    "input": "malformed snapshots only",
+    "included_in_full_python_suite": true
+  },
+  "new_browser_workers": 0,
+  "new_builds": 0,
+  "new_valid_native_qualification_probes": 0,
+  "old_sampling_starts": 34,
+  "old_sampling_charged_seconds": 1264,
+  "offline_derivation_attempt_note_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/offline-compile-attempts.json",
+    "sha256": "f04b4724f85ad1ebc3a4d24728d9dc94c80eba31582d893a1882a21fe8644d6b"
+  }
+}

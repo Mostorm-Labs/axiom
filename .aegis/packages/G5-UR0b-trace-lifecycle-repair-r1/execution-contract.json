@@ -1,0 +1,97 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/initialization_basis.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/tests/g5_ur0_initialization.test.mjs",
+      "verification/tests/test_g5_ur0_repair_runner.py",
+      "verification/tests/test_g5_ur0_reverified_remaining_runner.py"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/**",
+      "out/ur0b/trace-lifecycle-repair-r1/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/trace-lifecycle-repair-r1/**"
+    ],
+    "approved_additive_control_paths": [
+      ".aegis/verification/G5-UR0b-trace-lifecycle-v1/**",
+      ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/**"
+    ],
+    "required_changes": [
+      "Derive the final ON-page trace scope only for the exact existing repaired correctness profile and complete fixed reload protocol; then apply uniqueness/native/fresh-empty checks in that scope. Preserve all states and full accepted population.",
+      "Keep JS producer/Python reader and bound actual-record reconstruction coherent, with an exact reference to this P20 scope contract. Worker and7-file creation-profile literals are read-only; no new worker tuple is needed.",
+      "Run actual old r5 RED; recompile that exact immutable recording to new outputs under the corrected rule, expected native-only6=1+5+0 with all5committed chains and all pixel/subject results unchanged.",
+      "Recompile the17 previous records into new outputs and prove invariance except explicit compiler provenance.",
+      "Update only compiler-context-dependent r5 regression fixtures to use the exact a00dc4a2 Git compiler bytes when exercising the historical acceptance, retain actual-new-compiler rejection and all other record/guard/ledger negatives. Do not weaken or edit the old r5 runner/acceptance."
+    ],
+    "required_tests": [
+      "Nine frozen oracle groups including actual real-record RED",
+      "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+      "python3.12 tools/check_runtime_boundaries.py --root .",
+      "All18 frozen recorded inputs (17 invariants + one corrected native-only actual r5 case) derived into a new directory",
+      "git diff --check"
+    ],
+    "forbidden": [
+      "Any new browser/smoke/probe/recording/build/valid native qualification call; only the2 existing malformed-snapshot unit checks are allowed/countable",
+      "Choosing init state by equal values, arbitrary first/last, ignoring unknown lifecycle or dropping a raw record",
+      "Forging an Operation/Scene publication/native epoch, changing input IDs, metrics counts or pixel outcomes",
+      "Reopening/admitting into r5 or changing original rejected/CLOSED history",
+      "Changing worker/helpers/profile/source-identity exclusions or any limits; commit/push; UR0c/UR1"
+    ],
+    "read_only": [
+      "Runtime/SDK/collector/worker.mjs/consumer.mjs/all seven repaired-profile files and literal identity tuple",
+      "All original packages/recordings/results/windows/ledgers; all P20 files including this directory",
+      "All pixel, timing, pressure, schema, budget and canonical mutation authorities; all orchestration readers except the named repair_runner proof path"
+    ],
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "Actual immutable r5 raw6/init0/committed5/unresolved1; explicit foreign-or-ambiguous initializer",
+      "observation_seam": "Frozen compiler on actual r5 archived input bytes"
+    },
+    "blocking_evidence": [
+      "All frozen scope and9oracle groups complete",
+      "All17 invariant plus r5 expected6=1+5+0 native-only proof with raw/pixels untouched",
+      "Full relevant regression green and honest source/scope/proof/reuse applicability report",
+      "New content-addressed result/evidence with exact hashes and proactive terminal notification"
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "terminal_success": "READY_FOR_CONTROL_REVIEW with9 groups,18 derivations, green regressions, exact local bundle and notice; no producer reuse or Gate acceptance",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "sampling_limits": {
+      "new_workers_max": 0,
+      "builds": 0,
+      "prior_starts": 34,
+      "prior_charged_seconds": 1264,
+      "allowed_native_unit_checks": 2,
+      "native_unit_input": "malformed snapshots only"
+    },
+    "notify_terminal": {
+      "required": true,
+      "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any actual blocker/frozen stop"
+      ],
+      "contents": [
+        "task/package/status",
+        "actual revision/dirty/source SHA",
+        "result/bundle/manifest hashes",
+        "nine groups/18-record derivation/committed invariance/actual-case native-only counts and unchanged pixels",
+        "sampling0, cumulative34/1264, all remaining work"
+      ]
+    }
+  }
+}

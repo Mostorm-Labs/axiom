@@ -1,0 +1,592 @@
+TAP version 13
+# canvas control API tests PASS
+# Subtest: verification/sdk_web_external/control_api_test.mjs
+ok 1 - verification/sdk_web_external/control_api_test.mjs
+  ---
+  duration_ms: 61.167
+  ...
+# pointer input tests PASS
+# Subtest: verification/sdk_web_external/pointer_input_test.mjs
+ok 2 - verification/sdk_web_external/pointer_input_test.mjs
+  ---
+  duration_ms: 60.187708
+  ...
+# Subtest: a partial process, wrong axis count or component cannot qualify root SDK
+ok 3 - a partial process, wrong axis count or component cannot qualify root SDK
+  ---
+  duration_ms: 0.982542
+  ...
+# Subtest: point tiers count canonical points rather than objects or input samples
+ok 4 - point tiers count canonical points rather than objects or input samples
+  ---
+  duration_ms: 0.169
+  ...
+# Subtest: resource caps preserve the last stage and never manufacture success
+ok 5 - resource caps preserve the last stage and never manufacture success
+  ---
+  duration_ms: 0.239167
+  ...
+# Subtest: tier coverage requires an honest outcome for every declared tier
+ok 6 - tier coverage requires an honest outcome for every declared tier
+  ---
+  duration_ms: 0.479875
+  ...
+# Subtest: cache occupancy is a peak gauge; absent diagnostics stay unavailable
+ok 7 - cache occupancy is a peak gauge; absent diagnostics stay unavailable
+  ---
+  duration_ms: 2.007958
+  ...
+# Subtest: a leaked worker or wrong DPR remains blocked despite a good object count
+ok 8 - a leaked worker or wrong DPR remains blocked despite a good object count
+  ---
+  duration_ms: 0.139542
+  ...
+# Subtest: nested contour scopes do not make coverage CPU disappear or double count
+ok 9 - nested contour scopes do not make coverage CPU disappear or double count
+  ---
+  duration_ms: 0.829458
+  ...
+# Subtest: unavailable diagnostics are not measured zero CPU
+ok 10 - unavailable diagnostics are not measured zero CPU
+  ---
+  duration_ms: 0.073333
+  ...
+# Subtest: canonical attempts before pointer Up stay outside recovery totals
+ok 11 - canonical attempts before pointer Up stay outside recovery totals
+  ---
+  duration_ms: 0.084291
+  ...
+# Subtest: ABBA separates a10ms source effect from linear2ms order drift
+ok 12 - ABBA separates a10ms source effect from linear2ms order drift
+  ---
+  duration_ms: 0.651875
+  ...
+# Subtest: a short pilot cannot establish nonregression even with perfect signs
+ok 13 - a short pilot cannot establish nonregression even with perfect signs
+  ---
+  duration_ms: 0.217459
+  ...
+# Subtest: eight independent signs distinguish nonregression,regression and ties
+ok 14 - eight independent signs distinguish nonregression,regression and ties
+  ---
+  duration_ms: 0.11725
+  ...
+# Subtest: all local sampler imports can be fetched as JavaScript modules
+ok 15 - all local sampler imports can be fetched as JavaScript modules
+  ---
+  duration_ms: 44.08225
+  ...
+# Subtest: fixture routing does not expose the SDK or an arbitrary local path
+ok 16 - fixture routing does not expose the SDK or an arbitrary local path
+  ---
+  duration_ms: 0.162542
+  ...
+# Subtest: an early process exit cannot qualify unfinished native GPU work
+ok 17 - an early process exit cannot qualify unfinished native GPU work
+  ---
+  duration_ms: 0.8625
+  ...
+# Subtest: stderr rejection cannot be hidden by a zero process exit
+ok 18 - stderr rejection cannot be hidden by a zero process exit
+  ---
+  duration_ms: 0.169166
+  ...
+# Subtest: only completed native work without browser or native errors passes
+ok 19 - only completed native work without browser or native errors passes
+  ---
+  duration_ms: 0.123208
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 0
+ok 20 - navigation corroboration rejects unsupported DPR 0
+  ---
+  duration_ms: 404.337458
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 5
+ok 21 - navigation corroboration rejects unsupported DPR 5
+  ---
+  duration_ms: 381.248625
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR not-a-number
+ok 22 - navigation corroboration rejects unsupported DPR not-a-number
+  ---
+  duration_ms: 322.782375
+  ...
+# Subtest: exact coverage metadata and replay counts are separate and missing counters stay unknown
+ok 23 - exact coverage metadata and replay counts are separate and missing counters stay unknown
+  ---
+  duration_ms: 1.322583
+  ...
+# Subtest: navigation summary retains tails and sums diagnostic deltas
+ok 24 - navigation summary retains tails and sums diagnostic deltas
+  ---
+  duration_ms: 0.379583
+  ...
+# Subtest: missing diagnostic rows remain unavailable rather than invented zero
+ok 25 - missing diagnostic rows remain unavailable rather than invented zero
+  ---
+  duration_ms: 0.067459
+  ...
+# Subtest: input display gap includes the first response and excludes exact settle
+ok 26 - input display gap includes the first response and excludes exact settle
+  ---
+  duration_ms: 0.074042
+  ...
+# Subtest: prepared geometry deltas are summed while resident bytes are a peak gauge
+ok 27 - prepared geometry deltas are summed while resident bytes are a peak gauge
+  ---
+  duration_ms: 0.173792
+  ...
+# Subtest: an interrupted selection receipt cannot qualify navigation settlement
+ok 28 - an interrupted selection receipt cannot qualify navigation settlement
+  ---
+  duration_ms: 0.279833
+  ...
+# Subtest: GPU admission deltas remain separate from CPU and unknown old counters
+ok 29 - GPU admission deltas remain separate from CPU and unknown old counters
+  ---
+  duration_ms: 0.11
+  ...
+# Subtest: presented source quality uses gauges and observed time, including unrecovered debt
+ok 30 - presented source quality uses gauges and observed time, including unrecovered debt
+  ---
+  duration_ms: 0.221834
+  ...
+# Subtest: old or incomplete source quality diagnostics remain unavailable
+ok 31 - old or incomplete source quality diagnostics remain unavailable
+  ---
+  duration_ms: 1.827542
+  ...
+# Subtest: shared-source gauges and query deltas stay distinct from historical missing rows
+ok 32 - shared-source gauges and query deltas stay distinct from historical missing rows
+  ---
+  duration_ms: 1.00525
+  ...
+# Subtest: coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+ok 33 - coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+  ---
+  duration_ms: 0.44375
+  ...
+# Subtest: navigation components and region compactions preserve old unknown diagnostics
+ok 34 - navigation components and region compactions preserve old unknown diagnostics
+  ---
+  duration_ms: 0.278417
+  ...
+# Subtest: v2 starts at real input and separates clear activity,content return and coarse receipt
+ok 35 - v2 starts at real input and separates clear activity,content return and coarse receipt
+  ---
+  duration_ms: 0.820334
+  ...
+# Subtest: v2 clear-only work cannot hide a censored content gap
+ok 36 - v2 clear-only work cannot hide a censored content gap
+  ---
+  duration_ms: 0.238667
+  ...
+# Subtest: v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+ok 37 - v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+  ---
+  duration_ms: 0.571667
+  ...
+# Subtest: v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+ok 38 - v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+  ---
+  duration_ms: 0.844333
+  ...
+# Subtest: runtime submit identities reject numeric or overwide IDs rather than losing precision
+ok 39 - runtime submit identities reject numeric or overwide IDs rather than losing precision
+  ---
+  duration_ms: 0.3
+  ...
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 40 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 21.648667
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 41 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 0.704209
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 42 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.315125
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 43 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.662667
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 44 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.243333
+  ...
+# Subtest: private observation exports must be exactly the qualifier-only delta
+ok 45 - private observation exports must be exactly the qualifier-only delta
+  ---
+  duration_ms: 0.962875
+  ...
+# Subtest: release minified exports resolve through actual generated JS bindings
+ok 46 - release minified exports resolve through actual generated JS bindings
+  ---
+  duration_ms: 0.834583
+  ...
+# Subtest: normal install rejects internal archives and private observation headers
+ok 47 - normal install rejects internal archives and private observation headers
+  ---
+  duration_ms: 0.076791
+  ...
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 48 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 72.03725
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 49 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 64.341834
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 50 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 72.480208
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 51 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 1.001833
+  ...
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+ok 52 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 78.427375
+  ...
+# Subtest: canonical admission proof reconciles real raw completions, decoded links and metric receipts
+ok 53 - canonical admission proof reconciles real raw completions, decoded links and metric receipts
+  ---
+  duration_ms: 5.503166
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 54 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 57.730083
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 55 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 48.624833
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+ok 56 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 76.511208
+  ...
+# Subtest: actual metrics retain separate Runtime owners for simultaneous navigation demands
+ok 57 - actual metrics retain separate Runtime owners for simultaneous navigation demands
+  ---
+  duration_ms: 70.249041
+  ...
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794124648068.448","sequence":1,"monotonic_ns":"308720542"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794124648068.448","sequence":2,"monotonic_ns":"309190875","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794124648068.448","sequence":3,"monotonic_ns":"309272000"}
+# Subtest: REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+ok 58 - REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+  ---
+  duration_ms: 163.821625
+  ...
+# Subtest: RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+ok 59 - RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+  ---
+  duration_ms: 0.552167
+  ...
+# Subtest: LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+ok 60 - LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+  ---
+  duration_ms: 8.628208
+  ...
+# Subtest: LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+ok 61 - LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+  ---
+  duration_ms: 0.951333
+  ...
+# Subtest: LIVE-SUBJECT: a transform-only commit cannot also change the stroke body or its masks
+ok 62 - LIVE-SUBJECT: a transform-only commit cannot also change the stroke body or its masks
+  ---
+  duration_ms: 0.583542
+  ...
+# Subtest: HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+ok 63 - HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+  ---
+  duration_ms: 64.966416
+  ...
+# Subtest: BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+ok 64 - BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+  ---
+  duration_ms: 22.6945
+  ...
+# Subtest: STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+ok 65 - STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+  ---
+  duration_ms: 0.421708
+  ...
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794124648068.448","sequence":4,"monotonic_ns":"322715917","status":"completed"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"begin","domain":"browser:1794124648068.448","sequence":5,"monotonic_ns":"323168083"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"end","domain":"browser:1794124648068.448","sequence":6,"monotonic_ns":"323294667","status":"completed"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794124648068.448","sequence":7,"monotonic_ns":"599074625"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794124648068.448","sequence":8,"monotonic_ns":"599267417","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794124648068.448","sequence":9,"monotonic_ns":"599421208"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794124648068.448","sequence":10,"monotonic_ns":"607533208","status":"completed"}
+# Subtest: DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+ok 66 - DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+  ---
+  duration_ms: 532.988083
+  ...
+# Subtest: same-frame retries select the unique accepted provider job and preserve every attempt
+ok 67 - same-frame retries select the unique accepted provider job and preserve every attempt
+  ---
+  duration_ms: 3.925208
+  ...
+# Subtest: an unrelated later attempt never replaces the job that actually submitted
+ok 68 - an unrelated later attempt never replaces the job that actually submitted
+  ---
+  duration_ms: 0.863667
+  ...
+# Subtest: provider job, basis, camera, Scene and chronology mismatches remain unqualified
+ok 69 - provider job, basis, camera, Scene and chronology mismatches remain unqualified
+  ---
+  duration_ms: 4.903417
+  ...
+# Subtest: duplicate accepted submits and ambiguous draws within the successful job fail closed
+ok 70 - duplicate accepted submits and ambiguous draws within the successful job fail closed
+  ---
+  duration_ms: 0.896666
+  ...
+# Subtest: decodes actual observed commit Scene submit and completion fields
+ok 71 - decodes actual observed commit Scene submit and completion fields
+  ---
+  duration_ms: 0.149458
+  ...
+# Subtest: foreign completion or mismatched Scene cannot be repaired by copying expected fields
+ok 72 - foreign completion or mismatched Scene cannot be repaired by copying expected fields
+  ---
+  duration_ms: 0.314042
+  ...
+# Subtest: Scene intent publication can precede the callsite observation of its returned commit record
+ok 73 - Scene intent publication can precede the callsite observation of its returned commit record
+  ---
+  duration_ms: 0.182375
+  ...
+# Subtest: scope exclusive time and GPU callback ordering preserve raw facts
+ok 74 - scope exclusive time and GPU callback ordering preserve raw facts
+  ---
+  duration_ms: 0.143625
+  ...
+# Subtest: actual compiler rejects another Runtime committing the same generation
+ok 75 - actual compiler rejects another Runtime committing the same generation
+  ---
+  duration_ms: 106.719416
+  ...
+# Subtest: foreign same-generation noise cannot replace the actual matching operation
+ok 76 - foreign same-generation noise cannot replace the actual matching operation
+  ---
+  duration_ms: 0.542792
+  ...
+# Subtest: lifetime attachment resource missing or ambiguous render owners fail closed
+ok 77 - lifetime attachment resource missing or ambiguous render owners fail closed
+  ---
+  duration_ms: 0.298875
+  ...
+# Subtest: compact lease lifecycles restore all actual identities, times and ordered events
+ok 78 - compact lease lifecycles restore all actual identities, times and ordered events
+  ---
+  duration_ms: 0.716
+  ...
+# Subtest: common OFF/ON metrics retain rejected feedback in the planned denominator
+ok 79 - common OFF/ON metrics retain rejected feedback in the planned denominator
+  ---
+  duration_ms: 0.828959
+  ...
+# Subtest: an incomplete dispatch has a lower bound and is not a zero successful sample
+ok 80 - an incomplete dispatch has a lower bound and is not a zero successful sample
+  ---
+  duration_ms: 0.184458
+  ...
+# Subtest: realtime batching retains every literal sample and separates terminal contacts
+ok 81 - realtime batching retains every literal sample and separates terminal contacts
+  ---
+  duration_ms: 20.93625
+  ...
+# Subtest: clock brackets reject incompatible domains rather than manufacture queue time
+ok 82 - clock brackets reject incompatible domains rather than manufacture queue time
+  ---
+  duration_ms: 0.648416
+  ...
+# Subtest: overhead gate retains all six pairs and rejects critical loss
+ok 83 - overhead gate retains all six pairs and rejects critical loss
+  ---
+  duration_ms: 0.7655
+  ...
+# Subtest: missing dispatch samples cannot qualify as a zero-cost overhead pair
+ok 84 - missing dispatch samples cannot qualify as a zero-cost overhead pair
+  ---
+  duration_ms: 0.158792
+  ...
+# Subtest: legacy input remains an unquantized 28.796 second anchor
+ok 85 - legacy input remains an unquantized 28.796 second anchor
+  ---
+  duration_ms: 9.181
+  ...
+# Subtest: real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+ok 86 - real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+  ---
+  duration_ms: 1.642833
+  ...
+# Subtest: foreign or stale completion never qualifies a different execution
+ok 87 - foreign or stale completion never qualifies a different execution
+  ---
+  duration_ms: 2.59375
+  ...
+# Subtest: Scene generation must match committed generation, not merely the static schema shape
+ok 88 - Scene generation must match committed generation, not merely the static schema shape
+  ---
+  duration_ms: 0.33425
+  ...
+# Subtest: requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+ok 89 - requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+  ---
+  duration_ms: 0.235958
+  ...
+# Subtest: ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+ok 90 - ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+  ---
+  duration_ms: 1734.3135
+  ...
+# Subtest: INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+ok 91 - INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+  ---
+  duration_ms: 92.072209
+  ...
+# Subtest: MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+ok 92 - MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+  ---
+  duration_ms: 133.531458
+  ...
+# Subtest: RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+ok 93 - RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+  ---
+  duration_ms: 347.197541
+  ...
+# Subtest: CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+ok 94 - CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+  ---
+  duration_ms: 70.562917
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+ok 95 - LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+  ---
+  duration_ms: 69.4295
+  ...
+# Subtest: FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+ok 96 - FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+  ---
+  duration_ms: 314.172917
+  ...
+# Subtest: DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+ok 97 - DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+  ---
+  duration_ms: 60.868209
+  ...
+# Subtest: NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+ok 98 - NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+  ---
+  duration_ms: 33.384959
+  ...
+# Subtest: MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+ok 99 - MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+  ---
+  duration_ms: 547.930417
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+ok 100 - LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+  ---
+  duration_ms: 36.954417
+  ...
+# Subtest: NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+ok 101 - NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+  ---
+  duration_ms: 52.083583
+  ...
+# Subtest: OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+ok 102 - OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+  ---
+  duration_ms: 14.124625
+  ...
+# Subtest: CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+ok 103 - CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+  ---
+  duration_ms: 514.326875
+  ...
+# Subtest: CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+ok 104 - CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+  ---
+  duration_ms: 425.229583
+  ...
+# Subtest: PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+ok 105 - PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+  ---
+  duration_ms: 264.750875
+  ...
+# Subtest: independent pixel comparator allows only reference geometric AA edges
+ok 106 - independent pixel comparator allows only reference geometric AA edges
+  ---
+  duration_ms: 1.229708
+  ...
+# Subtest: pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+ok 107 - pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+  ---
+  duration_ms: 0.465042
+  ...
+# Subtest: a blocked Down never shifts the next original planned time or drops Up
+ok 108 - a blocked Down never shifts the next original planned time or drops Up
+  ---
+  duration_ms: 2.888583
+  ...
+# Subtest: rejects a reversed plan and retains thrown dispatch as failure
+ok 109 - rejects a reversed plan and retains thrown dispatch as failure
+  ---
+  duration_ms: 0.771208
+  ...
+# Subtest: failure/censoring stays in the denominator and large ns values remain exact
+ok 110 - failure/censoring stays in the denominator and large ns values remain exact
+  ---
+  duration_ms: 0.696709
+  ...
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+ok 111 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 114.004333
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+ok 112 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.254708
+  ...
+# Subtest: BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+ok 113 - BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+  ---
+  duration_ms: 563.664208
+  ...
+# Subtest: BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+ok 114 - BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+  ---
+  duration_ms: 22.0695
+  ...
+1..114
+# tests 114
+# suites 0
+# pass 114
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5462.427125

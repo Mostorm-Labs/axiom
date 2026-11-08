@@ -49,7 +49,7 @@ try{
  await page.addInitScript(()=>{let word=0x12345678;crypto.getRandomValues=a=>{const b=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);for(let i=0;i<b.length;++i){word^=word<<13;word^=word>>>17;word^=word<<5;b[i]=word&255;}return a;};});
  await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');
  await page.waitForFunction(()=>!!window.ur0);stage({stage:'initializing'});
- result.init=await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
+ result.init=mode==='correctness'?await page.evaluate(()=>ur0.init({correctnessOnly:true,deadlineMs:45000})):await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
  const correctnessStages=mode==='correctness'?createStageRecorder({domain:'node',clock:()=>String(process.hrtime.bigint()),emit:stage}):null;
  const coldRelease=(channel,cancel)=>page.evaluate(({channel,cancel})=>channel==='snapshot'?ur0.snapshotRelease(cancel):ur0.pixelRelease(cancel),{channel,cancel});
  const coldCopy=(channel,length,source_sha256,file)=>copyCorrectnessBytes({length,source_sha256,
@@ -84,7 +84,7 @@ try{
    if(pairedToggle==='ON'){
     await correctnessStages.run('close OFF',()=>page.evaluate(()=>ur0.close()));
     await correctnessStages.run('metrics override/reload',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});await page.reload();await page.waitForFunction(()=>!!window.ur0);});
-    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
+    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init({correctnessOnly:true,deadlineMs:30000}));await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
    }
    for(let n=0;n<2;++n){
     const label=pairedToggle.toLowerCase()+'-'+n,before=await capture(label+'-before');

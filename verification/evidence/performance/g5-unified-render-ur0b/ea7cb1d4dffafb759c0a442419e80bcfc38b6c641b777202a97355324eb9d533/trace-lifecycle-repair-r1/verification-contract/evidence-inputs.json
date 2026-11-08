@@ -1,0 +1,66 @@
+{
+  "schema": "ur0b-trace-lifecycle-inputs-v1",
+  "original_r5_result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/result.json",
+    "sha256": "bf1ee511aa71ec587462d33938608fecc076d17e083313278f35f0201e627be3",
+    "identity_kind": "local-content-addressed"
+  },
+  "original_r5_manifest_ref": {
+    "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/manifest.json",
+    "sha256": "f91e6f1b29039e6675f55b72fe4261ceebea6394f46855a3dc1b13a82a7e0739",
+    "identity_kind": "local-content-addressed"
+  },
+  "blocker_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/blocker-analysis.json",
+    "sha256": "7008f4bbb690a93e6e21accfa431227e7f082b023d96d411c01620542e7903c5",
+    "identity_kind": "local-content-addressed"
+  },
+  "r5_worker_inputs": [
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/raw-trace.jsonl",
+      "sha256": "6d8fed248cd40cf723bd428954ff5823d70815399833a560b31accac046b948c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/worker-result.json",
+      "sha256": "1232a4a5c56bc597eddf1de2c8d10445b4d7e9c6d3f78f8a71f2a35ea4e5eca2",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/run-inputs.json",
+      "sha256": "099c7bd40258286345e8b21e12dd533c28aeac08762da56e0d6c9018957f8085",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "old17_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/reuse-acceptance.json",
+    "sha256": "9fb07bc5798cd455d9a98a3b8b8cf23d7eb42b7c6e68c51edd3adf50f1e4798d",
+    "identity_kind": "local-content-addressed"
+  },
+  "old17_input_set_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+    "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+    "identity_kind": "local-content-addressed"
+  },
+  "current_recorded_proof_ref": {
+    "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/canonical-chain.json",
+    "sha256": "b57979a7446aaf650c2fd385dd31f03db9521ccd3b90d16b7b5e456e6711e4a1",
+    "identity_kind": "local-content-addressed"
+  },
+  "pinned_worker_ref": {
+    "path": "verification/runners/g5/ur0/worker.mjs",
+    "sha256": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+    "identity_kind": "local-content-addressed"
+  },
+  "pinned_consumer_ref": {
+    "path": "verification/runners/g5/ur0/consumer.mjs",
+    "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+    "identity_kind": "local-content-addressed"
+  },
+  "actual_public_state_values_equal": true,
+  "actual_off_time_origin_ms": 1794125448546.5,
+  "actual_on_time_origin_ms": 1794125452313.2,
+  "historical_starts": 34,
+  "historical_seconds": 1264,
+  "old_windows": "CLOSED_UNCHANGED"
+}

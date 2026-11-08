@@ -1,0 +1,82 @@
+{
+  "status": "ELIGIBLE_PENDING_INDEPENDENT_CONTROL_REVIEW",
+  "actual_case": "correctness-lower_z_translucent_drag",
+  "actual_case_ref": {
+    "run_id": "actual-r5-lower-z",
+    "result": "CORRECTED_NATIVE_INITIALIZATION_LIFECYCLE",
+    "mode": "OFFLINE_REVERIFICATION",
+    "original_mode": "WORKER_COMPILE",
+    "recording_source_tree_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+    "original_input_refs": [
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/raw-trace.jsonl",
+        "sha256": "6d8fed248cd40cf723bd428954ff5823d70815399833a560b31accac046b948c",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/worker-result.json",
+        "sha256": "1232a4a5c56bc597eddf1de2c8d10445b4d7e9c6d3f78f8a71f2a35ea4e5eca2",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/run-inputs.json",
+        "sha256": "099c7bd40258286345e8b21e12dd533c28aeac08762da56e0d6c9018957f8085",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "derived_summary_ref": {
+      "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/recompiled-recordings/actual-r5-lower-z/compiled-summary.json",
+      "sha256": "b0c2adfaaee8df23a64ebb17e80081ee6ab47628b44407bee0392d150f7829ab"
+    },
+    "derived_proof_ref": {
+      "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/recompiled-recordings/actual-r5-lower-z/canonical-chain.json",
+      "sha256": "1459a12f24211e9cee1f3d0e90874d05c1962f810eefa58fc017c4825fb3bb55"
+    },
+    "counts": {
+      "accepted_raw_count": 6,
+      "qualified_initialization_count": 1,
+      "qualified_committed_count": 5,
+      "qualified_decoded_count": 5,
+      "metric_receipt_count": null,
+      "unresolved_accepted_count": 0
+    },
+    "five_committed_chains_identical": true,
+    "pixel_and_subject_results_unchanged": true,
+    "trace_scope": {
+      "scheme": "CORRECTNESS_FINAL_ON_PAGE_V1",
+      "qualifying_state_path": "worker-result.json/paired_init/state",
+      "off_page_time_origin_ms": 1794125448546.5,
+      "trace_page_time_origin_ms": 1794125452313.2,
+      "verification_spec_ref": {
+        "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+        "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a"
+      }
+    },
+    "metrics_not_applicable": true
+  },
+  "old17_invariant_records": [
+    "diagnostic-OFF",
+    "diagnostic-ON",
+    "qualification-p1-A",
+    "qualification-p1-B",
+    "qualification-p2-A",
+    "qualification-p2-B",
+    "qualification-p3-A",
+    "qualification-p3-B",
+    "qualification-p4-A",
+    "qualification-p4-B",
+    "qualification-p5-A",
+    "qualification-p5-B",
+    "qualification-p6-A",
+    "qualification-p6-B",
+    "realtime-60",
+    "realtime-120",
+    "realtime-240"
+  ],
+  "producer_accepts_reuse": false,
+  "new_sampling_workers": 0,
+  "old_r5_admission": "REJECTED_UNCHANGED",
+  "old_r5_window": "CLOSED_UNCHANGED",
+  "remaining_if_independently_accepted": "5 correctness plus30 main; no starts authorized by this package",
+  "performance_or_gate_PASS": false
+}

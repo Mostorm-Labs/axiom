@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r6",
+  "status": "AUTHORIZED_BOUNDED_REVERIFICATION_CONTINUATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "accepted_source_sha256": "ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533",
+    "completed_through": "Independent lifecycle repair acceptance, current compiler17 prerequisites and exact one recorded lower-z correctness case; all old windows closed.",
+    "next_action": "Materialize/test new r6-window orchestration, then run the5remaining correctness and conditional30main continuously until terminal result."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "1e7b043bb68987892ed63c02cfe5528a68894c2c66f0ca920c68e0ce6a63cd85"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "8fcd0f315b4e762d9d530bc697798546ea4783b3badfacbdc8d0e7dcd774f377"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "28588608163aef3dd098ae3b4fa813640a203b2909b7cf11d91581c2dc52c22a"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "d026678533a4b5d7a4de6b5888144890ef4b94fd0f67548103b43acf3d9650c8"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "d9cfcd1695d0eca59f55442c49891560297ce3a43455883c8a8e05df3294a211"
+  },
+  "run_plan_ref": {
+    "path": "run-plan.json",
+    "sha256": "dcb0f4b140d32b23c370331739379b11b32c424e740e2725d8d31e867e7d7ba7"
+  }
+}

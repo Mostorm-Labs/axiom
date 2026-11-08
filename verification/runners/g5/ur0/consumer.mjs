@@ -13,7 +13,7 @@ window.cancelAnimationFrame=handle=>{pendingSdk.delete(handle);return nativeCanc
 const raf=()=>new Promise(r=>{r.ur0Probe=true;requestAnimationFrame(r);});
 const errors=[],frames=[],handlers=[],planned=[],rafTimes=[],captures=[];
 const snapshotTransfer=new SnapshotTransfer();
-let sdk,correctness,current=null,measuring=false,contentNs=1000000000n,sequence=0;
+let sdk,correctness,startupEvidence=null,current=null,measuring=false,contentNs=1000000000n,sequence=0;
 const tapCounts=new WeakMap(),rawAdd=EventTarget.prototype.addEventListener,rawRemove=EventTarget.prototype.removeEventListener,wrapped=new WeakMap();
 EventTarget.prototype.addEventListener=function(type,fn,opts){
  const capture=typeof opts==='boolean'?opts:!!opts?.capture;
@@ -60,14 +60,17 @@ async function checkpoint(label){const state=sdk.readState(),selection=sdk.readS
  const source_sha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(v=>v.toString(16).padStart(2,'0')).join('');
  const row={label,state,selection,snapshot:{...metadata,byte_length:bytes.length,source_sha256}};captures.push(row);return row;
 }
-async function init(){
+async function init({correctnessOnly=false,deadlineMs=45000}={}){
+ const pageToken=correctnessOnly?{}:null,pageOrigin=correctnessOnly?performance.timeOrigin:null;
+ const startup=correctnessOnly?(await import('./correctness_startup.mjs')).createStartupFrontier({page:pageToken,documentId:'99999999999999999999999999999999',timeOrigin:pageOrigin,nowNs:()=>String(nowNs()),timeoutMs:deadlineMs}):null;
  const {createRuntime}=await import('/axiom.mjs');
- sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',permission:'localSingleUser',builtinFonts:false,onError:error=>errors.push({at_ns:String(nowNs()),event_id:current?.event_id??null,error:String(error)}),onFrame:f=>frames.push({at_ns:String(nowNs()),...f})});
+ sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',permission:'localSingleUser',builtinFonts:false,onError:error=>errors.push({at_ns:String(nowNs()),event_id:current?.event_id??null,error:String(error)}),onFrame:correctnessOnly?f=>{frames.push({at_ns:String(nowNs()),...f});startup.onFrame(pageToken,f);}:f=>frames.push({at_ns:String(nowNs()),...f})});
  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+ if(correctnessOnly)startupEvidence=await startup.wait({readState:()=>sdk.readState(),pendingSdk:()=>pendingSdk.size,probe:raf,errors:()=>errors,isCurrent:()=>performance.timeOrigin===pageOrigin});
  if(diag())diag().control(2,1);
  const gl=sdk.canvas.getContext('webgl2'),extension=gl.getExtension('WEBGL_debug_renderer_info');
  let resolution=Infinity,previous=performance.now();for(let i=0;i<10000;++i){const t=performance.now();if(t>previous)resolution=Math.min(resolution,t-previous);previous=t;}
- return{build:sdk.readBuildInfo(),state:sdk.readState(),private_channel:!!diag(),environment:{userAgent:navigator.userAgent,timeOrigin:performance.timeOrigin,reported_resolution_ns:Number.isFinite(resolution)?String(Math.round(resolution*1e6)):null,renderer:gl.getParameter(extension?extension.UNMASKED_RENDERER_WEBGL:gl.RENDERER),vendor:gl.getParameter(extension?extension.UNMASKED_VENDOR_WEBGL:gl.VENDOR),dpr:devicePixelRatio,mount:[800,500],window:[innerWidth,innerHeight]}};
+ return{build:sdk.readBuildInfo(),state:sdk.readState(),private_channel:!!diag(),...(correctnessOnly?{correctness_startup:startupEvidence}:{}),environment:{userAgent:navigator.userAgent,timeOrigin:performance.timeOrigin,reported_resolution_ns:Number.isFinite(resolution)?String(Math.round(resolution*1e6)):null,renderer:gl.getParameter(extension?extension.UNMASKED_RENDERER_WEBGL:gl.RENDERER),vendor:gl.getParameter(extension?extension.UNMASKED_VENDOR_WEBGL:gl.VENDOR),dpr:devicePixelRatio,mount:[800,500],window:[innerWidth,innerHeight]}};
 }
 async function setup({fixture,copies=15,scale=2,deadlineMs=45000,legacy=false}){
  const deadline=performance.now()+deadlineMs;
@@ -134,7 +137,7 @@ async function measureLegacy({kind,on=true,start}){
  return{origin_ns:String(originNs),input_end_ns:String(lastInput),end_ns:end,quiescence_ns:quiescence,before,after:sdk.readState(),selection:sdk.readSelection(),planned,handlers,errors,frames,rafTimes:rafTimes.slice(rafStart),clock_before:pre,clock_after:post,phases,measurement_schedule:'LEGACY_CLOSED_LOOP',content_span_ns:'28796000000',legacy_floor_p95_frame_ns:sorted.length?sorted[Math.floor(sorted.length*.95)]:null,legacy_original_archives_unchanged:true};
 }
 window.ur0={init,setup,setupLegacy:kind=>setup({fixture:legacyCorpus(),legacy:true,copies:kind==='legacy9_drag'?8:15,scale:kind==='legacy9_drag'?1:2}),measureLegacy,checkpoint,snapshotChunk:(offset,count)=>snapshotTransfer.pull(offset,count),snapshotRelease:cancel=>snapshotTransfer.end(cancel),measure,prepareMeasurement,clocks,
- async correctnessSetup(kind,on){correctness=correctnessDriver({sdk,pointer,raf,settled,diag});return correctness.setup(kind,on);},
+ async correctnessSetup(kind,on){if(!startupEvidence)throw Error('correctness startup frontier missing');correctness=correctnessDriver({sdk,pointer,raf,settled,diag});return correctness.setup(kind,on);},
  correctnessNext:()=>correctness.next(),pixelChunk:(offset,count)=>correctness.pull(offset,count),pixelRelease:cancel=>correctness.release(cancel),
  async realtime({fixture,hz,on=true}){
  await sdk.selectBrush('round-handdrawn',4);await sdk.selectTool('ink');

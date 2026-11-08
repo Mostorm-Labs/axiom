@@ -1,0 +1,41 @@
+{
+  "status": "READ_ONLY_OBSERVATION_AWAITING_PRODUCER_TERMINAL_ARCHIVE",
+  "window_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/window.json",
+    "sha256": "2cc5de5d4dce51651ecf6c273a6136c60bb4e32fd7e649e7d1b310a12844dc3f"
+  },
+  "window_status": "CLOSED",
+  "first_run": "correctness-lower_z_translucent_drag",
+  "worker_guard_reason": "completed",
+  "worker_returncode": 0,
+  "elapsed_s": 12.645439916988835,
+  "correctness_status": "QUALIFIED",
+  "admission_status": "REJECTED",
+  "critical_loss": 0,
+  "identity_errors": [],
+  "canonical_counts": {
+    "accepted_raw_count": 6,
+    "qualified_initialization_count": 0,
+    "qualified_committed_count": 5,
+    "unresolved_accepted_count": 1
+  },
+  "canonical_unresolved": [
+    {
+      "completion_seq": "293",
+      "reason": "accepted raw completion lacks a unique qualified decoded chain"
+    }
+  ],
+  "missing": [
+    {
+      "reason": "frame Scene publication outside observed window",
+      "seq": "60",
+      "work": "2"
+    }
+  ],
+  "new_starts": 1,
+  "new_seconds": 13,
+  "cumulative_seconds": 1264,
+  "missing_unstarted": 35,
+  "automatic_retry_authorized": false,
+  "root_cause_or_gate_review_issued": false
+}

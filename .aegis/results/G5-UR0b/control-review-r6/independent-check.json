@@ -1,0 +1,66 @@
+{
+  "repository": "git@github.com:Mostorm-Labs/axiom.git",
+  "head": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "manifest_payload_files": 162,
+  "all_payload_and_result_refs_verified": true,
+  "errors": [],
+  "refs": {
+    "package_ref": true,
+    "continuation_request_ref": true,
+    "mechanism_proofs_ref": true,
+    "source_scope_ref": true,
+    "regression_ref": true,
+    "blocker_analysis_ref": true,
+    "guard_ref": true,
+    "cleanup_ref": true,
+    "window_ref": true,
+    "accounting_ref": true,
+    "correctness_ref": true,
+    "canonical_chain_ref": true,
+    "compiled_summary_ref": true,
+    "exact17_plus_one_reuse_ref": true,
+    "input_reference_audit_ref": true,
+    "source_identity_ref": true
+  },
+  "independent_analysis_mode": "OFFLINE_REVERIFICATION",
+  "actual_observations": {
+    "raw_records": 3394,
+    "owners": 322,
+    "leaves": 75,
+    "commits": 2,
+    "qualified_completions": 5,
+    "initialization_completions": 1
+  },
+  "missing": [
+    {
+      "reason": "accepted completion outside observed work",
+      "seq": "22"
+    }
+  ],
+  "identity_errors": [],
+  "canonical_counts": {
+    "status": "MISSING",
+    "scope": "NATIVE_ONLY",
+    "accepted_raw_count": 7,
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 5,
+    "qualified_decoded_count": 5,
+    "metric_receipt_count": null,
+    "unresolved_accepted_count": 1
+  },
+  "ledger": {
+    "total_starts": 35,
+    "total_charged_seconds": 1276,
+    "new_starts": 1,
+    "new_charged_seconds": 12,
+    "outstanding_reserved_seconds": 0,
+    "unknown_starts": 0
+  },
+  "cleanup": {
+    "producer_status": "CLEANUP_VERIFIED",
+    "producer_remaining": [],
+    "observed_pid_count": 18,
+    "reviewer_currently_live": []
+  },
+  "browser_starts_in_review": 0
+}

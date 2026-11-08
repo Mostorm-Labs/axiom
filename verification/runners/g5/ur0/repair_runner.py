@@ -1,5 +1,5 @@
 """One authorized P36 continuation. No retry selection and no product changes."""
-import argparse,hashlib,importlib.util,json,re,subprocess,sys
+import argparse,hashlib,importlib.util,json,math,re,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4];HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
@@ -17,6 +17,60 @@ REPAIRED_INITIALIZATION_PROFILE={
  "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
 }
 CASES=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical']
+STARTUP_INITIALIZATION_PROFILE={
+ 'verification/runners/g5/ur0/consumer.mjs':'aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff',
+ 'verification/runners/g5/ur0/worker.mjs':'2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78',
+ 'verification/runners/g5/ur0/correctness_driver.mjs':'0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721',
+ 'verification/runners/g5/ur0/pixel_oracle.mjs':'dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1',
+ 'verification/runners/g5/ur0/stream_transfer.mjs':'4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210',
+ 'verification/runners/g5/ur0/correctness_transfer.mjs':'87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8',
+ 'verification/runners/g5/ur0/correctness_contract.mjs':'682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0',
+ 'verification/runners/g5/ur0/correctness_startup.mjs':'5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39'
+}
+STARTUP_SPEC={'path':'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json','sha256':'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}
+def startup_public_state(s):
+ return {'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'activeContacts':s.get('activeContacts'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId','viewEpoch']}}
+def valid_startup_record(record,budget):
+ try:
+  e=record['correctness_startup'];s=record['state']
+  uint=lambda x:isinstance(x,str) and re.fullmatch(r'(0|[1-9][0-9]*)',x) is not None and int(x)<2**64
+  if e.get('scheme')!='CORRECTNESS_STARTUP_QUIESCENT_V1' or type(e.get('page_time_origin_ms')) not in [int,float] or not math.isfinite(e['page_time_origin_ms']) or e['page_time_origin_ms']<=0 or e['page_time_origin_ms']!=record['environment']['timeOrigin'] or e.get('verification_spec_ref')!=STARTUP_SPEC:return False
+  if type(e.get('accepted_callback_count')) is not int or not 0<e['accepted_callback_count']<2**53 or not uint(e.get('last_presented_count')) or int(e['last_presented_count'])==0 or type(e.get('pending_sdk_raf')) is not int or e['pending_sdk_raf']!=0:return False
+  if any(not uint(e.get(k)) for k in ['created_at_ns','accepted_at_ns','quiescent_at_ns']):return False
+  a,b,c=[int(e[k]) for k in ['created_at_ns','accepted_at_ns','quiescent_at_ns']]
+  if not a<=b<=c or c-a>budget*1000000:return False
+  public=startup_public_state(s)
+  return s['documentId']=='9'*32 and s['generation']=='0' and type(s['objects']) is int and s['objects']==0 and type(s['activeContacts']) is int and s['activeContacts']==0 and s['lastCommit']['ordinal']=='0' and s['lastCommit']['operationId']=='0'*32 and all(uint(x) and int(x)>0 for x in public['target'].values()) and e['public_state']==public
+ except (AttributeError,KeyError,TypeError,ValueError):return False
+TRACE_LIFECYCLE_SPEC={'path':'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json','sha256':'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}
+TRACE_STATE_PATH='worker-result.json/paired_init/state'
+def valid_trace_scope(scope):
+ if not isinstance(scope,dict) or set(scope)!={'scheme','qualifying_state_path','off_page_time_origin_ms','trace_page_time_origin_ms','verification_spec_ref'}:return False
+ off=scope['off_page_time_origin_ms'];on=scope['trace_page_time_origin_ms']
+ return scope['scheme']=='CORRECTNESS_FINAL_ON_PAGE_V1' and scope['qualifying_state_path']==TRACE_STATE_PATH and scope['verification_spec_ref']==TRACE_LIFECYCLE_SPEC and all(type(x) in [int,float] and math.isfinite(x) and x>0 for x in [off,on]) and on>off
+def trace_scope_for_recording(run,inputs,raw_count):
+ if not isinstance(inputs,dict) or run.get('schema')!='g5-ur0b-worker-v1' or run.get('mode')!='correctness' or run.get('toggle')!='ON' or run.get('branch') not in CASES or run.get('status')!='OBSERVED' or run.get('close',{}).get('closed') is not True:return None
+ if run.get('source_stable') is not True or run.get('artifacts_stable') is not True or run.get('source_before')!=run.get('source_after') or run.get('artifacts_before')!=run.get('artifacts_after'):return None
+ artifacts=run.get('artifacts_before')
+ if not isinstance(artifacts,dict) or not artifacts or any(not isinstance(v,str) or not re.fullmatch('[0-9a-f]{64}',v) for v in artifacts.values()):return None
+ if any(inputs.get(k)!=run.get(k) for k in ['schema','mode','branch','toggle','source_before','artifacts_before']):return None
+ matches=lambda profile:all(run.get('source_before',{}).get('files',{}).get(k,{}).get('sha256')==v for k,v in profile.items())
+ startup=matches(STARTUP_INITIALIZATION_PROFILE)
+ if not startup and not matches(REPAIRED_INITIALIZATION_PROFILE):return None
+ if startup and (not valid_startup_record(run.get('init',{}),45000) or not valid_startup_record(run.get('paired_init',{}),30000)):return None
+ trace=run.get('trace',{})
+ if type(trace.get('records')) is not int or trace['records']!=raw_count or trace.get('loss',{}).get('critical')!=0:return None
+ entries=run.get('correctness')
+ if not isinstance(entries,list) or len(entries)!=4:return None
+ keys=[]
+ for e in entries:
+  if not isinstance(e,dict) or e.get('case_id')!=run['branch'] or e.get('toggle') not in ['OFF','ON'] or type(e.get('step')) is not int or e['step'] not in [0,1] or e.get('comparison',{}).get('status') not in ['QUALIFIED','FAILED','MISSING']:return None
+  if any(not isinstance(e.get(k),str) or not re.fullmatch('[0-9a-f]{64}',e[k]) for k in ['candidate_sha256','source_sha256','reference_snapshot_sha256']) or e['candidate_sha256']!=e['source_sha256']:return None
+  keys.append((e['toggle'],e['step']))
+ if len(set(keys))!=4:return None
+ if not run.get('init',{}).get('state') or not run.get('paired_init',{}).get('state'):return None
+ scope={'scheme':'CORRECTNESS_FINAL_ON_PAGE_V1','qualifying_state_path':TRACE_STATE_PATH,'off_page_time_origin_ms':run.get('init',{}).get('environment',{}).get('timeOrigin'),'trace_page_time_origin_ms':run.get('paired_init',{}).get('environment',{}).get('timeOrigin'),'verification_spec_ref':dict(TRACE_LIFECYCLE_SPEC)}
+ return scope if valid_trace_scope(scope) else None
 def load(p):return json.loads(Path(p).read_text())
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,v):p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
@@ -46,15 +100,34 @@ def assert_sampling_authority_open(previous_return,authorization_sha):
    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
 def valid_initialization_profile(origin,basis):
  profile=origin.get('source_profile')
- if profile==OLD_INITIALIZATION_PROFILE:return True
- if profile!=REPAIRED_INITIALIZATION_PROFILE or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in REPAIRED_INITIALIZATION_PROFILE.values()) or origin.get('recording_mode') not in ['correctness','fixture','main','realtime','legacy','setup']:return False
+ if profile==OLD_INITIALIZATION_PROFILE:return 'trace_scope' not in origin and 'startup_frontiers' not in origin
+ startup=profile==STARTUP_INITIALIZATION_PROFILE
+ if profile not in [REPAIRED_INITIALIZATION_PROFILE,STARTUP_INITIALIZATION_PROFILE] or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in profile.values()) or origin.get('recording_mode') not in (['correctness'] if startup else ['correctness','fixture','main','realtime','legacy','setup']):return False
+ if not startup and 'startup_frontiers' in origin:return False
  rows=origin.get('recorded_states')
  paths=['worker-result.json/init/state']+(['worker-result.json/paired_init/state'] if origin['recording_mode']=='correctness' else [])
  if not isinstance(rows,list) or not 1<=len(rows)<=len(paths) or any(not isinstance(r,dict) or r.get('state_path') not in paths for r in rows) or len({r['state_path'] for r in rows})!=len(rows):return False
  def matches(row):
   s=row.get('public_state',{});t=s.get('target',{})
   return s.get('documentId')==basis.get('document_id') and t.get('attachmentEpoch')==basis.get('attachment_epoch') and t.get('viewId')==basis.get('view_id') and t.get('runtimeEpoch')==basis.get('document_epoch')
- selected=[r for r in rows if matches(r)]
+ if origin['recording_mode']=='correctness':
+  scope=origin.get('trace_scope')
+  if not valid_trace_scope(scope) or len(rows)!=2:return False
+  for r in rows:
+   expected=scope['trace_page_time_origin_ms'] if r['state_path']==TRACE_STATE_PATH else scope['off_page_time_origin_ms']
+   if type(r.get('page_time_origin_ms')) not in [int,float] or r['page_time_origin_ms']!=expected:return False
+  selected=[r for r in rows if r['state_path']==scope['qualifying_state_path'] and matches(r)]
+  if startup:
+   frontiers=origin.get('startup_frontiers')
+   if not isinstance(frontiers,dict) or set(frontiers)!={'init','paired_init'}:return False
+   for row in rows:
+    key='paired_init' if row['state_path']==TRACE_STATE_PATH else 'init';e=frontiers[key]
+    if not isinstance(e,dict) or not valid_startup_record({'correctness_startup':e,'state':e.get('public_state'),'environment':{'timeOrigin':row['page_time_origin_ms']}},30000 if key=='paired_init' else 45000):return False
+    public=e['public_state'];expected={'documentId':public['documentId'],'generation':public['generation'],'objects':public['objects'],'lastCommit':public['lastCommit'],'target':{k:public['target'][k] for k in ['runtimeEpoch','attachmentEpoch','viewId']}}
+    if row['public_state']!=expected:return False
+ else:
+  if 'trace_scope' in origin:return False
+  selected=[r for r in rows if matches(r)]
  return len(selected)==1 and selected[0]['state_path']==origin.get('state_path') and selected[0]['public_state']==origin.get('public_state')
 def require_canonical_chain(summary,require_positive=False,require_metrics=True):
  chain=summary.get('canonical_chain')
@@ -114,13 +187,20 @@ def require_bound_compilation(directory,summary,proof):
   for chain in summary['canonical_chain'].get('initialization_chains',[]):
    if chain.get('initialization_basis',{}).get('input_refs')!={k:analysis.get(k) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']}:raise RuntimeError('canonical initialization input basis differs from bound compiler input')
    origin=chain.get('initialization_basis',{})
-   if origin.get('source_profile')==REPAIRED_INITIALIZATION_PROFILE:
+   if origin.get('source_profile') in [REPAIRED_INITIALIZATION_PROFILE,STARTUP_INITIALIZATION_PROFILE]:
     run=load(directory/'worker-result.json')
-    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in REPAIRED_INITIALIZATION_PROFILE.items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
+    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in origin['source_profile'].items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
     rows=[]
     for key in (['init','paired_init'] if run.get('mode')=='correctness' else ['init']):
      if not run.get(key,{}).get('state'):continue
-     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}}})
+     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}},**({'page_time_origin_ms':run[key].get('environment',{}).get('timeOrigin')} if run.get('mode')=='correctness' else {})})
+    if run.get('mode')=='correctness':
+     raw=[json.loads(line) for line in (directory/'raw-trace.jsonl').read_text().splitlines() if line.strip()]
+     scope=trace_scope_for_recording(run,load(directory/'run-inputs.json'),len(raw))
+     if scope is None or origin.get('trace_scope')!=scope or sha(ROOT/TRACE_LIFECYCLE_SPEC['path'])!=TRACE_LIFECYCLE_SPEC['sha256']:raise RuntimeError('repaired initialization trace scope differs from actual recording or Verification authority')
+    if origin['source_profile']==STARTUP_INITIALIZATION_PROFILE:
+     expected_frontiers={k:run.get(k,{}).get('correctness_startup') for k in ['init','paired_init']}
+     if origin.get('startup_frontiers')!=expected_frontiers or not valid_startup_record(run.get('init',{}),45000) or not valid_startup_record(run.get('paired_init',{}),30000) or sha(ROOT/STARTUP_SPEC['path'])!=STARTUP_SPEC['sha256']:raise RuntimeError('correctness startup frontiers differ from actual recording or Verification authority')
     if origin.get('recorded_states')!=rows or not valid_initialization_profile(origin,chain['basis']):raise RuntimeError('repaired initialization states differ from actual recording or owner')
  if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
 def require_qualified_diagnostic(out,proof):

@@ -1,0 +1,143 @@
+TAP version 13
+# Subtest: LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+not ok 1 - LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+  ---
+  duration_ms: 280.97725
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:142:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'MISSING'
+    - 'QUALIFIED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'QUALIFIED'
+  actual: 'MISSING'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:144:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+not ok 2 - LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+  ---
+  duration_ms: 9.285375
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:149:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'MISSING'
+    - 'QUALIFIED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'QUALIFIED'
+  actual: 'MISSING'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:150:89)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+not ok 3 - LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+  ---
+  duration_ms: 11.691708
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:153:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    r=>delete r.paired_init
+    + actual - expected
+    
+    + 'QUALIFIED'
+    - 'MISSING'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'MISSING'
+  actual: 'QUALIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:155:74)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+not ok 4 - LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+  ---
+  duration_ms: 10.488667
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:158:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'QUALIFIED'
+    - 'MISSING'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'MISSING'
+  actual: 'QUALIFIED'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:160:102)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+not ok 5 - LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+  ---
+  duration_ms: 9.596625
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:163:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'MISSING'
+    - 'QUALIFIED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'QUALIFIED'
+  actual: 'MISSING'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_initialization.test.mjs:164:211)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 0
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 902.49975

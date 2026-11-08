@@ -94,17 +94,19 @@ class RepairRunnerTest(unittest.TestCase):
  def repaired_v2(self):
   s=self.mixed_v2();origin=s['canonical_chain']['initialization_chains'][0]['initialization_basis']
   names=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs']
-  origin['source_profile']={'verification/runners/g5/ur0/'+n:hashlib.sha256((ROOT/'verification/runners/g5/ur0'/n).read_bytes()).hexdigest() for n in names}
+  origin['source_profile']=dict(self.module().REPAIRED_INITIALIZATION_PROFILE)
   origin['recording_mode']='correctness';origin['state_path']='worker-result.json/paired_init/state'
   foreign=copy.deepcopy(origin['public_state']);foreign['target']['viewId']='9'
   origin['recorded_states']=[{'state_path':'worker-result.json/init/state','public_state':foreign},{'state_path':origin['state_path'],'public_state':copy.deepcopy(origin['public_state'])}]
+  origin['trace_scope']={'scheme':'CORRECTNESS_FINAL_ON_PAGE_V1','qualifying_state_path':origin['state_path'],'off_page_time_origin_ms':1000,'trace_page_time_origin_ms':2000,'verification_spec_ref':{'path':'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json','sha256':'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}}
+  for row,time in zip(origin['recorded_states'],[1000,2000]):row['page_time_origin_ms']=time
   return s
  def test_repaired_exact_profile_and_unique_paired_owner_are_accepted(self):
   m=self.module();m.require_canonical_chain(self.repaired_v2(),require_positive=True)
  def test_repaired_worker_keeps_primary_init_only_profile_qualification(self):
   m=self.module()
   for mode in ['fixture','main','realtime','legacy','setup']:
-   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
+   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.pop('trace_scope');o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
    m.require_canonical_chain(s,require_positive=True)
  def test_repaired_unknown_partial_helper_or_foreign_ambiguous_owner_are_rejected(self):
   m=self.module();base=self.repaired_v2()
@@ -120,13 +122,10 @@ import fs from 'node:fs';import {createHash} from 'node:crypto';
 import {decodeTrace} from './verification/runners/g5/ur0/decode_trace.mjs';
 import {canonicalChainProof} from './verification/runners/g5/ur0/canonical_chain.mjs';
 import {repairedInitializationProfile} from './verification/runners/g5/ur0/initialization_basis.mjs';
-const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json'));
-const dir=inputs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
-const run=JSON.parse(fs.readFileSync(dir+'/worker-result.json'));run.mode='correctness';
-run.source_before.files=Object.fromEntries(Object.entries(repairedInitializationProfile).map(([k,v])=>[k,{sha256:v}]));
-run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
-const raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
-const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
+const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json'));
+const dir=inputs.r5_worker_inputs[0].path.replace(/\/raw-trace.jsonl$/,'');
+const text={raw_trace_jsonl:fs.readFileSync(dir+'/raw-trace.jsonl','utf8'),worker_result_json:fs.readFileSync(dir+'/worker-result.json','utf8'),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
+const run=JSON.parse(text.worker_result_json),raw=text.raw_trace_jsonl.trim().split('\\n').map(JSON.parse);
 const h=x=>createHash('sha256').update(x).digest('hex');const input_refs={raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)};
 const recording={...text,input_refs,run};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);
 console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
@@ -145,7 +144,55 @@ console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null
    def bind():
     (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
    bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
+   saved=copy.deepcopy(origin['trace_scope'])
+   for change in [lambda o:o.update(scheme='UNKNOWN'),lambda o:o.update(qualifying_state_path='worker-result.json/init/state'),lambda o:o.update(trace_page_time_origin_ms=o['off_page_time_origin_ms']),lambda o:o.update(trace_page_time_origin_ms=o['trace_page_time_origin_ms']+1),lambda o:o['verification_spec_ref'].update(sha256='0'*64)]:
+    origin['trace_scope']=copy.deepcopy(saved);change(origin['trace_scope']);bind()
+    with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,summary,proof)
+   origin['trace_scope']=saved;bind()
    bad=copy.deepcopy(recording['run']);bad['paired_init']['state']['target']['viewId']='77';(directory/'worker-result.json').write_text(json.dumps(bad));changed=hashlib.sha256((directory/'worker-result.json').read_bytes()).hexdigest()
    summary['analysis']['worker_result_sha256']=changed;origin['input_refs']['worker_result_sha256']=changed;bind()
    with self.assertRaisesRegex(RuntimeError,'states differ'):m.require_bound_compilation(directory,summary,proof)
+ def test_lifecycle_reader_keeps_equal_cross_page_states_but_rejects_unknown_forged_or_duplicate_scope(self):
+  m=self.module();s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o['recorded_states'][0]['public_state']=copy.deepcopy(o['public_state'])
+  m.require_canonical_chain(s,require_positive=True)
+  changes=[lambda o:o.pop('trace_scope'),lambda o:o['trace_scope'].update(scheme='UNKNOWN'),lambda o:o['trace_scope'].update(qualifying_state_path='worker-result.json/init/state'),lambda o:o['trace_scope'].update(trace_page_time_origin_ms=1000),lambda o:o['trace_scope'].update(trace_page_time_origin_ms=float('inf')),lambda o:o['trace_scope'].update(off_page_time_origin_ms=True),lambda o:o['trace_scope']['verification_spec_ref'].update(path='foreign'),lambda o:o['trace_scope']['verification_spec_ref'].update(sha256='f'*64),lambda o:o['recorded_states'][1].update(page_time_origin_ms=3000),lambda o:o['recorded_states'].append(copy.deepcopy(o['recorded_states'][1]))]
+  for change in changes:
+   bad=copy.deepcopy(s);change(bad['canonical_chain']['initialization_chains'][0]['initialization_basis'])
+   with self.assertRaises(RuntimeError):m.require_canonical_chain(bad,require_positive=True)
+ def test_startup_profile_requires_two_qualified_frontiers_and_preserves_old_profiles(self):
+  m=self.module();s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o['source_profile']=dict(m.STARTUP_INITIALIZATION_PROFILE);o['startup_frontiers']={}
+  # This isolated synthetic owner fixture uses the public seeded document.
+  s['canonical_chain']['initialization_chains'][0]['basis']['document_id']='9'*32;o['public_state']['documentId']='9'*32
+  for row,key in zip(o['recorded_states'],['init','paired_init']):
+   row['public_state']['documentId']='9'*32;state=copy.deepcopy(row['public_state']);state['activeContacts']=0;state['target']['viewEpoch']='1'
+   o['startup_frontiers'][key]={'scheme':'CORRECTNESS_STARTUP_QUIESCENT_V1','page_time_origin_ms':row['page_time_origin_ms'],'created_at_ns':'1','accepted_callback_count':1,'last_presented_count':'1','accepted_at_ns':'2','quiescent_at_ns':'3','pending_sdk_raf':0,'public_state':state,'verification_spec_ref':dict(m.STARTUP_SPEC)}
+  m.require_canonical_chain(s,require_positive=True)
+  for change in [lambda o:o.pop('startup_frontiers'),lambda o:o['startup_frontiers']['init'].update(accepted_callback_count=0),lambda o:o['startup_frontiers']['paired_init'].update(pending_sdk_raf=1),lambda o:o['startup_frontiers']['paired_init'].update(page_time_origin_ms=1000),lambda o:o['startup_frontiers']['paired_init'].update(quiescent_at_ns='1'),lambda o:o['startup_frontiers']['paired_init']['verification_spec_ref'].update(sha256='f'*64),lambda o:o['startup_frontiers']['paired_init']['public_state'].update(objects=1)]:
+   bad=copy.deepcopy(s);change(bad['canonical_chain']['initialization_chains'][0]['initialization_basis'])
+   with self.assertRaises(RuntimeError):m.require_canonical_chain(bad,require_positive=True)
+ def test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata(self):
+  m=self.module();self.assertFalse(m.valid_startup_record({},45000))
+  for name,value in m.STARTUP_INITIALIZATION_PROFILE.items():self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),value,name)
+  script="""
+import fs from 'node:fs';import{createHash}from'node:crypto';
+import{decodeTrace}from'./verification/runners/g5/ur0/decode_trace.mjs';import{canonicalChainProof}from'./verification/runners/g5/ur0/canonical_chain.mjs';import{startupInitializationProfile}from'./verification/runners/g5/ur0/initialization_basis.mjs';
+const refs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json')),dir=refs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
+const original=JSON.parse(fs.readFileSync(dir+'/worker-result.json')),raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
+const run={schema:'g5-ur0b-worker-v1',mode:'correctness',branch:'lower_z_translucent_drag',toggle:'ON',status:'OBSERVED',source_stable:true,artifacts_stable:true,close:{closed:true},source_before:{source_tree_sha256:'a'.repeat(64),files:Object.fromEntries(Object.entries(startupInitializationProfile).map(([k,v])=>[k,{sha256:v}]))},artifacts_before:{sdk:'b'.repeat(64)},init:structuredClone(original.init),paired_init:structuredClone(original.init),trace:{records:raw.length,loss:{critical:0,statistical:0}},correctness:['OFF','ON'].flatMap(toggle=>[0,1].map(step=>({case_id:'lower_z_translucent_drag',toggle,step,candidate_sha256:'a'.repeat(64),source_sha256:'a'.repeat(64),reference_snapshot_sha256:'b'.repeat(64),comparison:{status:'MISSING'}})))};
+run.source_after=structuredClone(run.source_before);run.artifacts_after=structuredClone(run.artifacts_before);
+for(const [key,time]of[['init',1000],['paired_init',2000]]){const s=run[key].state;run[key].environment.timeOrigin=time;run[key].correctness_startup={scheme:'CORRECTNESS_STARTUP_QUIESCENT_V1',page_time_origin_ms:time,created_at_ns:'1',accepted_callback_count:1,last_presented_count:'1',accepted_at_ns:'2',quiescent_at_ns:'3',pending_sdk_raf:0,public_state:{documentId:s.documentId,generation:s.generation,objects:s.objects,activeContacts:s.activeContacts,lastCommit:{ordinal:s.lastCommit.ordinal,operationId:s.lastCommit.operationId},target:{...s.target}},verification_spec_ref:{path:'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json',sha256:'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}};}
+const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:JSON.stringify({schema:run.schema,mode:run.mode,branch:run.branch,toggle:run.toggle,source_before:run.source_before,artifacts_before:run.artifacts_before})};const h=x=>createHash('sha256').update(x).digest('hex'),recording={...text,run,input_refs:{raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)}};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
+"""
+  value=json.loads(subprocess.check_output(['node','--input-type=module','-e',script],cwd=ROOT,text=True));self.assertEqual(value['proof']['status'],'QUALIFIED');summary={'critical_loss':0,'identity_errors':[],'canonical_chain':value['proof']};m.require_canonical_chain(summary,require_metrics=False)
+  with tempfile.TemporaryDirectory() as tmp:
+   directory=Path(tmp);record=value['recording']
+   for name,key in [('raw-trace.jsonl','raw_trace_jsonl'),('worker-result.json','worker_result_json'),('run-inputs.json','run_inputs_json')]:(directory/name).write_text(record[key])
+   summary['analysis']={'mode':'WORKER_COMPILE','input_source_tree_sha256':record['run']['source_before']['source_tree_sha256'],**record['input_refs'],'compiler_files':{n:hashlib.sha256((m.HERE/n).read_bytes()).hexdigest() for n in ['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py','initialization_basis.mjs']}}
+   for key,name in [('verification_spec_ref','verification-spec.json'),('completion_contract_ref','completion-contract.json')]:
+    path=ROOT/'.aegis/verification/G5-UR0b-initialization-v1'/name;summary['analysis'][key]={'path':str(path.relative_to(ROOT)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+   def bind():
+    (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
+   bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
+   origin=summary['canonical_chain']['initialization_chains'][0]['initialization_basis'];origin['startup_frontiers']['paired_init']['accepted_callback_count']=2;bind()
+   with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,summary,proof)
 if __name__=='__main__':unittest.main()

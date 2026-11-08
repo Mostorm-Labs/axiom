@@ -1,0 +1,156 @@
+{
+  "status": "10_FROZEN_OFFLINE_GROUPS_OBSERVED",
+  "groups": [
+    {
+      "id": "STARTUP-RED",
+      "oracle": "Controlled delayed initial accepted callback arrives after old reset/enable, exposing orphan completion; no browser.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/startup-model-red.log",
+          "sha256": "88d6e0375791ecd7c6f7da1079ab4e78e0f6ad0d549b1f3aca59c257ff4dc7f4"
+        }
+      ]
+    },
+    {
+      "id": "EARLY-DELAYED",
+      "oracle": "Both early acceptance before createRuntime resolves and delayed acceptance after more than10 probe ticks wait/finish correctly.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "OFF-ON-SYMMETRY",
+      "oracle": "Fresh OFF and reloaded ON both await frontier before reset/enable/fixture, preserving distinct page facts.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "FALSE-FRONTIERS",
+      "oracle": "Empty generation0, zero disabled pending_gpu, fixed sleep/ticks or zero queue without accepted callback cannot qualify.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "ERROR-TIMEOUT-FOREIGN",
+      "oracle": "Stale/wrong-page callback, foreign/nonempty state, errors and never-converging startup fail explicitly under existing deadlines.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "PENDING-RETRY",
+      "oracle": "An accepted callback alone cannot qualify while SDK RAF pending/retry work remains; host probes never count as SDK work.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "PROFILE-BINDING",
+      "oracle": "Three literal profiles: two historical unchanged; new8-file correctness-only profile requires both real startup frontiers, exact P20 and native lifecycle reconstruction in JS/Python; unknown/forged rejected.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "PRIMARY-UNCHANGED",
+      "oracle": "Non-correctness init/default path, measured scheduling/toggles, phase arm locations and other five helper files unchanged by source diff and offline fixtures.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    },
+    {
+      "id": "RECORDING-INVARIANCE",
+      "oracle": "17+1 prior records retain exact outputs apart from compiler provenance; actual r6 remains native-only MISSING7=1+5+1 withseq22 unresolved.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/reverification.json",
+          "sha256": "758cc85044ca4c30fe377d6a2de597ac56c0fa7748c5149a27a239deb4f0a94e"
+        }
+      ]
+    },
+    {
+      "id": "HISTORICAL-CONTEXT",
+      "oracle": "Three runner test contexts use exact accepted compiler/helper bytes, real validators, plus actual-current mismatch negatives; no success mocks/skips.",
+      "status": "COVERED_BY_ROOT_RED_MODEL_TARGETED_AND_FULL_TESTS",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+          "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+          "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+        }
+      ]
+    }
+  ],
+  "official_gate_pass": false
+}

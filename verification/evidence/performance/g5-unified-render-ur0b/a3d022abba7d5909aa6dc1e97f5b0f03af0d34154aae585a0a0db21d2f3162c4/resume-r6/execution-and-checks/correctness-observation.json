@@ -1,0 +1,131 @@
+{
+  "status": "PIXELS_QUALIFIED_CANONICAL_CHAIN_REJECTED",
+  "case_id": "permanent_live_mask",
+  "fresh_mode": "WORKER_COMPILE",
+  "worker_correctness_status": "QUALIFIED",
+  "admission_status": "REJECTED",
+  "captures": [
+    {
+      "toggle": "OFF",
+      "step": 0,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1556053,
+        "aa_boundary_pixels": 43947,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 1,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/off-0-before.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "52238e7fe58715227f59b713aee8248401b88356850a4ae9de9f3603f95e5501",
+      "reference_snapshot_sha256": "8fffeceb69231982b84c39cf68e52409d891f10f6154eb47752d6c45eda5ba5d"
+    },
+    {
+      "toggle": "OFF",
+      "step": 1,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1556053,
+        "aa_boundary_pixels": 43947,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 1,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/off-1-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "52238e7fe58715227f59b713aee8248401b88356850a4ae9de9f3603f95e5501",
+      "reference_snapshot_sha256": "cad9c86c1af1c435388552991bc5d10c1a813db91d57f008c8e51d0c29ab5994"
+    },
+    {
+      "toggle": "ON",
+      "step": 0,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1556053,
+        "aa_boundary_pixels": 43947,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 1,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/on-0-before.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "52238e7fe58715227f59b713aee8248401b88356850a4ae9de9f3603f95e5501",
+      "reference_snapshot_sha256": "8fffeceb69231982b84c39cf68e52409d891f10f6154eb47752d6c45eda5ba5d"
+    },
+    {
+      "toggle": "ON",
+      "step": 1,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1556053,
+        "aa_boundary_pixels": 43947,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 1,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r6/execution/raw-runs/correctness-permanent_live_mask/on-1-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "52238e7fe58715227f59b713aee8248401b88356850a4ae9de9f3603f95e5501",
+      "reference_snapshot_sha256": "cad9c86c1af1c435388552991bc5d10c1a813db91d57f008c8e51d0c29ab5994"
+    }
+  ],
+  "recorded_reuse_is_fresh": false,
+  "performance_or_gate_pass": false
+}

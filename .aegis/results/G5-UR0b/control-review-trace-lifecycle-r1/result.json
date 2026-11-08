@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "primary_owner": "aegis-gate-review",
+  "status": "ACCEPTED_TRACE_LIFECYCLE_REPAIR_AND_RECORDED_CORRECTNESS",
+  "subject_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/result.json",
+    "sha256": "fd38c6a1be1411eb57b5618396c689a548d3a9ec2c06378f22a5815934d4a1c5",
+    "identity_kind": "local-content-addressed"
+  },
+  "source_tree_sha256": "ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533",
+  "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "dirty": true,
+  "frozen_requirements_passed": [
+    "Scoped final-ON-page protocol before unique native/state matching",
+    "Exact unchanged worker/helpers/profile/Runtime/SDK",
+    "17 invariant prior records and actual r5 native-only6=1+5+0, no raw/committed/pixel mutation",
+    "All9 frozen oracles and independent regression"
+  ],
+  "independent_regression": {
+    "node": 119,
+    "python": 76,
+    "boundary_contracts": 120,
+    "malformed_native_unit_checks": 2,
+    "new_browser_workers": 0
+  },
+  "independent_evidence_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/independent-check.json",
+    "sha256": "65dd4de2dc8c2a90f74ffda516b0ffb4120ebfca35c9abb2a3acf068628526c7",
+    "identity_kind": "local-content-addressed"
+  },
+  "reuse_acceptance_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/reuse-acceptance.json",
+    "sha256": "f76c8b5249efc4b1e3a908e2ee19cc94461cd5592f9856518b9073c289404135",
+    "identity_kind": "local-content-addressed"
+  },
+  "old_r5_status": "REJECTED_CLOSED_UNCHANGED",
+  "historical_starts": 34,
+  "historical_seconds": 1264,
+  "remaining": [
+    "5 real correctness workers",
+    "30 main rows"
+  ],
+  "full_ur0b_status": "BLOCKED_EVIDENCE_PENDING_REMAINING_REAL_BROWSER_RUNS",
+  "findings": [
+    "One offline compiler-child wait timeout was preserved; deterministic final byte invariance is verified. No new browser attempt or performance selection occurred."
+  ],
+  "performance_platform_or_official_P34_PASS": false
+}

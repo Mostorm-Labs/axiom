@@ -1,0 +1,36 @@
+{
+  "schema": "ur0b-r5-checkpoint-continuation-v1",
+  "status": "DESCENDANT_CURSOR_AND_EXISTING_PREFLIGHT_VERIFIED",
+  "primary_owner": "aegis-implementation",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "branch": "codex/geometry-navigation-integration",
+  "observed_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "predecessor_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "local_origin_equal_at_review": true,
+  "source_tree_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+  "dirty_at_review": false,
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r5/package.json",
+    "sha256": "0feefbab71d9b214bbebdd6a456290a461d767734280d73c86677c0fc5cd06c6"
+  },
+  "mechanism_proof_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/mechanism-proofs.json",
+    "sha256": "6766fb34e625e652586ee7e72b9af4b8ff4a13f1f34ece47ce8b4d3567d2979e"
+  },
+  "mechanism_preparation_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "same_content_tree_before_and_after_checkpoint": true,
+  "actual_new_worker_execution_revision_must_be": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "historical_starts": 33,
+  "historical_seconds": 1251,
+  "new_starts": 0,
+  "window_claimed": false,
+  "next_action": "Execute the already-authorized stored execution-command.json once. No new package, rebuild, resampling or repeated offline regression needed for unchanged bytes. Continue all36 rows or first frozen stop and notify control.",
+  "existing_limits_unchanged": true,
+  "execution_command_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/execution-command.json",
+    "sha256": "115b401edd0653d550c6a22fe1dbe18653b152d8c31791e4a83769b596113753"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "result_root": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/**",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/trace-lifecycle-repair-r1/**",
+  "required": [
+    "Exact P20/package bindings",
+    "Actual RED,9 groups,18 derivations, full regression logs",
+    "Only5 source files plus approved control delta",
+    "Old18 input/window/result bytes,5 committed chains,pixels preserved",
+    "OFFLINE only, native-only6=1+5+0, no metrics invention",
+    "Exact source/result/bundle/manifest and prospective reuse assessment",
+    "Proactive terminal notice"
+  ],
+  "notification": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any actual blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "actual revision/dirty/source SHA",
+      "result/bundle/manifest hashes",
+      "nine groups/18-record derivation/committed invariance/actual-case native-only counts and unchanged pixels",
+      "sampling0, cumulative34/1264, all remaining work"
+    ]
+  },
+  "materialization": "Shared controlled worktree content-addressed bundle; no commit/push",
+  "official_gate_pass": false
+}

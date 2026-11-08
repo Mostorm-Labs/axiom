@@ -1,0 +1,134 @@
+{
+  "status": "9_FROZEN_ORACLE_GROUPS_OBSERVED",
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+    "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a",
+    "identity_kind": "local-content-addressed"
+  },
+  "groups": [
+    {
+      "id": "ACTUAL-R5-RED",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Original compiler on immutable actual r5 data must expose raw6/init0/committed5/unresolved1 and the foreign-or-ambiguous public initialization reason. No merely missing-new-field RED.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/red-precondition.json",
+          "sha256": "ff3f07e1c343ece3907e35caa59d3069f6f26fe4fabca5595019616d83ad642a"
+        }
+      ]
+    },
+    {
+      "id": "ACTUAL-SCOPED-POSITIVE",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Same actual raw/input bytes under the corrected known-profile lifecycle rule yield raw6/init1/committed5/unresolved0; the five committed chains/receipts, four QUALIFIED pixel results, subject proofs and observations are unchanged.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/recompiled-recordings/actual-r5-lower-z/compiled-summary.json",
+          "sha256": "b0c2adfaaee8df23a64ebb17e80081ee6ab47628b44407bee0392d150f7829ab"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/recompiled-recordings/actual-r5-lower-z/canonical-chain.json",
+          "sha256": "1459a12f24211e9cee1f3d0e90874d05c1962f810eefa58fc017c4825fb3bb55"
+        }
+      ]
+    },
+    {
+      "id": "CROSS-PAGE-ALIAS",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Equal public IDs and entire state across distinct OFF/ON page origins are valid; select ON paired_init only after the fixed final-ON-drain protocol is qualified. Numeric equality alone never selects a lifecycle.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/lifecycle-green-node.log",
+          "sha256": "32eeed9eb7cdff592032c44c898c826a4544d66c8e10f07a058b30ecf4d80423"
+        }
+      ]
+    },
+    {
+      "id": "UNKNOWN-SCOPE",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Unknown/mismatched worker/consumer/helper hash, missing paired state/page-origin metadata, same/reversed/nonfinite origins, incomplete/duplicate/foreign pair, wrong branch/mode, missing/lossy trace or wrong raw record count remains UNRESOLVED.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/lifecycle-green-node.log",
+          "sha256": "32eeed9eb7cdff592032c44c898c826a4544d66c8e10f07a058b30ecf4d80423"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reader-green.log",
+          "sha256": "ad5a657bf87c7ed87487a91749e89b8cec4cdbd7ca131904fcd72e87c29f43fe"
+        }
+      ]
+    },
+    {
+      "id": "WITHIN-SCOPE-IDENTITY",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Within the chosen ON lifecycle, wrong document/epoch/attachment/view, nonempty/restored/nonzero state, nonzero operation, duplicate same eligible state path or ambiguous native owner fails. The OFF state cannot substitute for absent/foreign ON even if its values match.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/lifecycle-green-node.log",
+          "sha256": "32eeed9eb7cdff592032c44c898c826a4544d66c8e10f07a058b30ecf4d80423"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reader-green.log",
+          "sha256": "ad5a657bf87c7ed87487a91749e89b8cec4cdbd7ca131904fcd72e87c29f43fe"
+        }
+      ]
+    },
+    {
+      "id": "OUTCOME-INDEPENDENCE",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Trace source qualification depends on complete protocol and exact source, not pixel green. Complete FAILED/MISSING pixel comparisons cannot manufacture qualification/PASS; native provenance may be resolved while separate pixel/case admission still fails.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/lifecycle-green-node.log",
+          "sha256": "32eeed9eb7cdff592032c44c898c826a4544d66c8e10f07a058b30ecf4d80423"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/historical-context.log",
+          "sha256": "d34e90fd93532d9579bb67291f5b1a8ebf0094a8cfb2e66ae237f5c5606dce6c"
+        }
+      ]
+    },
+    {
+      "id": "PRODUCER-READER-BINDING",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "JS derived trace_scope and Python validation agree; forged scope/path/timeOrigin/authority ref or discrepancy from actual worker-result/raw/input bytes is rejected by strict bound admission. No current-file-hash wildcard.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reader-red.log",
+          "sha256": "24e1106d62dc1d61d3273be69615a1fda0f62a6a673d97e8b0cb74447e9eb89b"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reader-green.log",
+          "sha256": "ad5a657bf87c7ed87487a91749e89b8cec4cdbd7ca131904fcd72e87c29f43fe"
+        }
+      ]
+    },
+    {
+      "id": "LEGACY17-INVARIANCE",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Recompile17 immutable complete prior records separately. Canonical/decoded/metrics/external bytes and non-provenance summaries remain identical to their accepted baselines; original modes/source/artifacts and committed receipts unchanged.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reverification.json",
+          "sha256": "39b48461f6892dd380b76396d4cd94f0a12ddac48c0ee7748b938e076a47a339"
+        }
+      ]
+    },
+    {
+      "id": "HISTORICAL-TEST-CONTEXT",
+      "status": "SATISFIED_BY_RECORDED_OR_TEST_EVIDENCE",
+      "frozen_rule": "Existing r5 tests of its old current-compiler acceptance use the exact a00dc4a2 historical compiler bytes for positive or later-stage negative cases. Actual new compiler must still reject that old packet. Preserve real checks and all guard/ledger tests; no success mocks/skip/xfail.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/historical-context.log",
+          "sha256": "d34e90fd93532d9579bb67291f5b1a8ebf0094a8cfb2e66ae237f5c5606dce6c"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/historical-compiler-context.json",
+          "sha256": "d1692e3b4bcd058eb25a66b0a25e1c108b12a9d616579e5a4d31a7f20c8821b6"
+        }
+      ]
+    }
+  ],
+  "official_gate_pass": false
+}

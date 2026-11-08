@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r5",
+  "stage": "P32_BOUNDED_REAL_BROWSER_REVERIFICATION",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "dirty": true,
+  "dirty_scope": "New excluded result/evidence outputs only; no tracked source change.",
+  "source_tree_sha256": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r5/package.json",
+    "sha256": "0feefbab71d9b214bbebdd6a456290a461d767734280d73c86677c0fc5cd06c6"
+  },
+  "continuation_request_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/continuation-request.json",
+    "sha256": "151aad4d4625a671c4132fc614416c9536e76d74c7f23722b2677ef29b93e501"
+  },
+  "descendant_position_ref": {
+    "path": ".aegis/results/G5-UR0b/control-resume-after-a00dc4a2/position.json",
+    "sha256": "bdff9dc1007942188195de6d7b1d9fc8be2736c6e51a263eced8e330b275ac9d"
+  },
+  "mechanism_proofs_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/mechanism-proofs.json",
+    "sha256": "6766fb34e625e652586ee7e72b9af4b8ff4a13f1f34ece47ce8b4d3567d2979e"
+  },
+  "prepared_mechanism_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "actual_worker_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "regression_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/regression.json",
+    "sha256": "c4c989a495e7240ea81c11bc21f7aefb4524a76a6eca45b9a8eada3647f1de63"
+  },
+  "regressions_reused_not_rerun": true,
+  "blocker_analysis_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/blocker-analysis.json",
+    "sha256": "7008f4bbb690a93e6e21accfa431227e7f082b023d96d411c01620542e7903c5"
+  },
+  "guard_ref": {
+    "path": "out/ur0b/resume-r5/execution/guards/correctness-lower_z_translucent_drag.worker.json",
+    "sha256": "f496cfbf7f42c7fa2ef84f5318273d7c4e80328940dfad9e28c68b19d1b26468"
+  },
+  "cleanup_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/process-cleanup.json",
+    "sha256": "cfacbb5bee728b940bbddad30283094c139e32cdf09646953a0e016b7abe6af4"
+  },
+  "window_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/window.json",
+    "sha256": "2cc5de5d4dce51651ecf6c273a6136c60bb4e32fd7e649e7d1b310a12844dc3f"
+  },
+  "accounting_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/terminal-accounting.json",
+    "sha256": "7e008e3c191b474254b0e19f6ad868e265b2fe15676fb08b09af5468318e0edf"
+  },
+  "correctness_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/correctness-observation.json",
+    "sha256": "529967e80e9d5654811ff209fa0dfae8e628035b1df8d03d9efca6588db22a2b"
+  },
+  "canonical_chain_ref": {
+    "path": "out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/canonical-chain.json",
+    "sha256": "b57979a7446aaf650c2fd385dd31f03db9521ccd3b90d16b7b5e456e6711e4a1"
+  },
+  "compiled_summary_ref": {
+    "path": "out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/compiled-summary.json",
+    "sha256": "e50af3165d2dbe1398d90316097dcac0e53134b3ac77bd80c62986b3c0b726f4"
+  },
+  "exact17_recorded_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/reused-prerequisites.json",
+    "sha256": "302ec574e10eed4f04e61dd701d453f317ef30c7b7c8315a56b3bd7ef3122184"
+  },
+  "input_reference_audit_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/input-reference-audit.json",
+    "sha256": "469323229b69a511acc0ce2e561240a41feb5ee3987a239a3a8ffb5c3c51e480"
+  },
+  "source_identity_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/execution-source-identity.json",
+    "sha256": "b767a5028ef501c437da234fc5acc3d2c85eaea79a3eb3872f78cf4ec77eccfa"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_BUNDLE",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe/resume-r5",
+    "manifest_sha256": "f91e6f1b29039e6675f55b72fe4261ceebea6394f46855a3dc1b13a82a7e0739",
+    "payload_files": 161
+  },
+  "fresh_browser_starts": 1,
+  "new_charged_seconds": 13,
+  "total_starts": 34,
+  "total_charged_seconds": 1264,
+  "planned_ids": [
+    "correctness-lower_z_translucent_drag",
+    "correctness-permanent_live_mask",
+    "correctness-transparent_color_bg",
+    "correctness-warm_miss_pressure",
+    "correctness-dpr_switch",
+    "correctness-feedback_canonical",
+    "LEGACY9_DRAG_DPR2_32_96-r1",
+    "LEGACY9_DRAG_DPR2_32_96-r2",
+    "LEGACY9_DRAG_DPR2_32_96-r3",
+    "LEGACY16_ERASE_DPR2_32_96-r1",
+    "LEGACY16_ERASE_DPR2_32_96-r2",
+    "LEGACY16_ERASE_DPR2_32_96-r3",
+    "IMMEDIATE_REERASE_DPR2_32_96-r1",
+    "IMMEDIATE_REERASE_DPR2_32_96-r2",
+    "IMMEDIATE_REERASE_DPR2_32_96-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+    "LEGACY9_DRAG_DPR2_64_192-r1",
+    "LEGACY9_DRAG_DPR2_64_192-r2",
+    "LEGACY9_DRAG_DPR2_64_192-r3",
+    "LEGACY16_ERASE_DPR2_64_192-r1",
+    "LEGACY16_ERASE_DPR2_64_192-r2",
+    "LEGACY16_ERASE_DPR2_64_192-r3",
+    "IMMEDIATE_REERASE_DPR2_64_192-r1",
+    "IMMEDIATE_REERASE_DPR2_64_192-r2",
+    "IMMEDIATE_REERASE_DPR2_64_192-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3"
+  ],
+  "executed_ids": [
+    "correctness-lower_z_translucent_drag"
+  ],
+  "admitted_ids": [],
+  "missing_ids": [
+    "correctness-permanent_live_mask",
+    "correctness-transparent_color_bg",
+    "correctness-warm_miss_pressure",
+    "correctness-dpr_switch",
+    "correctness-feedback_canonical",
+    "LEGACY9_DRAG_DPR2_32_96-r1",
+    "LEGACY9_DRAG_DPR2_32_96-r2",
+    "LEGACY9_DRAG_DPR2_32_96-r3",
+    "LEGACY16_ERASE_DPR2_32_96-r1",
+    "LEGACY16_ERASE_DPR2_32_96-r2",
+    "LEGACY16_ERASE_DPR2_32_96-r3",
+    "IMMEDIATE_REERASE_DPR2_32_96-r1",
+    "IMMEDIATE_REERASE_DPR2_32_96-r2",
+    "IMMEDIATE_REERASE_DPR2_32_96-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+    "LEGACY9_DRAG_DPR2_64_192-r1",
+    "LEGACY9_DRAG_DPR2_64_192-r2",
+    "LEGACY9_DRAG_DPR2_64_192-r3",
+    "LEGACY16_ERASE_DPR2_64_192-r1",
+    "LEGACY16_ERASE_DPR2_64_192-r2",
+    "LEGACY16_ERASE_DPR2_64_192-r3",
+    "IMMEDIATE_REERASE_DPR2_64_192-r1",
+    "IMMEDIATE_REERASE_DPR2_64_192-r2",
+    "IMMEDIATE_REERASE_DPR2_64_192-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3"
+  ],
+  "window_closed": true,
+  "outstanding_reservations": 0,
+  "retry_authorized": false,
+  "blocker_classification": "VERIFICATION_DESIGN_DEFECT",
+  "next_action": "Independent control/Verification review of paired correctness initialization lifecycle binding; this window remains closed.",
+  "performance_or_official_gate_PASS": false
+}

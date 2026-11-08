@@ -1,0 +1,25 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py:126: SyntaxWarning: invalid escape sequence '\/'
+  const dir=inputs.r5_worker_inputs[0].path.replace(/\/raw-trace.jsonl$/,'');
+EE
+======================================================================
+ERROR: test_startup_profile_requires_two_qualified_frontiers_and_preserves_old_profiles (test_g5_ur0_repair_runner.RepairRunnerTest.test_startup_profile_requires_two_qualified_frontiers_and_preserves_old_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 163, in test_startup_profile_requires_two_qualified_frontiers_and_preserves_old_profiles
+    m=self.module();s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o['source_profile']=dict(m.STARTUP_INITIALIZATION_PROFILE);o['startup_frontiers']={}
+                                                                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'repair_runner' has no attribute 'STARTUP_INITIALIZATION_PROFILE'. Did you mean: 'OLD_INITIALIZATION_PROFILE'?
+
+======================================================================
+ERROR: test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata (test_g5_ur0_repair_runner.RepairRunnerTest.test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 174, in test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata
+    m=self.module();self.assertFalse(m.valid_startup_record({},45000))
+                                     ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'repair_runner' has no attribute 'valid_startup_record'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (errors=2)

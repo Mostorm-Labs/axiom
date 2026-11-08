@@ -1,0 +1,97 @@
+{
+  "schema": "ur0b-trace-lifecycle-verification-v1",
+  "status": "CURRENT_FOR_OFFLINE_CORRECTNESS_LIFECYCLE_REPAIR",
+  "role": "aegis-verification / P20 control",
+  "authority": {
+    "basis": "User authorized this conversation to design/control, adjacent thread to implement, continue the baseline, and proactively notify terminal results.",
+    "inherited_correctness_spec_ref": {
+      "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+      "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+      "identity_kind": "local-content-addressed"
+    },
+    "inherited_fresh_empty_contract_ref": {
+      "path": ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json",
+      "sha256": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd",
+      "identity_kind": "local-content-addressed"
+    },
+    "actual_failed_result_ref": {
+      "path": ".aegis/results/G5-UR0b/resume-r5/result.json",
+      "sha256": "bf1ee511aa71ec587462d33938608fecc076d17e083313278f35f0201e627be3",
+      "identity_kind": "local-content-addressed"
+    }
+  },
+  "objective": "Bind an initialization public state to the actual browser-page lifecycle that produced the native trace, then apply all existing unique-owner/fresh-empty/canonical checks.",
+  "non_goals": [
+    "No Runtime/SDK/public API/collector/worker/consumer/native schema change",
+    "No new browser start, retry or build",
+    "No change to pixel or timing/budget limits",
+    "No rewriting r5 rejected/CLOSED history"
+  ],
+  "required_analysis": [
+    "Current exact worker3e3d5e... performs OFF correctness -> closes OFF -> reloads -> records paired_init from ON -> completes ON -> drains raw-trace.jsonl from the current ON page, then closes/drains cleanup.",
+    "Public and native numeric identities may restart on module reload; equality across distinct pages does not create an ambiguity inside one trace lifecycle.",
+    "Actual OFF/ON timeOrigin values are distinct and ordered; this corroborates the known creation/reload protocol, not a new native epoch or semantic identity."
+  ],
+  "trace_lifecycle_contract": {
+    "scheme": "CORRECTNESS_FINAL_ON_PAGE_V1",
+    "applicability": "Only the existing exact repairedInitializationProfile tuple, mode correctness, toggle ON and one of the existing six branch cases. Original old profile and all non-correctness modes retain existing init-only behavior unchanged.",
+    "source_protocol": "Do not trust an input label or generation0 alone. Exact pinned worker/consumer/helper source proves the single OFF-close/reload/ON-init/final-current-page-drain sequence. Require OBSERVED complete worker, source/artifacts stable, complete four unique OFF0/OFF1/ON0/ON1 comparison entries for the declared case, and bound actual raw trace/input/worker bytes. Comparison outcomes may be QUALIFIED/FAILED/MISSING; do not make provenance depend on pixel PASS.",
+    "page_evidence": "Both actual init.environment.timeOrigin and paired_init.environment.timeOrigin finite positive, ON strictly greater than OFF; paired_init.state exists. Raw record count agrees with run.trace.records; existing critical-loss checks stay. Preserve pending_gpu metadata without adding a new source-lifecycle Gate for it. Missing/contradictory protocol remains unresolved.",
+    "qualifying_state_path": "worker-result.json/paired_init/state",
+    "selection": "First establish final ON trace lifecycle, then require a unique state/owner match within that lifecycle. Retain init and paired_init as separate provenance entries even if values equal. Never collapse equal values, select first/last by convenience, prefer a matching OFF state, or treat two same-lifecycle candidates as unique.",
+    "identity": "All existing complete native runtime/lifetime/attachment/document/epoch/resource/view, successful attempt, sequence and input hash checks stay. Public fresh-empty0/no-operation constraints stay; no Operation/Scene mutation or ID is invented.",
+    "derived_proof": "Emit an explicit trace_scope with scheme, qualifying_state_path, off_page_time_origin_ms, trace_page_time_origin_ms, and exact ref to this Verification spec. It is derived host evidence backed by the fixed profile and recorded bytes, not a fabricated native event or new semantic epoch.",
+    "python_consumer": "Validate the same scoped rule in require_canonical_chain; require_bound_compilation additionally reconstructs expected scope/public states from actual worker-result and checks exact input/profile/spec hashes. Reject mismatches and unknown scope. Existing source/profile literal tuple remains unchanged."
+  },
+  "actual_r5_expected": {
+    "recording_source": "17affbd9dcf5b2c262755fb2320aa617a815a0a021a18c479eea596e50f13dbe",
+    "original_mode": "WORKER_COMPILE",
+    "new_derived_mode": "OFFLINE_REVERIFICATION",
+    "canonical_scope": "NATIVE_ONLY",
+    "accepted_raw_count": 6,
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 5,
+    "qualified_decoded_count": 5,
+    "metric_receipt_count": null,
+    "unresolved_accepted_count": 0,
+    "metrics_schema": "No measurement exists for this correctness worker. Leave metrics MISSING/not applicable; do not fabricate a metrics document or make native-only proof pretend to have mutation metric receipts.",
+    "immutable": "All original raw/worker/input bytes, six accepted records, five committed chains, pixels/subjects, artifact identities, timings, guard and original r5 rejected status/window stay unchanged.",
+    "reuse": "Report eligible-pending-independent-review for this one recorded correctness case; do not admit it into the old closed window or self-issue reuse/P34/performance PASS."
+  },
+  "evidence_qualification": {
+    "failure_mode": "Cross-page numeric identity alias is misclassified as ambiguous initialization, or a naive fix chooses an unrelated runtime state.",
+    "impact": "Blocks a valid real browser prerequisite or can hide a foreign/stale initialization if uniqueness is simply weakened.",
+    "existing_independent_coverage": "Exact source profile, public states, full native owner/frame chains and immutable recording bindings.",
+    "residual_proof_gap": "Scope the public state selection to the page that the fixed worker actually drained.",
+    "new_evidence_unique_detection_value": "Actual equal-state distinct-page recording plus wrong/unknown lifecycle negatives directly isolate this failure mode.",
+    "blocking_justification": "Fix of the existing all-accepted-record reconciliation obligation; no new product gate."
+  },
+  "required_output": [
+    "Actual-record RED then scoped corrected derivation",
+    "Nine frozen positive/negative groups and full regression",
+    "17 prior invariance plus one actual r5 native-only recompile, with honest source/provenance separation",
+    "Exact result/bundle and prospective reuse assessment"
+  ],
+  "quality_evidence_gate": {
+    "required": [
+      "All nine groups",
+      "Existing full Node/Python/boundary and diff checks",
+      "Unchanged old recordings, worker/consumer/profiles, existing timers/budgets and readers outside named repair scope"
+    ],
+    "official_gate_pass": false
+  },
+  "handoff": {
+    "owner": "Adjacent implementation conversation; materialize exact P31 and execute all offline work without another approval if preflight is clean."
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/oracle-cases.json",
+    "sha256": "2fe494a6443b48d7f1b923e2423d8f8ed61c792a2d5052417c0f6a3e4a79917a",
+    "identity_kind": "local-content-addressed"
+  },
+  "inputs_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json",
+    "sha256": "1aac426127a22c3cb1c366aac0260c8a288ac1f05e83a100ec75589c6fe0942d",
+    "identity_kind": "local-content-addressed"
+  },
+  "supersession": "Narrow additive correction of cross-page uniqueness interpretation in the previous correctness paired-state contract. Original fresh-empty/native ownership requirements, old results, all other12-group pixel/transport contracts and old profile stay unchanged."
+}

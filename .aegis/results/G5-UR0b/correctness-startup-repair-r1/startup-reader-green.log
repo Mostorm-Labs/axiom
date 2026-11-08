@@ -1,0 +1,26 @@
+...............E..
+======================================================================
+ERROR: test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata (test_g5_ur0_repair_runner.RepairRunnerTest.test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 195, in test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata
+    bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
+                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 205, in require_bound_compilation
+    if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
+                                             ^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 75, in sha
+    def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                                     ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1019, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/init'
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.396s
+
+FAILED (errors=1)

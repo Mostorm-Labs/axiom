@@ -1,0 +1,115 @@
+TAP version 13
+# Subtest: ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+ok 1 - ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+  ---
+  duration_ms: 1531.168292
+  ...
+# Subtest: INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+ok 2 - INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+  ---
+  duration_ms: 92.221542
+  ...
+# Subtest: MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+ok 3 - MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+  ---
+  duration_ms: 123.116875
+  ...
+# Subtest: RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+ok 4 - RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+  ---
+  duration_ms: 322.871291
+  ...
+# Subtest: CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+ok 5 - CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+  ---
+  duration_ms: 66.573875
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+ok 6 - LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+  ---
+  duration_ms: 65.92825
+  ...
+# Subtest: FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+ok 7 - FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+  ---
+  duration_ms: 301.020208
+  ...
+# Subtest: DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+ok 8 - DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+  ---
+  duration_ms: 57.068708
+  ...
+# Subtest: NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+ok 9 - NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+  ---
+  duration_ms: 32.341125
+  ...
+# Subtest: MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+ok 10 - MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+  ---
+  duration_ms: 542.381125
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+ok 11 - LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+  ---
+  duration_ms: 35.753041
+  ...
+# Subtest: NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+ok 12 - NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+  ---
+  duration_ms: 51.240959
+  ...
+# Subtest: OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+ok 13 - OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+  ---
+  duration_ms: 13.905292
+  ...
+# Subtest: CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+ok 14 - CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+  ---
+  duration_ms: 81.156791
+  ...
+# Subtest: CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+ok 15 - CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+  ---
+  duration_ms: 420.239875
+  ...
+# Subtest: PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+ok 16 - PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+  ---
+  duration_ms: 8.553708
+  ...
+# Subtest: LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+ok 17 - LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope
+  ---
+  duration_ms: 339.985166
+  ...
+# Subtest: LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+ok 18 - LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries
+  ---
+  duration_ms: 6.137833
+  ...
+# Subtest: LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+ok 19 - LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience
+  ---
+  duration_ms: 179.244083
+  ...
+# Subtest: LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+ok 20 - LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON
+  ---
+  duration_ms: 59.255708
+  ...
+# Subtest: LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+ok 21 - LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes
+  ---
+  duration_ms: 15.177125
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4622.566666

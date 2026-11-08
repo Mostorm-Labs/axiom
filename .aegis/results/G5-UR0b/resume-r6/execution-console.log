@@ -1,0 +1,20 @@
+{"stage": "r6-worker-start", "run_id": "correctness-permanent_live_mask", "reserved_seconds": 90, "starts": 1}
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/scoped_remaining_runner.py", line 274, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/scoped_remaining_runner.py", line 273, in main
+    p=argparse.ArgumentParser();p.add_argument('--sdk64',type=Path,required=True);p.add_argument('--sdk32',type=Path,required=True);p.add_argument('--proofs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);return run(p.parse_args())
+                                                                                                                                                                                                                                                 ^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/scoped_remaining_runner.py", line 262, in run
+    check_guard(row,outcome);compile_outcome(outcome);require_fresh(row,outcome,proof);window.admit(current)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/scoped_remaining_runner.py", line 142, in require_fresh
+    resume.check_worker(row,outcome,proof)
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 137, in check_worker
+    repair.require_canonical_chain(s,require_positive=row['phase']=='diagnostic',require_metrics=row.get('mode')!='correctness');repair.require_bound_compilation(Path(outcome['raw_directory']),s,proof)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 99, in require_canonical_chain
+    if summary.get('critical_loss')!=0 or summary.get('identity_errors')!=[] or chain.get('unresolved')!=[]:raise RuntimeError('canonical observation has loss, identity error or unresolved links')
+                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical observation has loss, identity error or unresolved links

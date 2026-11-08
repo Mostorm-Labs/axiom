@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "root_cause_red_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/startup-model-red.log",
+    "sha256": "88d6e0375791ecd7c6f7da1079ab4e78e0f6ad0d549b1f3aca59c257ff4dc7f4"
+  },
+  "node": {
+    "tests": 127,
+    "passed": 127,
+    "failed": 0,
+    "command": "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/node.log",
+      "sha256": "804f1e08336082e7d044d462786e29018cff4096cb2d988fde71bb0b225df249"
+    }
+  },
+  "python": {
+    "tests": 96,
+    "passed": 96,
+    "failed": 0,
+    "command": "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/python.log",
+      "sha256": "3b972f1ee56f18162aa5dc4b1053ee88320c25aea9982264c6cec739ce50620f"
+    }
+  },
+  "boundary": {
+    "contracts": 120,
+    "command": "python3.12 tools/check_runtime_boundaries.py --root .",
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  },
+  "historical_reader_subset": {
+    "tests": 73,
+    "log_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/historical-readers.log",
+      "sha256": "e10c7f642056a4429d37831ffa4467e2c7a2c24837e20605fdfa32d35a2f98ed"
+    }
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0
+  },
+  "native_unit_invocations": {
+    "count": 2,
+    "input": "malformed snapshots only",
+    "included_in_full_python_suite": true
+  },
+  "new_browser_starts": 0,
+  "new_builds": 0,
+  "new_valid_native_qualification": 0
+}

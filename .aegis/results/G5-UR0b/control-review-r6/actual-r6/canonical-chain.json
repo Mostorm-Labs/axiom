@@ -1,0 +1,387 @@
+{
+  "schema": "g5-ur0b-canonical-chain-proof-v2",
+  "scope": "NATIVE_ONLY",
+  "status": "MISSING",
+  "accepted_raw_count": 7,
+  "qualified_initialization_count": 1,
+  "qualified_committed_count": 5,
+  "qualified_decoded_count": 5,
+  "observed_qualified_decoded_count": 5,
+  "metric_receipt_count": null,
+  "unresolved_accepted_count": 1,
+  "accepted_records": [
+    {
+      "completion_seq": "22",
+      "work_id": "1",
+      "classification": "UNRESOLVED"
+    },
+    {
+      "completion_seq": "188",
+      "work_id": "2",
+      "classification": "INITIALIZATION"
+    },
+    {
+      "completion_seq": "2111",
+      "work_id": "3",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2608",
+      "work_id": "4",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2729",
+      "work_id": "5",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "3108",
+      "work_id": "6",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "3425",
+      "work_id": "7",
+      "classification": "COMMITTED"
+    }
+  ],
+  "initialization_chains": [
+    {
+      "work_id": "2",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "0",
+        "scene_generation": "0",
+        "scene_revision": "0",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "2",
+        "operation_id": null,
+        "commit_revision": "0"
+      },
+      "draw_job": "8",
+      "draw_basis": "8",
+      "attempt_jobs": [
+        "8"
+      ],
+      "draw_seq": "40",
+      "provider_seq": "57",
+      "capture_seq": "67",
+      "completion_seq": "188",
+      "provenance": [
+        "66",
+        "64",
+        "67",
+        "57",
+        "40",
+        "188"
+      ],
+      "operation_reason": "NOT_APPLICABLE_INITIALIZATION",
+      "initialization_basis": {
+        "status": "PROVEN_FRESH_EMPTY_INITIALIZATION",
+        "state_path": "worker-result.json/paired_init/state",
+        "public_state": {
+          "documentId": "99999999999999999999999999999999",
+          "generation": "0",
+          "objects": 0,
+          "lastCommit": {
+            "ordinal": "0",
+            "operationId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "runtimeEpoch": "1",
+            "attachmentEpoch": "2",
+            "viewId": "1"
+          }
+        },
+        "source_profile": {
+          "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+          "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+          "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+          "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+          "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
+          "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+          "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+        },
+        "recording_source_tree_sha256": "a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4",
+        "input_refs": {
+          "raw_trace_sha256": "f78f4f7b02bb005ec27dc7dec0f54a5c42a97a83d9a3d163ca7d8271a6451ca3",
+          "worker_result_sha256": "30cc1bf9581961cdf4da57b9c2c75a513b10c647bd73a7fa8e91a0138f3f5685",
+          "run_inputs_sha256": "132c1b12cbb2d533af0ec4dcfe8b1e4c70457b28e87e1bff192cd5f101ad87d0"
+        },
+        "recording_mode": "correctness",
+        "recorded_states": [
+          {
+            "state_path": "worker-result.json/init/state",
+            "public_state": {
+              "documentId": "99999999999999999999999999999999",
+              "generation": "0",
+              "objects": 0,
+              "lastCommit": {
+                "ordinal": "0",
+                "operationId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "runtimeEpoch": "1",
+                "attachmentEpoch": "2",
+                "viewId": "1"
+              }
+            },
+            "page_time_origin_ms": 1794129579321.8
+          },
+          {
+            "state_path": "worker-result.json/paired_init/state",
+            "public_state": {
+              "documentId": "99999999999999999999999999999999",
+              "generation": "0",
+              "objects": 0,
+              "lastCommit": {
+                "ordinal": "0",
+                "operationId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "runtimeEpoch": "1",
+                "attachmentEpoch": "2",
+                "viewId": "1"
+              }
+            },
+            "page_time_origin_ms": 1794129582489.5
+          }
+        ],
+        "trace_scope": {
+          "scheme": "CORRECTNESS_FINAL_ON_PAGE_V1",
+          "qualifying_state_path": "worker-result.json/paired_init/state",
+          "off_page_time_origin_ms": 1794129579321.8,
+          "trace_page_time_origin_ms": 1794129582489.5,
+          "verification_spec_ref": {
+            "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+            "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a"
+          }
+        },
+        "applicability": "frozen fresh-empty createRuntime recording plus actual native chain; no synthetic Operation or Scene"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "work_id": "3",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "3",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "328",
+      "draw_basis": "328",
+      "attempt_jobs": [
+        "328"
+      ],
+      "draw_seq": "2005",
+      "provider_seq": "2088",
+      "capture_seq": "2102",
+      "completion_seq": "2111",
+      "provenance": [
+        "2101",
+        "2099",
+        "2102",
+        "2088",
+        "2005",
+        "1973",
+        "1980",
+        "1987",
+        "2111"
+      ]
+    },
+    {
+      "work_id": "4",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "4",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "352",
+      "draw_basis": "352",
+      "attempt_jobs": [
+        "352"
+      ],
+      "draw_seq": "2149",
+      "provider_seq": "2173",
+      "capture_seq": "2579",
+      "completion_seq": "2608",
+      "provenance": [
+        "2578",
+        "2576",
+        "2579",
+        "2173",
+        "2149",
+        "1973",
+        "1980",
+        "1987",
+        "2608"
+      ]
+    },
+    {
+      "work_id": "5",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "6",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "422",
+      "draw_basis": "422",
+      "attempt_jobs": [
+        "422"
+      ],
+      "draw_seq": "2629",
+      "provider_seq": "2710",
+      "capture_seq": "2724",
+      "completion_seq": "2729",
+      "provenance": [
+        "2723",
+        "2721",
+        "2724",
+        "2710",
+        "2629",
+        "1973",
+        "1980",
+        "1987",
+        "2729"
+      ]
+    },
+    {
+      "work_id": "6",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "7",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "444",
+      "draw_basis": "444",
+      "attempt_jobs": [
+        "444"
+      ],
+      "draw_seq": "2767",
+      "provider_seq": "2791",
+      "capture_seq": "3095",
+      "completion_seq": "3108",
+      "provenance": [
+        "3094",
+        "3092",
+        "3095",
+        "2791",
+        "2767",
+        "1973",
+        "1980",
+        "1987",
+        "3108"
+      ]
+    },
+    {
+      "work_id": "7",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "2",
+        "scene_generation": "2",
+        "scene_revision": "2",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "10",
+        "operation_id": "a7a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "2"
+      },
+      "draw_job": "497",
+      "draw_basis": "497",
+      "attempt_jobs": [
+        "497"
+      ],
+      "draw_seq": "3325",
+      "provider_seq": "3406",
+      "capture_seq": "3420",
+      "completion_seq": "3425",
+      "provenance": [
+        "3419",
+        "3417",
+        "3420",
+        "3406",
+        "3325",
+        "3271",
+        "3288",
+        "3298",
+        "3425"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "completion_seq": "22",
+      "reason": "accepted raw completion lacks a unique qualified decoded chain"
+    }
+  ],
+  "timing_scope": "native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance"
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-trace-lifecycle-repair-r1",
+  "stage": "P32_OFFLINE_VERIFICATION_REPAIR",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+  "dirty": true,
+  "source_tree_sha256": "ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-trace-lifecycle-repair-r1/package.json",
+    "sha256": "f187fa6ead75bc6eddca92f7bbc1e76862be7060b89cbc279816c577b3ec3d71"
+  },
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/implementation-request.json",
+    "sha256": "53985e867abf682fb6fbbaed9c6e16f82d7f763a34904d08c653df7439c3ecf8"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+    "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a",
+    "identity_kind": "local-content-addressed"
+  },
+  "preflight_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/preflight.json",
+    "sha256": "b1ec0811984068682a4737fc57667d11d3783b2bec30d5ce07cd949b93f0102b"
+  },
+  "source_identity_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/full-source-identity.json",
+    "sha256": "c9d6947943d8838fc2554f1e96e0b3e142c979dd048daa4e27c8ffd122c6fd38"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/validation.json",
+    "sha256": "51a33a21b132d1af6bf088e8fe51c1034646c61067bc478f912b21b0bfd305cd"
+  },
+  "oracle_coverage_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/oracle-coverage.json",
+    "sha256": "ce62f4d3253277242160739872e38cc6e7613c345c6fb6cb0f12d3b83cbc1d5c"
+  },
+  "reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reverification.json",
+    "sha256": "39b48461f6892dd380b76396d4cd94f0a12ddac48c0ee7748b938e076a47a339"
+  },
+  "reuse_assessment_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/reuse-assessment.json",
+    "sha256": "7c81f2777398871cf00b2fd0e2d2a2f88bfdd1316cf91270cc2970175133d66a"
+  },
+  "preservation_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/preservation.json",
+    "sha256": "6b25b616ae12fc22f2995482b952246483d13387bb4f3234f7e4a47610bee397"
+  },
+  "historical_context_ref": {
+    "path": ".aegis/results/G5-UR0b/trace-lifecycle-repair-r1/historical-compiler-context.json",
+    "sha256": "d1692e3b4bcd058eb25a66b0a25e1c108b12a9d616579e5a4d31a7f20c8821b6"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_BUNDLE",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533/trace-lifecycle-repair-r1",
+    "manifest_sha256": "5b1de8cc05585f271b0137a8518953e50e16137553cd657247607d8e8486136c",
+    "payload_files": 194
+  },
+  "actual_r5_native_only_counts": {
+    "accepted_raw_count": 6,
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 5,
+    "qualified_decoded_count": 5,
+    "metric_receipt_count": null,
+    "unresolved_accepted_count": 0
+  },
+  "new_sampling_workers": 0,
+  "historical_starts": 34,
+  "historical_charged_seconds": 1264,
+  "new_builds": 0,
+  "new_commit_push": 0,
+  "producer_accepts_reuse": false,
+  "old_r5_status": "FROZEN_VERIFICATION_FAILURE_UNCHANGED",
+  "old_r5_admission": "REJECTED_UNCHANGED",
+  "old_r5_window": "CLOSED_UNCHANGED",
+  "next_action": "Independent control review and exact new-compiler recorded-correctness reuse acceptance. Only then authorize5 remaining correctness plus30 main.",
+  "performance_or_official_gate_PASS": false
+}

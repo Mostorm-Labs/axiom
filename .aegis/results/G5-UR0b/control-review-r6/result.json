@@ -1,0 +1,115 @@
+{
+  "schema": "ur0b-r6-control-review-v1",
+  "role": "aegis-gate-review / P35",
+  "status": "REVIEWED_BLOCKED_EVIDENCE",
+  "authority": "Human delegated design/control to this thread, implementation to adjacent thread, authorized continuation and proactive terminal notifications.",
+  "objective": "Independently classify the exact r6 accepted-completion provenance failure.",
+  "non_goals": [
+    "No new sampling or product/GPU change",
+    "No retroactive qualification of missing work1",
+    "No performance/platform/P34 PASS"
+  ],
+  "result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/result.json",
+    "sha256": "41650906d25a902f4515b06d46cf757386aad75593d017f89d51c1461809c301",
+    "identity_kind": "local-content-addressed"
+  },
+  "independent_check_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-r6/independent-check.json",
+    "sha256": "05ec917c135a52f7291ac45d5c3a1414f0aa63d82bac1354c63da2ee72a16237",
+    "identity_kind": "local-content-addressed"
+  },
+  "source_refs": [
+    {
+      "path": "verification/runners/g5/ur0/consumer.mjs",
+      "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/ur0/worker.mjs",
+      "sha256": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/ur0/correctness_driver.mjs",
+      "sha256": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "7f25360b98edb7f8e3d5ff8ea685130dbeff9f7ed70f2d892cc886b9a04f338b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "sdk/web/bridge.cpp",
+      "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "frozen_requirement_audit": {
+    "preserved": [
+      "All accepted raw completions retained",
+      "First failure closes window; no retry; all remaining34 MISSING",
+      "Guard/timer/RSS/source/artifact/cleanup limits honored"
+    ],
+    "failed": [
+      "Accepted work1 completion seq22 lacks observed draw/provider/capture chain; 7 accepted = 1 initialized + 5 committed + 1 unresolved"
+    ]
+  },
+  "frozen_evidence_audit": {
+    "verified_payloads": 162,
+    "verified_result_refs": 17,
+    "reviewer_recompiled_original_raw": true,
+    "pixels": "All four actual OFF0/OFF1/ON0/ON1 comparisons QUALIFIED; these do not replace missing native provenance.",
+    "trace_loss": {
+      "critical": 0,
+      "statistical": 0
+    },
+    "analysis_mode": "OFFLINE_REVERIFICATION"
+  },
+  "repository_reality": {
+    "remote": "git@github.com:Mostorm-Labs/axiom.git",
+    "head": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "branch": "codex/geometry-navigation-integration",
+    "dirty_work_preserved": true
+  },
+  "classification": {
+    "type": "VERIFICATION_DESIGN_DEFECT",
+    "owner": "P20 correctness observation lifecycle, then P31 harness repair",
+    "failure_mode": "A canonical frame starts while observation is disabled; its accepted asynchronous completion arrives after enable, making an incomplete left boundary look like missing Runtime work.",
+    "evidence": "consumer.init awaits createRuntime before control(2,1). correctness.setup subsequently enables recording. The collector reset starts off, ordinary observations are gated by on. Native capture occurs synchronously in initial bind/render; completion is reported later in receivePlatformPresented. Raw seq21/22 is work1 frame1 generation0; first observed frame is work2/frame2.",
+    "proof_limit": "Source and raw data support the startup-boundary cause; original work1 draw/provider/capture bytes do not exist in r6 and cannot be reconstructed as an observed proof. This does not establish a product rendering or GPU failure.",
+    "existing_independent_coverage": [
+      "Complete actual frames2..7",
+      "Four independent snapshot/pixel comparisons",
+      "Full current loss/owner/source/guard checks"
+    ],
+    "residual_gap": "The frozen observation protocol did not ensure a closed startup boundary. Do not drop the completion or invent a frame.",
+    "blocking_basis": "Existing all-accepted-record chain requirement failed; no new product requirement or larger evidence matrix.",
+    "routing": "Return to P20 to define a minimal startup boundary; preserve common native checks and prior protocol history."
+  },
+  "accounting": {
+    "total_starts": 35,
+    "total_charged_seconds": 1276,
+    "new_starts": 1,
+    "new_charged_seconds": 12,
+    "outstanding_reserved_seconds": 0,
+    "unknown_starts": 0
+  },
+  "sampling_in_review": 0,
+  "handoff": {
+    "to": "aegis-verification / P20 on adjacent execution thread",
+    "target_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+    "scope": "Materialize narrow startup-boundary correction, then P31 and offline harness implementation; no new browser window in this task."
+  }
+}

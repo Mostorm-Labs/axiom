@@ -1,0 +1,580 @@
+diff --git a/verification/runners/g5/ur0/consumer.mjs b/verification/runners/g5/ur0/consumer.mjs
+index 1f460424..a730397a 100644
+--- a/verification/runners/g5/ur0/consumer.mjs
++++ b/verification/runners/g5/ur0/consumer.mjs
+@@ -13,7 +13,7 @@ window.cancelAnimationFrame=handle=>{pendingSdk.delete(handle);return nativeCanc
+ const raf=()=>new Promise(r=>{r.ur0Probe=true;requestAnimationFrame(r);});
+ const errors=[],frames=[],handlers=[],planned=[],rafTimes=[],captures=[];
+ const snapshotTransfer=new SnapshotTransfer();
+-let sdk,correctness,current=null,measuring=false,contentNs=1000000000n,sequence=0;
++let sdk,correctness,startupEvidence=null,current=null,measuring=false,contentNs=1000000000n,sequence=0;
+ const tapCounts=new WeakMap(),rawAdd=EventTarget.prototype.addEventListener,rawRemove=EventTarget.prototype.removeEventListener,wrapped=new WeakMap();
+ EventTarget.prototype.addEventListener=function(type,fn,opts){
+  const capture=typeof opts==='boolean'?opts:!!opts?.capture;
+@@ -60,14 +60,17 @@ async function checkpoint(label){const state=sdk.readState(),selection=sdk.readS
+  const source_sha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(v=>v.toString(16).padStart(2,'0')).join('');
+  const row={label,state,selection,snapshot:{...metadata,byte_length:bytes.length,source_sha256}};captures.push(row);return row;
+ }
+-async function init(){
++async function init({correctnessOnly=false,deadlineMs=45000}={}){
++ const pageToken=correctnessOnly?{}:null,pageOrigin=correctnessOnly?performance.timeOrigin:null;
++ const startup=correctnessOnly?(await import('./correctness_startup.mjs')).createStartupFrontier({page:pageToken,documentId:'99999999999999999999999999999999',timeOrigin:pageOrigin,nowNs:()=>String(nowNs()),timeoutMs:deadlineMs}):null;
+  const {createRuntime}=await import('/axiom.mjs');
+- sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',permission:'localSingleUser',builtinFonts:false,onError:error=>errors.push({at_ns:String(nowNs()),event_id:current?.event_id??null,error:String(error)}),onFrame:f=>frames.push({at_ns:String(nowNs()),...f})});
++ sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'99999999999999999999999999999999',permission:'localSingleUser',builtinFonts:false,onError:error=>errors.push({at_ns:String(nowNs()),event_id:current?.event_id??null,error:String(error)}),onFrame:correctnessOnly?f=>{frames.push({at_ns:String(nowNs()),...f});startup.onFrame(pageToken,f);}:f=>frames.push({at_ns:String(nowNs()),...f})});
+  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
++ if(correctnessOnly)startupEvidence=await startup.wait({readState:()=>sdk.readState(),pendingSdk:()=>pendingSdk.size,probe:raf,errors:()=>errors,isCurrent:()=>performance.timeOrigin===pageOrigin});
+  if(diag())diag().control(2,1);
+  const gl=sdk.canvas.getContext('webgl2'),extension=gl.getExtension('WEBGL_debug_renderer_info');
+  let resolution=Infinity,previous=performance.now();for(let i=0;i<10000;++i){const t=performance.now();if(t>previous)resolution=Math.min(resolution,t-previous);previous=t;}
+- return{build:sdk.readBuildInfo(),state:sdk.readState(),private_channel:!!diag(),environment:{userAgent:navigator.userAgent,timeOrigin:performance.timeOrigin,reported_resolution_ns:Number.isFinite(resolution)?String(Math.round(resolution*1e6)):null,renderer:gl.getParameter(extension?extension.UNMASKED_RENDERER_WEBGL:gl.RENDERER),vendor:gl.getParameter(extension?extension.UNMASKED_VENDOR_WEBGL:gl.VENDOR),dpr:devicePixelRatio,mount:[800,500],window:[innerWidth,innerHeight]}};
++ return{build:sdk.readBuildInfo(),state:sdk.readState(),private_channel:!!diag(),...(correctnessOnly?{correctness_startup:startupEvidence}:{}),environment:{userAgent:navigator.userAgent,timeOrigin:performance.timeOrigin,reported_resolution_ns:Number.isFinite(resolution)?String(Math.round(resolution*1e6)):null,renderer:gl.getParameter(extension?extension.UNMASKED_RENDERER_WEBGL:gl.RENDERER),vendor:gl.getParameter(extension?extension.UNMASKED_VENDOR_WEBGL:gl.VENDOR),dpr:devicePixelRatio,mount:[800,500],window:[innerWidth,innerHeight]}};
+ }
+ async function setup({fixture,copies=15,scale=2,deadlineMs=45000,legacy=false}){
+  const deadline=performance.now()+deadlineMs;
+@@ -134,7 +137,7 @@ async function measureLegacy({kind,on=true,start}){
+  return{origin_ns:String(originNs),input_end_ns:String(lastInput),end_ns:end,quiescence_ns:quiescence,before,after:sdk.readState(),selection:sdk.readSelection(),planned,handlers,errors,frames,rafTimes:rafTimes.slice(rafStart),clock_before:pre,clock_after:post,phases,measurement_schedule:'LEGACY_CLOSED_LOOP',content_span_ns:'28796000000',legacy_floor_p95_frame_ns:sorted.length?sorted[Math.floor(sorted.length*.95)]:null,legacy_original_archives_unchanged:true};
+ }
+ window.ur0={init,setup,setupLegacy:kind=>setup({fixture:legacyCorpus(),legacy:true,copies:kind==='legacy9_drag'?8:15,scale:kind==='legacy9_drag'?1:2}),measureLegacy,checkpoint,snapshotChunk:(offset,count)=>snapshotTransfer.pull(offset,count),snapshotRelease:cancel=>snapshotTransfer.end(cancel),measure,prepareMeasurement,clocks,
+- async correctnessSetup(kind,on){correctness=correctnessDriver({sdk,pointer,raf,settled,diag});return correctness.setup(kind,on);},
++ async correctnessSetup(kind,on){if(!startupEvidence)throw Error('correctness startup frontier missing');correctness=correctnessDriver({sdk,pointer,raf,settled,diag});return correctness.setup(kind,on);},
+  correctnessNext:()=>correctness.next(),pixelChunk:(offset,count)=>correctness.pull(offset,count),pixelRelease:cancel=>correctness.release(cancel),
+  async realtime({fixture,hz,on=true}){
+  await sdk.selectBrush('round-handdrawn',4);await sdk.selectTool('ink');
+diff --git a/verification/runners/g5/ur0/initialization_basis.mjs b/verification/runners/g5/ur0/initialization_basis.mjs
+index 86dea176..43d33452 100644
+--- a/verification/runners/g5/ur0/initialization_basis.mjs
++++ b/verification/runners/g5/ur0/initialization_basis.mjs
+@@ -16,6 +16,16 @@ export const repairedInitializationProfile=Object.freeze({
+  "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+  "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+ });
++export const startupInitializationProfile=Object.freeze({
++ 'verification/runners/g5/ur0/consumer.mjs':'aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff',
++ 'verification/runners/g5/ur0/worker.mjs':'2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78',
++ 'verification/runners/g5/ur0/correctness_driver.mjs':'0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721',
++ 'verification/runners/g5/ur0/pixel_oracle.mjs':'dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1',
++ 'verification/runners/g5/ur0/stream_transfer.mjs':'4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210',
++ 'verification/runners/g5/ur0/correctness_transfer.mjs':'87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8',
++ 'verification/runners/g5/ur0/correctness_contract.mjs':'682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0',
++ 'verification/runners/g5/ur0/correctness_startup.mjs':'5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39'
++});
+ const hash=x=>createHash('sha256').update(x).digest('hex');
+ const hex=x=>typeof x==='string'&&/^[0-9a-f]{64}$/.test(x);
+ const uint=x=>typeof x==='string'&&/^(0|[1-9][0-9]*)$/.test(x)&&BigInt(x)<2n**64n;
+@@ -23,22 +33,49 @@ const ownerFields=['runtime','lifetime','attachment','document','documentEpoch',
+ const sameOwner=(a,b)=>a&&b&&ownerFields.every(k=>a[k]!==undefined&&a[k]===b[k]);
+ const publicState=s=>({documentId:s.documentId,generation:s.generation,objects:s.objects,lastCommit:{ordinal:s.lastCommit?.ordinal,operationId:s.lastCommit?.operationId},target:{runtimeEpoch:s.target?.runtimeEpoch,attachmentEpoch:s.target?.attachmentEpoch,viewId:s.target?.viewId}});
+ const matchesState=(s,c)=>s?.documentId===c.document&&s.target?.attachmentEpoch===c.attachment&&s.target?.viewId===c.view&&s.target?.runtimeEpoch===c.documentEpoch;
++const lifecycleSpec={path:'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json',sha256:'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'};
++const correctnessCases=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical'];
++const startupSpec={path:'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json',sha256:'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'};
++function validStartup(record,budget){
++ const e=record?.correctness_startup,s=record?.state;
++ if(!e||!s||e.scheme!=='CORRECTNESS_STARTUP_QUIESCENT_V1'||typeof e.page_time_origin_ms!=='number'||!Number.isFinite(e.page_time_origin_ms)||e.page_time_origin_ms<=0||e.page_time_origin_ms!==record.environment?.timeOrigin||!isDeepStrictEqual(e.verification_spec_ref,startupSpec)||!Number.isSafeInteger(e.accepted_callback_count)||e.accepted_callback_count<1||!uint(e.last_presented_count)||BigInt(e.last_presented_count)===0n||e.pending_sdk_raf!==0)return false;
++ if(!['created_at_ns','accepted_at_ns','quiescent_at_ns'].every(k=>uint(e[k]))||BigInt(e.created_at_ns)>BigInt(e.accepted_at_ns)||BigInt(e.accepted_at_ns)>BigInt(e.quiescent_at_ns)||BigInt(e.quiescent_at_ns)-BigInt(e.created_at_ns)>BigInt(budget)*1000000n)return false;
++ const expected={documentId:s.documentId,generation:s.generation,objects:s.objects,activeContacts:s.activeContacts,lastCommit:{ordinal:s.lastCommit?.ordinal,operationId:s.lastCommit?.operationId},target:Object.fromEntries(['runtimeEpoch','attachmentEpoch','viewId','viewEpoch'].map(k=>[k,s.target?.[k]]))};
++ return s.documentId==='9'.repeat(32)&&s.generation==='0'&&s.objects===0&&s.activeContacts===0&&s.lastCommit?.ordinal==='0'&&s.lastCommit?.operationId==='0'.repeat(32)&&Object.values(expected.target).every(v=>uint(v)&&BigInt(v)>0n)&&isDeepStrictEqual(e.public_state,expected);
++}
++function finalOnTraceScope(run,inputs,raw){
++ if(run.schema!=='g5-ur0b-worker-v1'||run.mode!=='correctness'||run.toggle!=='ON'||!correctnessCases.includes(run.branch)||run.status!=='OBSERVED'||run.close?.closed!==true)return null;
++ if(run.source_stable!==true||run.artifacts_stable!==true||!isDeepStrictEqual(run.source_before,run.source_after)||!isDeepStrictEqual(run.artifacts_before,run.artifacts_after))return null;
++ if(!run.artifacts_before||!Object.keys(run.artifacts_before).length||!Object.values(run.artifacts_before).every(hex))return null;
++ if(['schema','mode','branch','toggle'].some(k=>inputs[k]!==run[k])||!isDeepStrictEqual(inputs.source_before,run.source_before)||!isDeepStrictEqual(inputs.artifacts_before,run.artifacts_before))return null;
++ if(run.trace?.records!==raw.length||run.trace?.loss?.critical!==0)return null;
++ const entries=run.correctness;
++ if(!Array.isArray(entries)||entries.length!==4||entries.some(e=>e.case_id!==run.branch||!['OFF','ON'].includes(e.toggle)||![0,1].includes(e.step)||!['QUALIFIED','FAILED','MISSING'].includes(e.comparison?.status)||!hex(e.candidate_sha256)||e.candidate_sha256!==e.source_sha256||!hex(e.reference_snapshot_sha256)))return null;
++ if(new Set(entries.map(e=>e.toggle+'/'+e.step)).size!==4)return null;
++ const off=run.init?.environment?.timeOrigin,on=run.paired_init?.environment?.timeOrigin;
++ if(!run.init?.state||!run.paired_init?.state||![off,on].every(x=>typeof x==='number'&&Number.isFinite(x)&&x>0)||on<=off)return null;
++ return {scheme:'CORRECTNESS_FINAL_ON_PAGE_V1',qualifying_state_path:'worker-result.json/paired_init/state',off_page_time_origin_ms:off,trace_page_time_origin_ms:on,verification_spec_ref:{...lifecycleSpec}};
++}
+ export function initializationBasis(completion,decoded,raw,recording){
+  const absent=reason=>({status:'UNRESOLVED',reason});
+  if(decoded.errors?.length||decoded.loss?.critical)return absent('loss or identity error prevents initialization proof');
+  if(!recording?.run||!recording.input_refs)return absent('missing archived initial-state/input binding');
+  const bound=[['raw_trace_jsonl','raw_trace_sha256'],['worker_result_json','worker_result_sha256'],['run_inputs_json','run_inputs_sha256']];
+  if(bound.some(([file,key])=>typeof recording[file]!=='string'||!hex(recording.input_refs[key])||hash(recording[file])!==recording.input_refs[key]))return absent('initial-state input bytes/hash binding differs');
+- let run;
++ let run,inputs;
+  try{
+-  run=JSON.parse(recording.worker_result_json);JSON.parse(recording.run_inputs_json);
++  run=JSON.parse(recording.worker_result_json);inputs=JSON.parse(recording.run_inputs_json);
+   if(!isDeepStrictEqual(run,recording.run)||!isDeepStrictEqual(raw,recording.raw_trace_jsonl.trim().split('\n').filter(Boolean).map(JSON.parse)))return absent('initial-state recording differs from actual input bytes');
+  }catch{return absent('malformed initial-state recording input');}
+  const matches=p=>Object.entries(p).every(([name,expected])=>hex(expected)&&run.source_before?.files?.[name]?.sha256===expected);
+- const old=matches(initializationProfile),repaired=!old&&['correctness','fixture','main','realtime','legacy','setup'].includes(run.mode)&&matches(repairedInitializationProfile);
+- if(!hex(run.source_before?.source_tree_sha256)||!old&&!repaired)return absent('fresh-empty creation source profile unproved');
+- const c=completion,candidates=(repaired&&run.mode==='correctness'?['init','paired_init']:['init']).filter(k=>run[k]?.state).map(k=>({state_path:'worker-result.json/'+k+'/state',state:run[k].state}));
+- const matching=old?[{state_path:'worker-result.json/init/state',state:run.init?.state}]:candidates.filter(r=>matchesState(r.state,c));
++ const old=matches(initializationProfile),repaired=!old&&['correctness','fixture','main','realtime','legacy','setup'].includes(run.mode)&&matches(repairedInitializationProfile),startup=!old&&!repaired&&run.mode==='correctness'&&matches(startupInitializationProfile);
++ if(!hex(run.source_before?.source_tree_sha256)||!old&&!repaired&&!startup)return absent('fresh-empty creation source profile unproved');
++ if(startup&&(!validStartup(run.init,45000)||!validStartup(run.paired_init,30000)))return absent('correctness startup frontier unproved');
++ const scoped=(repaired||startup)&&run.mode==='correctness',trace_scope=scoped?finalOnTraceScope(run,inputs,raw):null;
++ if(scoped&&!trace_scope)return absent('final ON-page correctness trace lifecycle unproved');
++ const c=completion,candidates=(scoped?['init','paired_init']:['init']).filter(k=>run[k]?.state).map(k=>({state_path:'worker-result.json/'+k+'/state',state:run[k].state,...(scoped?{page_time_origin_ms:run[k].environment.timeOrigin}:{})}));
++ const eligible=scoped?candidates.filter(r=>r.state_path===trace_scope.qualifying_state_path):candidates;
++ const matching=old?[{state_path:'worker-result.json/init/state',state:run.init?.state}]:eligible.filter(r=>matchesState(r.state,c));
+  if(matching.length!==1)return absent('public initialization state absent, foreign or ambiguous');
+  const s=matching[0].state;
+  if(!s||s.documentId!==c.document||s.generation!=='0'||s.objects!==0||s.lastCommit?.ordinal!=='0'||s.lastCommit?.operationId!=='0'.repeat(32))return absent('missing/nonempty/restored or contradictory public initial state');
+@@ -52,7 +89,9 @@ export function initializationBasis(completion,decoded,raw,recording){
+  }
+  return {status:'PROVEN_FRESH_EMPTY_INITIALIZATION',state_path:matching[0].state_path,
+   public_state:publicState(s),
+-  source_profile:{...(old?initializationProfile:repairedInitializationProfile)},recording_source_tree_sha256:run.source_before.source_tree_sha256,input_refs:{...recording.input_refs},
+-  ...(repaired?{recording_mode:run.mode,recorded_states:candidates.map(r=>({state_path:r.state_path,public_state:publicState(r.state)}))}:{}),
++  source_profile:{...(old?initializationProfile:repaired?repairedInitializationProfile:startupInitializationProfile)},recording_source_tree_sha256:run.source_before.source_tree_sha256,input_refs:{...recording.input_refs},
++  ...(repaired||startup?{recording_mode:run.mode,recorded_states:candidates.map(r=>({state_path:r.state_path,public_state:publicState(r.state),...(scoped?{page_time_origin_ms:r.page_time_origin_ms}:{})}))}:{}),
++  ...(scoped?{trace_scope}:{}),
++  ...(startup?{startup_frontiers:{init:run.init.correctness_startup,paired_init:run.paired_init.correctness_startup}}:{}),
+   applicability:'frozen fresh-empty createRuntime recording plus actual native chain; no synthetic Operation or Scene'};
+ }
+diff --git a/verification/runners/g5/ur0/repair_runner.py b/verification/runners/g5/ur0/repair_runner.py
+index e515eaf3..1a8ebbea 100644
+--- a/verification/runners/g5/ur0/repair_runner.py
++++ b/verification/runners/g5/ur0/repair_runner.py
+@@ -1,5 +1,5 @@
+ """One authorized P36 continuation. No retry selection and no product changes."""
+-import argparse,hashlib,importlib.util,json,re,subprocess,sys
++import argparse,hashlib,importlib.util,json,math,re,subprocess,sys
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[4];HERE=Path(__file__).resolve().parent
+ sys.path.insert(0,str(HERE))
+@@ -17,6 +17,60 @@ REPAIRED_INITIALIZATION_PROFILE={
+  "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+ }
+ CASES=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical']
++STARTUP_INITIALIZATION_PROFILE={
++ 'verification/runners/g5/ur0/consumer.mjs':'aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff',
++ 'verification/runners/g5/ur0/worker.mjs':'2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78',
++ 'verification/runners/g5/ur0/correctness_driver.mjs':'0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721',
++ 'verification/runners/g5/ur0/pixel_oracle.mjs':'dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1',
++ 'verification/runners/g5/ur0/stream_transfer.mjs':'4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210',
++ 'verification/runners/g5/ur0/correctness_transfer.mjs':'87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8',
++ 'verification/runners/g5/ur0/correctness_contract.mjs':'682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0',
++ 'verification/runners/g5/ur0/correctness_startup.mjs':'5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39'
++}
++STARTUP_SPEC={'path':'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json','sha256':'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}
++def startup_public_state(s):
++ return {'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'activeContacts':s.get('activeContacts'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId','viewEpoch']}}
++def valid_startup_record(record,budget):
++ try:
++  e=record['correctness_startup'];s=record['state']
++  uint=lambda x:isinstance(x,str) and re.fullmatch(r'(0|[1-9][0-9]*)',x) is not None and int(x)<2**64
++  if e.get('scheme')!='CORRECTNESS_STARTUP_QUIESCENT_V1' or type(e.get('page_time_origin_ms')) not in [int,float] or not math.isfinite(e['page_time_origin_ms']) or e['page_time_origin_ms']<=0 or e['page_time_origin_ms']!=record['environment']['timeOrigin'] or e.get('verification_spec_ref')!=STARTUP_SPEC:return False
++  if type(e.get('accepted_callback_count')) is not int or not 0<e['accepted_callback_count']<2**53 or not uint(e.get('last_presented_count')) or int(e['last_presented_count'])==0 or type(e.get('pending_sdk_raf')) is not int or e['pending_sdk_raf']!=0:return False
++  if any(not uint(e.get(k)) for k in ['created_at_ns','accepted_at_ns','quiescent_at_ns']):return False
++  a,b,c=[int(e[k]) for k in ['created_at_ns','accepted_at_ns','quiescent_at_ns']]
++  if not a<=b<=c or c-a>budget*1000000:return False
++  public=startup_public_state(s)
++  return s['documentId']=='9'*32 and s['generation']=='0' and type(s['objects']) is int and s['objects']==0 and type(s['activeContacts']) is int and s['activeContacts']==0 and s['lastCommit']['ordinal']=='0' and s['lastCommit']['operationId']=='0'*32 and all(uint(x) and int(x)>0 for x in public['target'].values()) and e['public_state']==public
++ except (AttributeError,KeyError,TypeError,ValueError):return False
++TRACE_LIFECYCLE_SPEC={'path':'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json','sha256':'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}
++TRACE_STATE_PATH='worker-result.json/paired_init/state'
++def valid_trace_scope(scope):
++ if not isinstance(scope,dict) or set(scope)!={'scheme','qualifying_state_path','off_page_time_origin_ms','trace_page_time_origin_ms','verification_spec_ref'}:return False
++ off=scope['off_page_time_origin_ms'];on=scope['trace_page_time_origin_ms']
++ return scope['scheme']=='CORRECTNESS_FINAL_ON_PAGE_V1' and scope['qualifying_state_path']==TRACE_STATE_PATH and scope['verification_spec_ref']==TRACE_LIFECYCLE_SPEC and all(type(x) in [int,float] and math.isfinite(x) and x>0 for x in [off,on]) and on>off
++def trace_scope_for_recording(run,inputs,raw_count):
++ if not isinstance(inputs,dict) or run.get('schema')!='g5-ur0b-worker-v1' or run.get('mode')!='correctness' or run.get('toggle')!='ON' or run.get('branch') not in CASES or run.get('status')!='OBSERVED' or run.get('close',{}).get('closed') is not True:return None
++ if run.get('source_stable') is not True or run.get('artifacts_stable') is not True or run.get('source_before')!=run.get('source_after') or run.get('artifacts_before')!=run.get('artifacts_after'):return None
++ artifacts=run.get('artifacts_before')
++ if not isinstance(artifacts,dict) or not artifacts or any(not isinstance(v,str) or not re.fullmatch('[0-9a-f]{64}',v) for v in artifacts.values()):return None
++ if any(inputs.get(k)!=run.get(k) for k in ['schema','mode','branch','toggle','source_before','artifacts_before']):return None
++ matches=lambda profile:all(run.get('source_before',{}).get('files',{}).get(k,{}).get('sha256')==v for k,v in profile.items())
++ startup=matches(STARTUP_INITIALIZATION_PROFILE)
++ if not startup and not matches(REPAIRED_INITIALIZATION_PROFILE):return None
++ if startup and (not valid_startup_record(run.get('init',{}),45000) or not valid_startup_record(run.get('paired_init',{}),30000)):return None
++ trace=run.get('trace',{})
++ if type(trace.get('records')) is not int or trace['records']!=raw_count or trace.get('loss',{}).get('critical')!=0:return None
++ entries=run.get('correctness')
++ if not isinstance(entries,list) or len(entries)!=4:return None
++ keys=[]
++ for e in entries:
++  if not isinstance(e,dict) or e.get('case_id')!=run['branch'] or e.get('toggle') not in ['OFF','ON'] or type(e.get('step')) is not int or e['step'] not in [0,1] or e.get('comparison',{}).get('status') not in ['QUALIFIED','FAILED','MISSING']:return None
++  if any(not isinstance(e.get(k),str) or not re.fullmatch('[0-9a-f]{64}',e[k]) for k in ['candidate_sha256','source_sha256','reference_snapshot_sha256']) or e['candidate_sha256']!=e['source_sha256']:return None
++  keys.append((e['toggle'],e['step']))
++ if len(set(keys))!=4:return None
++ if not run.get('init',{}).get('state') or not run.get('paired_init',{}).get('state'):return None
++ scope={'scheme':'CORRECTNESS_FINAL_ON_PAGE_V1','qualifying_state_path':TRACE_STATE_PATH,'off_page_time_origin_ms':run.get('init',{}).get('environment',{}).get('timeOrigin'),'trace_page_time_origin_ms':run.get('paired_init',{}).get('environment',{}).get('timeOrigin'),'verification_spec_ref':dict(TRACE_LIFECYCLE_SPEC)}
++ return scope if valid_trace_scope(scope) else None
+ def load(p):return json.loads(Path(p).read_text())
+ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ def write(p,v):p=Path(p);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
+@@ -46,15 +100,34 @@ def assert_sampling_authority_open(previous_return,authorization_sha):
+    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
+ def valid_initialization_profile(origin,basis):
+  profile=origin.get('source_profile')
+- if profile==OLD_INITIALIZATION_PROFILE:return True
+- if profile!=REPAIRED_INITIALIZATION_PROFILE or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in REPAIRED_INITIALIZATION_PROFILE.values()) or origin.get('recording_mode') not in ['correctness','fixture','main','realtime','legacy','setup']:return False
++ if profile==OLD_INITIALIZATION_PROFILE:return 'trace_scope' not in origin and 'startup_frontiers' not in origin
++ startup=profile==STARTUP_INITIALIZATION_PROFILE
++ if profile not in [REPAIRED_INITIALIZATION_PROFILE,STARTUP_INITIALIZATION_PROFILE] or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in profile.values()) or origin.get('recording_mode') not in (['correctness'] if startup else ['correctness','fixture','main','realtime','legacy','setup']):return False
++ if not startup and 'startup_frontiers' in origin:return False
+  rows=origin.get('recorded_states')
+  paths=['worker-result.json/init/state']+(['worker-result.json/paired_init/state'] if origin['recording_mode']=='correctness' else [])
+  if not isinstance(rows,list) or not 1<=len(rows)<=len(paths) or any(not isinstance(r,dict) or r.get('state_path') not in paths for r in rows) or len({r['state_path'] for r in rows})!=len(rows):return False
+  def matches(row):
+   s=row.get('public_state',{});t=s.get('target',{})
+   return s.get('documentId')==basis.get('document_id') and t.get('attachmentEpoch')==basis.get('attachment_epoch') and t.get('viewId')==basis.get('view_id') and t.get('runtimeEpoch')==basis.get('document_epoch')
+- selected=[r for r in rows if matches(r)]
++ if origin['recording_mode']=='correctness':
++  scope=origin.get('trace_scope')
++  if not valid_trace_scope(scope) or len(rows)!=2:return False
++  for r in rows:
++   expected=scope['trace_page_time_origin_ms'] if r['state_path']==TRACE_STATE_PATH else scope['off_page_time_origin_ms']
++   if type(r.get('page_time_origin_ms')) not in [int,float] or r['page_time_origin_ms']!=expected:return False
++  selected=[r for r in rows if r['state_path']==scope['qualifying_state_path'] and matches(r)]
++  if startup:
++   frontiers=origin.get('startup_frontiers')
++   if not isinstance(frontiers,dict) or set(frontiers)!={'init','paired_init'}:return False
++   for row in rows:
++    key='paired_init' if row['state_path']==TRACE_STATE_PATH else 'init';e=frontiers[key]
++    if not isinstance(e,dict) or not valid_startup_record({'correctness_startup':e,'state':e.get('public_state'),'environment':{'timeOrigin':row['page_time_origin_ms']}},30000 if key=='paired_init' else 45000):return False
++    public=e['public_state'];expected={'documentId':public['documentId'],'generation':public['generation'],'objects':public['objects'],'lastCommit':public['lastCommit'],'target':{k:public['target'][k] for k in ['runtimeEpoch','attachmentEpoch','viewId']}}
++    if row['public_state']!=expected:return False
++ else:
++  if 'trace_scope' in origin:return False
++  selected=[r for r in rows if matches(r)]
+  return len(selected)==1 and selected[0]['state_path']==origin.get('state_path') and selected[0]['public_state']==origin.get('public_state')
+ def require_canonical_chain(summary,require_positive=False,require_metrics=True):
+  chain=summary.get('canonical_chain')
+@@ -114,13 +187,20 @@ def require_bound_compilation(directory,summary,proof):
+   for chain in summary['canonical_chain'].get('initialization_chains',[]):
+    if chain.get('initialization_basis',{}).get('input_refs')!={k:analysis.get(k) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']}:raise RuntimeError('canonical initialization input basis differs from bound compiler input')
+    origin=chain.get('initialization_basis',{})
+-   if origin.get('source_profile')==REPAIRED_INITIALIZATION_PROFILE:
++   if origin.get('source_profile') in [REPAIRED_INITIALIZATION_PROFILE,STARTUP_INITIALIZATION_PROFILE]:
+     run=load(directory/'worker-result.json')
+-    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in REPAIRED_INITIALIZATION_PROFILE.items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
++    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in origin['source_profile'].items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
+     rows=[]
+     for key in (['init','paired_init'] if run.get('mode')=='correctness' else ['init']):
+      if not run.get(key,{}).get('state'):continue
+-     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}}})
++     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}},**({'page_time_origin_ms':run[key].get('environment',{}).get('timeOrigin')} if run.get('mode')=='correctness' else {})})
++    if run.get('mode')=='correctness':
++     raw=[json.loads(line) for line in (directory/'raw-trace.jsonl').read_text().splitlines() if line.strip()]
++     scope=trace_scope_for_recording(run,load(directory/'run-inputs.json'),len(raw))
++     if scope is None or origin.get('trace_scope')!=scope or sha(ROOT/TRACE_LIFECYCLE_SPEC['path'])!=TRACE_LIFECYCLE_SPEC['sha256']:raise RuntimeError('repaired initialization trace scope differs from actual recording or Verification authority')
++    if origin['source_profile']==STARTUP_INITIALIZATION_PROFILE:
++     expected_frontiers={k:run.get(k,{}).get('correctness_startup') for k in ['init','paired_init']}
++     if origin.get('startup_frontiers')!=expected_frontiers or not valid_startup_record(run.get('init',{}),45000) or not valid_startup_record(run.get('paired_init',{}),30000) or sha(ROOT/STARTUP_SPEC['path'])!=STARTUP_SPEC['sha256']:raise RuntimeError('correctness startup frontiers differ from actual recording or Verification authority')
+     if origin.get('recorded_states')!=rows or not valid_initialization_profile(origin,chain['basis']):raise RuntimeError('repaired initialization states differ from actual recording or owner')
+  if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
+ def require_qualified_diagnostic(out,proof):
+diff --git a/verification/runners/g5/ur0/worker.mjs b/verification/runners/g5/ur0/worker.mjs
+index 36b48ac8..cd1bb835 100644
+--- a/verification/runners/g5/ur0/worker.mjs
++++ b/verification/runners/g5/ur0/worker.mjs
+@@ -49,7 +49,7 @@ try{
+  await page.addInitScript(()=>{let word=0x12345678;crypto.getRandomValues=a=>{const b=new Uint8Array(a.buffer,a.byteOffset,a.byteLength);for(let i=0;i<b.length;++i){word^=word<<13;word^=word>>>17;word^=word<<5;b[i]=word&255;}return a;};});
+  await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');
+  await page.waitForFunction(()=>!!window.ur0);stage({stage:'initializing'});
+- result.init=await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
++ result.init=mode==='correctness'?await page.evaluate(()=>ur0.init({correctnessOnly:true,deadlineMs:45000})):await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
+  const correctnessStages=mode==='correctness'?createStageRecorder({domain:'node',clock:()=>String(process.hrtime.bigint()),emit:stage}):null;
+  const coldRelease=(channel,cancel)=>page.evaluate(({channel,cancel})=>channel==='snapshot'?ur0.snapshotRelease(cancel):ur0.pixelRelease(cancel),{channel,cancel});
+  const coldCopy=(channel,length,source_sha256,file)=>copyCorrectnessBytes({length,source_sha256,
+@@ -84,7 +84,7 @@ try{
+    if(pairedToggle==='ON'){
+     await correctnessStages.run('close OFF',()=>page.evaluate(()=>ur0.close()));
+     await correctnessStages.run('metrics override/reload',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});await page.reload();await page.waitForFunction(()=>!!window.ur0);});
+-    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
++    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init({correctnessOnly:true,deadlineMs:30000}));await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
+    }
+    for(let n=0;n<2;++n){
+     const label=pairedToggle.toLowerCase()+'-'+n,before=await capture(label+'-before');
+diff --git a/verification/tests/g5_ur0_initialization.test.mjs b/verification/tests/g5_ur0_initialization.test.mjs
+index 3ad8c784..27fe718b 100644
+--- a/verification/tests/g5_ur0_initialization.test.mjs
++++ b/verification/tests/g5_ur0_initialization.test.mjs
+@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
+ import {decodeTrace} from '../runners/g5/ur0/decode_trace.mjs';
+ import {compileMetrics} from '../runners/g5/ur0/metrics_compiler.mjs';
+ import {canonicalChainProof} from '../runners/g5/ur0/canonical_chain.mjs';
++import * as initializationContract from '../runners/g5/ur0/initialization_basis.mjs';
+ const root=path.resolve(import.meta.dirname,'../..');
+ const inputs=JSON.parse(fs.readFileSync(path.join(root,'.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json')));
+ const entry=inputs.inputs.find(r=>r.run_id==='realtime-60'),directory=path.join(root,entry.input_directory);
+@@ -18,7 +19,7 @@ const actualRecording={run:actualRun,raw_trace_jsonl:rawBytes.toString(),worker_
+ const prefix=()=>structuredClone(actualRaw.filter(r=>BigInt(r.seq)<=55n));
+ const modelRun=()=>({init:structuredClone(actualRun.init),source_before:{source_tree_sha256:actualRun.source_before.source_tree_sha256,files:Object.fromEntries(['verification/runners/g5/ur0/consumer.mjs','verification/runners/g5/ur0/worker.mjs'].map(n=>[n,structuredClone(actualRun.source_before.files[n])]))},trace:{loss:{critical:0,statistical:0}}});
+ function recording(raw,run=modelRun()){
+- const raw_trace_jsonl=raw.map(r=>JSON.stringify(r)+'\n').join(''),worker_result_json=JSON.stringify(run),run_inputs_json=JSON.stringify(actualInputs);
++ const raw_trace_jsonl=raw.map(r=>JSON.stringify(r)+'\n').join(''),worker_result_json=JSON.stringify(run),run_inputs_json=JSON.stringify(run.mode==='correctness'?{schema:run.schema,mode:run.mode,branch:run.branch,toggle:run.toggle,source_before:run.source_before,artifacts_before:run.artifacts_before}:actualInputs);
+  return {run,raw_trace_jsonl,worker_result_json,run_inputs_json,input_refs:{raw_trace_sha256:digest(raw_trace_jsonl),worker_result_sha256:digest(worker_result_json),run_inputs_sha256:digest(run_inputs_json)}};
+ }
+ function analyze(raw,context=recording(raw),document=null,loss={critical:0,statistical:0}){
+@@ -104,7 +105,15 @@ test('OFF-NO-OBSERVATIONS: initial public state cannot invent any native observa
+  const {proof}=analyze([],recording([]),{interactions:[]});assert.equal(proof.status,'NOT_OBSERVED');assert.equal(proof.accepted_raw_count,0);assert.equal(proof.qualified_initialization_count,0);assert.equal(proof.qualified_committed_count,0);
+ });
+ const repairedFiles=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs'].map(n=>'verification/runners/g5/ur0/'+n);
+-function repairedRun(){const run=modelRun();run.mode='correctness';run.source_before.files=Object.fromEntries(repairedFiles.map(n=>[n,{sha256:digest(fs.readFileSync(path.join(root,n)))}]));return run;}
++function repairedRun(){
++ const run=modelRun();Object.assign(run,{schema:'g5-ur0b-worker-v1',mode:'correctness',branch:'lower_z_translucent_drag',toggle:'ON',status:'OBSERVED',source_stable:true,artifacts_stable:true,close:{closed:true}});
++ run.source_before.files=Object.fromEntries(Object.entries(initializationContract.repairedInitializationProfile).map(([n,sha256])=>[n,{sha256}]));run.source_after=structuredClone(run.source_before);
++ run.artifacts_before={'axiom.wasm':'a'.repeat(64)};run.artifacts_after=structuredClone(run.artifacts_before);
++ run.init.environment={timeOrigin:1000};run.paired_init=structuredClone(run.init);run.paired_init.environment.timeOrigin=2000;
++ run.trace.records=prefix().length;
++ run.correctness=['OFF','ON'].flatMap(toggle=>[0,1].map(step=>({case_id:run.branch,toggle,step,source_sha256:'a'.repeat(64),candidate_sha256:'a'.repeat(64),reference_snapshot_sha256:'b'.repeat(64),comparison:{status:'QUALIFIED'}})));
++ return run;
++}
+ test('CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does',()=>{
+  const rows=prefix(),run=repairedRun();assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED','approved repaired worker profile missing');
+  for(const n of repairedFiles){for(const change of [r=>r.source_before.files[n].sha256='f'.repeat(64),r=>delete r.source_before.files[n]]){const bad=repairedRun();change(bad);assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING',n);}}
+@@ -117,9 +126,65 @@ test('CREATION-PROFILES: unchanged primary modes keep init-only admission under
+  }
+ });
+ test('PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state',()=>{
+- const rows=prefix(),run=repairedRun();run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
++ const rows=prefix(),run=repairedRun();run.init.state.target.viewId='99';
+  const good=analyze(rows,recording(rows,run)).proof;assert.equal(good.status,'QUALIFIED');assert.equal(good.initialization_chains[0].initialization_basis.state_path,'worker-result.json/paired_init/state');
+- for(const change of [r=>r.init=structuredClone(r.paired_init),r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
++ for(const change of [r=>r.init.environment.timeOrigin=r.paired_init.environment.timeOrigin,r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
+   const bad=structuredClone(run);change(bad);const p=analyze(rows,recording(rows,bad)).proof;assert.equal(p.status,'MISSING');assert.equal(p.unresolved_accepted_count,1);
+  }
+ });
++const lifecycleInputs=JSON.parse(fs.readFileSync(path.join(root,'.aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json')));
++const actualR5Directory=path.dirname(path.join(root,lifecycleInputs.r5_worker_inputs[0].path));
++let r5Context;
++function actualR5(){
++ if(r5Context)return r5Context;
++ const raw_trace_jsonl=fs.readFileSync(path.join(actualR5Directory,'raw-trace.jsonl'),'utf8'),worker_result_json=fs.readFileSync(path.join(actualR5Directory,'worker-result.json'),'utf8'),run_inputs_json=fs.readFileSync(path.join(actualR5Directory,'run-inputs.json'),'utf8');
++ r5Context={run:JSON.parse(worker_result_json),raw_trace_jsonl,worker_result_json,run_inputs_json,input_refs:{raw_trace_sha256:digest(raw_trace_jsonl),worker_result_sha256:digest(worker_result_json),run_inputs_sha256:digest(run_inputs_json)}};return r5Context;
++}
++test('LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope',()=>{
++ const context=actualR5(),raw=context.raw_trace_jsonl.trim().split('\n').map(JSON.parse),{proof,decoded}=analyze(raw,context);
++ assert.equal(proof.status,'QUALIFIED');assert.equal(proof.accepted_raw_count,6);assert.equal(proof.qualified_initialization_count,1);assert.equal(proof.qualified_committed_count,5);assert.equal(proof.unresolved_accepted_count,0);assert.equal(proof.scope,'NATIVE_ONLY');assert.equal(proof.metric_receipt_count,null);assert.deepEqual(decoded.missing,[]);
++ const old=JSON.parse(fs.readFileSync(path.join(actualR5Directory,'canonical-chain.json')));assert.deepEqual(proof.chains,old.chains);
++ assert.deepEqual(context.run.init.state,context.run.paired_init.state);
++ assert.deepEqual(proof.initialization_chains[0].initialization_basis.trace_scope,{scheme:'CORRECTNESS_FINAL_ON_PAGE_V1',qualifying_state_path:'worker-result.json/paired_init/state',off_page_time_origin_ms:lifecycleInputs.actual_off_time_origin_ms,trace_page_time_origin_ms:lifecycleInputs.actual_on_time_origin_ms,verification_spec_ref:{path:'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json',sha256:'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}});
++});
++test('LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries',()=>{
++ const run=repairedRun(),rows=prefix(),p=analyze(rows,recording(rows,run)).proof;assert.equal(p.status,'QUALIFIED');
++ const o=p.initialization_chains[0].initialization_basis;assert.equal(o.state_path,'worker-result.json/paired_init/state');assert.equal(o.recorded_states.length,2);assert.deepEqual(o.recorded_states[0].public_state,o.recorded_states[1].public_state);assert.notEqual(o.recorded_states[0].page_time_origin_ms,o.recorded_states[1].page_time_origin_ms);
++});
++test('LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience',()=>{
++ const changes=[r=>delete r.paired_init,r=>delete r.paired_init.environment,r=>delete r.init.environment,r=>r.paired_init.environment.timeOrigin=1000,r=>r.paired_init.environment.timeOrigin=500,r=>r.paired_init.environment.timeOrigin=Infinity,r=>r.paired_init.environment.timeOrigin='2000',r=>r.toggle='OFF',r=>r.branch='foreign',r=>r.status='FAILED',r=>r.source_stable=false,r=>r.artifacts_stable=false,r=>r.source_after.source_tree_sha256='f'.repeat(64),r=>r.artifacts_after['axiom.wasm']='f'.repeat(64),r=>r.trace.records++,r=>r.trace.loss.critical=1,r=>r.correctness.pop(),r=>r.correctness.push(structuredClone(r.correctness[0])),r=>r.correctness[3].step=0,r=>r.correctness[0].case_id='foreign',r=>r.correctness[0].comparison.status='unknown',r=>delete r.correctness[0].candidate_sha256,r=>r.close.closed=false];
++ for(const change of changes){const run=repairedRun();change(run);assert.equal(analyze(prefix(),recording(prefix(),run)).proof.status,'MISSING',String(change));}
++ const context=recording(prefix(),repairedRun()),inputs=JSON.parse(context.run_inputs_json);inputs.toggle='OFF';context.run_inputs_json=JSON.stringify(inputs);context.input_refs.run_inputs_sha256=digest(context.run_inputs_json);assert.equal(analyze(prefix(),context).proof.status,'MISSING');
++});
++test('LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON',()=>{
++ for(const change of [r=>r.paired_init.state.documentId='b'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.target.attachmentEpoch='99',r=>r.paired_init.state.target.viewId='99',r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.ordinal='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32)]){
++  const run=repairedRun();change(run);const p=analyze(prefix(),recording(prefix(),run)).proof;assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,0);
++ }
++});
++test('LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes',()=>{
++ for(const status of ['FAILED','MISSING']){const run=repairedRun();for(const e of run.correctness)e.comparison.status=status;const context=recording(prefix(),run);const p=analyze(prefix(),context).proof;assert.equal(p.status,'QUALIFIED');assert.equal(p.qualified_initialization_count,1);assert.ok(context.run.correctness.every(e=>e.comparison.status===status));}
++});
++const startupProfile={
++ 'verification/runners/g5/ur0/consumer.mjs':'aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff',
++ 'verification/runners/g5/ur0/worker.mjs':'2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78',
++ 'verification/runners/g5/ur0/correctness_driver.mjs':'0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721',
++ 'verification/runners/g5/ur0/pixel_oracle.mjs':'dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1',
++ 'verification/runners/g5/ur0/stream_transfer.mjs':'4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210',
++ 'verification/runners/g5/ur0/correctness_transfer.mjs':'87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8',
++ 'verification/runners/g5/ur0/correctness_contract.mjs':'682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0',
++ 'verification/runners/g5/ur0/correctness_startup.mjs':'5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39'
++};
++function startupRun(){
++ const run=repairedRun();run.source_before.files=Object.fromEntries(Object.entries(startupProfile).map(([n,sha256])=>[n,{sha256}]));run.source_after=structuredClone(run.source_before);
++ for(const key of ['init','paired_init']){const s=run[key].state;s.activeContacts=0;s.target.viewEpoch='1';run[key].correctness_startup={scheme:'CORRECTNESS_STARTUP_QUIESCENT_V1',page_time_origin_ms:run[key].environment.timeOrigin,created_at_ns:'1',accepted_callback_count:1,last_presented_count:'1',accepted_at_ns:'2',quiescent_at_ns:'3',pending_sdk_raf:0,public_state:{documentId:s.documentId,generation:s.generation,objects:s.objects,activeContacts:s.activeContacts,lastCommit:{ordinal:s.lastCommit.ordinal,operationId:s.lastCommit.operationId},target:{...s.target}},verification_spec_ref:{path:'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json',sha256:'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}};}
++ return run;
++}
++test('STARTUP-PROFILE: third exact correctness-only profile needs two positive host frontiers; historic profiles stay literal',()=>{
++ const run=startupRun(),p=analyze(prefix(),recording(prefix(),run)).proof;assert.equal(p.status,'QUALIFIED');const o=p.initialization_chains[0].initialization_basis;assert.deepEqual(o.startup_frontiers,{init:run.init.correctness_startup,paired_init:run.paired_init.correctness_startup});assert.deepEqual(initializationContract.startupInitializationProfile,startupProfile);
++ for(const [name,expected] of Object.entries(startupProfile))assert.equal(digest(fs.readFileSync(path.join(root,name))),expected,name);
++ for(const mode of ['fixture','main','realtime','legacy','setup']){const bad=startupRun();bad.mode=mode;assert.equal(analyze(prefix(),recording(prefix(),bad)).proof.status,'MISSING','startup profile cannot authorize primary modes');}
++});
++test('STARTUP-PROFILE: missing/forged/stale frontier or unknown helper never qualifies, independent of pixel green',()=>{
++ const edits=[r=>delete r.init.correctness_startup,r=>delete r.paired_init.correctness_startup,r=>r.init.correctness_startup.accepted_callback_count=0,r=>r.paired_init.correctness_startup.last_presented_count='0',r=>r.paired_init.correctness_startup.pending_sdk_raf=1,r=>r.paired_init.correctness_startup.page_time_origin_ms=1000,r=>r.paired_init.correctness_startup.accepted_at_ns='0',r=>r.paired_init.correctness_startup.quiescent_at_ns='1',r=>r.paired_init.correctness_startup.public_state.objects=1,r=>r.paired_init.correctness_startup.verification_spec_ref.sha256='f'.repeat(64),r=>r.source_before.files['verification/runners/g5/ur0/correctness_startup.mjs'].sha256='f'.repeat(64)];
++ for(const change of edits){const r=startupRun();change(r);assert.equal(analyze(prefix(),recording(prefix(),r)).proof.status,'MISSING');}
++});
+diff --git a/verification/tests/test_g5_ur0_repair_runner.py b/verification/tests/test_g5_ur0_repair_runner.py
+index 705e6fc5..60d076c5 100644
+--- a/verification/tests/test_g5_ur0_repair_runner.py
++++ b/verification/tests/test_g5_ur0_repair_runner.py
+@@ -94,17 +94,19 @@ class RepairRunnerTest(unittest.TestCase):
+  def repaired_v2(self):
+   s=self.mixed_v2();origin=s['canonical_chain']['initialization_chains'][0]['initialization_basis']
+   names=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs']
+-  origin['source_profile']={'verification/runners/g5/ur0/'+n:hashlib.sha256((ROOT/'verification/runners/g5/ur0'/n).read_bytes()).hexdigest() for n in names}
++  origin['source_profile']=dict(self.module().REPAIRED_INITIALIZATION_PROFILE)
+   origin['recording_mode']='correctness';origin['state_path']='worker-result.json/paired_init/state'
+   foreign=copy.deepcopy(origin['public_state']);foreign['target']['viewId']='9'
+   origin['recorded_states']=[{'state_path':'worker-result.json/init/state','public_state':foreign},{'state_path':origin['state_path'],'public_state':copy.deepcopy(origin['public_state'])}]
++  origin['trace_scope']={'scheme':'CORRECTNESS_FINAL_ON_PAGE_V1','qualifying_state_path':origin['state_path'],'off_page_time_origin_ms':1000,'trace_page_time_origin_ms':2000,'verification_spec_ref':{'path':'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json','sha256':'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}}
++  for row,time in zip(origin['recorded_states'],[1000,2000]):row['page_time_origin_ms']=time
+   return s
+  def test_repaired_exact_profile_and_unique_paired_owner_are_accepted(self):
+   m=self.module();m.require_canonical_chain(self.repaired_v2(),require_positive=True)
+  def test_repaired_worker_keeps_primary_init_only_profile_qualification(self):
+   m=self.module()
+   for mode in ['fixture','main','realtime','legacy','setup']:
+-   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
++   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.pop('trace_scope');o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
+    m.require_canonical_chain(s,require_positive=True)
+  def test_repaired_unknown_partial_helper_or_foreign_ambiguous_owner_are_rejected(self):
+   m=self.module();base=self.repaired_v2()
+@@ -120,13 +122,10 @@ import fs from 'node:fs';import {createHash} from 'node:crypto';
+ import {decodeTrace} from './verification/runners/g5/ur0/decode_trace.mjs';
+ import {canonicalChainProof} from './verification/runners/g5/ur0/canonical_chain.mjs';
+ import {repairedInitializationProfile} from './verification/runners/g5/ur0/initialization_basis.mjs';
+-const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json'));
+-const dir=inputs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
+-const run=JSON.parse(fs.readFileSync(dir+'/worker-result.json'));run.mode='correctness';
+-run.source_before.files=Object.fromEntries(Object.entries(repairedInitializationProfile).map(([k,v])=>[k,{sha256:v}]));
+-run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
+-const raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
+-const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
++const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json'));
++const dir=inputs.r5_worker_inputs[0].path.replace(/\/raw-trace.jsonl$/,'');
++const text={raw_trace_jsonl:fs.readFileSync(dir+'/raw-trace.jsonl','utf8'),worker_result_json:fs.readFileSync(dir+'/worker-result.json','utf8'),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
++const run=JSON.parse(text.worker_result_json),raw=text.raw_trace_jsonl.trim().split('\\n').map(JSON.parse);
+ const h=x=>createHash('sha256').update(x).digest('hex');const input_refs={raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)};
+ const recording={...text,input_refs,run};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);
+ console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
+@@ -145,7 +144,55 @@ console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null
+    def bind():
+     (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
+    bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
++   saved=copy.deepcopy(origin['trace_scope'])
++   for change in [lambda o:o.update(scheme='UNKNOWN'),lambda o:o.update(qualifying_state_path='worker-result.json/init/state'),lambda o:o.update(trace_page_time_origin_ms=o['off_page_time_origin_ms']),lambda o:o.update(trace_page_time_origin_ms=o['trace_page_time_origin_ms']+1),lambda o:o['verification_spec_ref'].update(sha256='0'*64)]:
++    origin['trace_scope']=copy.deepcopy(saved);change(origin['trace_scope']);bind()
++    with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,summary,proof)
++   origin['trace_scope']=saved;bind()
+    bad=copy.deepcopy(recording['run']);bad['paired_init']['state']['target']['viewId']='77';(directory/'worker-result.json').write_text(json.dumps(bad));changed=hashlib.sha256((directory/'worker-result.json').read_bytes()).hexdigest()
+    summary['analysis']['worker_result_sha256']=changed;origin['input_refs']['worker_result_sha256']=changed;bind()
+    with self.assertRaisesRegex(RuntimeError,'states differ'):m.require_bound_compilation(directory,summary,proof)
++ def test_lifecycle_reader_keeps_equal_cross_page_states_but_rejects_unknown_forged_or_duplicate_scope(self):
++  m=self.module();s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o['recorded_states'][0]['public_state']=copy.deepcopy(o['public_state'])
++  m.require_canonical_chain(s,require_positive=True)
++  changes=[lambda o:o.pop('trace_scope'),lambda o:o['trace_scope'].update(scheme='UNKNOWN'),lambda o:o['trace_scope'].update(qualifying_state_path='worker-result.json/init/state'),lambda o:o['trace_scope'].update(trace_page_time_origin_ms=1000),lambda o:o['trace_scope'].update(trace_page_time_origin_ms=float('inf')),lambda o:o['trace_scope'].update(off_page_time_origin_ms=True),lambda o:o['trace_scope']['verification_spec_ref'].update(path='foreign'),lambda o:o['trace_scope']['verification_spec_ref'].update(sha256='f'*64),lambda o:o['recorded_states'][1].update(page_time_origin_ms=3000),lambda o:o['recorded_states'].append(copy.deepcopy(o['recorded_states'][1]))]
++  for change in changes:
++   bad=copy.deepcopy(s);change(bad['canonical_chain']['initialization_chains'][0]['initialization_basis'])
++   with self.assertRaises(RuntimeError):m.require_canonical_chain(bad,require_positive=True)
++ def test_startup_profile_requires_two_qualified_frontiers_and_preserves_old_profiles(self):
++  m=self.module();s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o['source_profile']=dict(m.STARTUP_INITIALIZATION_PROFILE);o['startup_frontiers']={}
++  # This isolated synthetic owner fixture uses the public seeded document.
++  s['canonical_chain']['initialization_chains'][0]['basis']['document_id']='9'*32;o['public_state']['documentId']='9'*32
++  for row,key in zip(o['recorded_states'],['init','paired_init']):
++   row['public_state']['documentId']='9'*32;state=copy.deepcopy(row['public_state']);state['activeContacts']=0;state['target']['viewEpoch']='1'
++   o['startup_frontiers'][key]={'scheme':'CORRECTNESS_STARTUP_QUIESCENT_V1','page_time_origin_ms':row['page_time_origin_ms'],'created_at_ns':'1','accepted_callback_count':1,'last_presented_count':'1','accepted_at_ns':'2','quiescent_at_ns':'3','pending_sdk_raf':0,'public_state':state,'verification_spec_ref':dict(m.STARTUP_SPEC)}
++  m.require_canonical_chain(s,require_positive=True)
++  for change in [lambda o:o.pop('startup_frontiers'),lambda o:o['startup_frontiers']['init'].update(accepted_callback_count=0),lambda o:o['startup_frontiers']['paired_init'].update(pending_sdk_raf=1),lambda o:o['startup_frontiers']['paired_init'].update(page_time_origin_ms=1000),lambda o:o['startup_frontiers']['paired_init'].update(quiescent_at_ns='1'),lambda o:o['startup_frontiers']['paired_init']['verification_spec_ref'].update(sha256='f'*64),lambda o:o['startup_frontiers']['paired_init']['public_state'].update(objects=1)]:
++   bad=copy.deepcopy(s);change(bad['canonical_chain']['initialization_chains'][0]['initialization_basis'])
++   with self.assertRaises(RuntimeError):m.require_canonical_chain(bad,require_positive=True)
++ def test_startup_python_reconstruction_validates_actual_mode_queue_and_state_metadata(self):
++  m=self.module();self.assertFalse(m.valid_startup_record({},45000))
++  for name,value in m.STARTUP_INITIALIZATION_PROFILE.items():self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),value,name)
++  script="""
++import fs from 'node:fs';import{createHash}from'node:crypto';
++import{decodeTrace}from'./verification/runners/g5/ur0/decode_trace.mjs';import{canonicalChainProof}from'./verification/runners/g5/ur0/canonical_chain.mjs';import{startupInitializationProfile}from'./verification/runners/g5/ur0/initialization_basis.mjs';
++const refs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json')),dir=refs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
++const original=JSON.parse(fs.readFileSync(dir+'/worker-result.json')),raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
++const run={schema:'g5-ur0b-worker-v1',mode:'correctness',branch:'lower_z_translucent_drag',toggle:'ON',status:'OBSERVED',source_stable:true,artifacts_stable:true,close:{closed:true},source_before:{source_tree_sha256:'a'.repeat(64),files:Object.fromEntries(Object.entries(startupInitializationProfile).map(([k,v])=>[k,{sha256:v}]))},artifacts_before:{sdk:'b'.repeat(64)},init:structuredClone(original.init),paired_init:structuredClone(original.init),trace:{records:raw.length,loss:{critical:0,statistical:0}},correctness:['OFF','ON'].flatMap(toggle=>[0,1].map(step=>({case_id:'lower_z_translucent_drag',toggle,step,candidate_sha256:'a'.repeat(64),source_sha256:'a'.repeat(64),reference_snapshot_sha256:'b'.repeat(64),comparison:{status:'MISSING'}})))};
++run.source_after=structuredClone(run.source_before);run.artifacts_after=structuredClone(run.artifacts_before);
++for(const [key,time]of[['init',1000],['paired_init',2000]]){const s=run[key].state;run[key].environment.timeOrigin=time;run[key].correctness_startup={scheme:'CORRECTNESS_STARTUP_QUIESCENT_V1',page_time_origin_ms:time,created_at_ns:'1',accepted_callback_count:1,last_presented_count:'1',accepted_at_ns:'2',quiescent_at_ns:'3',pending_sdk_raf:0,public_state:{documentId:s.documentId,generation:s.generation,objects:s.objects,activeContacts:s.activeContacts,lastCommit:{ordinal:s.lastCommit.ordinal,operationId:s.lastCommit.operationId},target:{...s.target}},verification_spec_ref:{path:'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json',sha256:'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}};}
++const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:JSON.stringify({schema:run.schema,mode:run.mode,branch:run.branch,toggle:run.toggle,source_before:run.source_before,artifacts_before:run.artifacts_before})};const h=x=>createHash('sha256').update(x).digest('hex'),recording={...text,run,input_refs:{raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)}};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
++"""
++  value=json.loads(subprocess.check_output(['node','--input-type=module','-e',script],cwd=ROOT,text=True));self.assertEqual(value['proof']['status'],'QUALIFIED');summary={'critical_loss':0,'identity_errors':[],'canonical_chain':value['proof']};m.require_canonical_chain(summary,require_metrics=False)
++  with tempfile.TemporaryDirectory() as tmp:
++   directory=Path(tmp);record=value['recording']
++   for name,key in [('raw-trace.jsonl','raw_trace_jsonl'),('worker-result.json','worker_result_json'),('run-inputs.json','run_inputs_json')]:(directory/name).write_text(record[key])
++   summary['analysis']={'mode':'WORKER_COMPILE','input_source_tree_sha256':record['run']['source_before']['source_tree_sha256'],**record['input_refs'],'compiler_files':{n:hashlib.sha256((m.HERE/n).read_bytes()).hexdigest() for n in ['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py','initialization_basis.mjs']}}
++   for key,name in [('verification_spec_ref','verification-spec.json'),('completion_contract_ref','completion-contract.json')]:
++    path=ROOT/'.aegis/verification/G5-UR0b-initialization-v1'/name;summary['analysis'][key]={'path':str(path.relative_to(ROOT)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
++   def bind():
++    (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
++   bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
++   origin=summary['canonical_chain']['initialization_chains'][0]['initialization_basis'];origin['startup_frontiers']['paired_init']['accepted_callback_count']=2;bind()
++   with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,summary,proof)
+ if __name__=='__main__':unittest.main()
+diff --git a/verification/tests/test_g5_ur0_reverified_remaining_runner.py b/verification/tests/test_g5_ur0_reverified_remaining_runner.py
+index f50d0ba0..692b81df 100644
+--- a/verification/tests/test_g5_ur0_reverified_remaining_runner.py
++++ b/verification/tests/test_g5_ur0_reverified_remaining_runner.py
+@@ -1,7 +1,10 @@
+-import copy,hashlib,importlib.util,json,multiprocessing,tempfile,unittest
++import copy,hashlib,importlib.util,json,multiprocessing,subprocess,tempfile,unittest
+ from pathlib import Path
+ from types import SimpleNamespace
+ ROOT=Path(__file__).resolve().parents[2]
++class HistoricalSourceRoot(type(ROOT)):
++ def __truediv__(self,name):
++  return self.source_files.get(str(name),Path(self).joinpath(name))
+ def module():
+  p=ROOT/'verification/runners/g5/ur0/reverified_remaining_runner.py'
+  if not p.is_file():raise AssertionError('r5 bounded continuation runner missing')
+@@ -14,6 +17,22 @@ def competitor(state,out,queue):
+ def guard(reason='completed',code=0,elapsed=1.1,cleanup=True):
+  return {'reason':reason,'returncode':code,'elapsed_s':elapsed,'cleanup_complete':cleanup,'remaining_owned_pids':[],'rss_limit_kib':3145728,'peak_process_family_rss_kib':100,'timeout_s':90}
+ class ReverifiedRemainingTest(unittest.TestCase):
++ def historical_module(self):
++  m=module();old=m.HERE;oldroot=m.ROOT;temporary=tempfile.TemporaryDirectory(prefix='ur0b-r5-historical-compiler-')
++  self.addCleanup(temporary.cleanup);self.addCleanup(setattr,m,'HERE',old);self.addCleanup(setattr,m,'ROOT',oldroot)
++  m.HERE=Path(temporary.name)
++  packet=m.acceptance()
++  for name,expected in packet['compiler_file_sha256'].items():
++   data=subprocess.check_output(['git','show','a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7:verification/runners/g5/ur0/'+name],cwd=ROOT)
++   self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name);(m.HERE/name).write_bytes(data)
++  overlay=HistoricalSourceRoot(oldroot);overlay.source_files={}
++  for name,expected in packet['repaired_worker_and_helpers'].items():
++   data=subprocess.check_output(['git','show','a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7:'+name],cwd=ROOT);self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name)
++   path=m.HERE/Path(name).name;path.write_bytes(data);overlay.source_files[name]=path
++  # Only historical source-file lookup changes. Bound evidence paths and every
++  # real validator still resolve against the original repository and hashes.
++  m.ROOT=overlay
++  return m
+  def test_exact36_order_and_limits_do_not_repeat_RT_or_expand_allowance(self):
+   m=module();rows=m.plan();self.assertEqual(len(rows),36);self.assertEqual(sum(r['limit_seconds'] for r in rows),5940);self.assertTrue(all(r['mode']=='correctness' for r in rows[:6]));self.assertTrue(all(r['phase']=='main' for r in rows[6:]));self.assertFalse(any(r['run_id'].startswith('realtime-') for r in rows))
+   m.validate_plan(rows)
+@@ -25,14 +44,14 @@ class ReverifiedRemainingTest(unittest.TestCase):
+   old=m.bound(m.request()['historical_ledger_ref']);old['charged_seconds']=0
+   with self.assertRaises(RuntimeError):m.verify_history(old)
+  def test_new_exact_acceptance_keeps_all17_original_sources_and_OFFLINE_modes(self):
+-  m=module();a=m.acceptance();r=m.accepted_reuse(a)
++  m=self.historical_module();a=m.acceptance();r=m.accepted_reuse(a)
+   self.assertEqual(len(r['records']),17);self.assertEqual(len({x['run_id'] for x in r['records']}),17);self.assertEqual({x['mode'] for x in r['records']},{'OFFLINE_REVERIFICATION'})
+   sources={x['run_id']:x['recording_source_tree_sha256'] for x in r['records']}
+   self.assertEqual(sources['realtime-120'],'d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a');self.assertNotEqual(sources['realtime-120'],sources['realtime-60'])
+   stale=m.load(ROOT/'.aegis/packages/G5-UR0b-resume-r4/reuse-inputs.json')
+   with self.assertRaises(RuntimeError):m.accepted_reuse(stale)
+  def test_record_source_input_artifact_compiler_counts_and_proof_are_not_interchangeable(self):
+-  m=module();a=m.acceptance();row=next(r for r in a['records'] if r['run_id']=='realtime-120');summary=m.bound(row['summary_ref']);chain=m.bound(row['proof_ref']);m.admit_record(row,summary,chain,a)
++  m=self.historical_module();a=m.acceptance();row=next(r for r in a['records'] if r['run_id']=='realtime-120');summary=m.bound(row['summary_ref']);chain=m.bound(row['proof_ref']);m.admit_record(row,summary,chain,a)
+   for change in [lambda s:s['analysis'].update(mode='WORKER_COMPILE'),lambda s:s['analysis'].update(input_source_tree_sha256=a['records'][0]['recording_source_tree_sha256']),lambda s:s['analysis'].update(raw_trace_sha256='0'*64),lambda s:s['analysis']['compiler_files'].update({'decode_trace.mjs':'f'*64}),lambda s:s.update(artifact_identity={}),lambda s:s['canonical_chain'].update(metric_receipt_count=0),lambda s:s.update(clock='MISSING')]:
+    bad=copy.deepcopy(summary);change(bad)
+    with self.assertRaises(RuntimeError):m.admit_record(row,bad,chain,a)
+@@ -41,7 +60,7 @@ class ReverifiedRemainingTest(unittest.TestCase):
+   bad=copy.deepcopy(a);bad['records'].pop()
+   with self.assertRaises(RuntimeError):m.accepted_reuse(bad)
+  def test_foreign_compiler_and_worker_profile_fail_without_starting_a_browser(self):
+-  m=module();a=m.acceptance();old=m.HERE
++  m=self.historical_module();a=m.acceptance();old=m.HERE
+   with tempfile.TemporaryDirectory() as tmp:
+    m.HERE=Path(tmp)
+    for name in a['compiler_file_sha256']:(m.HERE/name).write_bytes((old/name).read_bytes())
+@@ -96,7 +115,7 @@ class ReverifiedRemainingTest(unittest.TestCase):
+     with self.assertRaises(RuntimeError):
+      with m.Window(state,target,'new-proof'):pass
+  def test_main_waits_for_all_six_admitted_correctness_rows_and_exact_reuse(self):
+-  m=module();rows=m.plan();reused=m.accepted_reuse(m.acceptance())
++  m=self.historical_module();rows=m.plan();reused=m.accepted_reuse(m.acceptance())
+   with self.assertRaises(RuntimeError):m.require_phase('main',rows,reused)
+   for row in rows[:6]:row.update(status='COMPLETED',admission_status='ADMITTED',correctness_status='QUALIFIED')
+   rows[0]['correctness_status']='PRODUCT_RED_IN_BOTH_OFF_ON';m.require_phase('main',rows,reused)
+@@ -110,4 +129,11 @@ class ReverifiedRemainingTest(unittest.TestCase):
+    m.STATE=Path(tmp)/'state';m.STATE.mkdir();p=m.STATE/'window.json';p.write_text('{"status":"CLOSED"}');before=p.read_bytes();out=Path(tmp)/'elsewhere'
+    with self.assertRaisesRegex(RuntimeError,'claimed|closed'):m.run(SimpleNamespace(output=out))
+    self.assertEqual(p.read_bytes(),before);self.assertFalse(out.exists())
++ def test_actual_current_compiler_still_rejects_the_unchanged_r5_acceptance(self):
++  m=module();self.assertEqual(m.HERE,ROOT/'verification/runners/g5/ur0')
++  self.assertTrue(any(m.sha(m.HERE/name)!=expected for name,expected in m.acceptance()['compiler_file_sha256'].items()))
++  with self.assertRaisesRegex(RuntimeError,'compiler'):m.accepted_reuse(m.acceptance())
++ def test_actual_current_worker_profile_is_rejected_even_with_historical_compiler(self):
++  m=self.historical_module();m.ROOT=ROOT
++  with self.assertRaisesRegex(RuntimeError,'profile'):m.verify_profiles(m.acceptance())
+ if __name__=='__main__':unittest.main()

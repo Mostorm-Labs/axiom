@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {decodeTrace} from '../runners/g5/ur0/decode_trace.mjs';
 import {compileMetrics} from '../runners/g5/ur0/metrics_compiler.mjs';
 import {canonicalChainProof} from '../runners/g5/ur0/canonical_chain.mjs';
+import * as initializationContract from '../runners/g5/ur0/initialization_basis.mjs';
 const root=path.resolve(import.meta.dirname,'../..');
 const inputs=JSON.parse(fs.readFileSync(path.join(root,'.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json')));
 const entry=inputs.inputs.find(r=>r.run_id==='realtime-60'),directory=path.join(root,entry.input_directory);
@@ -18,7 +19,7 @@ const actualRecording={run:actualRun,raw_trace_jsonl:rawBytes.toString(),worker_
 const prefix=()=>structuredClone(actualRaw.filter(r=>BigInt(r.seq)<=55n));
 const modelRun=()=>({init:structuredClone(actualRun.init),source_before:{source_tree_sha256:actualRun.source_before.source_tree_sha256,files:Object.fromEntries(['verification/runners/g5/ur0/consumer.mjs','verification/runners/g5/ur0/worker.mjs'].map(n=>[n,structuredClone(actualRun.source_before.files[n])]))},trace:{loss:{critical:0,statistical:0}}});
 function recording(raw,run=modelRun()){
- const raw_trace_jsonl=raw.map(r=>JSON.stringify(r)+'\n').join(''),worker_result_json=JSON.stringify(run),run_inputs_json=JSON.stringify(actualInputs);
+ const raw_trace_jsonl=raw.map(r=>JSON.stringify(r)+'\n').join(''),worker_result_json=JSON.stringify(run),run_inputs_json=JSON.stringify(run.mode==='correctness'?{schema:run.schema,mode:run.mode,branch:run.branch,toggle:run.toggle,source_before:run.source_before,artifacts_before:run.artifacts_before}:actualInputs);
  return {run,raw_trace_jsonl,worker_result_json,run_inputs_json,input_refs:{raw_trace_sha256:digest(raw_trace_jsonl),worker_result_sha256:digest(worker_result_json),run_inputs_sha256:digest(run_inputs_json)}};
 }
 function analyze(raw,context=recording(raw),document=null,loss={critical:0,statistical:0}){
@@ -104,7 +105,15 @@ test('OFF-NO-OBSERVATIONS: initial public state cannot invent any native observa
  const {proof}=analyze([],recording([]),{interactions:[]});assert.equal(proof.status,'NOT_OBSERVED');assert.equal(proof.accepted_raw_count,0);assert.equal(proof.qualified_initialization_count,0);assert.equal(proof.qualified_committed_count,0);
 });
 const repairedFiles=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs'].map(n=>'verification/runners/g5/ur0/'+n);
-function repairedRun(){const run=modelRun();run.mode='correctness';run.source_before.files=Object.fromEntries(repairedFiles.map(n=>[n,{sha256:digest(fs.readFileSync(path.join(root,n)))}]));return run;}
+function repairedRun(){
+ const run=modelRun();Object.assign(run,{schema:'g5-ur0b-worker-v1',mode:'correctness',branch:'lower_z_translucent_drag',toggle:'ON',status:'OBSERVED',source_stable:true,artifacts_stable:true,close:{closed:true}});
+ run.source_before.files=Object.fromEntries(Object.entries(initializationContract.repairedInitializationProfile).map(([n,sha256])=>[n,{sha256}]));run.source_after=structuredClone(run.source_before);
+ run.artifacts_before={'axiom.wasm':'a'.repeat(64)};run.artifacts_after=structuredClone(run.artifacts_before);
+ run.init.environment={timeOrigin:1000};run.paired_init=structuredClone(run.init);run.paired_init.environment.timeOrigin=2000;
+ run.trace.records=prefix().length;
+ run.correctness=['OFF','ON'].flatMap(toggle=>[0,1].map(step=>({case_id:run.branch,toggle,step,source_sha256:'a'.repeat(64),candidate_sha256:'a'.repeat(64),reference_snapshot_sha256:'b'.repeat(64),comparison:{status:'QUALIFIED'}})));
+ return run;
+}
 test('CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does',()=>{
  const rows=prefix(),run=repairedRun();assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED','approved repaired worker profile missing');
  for(const n of repairedFiles){for(const change of [r=>r.source_before.files[n].sha256='f'.repeat(64),r=>delete r.source_before.files[n]]){const bad=repairedRun();change(bad);assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING',n);}}
@@ -117,9 +126,65 @@ test('CREATION-PROFILES: unchanged primary modes keep init-only admission under 
  }
 });
 test('PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state',()=>{
- const rows=prefix(),run=repairedRun();run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
+ const rows=prefix(),run=repairedRun();run.init.state.target.viewId='99';
  const good=analyze(rows,recording(rows,run)).proof;assert.equal(good.status,'QUALIFIED');assert.equal(good.initialization_chains[0].initialization_basis.state_path,'worker-result.json/paired_init/state');
- for(const change of [r=>r.init=structuredClone(r.paired_init),r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
+ for(const change of [r=>r.init.environment.timeOrigin=r.paired_init.environment.timeOrigin,r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
   const bad=structuredClone(run);change(bad);const p=analyze(rows,recording(rows,bad)).proof;assert.equal(p.status,'MISSING');assert.equal(p.unresolved_accepted_count,1);
  }
+});
+const lifecycleInputs=JSON.parse(fs.readFileSync(path.join(root,'.aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json')));
+const actualR5Directory=path.dirname(path.join(root,lifecycleInputs.r5_worker_inputs[0].path));
+let r5Context;
+function actualR5(){
+ if(r5Context)return r5Context;
+ const raw_trace_jsonl=fs.readFileSync(path.join(actualR5Directory,'raw-trace.jsonl'),'utf8'),worker_result_json=fs.readFileSync(path.join(actualR5Directory,'worker-result.json'),'utf8'),run_inputs_json=fs.readFileSync(path.join(actualR5Directory,'run-inputs.json'),'utf8');
+ r5Context={run:JSON.parse(worker_result_json),raw_trace_jsonl,worker_result_json,run_inputs_json,input_refs:{raw_trace_sha256:digest(raw_trace_jsonl),worker_result_sha256:digest(worker_result_json),run_inputs_sha256:digest(run_inputs_json)}};return r5Context;
+}
+test('LIFECYCLE ACTUAL-SCOPED-POSITIVE: immutable actual r5 reconciles6=init1+committed5 with native-only scope',()=>{
+ const context=actualR5(),raw=context.raw_trace_jsonl.trim().split('\n').map(JSON.parse),{proof,decoded}=analyze(raw,context);
+ assert.equal(proof.status,'QUALIFIED');assert.equal(proof.accepted_raw_count,6);assert.equal(proof.qualified_initialization_count,1);assert.equal(proof.qualified_committed_count,5);assert.equal(proof.unresolved_accepted_count,0);assert.equal(proof.scope,'NATIVE_ONLY');assert.equal(proof.metric_receipt_count,null);assert.deepEqual(decoded.missing,[]);
+ const old=JSON.parse(fs.readFileSync(path.join(actualR5Directory,'canonical-chain.json')));assert.deepEqual(proof.chains,old.chains);
+ assert.deepEqual(context.run.init.state,context.run.paired_init.state);
+ assert.deepEqual(proof.initialization_chains[0].initialization_basis.trace_scope,{scheme:'CORRECTNESS_FINAL_ON_PAGE_V1',qualifying_state_path:'worker-result.json/paired_init/state',off_page_time_origin_ms:lifecycleInputs.actual_off_time_origin_ms,trace_page_time_origin_ms:lifecycleInputs.actual_on_time_origin_ms,verification_spec_ref:{path:'.aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json',sha256:'bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a'}});
+});
+test('LIFECYCLE CROSS-PAGE-ALIAS: equal state values remain separate page provenance entries',()=>{
+ const run=repairedRun(),rows=prefix(),p=analyze(rows,recording(rows,run)).proof;assert.equal(p.status,'QUALIFIED');
+ const o=p.initialization_chains[0].initialization_basis;assert.equal(o.state_path,'worker-result.json/paired_init/state');assert.equal(o.recorded_states.length,2);assert.deepEqual(o.recorded_states[0].public_state,o.recorded_states[1].public_state);assert.notEqual(o.recorded_states[0].page_time_origin_ms,o.recorded_states[1].page_time_origin_ms);
+});
+test('LIFECYCLE UNKNOWN-SCOPE: incomplete protocol/profile/origins/pair/input or trace never selects ON by convenience',()=>{
+ const changes=[r=>delete r.paired_init,r=>delete r.paired_init.environment,r=>delete r.init.environment,r=>r.paired_init.environment.timeOrigin=1000,r=>r.paired_init.environment.timeOrigin=500,r=>r.paired_init.environment.timeOrigin=Infinity,r=>r.paired_init.environment.timeOrigin='2000',r=>r.toggle='OFF',r=>r.branch='foreign',r=>r.status='FAILED',r=>r.source_stable=false,r=>r.artifacts_stable=false,r=>r.source_after.source_tree_sha256='f'.repeat(64),r=>r.artifacts_after['axiom.wasm']='f'.repeat(64),r=>r.trace.records++,r=>r.trace.loss.critical=1,r=>r.correctness.pop(),r=>r.correctness.push(structuredClone(r.correctness[0])),r=>r.correctness[3].step=0,r=>r.correctness[0].case_id='foreign',r=>r.correctness[0].comparison.status='unknown',r=>delete r.correctness[0].candidate_sha256,r=>r.close.closed=false];
+ for(const change of changes){const run=repairedRun();change(run);assert.equal(analyze(prefix(),recording(prefix(),run)).proof.status,'MISSING',String(change));}
+ const context=recording(prefix(),repairedRun()),inputs=JSON.parse(context.run_inputs_json);inputs.toggle='OFF';context.run_inputs_json=JSON.stringify(inputs);context.input_refs.run_inputs_sha256=digest(context.run_inputs_json);assert.equal(analyze(prefix(),context).proof.status,'MISSING');
+});
+test('LIFECYCLE WITHIN-SCOPE-IDENTITY: matching OFF never substitutes for foreign/nonempty/nonzero ON',()=>{
+ for(const change of [r=>r.paired_init.state.documentId='b'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.target.attachmentEpoch='99',r=>r.paired_init.state.target.viewId='99',r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.ordinal='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32)]){
+  const run=repairedRun();change(run);const p=analyze(prefix(),recording(prefix(),run)).proof;assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,0);
+ }
+});
+test('LIFECYCLE OUTCOME-INDEPENDENCE: complete FAILED/MISSING pixels can resolve provenance but never change their outcomes',()=>{
+ for(const status of ['FAILED','MISSING']){const run=repairedRun();for(const e of run.correctness)e.comparison.status=status;const context=recording(prefix(),run);const p=analyze(prefix(),context).proof;assert.equal(p.status,'QUALIFIED');assert.equal(p.qualified_initialization_count,1);assert.ok(context.run.correctness.every(e=>e.comparison.status===status));}
+});
+const startupProfile={
+ 'verification/runners/g5/ur0/consumer.mjs':'aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff',
+ 'verification/runners/g5/ur0/worker.mjs':'2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78',
+ 'verification/runners/g5/ur0/correctness_driver.mjs':'0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721',
+ 'verification/runners/g5/ur0/pixel_oracle.mjs':'dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1',
+ 'verification/runners/g5/ur0/stream_transfer.mjs':'4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210',
+ 'verification/runners/g5/ur0/correctness_transfer.mjs':'87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8',
+ 'verification/runners/g5/ur0/correctness_contract.mjs':'682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0',
+ 'verification/runners/g5/ur0/correctness_startup.mjs':'5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39'
+};
+function startupRun(){
+ const run=repairedRun();run.source_before.files=Object.fromEntries(Object.entries(startupProfile).map(([n,sha256])=>[n,{sha256}]));run.source_after=structuredClone(run.source_before);
+ for(const key of ['init','paired_init']){const s=run[key].state;s.activeContacts=0;s.target.viewEpoch='1';run[key].correctness_startup={scheme:'CORRECTNESS_STARTUP_QUIESCENT_V1',page_time_origin_ms:run[key].environment.timeOrigin,created_at_ns:'1',accepted_callback_count:1,last_presented_count:'1',accepted_at_ns:'2',quiescent_at_ns:'3',pending_sdk_raf:0,public_state:{documentId:s.documentId,generation:s.generation,objects:s.objects,activeContacts:s.activeContacts,lastCommit:{ordinal:s.lastCommit.ordinal,operationId:s.lastCommit.operationId},target:{...s.target}},verification_spec_ref:{path:'.aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json',sha256:'7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534'}};}
+ return run;
+}
+test('STARTUP-PROFILE: third exact correctness-only profile needs two positive host frontiers; historic profiles stay literal',()=>{
+ const run=startupRun(),p=analyze(prefix(),recording(prefix(),run)).proof;assert.equal(p.status,'QUALIFIED');const o=p.initialization_chains[0].initialization_basis;assert.deepEqual(o.startup_frontiers,{init:run.init.correctness_startup,paired_init:run.paired_init.correctness_startup});assert.deepEqual(initializationContract.startupInitializationProfile,startupProfile);
+ for(const [name,expected] of Object.entries(startupProfile))assert.equal(digest(fs.readFileSync(path.join(root,name))),expected,name);
+ for(const mode of ['fixture','main','realtime','legacy','setup']){const bad=startupRun();bad.mode=mode;assert.equal(analyze(prefix(),recording(prefix(),bad)).proof.status,'MISSING','startup profile cannot authorize primary modes');}
+});
+test('STARTUP-PROFILE: missing/forged/stale frontier or unknown helper never qualifies, independent of pixel green',()=>{
+ const edits=[r=>delete r.init.correctness_startup,r=>delete r.paired_init.correctness_startup,r=>r.init.correctness_startup.accepted_callback_count=0,r=>r.paired_init.correctness_startup.last_presented_count='0',r=>r.paired_init.correctness_startup.pending_sdk_raf=1,r=>r.paired_init.correctness_startup.page_time_origin_ms=1000,r=>r.paired_init.correctness_startup.accepted_at_ns='0',r=>r.paired_init.correctness_startup.quiescent_at_ns='1',r=>r.paired_init.correctness_startup.public_state.objects=1,r=>r.paired_init.correctness_startup.verification_spec_ref.sha256='f'.repeat(64),r=>r.source_before.files['verification/runners/g5/ur0/correctness_startup.mjs'].sha256='f'.repeat(64)];
+ for(const change of edits){const r=startupRun();change(r);assert.equal(analyze(prefix(),recording(prefix(),r)).proof.status,'MISSING');}
 });

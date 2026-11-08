@@ -1,0 +1,72 @@
+{
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json",
+    "sha256": "7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534"
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-startup-v1/oracle-cases.json",
+    "sha256": "0ba59787ec03afa21758f9dede107cb21bf378aeb8295bf98ce45f71567ac753"
+  },
+  "obligations": [
+    {
+      "requirement": "STARTUP-RED",
+      "oracle": "Controlled delayed initial accepted callback arrives after old reset/enable, exposing orphan completion; no browser.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "EARLY-DELAYED",
+      "oracle": "Both early acceptance before createRuntime resolves and delayed acceptance after more than10 probe ticks wait/finish correctly.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "OFF-ON-SYMMETRY",
+      "oracle": "Fresh OFF and reloaded ON both await frontier before reset/enable/fixture, preserving distinct page facts.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "FALSE-FRONTIERS",
+      "oracle": "Empty generation0, zero disabled pending_gpu, fixed sleep/ticks or zero queue without accepted callback cannot qualify.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "ERROR-TIMEOUT-FOREIGN",
+      "oracle": "Stale/wrong-page callback, foreign/nonempty state, errors and never-converging startup fail explicitly under existing deadlines.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "PENDING-RETRY",
+      "oracle": "An accepted callback alone cannot qualify while SDK RAF pending/retry work remains; host probes never count as SDK work.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "PROFILE-BINDING",
+      "oracle": "Three literal profiles: two historical unchanged; new8-file correctness-only profile requires both real startup frontiers, exact P20 and native lifecycle reconstruction in JS/Python; unknown/forged rejected.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "PRIMARY-UNCHANGED",
+      "oracle": "Non-correctness init/default path, measured scheduling/toggles, phase arm locations and other five helper files unchanged by source diff and offline fixtures.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "RECORDING-INVARIANCE",
+      "oracle": "17+1 prior records retain exact outputs apart from compiler provenance; actual r6 remains native-only MISSING7=1+5+1 withseq22 unresolved.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    },
+    {
+      "requirement": "HISTORICAL-CONTEXT",
+      "oracle": "Three runner test contexts use exact accepted compiler/helper bytes, real validators, plus actual-current mismatch negatives; no success mocks/skips.",
+      "acceptance": "Frozen offline oracle observed; no weakened native checks",
+      "evidence_required": "Named test/log/ref and exact source/recorded derivation hashes"
+    }
+  ]
+}

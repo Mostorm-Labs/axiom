@@ -1,0 +1,42 @@
+{
+  "schema": "ur0b-trace-lifecycle-oracles-v1",
+  "cases": [
+    {
+      "id": "ACTUAL-R5-RED",
+      "rule": "Original compiler on immutable actual r5 data must expose raw6/init0/committed5/unresolved1 and the foreign-or-ambiguous public initialization reason. No merely missing-new-field RED."
+    },
+    {
+      "id": "ACTUAL-SCOPED-POSITIVE",
+      "rule": "Same actual raw/input bytes under the corrected known-profile lifecycle rule yield raw6/init1/committed5/unresolved0; the five committed chains/receipts, four QUALIFIED pixel results, subject proofs and observations are unchanged."
+    },
+    {
+      "id": "CROSS-PAGE-ALIAS",
+      "rule": "Equal public IDs and entire state across distinct OFF/ON page origins are valid; select ON paired_init only after the fixed final-ON-drain protocol is qualified. Numeric equality alone never selects a lifecycle."
+    },
+    {
+      "id": "UNKNOWN-SCOPE",
+      "rule": "Unknown/mismatched worker/consumer/helper hash, missing paired state/page-origin metadata, same/reversed/nonfinite origins, incomplete/duplicate/foreign pair, wrong branch/mode, missing/lossy trace or wrong raw record count remains UNRESOLVED."
+    },
+    {
+      "id": "WITHIN-SCOPE-IDENTITY",
+      "rule": "Within the chosen ON lifecycle, wrong document/epoch/attachment/view, nonempty/restored/nonzero state, nonzero operation, duplicate same eligible state path or ambiguous native owner fails. The OFF state cannot substitute for absent/foreign ON even if its values match."
+    },
+    {
+      "id": "OUTCOME-INDEPENDENCE",
+      "rule": "Trace source qualification depends on complete protocol and exact source, not pixel green. Complete FAILED/MISSING pixel comparisons cannot manufacture qualification/PASS; native provenance may be resolved while separate pixel/case admission still fails."
+    },
+    {
+      "id": "PRODUCER-READER-BINDING",
+      "rule": "JS derived trace_scope and Python validation agree; forged scope/path/timeOrigin/authority ref or discrepancy from actual worker-result/raw/input bytes is rejected by strict bound admission. No current-file-hash wildcard."
+    },
+    {
+      "id": "LEGACY17-INVARIANCE",
+      "rule": "Recompile17 immutable complete prior records separately. Canonical/decoded/metrics/external bytes and non-provenance summaries remain identical to their accepted baselines; original modes/source/artifacts and committed receipts unchanged."
+    },
+    {
+      "id": "HISTORICAL-TEST-CONTEXT",
+      "rule": "Existing r5 tests of its old current-compiler acceptance use the exact a00dc4a2 historical compiler bytes for positive or later-stage negative cases. Actual new compiler must still reject that old packet. Preserve real checks and all guard/ledger tests; no success mocks/skip/xfail."
+    }
+  ],
+  "scope": "Only the initialization trace-lifecycle proof defect; previous pixel/transfer12 groups remain applicable and unchanged."
+}

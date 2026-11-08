@@ -1,0 +1,26 @@
+{
+  "status": "CURRENT",
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/implementation-request.json",
+    "sha256": "53985e867abf682fb6fbbaed9c6e16f82d7f763a34904d08c653df7439c3ecf8",
+    "identity_kind": "local-content-addressed"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+    "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a",
+    "identity_kind": "local-content-addressed"
+  },
+  "approved_control_delta": "This P20 directory and the new package are authorized additive control inputs; compute actual current source before code, do not require equality with the predecessor hash.",
+  "source_scope": [
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_reverified_remaining_runner.py"
+  ],
+  "read_only": [
+    "Runtime/SDK/collector/worker.mjs/consumer.mjs/all seven repaired-profile files and literal identity tuple",
+    "All original packages/recordings/results/windows/ledgers; all P20 files including this directory",
+    "All pixel, timing, pressure, schema, budget and canonical mutation authorities; all orchestration readers except the named repair_runner proof path"
+  ]
+}

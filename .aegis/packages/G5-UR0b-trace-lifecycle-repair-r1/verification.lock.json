@@ -1,0 +1,73 @@
+{
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+    "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a",
+    "identity_kind": "local-content-addressed"
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/oracle-cases.json",
+    "sha256": "2fe494a6443b48d7f1b923e2423d8f8ed61c792a2d5052417c0f6a3e4a79917a",
+    "identity_kind": "local-content-addressed"
+  },
+  "evidence_inputs_ref": {
+    "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/evidence-inputs.json",
+    "sha256": "1aac426127a22c3cb1c366aac0260c8a288ac1f05e83a100ec75589c6fe0942d",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "requirement": "ACTUAL-R5-RED",
+      "oracle": "Original compiler on immutable actual r5 data must expose raw6/init0/committed5/unresolved1 and the foreign-or-ambiguous public initialization reason. No merely missing-new-field RED.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "ACTUAL-SCOPED-POSITIVE",
+      "oracle": "Same actual raw/input bytes under the corrected known-profile lifecycle rule yield raw6/init1/committed5/unresolved0; the five committed chains/receipts, four QUALIFIED pixel results, subject proofs and observations are unchanged.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "CROSS-PAGE-ALIAS",
+      "oracle": "Equal public IDs and entire state across distinct OFF/ON page origins are valid; select ON paired_init only after the fixed final-ON-drain protocol is qualified. Numeric equality alone never selects a lifecycle.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "UNKNOWN-SCOPE",
+      "oracle": "Unknown/mismatched worker/consumer/helper hash, missing paired state/page-origin metadata, same/reversed/nonfinite origins, incomplete/duplicate/foreign pair, wrong branch/mode, missing/lossy trace or wrong raw record count remains UNRESOLVED.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "WITHIN-SCOPE-IDENTITY",
+      "oracle": "Within the chosen ON lifecycle, wrong document/epoch/attachment/view, nonempty/restored/nonzero state, nonzero operation, duplicate same eligible state path or ambiguous native owner fails. The OFF state cannot substitute for absent/foreign ON even if its values match.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "OUTCOME-INDEPENDENCE",
+      "oracle": "Trace source qualification depends on complete protocol and exact source, not pixel green. Complete FAILED/MISSING pixel comparisons cannot manufacture qualification/PASS; native provenance may be resolved while separate pixel/case admission still fails.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "PRODUCER-READER-BINDING",
+      "oracle": "JS derived trace_scope and Python validation agree; forged scope/path/timeOrigin/authority ref or discrepancy from actual worker-result/raw/input bytes is rejected by strict bound admission. No current-file-hash wildcard.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "LEGACY17-INVARIANCE",
+      "oracle": "Recompile17 immutable complete prior records separately. Canonical/decoded/metrics/external bytes and non-provenance summaries remain identical to their accepted baselines; original modes/source/artifacts and committed receipts unchanged.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    },
+    {
+      "requirement": "HISTORICAL-TEST-CONTEXT",
+      "oracle": "Existing r5 tests of its old current-compiler acceptance use the exact a00dc4a2 historical compiler bytes for positive or later-stage negative cases. Actual new compiler must still reject that old packet. Preserve real checks and all guard/ledger tests; no success mocks/skip/xfail.",
+      "acceptance": "Frozen exact oracle satisfied with negative cases retained",
+      "evidence_required": "Named tests/logs and exact recorded derivation/proof hashes"
+    }
+  ]
+}

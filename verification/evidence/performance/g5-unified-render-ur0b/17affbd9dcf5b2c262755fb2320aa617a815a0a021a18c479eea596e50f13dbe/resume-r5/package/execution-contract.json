@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/reverified_remaining_runner.py",
+      "verification/tests/test_g5_ur0_reverified_remaining_runner.py"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/resume-r5/**",
+      "out/ur0b/resume-r5/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/resume-r5/**"
+    ],
+    "read_only": [
+      "All prior packages/results/windows/ledgers and all17 accepted raw or derived records",
+      "All existing Runtime/SDK/consumer/collector/harness/compiler/profile/reader/threshold/corpus files; only the two new orchestration paths are mutable"
+    ],
+    "required_changes": [
+      "Explicitly consume the new control acceptance, not the old r4 packet. Bind each of17 listed recordings to its own original source, input hashes, current derived compiler and exact proof/cardinality/artifact. Old15 and newRT2 have distinct source groups; never collapse them into one invented source or mark them fresh.",
+      "Keep current frozen compiler/profile/SDK/corpus identities, native proof and actual OFFLINE-vs-WORKER_COMPILE separation. No SDK rebuild or diagnostic/cohort/RT rerun.",
+      "Use current canonical/admission helpers with all ownership, commit, clock, metrics, source/artifact and receipt checks. Main requires all6 fresh correctness prerequisites satisfy inherited exact QUALIFIED or complete matching PRODUCT_RED_IN_BOTH_OFF_ON criteria; preserve any product RED as such.",
+      "Bind each fresh worker to current source/mechanism and actual SDK artifacts. Native/cold surfaces and viewport requirements remain unchanged.",
+      "A single fixed r5 state root with durable exclusive claim prevents concurrency, restart, relocation or second invocation from obtaining another allowance. Test runner/ledger/admission rules offline first; such tests may not start browsers.",
+      "Return guard-primary failure cause before missing-summary diagnostics; preserve every raw reason and honest unknown status. No success synthesis or skipping required rows."
+    ],
+    "required_tests": [
+      "New runner offline unit tests for exact17 reuse, source groups, stale compiler/profile/input/artifact/proof rejection, scope and fresh/recorded separation",
+      "Offline ledger tests: prior33/1251 retained, reserve-before-spawn, unknown charge, overrun honesty, concurrency/restart/relocation refusal, no hidden starts and6-correctness-before-main gating",
+      "Full existing Node/Python/boundary regression and git diff --check before browser starts;2 existing malformed native unit checks allowed/counted, no new qualification oracle/build",
+      "New exact mechanism proof and immutable SDK artifact checks before claiming the one r5 window",
+      "All36 frozen planned evidence runs, or exact early frozen failure with all remaining items explicitly MISSING"
+    ],
+    "sampling_limits": {
+      "new_workers_max": 36,
+      "new_nominal_worker_seconds_max": 5940,
+      "prior_starts": 33,
+      "prior_seconds": 1251,
+      "original_cumulative_cap_seconds": 8370,
+      "cumulative_nominal_seconds": 7191,
+      "concurrency": 1,
+      "process_family_rss_bytes": 3221225472,
+      "correctness_phase_ms": 30000,
+      "correctness_outer_seconds": 90,
+      "main_outer_seconds": 180,
+      "accounting": "Reserve each full worker limit before spawn. Count all started browser/native worker process families including failures; charge actual terminal ceil(elapsed_s), or full reserved limit for unknown interrupted guard. Never clip overrun; stop and record it. Unit/offline compiler tests follow the original separate accounting.",
+      "no_hidden_starts": "No smoke/probe/unplanned qualification/extra replay, no retry or resampling. All worker starts must be named in plan before launch.",
+      "stop_policy": "First hard timer/RSS/cleanup/nonzero-exit/admission/identity/ledger failure closes the window; cleanup owned processes, mark remaining rows MISSING, notify control. Unused time is not retry permission."
+    },
+    "run_plan_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/remaining-run-plan.json",
+      "sha256": "8506692699863cfaed74a5d4dd69feca2a3afb91e7192ebc88cee63c46e41632",
+      "identity_kind": "local-content-addressed"
+    },
+    "historical_ledger_ref": {
+      "path": ".aegis/results/G5-UR0b/resume-r4/window.json",
+      "sha256": "c07a4aa8560b6ab51d472bc38d127d641c43bce9043ff3d10a2cb1a687981c70",
+      "identity_kind": "local-content-addressed"
+    },
+    "accepted_reuse_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/reuse-acceptance.json",
+      "sha256": "9fb07bc5798cd455d9a98a3b8b8cf23d7eb42b7c6e68c51edd3adf50f1e4798d",
+      "identity_kind": "local-content-addressed"
+    },
+    "fixed_state_root": ".aegis/results/G5-UR0b/resume-r5/",
+    "execution_design": "New orchestration owns the durable claim, reserve/charge/close ledger and sequencing. Existing immutable observed_worker/bounded_worker own process containment. Existing current canonical and compilation readers own native/receipt proof validation. Guard failure precedes cold compilation or missing-summary diagnostics.",
+    "forbidden": [
+      "Any hidden/extra worker, cohort/RT rerun, retry, relocation/restart allowance",
+      "Any source outside the two named paths",
+      "Build/dependency/SDK/profile/threshold/corpus mutation",
+      "Any prior window/package/result/evidence mutation",
+      "Commit/push, UR0c/UR1, performance/platform/P34 PASS"
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "blocking_evidence": [
+      "New runner offline unit tests for exact17 reuse, source groups, stale compiler/profile/input/artifact/proof rejection, scope and fresh/recorded separation",
+      "Offline ledger tests: prior33/1251 retained, reserve-before-spawn, unknown charge, overrun honesty, concurrency/restart/relocation refusal, no hidden starts and6-correctness-before-main gating",
+      "Full existing Node/Python/boundary regression and git diff --check before browser starts;2 existing malformed native unit checks allowed/counted, no new qualification oracle/build",
+      "New exact mechanism proof and immutable SDK artifact checks before claiming the one r5 window",
+      "All36 frozen planned evidence runs, or exact early frozen failure with all remaining items explicitly MISSING"
+    ],
+    "terminal_success": "READY_FOR_CONTROL_REVIEW with36 accounted and exact reused/current evidence identities; never product/performance/P34 PASS",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "stop_after": "UR0b",
+    "notify_terminal": {
+      "required": true,
+      "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit blocker/frozen stop"
+      ],
+      "contents": [
+        "task/package/status",
+        "revision/dirty/full-source hash",
+        "result/bundle paths andSHA256",
+        "test/RED/17-input reconciliation and any residual differences",
+        "sampling0 and all remaining work",
+        "all planned/executed/missing run IDs and actual guard/cleanup results",
+        "original33 starts1251s plus new starts/actual charged seconds/reservations and whether the window is closed",
+        "actual OFF/ON correctness verdicts or product RED, current/fresh vs reused source/proof/artifact identities"
+      ],
+      "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+    }
+  }
+}

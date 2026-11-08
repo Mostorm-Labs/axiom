@@ -1,0 +1,259 @@
+{
+  "schema": "g5-ur0b-canonical-chain-proof-v2",
+  "scope": "NATIVE_ONLY",
+  "status": "MISSING",
+  "accepted_raw_count": 6,
+  "qualified_initialization_count": 0,
+  "qualified_committed_count": 5,
+  "qualified_decoded_count": 5,
+  "observed_qualified_decoded_count": 5,
+  "metric_receipt_count": null,
+  "unresolved_accepted_count": 1,
+  "accepted_records": [
+    {
+      "completion_seq": "293",
+      "work_id": "2",
+      "classification": "UNRESOLVED"
+    },
+    {
+      "completion_seq": "2097",
+      "work_id": "3",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2205",
+      "work_id": "4",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2300",
+      "work_id": "5",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2498",
+      "work_id": "6",
+      "classification": "COMMITTED"
+    },
+    {
+      "completion_seq": "2579",
+      "work_id": "7",
+      "classification": "COMMITTED"
+    }
+  ],
+  "initialization_chains": [],
+  "chains": [
+    {
+      "work_id": "3",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "3",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "324",
+      "draw_basis": "324",
+      "attempt_jobs": [
+        "324"
+      ],
+      "draw_seq": "1991",
+      "provider_seq": "2074",
+      "capture_seq": "2088",
+      "completion_seq": "2097",
+      "provenance": [
+        "2087",
+        "2085",
+        "2088",
+        "2074",
+        "1991",
+        "1959",
+        "1966",
+        "1973",
+        "2097"
+      ]
+    },
+    {
+      "work_id": "4",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "2",
+        "scene_generation": "2",
+        "scene_revision": "2",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "4",
+        "operation_id": "a7a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "2"
+      },
+      "draw_job": "353",
+      "draw_basis": "353",
+      "attempt_jobs": [
+        "353"
+      ],
+      "draw_seq": "2158",
+      "provider_seq": "2188",
+      "capture_seq": "2200",
+      "completion_seq": "2205",
+      "provenance": [
+        "2199",
+        "2197",
+        "2200",
+        "2188",
+        "2158",
+        "2128",
+        "2139",
+        "2136",
+        "2205"
+      ]
+    },
+    {
+      "work_id": "5",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "2",
+        "scene_generation": "2",
+        "scene_revision": "2",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "5",
+        "operation_id": "a7a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "2"
+      },
+      "draw_job": "374",
+      "draw_basis": "374",
+      "attempt_jobs": [
+        "374"
+      ],
+      "draw_seq": "2251",
+      "provider_seq": "2283",
+      "capture_seq": "2295",
+      "completion_seq": "2300",
+      "provenance": [
+        "2294",
+        "2292",
+        "2295",
+        "2283",
+        "2251",
+        "2128",
+        "2139",
+        "2136",
+        "2300"
+      ]
+    },
+    {
+      "work_id": "6",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "3",
+        "scene_generation": "3",
+        "scene_revision": "3",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "7",
+        "operation_id": "a7a3c498884d1da9a711f8f8a015c669",
+        "commit_revision": "3"
+      },
+      "draw_job": "424",
+      "draw_basis": "424",
+      "attempt_jobs": [
+        "424"
+      ],
+      "draw_seq": "2451",
+      "provider_seq": "2481",
+      "capture_seq": "2493",
+      "completion_seq": "2498",
+      "provenance": [
+        "2492",
+        "2490",
+        "2493",
+        "2481",
+        "2451",
+        "2416",
+        "2432",
+        "2429",
+        "2498"
+      ]
+    },
+    {
+      "work_id": "7",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "3",
+        "scene_generation": "3",
+        "scene_revision": "3",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "8",
+        "operation_id": "a7a3c498884d1da9a711f8f8a015c669",
+        "commit_revision": "3"
+      },
+      "draw_job": "444",
+      "draw_basis": "444",
+      "attempt_jobs": [
+        "444"
+      ],
+      "draw_seq": "2532",
+      "provider_seq": "2562",
+      "capture_seq": "2574",
+      "completion_seq": "2579",
+      "provenance": [
+        "2573",
+        "2571",
+        "2574",
+        "2562",
+        "2532",
+        "2416",
+        "2432",
+        "2429",
+        "2579"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "completion_seq": "293",
+      "reason": "accepted raw completion lacks a unique qualified decoded chain"
+    }
+  ],
+  "timing_scope": "native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance"
+}

@@ -1,0 +1,122 @@
+{
+  "status": "SCOPE_AND_RECORDED_IDENTITIES_PRESERVED",
+  "accepted_source_tree_sha256": "a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4",
+  "current_source_tree_sha256": "af798aa5c1edc59a6aebd28f2bd5cbce0e4ab0a2b27a787bc13a69f5ac966bff",
+  "source_delta": [
+    "verification/runners/g5/ur0/consumer.mjs",
+    "verification/runners/g5/ur0/correctness_startup.mjs",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/runners/g5/ur0/worker.mjs",
+    "verification/tests/g5_ur0_correctness_startup.test.mjs",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_reverified_remaining_runner.py",
+    "verification/tests/test_g5_ur0_scoped_remaining_runner.py"
+  ],
+  "approved_control_delta": [
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/authority.lock.json",
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/execution-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/implementation-context.md",
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/package.json",
+    ".aegis/packages/G5-UR0b-correctness-startup-repair-r1/verification.lock.json",
+    ".aegis/verification/G5-UR0b-correctness-startup-v1/oracle-cases.json",
+    ".aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json"
+  ],
+  "historical_source_seam_materializations": [
+    {
+      "logical_source": {
+        "path": "sdk/web/axiom.mjs",
+        "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c"
+      },
+      "immutable_materialization": {
+        "path": "sdk/web/axiom.mjs",
+        "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c"
+      }
+    },
+    {
+      "logical_source": {
+        "path": "sdk/web/bridge.cpp",
+        "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9"
+      },
+      "immutable_materialization": {
+        "path": "sdk/web/bridge.cpp",
+        "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9"
+      }
+    },
+    {
+      "logical_source": {
+        "path": "sdk/web/web_runtime_adapter.cpp",
+        "sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+      },
+      "immutable_materialization": {
+        "path": "sdk/web/web_runtime_adapter.cpp",
+        "sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+      }
+    },
+    {
+      "logical_source": {
+        "path": "runtime/composition/src/runtime_composition.cpp",
+        "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+      },
+      "immutable_materialization": {
+        "path": "runtime/composition/src/runtime_composition.cpp",
+        "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+      }
+    },
+    {
+      "logical_source": {
+        "path": "verification/runners/g5/ur0/consumer.mjs",
+        "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7"
+      },
+      "immutable_materialization": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4/resume-r6/source/verification/runners/g5/ur0/consumer.mjs",
+        "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7"
+      }
+    },
+    {
+      "logical_source": {
+        "path": "verification/runners/g5/ur0/worker.mjs",
+        "sha256": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735"
+      },
+      "immutable_materialization": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/a3d022abba7d5909aa6dc1e97f5b0f03af0d34154aae585a0a0db21d2f3162c4/resume-r6/source/verification/runners/g5/ur0/worker.mjs",
+        "sha256": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735"
+      }
+    }
+  ],
+  "historical_profile_literals_unchanged": true,
+  "new_correctness_only_profile": {
+    "verification/runners/g5/ur0/consumer.mjs": "aabe47cdaca09aa4270488e84788c50348514169df4b1aff434b1a194f5191ff",
+    "verification/runners/g5/ur0/worker.mjs": "2d47ccfd246fd6d52d5e4194d62368658a340cad87477213b1987a1801b1db78",
+    "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+    "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+    "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
+    "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+    "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0",
+    "verification/runners/g5/ur0/correctness_startup.mjs": "5f08d489884f1b242bfdee3e19b932447137adf7d098579ae853ef39e6207d39"
+  },
+  "r4_historical_context": "Already isolated at fixed df214581 Git compiler; preserved unchanged and verified in the73-reader subset.",
+  "r5_historical_context": "Fixed a00dc4a2 compiler plus exact source-file namespace for7 helper bytes; bound evidence and real validators unchanged.",
+  "r6_historical_context": "Manifest-bound a3d source archive compiler/helper bytes; real validators and actual-current compiler/profile mismatch negatives retained.",
+  "r6_result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/result.json",
+    "sha256": "41650906d25a902f4515b06d46cf757386aad75593d017f89d51c1461809c301"
+  },
+  "r6_window_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r6/window.json",
+    "sha256": "e017264ae65d947e6865df4e67d889516e0fc432fab471d8e6f43a681505c30b"
+  },
+  "r6_still_missing": {
+    "accepted_raw_count": 7,
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 5,
+    "metric_receipt_count": null,
+    "unresolved_accepted_count": 1
+  },
+  "old_17_plus_one_inputs_unchanged": true,
+  "new_browser_starts": 0,
+  "historical_starts": 35,
+  "historical_seconds": 1276
+}

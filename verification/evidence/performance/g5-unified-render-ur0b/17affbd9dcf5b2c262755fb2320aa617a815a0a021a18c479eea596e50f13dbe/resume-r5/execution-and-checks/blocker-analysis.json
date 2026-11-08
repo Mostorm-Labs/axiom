@@ -1,0 +1,213 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "classification": "VERIFICATION_DESIGN_DEFECT",
+  "subtype": "CORRECTNESS_RELOAD_INITIALIZATION_IDENTITY_AMBIGUITY",
+  "owning_boundary": "Verification correctness lifecycle/initialization evidence binding; independent control review required",
+  "actual_admission_error": "canonical observation has loss, identity error or unresolved links",
+  "decoded_unqualified_completion": {
+    "runtime": "1",
+    "lifetime": "1",
+    "attachment": "2",
+    "document": "99999999999999999999999999999999",
+    "documentEpoch": "1",
+    "commitRevision": "0",
+    "resource": "0",
+    "sceneRevision": "0",
+    "camera": "1",
+    "seq": "59",
+    "view": "1",
+    "work": "2",
+    "frame": "2",
+    "semanticGeneration": "0",
+    "sceneGeneration": "0",
+    "surface": "1",
+    "metrics": "1",
+    "operation": null,
+    "scene_qualified": false,
+    "at_ns": "155900000",
+    "job": "7",
+    "basis": "7",
+    "gpu_resource_epoch": "1",
+    "attempt_jobs": [
+      "7"
+    ],
+    "capture_seq": "60",
+    "capture_ns": "122900000",
+    "draw_seq": "33",
+    "provider_seq": "50",
+    "provenance": [
+      "59",
+      "57",
+      "60",
+      "50",
+      "33",
+      "293"
+    ],
+    "qualification": "MISSING_SETUP_SCENE_OBSERVATION",
+    "initialization_unresolved": "public initialization state absent, foreign or ambiguous"
+  },
+  "matching_public_initial_states": {
+    "init": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": false,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "0",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "00000000000000000000000000000000",
+        "ordinal": "0",
+        "presentedGeneration": "0",
+        "runtimeEpoch": "0"
+      },
+      "objects": 0,
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 0
+    },
+    "paired_init": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": false,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "0",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "00000000000000000000000000000000",
+        "ordinal": "0",
+        "presentedGeneration": "0",
+        "runtimeEpoch": "0"
+      },
+      "objects": 0,
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 0
+    }
+  },
+  "observed_cause": "OFF and ON page lifecycles restart the same numeric document/attachment/view/runtime epoch values. Both public initial states match the ON trace; the frozen helper requires exactly one match and refuses the ambiguity.",
+  "canonical_chain": {
+    "status": "MISSING",
+    "accepted_raw_count": 6,
+    "qualified_initialization_count": 0,
+    "qualified_committed_count": 5,
+    "qualified_decoded_count": 5,
+    "unresolved_accepted_count": 1,
+    "unresolved": [
+      {
+        "completion_seq": "293",
+        "reason": "accepted raw completion lacks a unique qualified decoded chain"
+      }
+    ]
+  },
+  "pixel_result": "All four OFF/ON captures QUALIFIED with zero interior mismatches, but this does not qualify the missing canonical initialization chain.",
+  "not_observed_as_cause": [
+    "timer expiry",
+    "RSS overflow",
+    "nonzero browser worker exit",
+    "trace loss",
+    "product pixel mismatch"
+  ],
+  "repair_executed": false,
+  "retry_executed": false,
+  "next_owner_action": "Control/Verification review must bind a native trace to its actual initialization lifecycle without weakening unique identity, inventing a commit, modifying this closed window, or reusing unused budget as retry permission."
+}

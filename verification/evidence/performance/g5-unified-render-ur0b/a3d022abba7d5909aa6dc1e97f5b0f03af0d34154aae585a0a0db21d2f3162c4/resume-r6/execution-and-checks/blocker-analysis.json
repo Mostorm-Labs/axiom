@@ -1,0 +1,80 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "classification": "BLOCKED_EVIDENCE",
+  "subtype": "ACCEPTED_NATIVE_COMPLETION_OUTSIDE_OBSERVED_WORK",
+  "actual_admission_error": "canonical observation has loss, identity error or unresolved links",
+  "decoded_missing": [
+    {
+      "reason": "accepted completion outside observed work",
+      "seq": "22"
+    }
+  ],
+  "unresolved_raw_record": {
+    "seq": "22",
+    "at_ns": "123700000",
+    "event": "0",
+    "job": "6",
+    "attempt": "6",
+    "basis": "6",
+    "purpose": 1,
+    "route": 0,
+    "kind": 12,
+    "tag": 29,
+    "values": [
+      "1",
+      "1",
+      "1",
+      "1",
+      "2",
+      "1",
+      "1",
+      "0",
+      "0",
+      "1",
+      "1"
+    ]
+  },
+  "unresolved_accepted_record": {
+    "completion_seq": "22",
+    "work_id": "1",
+    "classification": "UNRESOLVED"
+  },
+  "observed_frame_work_ids": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "qualified_initialization_trace_scope": {
+    "scheme": "CORRECTNESS_FINAL_ON_PAGE_V1",
+    "qualifying_state_path": "worker-result.json/paired_init/state",
+    "off_page_time_origin_ms": 1794129579321.8,
+    "trace_page_time_origin_ms": 1794129582489.5,
+    "verification_spec_ref": {
+      "path": ".aegis/verification/G5-UR0b-trace-lifecycle-v1/verification-spec.json",
+      "sha256": "bd6e1d2f36f7e20317a326fc64ff9856523927cb054acc2ec443cbc18052ed5a"
+    }
+  },
+  "canonical_counts": {
+    "accepted_raw_count": 7,
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 5,
+    "qualified_decoded_count": 5,
+    "metric_receipt_count": null,
+    "unresolved_accepted_count": 1
+  },
+  "facts": "The final-ON-page initialization proof now qualifies work2. A separate accepted work1 completion at seq22 has no matching observed frame/work chain under the current decoder. All7 accepted records remain in the denominator; one is unresolved.",
+  "cause_not_established": "This recording does not by itself establish the upstream reason for the missing work1 frame/capture provenance. Control/Verification must review the observation-window/initial-work boundary; no product or collector fix is inferred here.",
+  "not_observed_as_failure": [
+    "cross-page initialization ambiguity",
+    "timer expiry",
+    "RSS overflow",
+    "worker nonzero exit",
+    "trace critical/statistical loss",
+    "pixel mismatch"
+  ],
+  "repair_or_retry_executed": false,
+  "next_owner_action": "Independent control/Verification classification and observation-boundary review. Keep r6 CLOSED; do not synthesize a frame, drop the accepted record or reuse unused allowance as retry permission."
+}

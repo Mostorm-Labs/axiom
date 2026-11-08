@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: STARTUP RED witness and corrected delayed boundary: generation0/disabled pending_gpu0 cannot drain a late accepted frame
+ok 1 - STARTUP RED witness and corrected delayed boundary: generation0/disabled pending_gpu0 cannot drain a late accepted frame
+  ---
+  duration_ms: 1.705208
+  ...
+# Subtest: EARLY-DELAYED/OFF-ON: early callbacks survive createRuntime return and both fresh pages use the same frontier
+ok 2 - EARLY-DELAYED/OFF-ON: early callbacks survive createRuntime return and both fresh pages use the same frontier
+  ---
+  duration_ms: 0.444417
+  ...
+# Subtest: FALSE-FRONTIERS and deadlines: idle queue, fixed10ticks and generation equality alone never qualify
+ok 3 - FALSE-FRONTIERS and deadlines: idle queue, fixed10ticks and generation equality alone never qualify
+  ---
+  duration_ms: 1.307084
+  ...
+# Subtest: PENDING-RETRY: positive onFrame still waits for SDK-owned retry queue to drain
+ok 4 - PENDING-RETRY: positive onFrame still waits for SDK-owned retry queue to drain
+  ---
+  duration_ms: 0.175
+  ...
+# Subtest: ERROR-TIMEOUT-FOREIGN: wrong page/stale callback, SDK errors and foreign/nonempty state fail before collector mutation
+ok 5 - ERROR-TIMEOUT-FOREIGN: wrong page/stale callback, SDK errors and foreign/nonempty state fail before collector mutation
+  ---
+  duration_ms: 0.867958
+  ...
+# Subtest: PRIMARY-UNCHANGED: measured bodies stay byte-identical and correctness startup requires a gated init
+ok 6 - PRIMARY-UNCHANGED: measured bodies stay byte-identical and correctness startup requires a gated init
+  ---
+  duration_ms: 0.297292
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 44.629458

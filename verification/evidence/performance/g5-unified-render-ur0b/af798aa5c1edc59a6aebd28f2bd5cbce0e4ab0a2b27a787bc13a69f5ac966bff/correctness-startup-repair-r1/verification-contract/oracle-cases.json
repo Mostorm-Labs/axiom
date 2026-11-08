@@ -1,0 +1,46 @@
+{
+  "schema": "ur0b-startup-oracles-v1",
+  "groups": [
+    {
+      "id": "STARTUP-RED",
+      "oracle": "Controlled delayed initial accepted callback arrives after old reset/enable, exposing orphan completion; no browser."
+    },
+    {
+      "id": "EARLY-DELAYED",
+      "oracle": "Both early acceptance before createRuntime resolves and delayed acceptance after more than10 probe ticks wait/finish correctly."
+    },
+    {
+      "id": "OFF-ON-SYMMETRY",
+      "oracle": "Fresh OFF and reloaded ON both await frontier before reset/enable/fixture, preserving distinct page facts."
+    },
+    {
+      "id": "FALSE-FRONTIERS",
+      "oracle": "Empty generation0, zero disabled pending_gpu, fixed sleep/ticks or zero queue without accepted callback cannot qualify."
+    },
+    {
+      "id": "ERROR-TIMEOUT-FOREIGN",
+      "oracle": "Stale/wrong-page callback, foreign/nonempty state, errors and never-converging startup fail explicitly under existing deadlines."
+    },
+    {
+      "id": "PENDING-RETRY",
+      "oracle": "An accepted callback alone cannot qualify while SDK RAF pending/retry work remains; host probes never count as SDK work."
+    },
+    {
+      "id": "PROFILE-BINDING",
+      "oracle": "Three literal profiles: two historical unchanged; new8-file correctness-only profile requires both real startup frontiers, exact P20 and native lifecycle reconstruction in JS/Python; unknown/forged rejected."
+    },
+    {
+      "id": "PRIMARY-UNCHANGED",
+      "oracle": "Non-correctness init/default path, measured scheduling/toggles, phase arm locations and other five helper files unchanged by source diff and offline fixtures."
+    },
+    {
+      "id": "RECORDING-INVARIANCE",
+      "oracle": "17+1 prior records retain exact outputs apart from compiler provenance; actual r6 remains native-only MISSING7=1+5+1 withseq22 unresolved."
+    },
+    {
+      "id": "HISTORICAL-CONTEXT",
+      "oracle": "Three runner test contexts use exact accepted compiler/helper bytes, real validators, plus actual-current mismatch negatives; no success mocks/skips."
+    }
+  ],
+  "no_new_sampling": true
+}

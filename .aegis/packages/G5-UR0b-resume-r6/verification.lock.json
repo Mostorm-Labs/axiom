@@ -1,0 +1,48 @@
+{
+  "request_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/continuation-request.json",
+    "sha256": "bfaa5b13023b0ebb37dc9d68e47947e9381a869d4df777e19248646784ae5c73"
+  },
+  "accepted_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/reuse-acceptance.json",
+    "sha256": "f76c8b5249efc4b1e3a908e2ee19cc94461cd5592f9856518b9073c289404135",
+    "identity_kind": "local-content-addressed"
+  },
+  "run_plan_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/remaining-run-plan.json",
+    "sha256": "dcb0f4b140d32b23c370331739379b11b32c424e740e2725d8d31e867e7d7ba7",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "requirement": "New runner offline unit tests for exact17 prerequisite reuse and1native-only correctness reuse, source groups, stale compiler/profile/input/artifact/proof rejection, scope and fresh/recorded separation",
+      "oracle": "Exact offline negative/positive tests or frozen real row guard/current strict admission",
+      "acceptance": "All specified predicates; first hard failure closes and preserves missing evidence",
+      "evidence_required": "Bound source/input/artifact/compiler/guard/ledger/test logs and complete terminal bundle"
+    },
+    {
+      "requirement": "Offline ledger tests: prior34/1264 retained, reserve-before-spawn, unknown charge, overrun honesty, concurrency/restart/relocation refusal, no hidden starts andrecorded1+fresh5 correctness-before-main gating",
+      "oracle": "Exact offline negative/positive tests or frozen real row guard/current strict admission",
+      "acceptance": "All specified predicates; first hard failure closes and preserves missing evidence",
+      "evidence_required": "Bound source/input/artifact/compiler/guard/ledger/test logs and complete terminal bundle"
+    },
+    {
+      "requirement": "Full existing Node/Python/boundary regression and git diff --check before browser starts;2 existing malformed native unit checks allowed/counted, no new qualification oracle/build",
+      "oracle": "Exact offline negative/positive tests or frozen real row guard/current strict admission",
+      "acceptance": "All specified predicates; first hard failure closes and preserves missing evidence",
+      "evidence_required": "Bound source/input/artifact/compiler/guard/ledger/test logs and complete terminal bundle"
+    },
+    {
+      "requirement": "New exact mechanism proof and immutable SDK artifact checks before claiming the one r5 window",
+      "oracle": "Exact offline negative/positive tests or frozen real row guard/current strict admission",
+      "acceptance": "All specified predicates; first hard failure closes and preserves missing evidence",
+      "evidence_required": "Bound source/input/artifact/compiler/guard/ledger/test logs and complete terminal bundle"
+    },
+    {
+      "requirement": "All35 frozen planned evidence runs, or exact early frozen failure with all remaining items explicitly MISSING",
+      "oracle": "Exact offline negative/positive tests or frozen real row guard/current strict admission",
+      "acceptance": "All specified predicates; first hard failure closes and preserves missing evidence",
+      "evidence_required": "Bound source/input/artifact/compiler/guard/ledger/test logs and complete terminal bundle"
+    }
+  ]
+}

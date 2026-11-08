@@ -1,0 +1,36 @@
+{
+  "schema": "g5-ur0b-commit-preflight-v1",
+  "status": "PASS",
+  "requested_action": "commit and push current UR0b checkpoint",
+  "authorization": "direct user request in implementation chat",
+  "branch": "codex/geometry-navigation-integration",
+  "source_tree_sha256": "af798aa5c1edc59a6aebd28f2bd5cbce0e4ab0a2b27a787bc13a69f5ac966bff",
+  "result_sha256": "965eedb2e39e09860a0e69915741de0849bc8139e4f11e03dd1fb0114c6bd424",
+  "checks": {
+    "node": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/prepush-node.log",
+      "sha256": "7275c1df8b5a90de05c9e3750665fa60a538192ecef552a8faa5dd10db360469",
+      "passed": 127
+    },
+    "python": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/prepush-python.log",
+      "sha256": "3b99b3059c6f01224a3a1bcbd8d83f986a50fa92dba7979334d9d0657171bea0",
+      "passed": 96
+    },
+    "boundary": {
+      "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/prepush-boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "passed": 120
+    }
+  },
+  "manifest_payloads_checked": {
+    "resume-r5": 161,
+    "resume-r6": 162,
+    "trace-lifecycle-repair-r1": 194,
+    "correctness-startup-repair-r1": 184
+  },
+  "new_builds": 0,
+  "new_browser_starts": 0,
+  "baseline_UR0b_status": "BLOCKED_EVIDENCE",
+  "next_UR1a_input_included": false
+}

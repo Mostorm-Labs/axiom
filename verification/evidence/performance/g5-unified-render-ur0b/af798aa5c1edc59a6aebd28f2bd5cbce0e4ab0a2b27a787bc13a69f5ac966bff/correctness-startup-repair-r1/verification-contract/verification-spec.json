@@ -1,0 +1,105 @@
+{
+  "schema": "ur0b-correctness-startup-boundary-v1",
+  "status": "CURRENT_FOR_AUTHORIZED_OFFLINE_REPAIR",
+  "authority_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-r6/repair-request.json",
+    "sha256": "2ea7f14b77d0a65226f474495ae115e5be073af6995152026aa4ec64e6267dec"
+  },
+  "control_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-r6/result.json",
+    "sha256": "8598684c2aeec1447f19a70ab9537fb848ae0d44d419527da9e275a0a750cad7"
+  },
+  "requirement": "Correctness collector reset/enable and fixture mutation begin only after initial accepted presentation and SDK-owned RAF quiescence in the same fresh isolated page/runtime.",
+  "invariant": "No startup canonical work remains in flight at the observation left boundary; all observed accepted completions still require original native draw/provider/capture/owner/sequence proof.",
+  "failure_mode": "Initial draw/capture while OFF followed by accepted completion after enable leaves an orphan; blindly dropping it could hide a real missing chain.",
+  "impact": "Prevents complete baseline admission or falsely qualifies missing native provenance.",
+  "existing_independent_coverage": [
+    "strict all-accepted native chains",
+    "public onFrame accepted counter",
+    "tracked SDK RAF queue",
+    "snapshot/pixel comparisons"
+  ],
+  "residual_gap": "Old correctness init did not positively drain startup before resetting/enabling collection.",
+  "unique_detection_value": "Controlled callback/queue delay independently proves the startup ordering; old generation equality and fixed ticks cannot pass.",
+  "blocking_justification": "Closes the already failed startup-observation requirement, not a new product/performance Gate.",
+  "source_seam_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/source-seam.json",
+    "sha256": "365706dc2e668301e5a42968f54476aa0158f8d2f6130c2737da81df3774012a"
+  },
+  "protocol": {
+    "scope": "correctness only; default non-correctness scheduling and timers unchanged",
+    "sequence": [
+      "Create page-owned frontier before createRuntime, register onFrame callback immediately",
+      "Await createRuntime, retain callbacks that arrived early",
+      "Validate fresh empty public document/target and existing errors",
+      "Await actual positive onFrame plus SDK-owned RAF queue empty after host probe/microtasks, continually checking same page/target/error/deadline",
+      "Only then collector reset, return init with host frontier evidence",
+      "Then correctness fixture setup may enable/OFF collector; OFF and reloaded ON follow same path"
+    ],
+    "false_proofs": [
+      "generation0 by itself",
+      "OFF pending_gpu0",
+      "fixed sleeps or10RAFs",
+      "queue0 without actual onFrame",
+      "stale/other-page callback"
+    ],
+    "no_extra_work": [
+      "No native frame request or forced finish",
+      "No new operation, GPU sync or SDK API",
+      "No change to pending/retry scheduling or native completion rules"
+    ],
+    "deadlines": "Original setup45000ms, correctness phase30000ms/unchanged arm position, worker90s, RSS3GiB. Browser frontier budget45000 forOFF and30000 forON is nested under those unchanged outer caps; timeout is failure, never a fresh allowance."
+  },
+  "evidence_contract": {
+    "scheme": "CORRECTNESS_STARTUP_QUIESCENT_V1",
+    "fields": [
+      "scheme",
+      "page_time_origin_ms",
+      "created_at_ns",
+      "accepted_callback_count",
+      "last_presented_count",
+      "accepted_at_ns",
+      "quiescent_at_ns",
+      "pending_sdk_raf",
+      "public_state",
+      "verification_spec_ref"
+    ],
+    "constraints": [
+      "Positive finite same page origin; callback bound by exact closure to current page token",
+      "All ns fields canonical uint64 strings; created<=accepted<=quiescent",
+      "accepted_callback_count positive integer; last_presented_count positive uint64 string; SDK pending count exactly0",
+      "Public state projection includes documentId,generation,objects,activeContacts,lastCommit ordinal/operationId and target runtimeEpoch/attachmentEpoch/viewId/viewEpoch",
+      "Fresh nonzero expected document, generation0, objects0, activeContacts0, no operation/commit; full target stable",
+      "record proof stores init and paired_init startup evidence separately and exact P20 ref; strict bound reader reconstructs it from recorded bytes"
+    ],
+    "meaning": "Host protocol facts only, no synthetic native frame/semantic epoch or mutation receipt."
+  },
+  "profiles": {
+    "historical": "Both existing literal profile dictionaries and their old behavior stay unchanged.",
+    "new": "Exact8-file tuple: consumer,worker,correctness_driver,pixel_oracle,stream_transfer,correctness_transfer,correctness_contract,correctness_startup. Fixed literals, correctness-only; no current-file-hash wildcard.",
+    "applicability": "Future correctness sampling only after independent acceptance; no automatic primary workload/new window authorization."
+  },
+  "required_oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-startup-v1/oracle-cases.json",
+    "sha256": "0ba59787ec03afa21758f9dede107cb21bf378aeb8295bf98ce45f71567ac753"
+  },
+  "required_tests": [
+    "Deterministic Node offline RED reproduces createRuntime returning with initial canonical work still in flight, accepted completion arriving after old reset/enable. Corrected protocol waits for actual acceptance/SDK queue drain before recording. Test both early and delayed completion without opening any browser/native sample.",
+    "Test OFF-close/reload-ON symmetry, wrong page/stale callback, nonempty/foreign state, pending/retry callbacks, startup timeout/error and that fixed sleep/ten RAF/generation0/disabled pending_gpu0 alone cannot satisfy frontier.",
+    "Default non-correctness path unchanged; measurement init/toggle and original seven helper behavior preserved except exact correctness branch and optional helper. Explain source diff rather than claiming identical entire files.",
+    "Current all-accepted native rules stay. Actual archived r6 independently recompiled must REMAIN MISSING with 7=1+5+1, seq22 unresolved; no offline invented work1. The accepted17 metrics/native recordings plus one recorded lower-z correctness keep their canonical/decoded/metric/pixel identities and recorded status.",
+    "Both historical initialization profiles remain literal and unchanged. New correctness-only profile is exact/literal; unknown or forged startup/profile/lifecycle remains rejected by JS and Python. Current bound-compilation reconstructs actual protocol inputs.",
+    "Historical positive runner tests use their exact accepted compiler context from immutable commit or manifest-bound r6 source archive. Do not weaken actual-current compiler/source/profile mismatch negatives to make old packet tests green. The scope explicitly includes all three affected historical runner test files.",
+    "Run full existing UR0b Node/Python tests, the120 boundary contracts and git diff --check. Record actual counts/commands. Two already-existing malformed native unit invocations may run under original separate unit accounting; no new build, native probe, browser smoke or hidden qualification.",
+    "Archive exact repaired source/result and evidence hashes; distinguish current source from recording source and OFFLINE_REVERIFICATION from fresh WORKER_COMPILE."
+  ],
+  "old_evidence": "r6 stays MISSING raw7/init1/committed5/unresolved1; no reconstruction of absent work1.17+1 prior recorded proofs and pixels unchanged.",
+  "sampling": {
+    "starts": 35,
+    "charged_seconds": 1276,
+    "outstanding_reservations": 0,
+    "unknown_starts": 0,
+    "new_browser_starts_authorized": 0
+  },
+  "official_gate_pass": false
+}

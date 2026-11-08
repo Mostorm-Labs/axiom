@@ -1,0 +1,134 @@
+{
+  "schema": "ur0b-scoped-recorded-correctness-continuation-v1",
+  "status": "AUTHORIZED_BOUNDED_REVERIFICATION_CONTINUATION",
+  "stage": "P36 failed-evidence reverification and previously frozen pending UR0b baseline execution",
+  "authority": "Existing human continuation/delegation plus independent repair acceptance. This request authorizes exactly35 named new starts, not reopening or retrying any old window. The recorded lower-z case is explicitly reused, never silently marked fresh or retroactively admitted.",
+  "review_result_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/result.json",
+    "sha256": "b038efaee241ba9729d7c2e851f977c235177fab73477543f8182a09ae0e2702",
+    "identity_kind": "local-content-addressed"
+  },
+  "accepted_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/reuse-acceptance.json",
+    "sha256": "f76c8b5249efc4b1e3a908e2ee19cc94461cd5592f9856518b9073c289404135",
+    "identity_kind": "local-content-addressed"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "accepted_source_sha256": "ea7cb1d4dffafb759c0a442419e80bcfc38b6c641b777202a97355324eb9d533",
+    "completed_through": "Independent lifecycle repair acceptance, current compiler17 prerequisites and exact one recorded lower-z correctness case; all old windows closed.",
+    "next_action": "Materialize/test new r6-window orchestration, then run the5remaining correctness and conditional30main continuously until terminal result."
+  },
+  "owner_handoff": "Existing implementation conversation applies aegis-implementation for exact P31/window mechanics; clean preflight is an internal checkpoint and must not cause another approval wait.",
+  "package_to_materialize": ".aegis/packages/G5-UR0b-resume-r6/package.json",
+  "source_scope": [
+    "verification/runners/g5/ur0/scoped_remaining_runner.py",
+    "verification/tests/test_g5_ur0_scoped_remaining_runner.py"
+  ],
+  "new_control_paths": [
+    ".aegis/packages/G5-UR0b-resume-r6/**"
+  ],
+  "read_only": [
+    "All prior packages/results/windows/ledgers and all17 accepted raw or derived records",
+    "All existing Runtime/SDK/consumer/collector/harness/compiler/profile/reader/threshold/corpus files; only the two new orchestration paths are mutable"
+  ],
+  "accepted_artifact_provenance_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/mechanism-proofs.json",
+    "sha256": "6766fb34e625e652586ee7e72b9af4b8ff4a13f1f34ece47ce8b4d3567d2979e"
+  },
+  "required_preflight_and_orchestration": [
+    "Explicitly consume this new current-compiler acceptance, validating17 exact metrics/native prerequisites and the distinct one native-only recorded correctness. Preserve each original source/profile/input/artifact and offline identity; never run lower-z again or fabricate a metrics row for it.",
+    "The recorded correctness source17aff and raw/worker/input/guard/4pixel/2subject/proof6=1+5+0 must match this control record. Validate its ON-page lifecycle and scope spec via current strict readers. Accept it only in the new baseline aggregate, leaving r5 REJECTED/CLOSED unchanged.",
+    "Main requires this one exact recorded correctness plus all5new correct cases admitted under the inherited full-pair QUALIFIED or exact matching PRODUCT_RED_IN_BOTH_OFF_ON rule. No duplicated/missing case, source alias or dropping accepted native records.",
+    "Keep current frozen compiler/profile/SDK/corpus identities, native proof and actual OFFLINE-vs-WORKER_COMPILE separation. No SDK rebuild or diagnostic/cohort/RT rerun.",
+    "Use current canonical/admission helpers with all ownership, commit, clock, metrics, source/artifact and receipt checks. Main requires all5 new correctness prerequisites plus the recorded lower-z case satisfy inherited exact QUALIFIED or complete matching PRODUCT_RED_IN_BOTH_OFF_ON criteria; preserve any product RED as such.",
+    "Bind each fresh worker to current source/mechanism and actual SDK artifacts. Native/cold surfaces and viewport requirements remain unchanged.",
+    "A single fixed r6 state root with durable exclusive claim prevents concurrency, restart, relocation or second invocation from obtaining another allowance. Test runner/ledger/admission rules offline first; such tests may not start browsers.",
+    "Return guard-primary failure cause before missing-summary diagnostics; preserve every raw reason and honest unknown status. No success synthesis or skipping required rows."
+  ],
+  "run_plan_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-trace-lifecycle-r1/remaining-run-plan.json",
+    "sha256": "dcb0f4b140d32b23c370331739379b11b32c424e740e2725d8d31e867e7d7ba7",
+    "identity_kind": "local-content-addressed"
+  },
+  "historical_ledger_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r5/window.json",
+    "sha256": "2cc5de5d4dce51651ecf6c273a6136c60bb4e32fd7e649e7d1b310a12844dc3f"
+  },
+  "sampling_limits": {
+    "new_workers_max": 35,
+    "new_nominal_worker_seconds_max": 5850,
+    "prior_starts": 34,
+    "prior_seconds": 1264,
+    "original_cumulative_cap_seconds": 8370,
+    "cumulative_nominal_seconds": 7114,
+    "concurrency": 1,
+    "process_family_rss_bytes": 3221225472,
+    "correctness_phase_ms": 30000,
+    "correctness_outer_seconds": 90,
+    "main_outer_seconds": 180,
+    "accounting": "Reserve each full worker limit before spawn. Count all started browser/native worker process families including failures; charge actual terminal ceil(elapsed_s), or full reserved limit for unknown interrupted guard. Never clip overrun; stop and record it. Unit/offline compiler tests follow the original separate accounting.",
+    "no_hidden_starts": "No smoke/probe/unplanned qualification/extra replay, no retry or resampling. All worker starts must be named in plan before launch.",
+    "stop_policy": "First hard timer/RSS/cleanup/nonzero-exit/admission/identity/ledger failure closes the window; cleanup owned processes, mark remaining rows MISSING, notify control. Unused time is not retry permission."
+  },
+  "state_root": ".aegis/results/G5-UR0b/resume-r6/",
+  "required_tests": [
+    "New runner offline unit tests for exact17 prerequisite reuse and1native-only correctness reuse, source groups, stale compiler/profile/input/artifact/proof rejection, scope and fresh/recorded separation",
+    "Offline ledger tests: prior34/1264 retained, reserve-before-spawn, unknown charge, overrun honesty, concurrency/restart/relocation refusal, no hidden starts andrecorded1+fresh5 correctness-before-main gating",
+    "Full existing Node/Python/boundary regression and git diff --check before browser starts;2 existing malformed native unit checks allowed/counted, no new qualification oracle/build",
+    "New exact mechanism proof and immutable SDK artifact checks before claiming the one r5 window",
+    "All35 frozen planned evidence runs, or exact early frozen failure with all remaining items explicitly MISSING"
+  ],
+  "outputs": [
+    ".aegis/results/G5-UR0b/resume-r6/**",
+    "out/ur0b/resume-r6/**",
+    "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/resume-r6/**"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "stop_after": "UR0b",
+    "success": "READY_FOR_CONTROL_REVIEW with35 new planned rows accounted and explicit17+1recorded reuse; no product/performance/P34PASS.",
+    "blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ]
+  },
+  "notify_terminal": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work",
+      "all planned/executed/missing run IDs and actual guard/cleanup results",
+      "original34 starts1264s plus new starts/actual charged seconds/reservations and whether the window is closed",
+      "actual OFF/ON correctness verdicts or product RED, current/fresh vs reused source/proof/artifact identities"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  },
+  "commit_push": false,
+  "UR0c_or_UR1_authorized": false,
+  "gate_boundary": "Review acceptance is only the offline repair and listed historical prerequisites. New real correctness/performance evidence remains pending and must be reviewed independently."
+}

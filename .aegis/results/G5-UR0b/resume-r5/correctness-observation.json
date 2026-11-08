@@ -1,0 +1,168 @@
+{
+  "status": "PIXELS_QUALIFIED_CANONICAL_CHAIN_REJECTED",
+  "case_id": "lower_z_translucent_drag",
+  "fresh_mode": "WORKER_COMPILE",
+  "worker_status": "OBSERVED",
+  "worker_correctness_status": "QUALIFIED",
+  "admission_status": "REJECTED",
+  "captures": [
+    {
+      "toggle": "OFF",
+      "step": 0,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1328776,
+        "aa_boundary_pixels": 45653,
+        "hud_excluded_pixels": 225571,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "00e6a9ae775217edb2bdb8cda62c01eb69185a7b047199e7f1ba93973441008e",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "applicability": {
+        "status": "QUALIFIED",
+        "expected_transform": [
+          1,
+          0,
+          0,
+          1,
+          24,
+          10.50576400756836
+        ],
+        "selected_stroke": "a4a3c498884d1d29a711f8f8a015c626",
+        "object_order": [
+          "a4a3c498884d1d29a711f8f8a015c626",
+          "a7a3c498884d1d29a711f8f8a015c626"
+        ],
+        "reference": "actual after-Up opaque snapshot; fixed expectation independent of candidate"
+      }
+    },
+    {
+      "toggle": "OFF",
+      "step": 1,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1436374,
+        "aa_boundary_pixels": 47666,
+        "hud_excluded_pixels": 115960,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/off-1-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "7089f028d05a8a12c1f6b63cbbe897e6518f6d9964eb7926102cea80616f3822",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "applicability": null
+    },
+    {
+      "toggle": "ON",
+      "step": 0,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1328776,
+        "aa_boundary_pixels": 45653,
+        "hud_excluded_pixels": 225571,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/on-0-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "00e6a9ae775217edb2bdb8cda62c01eb69185a7b047199e7f1ba93973441008e",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "applicability": {
+        "status": "QUALIFIED",
+        "expected_transform": [
+          1,
+          0,
+          0,
+          1,
+          24,
+          10.50576400756836
+        ],
+        "selected_stroke": "a4a3c498884d1d29a711f8f8a015c626",
+        "object_order": [
+          "a4a3c498884d1d29a711f8f8a015c626",
+          "a7a3c498884d1d29a711f8f8a015c626"
+        ],
+        "reference": "actual after-Up opaque snapshot; fixed expectation independent of candidate"
+      }
+    },
+    {
+      "toggle": "ON",
+      "step": 1,
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1436374,
+        "aa_boundary_pixels": 47666,
+        "hud_excluded_pixels": 115960,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r5/execution/raw-runs/correctness-lower_z_translucent_drag/on-1-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "7089f028d05a8a12c1f6b63cbbe897e6518f6d9964eb7926102cea80616f3822",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "applicability": null
+    }
+  ],
+  "recorded_reuse_is_fresh": false,
+  "performance_or_gate_pass": false
+}

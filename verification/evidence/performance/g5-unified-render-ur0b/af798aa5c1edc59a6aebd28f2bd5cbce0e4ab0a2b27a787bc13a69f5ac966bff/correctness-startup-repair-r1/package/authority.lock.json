@@ -1,0 +1,35 @@
+{
+  "status": "CURRENT",
+  "work_order_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-r6/repair-request.json",
+    "sha256": "2ea7f14b77d0a65226f474495ae115e5be073af6995152026aa4ec64e6267dec"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-startup-v1/verification-spec.json",
+    "sha256": "7bb77a8fe61739267ac23f46d15b4920e9b3331de7c2054932a1b99a9bcac534"
+  },
+  "accepted_source_identity_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-startup-repair-r1/accepted-start-source-identity.json",
+    "sha256": "05d6a9252699d9ad8e3b1d93d59a265b6d2231b89e757059e6345df688219489"
+  },
+  "scope": [
+    "verification/runners/g5/ur0/consumer.mjs",
+    "verification/runners/g5/ur0/worker.mjs",
+    "verification/runners/g5/ur0/correctness_startup.mjs",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/g5_ur0_correctness_startup.test.mjs",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_remaining_runner.py",
+    "verification/tests/test_g5_ur0_reverified_remaining_runner.py",
+    "verification/tests/test_g5_ur0_scoped_remaining_runner.py"
+  ],
+  "read_only": [
+    "runtime/**",
+    "sdk/**",
+    "all accepted SDK artifacts and locks",
+    "all previous verification specs/packages/results/windows/ledgers and raw recordings",
+    "all other existing harness/compiler/pixel/corpus/threshold code"
+  ]
+}
