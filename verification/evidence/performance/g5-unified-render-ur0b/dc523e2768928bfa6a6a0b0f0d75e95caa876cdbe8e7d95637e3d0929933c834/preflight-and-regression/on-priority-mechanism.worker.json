@@ -1,0 +1,31 @@
+{
+  "command": [
+    "node",
+    "verification/runners/g5/ur0/worker.mjs",
+    "out/ur0b/build-qualified-64-192/sdk/web",
+    "out/ur0b/on-priority-mechanism-data",
+    "fixture",
+    "navigation",
+    "ON"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 36.44565941696055,
+  "peak_process_family_rss_kib": 2698448,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 90.0,
+  "last_stage": {
+    "stage": "complete",
+    "status": "OBSERVED",
+    "trace": {
+      "loss": {
+        "statistical": 0,
+        "critical": 0
+      },
+      "pending_gpu": 0,
+      "records": 56292
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

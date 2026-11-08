@@ -1,0 +1,52 @@
+[0/2] Re-checking globbed directories...
+[1/45] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/__/src/linear_spatial_index.cpp.o
+[2/45] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/spatial_index_differential_test.cpp.o
+[3/45] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/__/src/uniform_grid_spatial_index.cpp.o
+[4/45] Linking CXX executable runtime/scene/tests/canvas_g2_a5_spatial_index_differential_test
+[5/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_change_journal.cpp.o
+[6/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_binding.cpp.o
+[7/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o
+[8/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/geometry_chunk.cpp.o
+[9/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_full_materialization_bridge.cpp.o
+[10/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o
+[11/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o
+[12/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/shadow_render_scene.cpp.o
+[13/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_delta.cpp.o
+[14/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/spatial_delta.cpp.o
+[15/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_record_store.cpp.o
+[16/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/linear_spatial_index.cpp.o
+[17/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/full_scene_compiler.cpp.o
+[18/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/uniform_grid_spatial_index.cpp.o
+[19/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/damage_tracker.cpp.o
+[20/45] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/runtime_scene_projection.cpp.o
+[21/45] Linking CXX static library runtime/scene/libcanvas_runtime_scene.a
+[22/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_group_manager.cpp.o
+[23/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/visibility_resolver.cpp.o
+[24/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o
+[25/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_backend.cpp.o
+[26/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_target.cpp.o
+[27/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/frame_plan.cpp.o
+[28/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/direct_reference_source.cpp.o
+[29/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_app_binding.cpp.o
+[30/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/preview_surface.cpp.o
+[31/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/image_encode.cpp.o
+[32/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_scene_renderer.cpp.o
+[33/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_headless_backend.cpp.o
+[34/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_compact_material.cpp.o
+[35/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_backend.cpp.o
+[36/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_surface_provider.cpp.o
+[37/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_layers.cpp.o
+[38/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o
+[39/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o
+[40/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_navigation_tiles.cpp.o
+[41/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_prepared_geometry.cpp.o
+[42/45] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/navigation_pixel_validity.cpp.o
+[43/45] Building CXX object runtime/render/CMakeFiles/axiom_ur0_fixture_oracle.dir/__/__/verification/runners/g5/ur0/fixture_oracle.cpp.o
+FAILED: runtime/render/CMakeFiles/axiom_ur0_fixture_oracle.dir/__/__/verification/runners/g5/ur0/fixture_oracle.cpp.o 
+/usr/bin/c++ -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -g -std=c++20 -arch arm64 -ffp-contract=off -MD -MT runtime/render/CMakeFiles/axiom_ur0_fixture_oracle.dir/__/__/verification/runners/g5/ur0/fixture_oracle.cpp.o -MF runtime/render/CMakeFiles/axiom_ur0_fixture_oracle.dir/__/__/verification/runners/g5/ur0/fixture_oracle.cpp.o.d -o runtime/render/CMakeFiles/axiom_ur0_fixture_oracle.dir/__/__/verification/runners/g5/ur0/fixture_oracle.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/fixture_oracle.cpp
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/fixture_oracle.cpp:11:10: fatal error: 'include/core/SkSurface.h' file not found
+   11 | #include "include/core/SkSurface.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+[44/45] Linking CXX static library runtime/render/libcanvas_runtime_render.a
+ninja: build stopped: subcommand failed.

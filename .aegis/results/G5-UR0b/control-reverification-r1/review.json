@@ -1,0 +1,114 @@
+{
+  "schema": "g5-ur0b-control-reverification-v1",
+  "verdict": "UR0b_NOT_COMPLETE; P36_IMPLEMENTATION_REPAIR_AUTHORIZED",
+  "official_gate_pass": false,
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "user_authorization": "复合后再让隔壁继续后续的任务（复核后续行）",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "origin": "git@github.com:Mostorm-Labs/axiom.git",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration"
+  },
+  "head": "f66592001012444cd99db968961014497c0f120f",
+  "source_tree_sha256": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834",
+  "source_dirty": true,
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b/package.json",
+    "sha256": "420f44b4d762664541381a6a99c758c72a085820ce9cbe85ec24e119f2aecc10"
+  },
+  "reviewed_result_ref": {
+    "path": ".aegis/results/G5-UR0b/result.json",
+    "sha256": "aaefaff53371f897b876da219d5f9a3c3c1478805757053a383e5cb1e82324e4"
+  },
+  "reviewed_manifest_ref": {
+    "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/manifest.json",
+    "sha256": "e9853be4994fb8bb032c0257450f0bf7cd6a4173f0a033448cd51c8482592f93"
+  },
+  "review_notes_ref": {
+    "path": ".aegis/results/G5-UR0b/control-reverification-r1/review.md",
+    "sha256": "6da75fbe0ca5444e7d3d54adc6636230c2ee9111333b1828194be672f19f10b8"
+  },
+  "audits": {
+    "repository_reality": "236 bundle files and 27581 listed source entries independently hash-checked; correct repo and controlled branch; no source modification by reviewer",
+    "frozen_requirements": "observation budget neutrality, complete identity matching and usable work totals not yet satisfied; full compiler/real-time/correctness paths incomplete",
+    "frozen_evidence": "original hard stop and remaining MISSING accepted as truthful; qualification not established; primary conclusions not admitted"
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "class": "IMPLEMENTATION_DEFECT",
+      "obligations": [
+        "UR0b-PRIVATE",
+        "UR0b-REGRESSION"
+      ],
+      "finding": "Diagnostic GpuToken changes sizeof(Ticket) charged to product Render budget in both qualifier OFF/ON."
+    },
+    {
+      "id": "R2",
+      "class": "IMPLEMENTATION_DEFECT",
+      "obligations": [
+        "UR0b-COMMIT-SCENE",
+        "UR0b-ROUTES-TARGETS"
+      ],
+      "finding": "Actual decoder accepts foreign owner Scene/operation as qualified completion.",
+      "witness_ref": {
+        "path": ".aegis/results/G5-UR0b/control-reverification-r1/decoder-foreign-owner-witness.mjs",
+        "sha256": "719377aaabb151b758a3927274a64062d872672e9c0252bf67c73b6bc178f080"
+      },
+      "observed_ref": {
+        "path": ".aegis/results/G5-UR0b/control-reverification-r1/decoder-foreign-owner-observed.json",
+        "sha256": "fb280f90d3d7c3f02db9f000125c07382500364ca214a431b9fc186fd1e92ef7"
+      }
+    },
+    {
+      "id": "R3",
+      "class": "IMPLEMENTATION_DEFECT",
+      "obligations": [
+        "UR0b-WORK-COUNTERS",
+        "UR0b-OVERHEAD"
+      ],
+      "finding": "High-rate lease records saturate ordinary lane; total work attribution missing; fixed collector must requalify overhead.",
+      "records": 79208,
+      "lease_records": 70505,
+      "ordinary_loss": 31860,
+      "critical_loss": 0
+    },
+    {
+      "id": "R4",
+      "class": "IMPLEMENTATION_INCOMPLETE",
+      "obligations": [
+        "UR0b-CLOCK-INPUT",
+        "UR0b-MATRIX",
+        "UR0b-PIXEL-SEMANTICS"
+      ],
+      "finding": "Real compiler is not full schema/identity normalized pipeline; realtime return shape incompatible; combined correctness not run."
+    },
+    {
+      "id": "I1",
+      "class": "ROOT_CAUSE_UNRESOLVED",
+      "obligations": [
+        "UR0b-OVERHEAD"
+      ],
+      "finding": "RSS stop after measurement, in final snapshot/checkpoint interval; no per-PID history, no trace drain yet. Snapshot copies a testable hypothesis, not established cause."
+    }
+  ],
+  "reverification": {
+    "node_new_tests": 21,
+    "node_failures": 0,
+    "node_log_ref": {
+      "path": ".aegis/results/G5-UR0b/control-reverification-r1/node-review.log",
+      "sha256": "552543c9b701fd7c035b9fb8bfc8c0b1352b4e269f12cfdb003d182938afbba5"
+    },
+    "negative_witness": "REPRODUCED_WRONG_QUALIFICATION",
+    "browser_or_perf_runs": 0,
+    "historical_regression_logs_checked": {
+      "native": 22,
+      "node": 65,
+      "python": 20,
+      "boundary_contracts": 120
+    }
+  },
+  "closure_stability": "All defects map to pre-existing frozen obligations. No new product gate; no authority or threshold change. Retain valid partial implementation and failed cohort."
+}

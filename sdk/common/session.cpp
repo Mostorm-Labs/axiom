@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "session.hpp"
 
 #include "data_port.hpp"
@@ -415,6 +417,7 @@ class Session::Impl {
         return t.front();
     }
     J receipt(const runtime::CanvasControlRequest& r) {
+        G5_SCOPE(g5Control,g5::Tag::control_result,g5::Purpose::input);
         auto& f = facade();
         const auto queued = f.submitCanvasControl(r);
         if (queued.state != runtime::ProductControlState::kQueued || !owner->ownerPump())
@@ -422,6 +425,7 @@ class Session::Impl {
         const auto done = f.canvasControlReceipt({r.clientId, r.requestId});
         if (!done)
             return error("RECEIPT_MISSING");
+        G5_OBSERVE(g5::Kind::Admission,g5::Tag::control_result,true,r.clientId,r.requestId,static_cast<unsigned>(r.payload.kind),r.target.runtimeEpoch,r.target.viewId,r.target.viewEpoch,r.target.attachmentEpoch,static_cast<unsigned>(done->state),static_cast<unsigned>(done->error),done->appliedRevision);
         J result = {{"ok",
                      done->state == runtime::CanvasControlReceiptState::kApplied ||
                          done->state == runtime::CanvasControlReceiptState::kDuplicate},
@@ -1201,6 +1205,7 @@ class Session::Impl {
             return error("UNSUPPORTED");
         }
         if (command == "pointer") {
+            G5_SCOPE(g5Dispatch,g5::Tag::input,g5::Purpose::input);
             input::PlatformPointerSample p;
             p.source = j.at("source");
             p.pointer = j.at("pointer");
@@ -1268,6 +1273,7 @@ class Session::Impl {
             if(!ok)std::fprintf(stderr,"AXIOM_INPUT_REJECT phase=%u source=%llu pointer=%llu sequence=%llu\n",phase,
                 static_cast<unsigned long long>(p.source),static_cast<unsigned long long>(p.pointer),static_cast<unsigned long long>(p.sequence));
 #endif
+            G5_OBSERVE(g5::Kind::Terminal,g5::Tag::input_result,true,ok,phase,p.source,p.pointer,p.sequence);
             return {{"ok", ok}, {"code", "INPUT_REJECTED"}};
         }
         if (command == "hover")

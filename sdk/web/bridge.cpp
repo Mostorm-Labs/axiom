@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
 #include "session.hpp"
 
 #include <canvas/platform/web_runtime_adapter.hpp>
@@ -127,3 +128,17 @@ axiom_js_call(const char* input, const std::uint8_t* data, std::size_t size) {
     }
 }
 }
+
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+extern "C" {
+EMSCRIPTEN_KEEPALIVE int axiom_g5_trace_control(std::uint32_t op,std::uint32_t value) {
+ return canvas::foundation::internal::g5::control(op,value);
+}
+EMSCRIPTEN_KEEPALIVE const char* axiom_g5_trace_bytes() {
+ return canvas::foundation::internal::g5::bytes();
+}
+EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_g5_trace_size() {
+ return canvas::foundation::internal::g5::size();
+}
+}
+#endif

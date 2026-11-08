@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "skia_render_cache_internal.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
@@ -164,6 +166,10 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
     const auto admitted=scheduler_.take();if(!admitted||admitted->id!=job)return nullptr;
     SkPictureRecorder recorder;
     auto* canvas=recorder.beginRecording(support.makeOutset(2,2));
+    G5_ROUTE(g5RecordRoute,g5::Route::recording);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    if(g5::enabled())g5::observeTarget(reinterpret_cast<std::uintptr_t>(canvas),3,0,0,0,options.gpuCoverageCandidate);
+#endif
     // Recording has no GPU context. Carry the target realization explicitly;
     // white GPU coverage uses fixed-function SrcOver rather than destination-
     // reading Lighten. CPU recordings keep the pinned evaluator unchanged.
@@ -243,6 +249,9 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
 }
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text){
+    G5_SCOPE(g5Prepare,g5::Tag::prepare,g5::Purpose::none);
+    G5_ROUTE(g5PreparedRoute,g5::Route::canonical_prepared);
+
     if(!sourceAdmission_)return Preparation::kResourcePending;
     if(!options.enabled||options.tileCandidate||!slice.maxGroups||!slice.maxMicroseconds||!slice.maxCoverageSteps||
        !options.maxEntries)return Preparation::kFallback;
@@ -505,6 +514,8 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
     const bool resident=draw(*isolated,plan,source,true,true,false);isolated->restore();
     configureScratch(*isolated,plan,transform);
     if(!resident) {
+        G5_ROUTE(g5EraseMiss,g5::Route::erase_miss);
+        G5_CANVAS(*isolated,true);
         isolated->save();isolated->resetMatrix();isolated->clipIRect(canvas.getDeviceClipBounds());isolated->setMatrix(transform);
         // A nonresident body is still part of the live GPU presentation path.
         // Preserve the qualified v4 coverage policy instead of silently using
@@ -662,6 +673,7 @@ void SkiaRenderCache::flushPreparation(){
     }
 }
 bool SkiaRenderCache::compositePreparedFrame(SkCanvas& canvas){
+    G5_SCOPE(g5Composite,g5::Tag::material,g5::Purpose::none);
     if(!compositeReady_||!preparedFrame_)return false;
     preparedFrame_->markGpuUse();
     SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
@@ -692,6 +704,8 @@ void SkiaRenderCache::noteCoverage(const CompactRasterWork& rasterWork){
     work.gpuInteriorPixels+=rasterWork.gpuInteriorPixels;work.cpuEdgePixels+=rasterWork.cpuEdgePixels;
 }
 bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite,bool allowBuild){
+    G5_SCOPE(g5Lookup,g5::Tag::lookup,g5::Purpose::none);
+
     AXIOM_FRAME_TIMING_SCOPE(drawTiming,cache_draw);
     if(!sourceAdmission_)return false;
     // A synchronous draw may overwrite the scratch used by suspended work.
@@ -719,6 +733,9 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
     auto found=entries_.find(source.record.objectId);
     if(found!=entries_.end()&&RenderSourceResolver::resolve(found->second.validity,validity)==RenderSourceKind::kRasterCache){
+        G5_ROUTE(g5Resident,source.presentationEraseActive?g5::Route::erase_resident:g5::context().route);
+        G5_CANVAS(canvas,true);
+        G5_OBSERVE(g5::Kind::Stage,g5::Tag::cached_pixels,true,g5::word(source.record.objectId,0),g5::word(source.record.objectId,1),targetEpoch_,plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value());
         if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(found->second.image,static_cast<float>(found->second.bounds.left()),static_cast<float>(found->second.bounds.top()));canvas.restore();}
         found->second.used=tick_;++work.hits;return true;
     }

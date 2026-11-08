@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "skia_prepared_geometry.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "canvas/ink/compact_geometry.hpp"
@@ -22,6 +24,8 @@ void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
 void PreparedNavigationGeometry::build(ink::CompactContour* staged){
+    G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
+
     if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&std::as_const(source_))){
         const auto& s=compact->content.get().stroke;
         distances_.resize(s.knots.size()+1,0);
@@ -56,6 +60,8 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
     }
 }
 void PreparedNavigationGeometry::buildReplay(){
+    G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
+
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
     contour_=true;replayDistance_=ink::compactLength(stroke.knots);
     replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
@@ -98,6 +104,8 @@ std::size_t PreparedNavigationGeometry::footprint()const{
     return bytes;
 }
 PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
+    G5_SCOPE(g5Work,g5::Tag::geometry_replay,g5::Purpose::none);
+
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
@@ -154,6 +162,8 @@ bool PreparedGeometryCache::evictUnused(){
 std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     const ReferenceTraversalEntry& entry,const RenderCacheOptions& limits,
     const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool criticalReplay){
+    G5_SCOPE(g5Work,g5::Tag::lookup,g5::Purpose::none);
+
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
     const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&entry.command);
     if(!compact&&(!vector||vector->content.get().stroke.snapshot.material_mode!=1))return {};
@@ -163,18 +173,20 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     const bool criticalContour=criticalReplay&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
     auto retained=retainSource(entry,budget,criticalContour);if(!retained)return denied();
     std::size_t sourceBytes=0;for(const auto& lease:*retained)sourceBytes+=lease->bytes;
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::lookup,false,0,entries_.size(),sourceBytes);
     auto found=entries_.find(entry.record.objectId);
     if(found!=entries_.end()){
-        if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;return found->second.geometry;}
+        if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,1);return found->second.geometry;}
         entries_.erase(found);
     }
     // Object transforms and masks do not change immutable brush geometry.
     // Share only the prepared body; device pixels stay independently keyed.
     for(auto& [id,cached]:entries_)if(cached.geometry->source_==entry.command){
-        (void)id;cached.used=++tick_;++work_.hits;return cached.geometry;
+        (void)id;cached.used=++tick_;++work_.hits;G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,2);return cached.geometry;
     }
     while(entries_.size()>=limits.maxEntries)if(!evictUnused())return denied();
     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,0,count);
     const std::size_t unit=compact?16:64;
     const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
     if(sourceBytes>=entryCap)return denied();

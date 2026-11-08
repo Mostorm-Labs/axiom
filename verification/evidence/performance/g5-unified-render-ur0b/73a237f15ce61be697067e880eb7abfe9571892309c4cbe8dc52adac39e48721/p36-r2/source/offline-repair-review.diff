@@ -1,0 +1,407 @@
+--- /dev/null
++++ b/verification/runners/g5/ur0/canonical_chain.mjs
+@@ -0,0 +1,32 @@
++// Positive-chain reconciliation for sampling admission. No product policies.
++const identities={runtime_instance:'runtime',lifetime_generation:'lifetime',attachment_epoch:'attachment',document_id:'document',document_epoch:'documentEpoch',resource_generation:'resource',view_id:'view',committed_generation:'semanticGeneration',scene_generation:'sceneGeneration',scene_revision:'sceneRevision',camera_generation:'camera',surface_generation:'surface',metrics_generation:'metrics',frame_id:'frame',operation_id:'operation',commit_revision:'commitRevision'};
++const frameFields=['runtime','lifetime','attachment','document','documentEpoch','resource','view','semanticGeneration','sceneGeneration','sceneRevision','camera','surface','metrics','frame','operation','commitRevision'];
++const same=(a,b)=>frameFields.every(k=>a[k]!==null&&a[k]!==undefined&&a[k]===b[k]);
++export function canonicalChainProof(raw,decoded,document=null){
++ const accepted=raw.filter(r=>r.kind===12&&r.tag===29&&r.values[0]==='1'),unresolved=[],chains=[];
++ const receipts=document?.interactions.flatMap(i=>i.canonical_receipts)??null;
++ const record=seq=>{const found=raw.filter(r=>r.seq===seq);return found.length===1?found[0]:null;};
++ const completed=decoded.qualified_completions??[];
++ for(const r of accepted){
++  const candidates=completed.filter(c=>c.work===r.values[1]&&c.provenance.includes(r.seq));
++  if(candidates.length!==1){unresolved.push({completion_seq:r.seq,reason:'accepted raw completion lacks a unique qualified decoded chain'});continue;}
++  const c=candidates[0],frames=(decoded.frames??[]).filter(f=>f.work===c.work&&same(f,c));
++  if(frames.length!==1){unresolved.push({completion_seq:r.seq,reason:'decoded completion lacks a unique full-identity frame'});continue;}
++  const f=frames[0],draw=record(f.draw_seq),submit=record(f.provider_seq),capture=record(f.capture_seq);
++  if(!draw||!submit||!capture||draw.kind!==5||draw.tag!==26||draw.values.length!==10||submit.kind!==11||submit.tag!==19||submit.values[6]!=='0'||capture.kind!==11||capture.tag!==29||draw.job!==submit.job||draw.basis!==submit.basis||draw.job!==c.job||draw.basis!==c.basis){
++   unresolved.push({completion_seq:r.seq,reason:'successful draw/provider/capture record provenance missing or foreign'});continue;
++  }
++  if(receipts){
++   const metrics=receipts.filter(receipt=>receipt.qualification==='QUALIFIED'&&Object.entries(identities).every(([key,field])=>receipt.basis[key]===c[field]));
++   if(metrics.length!==1){unresolved.push({completion_seq:r.seq,reason:'canonical metric receipt missing or foreign to the actual native chain'});continue;}
++  }
++  chains.push({work_id:c.work,basis:Object.fromEntries(Object.entries(identities).map(([key,field])=>[key,c[field]])),draw_job:c.job,draw_basis:c.basis,
++   attempt_jobs:f.attempt_jobs,draw_seq:f.draw_seq,provider_seq:f.provider_seq,capture_seq:f.capture_seq,completion_seq:r.seq,provenance:c.provenance});
++ }
++ if(decoded.errors?.length||decoded.loss?.critical)unresolved.push({reason:'critical loss or decoded identity error'});
++ if(completed.length!==accepted.length)unresolved.push({reason:'raw accepted and qualified decoded completion populations differ'});
++ if(receipts&&receipts.length!==accepted.length)unresolved.push({reason:'raw accepted and compiled metric receipt populations differ'});
++ return{schema:'g5-ur0b-canonical-chain-proof-v1',scope:document?'NATIVE_AND_METRICS':'NATIVE_ONLY',status:unresolved.length?'MISSING':accepted.length?'QUALIFIED':'NOT_OBSERVED',
++  accepted_raw_count:accepted.length,qualified_decoded_count:completed.length,metric_receipt_count:receipts?.length??null,chains,unresolved,
++  timing_scope:'native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance'};
++}
+--- a/verification/runners/g5/ur0/compile_run.mjs
++++ b/verification/runners/g5/ur0/compile_run.mjs
+@@ -1,19 +1,21 @@
+ import fs from 'node:fs/promises';import path from 'node:path';
+ import {decodeTrace} from './decode_trace.mjs';import {externalMetrics} from './external_metrics.mjs';
+ import {compileMetrics} from './metrics_compiler.mjs';import {execFileSync} from 'node:child_process';
++import {canonicalChainProof} from './canonical_chain.mjs';import {createHash} from 'node:crypto';
+ const root=path.resolve(process.argv[2]),output=path.resolve(process.argv[3]??root),read=async n=>JSON.parse(await fs.readFile(path.join(root,n),'utf8'));
+ await fs.mkdir(output,{recursive:true});
+ const run=await read('worker-result.json');
+-const raw=(await fs.readFile(path.join(root,'raw-trace.jsonl'),'utf8').catch(()=>'' )).trim().split('\n').filter(Boolean).map(JSON.parse);
++const rawBytes=await fs.readFile(path.join(root,'raw-trace.jsonl')).catch(()=>null);
++const raw=(rawBytes?.toString('utf8')??'').trim().split('\n').filter(Boolean).map(JSON.parse);
+ const decoded=decodeTrace(raw,run.trace?.loss??{critical:0,statistical:0});
+ await fs.writeFile(path.join(output,'decoded.json'),JSON.stringify(decoded));
+ const external=run.measurement?externalMetrics(run.measurement):null;
+ if(external)await fs.writeFile(path.join(output,'external-metrics.json'),JSON.stringify(external,null,2)+'\n');
+-let schema_status='MISSING',schema_reason='no complete measurement/source/fixture identity';
++let schema_status='MISSING',schema_reason='no complete measurement/source/fixture identity',compiled=null;
+ if(run.measurement){
+  try{
+   const inputs=await read('run-inputs.json'),runId=path.basename(root);
+-  const compiled=compileMetrics(run,raw,{run_id:runId,row_id:runId.replace(/-r\d+$/,''),repetition:Number(/-r(\d+)$/.exec(runId)?.[1]??1),fixture_sha256:inputs.fixture_sha256});
++  compiled=compileMetrics(run,raw,{run_id:runId,row_id:runId.replace(/-r\d+$/,''),repetition:Number(/-r(\d+)$/.exec(runId)?.[1]??1),fixture_sha256:inputs.fixture_sha256});
+   const schema=execFileSync('python3.12',[new URL('./validate_metrics.py',import.meta.url).pathname],{input:JSON.stringify(compiled.document),maxBuffer:64*1024*1024,encoding:'utf8'});
+   schema_status=JSON.parse(schema).status;schema_reason=null;
+   await fs.writeFile(path.join(output,'metrics.json'),JSON.stringify(compiled.document));
+@@ -23,4 +25,11 @@
+ const value={status:run.status,source_stable:run.source_stable,artifacts_stable:run.artifacts_stable,common:external?.common??null,critical_loss:run.trace?.loss?.critical??null,statistical_loss:run.trace?.loss?.statistical??null,identity_errors:decoded.errors,missing:decoded.missing,clock:run.calibration?.status??'MISSING',terminal:run.measurement?.after??null,final_snapshot_sha256:run.final?.snapshot.sha256??null,product_errors:run.measurement?.errors??[],artifact_identity:run.artifacts_before};
+ value.schema_status=schema_status;value.schema_reason=schema_reason;
+ value.actual_observations={raw_records:raw.length,owners:decoded.owner_bindings?.length??0,leaves:decoded.leaves.length,commits:decoded.commits.length,qualified_completions:decoded.qualified_completions.length};
++const hash=bytes=>createHash('sha256').update(bytes).digest('hex'),fileHash=async p=>fs.readFile(p).then(hash).catch(()=>null);
++const canonical=canonicalChainProof(raw,decoded,schema_status==='VALID'?compiled.document:null),canonicalBytes=JSON.stringify(canonical,null,2)+'\n';
++await fs.writeFile(path.join(output,'canonical-chain.json'),canonicalBytes);
++value.canonical_chain=canonical;value.canonical_chain_ref={path:'canonical-chain.json',sha256:hash(canonicalBytes)};
++value.analysis={mode:output===root?'WORKER_COMPILE':'OFFLINE_REVERIFICATION',input_source_tree_sha256:run.source_before?.source_tree_sha256??null,
++ raw_trace_sha256:rawBytes?hash(rawBytes):null,worker_result_sha256:await fileHash(path.join(root,'worker-result.json')),run_inputs_sha256:await fileHash(path.join(root,'run-inputs.json')),
++ compiler_files:Object.fromEntries(await Promise.all(['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py'].map(async n=>[n,await fileHash(new URL(n,import.meta.url))])))};
+ await fs.writeFile(path.join(output,'compiled-summary.json'),JSON.stringify(value,null,2)+'\n');console.log(JSON.stringify({status:value.status,common:value.common,critical_loss:value.critical_loss,identity_errors:value.identity_errors.length,schema_status,schema_reason}));
+--- a/verification/runners/g5/ur0/decode_trace.mjs
++++ b/verification/runners/g5/ur0/decode_trace.mjs
+@@ -24,10 +24,11 @@
+  if(loss?.critical)fail('critical record loss');
+  if(records.some(r=>!Array.isArray(r.values)||r.values.some(v=>typeof v!=='string'||!/^\d+$/.test(v)))){fail('malformed lossless record values');return out;}
+  try{records=expandLeaseCycles(records);}catch(e){fail(String(e));return out;}
+- const begins=new Map(),groups=new Map(),owners=new Map(),renderFrames=[],providerSubmits=[],workBasis=new Map(),work=new Map(),commits=[],scenes=[];
++ const begins=new Map(),groups=new Map(),owners=new Map(),renderFrames=[],providerSubmits=[],workBasis=new Map(),work=new Map(),completedWork=new Set(),commits=[],scenes=[];
+  const ownerFields=['runtime','lifetime','attachment','document','documentEpoch','resource','view'];
+  const ownerKey=o=>ownerFields.map(k=>o?.[k]??'?').join('/');
+  const sameOwner=(a,b)=>!!a&&!!b&&ownerFields.every(k=>a[k]!==undefined&&a[k]===b[k]);
++ const observedBefore=(a,b)=>typeof a==='string'&&typeof b==='string'&&/^\d+$/.test(a)&&/^\d+$/.test(b)&&BigInt(a)<=BigInt(b);
+  const contextKey=r=>r.job+'/'+r.basis;
+  const ownerFor=r=>{
+   const found=owners.get(contextKey(r));
+@@ -48,7 +49,7 @@
+    if(c.document!==owner.document||c.documentEpoch!==owner.documentEpoch){fail('foreign commit document/epoch',r);continue;}commits.push(c);
+   }
+  }
+- for(const r of records){
++ for(const [recordIndex,r] of records.entries()){
+   const v=r.values;
+   if(!Array.isArray(v)||v.some(n=>typeof n!=='string'||!/^[0-9]+$/.test(n))){fail('invalid lossless raw values',r);continue;}
+   if(r.kind===2)begins.set(v[0],{id:v[0],parent:v[2]??null,tag:r.tag,job:r.job,start_ns:v[3]??r.at_ns,end_ns:null,inclusive_ns:null,exclusive_ns:null,seq:r.seq});
+@@ -62,25 +63,37 @@
+    const commit=unique.values().next().value;
+    scenes.push({...commit,semanticGeneration:v[0],sceneGeneration:v[1],sceneRevision:v[2],at_ns:r.at_ns,commit_observed_after_publication:BigInt(commit.at_ns)>BigInt(r.at_ns),provenance:[...commit.provenance,r.seq]});
+   }
+-  if(r.kind===5&&r.tag===26&&v.length===10)renderFrames.push({...ownerFor(r),purpose:'canonical',view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],camera:v[4],surface:v[5],metrics:v[6],gpu_resource_epoch:v[7],job:r.job,at_ns:r.at_ns,seq:r.seq});
+-  if(r.kind===5&&r.tag===11&&v.length===8)renderFrames.push({...ownerFor(r),purpose:'edit_feedback',view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],camera:v[4],surface:v[5],metrics:v[6],gpu_resource_epoch:v[7],job:r.job,at_ns:r.at_ns,seq:r.seq});
+-  if(r.kind===11&&r.tag===19)providerSubmits.push({...ownerFor(r),view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],surface:v[4],metrics:v[5],code:v[6],job:r.job,at_ns:r.at_ns,seq:r.seq});
++  if(r.kind===5&&r.tag===26&&v.length===10)renderFrames.push({...ownerFor(r),purpose:'canonical',view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],camera:v[4],surface:v[5],metrics:v[6],gpu_resource_epoch:v[7],job:r.job,basis:r.basis,at_ns:r.at_ns,seq:r.seq,record_index:recordIndex});
++  if(r.kind===5&&r.tag===11&&v.length===8)renderFrames.push({...ownerFor(r),purpose:'edit_feedback',view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],camera:v[4],surface:v[5],metrics:v[6],gpu_resource_epoch:v[7],job:r.job,basis:r.basis,at_ns:r.at_ns,seq:r.seq,record_index:recordIndex});
++  if(r.kind===11&&r.tag===19)providerSubmits.push({...ownerFor(r),view:v[0],frame:v[1],sceneGeneration:v[2],sceneRevision:v[3],surface:v[4],metrics:v[5],code:v[6],job:r.job,basis:r.basis,at_ns:r.at_ns,seq:r.seq,record_index:recordIndex});
+   if(r.kind===5&&r.tag===26&&v.length===11)workBasis.set(contextKey(r)+'/'+v[0],{runtime:v[1],lifetime:v[2],attachment:v[3],document:id(v[4],v[5]),documentEpoch:v[6],commitRevision:v[7],resource:v[8],sceneRevision:v[9],camera:v[10],seq:r.seq});
+   if(r.kind===11&&r.tag===29){
+-   const owner=workBasis.get(contextKey(r)+'/'+v[0]),actualOwner=ownerFor(r);
++   const capturedOwner=workBasis.get(contextKey(r)+'/'+v[0]),actualOwner=ownerFor(r);
++   const owner=capturedOwner?{...capturedOwner,view:v[1]}:null;
+    if(!owner||!actualOwner){out.missing.push({reason:'work capture has no full observed owner',seq:r.seq});continue;}
+-   owner.view=v[1];if(!sameOwner(owner,actualOwner)){fail('work capture owner differs from actual caller',r);continue;}
++   if(!sameOwner(owner,actualOwner)){fail('work capture owner differs from actual caller',r);continue;}
+    const match=s=>s.purpose!=='edit_feedback'&&sameOwner(s,owner)&&s.view===v[1]&&s.frame===v[2]&&s.sceneGeneration===v[4]&&s.surface===v[5]&&s.metrics===v[6];
+-   const submits=providerSubmits.filter(s=>match(s)&&s.code==='0'),draws=renderFrames.filter(match);
+-   const submitted=submits.length===1?submits[0]:null,draw=draws.length===1?draws[0]:null;
+-   if(!submitted||!draw){out.missing.push({reason:'work capture has no new observed provider submit',seq:r.seq,work:v[0]});continue;}
+-   if(owner.sceneRevision!==draw.sceneRevision||owner.camera!==draw.camera){fail('work capture and actual drawn basis differ',r);continue;}
++   const submits=providerSubmits.filter(s=>match(s)&&s.code==='0');
++   if(submits.length!==1){out.missing.push({reason:submits.length?'work capture has ambiguous accepted provider submits':'work capture has no observed accepted provider submit',seq:r.seq,work:v[0]});continue;}
++   const submitted=submits[0];
++   // The frame may have many preparation attempts. Only the exact job/basis
++   // that actually submitted can identify its drawn attempt; never choose the
++   // first/latest frame record or discard earlier attempts from the output.
++   const attempts=renderFrames.filter(match),draws=attempts.filter(s=>s.job===submitted.job&&s.basis===submitted.basis);
++   if(draws.length!==1){out.missing.push({reason:draws.length?'accepted provider job has ambiguous render attempts':'accepted provider job has no observed canonical render attempt',seq:r.seq,work:v[0]});continue;}
++   const draw=draws[0];
++   if(owner.sceneRevision!==draw.sceneRevision||owner.sceneRevision!==submitted.sceneRevision||owner.camera!==draw.camera){fail('work capture, provider and actual drawn basis differ',r);continue;}
++   if(draw.record_index>=submitted.record_index||!observedBefore(draw.at_ns,submitted.at_ns)||!observedBefore(submitted.at_ns,r.at_ns)){fail('canonical draw/provider/capture chronology mismatch',r);continue;}
+    const sceneMatches=scenes.filter(s=>sameOwner(s,owner)&&s.sceneGeneration===v[4]&&s.semanticGeneration===v[3]&&s.sceneRevision===draw.sceneRevision);
+    const scene=sceneMatches.length===1?sceneMatches[0]:null;
+    if(!scene){out.missing.push({reason:'frame Scene publication outside observed window',seq:r.seq,work:v[0]});}
+    else if(owner.commitRevision!==scene.commitRevision||owner.documentEpoch!==scene.documentEpoch||owner.document!==scene.document){fail('frame commit and published Scene differ',r);continue;}
+-   const f={...owner,work:v[0],view:v[1],frame:v[2],semanticGeneration:v[3],sceneGeneration:v[4],surface:v[5],metrics:v[6],operation:scene?.operation??null,scene_qualified:!!scene,at_ns:submitted.at_ns,job:draw.job,gpu_resource_epoch:draw.gpu_resource_epoch,provenance:[owner.seq,r.seq,submitted.seq,draw.seq,...(scene?.provenance??[])]};
+-   out.frames.push(f);work.set(ownerKey(owner)+'/'+v[0],f);
++   const key=ownerKey(owner)+'/'+v[0];
++   if(work.has(key)){fail('duplicate canonical work capture',r);work.set(key,null);continue;}
++   const f={...owner,work:v[0],view:v[1],frame:v[2],semanticGeneration:v[3],sceneGeneration:v[4],surface:v[5],metrics:v[6],operation:scene?.operation??null,scene_qualified:!!scene,at_ns:submitted.at_ns,job:draw.job,basis:draw.basis,gpu_resource_epoch:draw.gpu_resource_epoch,
++    attempt_jobs:[...new Set(attempts.filter(s=>s.sceneRevision===owner.sceneRevision&&s.camera===owner.camera).map(s=>s.job))],capture_seq:r.seq,capture_ns:r.at_ns,draw_seq:draw.seq,provider_seq:submitted.seq,
++    provenance:[owner.seq,actualOwner.owner_seq,r.seq,submitted.seq,draw.seq,...(scene?.provenance??[])]};
++   out.frames.push(f);work.set(key,f);
+   }
+   if(r.kind===12&&r.tag===29&&v[0]!=='0'){
+    const completionOwner=ownerFor(r),f=work.get(ownerKey(completionOwner)+'/'+v[1]),observed={runtime:v[2],lifetime:v[3],attachment:v[4],view:v[5],frame:v[6],semanticGeneration:v[7],sceneGeneration:v[8],surface:v[9],metrics:v[10]};
+@@ -88,6 +101,8 @@
+     if(completionOwner&&['runtime','lifetime','attachment','view'].some(k=>completionOwner[k]!==observed[k])){fail('foreign accepted completion caller',r);continue;}
+     if(!f){out.missing.push({reason:'accepted completion outside observed work',seq:r.seq});continue;}
+     if(Object.keys(observed).some(k=>f[k]!==observed[k])){fail('foreign/stale accepted completion',r);continue;}
++    if(!observedBefore(f.capture_ns,r.at_ns)){fail('canonical completion precedes observed capture',r);continue;}
++    const key=ownerKey(completionOwner)+'/'+v[1];if(completedWork.has(key)){fail('duplicate accepted canonical completion',r);continue;}completedWork.add(key);
+     const c={...f,...observed,at_ns:r.at_ns,provenance:[...f.provenance,r.seq],qualification:f.scene_qualified?'QUALIFIED':'MISSING_SETUP_SCENE_OBSERVATION'};
+     (f.scene_qualified?out.qualified_completions:out.unqualified_completions).push(c);
+    }else out.unqualified_completions.push({...observed,work:v[1],at_ns:r.at_ns,qualification:'REJECTED'});
+--- a/verification/runners/g5/ur0/repair_runner.py
++++ b/verification/runners/g5/ur0/repair_runner.py
+@@ -1,5 +1,5 @@
+ """One authorized P36 continuation. No retry selection and no product changes."""
+-import argparse,hashlib,importlib.util,json,subprocess,sys
++import argparse,hashlib,importlib.util,json,re,subprocess,sys
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[4];HERE=Path(__file__).resolve().parent
+ sys.path.insert(0,str(HERE))
+@@ -28,6 +28,46 @@
+   if r['phase']==phase:r['status']='CLAIMED'
+  write(path,rows);return rows
+ def hard_stop(guard):return guard['reason'] in ['timeout','rss_limit','observer_failure'] or guard['returncode']==124 or not guard['cleanup_complete']
++def assert_sampling_authority_open(previous_return,authorization_sha):
++ previous_return=Path(previous_return)
++ if previous_return.is_file():
++  previous=load(previous_return)
++  if previous.get('authorization_ref',{}).get('sha256')==authorization_sha and previous.get('continue_execution') is False:
++   raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
++def require_canonical_chain(summary,require_positive=False,require_metrics=True):
++ chain=summary.get('canonical_chain')
++ if not chain or chain.get('schema')!='g5-ur0b-canonical-chain-proof-v1':raise RuntimeError('canonical positive-chain proof missing')
++ if chain.get('scope') not in ['NATIVE_AND_METRICS','NATIVE_ONLY']:raise RuntimeError('canonical proof scope unknown')
++ if summary.get('critical_loss')!=0 or summary.get('identity_errors')!=[] or chain.get('unresolved')!=[]:raise RuntimeError('canonical observation has loss, identity error or unresolved links')
++ n=chain.get('accepted_raw_count');qualified=chain.get('qualified_decoded_count');metric=chain.get('metric_receipt_count');links=chain.get('chains')
++ if type(n) is not int or n<0 or type(qualified) is not int or qualified!=n or not isinstance(links,list) or len(links)!=n:raise RuntimeError('canonical raw/decoded/chain populations disagree')
++ if require_metrics and (chain.get('scope')!='NATIVE_AND_METRICS' or type(metric) is not int or metric!=n):raise RuntimeError('canonical metric receipt population missing')
++ if chain.get('status')!=('QUALIFIED' if n else 'NOT_OBSERVED') or require_positive and not n:raise RuntimeError('positive canonical completion chain not observed')
++ uint=lambda s:isinstance(s,str) and re.fullmatch(r'\d+',s) is not None and int(s)<2**64
++ numeric=['runtime_instance','lifetime_generation','attachment_epoch','document_epoch','resource_generation','view_id','committed_generation','scene_generation','scene_revision','camera_generation','surface_generation','metrics_generation','frame_id','commit_revision']
++ seen=set()
++ for link in links:
++  basis=link.get('basis',{});sequences=[link.get(k) for k in ['draw_seq','provider_seq','capture_seq','completion_seq']]
++  if any(not uint(basis.get(k)) for k in numeric) or any(not isinstance(basis.get(k),str) or re.fullmatch(r'[0-9a-f]{32}',basis[k]) is None for k in ['document_id','operation_id']):raise RuntimeError('canonical full identity missing or lossy')
++  if any(not uint(v) for v in sequences) or not all(int(a)<int(b) for a,b in zip(sequences,sequences[1:])):raise RuntimeError('canonical draw/submit/capture/completion sequence invalid')
++  if not uint(link.get('draw_job')) or not uint(link.get('draw_basis')) or not uint(link.get('work_id')) or link['draw_job'] not in link.get('attempt_jobs',[]):raise RuntimeError('canonical successful attempt provenance missing')
++  key=(tuple(sorted(basis.items())),link['work_id'],link['completion_seq'])
++  if key in seen:raise RuntimeError('duplicate canonical completion chain')
++  seen.add(key)
++def require_bound_compilation(directory,summary,proof):
++ directory=Path(directory);analysis=summary.get('analysis',{});ref=summary.get('canonical_chain_ref',{})
++ if analysis.get('mode')!='WORKER_COMPILE':raise RuntimeError('canonical offline reverification is not a fresh sampling admission')
++ if analysis.get('input_source_tree_sha256')!=proof.get('source_tree_sha256'):raise RuntimeError('canonical diagnostic source tree differs from current mechanism proof')
++ for name,key in [('raw-trace.jsonl','raw_trace_sha256'),('worker-result.json','worker_result_sha256'),('run-inputs.json','run_inputs_sha256')]:
++  if not (directory/name).is_file() or analysis.get(key)!=sha(directory/name):raise RuntimeError('canonical diagnostic input binding changed: '+name)
++ if ref.get('path')!='canonical-chain.json' or not (directory/'canonical-chain.json').is_file() or ref.get('sha256')!=sha(directory/'canonical-chain.json') or load(directory/'canonical-chain.json')!=summary.get('canonical_chain'):raise RuntimeError('canonical proof bytes do not match compiled summary')
++ expected=['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py']
++ if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
++def require_qualified_diagnostic(out,proof):
++ out=Path(out);decision=out/'diagnostic-result.json';summary_path=out/'raw-runs/diagnostic-ON/compiled-summary.json'
++ if not decision.is_file() or load(decision).get('status')!='QUALIFIED' or not summary_path.is_file():raise RuntimeError('positive canonical diagnostic prerequisite missing')
++ summary=load(summary_path);require_canonical_chain(summary,require_positive=True);require_bound_compilation(summary_path.parent,summary,proof)
++ if summary.get('schema_status')!='VALID' or summary.get('artifact_identity')!=proof.get('qualified_sdk_artifacts'):raise RuntimeError('canonical diagnostic schema/artifact prerequisite differs')
+ def verify(proofs):
+  if sha(AUTH)!=AUTH_SHA:raise RuntimeError('changed P36 authorization')
+  auth=load(AUTH)
+@@ -40,6 +80,7 @@
+   if sha(ROOT/'.aegis/packages/G5-UR0b'/ref['path'])!=ref['sha256']:raise RuntimeError('changed parent frozen '+key)
+  if Path.cwd().resolve()!=ROOT or subprocess.check_output(['git','branch','--show-current'],cwd=ROOT,text=True).strip()!=auth['execution_branch']:raise RuntimeError('wrong controlled worktree/branch')
+  if 'Mostorm-Labs/axiom' not in subprocess.check_output(['git','remote','get-url','origin'],cwd=ROOT,text=True):raise RuntimeError('wrong repository')
++ assert_sampling_authority_open(ROOT/'.aegis/results/G5-UR0b/p36-r1/result.json',AUTH_SHA)
+  proof=load(proofs)
+  if proof['status']!='MECHANISMS_VERIFIED' or proof['source_tree_sha256']!=source_identity.identity(ROOT)['source_tree_sha256']:raise RuntimeError('mechanism proof does not bind current source')
+  if any(sha(ROOT/r['path'])!=r['sha256'] for r in proof['files']):raise RuntimeError('mechanism log/artifact changed')
+@@ -85,6 +126,7 @@
+  ledger=out/'worker-ledger.json';rows=load(ledger) if ledger.exists() else plan()
+  prerequisite={'qualification':'diagnostic-result.json','separate':'overhead-qualification.json','main':'separate-result.json'}.get(which)
+  if prerequisite and (not (out/prerequisite).exists() or load(out/prerequisite)['status']!='QUALIFIED'):raise RuntimeError('phase prerequisite not qualified: '+prerequisite)
++ if which!='diagnostic':require_qualified_diagnostic(out,proof)
+  rows=claim(ledger,rows,which)
+  for row in rows:
+   if row['phase']!=which:continue
+@@ -97,6 +139,11 @@
+   if row.get('toggle','ON')=='ON' and (summary['critical_loss'] or summary['identity_errors']):return stop(out,rows,'critical/foreign observation at '+row['run_id'],'BLOCKED_EVIDENCE')
+   if row.get('toggle','ON')=='ON' and any(not summary['actual_observations'][k] for k in ['raw_records','owners','leaves']):return stop(out,rows,'actual observed owner/target links missing at '+row['run_id'],'BLOCKED_EVIDENCE')
+   if row.get('mode')!='correctness' and summary['schema_status']!='VALID':return stop(out,rows,'frozen metrics schema unresolved at '+row['run_id'],'BLOCKED_EVIDENCE')
++  if row.get('toggle','ON')=='ON':
++   try:
++    require_canonical_chain(summary,require_positive=which=='diagnostic',require_metrics=row.get('mode')!='correctness')
++    require_bound_compilation(Path(outcome['raw_directory']),summary,proof)
++   except RuntimeError as error:return stop(out,rows,str(error)+' at '+row['run_id'],'BLOCKED_EVIDENCE')
+   expected=proof.get('qualified_sdk32_artifacts') if which=='main' and row['budget_mib']['navigation']==32 else proof['qualified_sdk_artifacts']
+   if summary['artifact_identity']!=expected:return stop(out,rows,'worker artifacts differ from exact mechanism build','BLOCKED_EVIDENCE')
+  if which in ['diagnostic','qualification']:
+--- a/verification/tests/g5_ur0_compiler.test.mjs
++++ b/verification/tests/g5_ur0_compiler.test.mjs
+@@ -1,5 +1,6 @@
+ import test from 'node:test';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';
+ let api={};try{api=await import('../runners/g5/ur0/metrics_compiler.mjs');}catch(e){if(e.code!=='ERR_MODULE_NOT_FOUND')throw e;}
++let proofApi={};try{proofApi=await import('../runners/g5/ur0/canonical_chain.mjs');}catch(e){if(e.code!=='ERR_MODULE_NOT_FOUND')throw e;}
+ const meta={run_id:'MODEL-r1',row_id:'MODEL',repetition:1,fixture_sha256:'a'.repeat(64),record_origin:'SCHEMA_EXAMPLE'};
+ const base=()=>({status:'OBSERVED',source_stable:true,artifacts_stable:true,source_before:{revision:'1'.repeat(40)},artifacts_before:{},init:{environment:{reported_resolution_ns:'1'}},trace:{loss:{critical:0,statistical:0}},calibration:{status:'QUALIFIED',offset_ns:'0',error_bound_ns:'0'},measurement:{origin_ns:'100',end_ns:'1000',input_end_ns:'600',quiescence_ns:'900',before:{generation:'8'},after:{generation:'9',activeContacts:0},planned:[{event_id:'E0-0',interaction_id:'E0',kind:'pointer',phase:'down',diagnostic_event:'1',planned_ns:'100',producer_ns:'110'}],handlers:[{event_id:'E0-0',enter_ns:'120',exit_ns:'180'}],errors:[],rafTimes:[]}});
+ const row=(kind,tag,values,event='1',job='10',time='150')=>({kind,tag,values:values.map(String),event,job,basis:job,attempt:job,route:1,purpose:2,seq:'1',at_ns:time});
+@@ -33,6 +34,39 @@
+  const jobs=api.compileMetrics(base(),rows,meta).document.jobs;
+  assert.equal(jobs.length,1);assert.equal(jobs[0].attempts.length,2);assert.equal(jobs[0].attempts[0].outcome,'Pending');
+  assert.equal(jobs[0].attempts[1].outcome,'Submitted');assert.equal(jobs[0].final_state,'RIGHT_CENSORED');
++});
++function repeatedCanonical(){
++ const run=base();run.measurement.planned[0].phase='up';
++ const rows=[row(5,1,[11,1,2,0,0,4,7,1]),row(6,27,[0,0,1,0,8,9,4,6],'1','10','170'),row(7,9,[9,9,44],'1','10','169')];
++ for(let n=0;n<24;++n){const job=String(20+n),start=200+n*10;
++  rows.push(row(5,1,[11,1,2,0,0,4,7,1],'0',job,String(start)),row(2,10,[job,2,0,start],'0',job,String(start)),
++   row(5,26,[1,23,9,44,4,2,3,8,67108864,201326592],'0',job,String(start+1)));
++  if(n===23)rows.push(row(8,24,[500,1,2,1],'0',job,String(start+2)),row(9,24,[500,1,222,2,128,128,4],'0',job,String(start+3)),row(11,19,[1,23,9,44,2,3,0],'0',job,String(start+4)));
++  rows.push(row(3,10,[job,start+6,6],'0',job,String(start+6)),row(16,10,[job,0,n===23?1:0],'0','0',String(start+7)));
++ }
++ rows.push(row(5,26,[10,11,1,2,0,0,4,6,7,44,4],'0','10','450'),row(11,29,[10,1,23,9,9,2,3],'0','10','451'),row(12,29,[1,10,11,1,2,1,23,9,9,2,3],'0','10','452'));
++ rows.forEach((r,n)=>r.seq=String(n+1));
++ return{run,rows};
++}
++test('repeated-frame canonical metrics keep all attempts and only the actual successful receipt',()=>{
++ const {run,rows}=repeatedCanonical(),doc=api.compileMetrics(run,rows,meta).document,i=doc.interactions.find(i=>i.interaction_id==='E0'),job=doc.jobs.find(j=>j.purpose==='canonical');
++ assert.equal(i.submits.length,1);assert.equal(i.canonical_receipts.length,1);assert.equal(job.final_state,'Completed');
++ const calls=job.attempts.filter(a=>a.attempt_id.startsWith('call-'));assert.equal(calls.length,24);assert.equal(calls.filter(a=>a.outcome==='Submitted').length,1);
++ assert.equal(calls.filter(a=>a.outcome==='MISSING').length,23,'false boolean returns cannot be relabeled Pending');
++ execFileSync('python3.12',['verification/runners/g5/ur0/validate_metrics.py'],{input:JSON.stringify(doc)});
++});
++test('canonical admission proof reconciles real raw completions, decoded links and metric receipts',()=>{
++ assert.equal(typeof proofApi.canonicalChainProof,'function','canonical positive-chain admission proof missing');
++ const {run,rows}=repeatedCanonical(),compiled=api.compileMetrics(run,rows,meta);
++ const good=proofApi.canonicalChainProof(rows,compiled.decoded,compiled.document);
++ assert.equal(good.status,'QUALIFIED');assert.equal(good.accepted_raw_count,1);assert.equal(good.qualified_decoded_count,1);assert.equal(good.metric_receipt_count,1);
++ assert.equal(good.chains[0].draw_job,'43');assert.equal(good.chains[0].attempt_jobs.length,24);
++ const dropped=structuredClone(compiled.decoded);dropped.qualified_completions=[];
++ assert.equal(proofApi.canonicalChainProof(rows,dropped,compiled.document).status,'MISSING');
++ const foreign=structuredClone(compiled.document);foreign.interactions.find(i=>i.canonical_receipts.length).canonical_receipts[0].basis.attachment_epoch='99';
++ assert.equal(proofApi.canonicalChainProof(rows,compiled.decoded,foreign).status,'MISSING');
++ const noReceipt=structuredClone(compiled.document);for(const i of noReceipt.interactions)i.canonical_receipts=[];
++ assert.equal(proofApi.canonicalChainProof(rows,compiled.decoded,noReceipt).status,'MISSING');
+ });
+ test('transient feedback uses its own trace demand and full provider submit',()=>{
+  const run=base();run.measurement.handlers[0].exit_ns='300';
+--- a/verification/tests/g5_ur0_decode.test.mjs
++++ b/verification/tests/g5_ur0_decode.test.mjs
+@@ -15,6 +15,49 @@
+   r(12,29,[1,10,11,1,2,1,23,9,9,2,3]),
+  ];
+ };
++const repeatedFrame=()=>{
++ const original=raw(),rows=original.slice(0,3);
++ for(let n=0;n<24;++n){const job=String(20+n);
++  rows.push({...original[3],job,basis:job,values:[...original[3].values]},
++   {...original[4],job,basis:job,values:[...original[4].values]});
++ }
++ rows.push({...original[5],job:'43',basis:'43',values:[...original[5].values]},...original.slice(6));
++ rows.forEach((r,n)=>{r.seq=String(n+1);r.at_ns=String(100+n);});return rows;
++};
++test('same-frame retries select the unique accepted provider job and preserve every attempt',()=>{
++ const rows=repeatedFrame(),d=api.decodeTrace(rows,{critical:0,statistical:0});
++ assert.equal(d.qualified_completions.length,1,'24 preparations and one accepted submit lost the real completion');
++ assert.equal(d.render_frames.length,24);assert.equal(d.frames[0].job,'43');assert.equal(d.frames[0].attempt_jobs.length,24);
++ assert.ok(d.frames[0].provenance.includes(rows.find(r=>r.kind===11&&r.tag===19).seq));
++});
++test('an unrelated later attempt never replaces the job that actually submitted',()=>{
++ const rows=repeatedFrame(),capture=rows.findIndex(r=>r.kind===11&&r.tag===29),original=raw();
++ rows.splice(capture,0,{...original[3],job:'99',basis:'99',values:[...original[3].values]},
++  {...original[4],job:'99',basis:'99',values:[...original[4].values]});
++ rows.forEach((r,n)=>{r.seq=String(n+1);r.at_ns=String(100+n);});
++ const d=api.decodeTrace(rows,{critical:0,statistical:0});assert.equal(d.qualified_completions.length,1);assert.equal(d.frames[0].job,'43');
++});
++test('provider job, basis, camera, Scene and chronology mismatches remain unqualified',()=>{
++ for(const change of [
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).job='999',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).basis='999',
++  rows=>rows.find(r=>r.kind===5&&r.tag===26&&r.job==='43').values[4]='99',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).values[3]='99',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).values[1]='99',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).values[4]='99',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).values[5]='99',
++  rows=>rows.find(r=>r.kind===5&&r.tag===26&&r.job==='43').at_ns='9999',
++  rows=>rows.find(r=>r.kind===11&&r.tag===19).at_ns='9999',
++  rows=>rows.at(-1).at_ns='99',
++ ]){const rows=repeatedFrame();change(rows);assert.equal(api.decodeTrace(rows,{critical:0,statistical:0}).qualified_completions.length,0);}
++});
++test('duplicate accepted submits and ambiguous draws within the successful job fail closed',()=>{
++ for(const kind of ['submit','draw']){
++  const rows=repeatedFrame(),match=rows.find(r=>kind==='submit'?r.kind===11&&r.tag===19:r.kind===5&&r.tag===26&&r.job==='43');
++  rows.splice(rows.indexOf(match)+1,0,{...match,values:[...match.values]});rows.forEach((r,n)=>{r.seq=String(n+1);r.at_ns=String(100+n);});
++  const d=api.decodeTrace(rows,{critical:0,statistical:0});assert.equal(d.qualified_completions.length,0);
++ }
++});
+ test('decodes actual observed commit Scene submit and completion fields',()=>{
+  assert.equal(typeof api.decodeTrace,'function','raw trace decoder unavailable');
+  const d=api.decodeTrace(raw(),{critical:0,statistical:0});assert.equal(d.errors.length,0);assert.equal(d.qualified_completions.length,1);
+--- a/verification/tests/test_g5_ur0_repair_runner.py
++++ b/verification/tests/test_g5_ur0_repair_runner.py
+@@ -1,7 +1,12 @@
+-import importlib.util,json,tempfile,unittest
++import copy,hashlib,importlib.util,json,tempfile,unittest
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[2]
+ class RepairRunnerTest(unittest.TestCase):
++ def summary(self):
++  basis={k:'1' for k in ['runtime_instance','lifetime_generation','attachment_epoch','document_epoch','resource_generation','view_id','committed_generation','scene_generation','scene_revision','camera_generation','surface_generation','metrics_generation','frame_id','commit_revision']}
++  basis.update(document_id='0'*32,operation_id='1'*32)
++  return {'critical_loss':0,'identity_errors':[],'canonical_chain':{'schema':'g5-ur0b-canonical-chain-proof-v1','scope':'NATIVE_AND_METRICS','status':'QUALIFIED','accepted_raw_count':1,'qualified_decoded_count':1,'metric_receipt_count':1,'unresolved':[],
++   'chains':[{'work_id':'1','basis':basis,'draw_job':'43','draw_basis':'43','attempt_jobs':['20','43'],'draw_seq':'7','provider_seq':'8','capture_seq':'9','completion_seq':'10'}]}}
+  def module(self):
+   path=ROOT/'verification/runners/g5/ur0/repair_runner.py';self.assertTrue(path.is_file(),'P36 bounded continuation runner missing')
+   spec=importlib.util.spec_from_file_location('repair_runner',path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+@@ -19,4 +24,49 @@
+   m=self.module();self.assertTrue(m.hard_stop({'reason':'rss_limit','cleanup_complete':True,'returncode':0}))
+   self.assertTrue(m.hard_stop({'reason':'completed','cleanup_complete':True,'returncode':124}))
+   self.assertFalse(m.hard_stop({'reason':'completed','cleanup_complete':True,'returncode':0}))
++ def test_schema_and_zero_loss_cannot_admit_a_missing_canonical_chain(self):
++  m=self.module();self.assertTrue(callable(getattr(m,'require_canonical_chain',None)),'positive canonical admission gate missing')
++  with self.assertRaisesRegex(RuntimeError,'canonical'):m.require_canonical_chain({'critical_loss':0,'identity_errors':[],'schema_status':'VALID'},require_positive=True)
++  m.require_canonical_chain(self.summary(),require_positive=True)
++  for change in [lambda s:s['canonical_chain'].update(chains=[]),lambda s:s['canonical_chain'].update(qualified_decoded_count=0),lambda s:s['canonical_chain'].update(unresolved=[{'reason':'missing completion'}]),lambda s:s.update(critical_loss=1)]:
++   summary=self.summary();change(summary)
++   with self.assertRaises(RuntimeError):m.require_canonical_chain(summary,require_positive=True)
++ def test_no_observed_completion_is_distinct_from_a_positive_chain(self):
++  m=self.module();self.assertTrue(callable(getattr(m,'require_canonical_chain',None)),'positive canonical admission gate missing')
++  s=self.summary();s['canonical_chain'].update(status='NOT_OBSERVED',accepted_raw_count=0,qualified_decoded_count=0,metric_receipt_count=0,chains=[])
++  with self.assertRaisesRegex(RuntimeError,'positive|canonical'):m.require_canonical_chain(s,require_positive=True)
++  m.require_canonical_chain(s,require_positive=False)
++ def test_native_only_proof_cannot_claim_metrics_or_an_unknown_scope(self):
++  m=self.module();s=self.summary();s['canonical_chain'].update(scope='UNKNOWN')
++  with self.assertRaisesRegex(RuntimeError,'canonical'):m.require_canonical_chain(s,require_metrics=False)
++  s['canonical_chain'].update(scope='NATIVE_ONLY',metric_receipt_count=None)
++  m.require_canonical_chain(s,require_metrics=False)
++  with self.assertRaises(RuntimeError):m.require_canonical_chain(s,require_metrics=True)
++ def test_old_qualified_label_without_a_bound_positive_diagnostic_never_claims_a_cohort(self):
++  m=self.module();self.assertTrue(callable(getattr(m,'require_qualified_diagnostic',None)),'canonical prerequisite check missing')
++  with tempfile.TemporaryDirectory() as tmp:
++   out=Path(tmp);(out/'diagnostic-result.json').write_text('{"status":"QUALIFIED"}')
++   with self.assertRaisesRegex(RuntimeError,'canonical|diagnostic'):m.require_qualified_diagnostic(out,{'qualified_sdk_artifacts':{}})
++   self.assertFalse((out/'worker-ledger.json').exists(),'prerequisite failure claimed a new cohort')
++ def test_frozen_sampling_stop_applies_even_to_a_fresh_output_directory(self):
++  m=self.module();self.assertTrue(callable(getattr(m,'assert_sampling_authority_open',None)),'consumed authorization guard missing')
++  with tempfile.TemporaryDirectory() as tmp:
++   previous=Path(tmp)/'result.json';previous.write_text(json.dumps({'status':'BLOCKED_EVIDENCE','continue_execution':False,'authorization_ref':{'sha256':'abc'}}))
++   with self.assertRaisesRegex(RuntimeError,'control review|closed|exhausted'):m.assert_sampling_authority_open(previous,'abc')
++ def test_compilation_binding_rejects_changed_raw_proof_compiler_and_offline_promotion(self):
++  m=self.module();self.assertTrue(callable(getattr(m,'require_bound_compilation',None)),'compiled provenance binding missing')
++  with tempfile.TemporaryDirectory() as tmp:
++   directory=Path(tmp);summary=self.summary()
++   for name in ['raw-trace.jsonl','worker-result.json','run-inputs.json']:(directory/name).write_text('{}\n')
++   (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']))
++   digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
++   summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':digest(directory/'canonical-chain.json')}
++   summary['analysis']={'mode':'WORKER_COMPILE','input_source_tree_sha256':'tree','raw_trace_sha256':digest(directory/'raw-trace.jsonl'),'worker_result_sha256':digest(directory/'worker-result.json'),'run_inputs_sha256':digest(directory/'run-inputs.json'),
++    'compiler_files':{name:digest(m.HERE/name) for name in ['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py']}}
++   m.require_bound_compilation(directory,summary,{'source_tree_sha256':'tree'})
++   for change in [lambda s:s['analysis'].update(mode='OFFLINE_REVERIFICATION'),lambda s:s['analysis'].update(raw_trace_sha256='0'*64),lambda s:s['analysis']['compiler_files'].update({'decode_trace.mjs':'0'*64}),lambda s:s['canonical_chain_ref'].update(sha256='0'*64)]:
++    bad=copy.deepcopy(summary);change(bad)
++    with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,bad,{'source_tree_sha256':'tree'})
++   (directory/'raw-trace.jsonl').write_text('changed\n')
++   with self.assertRaisesRegex(RuntimeError,'input binding'):m.require_bound_compilation(directory,summary,{'source_tree_sha256':'tree'})
+ if __name__=='__main__':unittest.main()

@@ -33,7 +33,16 @@ class SkiaGpuLifetime final {
       GrFlushInfo info;info.fFinishedContext=payload_.release();
       info.fFinishedProc=[](void* raw){std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> p(
           static_cast<std::shared_ptr<GpuResourceRetirement::Ticket>*>(raw));(*p)->finish();};
-      context_->flush(info);(void)context_->submit(GrSyncCpu::kNo);
+      #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+      g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket_.get()),reinterpret_cast<std::uintptr_t>(context_),ticket_->epoch);
+#endif
+      context_->flush(info);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+      const auto submitted=context_->submit(GrSyncCpu::kNo);
+      g5::gpuTicketSubmitted(reinterpret_cast<std::uintptr_t>(ticket_.get()),submitted);
+#else
+      (void)context_->submit(GrSyncCpu::kNo);
+#endif
     }else ticket_->finish();
     ticket_.reset();payload_.reset();
   }

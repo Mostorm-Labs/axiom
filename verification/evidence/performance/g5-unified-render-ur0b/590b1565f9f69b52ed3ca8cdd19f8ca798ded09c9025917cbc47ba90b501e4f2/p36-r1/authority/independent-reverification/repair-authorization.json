@@ -1,0 +1,127 @@
+{
+  "schema": "g5-ur0b-p36-repair-authorization-v1",
+  "status": "AUTHORIZED_OBSERVATION_REPAIR_AND_CONDITIONAL_REVERIFICATION",
+  "stage": "P36",
+  "parent_task": "G5-UR0b",
+  "parent_package_ref": {
+    "path": ".aegis/packages/G5-UR0b/package.json",
+    "sha256": "420f44b4d762664541381a6a99c758c72a085820ce9cbe85ec24e119f2aecc10"
+  },
+  "parent_activation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-activation.json",
+    "sha256": "da0918fc537ee13a73cd3bc626db2ea6eebad9f585e1ed39078ef3a83d3ea9a2"
+  },
+  "independent_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-reverification-r1/review.json",
+    "sha256": "7bc72ecf86cefdf622012de756cce6e5a48a23fa7cbc02fa447466196217f65e"
+  },
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "user_authorization": "复合后再让隔壁继续后续的任务（复核后续行）",
+  "execution_worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_branch": "codex/geometry-navigation-integration",
+  "reviewed_source_tree_sha256": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834",
+  "resume_cursor": "Repair observation neutrality/identity/loss and finish actual compiler before resuming frozen qualification; preserve completed mechanisms and archived failure",
+  "scope": {
+    "inherit_exact_parent_scope": true,
+    "authority_or_schema_or_threshold_changes": false,
+    "production_writer": "implementation thread only",
+    "source_edits": "Only existing authorized observation seams, private collector, tests and UR0 runner. Frozen shared bounded_worker.py remains unchanged; add any diagnostic wrapper inside verification/runners/g5/ur0/.",
+    "repair_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "I1 investigation"
+    ],
+    "no_product_optimization": true,
+    "no_commit_push": true,
+    "no_automatic_UR0c_UR1": true
+  },
+  "steps": [
+    {
+      "id": "P36-1",
+      "action": "Add failing mechanism tests, fix diagnostic/product budget isolation and actual owner/basis matching. Include normal vs qualifier OFF/ON boundary quota, delayed/lost GPU retirement and actual compiler mixed-owner/stale/ambiguous negatives."
+    },
+    {
+      "id": "P36-2",
+      "action": "Compact bounded numeric work/lease recording preserving provenance/lifecycle and accurate totals; keep critical links. No hot JSON/profile/readback or per-point recounting. Overflow is explicit loss/MISSING. Reconcile aggregate output against known event streams."
+    },
+    {
+      "id": "P36-3",
+      "action": "Complete UR0a schema and real compiler metrics/identity/demand/attempt normalization, realtime return contract, actual route/target and independent correctness integration. Use existing raw fixtures first. Truthful null/MISSING permitted; never fabricate stage-inapplicable IDs or exact commit timestamps."
+    },
+    {
+      "id": "P36-4",
+      "action": "Add bounded per-process RSS/stage diagnostics in new runner, keep parent guard ownership and thresholds. Reduce cold snapshot/CDP and trace-export duplication with byte-identical public snapshot transport. Do not alter timed workload or omit final snapshot. Validate snapshot bytes and independent semantic oracle."
+    },
+    {
+      "id": "P36-5",
+      "action": "Run affected existing tests and normal/qualification artifact boundaries. One diagnostic OFF/ON pair max on the repaired exact build; preserve all outcomes. Any hard stop or unresolved mechanism error returns CONTROL_REVIEW."
+    },
+    {
+      "id": "P36-6",
+      "action": "Only after mechanism proofs succeed: one fresh complete six-pair qualification in original order/thresholds. Never combine old pair with repaired build. Qualification failure returns CONTROL_REVIEW; no automatic noise rerun in this authorization."
+    },
+    {
+      "id": "P36-7",
+      "action": "Only when qualification and frozen prerequisite fixture/schema/identity/correctness proofs pass: execute remaining original UR0b matrix and separate required workers under original guards. Product RED/censored allowed as honest baseline. Stop at UR0b and return exact evidence."
+    }
+  ],
+  "bounds": {
+    "diagnostic_memory_bytes": 16777216,
+    "critical_reserve_bytes": 1048576,
+    "process_family_rss_bytes": 3221225472,
+    "rss_metric": "same summed owned-process RSS; not renderer quota or unique memory",
+    "render_budget_pairs_mib": [
+      [
+        32,
+        96
+      ],
+      [
+        64,
+        192
+      ]
+    ],
+    "diagnostic_workers_max": 2,
+    "diagnostic_worker_seconds": 90,
+    "new_qualification_workers_max": 12,
+    "qualification_worker_seconds": 90,
+    "qualification_order": [
+      "AB",
+      "BA",
+      "BA",
+      "AB",
+      "AB",
+      "BA"
+    ],
+    "concurrency": 1,
+    "automatic_noise_rerun": false,
+    "main_runs_max": 30,
+    "main_worker_seconds": 180,
+    "realtime_runs_max": 3,
+    "correctness_runs_max": 6,
+    "separate_worker_seconds": 90,
+    "original_all_workers_cap_seconds": 8370,
+    "cumulative_planned_upper_bound_seconds": 7740,
+    "upper_bound_formula": "3 original qualification workers*90 + 2 repair diagnostic workers*90 + 12 new qualification workers*90 + 30 main*180 + 9 separate*90; no reset or unlisted automatic retries",
+    "stop_policy": "Any hard timeout/RSS stops relevant tier, cleanup before next allowed worker; original failed/MISSING outcomes preserved. If same blocker recurs or bounds cannot be met, return CONTROL_REVIEW."
+  },
+  "materialization": {
+    "preserve_original_result": true,
+    "preserve_original_bundle": true,
+    "preserve_packages_and_activation": true,
+    "new_results_under": ".aegis/results/G5-UR0b/p36-r1/",
+    "new_evidence_under": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/p36-r1/",
+    "identity": "new source/runner/tree and matching SDK artifact hashes; no claiming HEAD contains dirty bytes; no mixing prior corrected observations into original traces",
+    "source_identity_self_outputs": "Existing excluded result/evidence roots already cover review and successor returns; do not exclude any product/test/runner sources"
+  },
+  "return_states": [
+    "READY_FOR_CONTROL_REVIEW",
+    "FROZEN_VERIFICATION_FAILURE",
+    "BLOCKED_EVIDENCE",
+    "TASK_PACKAGE_DEFECT",
+    "ENVIRONMENT_BLOCKER"
+  ],
+  "official_gate_pass": false
+}

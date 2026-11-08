@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #pragma once
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
@@ -34,6 +36,9 @@ class GpuResourceRetirement final {
       }else if(state->physicalLost.load(std::memory_order_acquire)){
         (void)budget->completeGpuEpoch(epoch);
       }
+      #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+      g5::gpuTicketCompleted(reinterpret_cast<std::uintptr_t>(this),state->abandoned.load(std::memory_order_acquire),state->physicalLost.load(std::memory_order_acquire));
+#endif
       done.store(true,std::memory_order_release);
     }
   };
@@ -55,7 +60,11 @@ class GpuResourceRetirement final {
   }
   void service()noexcept {
     for(auto& e:entries_)if(!e.ticket->done.load(std::memory_order_acquire))e.service->service();
-    std::erase_if(entries_,[](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;e.ticket->metadata.reset();return true;});
+    std::erase_if(entries_,[](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+      g5::gpuTicketRetired(reinterpret_cast<std::uintptr_t>(e.ticket.get()),e.ticket->epoch);
+#endif
+      e.ticket->metadata.reset();return true;});
   }
   std::size_t preparationCount()const noexcept {
     return std::count_if(entries_.begin(),entries_.end(),[](const auto& e){return e.ticket->preparation&&!e.ticket->done.load(std::memory_order_acquire);});

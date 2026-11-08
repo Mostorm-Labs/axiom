@@ -1,0 +1,34 @@
+{
+  "overhead": {
+    "planned": 12,
+    "outcomes": {
+      "COMPLETED": 2,
+      "RSS_LIMIT": 1,
+      "MISSING": 9
+    },
+    "executed_elapsed_seconds": 100.19198933400912,
+    "max_frozen_seconds": 1080
+  },
+  "main": {
+    "planned": 30,
+    "outcomes": {
+      "MISSING": 30
+    },
+    "executed_elapsed_seconds": 0,
+    "max_frozen_seconds": 5400
+  },
+  "separate_realtime_correctness": {
+    "planned": 9,
+    "outcomes": {
+      "MISSING": 9
+    },
+    "executed_elapsed_seconds": 0,
+    "max_frozen_seconds": 810
+  },
+  "optional_diagnostic_rerun": {
+    "used": false,
+    "count": 0
+  },
+  "mechanism_preflights": "separate retained development/qualification checks; not a replacement or retry of the formal cohort",
+  "all_formal_owned_workers_cleaned": true
+}

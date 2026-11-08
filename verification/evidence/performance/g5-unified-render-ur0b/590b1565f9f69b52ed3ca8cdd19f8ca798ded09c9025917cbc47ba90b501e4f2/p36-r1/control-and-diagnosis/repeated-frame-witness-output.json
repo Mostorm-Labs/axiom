@@ -1,0 +1,59 @@
+{
+  "status": "REPRODUCED_FALSE_NEGATIVE",
+  "accepted_raw_completions": [
+    {
+      "seq": "30074",
+      "values": [
+        "1",
+        "21",
+        "1",
+        "1",
+        "2",
+        "1",
+        "63",
+        "17",
+        "17",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "seq": "58331",
+      "values": [
+        "1",
+        "22",
+        "1",
+        "1",
+        "2",
+        "1",
+        "87",
+        "17",
+        "17",
+        "1",
+        "1"
+      ]
+    }
+  ],
+  "decoded_qualified_completions": 0,
+  "missing": [
+    {
+      "reason": "work capture has no new observed provider submit",
+      "seq": "30069",
+      "work": "21"
+    },
+    {
+      "reason": "accepted completion outside observed work",
+      "seq": "30074"
+    },
+    {
+      "reason": "work capture has no new observed provider submit",
+      "seq": "58326",
+      "work": "22"
+    },
+    {
+      "reason": "accepted completion outside observed work",
+      "seq": "58331"
+    }
+  ],
+  "errors": []
+}

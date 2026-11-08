@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b",
+  "stage": "P36-r2",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "scope": "OFFLINE_R4_REPAIR_AND_SAMPLING_ADMISSION_ONLY",
+  "parent_UR0b_status": "SAMPLING_CLOSED; complete qualification and remaining evidence not achieved",
+  "starting_revision": "f66592001012444cd99db968961014497c0f120f",
+  "result_revision": "f66592001012444cd99db968961014497c0f120f",
+  "starting_source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "source_tree_sha256": "73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721",
+  "head_contains_dirty_changes": false,
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b/package.json",
+    "sha256": "420f44b4d762664541381a6a99c758c72a085820ce9cbe85ec24e119f2aecc10"
+  },
+  "current_user_authorization": "\u7ee7\u7eed\u4e0b\u4e00\u6b65: fix successful attempt linkage and sampling admission then return for control review; no new sampling window inferred",
+  "materialized_ref": {
+    "kind": "shared-controlled-worktree-content-addressed-bundle",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721/p36-r2",
+    "manifest_sha256": "29c30b7b804ece42c19480330d1104b2dea8f1c55f30712a81e282345d9f7bd4"
+  },
+  "validation_results": {
+    "status": "OFFLINE_REPAIR_SLICE_VERIFIED",
+    "new_browser_workers": 0,
+    "completed_inputs": 5,
+    "positive_native_inputs": 3,
+    "raw_accepted_completions": 4,
+    "decoded_qualified_completions": 4,
+    "metric_receipts": 4,
+    "node_passed": 87,
+    "python_passed": 32,
+    "boundary_contracts": 120,
+    "native_cpp": "UNCHANGED; prior 22-test evidence retained, not rerun or relabeled as fresh",
+    "runtime_sdk_build_dependency_authority_changed": false,
+    "sampling_state": "CLOSED; no budget reset, retry or primary timing adoption"
+  },
+  "scope_audit": {
+    "status": "OFFLINE_REPAIR_SCOPE_VERIFIED",
+    "base_source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+    "result_source_tree_sha256": "73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721",
+    "changed_paths": [
+      "verification/runners/g5/ur0/canonical_chain.mjs",
+      "verification/runners/g5/ur0/compile_run.mjs",
+      "verification/runners/g5/ur0/decode_trace.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/tests/g5_ur0_compiler.test.mjs",
+      "verification/tests/g5_ur0_decode.test.mjs",
+      "verification/tests/test_g5_ur0_repair_runner.py"
+    ],
+    "runtime_sdk_build_dependency_authority_changes": false,
+    "public_api_impact": "NONE",
+    "source_records": {
+      "verification/runners/g5/ur0/canonical_chain.mjs": {
+        "before": null,
+        "after": {
+          "sha256": "756920ea04c282324dc80ff75f8bdbe78990d23c5fb95526c7d5bf88f9ed4e32",
+          "executable": false
+        }
+      },
+      "verification/runners/g5/ur0/compile_run.mjs": {
+        "before": {
+          "sha256": "7befd3126a8d5e807946c8541df34dbea9bf0d1942459be299aac65d05c159c5",
+          "executable": false
+        },
+        "after": {
+          "sha256": "df8ca211885678e8b687414eb51db9987990c90c42566d187352d19214e1fa58",
+          "executable": false
+        }
+      },
+      "verification/runners/g5/ur0/decode_trace.mjs": {
+        "before": {
+          "sha256": "e3777503a8aa6fa24329cd467d6dd5668c9c92dcc9ac19528f423a9d72f6e67e",
+          "executable": false
+        },
+        "after": {
+          "sha256": "062d14a29a1948436087d013c84b04d413440264b79a1ead184c4de3488e53ae",
+          "executable": false
+        }
+      },
+      "verification/runners/g5/ur0/repair_runner.py": {
+        "before": {
+          "sha256": "a4e9a10b37e9a3d2231f5fd0a5d210be6a1a5d43b87731ce95dda7415e74a2ec",
+          "executable": false
+        },
+        "after": {
+          "sha256": "3f3f8423b0310401b7a43cbf80e9cba3f59d2ef61b761b2b929e07c4730ff13a",
+          "executable": false
+        }
+      },
+      "verification/tests/g5_ur0_compiler.test.mjs": {
+        "before": {
+          "sha256": "a95e0d513d339f1ee5b1e0a6564d07a2a41415eb0e8e453f267c19c127a46282",
+          "executable": false
+        },
+        "after": {
+          "sha256": "05ed0fa511c42610e4f260cfe49e72f4a897e15570f43b64bde53261387cb0c1",
+          "executable": false
+        }
+      },
+      "verification/tests/g5_ur0_decode.test.mjs": {
+        "before": {
+          "sha256": "8f846524e50849f5ee465fffdae18c80021dfe77ba411cb91bc63b39f1bd6d74",
+          "executable": false
+        },
+        "after": {
+          "sha256": "adf05acde3c5c4062ca95ac4a17af598d3f434ee8e038c49092b4b872a47561a",
+          "executable": false
+        }
+      },
+      "verification/tests/test_g5_ur0_repair_runner.py": {
+        "before": {
+          "sha256": "c09ff10e9d6906076b3b23f132465d46c4b96f6870eb8b34aff0f82d2693057f",
+          "executable": false
+        },
+        "after": {
+          "sha256": "5265328f179168ee6fc54fef40e6a7df64c4e1b3fd8958b0ec555b4e5d307771",
+          "executable": false
+        }
+      }
+    }
+  },
+  "historical_preservation": [
+    {
+      "result_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/result.json",
+      "result_sha256": "aaefaff53371f897b876da219d5f9a3c3c1478805757053a383e5cb1e82324e4",
+      "manifest_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/manifest.json",
+      "manifest_sha256": "e9853be4994fb8bb032c0257450f0bf7cd6a4173f0a033448cd51c8482592f93",
+      "file_count": 236,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/p36-r1/result.json",
+      "result_sha256": "c35860d6ebe4528516c449bafcc81d301c66d2420b6a0235c70f1760b84ae7ea",
+      "manifest_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/manifest.json",
+      "manifest_sha256": "ec20501acf288828177293e9661c7fdbb4ed90c34f31233d3d022cd469754300",
+      "file_count": 266,
+      "all_bytes_unchanged": true
+    }
+  ],
+  "recorded_input_source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "compiler_identity": "per analysis.compiler_files SHA256; input recording identity kept separate",
+  "primary_timings_adopted": false,
+  "new_browser_workers": 0,
+  "open_boundaries": [
+    "Independent control review of this repair and the remaining sampling authority",
+    "Existing incomplete qualification preserved; no cohort reset or reuse as a complete six-pair result",
+    "Three realtime, six combined Web correctness and thirty main rows still unexecuted",
+    "Helper outcomes without real result evidence remain MISSING; no physical display or pure GPU timing claim",
+    "Existing product input rejection retained; no product behavior changed"
+  ],
+  "next_action": "Review this offline repair slice; explicitly reconcile any future bounded sampling authorization before restarting workers",
+  "continue_execution": false,
+  "official_gate_pass": false,
+  "committed": false,
+  "pushed": false
+}

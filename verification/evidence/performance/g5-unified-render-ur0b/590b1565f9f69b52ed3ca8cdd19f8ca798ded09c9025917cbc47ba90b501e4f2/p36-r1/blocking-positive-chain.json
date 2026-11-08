@@ -1,0 +1,26 @@
+{
+  "classification": "IMPLEMENTATION_DEFECT",
+  "owner": "UR0b R4 compiler / canonical demand-attempt joins",
+  "facts": [
+    {
+      "work_id": "21",
+      "frame_id": "63",
+      "preparation_attempts": 24,
+      "actual_provider_submits": 1,
+      "accepted_completions": 1,
+      "accepted_provider_job": "1582"
+    },
+    {
+      "work_id": "22",
+      "frame_id": "87",
+      "preparation_attempts": 24,
+      "actual_provider_submits": 1,
+      "accepted_completions": 1,
+      "accepted_provider_job": "2498"
+    }
+  ],
+  "current_rule": "draws.length must equal one for full frame identity, so repeated pending attempts are falsely rejected despite one matching provider job",
+  "required_repair": "prove successful attempt via actual provider job plus complete owner/frame/Scene/camera/surface/metrics and record order; preserve pending attempts; add actual-compiler repeated-frame positive and foreign/stale negatives",
+  "sampling_admission_defect": "qualification was started after guard/loss/schema checks without checking this positive canonical chain; stopped as soon as diagnosed",
+  "no_late_code_fix_or_retry": true
+}

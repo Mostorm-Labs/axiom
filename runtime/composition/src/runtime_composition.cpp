@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/internal/multi_selection_port.hpp"
@@ -289,6 +291,14 @@ bool RuntimeCompositionCore::cancelAllPointers() noexcept {
   return true;
 }
 bool RuntimeCompositionCore::submit(const input::PlatformPointerBatch& batch) noexcept {
+  G5_SCOPE(g5Input,g5::Tag::input,g5::Purpose::none);
+
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  g5::OwnerScope g5Owner;
+  if(runtime_&&std::this_thread::get_id()==ownerThread_){g5Owner.bind({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value()});}
+#endif
+
+
   if (std::this_thread::get_id() != ownerThread_ || !canMutate() || batch.samples.empty()) return false;
   // Controls submitted through the public RuntimeFacade share this owner
   // boundary. Consume them before the next platform input batch so a host
@@ -393,6 +403,11 @@ bool RuntimeCompositionCore::publishResource(const ResourceBindingToken& token,
   return true;
 }
 bool RuntimeCompositionCore::ownerPump() noexcept {
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  g5::OwnerScope g5Owner;
+  if(runtime_&&std::this_thread::get_id()==ownerThread_){g5Owner.bind({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value()});}
+#endif
+
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate() && state_!=RuntimeCompositionState::kLost) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
@@ -430,6 +445,11 @@ bool RuntimeCompositionCore::ownerPump() noexcept {
   return true;
 }
 bool RuntimeCompositionCore::requestCanonicalFrame(std::uint64_t frameId) noexcept {
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  g5::OwnerScope g5Owner;
+  if(runtime_&&std::this_thread::get_id()==ownerThread_){g5Owner.bind({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value()});}
+#endif
+
   if (!canMutate() || std::this_thread::get_id() != ownerThread_ ||
       nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   // A frame opportunity is also the shared owner safe point. This advances
@@ -444,10 +464,17 @@ bool RuntimeCompositionCore::requestCanonicalFrame(std::uint64_t frameId) noexce
   const bool pumped = ownerPump();
   runtime_->setPlatformPresentationDeferred(wasDeferred);
   if (!pumped) return false;
-  return runtime_->presentCanonicalFrame(frameId, 0.0, false) && captureCanonicalWork();
+  return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false)) && captureCanonicalWork();
 }
 bool RuntimeCompositionCore::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
+
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  g5::OwnerScope g5Owner;
+  if(runtime_&&std::this_thread::get_id()==ownerThread_){g5Owner.bind({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value()});}
+#endif
+
+
   out = {};
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
   // A capture may be superseded by input, resize, restore, or cancellation
@@ -495,7 +522,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
       !awaitingViewportClaim) {
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
-    out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);
+    out.canonicalRequested = G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false));
     if (!out.canonicalRequested && !runtime_->canonicalPresentationRetryable()) return false;
   }
   if (!captureCanonicalWork()) return false;
@@ -586,6 +613,7 @@ bool RuntimeCompositionCore::finishFrameOpportunity(
   return accepted;
 }
 bool RuntimeCompositionCore::captureCanonicalWork() noexcept {
+  G5_SCOPE(g5Capture,g5::Tag::canonical_basis,g5::Purpose::canonical);
   const auto frame = runtime_->lastSubmittedCanonicalFrame();
   if (!frame) { pendingCanonicalWork_.reset(); return true; }
   if (lastSubmittedCanonicalWork()) return true;
@@ -593,6 +621,8 @@ bool RuntimeCompositionCore::captureCanonicalWork() noexcept {
       nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   pendingCanonicalWork_ = CanonicalWork{runtimeInstanceId_, resources_.lifetimeGeneration,
       attachmentEpoch_, nextCanonicalWorkId_++, *frame};
+  G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,pendingCanonicalWork_->workId,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),runtime_->canonicalCommitFence().ordinal.value(),resources_.manifest.manifest_revision,runtime_->sceneRevision(),runtime_->cameraGeneration());
+  G5_OBSERVE(g5::Kind::Submit,g5::Tag::canonical_receipt,true,pendingCanonicalWork_->workId,frame->viewId.value(),frame->frameId.value(),frame->documentRevision,frame->sceneGeneration,frame->surfaceGeneration.value(),frame->metricsGeneration.value());
   return true;
 }
 std::optional<CanonicalWork> RuntimeCompositionCore::lastSubmittedCanonicalWork() const noexcept {
@@ -605,6 +635,14 @@ std::optional<CanonicalWork> RuntimeCompositionCore::lastSubmittedCanonicalWork(
   return pendingCanonicalWork_;
 }
 bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion& completion) noexcept {
+  G5_SCOPE(g5Completion,g5::Tag::canonical_receipt,g5::Purpose::input);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  g5::OwnerScope g5Owner;
+  if(runtime_&&std::this_thread::get_id()==ownerThread_){g5Owner.bind({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value()});}
+#endif
+
+  G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,0,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,completion.work.frame.viewId.value(),completion.work.frame.frameId.value(),completion.work.frame.documentRevision,completion.work.frame.sceneGeneration,completion.work.frame.surfaceGeneration.value(),completion.work.frame.metricsGeneration.value());
+
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
   const auto current = lastSubmittedCanonicalWork();
   if (!current || completion.work != *current) return false;
@@ -612,6 +650,7 @@ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion&
   const bool accepted = runtime_->receivePlatformPresented({frame.viewId, frame.frameId,
       frame.surfaceGeneration, frame.metricsGeneration, completion.outcome,
       completion.evidence, completion.presentedTimeNs});
+  G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,accepted?1ULL:2ULL,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,frame.viewId.value(),frame.frameId.value(),frame.documentRevision,frame.sceneGeneration,frame.surfaceGeneration.value(),frame.metricsGeneration.value());
   if (accepted) pendingCanonicalWork_.reset();
   return accepted;
 }

@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
 #pragma once
 #include <concepts>
 #include <initializer_list>
@@ -32,7 +33,9 @@ template<class T> class ImmutableValue final {
         else result.value_=std::make_shared<const T>(member);
         return result;
     }
-    bool operator==(const ImmutableValue& b)const{return value_==b.value_||get()==b.get();}
+    bool operator==(const ImmutableValue& b)const{
+        G5_OBSERVE(::canvas::foundation::internal::g5::Kind::Counter,::canvas::foundation::internal::g5::Tag::lookup,false,value_==b.value_?1ULL:2ULL,sizeof(T));
+        return value_==b.value_||get()==b.get();}
     bool operator==(const T& b)const{return get()==b;}
 };
 

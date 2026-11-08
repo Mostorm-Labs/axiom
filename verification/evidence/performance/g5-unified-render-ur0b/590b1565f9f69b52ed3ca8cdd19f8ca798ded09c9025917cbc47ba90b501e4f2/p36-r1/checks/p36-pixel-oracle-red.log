@@ -1,0 +1,22 @@
+.E
+======================================================================
+ERROR: test_pixel_oracle_decodes_the_public_snapshot_and_rejects_invalid_bytes (verification.tests.test_g5_ur0_fixture_oracle.FixtureOracleTest.test_pixel_oracle_decodes_the_public_snapshot_and_rejects_invalid_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_fixture_oracle.py", line 13, in test_pixel_oracle_decodes_the_public_snapshot_and_rejects_invalid_bytes
+    self.assertEqual(json.loads(result.stdout)['status'],'INVALID_SNAPSHOT')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/json/decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.190s
+
+FAILED (errors=1)

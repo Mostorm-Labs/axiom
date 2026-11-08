@@ -1,0 +1,73 @@
+{
+  "schema_version": "g5-ur0-control-review-v1",
+  "status": "ACCEPTED_WITH_SCOPE_CORRECTION",
+  "review_scope": "UR0a static completion and UR0b execution readiness only",
+  "reviewer_identity": {
+    "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "role": "independent design/control reviewer"
+  },
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "reviewed_revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+  "user_authorization": "审查 并让隔壁开始执行",
+  "official_gate_pass": false,
+  "accepted_ur0a_result_sha256": "54e41722ac282c5efdfeb199094360184ff425ad4898869807ec0f6678142ee4",
+  "accepted_ur0a_manifest_sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29",
+  "accepted_candidate_sha256": "9f82895e2dbe8b84d62ab557adf87396fca7ff1ce245794fa3205bad987777c9",
+  "frozen_requirement_audit": {
+    "UR0a-PROTOCOL": "ACCEPTED",
+    "UR0a-ROUTES": "ACCEPTED",
+    "UR0a-MATRIX": "ACCEPTED",
+    "UR0a-READINESS": "ACCEPTED"
+  },
+  "frozen_evidence_audit": [
+    "13 UR0a output hashes independently verified",
+    "Schema7 positive/12 negative cases rerun",
+    "43 static routes,107 references,36 factory sites reviewed; no dynamic COVERED claims",
+    "10 rows x3 planned runs, literal7200 samples and fixed immediate timings verified",
+    "UR0b candidate69 source refs and8 policy negatives rerun successfully"
+  ],
+  "repository_reality_audit": [
+    "Exact Mostorm-Labs/axiom controlled worktree and branch verified",
+    "No tracked production edits",
+    "Existing transient encoding and GPU submit ownership checked against source",
+    "Original UR0a scope validation is judged at original result boundary; later design/candidate files do not invalidate it"
+  ],
+  "blocking_findings_resolved_before_execution": [
+    {
+      "id": "UR0b-SCOPE-01",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "failure_mode": "Frozen write list omits actual GPU submit and prepared lookup/compile instrumentation sites.",
+      "impact": "Executor would need either an out-of-scope edit or misleading proxy measurements to satisfy frozen obligations.",
+      "correction": "Executable successor permits qualifier-gated observation only in runtime/render/src/skia_gpu_lifetime.hpp and runtime/render/src/skia_prepared_geometry.cpp. Preserve candidate and algorithms/branch/order/budgets unchanged.",
+      "owning_stage": "P31 execution-scope correction before P32",
+      "resolved_by": "scope-correction.json and executable successor scope-contract"
+    }
+  ],
+  "non_blocking_findings": [
+    {
+      "id": "UR0a-MAPPING-01",
+      "finding": "SEM_APPLY source label points at manifest overload; eraser actually uses no-manifest indexed apply around operation_engine.cpp:294. R_ERASE_APPLY retains correct caller.",
+      "disposition": "Use actual invoked overload for UR0b observation; preserve original UR0a files."
+    },
+    {
+      "id": "UR0a-SCHEMA-01",
+      "finding": "Static sample validator accepts qualified-chain Scene generation999; schema examples are not complete dynamic basis qualification.",
+      "disposition": "UR0b existing COMMIT-SCENE and ROUTES-TARGETS obligations require real generation/basis joins and foreign/stale negative tests. No retrospective UR0a failure."
+    },
+    {
+      "id": "UR0b-LABEL-01",
+      "finding": "Budget matrix navigation32/64 maps to RenderCacheOptions.maxBytes, not a navigation-exclusive pool.",
+      "disposition": "Report concrete field mapping without changing frozen values."
+    }
+  ],
+  "release_limits": [
+    "No product performance/G5/P34/platform PASS",
+    "No optimization or UR0c/UR1 start",
+    "Baseline may be slow or partially censored under frozen stop rules",
+    "No implementation commit/push authorization; design-only materialization is performed by control for this handoff"
+  ]
+}

@@ -1,0 +1,62 @@
+TAP version 13
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+not ok 1 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 0.777625
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_transfer.test.mjs:3:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    bounded snapshot transport missing
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_transfer.test.mjs:4:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+not ok 2 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.159583
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_transfer.test.mjs:11:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    bounded snapshot transport missing
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_transfer.test.mjs:12:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49.394167

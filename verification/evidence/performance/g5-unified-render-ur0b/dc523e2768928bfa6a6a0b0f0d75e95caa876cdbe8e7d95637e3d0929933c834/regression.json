@@ -1,0 +1,65 @@
+{
+  "status": "QUALIFIED_AFFECTED_REGRESSIONS_ONLY",
+  "native": {
+    "tests": 22,
+    "runs": [
+      {
+        "name": "native-build",
+        "command": [
+          "cmake",
+          "--build",
+          "out/host",
+          "--target",
+          "axiom_canonical_handoff_tests",
+          "axiom_contact_recovery_tests",
+          "axiom_editor_history_tests",
+          "axiom_eraser_session_tests",
+          "axiom_g5_observation_identity_tests",
+          "axiom_g5_observation_tests",
+          "axiom_ink_v2_native_session_tests",
+          "axiom_prepared_geometry_tests",
+          "axiom_render_cache_tests",
+          "axiom_render_direct_reference_tests",
+          "axiom_render_skia_chunk_range_entry_tests",
+          "-j4"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 6.785403457994107,
+        "log": "out/ur0b/native-build-evidence.log"
+      },
+      {
+        "name": "ctest-required",
+        "command": [
+          "ctest",
+          "--test-dir",
+          "out/host",
+          "--output-on-failure",
+          "-R",
+          "^(G5RenderCache|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5V4CoverageFallback|G5MaskedCanonicalRecovery|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5PreparedGeometry|G5SkiaChunkRangeEntry|G3DirectReference|G4CanonicalHandoff|G4EraserSession|G4EditorHistory|SDKContactRecovery|InkV2NativeSession|G5Ur0Observation|G5Ur0ObservationIdentity)$"
+        ],
+        "exit_code": 0,
+        "elapsed_s": 173.78344579099212,
+        "log": "out/ur0b/ctest-required-evidence.log"
+      }
+    ],
+    "log": "preflight-and-regression/ctest-required-evidence.log"
+  },
+  "node": {
+    "passed": 65,
+    "failed": 0,
+    "log": "preflight-and-regression/node-required-evidence.log"
+  },
+  "python": {
+    "passed": 20,
+    "log": "preflight-and-regression/python-required-evidence.log"
+  },
+  "boundaries": {
+    "contract_files": 120,
+    "log": "preflight-and-regression/boundary-evidence.log"
+  },
+  "full_ctest": "NOT_RUN_CORROBORATIVE_ONLY; historical failures not repaired or relabeled",
+  "historical_authority_manifest": {
+    "path": ".aegis/results/G5-UR0a/output-sha256.json",
+    "sha256": "78f03914a7ef62c3659d82bd59c9f20c24b7f482b8f6aca0492e8e885c44ef29"
+  }
+}

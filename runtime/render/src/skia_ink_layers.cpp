@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "skia_ink_layers.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
@@ -36,6 +38,9 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
     const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending){
+    G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
+    G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
+
     painted=false;resourcePending=false;
     const auto pending=[&]{resourcePending=true;return false;};
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -70,6 +75,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         else masks.emplace_back(std::get<semantic::FilledPathMask>(m.geometry));
     }
     if(source.masks.size()>masks.size()||!std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask,false,1,source.masks.size(),masks.size(),source.epoch);
     source.masks=std::move(masks);source.metadata=std::move(metadataLease);
     auto demand=destination.getDeviceClipBounds();if(!demand.intersect(viewport))return true;
     const CompactDeviceGrid grid=originalGrid?*originalGrid:CompactDeviceGrid{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
@@ -82,6 +88,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+128;
             resources::ResourceLease lease;if(!reserve(bytes+metadataBytes,key,limits,budget,lease))return pending();
             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width(),crop.height()));if(!target)return pending();
+            G5_TARGET(target,true);
             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
             canvas->translate(float(-x),float(-y));canvas->concat(matrix);
             // Keep the original coverage grid/material origin in local device
@@ -106,6 +113,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             const auto resultBytes=std::size_t(crop.width()+2*guard)*(crop.height()+2*guard)*4;
             resources::ResourceLease lease;if(!reserve(resultBytes,key,limits,budget,lease))return pending();
             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width()+2*guard,crop.height()+2*guard));if(!target)return pending();
+            G5_TARGET(target,true);
             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
             SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);canvas->drawImage(base,prefix?0:guard,prefix?0:guard,SkSamplingOptions{},&copy);
             canvas->translate(float(guard-x),float(guard-y));canvas->clipIRect(viewport);canvas->concat(matrix);

@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
 #include "resource_reclaim.hpp"
@@ -30,6 +32,18 @@
 #include <type_traits>
 
 namespace canvas::render {
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+namespace {
+struct ObservationCounters final {
+ const SkiaRenderer& renderer;bool on=g5::enabled();RenderCacheWork before=on?renderer.renderCacheWork():RenderCacheWork{};
+ ~ObservationCounters(){if(!on)return;const auto w=renderer.renderCacheWork();
+  G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask,false,3,w.bodyTileBuilds-before.bodyTileBuilds,w.bodyTileHits-before.bodyTileHits,w.maskTileUpdates-before.maskTileUpdates,w.maskPrimitiveDraws-before.maskPrimitiveDraws,w.maskTileResets-before.maskTileResets,w.inkLayerBytes);
+  G5_OBSERVE(g5::Kind::Counter,g5::Tag::coverage,false,4,w.gpuCoverageTiles-before.gpuCoverageTiles,w.cpuCoverageTiles-before.cpuCoverageTiles,w.gpuInteriorPixels-before.gpuInteriorPixels,w.cpuEdgePixels-before.cpuEdgePixels,w.preparationCoverageSteps-before.preparationCoverageSteps,w.coverageBuilds-before.coverageBuilds,w.coverageHits-before.coverageHits,w.retainedBytes,w.coverageBytes,w.scratchPeakBytes);
+ }
+};
+}
+#endif
+
 SkiaRenderer::SkiaRenderer(){
     renderCacheOptions_.maxBytes=std::size_t(AXIOM_RENDER_CACHE_MIB)*1024*1024;
     renderCacheOptions_.sharedMaxBytes=std::size_t(AXIOM_RENDER_SHARED_MIB)*1024*1024;
@@ -277,6 +291,13 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
+    G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    ObservationCounters observationCounters{*this};
+#endif
+    G5_ROUTE(g5Route,g5::Route::canonical_prepared);
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
+
     partialEraseFrame_.reset();
     serviceResourceRetirements();
     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
@@ -429,7 +450,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }catch(const std::bad_alloc&){navigationCache_.reset();navigationFallback_.reset();}
     }
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
-        auto* canvas = acquired.frame.surface->getCanvas();
+        G5_TARGET(acquired.frame.surface,true);
+    auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
@@ -448,7 +470,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     ++submissions_;
     rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
     AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
+    G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
     const auto presented=provider.present();
+    G5_SCOPE_END(g5Present);
+    G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
     AXIOM_FRAME_TIMING_END(presentTiming);
     if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
     return presented;
@@ -457,6 +482,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& current,
     const EditingOverlay* selectionOverlay){
+    G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
+
     serviceResourceRetirements();
     const auto cache=navigationCache_;
     if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
@@ -487,12 +515,15 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     const float ratio=static_cast<float>(camera.scale/old.a);
     const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
     const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
+    G5_TARGET(acquired.frame.surface,true);
     auto* canvas=acquired.frame.surface->getCanvas();
     canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
     canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
     canvas->scale(ratio,ratio);
     if(cache->prepared)cache->prepared->markGpuUse();
     (void)cache->lease.markGpuUse();
+    G5_ROUTE(g5Retained,g5::Route::nav_retained);
+    G5_TARGET(acquired.frame.surface,true);
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
     canvas->restore();
     if(selectionOverlay){
@@ -511,6 +542,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
     const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
+    G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
+
     serviceResourceRetirements();
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
@@ -664,6 +698,13 @@ RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_-
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay) {
+    G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    ObservationCounters observationCounters{*this};
+#endif
+    G5_ROUTE(g5Route,g5::Route::edit_plain);
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::transient,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_);
+
     auto previousErase=std::move(partialEraseFrame_);
     serviceResourceRetirements();
     if (selectionOverlay == nullptr) {
@@ -673,6 +714,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return BackendSubmissionResult::rejected(acquired.message);
     }
+    G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
     if(acquired.frame.generation!=plan.frame.surfaceGeneration.value()||
        acquired.frame.surface->width()!=int(plan.frame.metrics.physicalWidth)||
@@ -826,7 +868,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     provider.release();
     ++submissions_;
     ++rasterizations_;
+    G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
     const auto presented=provider.present();
+    G5_SCOPE_END(g5Present);
+    G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
     if(candidate&&presented.code==BackendSubmissionCode::kAccepted){candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);}
     return presented;
 }
@@ -834,6 +879,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
 BackendSubmissionResult SkiaRenderer::renderPreview(
     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
     const PreviewStyleOverride& style) {
+    G5_SCOPE(g5Preview,g5::Tag::preview,g5::Purpose::none);
+    G5_ROUTE(g5Route,g5::Route::preview_tail);
+
     if (geometry.revision == 0U || geometry.surfaceGeneration.value() == 0U ||
         !std::isfinite(geometry.viewport.scale) || geometry.viewport.scale <= 0.0F ||
         !std::isfinite(geometry.viewport.translationX) ||
@@ -853,6 +901,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         provider.release();
         return BackendSubmissionResult::rejected("stale preview surface generation");
     }
+    G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
     canvas->clear(SK_ColorTRANSPARENT);
     canvas->save();
@@ -1048,6 +1097,7 @@ BackendSubmissionResult SkiaRenderer::renderPrimitives(
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return BackendSubmissionResult::rejected(acquired.message);
     }
+    G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
     canvas->clear(SK_ColorWHITE);
     canvas->save();
@@ -1090,6 +1140,7 @@ BackendSubmissionResult SkiaRenderer::renderStrokes(
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return BackendSubmissionResult::rejected(acquired.message);
     }
+    G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
     canvas->clear(SK_ColorWHITE);
     canvas->save();

@@ -1,0 +1,15 @@
+{
+  "offline_checker_population_correction": {
+    "issue": "An initial offline check incorrectly assumed every ON dataset had two accepted completions, borrowing the diagnostic count.",
+    "observed_fact": "qualification-p1-B raw contains one accepted completion.",
+    "resolution": "Reverification derives each denominator from that dataset raw accepted records; raw, decoder output and metrics must agree exactly.",
+    "sampling_or_original_evidence_changed": false
+  },
+  "expected_RED_logs": [
+    "out/ur0b/p36-r2-decode-red.log",
+    "out/ur0b/p36-r2-compiler-red.log",
+    "out/ur0b/p36-r2-proof-red.log",
+    "out/ur0b/p36-r2-admission-red.log",
+    "out/ur0b/p36-r2-scope-red.log"
+  ]
+}

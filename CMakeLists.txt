@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.30)
 project(canvas_v2_pocs VERSION 0.1.0 LANGUAGES C CXX)
 include(cmake/AxiomBuildInfo.cmake)
 
+option(AXIOM_G5_UR0_DIAGNOSTICS "Enable non-installed private UR0 observation variant" OFF)
+if(AXIOM_G5_UR0_DIAGNOSTICS)
+  if(NOT EMSCRIPTEN)
+    message(FATAL_ERROR "UR0 diagnostics variant is Web qualification only; native collector tests are target-local")
+  endif()
+  add_compile_definitions(AXIOM_G5_UR0_DIAGNOSTICS=1)
+  install(CODE "message(FATAL_ERROR \"UR0 qualification artifacts are not consumer install packages\")")
+endif()
 option(AXIOM_ENABLE_FRAME_TIMING "Enable private canonical-frame stage diagnostics (not a release profile)" OFF)
 if(AXIOM_ENABLE_FRAME_TIMING)
   add_compile_definitions(AXIOM_ENABLE_FRAME_TIMING=1)
@@ -174,7 +182,7 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
       canvas_runtime_input canvas_runtime_control canvas_runtime_semantic
       ARCHIVE DESTINATION lib)
-    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
+    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include PATTERN "g5_observation.hpp" EXCLUDE)
     install(FILES runtime/composition/include/canvas/runtime/runtime_composition.hpp
       runtime/composition/include/canvas/runtime/resource_binding.hpp DESTINATION include/canvas/runtime)
     install(FILES "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" DESTINATION share/AxiomRuntime)
@@ -190,7 +198,7 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
     install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
       canvas_runtime_input canvas_runtime_control canvas_runtime_semantic ARCHIVE DESTINATION lib)
-    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
+    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include PATTERN "g5_observation.hpp" EXCLUDE)
     install(FILES runtime/composition/include/canvas/runtime/runtime_composition.hpp
       runtime/composition/include/canvas/runtime/resource_binding.hpp DESTINATION include/canvas/runtime)
     install(FILES runtime/composition/include/canvas/platform/web_runtime_adapter.hpp

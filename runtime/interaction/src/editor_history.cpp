@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/interaction/editor_history.hpp"
 
 #include <algorithm>
@@ -131,6 +133,7 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
 std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareValidatedRecord(
     const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
     std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after, bool admitted) {
+    G5_SCOPE(g5History,g5::Tag::history_prepare,g5::Purpose::none);
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     if (canvas::qualification::observing(fc08Qualification_)) return std::nullopt;
     canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
@@ -176,6 +179,7 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareIntentRecord(
 } catch (const std::bad_alloc&) { return std::nullopt; }
 
 void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
+    G5_SCOPE(g5History,g5::Tag::history_finalize,g5::Purpose::none);
     static_assert(std::is_nothrow_move_constructible_v<PreparedEntry>);
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     if (canvas::qualification::observing(fc08Qualification_)) return;

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 165, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 164, in main
+    p=argparse.ArgumentParser();p.add_argument('--phase',choices=['diagnostic','qualification','separate','main'],required=True);p.add_argument('--sdk',type=Path,required=True);p.add_argument('--sdk32',type=Path);p.add_argument('--proofs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();return phase(a,a.phase)
+                                                                                                                                                                                                                                                                                                                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 123, in phase
+    proof=verify(a.proofs);out=a.output;out.mkdir(parents=True,exist_ok=True)
+          ^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 82, in verify
+    assert_sampling_authority_open(ROOT/'.aegis/results/G5-UR0b/p36-r1/result.json',AUTH_SHA)
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 36, in assert_sampling_authority_open
+    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
+RuntimeError: sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory

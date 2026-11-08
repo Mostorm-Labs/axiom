@@ -1,0 +1,22 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Configuring done (1.6s)
+-- Generating done (0.5s)
+-- Build files have been written to: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host
+[0/2] Re-checking globbed directories...
+[1/6] Building CXX object runtime/foundation/CMakeFiles/axiom_g5_observation_tests.dir/src/g5_observation.cpp.o
+[2/6] Building CXX object runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/__/foundation/src/g5_observation.cpp.o
+[3/6] Building CXX object runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/tests/g5_observation_identity_test.cpp.o
+FAILED: runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/tests/g5_observation_identity_test.cpp.o 
+/usr/bin/c++ -DAXIOM_G5_UR0_DIAGNOSTICS=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -g -std=c++20 -arch arm64 -MD -MT runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/tests/g5_observation_identity_test.cpp.o -MF runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/tests/g5_observation_identity_test.cpp.o.d -o runtime/render/CMakeFiles/axiom_g5_observation_identity_tests.dir/tests/g5_observation_identity_test.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/g5_observation_identity_test.cpp
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/g5_observation_identity_test.cpp:7:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/../src/gpu_resource_retirement.hpp:4:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/skia_surface_provider.hpp:3:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/render_backend.hpp:3:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/frame_plan.hpp:6:
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/reference_draw_list.hpp:4:10: fatal error: 'canvas/scene/scene_types.hpp' file not found
+    4 | #include "canvas/scene/scene_types.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+[4/6] Building CXX object runtime/foundation/CMakeFiles/axiom_g5_observation_tests.dir/tests/g5_observation_test.cpp.o
+ninja: build stopped: subcommand failed.

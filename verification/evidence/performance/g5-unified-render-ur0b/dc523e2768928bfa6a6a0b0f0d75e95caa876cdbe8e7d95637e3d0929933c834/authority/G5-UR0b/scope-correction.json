@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "PRE_EXECUTION_P31_SCOPE_CORRECTION",
+  "candidate_sha256": "9f82895e2dbe8b84d62ab557adf87396fca7ff1ce245794fa3205bad987777c9",
+  "preserve_candidate": true,
+  "add_allowed_existing_source_files": [
+    "runtime/render/src/skia_gpu_lifetime.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp"
+  ],
+  "edit_rule": "qualifier-gated observation only; unchanged algorithms, branches, returns, submit/commit/present ordering and budgets",
+  "obligations_unchanged": true,
+  "new_performance_acceptance": false,
+  "source_sha256": {
+    "runtime/render/src/skia_gpu_lifetime.hpp": "f964042da7d6ba4c1ad00799af4ae5c8dd5a03cad1993745e9e5e54693f58a08",
+    "runtime/render/src/skia_prepared_geometry.cpp": "21cf4e4c2a1c6c845e9e6a6777a8bdfe02f6f61f3fec6f57a1acb2a2538ba741"
+  }
+}

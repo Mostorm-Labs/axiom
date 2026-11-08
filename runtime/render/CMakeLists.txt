@@ -626,3 +626,34 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     add_test(NAME G5SharedSceneParity COMMAND axiom_shared_scene_tests --parity)
   endif()
 endif()
+
+if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION AND NOT EMSCRIPTEN)
+  if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_ur0_fixture_oracle
+      ${PROJECT_SOURCE_DIR}/verification/runners/g5/ur0/fixture_oracle.cpp
+      ${PROJECT_SOURCE_DIR}/runtime/ink/src/compact_brush_session.cpp
+      ${PROJECT_SOURCE_DIR}/runtime/ink/src/compact_brush_quality.cpp)
+    target_link_libraries(axiom_ur0_fixture_oracle PRIVATE
+      canvas_runtime_render canvas_runtime_ink CanvasSkia::Skia)
+    target_include_directories(axiom_ur0_fixture_oracle PRIVATE
+      ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+    target_compile_features(axiom_ur0_fixture_oracle PRIVATE cxx_std_20)
+    # Match WASM scalar arithmetic for the independent knot replay. Native ARM
+    # contraction otherwise changes a few coordinates by ~1e-13. This flag is
+    # oracle-local; no production or third-party library is rebuilt/replaced.
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+      target_compile_options(axiom_ur0_fixture_oracle PRIVATE -ffp-contract=off)
+    endif()
+  endif()
+  add_executable(axiom_g5_observation_identity_tests tests/g5_observation_identity_test.cpp
+    ${PROJECT_SOURCE_DIR}/runtime/foundation/src/g5_observation.cpp)
+  target_compile_definitions(axiom_g5_observation_identity_tests PRIVATE AXIOM_G5_UR0_DIAGNOSTICS=1)
+  target_include_directories(axiom_g5_observation_identity_tests PRIVATE
+    ${PROJECT_SOURCE_DIR}/runtime/foundation/include ${PROJECT_SOURCE_DIR}/runtime/semantic/include
+    ${PROJECT_SOURCE_DIR}/runtime/render/include ${PROJECT_SOURCE_DIR}/runtime/resources/include
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include ${PROJECT_SOURCE_DIR}/runtime/ink/include
+    ${PROJECT_SOURCE_DIR}/runtime/input/include ${PROJECT_SOURCE_DIR}/runtime/text/include
+    ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+  target_compile_features(axiom_g5_observation_identity_tests PRIVATE cxx_std_20)
+  add_test(NAME G5Ur0ObservationIdentity COMMAND axiom_g5_observation_identity_tests)
+endif()

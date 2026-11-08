@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 1 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 53.194458
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 2 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 155.248709
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 3 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 1.639625
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+not ok 4 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 0.714333
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:31:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:37:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+not ok 5 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 0.965166
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:42:1'
+  failureType: 'testCodeFailure'
+  error: 'actual navigation source join missing'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:47:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 264.226167

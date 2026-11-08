@@ -1,0 +1,108 @@
+TAP version 13
+# Subtest: same-frame retries select the unique accepted provider job and preserve every attempt
+not ok 1 - same-frame retries select the unique accepted provider job and preserve every attempt
+  ---
+  duration_ms: 3.494458
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:27:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    24 preparations and one accepted submit lost the real completion
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:29:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: an unrelated later attempt never replaces the job that actually submitted
+not ok 2 - an unrelated later attempt never replaces the job that actually submitted
+  ---
+  duration_ms: 0.334791
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:33:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:38:66)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: provider job, basis, camera, Scene and chronology mismatches remain unqualified
+ok 3 - provider job, basis, camera, Scene and chronology mismatches remain unqualified
+  ---
+  duration_ms: 6.082666
+  ...
+# Subtest: duplicate accepted submits and ambiguous draws within the successful job fail closed
+ok 4 - duplicate accepted submits and ambiguous draws within the successful job fail closed
+  ---
+  duration_ms: 0.431584
+  ...
+# Subtest: decodes actual observed commit Scene submit and completion fields
+ok 5 - decodes actual observed commit Scene submit and completion fields
+  ---
+  duration_ms: 0.326833
+  ...
+# Subtest: foreign completion or mismatched Scene cannot be repaired by copying expected fields
+ok 6 - foreign completion or mismatched Scene cannot be repaired by copying expected fields
+  ---
+  duration_ms: 0.185667
+  ...
+# Subtest: Scene intent publication can precede the callsite observation of its returned commit record
+ok 7 - Scene intent publication can precede the callsite observation of its returned commit record
+  ---
+  duration_ms: 0.169
+  ...
+# Subtest: scope exclusive time and GPU callback ordering preserve raw facts
+ok 8 - scope exclusive time and GPU callback ordering preserve raw facts
+  ---
+  duration_ms: 0.137625
+  ...
+# Subtest: actual compiler rejects another Runtime committing the same generation
+ok 9 - actual compiler rejects another Runtime committing the same generation
+  ---
+  duration_ms: 46.05775
+  ...
+# Subtest: foreign same-generation noise cannot replace the actual matching operation
+ok 10 - foreign same-generation noise cannot replace the actual matching operation
+  ---
+  duration_ms: 0.389
+  ...
+# Subtest: lifetime attachment resource missing or ambiguous render owners fail closed
+ok 11 - lifetime attachment resource missing or ambiguous render owners fail closed
+  ---
+  duration_ms: 0.249542
+  ...
+# Subtest: compact lease lifecycles restore all actual identities, times and ordered events
+ok 12 - compact lease lifecycles restore all actual identities, times and ordered events
+  ---
+  duration_ms: 1.531875
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 10
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 221.392458

@@ -1,0 +1,36 @@
+{
+  "status": "INDEPENDENT_REHASH_VERIFIED",
+  "new_bundle_files": 266,
+  "original_bundle_files_unchanged": 236,
+  "source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "manifest_sha256": "ec20501acf288828177293e9661c7fdbb4ed90c34f31233d3d022cd469754300",
+  "result_status": "BLOCKED_EVIDENCE",
+  "regression": {
+    "status": "AFFECTED_REGRESSIONS_VERIFIED",
+    "native_tests": 22,
+    "node_tests": 81,
+    "python_tests": 26,
+    "boundary_contracts": 120,
+    "full_ctest": "CORROBORATIVE_ONLY_NOT_RERUN; existing historical failures not repaired or relabeled",
+    "positive_browser_chain": "NEW_FAILURE retained separately; passing unit tests do not close it"
+  },
+  "worker_outcomes": {
+    "original": {
+      "ARCHIVED_IMMUTABLE": 3
+    },
+    "diagnostic": {
+      "COMPLETED": 2
+    },
+    "qualification": {
+      "COMPLETED": 3,
+      "CONTROL_STOP": 1,
+      "MISSING": 8
+    },
+    "separate": {
+      "MISSING": 9
+    },
+    "main": {
+      "MISSING": 30
+    }
+  }
+}

@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/compact_geometry.hpp"
@@ -255,6 +257,8 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
                                 std::span<const foundation::InkKnot> knots,std::uint64_t seed,
                                 CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid,bool compatibleCoverage,CompactCoverageTargets* targets,
                                 const CompactStrokeRange* range,const PreparedNavigationGeometry* prepared,bool yieldOnAllocation){
+    G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
+
     if(knots.empty())return;
     std::vector<foundation::InkKnot> selected;
     double rangeStartDistance = 0.0;
@@ -324,6 +328,7 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         if(!targets){tile=compatibleCoverage?canvas.makeSurface(SkImageInfo::MakeN32Premul(w,h)):nullptr;
             if(!tile)tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
             if(work&&tile){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}}
+        G5_TARGET(tile,compatibleCoverage);
         if(!tile){
             if(yieldOnAllocation&&work){work->resourcePending=true;return;}
             if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");
@@ -531,6 +536,8 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
     bool compatible,CompactRasterWork* work){
+    G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
+
     resourcePending_=false;
     if(done_)return true;
     if(!tile_){
@@ -566,6 +573,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         // different coverage encoding. The exact checkpoints remain valid.
         if(recordComplete_&&blend!=contourBlend_)abandonPictures();
         contourBlend_=blend;
+        G5_TARGET(tile_,compatible);
         auto* target=tile_->getCanvas();target->resetMatrix();target->clear(tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
         target->translate(float(-x_),float(-y_));target->concat(matrix_);
         if(hybrid_){

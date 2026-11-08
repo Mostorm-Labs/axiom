@@ -16,11 +16,15 @@ target_compile_options(axiom_js_runtime PRIVATE -Wall -Wextra -Wpedantic -Werror
 target_include_directories(axiom_js_runtime PRIVATE
   "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
   "${PROJECT_SOURCE_DIR}/sdk/common")
+set(_axiom_web_exports "'_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free'")
+if(AXIOM_G5_UR0_DIAGNOSTICS)
+  string(APPEND _axiom_web_exports ",'_axiom_g5_trace_control','_axiom_g5_trace_bytes','_axiom_g5_trace_size'")
+endif()
 target_link_options(axiom_js_runtime PRIVATE
   -fexceptions
   --no-entry -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web
   -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2
-  "-sEXPORTED_FUNCTIONS=['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free']"
+  "-sEXPORTED_FUNCTIONS=[${_axiom_web_exports}]"
   "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16','HEAPU8']"
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf@/axiom-font.otf\""
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/catalog.json@/fonts/catalog.json\""

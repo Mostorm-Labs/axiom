@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+not ok 1 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 4.134584
+  location: '/private/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/p36-r2-red-0_wf4b91/verification/tests/g5_ur0_compiler.test.mjs:37:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/p36-r2-red-0_wf4b91/verification/tests/g5_ur0_compiler.test.mjs:49:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43.460083

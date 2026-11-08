@@ -1,0 +1,33 @@
+{
+  "status": "INCOMPLETE",
+  "loss": {
+    "statistical": 31860,
+    "critical": 0
+  },
+  "capabilities": [
+    {
+      "counter": "retained individual work/copy/reference/lease values",
+      "capability": "EXACT",
+      "scope": "only at each retained actual observation; never total work under statistical loss"
+    },
+    {
+      "counter": "full measurement work totals / mask and body cache totals / lease classes",
+      "capability": "MISSING",
+      "reason": "ordinary statistical records dropped"
+    },
+    {
+      "counter": "ImmutableValue equality header size",
+      "capability": "EXACT",
+      "scope": "sizeof(T) object/header only"
+    },
+    {
+      "counter": "deep payload scanned bytes, hash bytes, implicit allocator copies",
+      "capability": "UNSUPPORTED",
+      "reason": "no extra scan introduced solely to count"
+    },
+    {
+      "counter": "Skia internal software coverage on GPU surface",
+      "capability": "UNSUPPORTED"
+    }
+  ]
+}

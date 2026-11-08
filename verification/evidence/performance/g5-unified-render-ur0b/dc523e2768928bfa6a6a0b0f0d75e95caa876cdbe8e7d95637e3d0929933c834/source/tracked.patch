@@ -1,0 +1,1613 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f74c2c93..85b237cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,14 @@ cmake_minimum_required(VERSION 3.30)
+ project(canvas_v2_pocs VERSION 0.1.0 LANGUAGES C CXX)
+ include(cmake/AxiomBuildInfo.cmake)
+ 
++option(AXIOM_G5_UR0_DIAGNOSTICS "Enable non-installed private UR0 observation variant" OFF)
++if(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(NOT EMSCRIPTEN)
++    message(FATAL_ERROR "UR0 diagnostics variant is Web qualification only; native collector tests are target-local")
++  endif()
++  add_compile_definitions(AXIOM_G5_UR0_DIAGNOSTICS=1)
++  install(CODE "message(FATAL_ERROR \"UR0 qualification artifacts are not consumer install packages\")")
++endif()
+ option(AXIOM_ENABLE_FRAME_TIMING "Enable private canonical-frame stage diagnostics (not a release profile)" OFF)
+ if(AXIOM_ENABLE_FRAME_TIMING)
+   add_compile_definitions(AXIOM_ENABLE_FRAME_TIMING=1)
+@@ -174,7 +182,7 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
+       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
+       canvas_runtime_input canvas_runtime_control canvas_runtime_semantic
+       ARCHIVE DESTINATION lib)
+-    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
++    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include PATTERN "g5_observation.hpp" EXCLUDE)
+     install(FILES runtime/composition/include/canvas/runtime/runtime_composition.hpp
+       runtime/composition/include/canvas/runtime/resource_binding.hpp DESTINATION include/canvas/runtime)
+     install(FILES "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" DESTINATION share/AxiomRuntime)
+@@ -190,7 +198,7 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
+     install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
+       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
+       canvas_runtime_input canvas_runtime_control canvas_runtime_semantic ARCHIVE DESTINATION lib)
+-    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
++    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include PATTERN "g5_observation.hpp" EXCLUDE)
+     install(FILES runtime/composition/include/canvas/runtime/runtime_composition.hpp
+       runtime/composition/include/canvas/runtime/resource_binding.hpp DESTINATION include/canvas/runtime)
+     install(FILES runtime/composition/include/canvas/platform/web_runtime_adapter.hpp
+diff --git a/runtime/composition/src/runtime_composition.cpp b/runtime/composition/src/runtime_composition.cpp
+index e4e6c57c..eaf4cb43 100644
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/runtime/internal/runtime_composition_core.hpp"
+ #include "canvas/runtime/canvas_runtime_facade.hpp"
+ #include "canvas/runtime/internal/multi_selection_port.hpp"
+@@ -289,6 +291,13 @@ bool RuntimeCompositionCore::cancelAllPointers() noexcept {
+   return true;
+ }
+ bool RuntimeCompositionCore::submit(const input::PlatformPointerBatch& batch) noexcept {
++  G5_SCOPE(g5Input,g5::Tag::input,g5::Purpose::none);
++
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(runtime_&&std::this_thread::get_id()==ownerThread_){G5_OBSERVE(g5::Kind::Basis,g5::Tag::input,true,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value());}
++#endif
++
++
+   if (std::this_thread::get_id() != ownerThread_ || !canMutate() || batch.samples.empty()) return false;
+   // Controls submitted through the public RuntimeFacade share this owner
+   // boundary. Consume them before the next platform input batch so a host
+@@ -444,10 +453,16 @@ bool RuntimeCompositionCore::requestCanonicalFrame(std::uint64_t frameId) noexce
+   const bool pumped = ownerPump();
+   runtime_->setPlatformPresentationDeferred(wasDeferred);
+   if (!pumped) return false;
+-  return runtime_->presentCanonicalFrame(frameId, 0.0, false) && captureCanonicalWork();
++  return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false)) && captureCanonicalWork();
+ }
+ bool RuntimeCompositionCore::serviceFrameOpportunity(
+     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
++
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(runtime_&&std::this_thread::get_id()==ownerThread_){G5_OBSERVE(g5::Kind::Basis,g5::Tag::input,true,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),resources_.manifest.manifest_revision,viewId_.value());}
++#endif
++
++
+   out = {};
+   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+   // A capture may be superseded by input, resize, restore, or cancellation
+@@ -495,7 +510,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
+       !awaitingViewportClaim) {
+     const auto frameId = runtime_->nextCanonicalFrameId();
+     if (frameId == 0U) return false;
+-    out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);
++    out.canonicalRequested = G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false));
+     if (!out.canonicalRequested && !runtime_->canonicalPresentationRetryable()) return false;
+   }
+   if (!captureCanonicalWork()) return false;
+@@ -593,6 +608,8 @@ bool RuntimeCompositionCore::captureCanonicalWork() noexcept {
+       nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
+   pendingCanonicalWork_ = CanonicalWork{runtimeInstanceId_, resources_.lifetimeGeneration,
+       attachmentEpoch_, nextCanonicalWorkId_++, *frame};
++  G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,pendingCanonicalWork_->workId,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),runtime_->canonicalCommitFence().ordinal.value(),resources_.manifest.manifest_revision,runtime_->sceneRevision(),runtime_->cameraGeneration());
++  G5_OBSERVE(g5::Kind::Submit,g5::Tag::canonical_receipt,true,pendingCanonicalWork_->workId,frame->viewId.value(),frame->frameId.value(),frame->documentRevision,frame->sceneGeneration,frame->surfaceGeneration.value(),frame->metricsGeneration.value());
+   return true;
+ }
+ std::optional<CanonicalWork> RuntimeCompositionCore::lastSubmittedCanonicalWork() const noexcept {
+@@ -605,6 +622,8 @@ std::optional<CanonicalWork> RuntimeCompositionCore::lastSubmittedCanonicalWork(
+   return pendingCanonicalWork_;
+ }
+ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion& completion) noexcept {
++  G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,0,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,completion.work.frame.viewId.value(),completion.work.frame.frameId.value(),completion.work.frame.documentRevision,completion.work.frame.sceneGeneration,completion.work.frame.surfaceGeneration.value(),completion.work.frame.metricsGeneration.value());
++
+   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+   const auto current = lastSubmittedCanonicalWork();
+   if (!current || completion.work != *current) return false;
+@@ -612,6 +631,7 @@ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion&
+   const bool accepted = runtime_->receivePlatformPresented({frame.viewId, frame.frameId,
+       frame.surfaceGeneration, frame.metricsGeneration, completion.outcome,
+       completion.evidence, completion.presentedTimeNs});
++  G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,accepted?1ULL:2ULL,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,frame.viewId.value(),frame.frameId.value(),frame.documentRevision,frame.sceneGeneration,frame.surfaceGeneration.value(),frame.metricsGeneration.value());
+   if (accepted) pendingCanonicalWork_.reset();
+   return accepted;
+ }
+diff --git a/runtime/foundation/CMakeLists.txt b/runtime/foundation/CMakeLists.txt
+index 6e74f855..83721826 100644
+--- a/runtime/foundation/CMakeLists.txt
++++ b/runtime/foundation/CMakeLists.txt
+@@ -5,3 +5,18 @@ target_include_directories(canvas_runtime_foundation INTERFACE
+     # This is a header dependency, not a dependency on the Semantic library.
+     ${PROJECT_SOURCE_DIR}/runtime/semantic/include)
+ target_compile_features(canvas_runtime_foundation INTERFACE cxx_std_20)
++
++# Collector objects are private and never installed. Normal Runtime remains unchanged.
++if(AXIOM_G5_UR0_DIAGNOSTICS)
++  add_library(axiom_g5_observation STATIC src/g5_observation.cpp)
++  target_include_directories(axiom_g5_observation PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
++  target_compile_features(axiom_g5_observation PRIVATE cxx_std_20)
++  target_link_libraries(canvas_runtime_foundation INTERFACE axiom_g5_observation)
++endif()
++if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION AND NOT EMSCRIPTEN)
++  add_executable(axiom_g5_observation_tests tests/g5_observation_test.cpp src/g5_observation.cpp)
++  target_compile_definitions(axiom_g5_observation_tests PRIVATE AXIOM_G5_UR0_DIAGNOSTICS=1)
++  target_include_directories(axiom_g5_observation_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/runtime/resources/include ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
++  target_compile_features(axiom_g5_observation_tests PRIVATE cxx_std_20)
++  add_test(NAME G5Ur0Observation COMMAND axiom_g5_observation_tests)
++endif()
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index b1811992..0abc0051 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "canvas/interaction/canvas_editing_runtime.hpp"
+ #include "canvas/semantic/table_content.hpp"
+@@ -827,6 +829,8 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
+ 
+ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch& batch,
+                                             std::uint64_t observationTimeNs) {
++  G5_SCOPE(g5Scope,g5::Tag::input,g5::Purpose::none);
++
+   if (closed_ || surfaceTransitionActive_ || !surface_.available || std::this_thread::get_id() != ownerThread_ ||
+       publicationCallbackActive_) return false;
+   (void)observationTimeNs;
+@@ -839,6 +843,10 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+     if (!appBinding_->registerInputSource({source, "platform"})) return false;
+   }
+   const auto routed = appBinding_->submit(source, batch);
++  G5_OBSERVE(g5::Kind::Admission,g5::Tag::input_result,true,routed.accepted,routed.terminalCancel);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(g5::enabled())for(const auto& point:routed.normalized.samples)g5::emit(g5::Kind::Stage,g5::Tag::pointer_identity,{point.key.source,point.key.pointer,point.key.generation,point.sequence,point.timestampNs,static_cast<unsigned>(point.phase),point.predicted},true);
++#endif
+   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+   if (imageCropPointer_) {
+     // Retain normal ingress identities, then give Crop exclusive ownership.
+@@ -973,6 +981,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+       routing.routedSample.x = content.first;
+       routing.routedSample.y = content.second;
+     }
++    G5_OBSERVE(g5::Kind::Stage,g5::Tag::routed_sample,true,sample.sequence,sample.key.source,sample.key.pointer,sample.key.generation,g5::bits(routing.routedSample.x),g5::bits(routing.routedSample.y),g5::bits(sample.pressure),routing.viewportClaimed,static_cast<unsigned>(routing.disposition));
+     baselineTrace_.push_back({sample.sequence, sample.timestampNs, sample.x, sample.y,
+                               routing.routedSample.x, routing.routedSample.y,
+                               sample.pressure, sample.key, sample.phase,
+@@ -1019,7 +1028,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+       // in Runtime makes the scheduling decision explicit without doing a
+       // fence wait from the input callback.
+       canonicalPresentationDirty_ = true;
+-    } else if (!presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false)) {
++    } else if (!G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false))) {
+       return false;
+     }
+   }
+@@ -1205,7 +1214,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
+     // canonical target on Down; the first valid Move will submit the preview.
+     if (creation.preview().valid) {
+       if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+-      else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++      else (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+     }
+     return true;
+   }
+@@ -1231,7 +1240,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
+     // frame, so make the owner host repaint immediately after every move.
+     canonicalPresentationDirty_ = true;
+     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+-    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++    else (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+     return true;
+   }
+   if (phase == input::PointerPhase::kCancel) {
+@@ -1623,7 +1632,10 @@ bool CanvasEditingRuntime::selectAtViewPoint(float x, float y) noexcept {
+ 
+ void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,
+                                            const semantic::ApplyResult& result) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::observer,g5::Purpose::none);
++
+   if (result.disposition != semantic::ApplyDisposition::kApplied || !result.commit_record) return;
++  G5_OBSERVE(g5::Kind::Commit,g5::Tag::canonical_commit,true,g5::word(operation.document_id,0),g5::word(operation.document_id,1),g5::word(operation.id,0),g5::word(operation.id,1),result.commit_record->before_generation.value(),result.commit_record->after_generation.value(),result.commit_record->commit_stamp.runtime_epoch.value(),result.commit_record->commit_stamp.ordinal.value());
+   selection_.onChangeSet(result.commit_record->change_set);
+   if(selection_.primary().isZero())selectionView_.reset();
+   lastAppliedCommit_ = *result.commit_record;
+@@ -1859,7 +1871,9 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
+ bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
+   if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
+       operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
++  G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+   if (!publication)
+       return false;
+   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalCommand,
+@@ -2462,13 +2476,21 @@ bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x,float y) noexcept {
+   }
+   if(changed){canonicalPresentationDirty_=true;
+     if(platformPresentationDeferred_)transientOverlayDirty_=true;
+-    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());}
++    else (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));}
+   return changed;
+ }
+ 
+ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
+                                          float x, float y) noexcept {
+-  if (!selectionMode_ || !key.valid()) return false;
++  if (!selectionMode_ || !key.valid()) return false;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  const auto observePose=[&]()noexcept{if(!g5::enabled())return;const auto id=selection_.primary();if(id.isZero())return;
++    const auto* t=transformOverrides_.find(id);if(!t&&sceneCoordinator_){if(const auto* record=sceneCoordinator_->runtimeScene().find(id))t=&record->transform;}
++    if(t)g5::emit(g5::Kind::Stage,g5::Tag::transient,{g5::word(id,0),g5::word(id,1),key.generation,cameraGeneration(),g5::bits(t->a),g5::bits(t->b),g5::bits(t->c),g5::bits(t->d),g5::bits(t->tx),g5::bits(t->ty),sceneRevision(),semanticGeneration_.current().value()},true);
++  };
++  struct ObservePoseExit{const decltype(observePose)& callback;~ObservePoseExit(){callback();}} observePoseExit{observePose};
++#endif
++
+   if (connectorPointerKeys_.contains(key)) {
+     const bool accepted = creationPointer(key, phase, x, y);
+     if (phase == input::PointerPhase::kUp || phase == input::PointerPhase::kCancel || !accepted)
+@@ -2511,7 +2533,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+       editingMetricsGeneration_ = surface_.metricsGeneration; editingSurfaceGeneration_ = surface_.generation;
+       editingSelectionRevision_ = selection_.revision(); editingPermissionRevision_ = multiSelectionPermissionRevision_;
+       editingChanged_ = false;
+-      (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++      (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+       return true;
+     } catch (const std::bad_alloc&) { cancelSelectionTransform(); return false; }
+   }
+@@ -2531,7 +2553,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+       editingChanged_ = dx != 0.0 || dy != 0.0;
+       if (!transformDrag_.preview(values)) { cancelSelectionTransform(); return false; }
+       (void)renderSelectionOverlay(); canonicalPresentationDirty_ = true;
+-      (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++      (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+       if (phase == input::PointerPhase::kUp) {
+         const bool accepted = !editingChanged_ || transformDrag_.commit();
+         const bool handoff = accepted && editingChanged_;
+@@ -2588,7 +2610,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+       // all other object kinds and for failed/empty acquisition.
+       if (!selected || !acquired || acquired->kind != semantic::ObjectKind::kGroup) {
+         editingPointer_ = key;
+-        (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++        (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+         return true;
+       }
+     }
+@@ -2605,7 +2627,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+       sectionBoundaryDrag_=SectionBoundaryDrag{object->id,content,content,t,
+           semanticGeneration().value(),cameraGeneration(),surface_.metricsGeneration,true};
+       editingPointer_=key;editingDownWorld_={world.first,world.second};
+-      (void)presentTransientOverlayFrame(nextCanonicalFrameId());return true;
++      (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));return true;
+     }
+     const std::array targets{std::pair{object->id,t}};
+     if (!transformDrag_.begin(targets)) return false;
+@@ -2618,7 +2640,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+     editingSurfaceGeneration_=surface_.generation;editingSelectionRevision_=selection_.revision();
+     editingDropWorld_={world.first,world.second};
+     editingChanged_ = false;
+-    (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++    (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+     return true;
+   }
+   if (key != editingPointer_) return true;
+@@ -2786,7 +2808,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
+     // a canonical operation or a later unrelated repaint.
+     (void)renderSelectionOverlay();
+   canonicalPresentationDirty_ = true;
+-    (void)presentTransientOverlayFrame(nextCanonicalFrameId());
++    (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+     if (phase == input::PointerPhase::kUp) {
+       const bool accepted=!editingChanged_ || transformDrag_.commit();
+       const bool needsHandoff = accepted && editingChanged_;
+@@ -2985,6 +3007,8 @@ std::optional<CanvasEditingRuntime::InkDefaults> CanvasEditingRuntime::brushCata
+ }
+ 
+ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::eraser_begin,g5::Purpose::none);
++
+   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+   // A selection/creation frame uses the same transient provider as the
+   // eraser. Hide and clear that frame before starting a new eraser session;
+@@ -2998,7 +3022,7 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
+   // render pump presents it. Do that handoff before starting an eraser so the
+   // overlay cannot expose the shape's former location for one frame.
+   if (canonicalPresentationDirty_ && surface_.available && activeSurfaceProvider() != nullptr) {
+-    if (!presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false)) return false;
++    if (!G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false))) return false;
+   }
+   std::lock_guard lock(previewStateMutex_);
+   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
+@@ -3046,6 +3070,7 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
+   const auto it = eraserTraces_.find(pointerId);
+   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
+   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
++  G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
+   if(toolMode_==ToolMode::kObjectEraser){
+     auto& candidates=objectEraseCandidates_[pointerId];const auto count=candidates.size();
+     if(runtimeSceneHost_){
+@@ -3061,7 +3086,7 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
+     advanceLaserPresentation(now);
+     if(candidates.size()!=count){
+       transientOverlayDirty_=true;
+-      if(!platformPresentationDeferred_)(void)presentTransientOverlayFrame(nextCanonicalFrameId());
++      if(!platformPresentationDeferred_)(void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+     }
+     return !renderPreview||platformPresentationDeferred_||previewController_->renderIfDirty(previewController_->presentationStyle());
+   }
+@@ -3069,11 +3094,13 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
+   // unchanged until Up. Full-scene replacement reveals the actual backdrop.
+   transientOverlayDirty_=true;
+   if(renderPreview&&!platformPresentationDeferred_)
+-    return presentTransientOverlayFrame(nextCanonicalFrameId());
++    return G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));
+   return true;
+ }
+ 
+ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::eraser_up,g5::Purpose::none);
++
+   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+   std::lock_guard lock(previewStateMutex_);
+   const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
+@@ -3089,7 +3116,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
+   std::optional<std::vector<semantic::EraseMaskAddItem>> partial;
+   if(!objectEraser) {
++    G5_SCOPE(g5Exact,g5::Tag::exact_prepare,g5::Purpose::none);
+     partial=partialEraseTargets(it->second);
++    G5_SCOPE_END(g5Exact);
+     if(!partial){AXIOM_ERASE_REJECT("exact_targets");(void)eraserCancel(pointerId);return false;}
+     for(const auto& item:*partial)hit.insert(item.object_id);
+   } else {
+@@ -3155,19 +3184,25 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+     }
+     inverse.payload = std::move(remove);
+   }
++  G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+   if (!publication) {
+       AXIOM_ERASE_REJECT("publication_reservation");
+       (void)eraserCancel(pointerId);
+       return false;
+   }
++  G5_SCOPE(g5Apply,g5::Tag::semantic_apply,g5::Purpose::none);
+   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
+       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
++  G5_SCOPE_END(g5Apply);
+   eraserTraces_.erase(it);
+   eraserPreviewRevisions_.erase(pointerId);
+   if (applied.disposition != semantic::ApplyDisposition::kApplied) {AXIOM_ERASE_REJECT("semantic_apply");return false;}
+   observeApplied(operation, applied);
++  G5_SCOPE(g5History,g5::Tag::history,g5::Purpose::none);
+   if (!history_.record(operation, {std::move(inverse)})) {AXIOM_ERASE_REJECT("history_record");return false;}
++  G5_SCOPE_END(g5History);
+   ++submittedOperationCount_;
+   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+@@ -3183,7 +3218,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+     // Semantic acceptance is already complete. A failed derived present must
+     // not skip preview cleanup; the next frame may recover the Scene while the
+     // eraser overlay is retired immediately.
+-    (void)presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
++    (void)G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+   }
+   return true;
+ }
+@@ -3242,6 +3277,8 @@ bool CanvasEditingRuntime::appendBrushSamples(
+ }
+ 
+ bool CanvasEditingRuntime::presentBrushPreview() noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::preview,g5::Purpose::preview);
++
+   std::lock_guard lock(previewStateMutex_);
+   return previewController_ != nullptr &&
+       previewController_->renderIfDirty(previewController_->presentationStyle());
+@@ -3394,7 +3431,9 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept
+   inverse.schema_version = 1U;
+   inverse.payload_version = 1U;
+   inverse.payload = semantic::DeleteObjectsOp{{objectId}};
++  G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+   if (!publication) {
+       (void)cancelBrushSession(pointerId);
+       return false;
+@@ -3509,12 +3548,13 @@ bool CanvasEditingRuntime::applyViewportNavigation(
+   // brush input arrives.  Treat it as an independent canonical-surface
+   // invalidation so the Web/Android/Windows display cannot remain at the old
+   // transform until the next pointer sample happens to trigger a frame.
++  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+   if (surface_.available && activeSurfaceProvider() != nullptr) {
+     if (platformPresentationDeferred_) {
+       canonicalPresentationDirty_ = true;
+       return true;
+     }
+-    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
++    return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+   }
+   return true;
+ }
+@@ -3538,12 +3578,13 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
+                                            viewport.translationY)) {
+     return false;
+   }
++  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+   if (surface_.available && activeSurfaceProvider() != nullptr) {
+     if (platformPresentationDeferred_) {
+       canonicalPresentationDirty_ = true;
+       return true;
+     }
+-    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
++    return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+   }
+   return true;
+ }
+@@ -3583,7 +3624,7 @@ bool CanvasEditingRuntime::fitViewportToContent(
+       canonicalPresentationDirty_ = true;
+       return true;
+     }
+-    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
++    return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+   }
+   return true;
+ }
+@@ -3657,7 +3698,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
+   if (operation.document_id != documentId_ ||
+       operation.id != semantic::OperationId(canvas::foundation::ObjectId::fromUint64(request.operationId)))
+     return interaction::SubmitResult::rejected();
++  G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+   if (!publication)
+       return interaction::SubmitResult::rejected();
+   const auto applied = operationEngine_.apply(
+@@ -3711,7 +3754,9 @@ interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
+   if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
+       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
+       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
++  G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+   if (!publication)
+       return interaction::SubmitResult::rejected();
+   auto* commandAdmission = &admission;
+@@ -3868,7 +3913,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
+   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
+       !historySceneReady()) return interaction::SubmitResult::rejected();
+   for (const auto& operation : operations) {
+-      PublicationReservation publication(localOperationSink_, operation);
++      G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
++  PublicationReservation publication(localOperationSink_, operation);
++  G5_SCOPE_END(g5Publication);
+       if (!publication)
+           return interaction::SubmitResult::rejected();
+       const auto applied = resourceManifestPort_ ? operationEngine_.apply(operation,
+@@ -3902,7 +3949,7 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
+     // Once Semantic has accepted, presentation/projection failure cannot
+     // reject that mutation. The next frame recovers the derived Scene.
+     if (!platformPresentationDeferred_) {
+-      (void)presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
++      (void)G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+     }
+   }
+   return interaction::SubmitResult::acceptedResult();
+@@ -4200,6 +4247,8 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
+ }
+ 
+ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::navigation,g5::Purpose::navigation);
++
+   presented=false;
+   // A locally submitted canonical frame is already a valid visual source for
+   // disposable navigation feedback before platform PresentedFeedback arrives.
+@@ -4207,6 +4256,13 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
+   const auto* exact=lastSubmittedCanonicalFrameState_ != nullptr
+       ? lastSubmittedCanonicalFrameState_.get()
+       : lastPresentedCanonicalFrameState_.get();
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(g5::enabled()){
++    if(exact)g5::emit(g5::Kind::Stage,g5::Tag::navigation,{1,exact->sceneGeneration.value(),exact->sceneReadToken.value(),exact->surfaceGeneration.value(),exact->metricsGeneration.value(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,cameraGeneration(),pendingCanonicalIdentities_.size(),canonicalPresentationDirty_},true);
++    else g5::emit(g5::Kind::Stage,g5::Tag::navigation,{0,semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,cameraGeneration()},true);
++  }
++#endif
++
+   // A live preview or its seal changes navigation eligibility, not the cost
+   // of rebuilding this camera. Keep exact preparation cooperative until a
+   // replacement is submitted, including when input interrupts the settle.
+@@ -4238,6 +4294,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
+   if(previewActive()){
+       skiaRenderer_.cancelNavigationWork();navigationActive_=false;return false;
+   }
++  G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewportController_->state().scale),g5::bits(viewportController_->state().translationX),g5::bits(viewportController_->state().translationY));
+   const auto generation=cameraGeneration();
+   if(navigationCameraGeneration_!=generation){
+       navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
+@@ -4298,12 +4355,15 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
+       {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm,selectionOverlay(),backgroundOnly);
+   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
+   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
++  G5_OBSERVE(g5::Kind::Terminal,g5::Tag::navigation,true,generation,presented,skiaRenderer_.navigationWork().pending);
+   return true;
+ }
+ 
+ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+                                               double frameMs,
+                                               bool retirePreview) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::canonical,g5::Purpose::canonical);
++
+   AXIOM_FRAME_TIMING_BEGIN(navigationExactPreparation_,viewId_.value(),frameId,semanticGeneration().value(),sceneRevision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration);
+   canonicalPresentationRetryable_ = false;
+   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
+@@ -4460,6 +4520,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+     const auto bounds=scene::computeBounds(*object,nullptr,&route);
+     entry.record.derivedGeometry=route;entry.record.geometryBounds=bounds.geometry;
+     entry.record.visualBounds=bounds.visual;entry.record.worldBounds=bounds.world;
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
+     references.value().canonicalBytes.clear();references.value().digest.clear();
+   }
+   // Sticky text follows the Shape label presentation path: the parent owns
+@@ -4494,7 +4555,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+       parentEntry.command = render::StickyReferenceCommand{
+           *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
+       if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
+-      references.value().canonicalBytes.clear();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+       references.value().digest.clear();
+     }
+   }
+@@ -4502,7 +4564,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+   // RuntimeScene retain their original records throughout a drag.
+   for (auto& entry: references.value().entries) {
+     if (const auto* transform=transformOverrides_.find(entry.record.objectId)) {
+-      entry.record.transform=*transform;
++      entry.record.transform=*transform;
++      G5_OBSERVE(g5::Kind::Basis,g5::Tag::transient,true,g5::word(entry.record.objectId,0),g5::word(entry.record.objectId,1),frameId,cameraGeneration(),g5::bits(transform->a),g5::bits(transform->b),g5::bits(transform->c),g5::bits(transform->d),g5::bits(transform->tx),g5::bits(transform->ty),sceneRevision(),semanticGeneration_.current().value());
+       if (textLayoutService_) {
+         if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content.get())) {
+           const auto layout = textLayoutService_->resolveShape(
+@@ -4514,7 +4577,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+         }
+       }
+       // Canonical digest/encoding does not describe transient editor pixels.
+-      references.value().canonicalBytes.clear();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+       references.value().digest.clear();
+     }
+   }
+@@ -4546,7 +4610,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+         parentEntry.command = render::StickyReferenceCommand{
+             *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
+       if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
+-      references.value().canonicalBytes.clear();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+       references.value().digest.clear();
+     }
+   }
+@@ -4566,7 +4631,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+             selected->record.objectId, label, *shape, selected->record.transform, true);
+         selected->record.textLayout = layout;
+         selected->command = render::ShapeReferenceCommand{*shape, layout, true};
+-        references.value().canonicalBytes.clear();
++        G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+         references.value().digest.clear();
+       }
+       if (const auto* sticky = std::get_if<semantic::StickyContent>(&selected->record.content.get())) {
+@@ -4580,7 +4646,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+           const auto stickyLayout = textLayoutService_->resolveStickyLabel(
+               selected->record.objectId, empty, *sticky, true, selected->record.transform);
+           selected->command = render::StickyReferenceCommand{*sticky, stickyLayout, true};
+-          references.value().canonicalBytes.clear();
++          G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+           references.value().digest.clear();
+         }
+       }
+@@ -4645,7 +4712,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+             const auto& sticky = std::get<semantic::StickyContent>(parent->content);
+             existingParent->command = render::StickyReferenceCommand{
+                 sticky, layout, singleSelectionAffordances() && selection_.primary() == existingParent->record.objectId};
+-            references.value().canonicalBytes.clear();
++            G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+             references.value().digest.clear();
+             entry.command = render::GroupReferenceCommand{};
+           }
+@@ -4659,7 +4727,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+               [&](const auto& value) { return value.record.objectId == object->id; });
+           if (existing != entries.end()) *existing = std::move(entry);
+           else entries.push_back(std::move(entry));
+-          references.value().canonicalBytes.clear();
++          G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+           references.value().digest.clear();
+         }
+       }
+@@ -4675,7 +4744,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+       entry.record.worldBounds = bounds.world;
+       entry.command = render::ImageReferenceCommand{
+           std::get<semantic::ImageContent>(imageCropPresentation_->content), true};
+-      references.value().canonicalBytes.clear();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+       references.value().digest.clear();
+     }
+   }
+@@ -4698,7 +4768,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+       parentEntry.command = render::StickyReferenceCommand{
+           *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
+         childEntry.command = render::GroupReferenceCommand{};
+-        references.value().canonicalBytes.clear();
++        G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+         references.value().digest.clear();
+         break;
+       }
+@@ -4923,6 +4994,11 @@ bool CanvasEditingRuntime::receivePlatformPresented(
+ }
+ 
+ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, bool frameOpportunity) noexcept {
++  G5_SCOPE(g5Scope,g5::Tag::transient,g5::Purpose::transient);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  if(g5::enabled())for(const auto& [pointer,trace]:eraserTraces_)g5::emit(g5::Kind::Basis,g5::Tag::eraser_revision,{pointer,trace.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration},true);
++#endif
++
+   // Deferred hosts consume only the latest transform at a display opportunity.
+   // Pointer callbacks never build/rasterize a complete transient scene.
+   if(platformPresentationDeferred_&&!frameOpportunity){transientOverlayDirty_=true;return true;}
+@@ -5060,7 +5136,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+   for (auto& entry : references.value().entries) {
+     const auto* transform = transformOverrides_.find(entry.record.objectId);
+     const bool selected = entry.record.objectId == selection_.primary();
+-    if (transform) entry.record.transform = *transform;
++    if (transform) entry.record.transform = *transform;
++    if(transform)G5_OBSERVE(g5::Kind::Basis,g5::Tag::transient,true,g5::word(entry.record.objectId,0),g5::word(entry.record.objectId,1),frameId,cameraGeneration(),g5::bits(transform->a),g5::bits(transform->b),g5::bits(transform->c),g5::bits(transform->d),g5::bits(transform->tx),g5::bits(transform->ty),sceneRevision(),semanticGeneration_.current().value());
+     if (!transform && !editingMultiInitial_.empty()) {
+       auto ancestor = entry.record.placement.parent_id;
+       for (std::size_t depth = 0; ancestor && depth <= semanticObjects_.size(); ++depth) {
+@@ -5129,7 +5206,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+           entry.command = render::ShapeReferenceCommand{*shape, layout, selected};
+         }
+       }
+-      references.value().canonicalBytes.clear();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+       references.value().digest.clear();
+     }
+   }
+@@ -5152,7 +5230,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+         parentEntry.command = render::StickyReferenceCommand{
+             *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
+         childEntry.command = render::GroupReferenceCommand{};
+-        references.value().canonicalBytes.clear();
++        G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
++    references.value().canonicalBytes.clear();
+         references.value().digest.clear();
+         break;
+       }
+@@ -5162,6 +5241,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+   if(objectEraseFeedbackActive()){
+     for(auto& entry:references.value().entries)
+       for(const auto& [pointer,ids]:objectEraseCandidates_){(void)pointer;if(ids.contains(entry.record.objectId)){entry.presentationOpacity=.2F;break;}}
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
+     references.value().canonicalBytes.clear();references.value().digest.clear();
+   }
+   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
+@@ -5229,7 +5309,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+ bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
+   if (!transientOverlayDirty_) return true;
+   if (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && !partialEraseFeedbackActive() && !validCreationHover()) return clearTransientOverlay();
+-  return presentTransientOverlayFrame(nextCanonicalFrameId(),true);
++  return G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId(),true));
+ }
+ 
+ bool CanvasEditingRuntime::clearTransientOverlay() noexcept {
+diff --git a/runtime/interaction/src/canvas_partial_erase.cpp b/runtime/interaction/src/canvas_partial_erase.cpp
+index 8df13391..110d38e0 100644
+--- a/runtime/interaction/src/canvas_partial_erase.cpp
++++ b/runtime/interaction/src/canvas_partial_erase.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/interaction/canvas_editing_runtime.hpp"
+ #include "canvas/render/selection_region_geometry.hpp"
+ #include "partial_erase_geometry.hpp"
+@@ -11,6 +13,7 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
+     std::span<const foundation::WorldPoint> trace, bool exactHit) const {
+     std::vector<semantic::EraseMaskAddItem> result;
+     if (trace.empty() || !sceneCoordinator_) return result;
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::exact_prepare,true,semanticGeneration_.current().value(),sceneCoordinator_->runtimeScene().generation().value(),sceneRevision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration,trace.size(),exactHit);
+     const double radius = eraserDiameterLogicalPx_ * .5;
+     double left=trace.front().x,right=left,top=trace.front().y,bottom=top;
+     for(const auto& p:trace){left=std::min(left,double(p.x));right=std::max(right,double(p.x));top=std::min(top,double(p.y));bottom=std::max(bottom,double(p.y));}
+@@ -27,7 +30,9 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
+         auto mask=partialEraseGeometry(trace,record.transform,radius);
+         if(!mask)return std::nullopt;
+         if(exactHit) {
++            G5_SCOPE(g5Path,g5::Tag::pathops,g5::Purpose::none);
+             const auto hit=skiaRenderer_.intersectEraseGeometry(record,*mask);
++            G5_SCOPE_END(g5Path);
+             if(hit==render::SelectionGeometryHit::kInvalid){
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+                 std::fprintf(stderr,"AXIOM_ERASE_REJECT stage=exact_geometry trace=%zu old_masks=%zu\n",trace.size(),record.eraseMasks.size());
+diff --git a/runtime/interaction/src/editor_history.cpp b/runtime/interaction/src/editor_history.cpp
+index d42fa953..ff407031 100644
+--- a/runtime/interaction/src/editor_history.cpp
++++ b/runtime/interaction/src/editor_history.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/interaction/editor_history.hpp"
+ 
+ #include <algorithm>
+@@ -131,6 +133,7 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
+ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareValidatedRecord(
+     const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
+     std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after, bool admitted) {
++    G5_SCOPE(g5History,g5::Tag::history_prepare,g5::Purpose::none);
+ #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+     if (canvas::qualification::observing(fc08Qualification_)) return std::nullopt;
+     canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+@@ -176,6 +179,7 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareIntentRecord(
+ } catch (const std::bad_alloc&) { return std::nullopt; }
+ 
+ void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
++    G5_SCOPE(g5History,g5::Tag::history_finalize,g5::Purpose::none);
+     static_assert(std::is_nothrow_move_constructible_v<PreparedEntry>);
+ #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+     if (canvas::qualification::observing(fc08Qualification_)) return;
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 12a68d70..e8a81784 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -626,3 +626,30 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+     add_test(NAME G5SharedSceneParity COMMAND axiom_shared_scene_tests --parity)
+   endif()
+ endif()
++
++if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION AND NOT EMSCRIPTEN)
++  if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
++    add_executable(axiom_ur0_fixture_oracle
++      ${PROJECT_SOURCE_DIR}/verification/runners/g5/ur0/fixture_oracle.cpp
++      ${PROJECT_SOURCE_DIR}/runtime/ink/src/compact_brush_session.cpp
++      ${PROJECT_SOURCE_DIR}/runtime/ink/src/compact_brush_quality.cpp)
++    target_link_libraries(axiom_ur0_fixture_oracle PRIVATE canvas_runtime_render canvas_runtime_ink)
++    target_include_directories(axiom_ur0_fixture_oracle PRIVATE
++      ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
++    target_compile_features(axiom_ur0_fixture_oracle PRIVATE cxx_std_20)
++    # Match WASM scalar arithmetic for the independent knot replay. Native ARM
++    # contraction otherwise changes a few coordinates by ~1e-13. This flag is
++    # oracle-local; no production or third-party library is rebuilt/replaced.
++    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
++      target_compile_options(axiom_ur0_fixture_oracle PRIVATE -ffp-contract=off)
++    endif()
++  endif()
++  add_executable(axiom_g5_observation_identity_tests tests/g5_observation_identity_test.cpp
++    ${PROJECT_SOURCE_DIR}/runtime/foundation/src/g5_observation.cpp)
++  target_compile_definitions(axiom_g5_observation_identity_tests PRIVATE AXIOM_G5_UR0_DIAGNOSTICS=1)
++  target_include_directories(axiom_g5_observation_identity_tests PRIVATE
++    ${PROJECT_SOURCE_DIR}/runtime/foundation/include ${PROJECT_SOURCE_DIR}/runtime/semantic/include
++    ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
++  target_compile_features(axiom_g5_observation_identity_tests PRIVATE cxx_std_20)
++  add_test(NAME G5Ur0ObservationIdentity COMMAND axiom_g5_observation_identity_tests)
++endif()
+diff --git a/runtime/render/src/direct_reference_source.cpp b/runtime/render/src/direct_reference_source.cpp
+index a0a2471e..bc178e0b 100644
+--- a/runtime/render/src/direct_reference_source.cpp
++++ b/runtime/render/src/direct_reference_source.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "canvas/render/direct_reference_source.hpp"
+ #include "affine_bounds.hpp"
+@@ -528,6 +530,8 @@ static foundation::Result<ReferenceDrawList> buildSources(
+     const FrameState& frame,
+     const VisibilityResult& visibility,
+     const RuntimeScene& runtimeScene,bool canonical) {
++    G5_SCOPE(g5Reference,g5::Tag::reference_build,g5::Purpose::none);
++
+     if (frame.sceneGeneration != visibility.sceneGeneration ||
+         frame.sceneReadToken != visibility.sceneReadToken ||
+         frame.sceneGeneration != runtimeScene.generation()) {
+@@ -616,11 +620,16 @@ static foundation::Result<ReferenceDrawList> buildSources(
+     if (!canonical) list.visibleRecords = list.entries.size();
+     if(canonical){
+       AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
++      G5_SCOPE(g5Encode,g5::Tag::reference_encode,g5::Purpose::none);
+       list.canonicalBytes = canonicalBytes(list);
++      G5_SCOPE_END(g5Encode);
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,1,list.canonicalBytes.size());
+       AXIOM_FRAME_TIMING_END(encodeTiming);
+       AXIOM_FRAME_TIMING_ADD(encoded_bytes,list.canonicalBytes.size());
+       AXIOM_FRAME_TIMING_SCOPE(digestTiming,reference_digest);
++      G5_SCOPE(g5Digest,g5::Tag::reference_digest,g5::Purpose::none);
+       list.digest = stableDigest(list.canonicalBytes);
++      G5_SCOPE_END(g5Digest);
+     }
+     return foundation::Result<ReferenceDrawList>::success(std::move(list));
+ }
+diff --git a/runtime/render/src/gpu_resource_retirement.hpp b/runtime/render/src/gpu_resource_retirement.hpp
+index b06ad2fd..aaa87e3b 100644
+--- a/runtime/render/src/gpu_resource_retirement.hpp
++++ b/runtime/render/src/gpu_resource_retirement.hpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #pragma once
+ #include "canvas/render/skia_surface_provider.hpp"
+ #include "canvas/resources/resource_budget_manager.hpp"
+@@ -20,6 +22,9 @@ class GpuResourceRetirement final {
+     resources::ResourceLease metadata;
+     std::uint64_t epoch=0;std::atomic<bool> done=false;
+     bool preparation=false;std::size_t count=0;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    g5::GpuToken observation;
++#endif
+     std::array<resources::CompletedResourceShrink,8> shrink;
+     bool add(resources::CompletedResourceShrink permit)noexcept {
+       if(count==shrink.size())return false;shrink[count++]=std::move(permit);return true;
+@@ -34,6 +39,9 @@ class GpuResourceRetirement final {
+       }else if(state->physicalLost.load(std::memory_order_acquire)){
+         (void)budget->completeGpuEpoch(epoch);
+       }
++      #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++      g5::gpuCompleted(observation,state->abandoned.load(std::memory_order_acquire),state->physicalLost.load(std::memory_order_acquire));
++#endif
+       done.store(true,std::memory_order_release);
+     }
+   };
+@@ -55,7 +63,11 @@ class GpuResourceRetirement final {
+   }
+   void service()noexcept {
+     for(auto& e:entries_)if(!e.ticket->done.load(std::memory_order_acquire))e.service->service();
+-    std::erase_if(entries_,[](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;e.ticket->metadata.reset();return true;});
++    std::erase_if(entries_,[](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++      g5::gpuRetired(e.ticket->observation,e.ticket->epoch);
++#endif
++      e.ticket->metadata.reset();return true;});
+   }
+   std::size_t preparationCount()const noexcept {
+     return std::count_if(entries_.begin(),entries_.end(),[](const auto& e){return e.ticket->preparation&&!e.ticket->done.load(std::memory_order_acquire);});
+diff --git a/runtime/render/src/skia_compact_material.cpp b/runtime/render/src/skia_compact_material.cpp
+index b65421ee..bda23aff 100644
+--- a/runtime/render/src/skia_compact_material.cpp
++++ b/runtime/render/src/skia_compact_material.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "canvas/render/skia_scene_renderer.hpp"
+ #include "canvas/ink/compact_geometry.hpp"
+@@ -255,6 +257,8 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
+                                 std::span<const foundation::InkKnot> knots,std::uint64_t seed,
+                                 CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid,bool compatibleCoverage,CompactCoverageTargets* targets,
+                                 const CompactStrokeRange* range,const PreparedNavigationGeometry* prepared,bool yieldOnAllocation){
++    G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
++
+     if(knots.empty())return;
+     std::vector<foundation::InkKnot> selected;
+     double rangeStartDistance = 0.0;
+@@ -324,6 +328,7 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
+         if(!targets){tile=compatibleCoverage?canvas.makeSurface(SkImageInfo::MakeN32Premul(w,h)):nullptr;
+             if(!tile)tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
+             if(work&&tile){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}}
++        G5_TARGET(tile,compatibleCoverage);
+         if(!tile){
+             if(yieldOnAllocation&&work){work->resourcePending=true;return;}
+             if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");
+@@ -531,6 +536,8 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
+ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
+     bool compatible,CompactRasterWork* work){
++    G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
++
+     resourcePending_=false;
+     if(done_)return true;
+     if(!tile_){
+@@ -566,6 +573,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+         // different coverage encoding. The exact checkpoints remain valid.
+         if(recordComplete_&&blend!=contourBlend_)abandonPictures();
+         contourBlend_=blend;
++        G5_TARGET(tile_,compatible);
+         auto* target=tile_->getCanvas();target->resetMatrix();target->clear(tile_->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
+         target->translate(float(-x_),float(-y_));target->concat(matrix_);
+         if(hybrid_){
+diff --git a/runtime/render/src/skia_gpu_lifetime.hpp b/runtime/render/src/skia_gpu_lifetime.hpp
+index fe618237..a817fb93 100644
+--- a/runtime/render/src/skia_gpu_lifetime.hpp
++++ b/runtime/render/src/skia_gpu_lifetime.hpp
+@@ -33,7 +33,16 @@ class SkiaGpuLifetime final {
+       GrFlushInfo info;info.fFinishedContext=payload_.release();
+       info.fFinishedProc=[](void* raw){std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> p(
+           static_cast<std::shared_ptr<GpuResourceRetirement::Ticket>*>(raw));(*p)->finish();};
+-      context_->flush(info);(void)context_->submit(GrSyncCpu::kNo);
++      #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++      ticket_->observation=g5::gpuPrepared(reinterpret_cast<std::uintptr_t>(context_),ticket_->epoch);
++#endif
++      context_->flush(info);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++      const auto submitted=context_->submit(GrSyncCpu::kNo);
++      g5::gpuSubmissionObserved(ticket_->observation,submitted);
++#else
++      (void)context_->submit(GrSyncCpu::kNo);
++#endif
+     }else ticket_->finish();
+     ticket_.reset();payload_.reset();
+   }
+diff --git a/runtime/render/src/skia_headless_backend.cpp b/runtime/render/src/skia_headless_backend.cpp
+index 9da6590c..9ba6471d 100644
+--- a/runtime/render/src/skia_headless_backend.cpp
++++ b/runtime/render/src/skia_headless_backend.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "skia_erase_mask.hpp"
+ #include "canvas/render/skia_headless_backend.hpp"
+@@ -1046,6 +1048,8 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
+             catch(const std::bad_alloc&) {cache->clear();}
+         }
+         if (!cached) {
++            G5_ROUTE(g5DirectRoute,entry.record.eraseMasks.empty()?g5::Route::canonical_direct:g5::Route::edit_mask_direct);
++            G5_CANVAS(canvas,false);
+             if (cache) cache->noteDirect();
+             canvas.save();
+             if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
+diff --git a/runtime/render/src/skia_ink_layers.cpp b/runtime/render/src/skia_ink_layers.cpp
+index 60b542c6..0eb6c744 100644
+--- a/runtime/render/src/skia_ink_layers.cpp
++++ b/runtime/render/src/skia_ink_layers.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "skia_ink_layers.hpp"
+ #include "include/core/SkCanvas.h"
+ #include "include/core/SkPaint.h"
+@@ -36,6 +38,9 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
+     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
+     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+     const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending){
++    G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
++    G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
++
+     painted=false;resourcePending=false;
+     const auto pending=[&]{resourcePending=true;return false;};
+     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+@@ -70,6 +75,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
+         else masks.emplace_back(std::get<semantic::FilledPathMask>(m.geometry));
+     }
+     if(source.masks.size()>masks.size()||!std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask,false,1,source.masks.size(),masks.size(),source.epoch);
+     source.masks=std::move(masks);source.metadata=std::move(metadataLease);
+     auto demand=destination.getDeviceClipBounds();if(!demand.intersect(viewport))return true;
+     const CompactDeviceGrid grid=originalGrid?*originalGrid:CompactDeviceGrid{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
+@@ -82,6 +88,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
+             constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+128;
+             resources::ResourceLease lease;if(!reserve(bytes+metadataBytes,key,limits,budget,lease))return pending();
+             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width(),crop.height()));if(!target)return pending();
++            G5_TARGET(target,true);
+             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+             canvas->translate(float(-x),float(-y));canvas->concat(matrix);
+             // Keep the original coverage grid/material origin in local device
+@@ -106,6 +113,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
+             const auto resultBytes=std::size_t(crop.width()+2*guard)*(crop.height()+2*guard)*4;
+             resources::ResourceLease lease;if(!reserve(resultBytes,key,limits,budget,lease))return pending();
+             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width()+2*guard,crop.height()+2*guard));if(!target)return pending();
++            G5_TARGET(target,true);
+             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+             SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);canvas->drawImage(base,prefix?0:guard,prefix?0:guard,SkSamplingOptions{},&copy);
+             canvas->translate(float(guard-x),float(guard-y));canvas->clipIRect(viewport);canvas->concat(matrix);
+diff --git a/runtime/render/src/skia_navigation_tiles.cpp b/runtime/render/src/skia_navigation_tiles.cpp
+index d2486339..f8d645de 100644
+--- a/runtime/render/src/skia_navigation_tiles.cpp
++++ b/runtime/render/src/skia_navigation_tiles.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "skia_navigation_tiles.hpp"
+ #include "resource_reclaim.hpp"
+ #include "skia_gpu_lifetime.hpp"
+@@ -400,10 +402,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+     // Compose the highest-density valid sources in disjoint regions. A complete
+     // coarse plane must never overwrite sharper valid pixels in the overlap.
+     if(dirty_&&work.coverageComplete){
+-        gpu.touch();compose(*target,patches,camera,frame);
++        gpu.touch();
++        G5_ROUTE(g5NavCompose,g5::Route::nav_retained);
++        G5_TARGET(acquired.frame.surface,true);
++        compose(*target,patches,camera,frame);
+         if(drawOverlay)drawOverlay(*target);
+         provider.release();release.active=false;
+-        const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
++        const auto result=provider.present();
++        G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
++        if(result.code!=BackendSubmissionCode::kAccepted)return result;
+         work.presented=true;dirty_=false;++work.feedbackFirst;
+     }
+     if(!release.active){
+@@ -596,6 +603,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+             if(alpha)job->coverage=SkSurfaces::Raster(SkImageInfo::MakeA8(extent,extent));
+             if(!job->coverage)job->coverage=job->cpuCoverage?SkSurfaces::Raster(coverageInfo):target->makeSurface(coverageInfo);
+             if(!job->surface||!job->coverage){deferred=true;break;}
++            G5_ROUTE(g5NavTarget,job->cpuCoverage?g5::Route::nav_coarse_cpu:(job->gpuCoarse?g5::Route::nav_coarse_gpu:g5::Route::nav_unprepared));
++            G5_TARGET(job->coverage,!job->cpuCoverage);
+             job->surface->getCanvas()->clear(SK_ColorTRANSPARENT);
+             const auto b=grid_.bounds(*next);const float s=std::ldexp(1.F,next->scale);
+             auto demand=b;
+@@ -697,6 +706,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+             if(expired()){deferred=true;break;}
+         }
+         auto& job=*job_;(void)job.lease.markGpuUse();
++        G5_ROUTE(g5NavJob,job.cpuCoverage?g5::Route::nav_coarse_cpu:(job.gpuCoarse?g5::Route::nav_coarse_gpu:g5::Route::nav_unprepared));
++        G5_TARGET(job.coverage,!job.cpuCoverage);
++        G5_TARGET(job.surface,true);
+         if(job.source>=job.sources->entries.size()){
+             // A fixed ticket can retire at most eight publications. Defer
+             // additional cells; never allocate unbounded callback payloads.
+@@ -812,10 +824,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+     work.pending=bool(job_)||bool(refinement_)||!work.coverageComplete;
+     for(const auto key:keys)work.pending|=!ready(key)&&needsFine(key);
+     if(dirty_&&work.coverageComplete&&!work.presented){
+-        gpu.touch();compose(*target,patches,camera,frame);
++        gpu.touch();
++        G5_ROUTE(g5NavCompose,g5::Route::nav_retained);
++        G5_TARGET(acquired.frame.surface,true);
++        compose(*target,patches,camera,frame);
+         if(drawOverlay)drawOverlay(*target);
+         provider.release();release.active=false;
+-        const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
++        const auto result=provider.present();
++        G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
++        if(result.code!=BackendSubmissionCode::kAccepted)return result;
+         work.presented=true;dirty_=false;
+     }
+     // A ready refinement produced after the early feedback present still
+diff --git a/runtime/render/src/skia_prepared_geometry.cpp b/runtime/render/src/skia_prepared_geometry.cpp
+index 8e82a70f..0bf4022d 100644
+--- a/runtime/render/src/skia_prepared_geometry.cpp
++++ b/runtime/render/src/skia_prepared_geometry.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "skia_prepared_geometry.hpp"
+ #include "compact_contour_skia_path.hpp"
+ #include "canvas/ink/compact_geometry.hpp"
+@@ -22,6 +24,8 @@ void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink
+ }
+ PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
+ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
++    G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
++
+     if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&std::as_const(source_))){
+         const auto& s=compact->content.get().stroke;
+         distances_.resize(s.knots.size()+1,0);
+@@ -56,6 +60,8 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
+     }
+ }
+ void PreparedNavigationGeometry::buildReplay(){
++    G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
++
+     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
+     contour_=true;replayDistance_=ink::compactLength(stroke.knots);
+     replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
+@@ -98,6 +104,8 @@ std::size_t PreparedNavigationGeometry::footprint()const{
+     return bytes;
+ }
+ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
++    G5_SCOPE(g5Work,g5::Tag::geometry_replay,g5::Purpose::none);
++
+     PreparedGeometryDraw work;if(!contour_)return work;
+     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
+     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
+@@ -154,6 +162,8 @@ bool PreparedGeometryCache::evictUnused(){
+ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+     const ReferenceTraversalEntry& entry,const RenderCacheOptions& limits,
+     const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool criticalReplay){
++    G5_SCOPE(g5Work,g5::Tag::lookup,g5::Purpose::none);
++
+     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+     const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&entry.command);
+     if(!compact&&(!vector||vector->content.get().stroke.snapshot.material_mode!=1))return {};
+@@ -163,18 +173,20 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+     const bool criticalContour=criticalReplay&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+     auto retained=retainSource(entry,budget,criticalContour);if(!retained)return denied();
+     std::size_t sourceBytes=0;for(const auto& lease:*retained)sourceBytes+=lease->bytes;
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::lookup,false,0,entries_.size(),sourceBytes);
+     auto found=entries_.find(entry.record.objectId);
+     if(found!=entries_.end()){
+-        if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;return found->second.geometry;}
++        if(found->second.geometry->source_==entry.command){found->second.used=++tick_;++work_.hits;G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,1);return found->second.geometry;}
+         entries_.erase(found);
+     }
+     // Object transforms and masks do not change immutable brush geometry.
+     // Share only the prepared body; device pixels stay independently keyed.
+     for(auto& [id,cached]:entries_)if(cached.geometry->source_==entry.command){
+-        (void)id;cached.used=++tick_;++work_.hits;return cached.geometry;
++        (void)id;cached.used=++tick_;++work_.hits;G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,2);return cached.geometry;
+     }
+     while(entries_.size()>=limits.maxEntries)if(!evictUnused())return denied();
+     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::geometry_build,false,0,count);
+     const std::size_t unit=compact?16:64;
+     const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
+     if(sourceBytes>=entryCap)return denied();
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index 904521b1..7b9e1560 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "skia_render_cache_internal.hpp"
+ #include "canvas/render/skia_scene_renderer.hpp"
+@@ -164,6 +166,10 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
+     const auto admitted=scheduler_.take();if(!admitted||admitted->id!=job)return nullptr;
+     SkPictureRecorder recorder;
+     auto* canvas=recorder.beginRecording(support.makeOutset(2,2));
++    G5_ROUTE(g5RecordRoute,g5::Route::recording);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    if(g5::enabled())g5::observeTarget(reinterpret_cast<std::uintptr_t>(canvas),3,0,0,0,options.gpuCoverageCandidate);
++#endif
+     // Recording has no GPU context. Carry the target realization explicitly;
+     // white GPU coverage uses fixed-function SrcOver rather than destination-
+     // reading Lighten. CPU recordings keep the pinned evaluator unchanged.
+@@ -243,6 +249,9 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
+ }
+ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+     SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text){
++    G5_SCOPE(g5Prepare,g5::Tag::prepare,g5::Purpose::none);
++    G5_ROUTE(g5PreparedRoute,g5::Route::canonical_prepared);
++
+     if(!sourceAdmission_)return Preparation::kResourcePending;
+     if(!options.enabled||options.tileCandidate||!slice.maxGroups||!slice.maxMicroseconds||!slice.maxCoverageSteps||
+        !options.maxEntries)return Preparation::kFallback;
+@@ -505,6 +514,8 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const
+     const bool resident=draw(*isolated,plan,source,true,true,false);isolated->restore();
+     configureScratch(*isolated,plan,transform);
+     if(!resident) {
++        G5_ROUTE(g5EraseMiss,g5::Route::erase_miss);
++        G5_CANVAS(*isolated,true);
+         isolated->save();isolated->resetMatrix();isolated->clipIRect(canvas.getDeviceClipBounds());isolated->setMatrix(transform);
+         // A nonresident body is still part of the live GPU presentation path.
+         // Preserve the qualified v4 coverage policy instead of silently using
+@@ -662,6 +673,7 @@ void SkiaRenderCache::flushPreparation(){
+     }
+ }
+ bool SkiaRenderCache::compositePreparedFrame(SkCanvas& canvas){
++    G5_SCOPE(g5Composite,g5::Tag::material,g5::Purpose::none);
+     if(!compositeReady_||!preparedFrame_)return false;
+     preparedFrame_->markGpuUse();
+     SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
+@@ -692,6 +704,8 @@ void SkiaRenderCache::noteCoverage(const CompactRasterWork& rasterWork){
+     work.gpuInteriorPixels+=rasterWork.gpuInteriorPixels;work.cpuEdgePixels+=rasterWork.cpuEdgePixels;
+ }
+ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite,bool allowBuild){
++    G5_SCOPE(g5Lookup,g5::Tag::lookup,g5::Purpose::none);
++
+     AXIOM_FRAME_TIMING_SCOPE(drawTiming,cache_draw);
+     if(!sourceAdmission_)return false;
+     // A synchronous draw may overwrite the scratch used by suspended work.
+@@ -719,6 +733,9 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
+     const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
+     auto found=entries_.find(source.record.objectId);
+     if(found!=entries_.end()&&RenderSourceResolver::resolve(found->second.validity,validity)==RenderSourceKind::kRasterCache){
++        G5_ROUTE(g5Resident,source.presentationEraseActive?g5::Route::erase_resident:g5::context().route);
++        G5_CANVAS(canvas,true);
++        G5_OBSERVE(g5::Kind::Stage,g5::Tag::cached_pixels,true,g5::word(source.record.objectId,0),g5::word(source.record.objectId,1),targetEpoch_,plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value());
+         if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(found->second.image,static_cast<float>(found->second.bounds.left()),static_cast<float>(found->second.bounds.top()));canvas.restore();}
+         found->second.used=tick_;++work.hits;return true;
+     }
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index c647c435..366bb41b 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/foundation/internal/frame_timing.hpp"
+ #include "canvas/render/skia_renderer.hpp"
+ #include "resource_reclaim.hpp"
+@@ -30,6 +32,18 @@
+ #include <type_traits>
+ 
+ namespace canvas::render {
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++namespace {
++struct ObservationCounters final {
++ const SkiaRenderer& renderer;bool on=g5::enabled();RenderCacheWork before=on?renderer.renderCacheWork():RenderCacheWork{};
++ ~ObservationCounters(){if(!on)return;const auto w=renderer.renderCacheWork();
++  G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask,false,3,w.bodyTileBuilds-before.bodyTileBuilds,w.bodyTileHits-before.bodyTileHits,w.maskTileUpdates-before.maskTileUpdates,w.maskPrimitiveDraws-before.maskPrimitiveDraws,w.maskTileResets-before.maskTileResets,w.inkLayerBytes);
++  G5_OBSERVE(g5::Kind::Counter,g5::Tag::coverage,false,4,w.gpuCoverageTiles-before.gpuCoverageTiles,w.cpuCoverageTiles-before.cpuCoverageTiles,w.gpuInteriorPixels-before.gpuInteriorPixels,w.cpuEdgePixels-before.cpuEdgePixels,w.preparationCoverageSteps-before.preparationCoverageSteps,w.coverageBuilds-before.coverageBuilds,w.coverageHits-before.coverageHits,w.retainedBytes,w.coverageBytes,w.scratchPeakBytes);
++ }
++};
++}
++#endif
++
+ SkiaRenderer::SkiaRenderer(){
+     renderCacheOptions_.maxBytes=std::size_t(AXIOM_RENDER_CACHE_MIB)*1024*1024;
+     renderCacheOptions_.sharedMaxBytes=std::size_t(AXIOM_RENDER_SHARED_MIB)*1024*1024;
+@@ -277,6 +291,13 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
+ BackendSubmissionResult SkiaRenderer::renderFrame(
+     SkiaSurfaceProvider& provider, const FramePlan& plan,
+     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
++    G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    ObservationCounters observationCounters{*this};
++#endif
++    G5_ROUTE(g5Route,g5::Route::canonical_prepared);
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
++
+     partialEraseFrame_.reset();
+     serviceResourceRetirements();
+     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
+@@ -429,7 +450,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+         }catch(const std::bad_alloc&){navigationCache_.reset();navigationFallback_.reset();}
+     }
+     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
+-        auto* canvas = acquired.frame.surface->getCanvas();
++        G5_TARGET(acquired.frame.surface,true);
++    auto* canvas = acquired.frame.surface->getCanvas();
+         if (selectionOverlay->creationPreview()) {
+             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
+             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+@@ -448,7 +470,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+     ++submissions_;
+     rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
+     AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
++    G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
+     const auto presented=provider.present();
++    G5_SCOPE_END(g5Present);
++    G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
+     AXIOM_FRAME_TIMING_END(presentTiming);
+     if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
+     return presented;
+@@ -457,6 +482,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+     const CanonicalViewportTransform& camera,const FrameState& current,
+     const EditingOverlay* selectionOverlay){
++    G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
++
+     serviceResourceRetirements();
+     const auto cache=navigationCache_;
+     if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
+@@ -487,12 +515,15 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+     const float ratio=static_cast<float>(camera.scale/old.a);
+     const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
+     const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
++    G5_TARGET(acquired.frame.surface,true);
+     auto* canvas=acquired.frame.surface->getCanvas();
+     canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
+     canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
+     canvas->scale(ratio,ratio);
+     if(cache->prepared)cache->prepared->markGpuUse();
+     (void)cache->lease.markGpuUse();
++    G5_ROUTE(g5Retained,g5::Route::nav_retained);
++    G5_TARGET(acquired.frame.surface,true);
+     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
+     canvas->restore();
+     if(selectionOverlay){
+@@ -511,6 +542,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+     const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
+     const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
++    G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
++
+     serviceResourceRetirements();
+     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
+@@ -664,6 +698,13 @@ RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_-
+ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     SkiaSurfaceProvider& provider, const FramePlan& plan,
+     const EditingOverlay* selectionOverlay) {
++    G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    ObservationCounters observationCounters{*this};
++#endif
++    G5_ROUTE(g5Route,g5::Route::edit_plain);
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::transient,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_);
++
+     auto previousErase=std::move(partialEraseFrame_);
+     serviceResourceRetirements();
+     if (selectionOverlay == nullptr) {
+@@ -673,6 +714,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
+         return BackendSubmissionResult::rejected(acquired.message);
+     }
++    G5_TARGET(acquired.frame.surface,true);
+     auto* canvas = acquired.frame.surface->getCanvas();
+     if(acquired.frame.generation!=plan.frame.surfaceGeneration.value()||
+        acquired.frame.surface->width()!=int(plan.frame.metrics.physicalWidth)||
+@@ -826,7 +868,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     provider.release();
+     ++submissions_;
+     ++rasterizations_;
++    G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
+     const auto presented=provider.present();
++    G5_SCOPE_END(g5Present);
++    G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
+     if(candidate&&presented.code==BackendSubmissionCode::kAccepted){candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);}
+     return presented;
+ }
+@@ -834,6 +879,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+ BackendSubmissionResult SkiaRenderer::renderPreview(
+     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
+     const PreviewStyleOverride& style) {
++    G5_SCOPE(g5Preview,g5::Tag::preview,g5::Purpose::none);
++    G5_ROUTE(g5Route,g5::Route::preview_tail);
++
+     if (geometry.revision == 0U || geometry.surfaceGeneration.value() == 0U ||
+         !std::isfinite(geometry.viewport.scale) || geometry.viewport.scale <= 0.0F ||
+         !std::isfinite(geometry.viewport.translationX) ||
+@@ -853,6 +901,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
+         provider.release();
+         return BackendSubmissionResult::rejected("stale preview surface generation");
+     }
++    G5_TARGET(acquired.frame.surface,true);
+     auto* canvas = acquired.frame.surface->getCanvas();
+     canvas->clear(SK_ColorTRANSPARENT);
+     canvas->save();
+@@ -1048,6 +1097,7 @@ BackendSubmissionResult SkiaRenderer::renderPrimitives(
+     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
+         return BackendSubmissionResult::rejected(acquired.message);
+     }
++    G5_TARGET(acquired.frame.surface,true);
+     auto* canvas = acquired.frame.surface->getCanvas();
+     canvas->clear(SK_ColorWHITE);
+     canvas->save();
+@@ -1090,6 +1140,7 @@ BackendSubmissionResult SkiaRenderer::renderStrokes(
+     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
+         return BackendSubmissionResult::rejected(acquired.message);
+     }
++    G5_TARGET(acquired.frame.surface,true);
+     auto* canvas = acquired.frame.surface->getCanvas();
+     canvas->clear(SK_ColorWHITE);
+     canvas->save();
+diff --git a/runtime/resources/include/canvas/resources/resource_budget_manager.hpp b/runtime/resources/include/canvas/resources/resource_budget_manager.hpp
+index 0e759564..70ce4589 100644
+--- a/runtime/resources/include/canvas/resources/resource_budget_manager.hpp
++++ b/runtime/resources/include/canvas/resources/resource_budget_manager.hpp
+@@ -1,4 +1,8 @@
+ #pragma once
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#include "canvas/foundation/internal/g5_observation.hpp"
++#define AXIOM_G5_LEASE_OBSERVATIONS 1
++#endif
+ #include <algorithm>
+ #include <array>
+ #include <cstddef>
+@@ -37,6 +41,9 @@ class ResourceBudgetManager final {
+     const auto epoch=activeGpuEpoch_&&(activeGpuClasses_&resourceClassMask(kind))?activeGpuEpoch_:0;
+     entries_.emplace(id,Entry{kind,bytes,residentBytes,epoch,false});
+     used_+=bytes;classes_[index].used+=bytes;classes_[index].staging+=bytes-residentBytes;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,1,observationOwner_,id,index,bytes,residentBytes,epoch,used_);
++#endif
+     return id;
+   }
+   // Caller must prove these bytes are no longer needed; a GPU publishing
+@@ -49,11 +56,17 @@ class ResourceBudgetManager final {
+     e.bytes=bytes;e.residentBytes=std::min(e.residentBytes,bytes);
+     used_-=freed;usage.used-=freed;usage.staging-=oldStaging-(e.bytes-e.residentBytes);
+     if(e.pendingRelease)usage.pendingRelease-=freed;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,4,observationOwner_,id,static_cast<unsigned>(e.kind),e.bytes,e.residentBytes,e.gpuEpoch,used_);
++#endif
+     return true;
+   }
+   void release(std::uint64_t id)noexcept {
+     std::lock_guard lock(mutex_);auto it=entries_.find(id);
+     if(it==entries_.end()||it->second.pendingRelease)return;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,2,observationOwner_,id,static_cast<unsigned>(it->second.kind),it->second.bytes,it->second.residentBytes,it->second.gpuEpoch,used_);
++#endif
+     if(it->second.gpuEpoch>completedGpuEpoch_){
+       it->second.pendingRelease=true;
+       classes_[static_cast<std::size_t>(it->second.kind)].pendingRelease+=it->second.bytes;
+@@ -82,7 +95,14 @@ class ResourceBudgetManager final {
+   bool markGpuUse(std::uint64_t id)noexcept {
+     std::lock_guard lock(mutex_);auto it=entries_.find(id);
+     if(!activeGpuEpoch_||it==entries_.end()||it->second.pendingRelease)return false;
+-    it->second.gpuEpoch=activeGpuEpoch_;return true;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    const auto observationPreviousEpoch=it->second.gpuEpoch;
++#endif
++    it->second.gpuEpoch=activeGpuEpoch_;
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    if(observationPreviousEpoch!=activeGpuEpoch_)G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,5,observationOwner_,id,static_cast<unsigned>(it->second.kind),it->second.bytes,it->second.residentBytes,it->second.gpuEpoch,used_);
++#endif
++    return true;
+   }
+   bool endGpuEpoch(std::uint64_t epoch)noexcept {
+     std::lock_guard lock(mutex_);const auto it=gpuEpochs_.find(epoch);
+@@ -118,10 +138,16 @@ class ResourceBudgetManager final {
+   using Entries=std::unordered_map<std::uint64_t,Entry>;
+   Entries::iterator erase(Entries::iterator it)noexcept {
+     const auto& e=it->second;auto& usage=classes_[static_cast<std::size_t>(e.kind)];
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,3,observationOwner_,it->first,static_cast<unsigned>(e.kind),e.bytes,e.residentBytes,e.gpuEpoch,used_);
++#endif
+     used_-=e.bytes;usage.used-=e.bytes;usage.staging-=e.bytes-e.residentBytes;
+     if(e.pendingRelease){usage.pendingRelease-=e.bytes;--pendingReleaseCount_;}
+     return entries_.erase(it);
+   }
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++  const std::uint64_t observationOwner_=foundation::internal::g5::nextId();
++#endif
+   bool closed_=false;
+   BudgetLimits limits_;std::size_t used_=0,pendingReleaseCount_=0;std::uint64_t next_=0;
+   Entries entries_;
+diff --git a/runtime/scene/include/canvas/scene/shared_scene_value.hpp b/runtime/scene/include/canvas/scene/shared_scene_value.hpp
+index 86cbb008..1749302b 100644
+--- a/runtime/scene/include/canvas/scene/shared_scene_value.hpp
++++ b/runtime/scene/include/canvas/scene/shared_scene_value.hpp
+@@ -1,3 +1,4 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
+ #pragma once
+ #include <concepts>
+ #include <initializer_list>
+@@ -32,7 +33,9 @@ template<class T> class ImmutableValue final {
+         else result.value_=std::make_shared<const T>(member);
+         return result;
+     }
+-    bool operator==(const ImmutableValue& b)const{return value_==b.value_||get()==b.get();}
++    bool operator==(const ImmutableValue& b)const{
++        G5_OBSERVE(::canvas::foundation::internal::g5::Kind::Counter,::canvas::foundation::internal::g5::Tag::lookup,false,value_==b.value_?1ULL:2ULL,sizeof(T));
++        return value_==b.value_||get()==b.get();}
+     bool operator==(const T& b)const{return get()==b;}
+ };
+ 
+diff --git a/runtime/scene/src/incremental_runtime_coordinator.cpp b/runtime/scene/src/incremental_runtime_coordinator.cpp
+index bfbd715d..f14e5b06 100644
+--- a/runtime/scene/src/incremental_runtime_coordinator.cpp
++++ b/runtime/scene/src/incremental_runtime_coordinator.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "canvas/scene/incremental_runtime_coordinator.hpp"
+ 
+ #include "incremental_runtime_full_materialization_bridge.hpp"
+@@ -148,6 +150,7 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
+         self->publicationGate_.transactionActive = false;
+         self->publicationGate_.observation = nullptr;
+         self->publicationGate_.observationContext = nullptr;
++        G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,self->pendingGeneration_.value(),self->runtimeScene_.generation().value(),self->binding_._scene.revision().value());
+     }
+ }
+ 
+@@ -201,7 +204,11 @@ void IncrementalRuntimeCoordinator::commitIntent() noexcept {
+     // The owner must check intentBasisMatches() before starting canonical writes.
+     if (!intentScene_ || !intentRuntime_) return;
+     binding_._scene.commitIntent(std::move(intentScene_));
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    const auto observedIntentGeneration=intentRuntime_->projection.generation.value();
++#endif
+     runtimeScene_.publish(std::move(*intentRuntime_));
++    G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,observedIntentGeneration,runtimeScene_.generation().value(),binding_._scene.revision().value());
+     intentRuntime_.reset();
+     if (testPublicationObserver_ != nullptr)
+         testPublicationObserver_(testPublicationObserverContext_);
+@@ -243,6 +250,8 @@ foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
+ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
+     const ISemanticSceneCompiler& compiler,
+     const SceneCommitInput& input) {
++    G5_SCOPE(g5Scene,g5::Tag::scene_apply,g5::Purpose::none);
++
+     if (input.changes == nullptr) {
+         // A dropped ChangeSet is a recovery condition, not an incremental
+         // terminal error. Rebuild from the authoritative post-state.
+@@ -361,6 +370,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
+ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
+     const ISemanticSceneCompiler& compiler,
+     const SceneCommitInput& input) {
++    G5_SCOPE(g5Recovery,g5::Tag::scene_apply,g5::Purpose::none);
++
+     if (input.changes != nullptr) {
+         return foundation::Result<SceneSyncReceipt>::failure(
+             {foundation::ErrorCode::kInvalidRevision,
+@@ -412,6 +423,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
+     publicationGate_.transactionActive = false;
+     publicationGate_.observation = nullptr;
+     publicationGate_.observationContext = nullptr;
++    G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,input.after_generation.value(),runtimeScene_.generation().value(),binding_._scene.revision().value());
+     return result;
+ }
+ 
+diff --git a/sdk/common/session.cpp b/sdk/common/session.cpp
+index 5da8bec1..576a8bcb 100644
+--- a/sdk/common/session.cpp
++++ b/sdk/common/session.cpp
+@@ -1,3 +1,5 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
++namespace g5 = canvas::foundation::internal::g5;
+ #include "session.hpp"
+ 
+ #include "data_port.hpp"
+@@ -415,6 +417,7 @@ class Session::Impl {
+         return t.front();
+     }
+     J receipt(const runtime::CanvasControlRequest& r) {
++        G5_SCOPE(g5Control,g5::Tag::control_result,g5::Purpose::input);
+         auto& f = facade();
+         const auto queued = f.submitCanvasControl(r);
+         if (queued.state != runtime::ProductControlState::kQueued || !owner->ownerPump())
+@@ -422,6 +425,7 @@ class Session::Impl {
+         const auto done = f.canvasControlReceipt({r.clientId, r.requestId});
+         if (!done)
+             return error("RECEIPT_MISSING");
++        G5_OBSERVE(g5::Kind::Admission,g5::Tag::control_result,true,r.clientId,r.requestId,static_cast<unsigned>(r.payload.kind),r.target.runtimeEpoch,r.target.viewId,r.target.viewEpoch,r.target.attachmentEpoch,static_cast<unsigned>(done->state),static_cast<unsigned>(done->error),done->appliedRevision);
+         J result = {{"ok",
+                      done->state == runtime::CanvasControlReceiptState::kApplied ||
+                          done->state == runtime::CanvasControlReceiptState::kDuplicate},
+@@ -1201,6 +1205,7 @@ class Session::Impl {
+             return error("UNSUPPORTED");
+         }
+         if (command == "pointer") {
++            G5_SCOPE(g5Dispatch,g5::Tag::input,g5::Purpose::input);
+             input::PlatformPointerSample p;
+             p.source = j.at("source");
+             p.pointer = j.at("pointer");
+@@ -1268,6 +1273,7 @@ class Session::Impl {
+             if(!ok)std::fprintf(stderr,"AXIOM_INPUT_REJECT phase=%u source=%llu pointer=%llu sequence=%llu\n",phase,
+                 static_cast<unsigned long long>(p.source),static_cast<unsigned long long>(p.pointer),static_cast<unsigned long long>(p.sequence));
+ #endif
++            G5_OBSERVE(g5::Kind::Terminal,g5::Tag::input_result,true,ok,phase,p.source,p.pointer,p.sequence);
+             return {{"ok", ok}, {"code", "INPUT_REJECTED"}};
+         }
+         if (command == "hover")
+diff --git a/sdk/web/CMakeLists.txt b/sdk/web/CMakeLists.txt
+index bd545fe3..03144b73 100644
+--- a/sdk/web/CMakeLists.txt
++++ b/sdk/web/CMakeLists.txt
+@@ -16,11 +16,15 @@ target_compile_options(axiom_js_runtime PRIVATE -Wall -Wextra -Wpedantic -Werror
+ target_include_directories(axiom_js_runtime PRIVATE
+   "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+   "${PROJECT_SOURCE_DIR}/sdk/common")
++set(_axiom_web_exports "'_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free'")
++if(AXIOM_G5_UR0_DIAGNOSTICS)
++  string(APPEND _axiom_web_exports ",'_axiom_g5_trace_control','_axiom_g5_trace_bytes','_axiom_g5_trace_size'")
++endif()
+ target_link_options(axiom_js_runtime PRIVATE
+   -fexceptions
+   --no-entry -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web
+   -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2
+-  "-sEXPORTED_FUNCTIONS=['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free']"
++  "-sEXPORTED_FUNCTIONS=[${_axiom_web_exports}]"
+   "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16','HEAPU8']"
+   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf@/axiom-font.otf\""
+   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/catalog.json@/fonts/catalog.json\""
+diff --git a/sdk/web/bridge.cpp b/sdk/web/bridge.cpp
+index bad2de6e..905792b4 100644
+--- a/sdk/web/bridge.cpp
++++ b/sdk/web/bridge.cpp
+@@ -1,3 +1,4 @@
++#include "canvas/foundation/internal/g5_observation.hpp"
+ #include "session.hpp"
+ 
+ #include <canvas/platform/web_runtime_adapter.hpp>
+@@ -127,3 +128,17 @@ axiom_js_call(const char* input, const std::uint8_t* data, std::size_t size) {
+     }
+ }
+ }
++
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++extern "C" {
++EMSCRIPTEN_KEEPALIVE int axiom_g5_trace_control(std::uint32_t op,std::uint32_t value) {
++ return canvas::foundation::internal::g5::control(op,value);
++}
++EMSCRIPTEN_KEEPALIVE const char* axiom_g5_trace_bytes() {
++ return canvas::foundation::internal::g5::bytes();
++}
++EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_g5_trace_size() {
++ return canvas::foundation::internal::g5::size();
++}
++}
++#endif

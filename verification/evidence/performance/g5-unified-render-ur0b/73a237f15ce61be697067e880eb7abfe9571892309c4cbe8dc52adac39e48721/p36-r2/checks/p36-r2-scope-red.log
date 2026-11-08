@@ -1,0 +1,14 @@
+...F.....
+======================================================================
+FAIL: test_native_only_proof_cannot_claim_metrics_or_an_unknown_scope (test_g5_ur0_repair_runner.RepairRunnerTest.test_native_only_proof_cannot_claim_metrics_or_an_unknown_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 41, in test_native_only_proof_cannot_claim_metrics_or_an_unknown_scope
+    with self.assertRaisesRegex(RuntimeError,'canonical'):m.require_canonical_chain(s,require_metrics=False)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.011s
+
+FAILED (failures=1)

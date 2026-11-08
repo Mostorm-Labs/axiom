@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/render/selection_region_geometry.hpp"
 #include "partial_erase_geometry.hpp"
@@ -11,6 +13,7 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
     std::span<const foundation::WorldPoint> trace, bool exactHit) const {
     std::vector<semantic::EraseMaskAddItem> result;
     if (trace.empty() || !sceneCoordinator_) return result;
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::exact_prepare,true,semanticGeneration_.current().value(),sceneCoordinator_->runtimeScene().generation().value(),sceneRevision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration,trace.size(),exactHit);
     const double radius = eraserDiameterLogicalPx_ * .5;
     double left=trace.front().x,right=left,top=trace.front().y,bottom=top;
     for(const auto& p:trace){left=std::min(left,double(p.x));right=std::max(right,double(p.x));top=std::min(top,double(p.y));bottom=std::max(bottom,double(p.y));}
@@ -27,7 +30,9 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         auto mask=partialEraseGeometry(trace,record.transform,radius);
         if(!mask)return std::nullopt;
         if(exactHit) {
+            G5_SCOPE(g5Path,g5::Tag::pathops,g5::Purpose::none);
             const auto hit=skiaRenderer_.intersectEraseGeometry(record,*mask);
+            G5_SCOPE_END(g5Path);
             if(hit==render::SelectionGeometryHit::kInvalid){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
                 std::fprintf(stderr,"AXIOM_ERASE_REJECT stage=exact_geometry trace=%zu old_masks=%zu\n",trace.size(),record.eraseMasks.size());

@@ -1,0 +1,85 @@
+{
+  "status": "OFFLINE_REPAIR_SCOPE_VERIFIED",
+  "base_source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "result_source_tree_sha256": "73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721",
+  "changed_paths": [
+    "verification/runners/g5/ur0/canonical_chain.mjs",
+    "verification/runners/g5/ur0/compile_run.mjs",
+    "verification/runners/g5/ur0/decode_trace.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/g5_ur0_compiler.test.mjs",
+    "verification/tests/g5_ur0_decode.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "runtime_sdk_build_dependency_authority_changes": false,
+  "public_api_impact": "NONE",
+  "source_records": {
+    "verification/runners/g5/ur0/canonical_chain.mjs": {
+      "before": null,
+      "after": {
+        "sha256": "756920ea04c282324dc80ff75f8bdbe78990d23c5fb95526c7d5bf88f9ed4e32",
+        "executable": false
+      }
+    },
+    "verification/runners/g5/ur0/compile_run.mjs": {
+      "before": {
+        "sha256": "7befd3126a8d5e807946c8541df34dbea9bf0d1942459be299aac65d05c159c5",
+        "executable": false
+      },
+      "after": {
+        "sha256": "df8ca211885678e8b687414eb51db9987990c90c42566d187352d19214e1fa58",
+        "executable": false
+      }
+    },
+    "verification/runners/g5/ur0/decode_trace.mjs": {
+      "before": {
+        "sha256": "e3777503a8aa6fa24329cd467d6dd5668c9c92dcc9ac19528f423a9d72f6e67e",
+        "executable": false
+      },
+      "after": {
+        "sha256": "062d14a29a1948436087d013c84b04d413440264b79a1ead184c4de3488e53ae",
+        "executable": false
+      }
+    },
+    "verification/runners/g5/ur0/repair_runner.py": {
+      "before": {
+        "sha256": "a4e9a10b37e9a3d2231f5fd0a5d210be6a1a5d43b87731ce95dda7415e74a2ec",
+        "executable": false
+      },
+      "after": {
+        "sha256": "3f3f8423b0310401b7a43cbf80e9cba3f59d2ef61b761b2b929e07c4730ff13a",
+        "executable": false
+      }
+    },
+    "verification/tests/g5_ur0_compiler.test.mjs": {
+      "before": {
+        "sha256": "a95e0d513d339f1ee5b1e0a6564d07a2a41415eb0e8e453f267c19c127a46282",
+        "executable": false
+      },
+      "after": {
+        "sha256": "05ed0fa511c42610e4f260cfe49e72f4a897e15570f43b64bde53261387cb0c1",
+        "executable": false
+      }
+    },
+    "verification/tests/g5_ur0_decode.test.mjs": {
+      "before": {
+        "sha256": "8f846524e50849f5ee465fffdae18c80021dfe77ba411cb91bc63b39f1bd6d74",
+        "executable": false
+      },
+      "after": {
+        "sha256": "adf05acde3c5c4062ca95ac4a17af598d3f434ee8e038c49092b4b872a47561a",
+        "executable": false
+      }
+    },
+    "verification/tests/test_g5_ur0_repair_runner.py": {
+      "before": {
+        "sha256": "c09ff10e9d6906076b3b23f132465d46c4b96f6870eb8b34aff0f82d2693057f",
+        "executable": false
+      },
+      "after": {
+        "sha256": "5265328f179168ee6fc54fef40e6a7df64c4e1b3fd8958b0ec555b4e5d307771",
+        "executable": false
+      }
+    }
+  }
+}

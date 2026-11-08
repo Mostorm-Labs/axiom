@@ -1,0 +1,9 @@
+{
+  "status": "QUALIFIED_INITIAL_FIXTURE_ONLY",
+  "oracle": "exact-query-oracle.json",
+  "snapshot": "mechanism-diagnostics/fixture-mechanism-data/initial.axsnap",
+  "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+  "rule": "accepted Semantic decode and independent replay/exact geometry; no adaptive query",
+  "float_reproduction": "private oracle compiles existing algorithm with ffp-contract=off to match scalar WASM; production algorithm unchanged",
+  "earlier_diagnostic": "preflight-and-regression/fixture-oracle.json retained; its preliminary TASK_PACKAGE_DEFECT classification was disproved by the FMA-controlled replay, not an authority amendment"
+}

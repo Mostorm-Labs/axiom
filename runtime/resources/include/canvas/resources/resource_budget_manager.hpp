@@ -1,4 +1,8 @@
 #pragma once
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+#include "canvas/foundation/internal/g5_observation.hpp"
+#define AXIOM_G5_LEASE_OBSERVATIONS 1
+#endif
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -32,11 +36,19 @@ class ResourceBudgetManager final {
     std::lock_guard lock(mutex_);
     if(residentBytes==std::numeric_limits<std::size_t>::max())residentBytes=bytes;
     const auto index=static_cast<std::size_t>(kind),cap=critical?limits_.hard:std::min(limits_.soft,limits_.hard);
-    if(closed_||index>=classes_.size()||residentBytes>bytes||bytes>cap||used_>cap-bytes||next_==UINT64_MAX)return {};
+    if(closed_||index>=classes_.size()||residentBytes>bytes||bytes>cap||used_>cap-bytes||next_==UINT64_MAX){
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+      G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,7,observationOwner_,index,bytes,residentBytes,used_,cap,critical,closed_);
+#endif
+      return {};
+    }
     const auto id=++next_;
     const auto epoch=activeGpuEpoch_&&(activeGpuClasses_&resourceClassMask(kind))?activeGpuEpoch_:0;
     entries_.emplace(id,Entry{kind,bytes,residentBytes,epoch,false});
     used_+=bytes;classes_[index].used+=bytes;classes_[index].staging+=bytes-residentBytes;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,1,observationOwner_,id,index,bytes,residentBytes,epoch,used_);
+#endif
     return id;
   }
   // Caller must prove these bytes are no longer needed; a GPU publishing
@@ -49,11 +61,17 @@ class ResourceBudgetManager final {
     e.bytes=bytes;e.residentBytes=std::min(e.residentBytes,bytes);
     used_-=freed;usage.used-=freed;usage.staging-=oldStaging-(e.bytes-e.residentBytes);
     if(e.pendingRelease)usage.pendingRelease-=freed;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,4,observationOwner_,id,static_cast<unsigned>(e.kind),e.bytes,e.residentBytes,e.gpuEpoch,used_);
+#endif
     return true;
   }
   void release(std::uint64_t id)noexcept {
     std::lock_guard lock(mutex_);auto it=entries_.find(id);
     if(it==entries_.end()||it->second.pendingRelease)return;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,2,observationOwner_,id,static_cast<unsigned>(it->second.kind),it->second.bytes,it->second.residentBytes,it->second.gpuEpoch,used_);
+#endif
     if(it->second.gpuEpoch>completedGpuEpoch_){
       it->second.pendingRelease=true;
       classes_[static_cast<std::size_t>(it->second.kind)].pendingRelease+=it->second.bytes;
@@ -82,7 +100,14 @@ class ResourceBudgetManager final {
   bool markGpuUse(std::uint64_t id)noexcept {
     std::lock_guard lock(mutex_);auto it=entries_.find(id);
     if(!activeGpuEpoch_||it==entries_.end()||it->second.pendingRelease)return false;
-    it->second.gpuEpoch=activeGpuEpoch_;return true;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    const auto observationPreviousEpoch=it->second.gpuEpoch;
+#endif
+    it->second.gpuEpoch=activeGpuEpoch_;
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    if(observationPreviousEpoch!=activeGpuEpoch_)G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,5,observationOwner_,id,static_cast<unsigned>(it->second.kind),it->second.bytes,it->second.residentBytes,it->second.gpuEpoch,used_);
+#endif
+    return true;
   }
   bool endGpuEpoch(std::uint64_t epoch)noexcept {
     std::lock_guard lock(mutex_);const auto it=gpuEpochs_.find(epoch);
@@ -118,10 +143,16 @@ class ResourceBudgetManager final {
   using Entries=std::unordered_map<std::uint64_t,Entry>;
   Entries::iterator erase(Entries::iterator it)noexcept {
     const auto& e=it->second;auto& usage=classes_[static_cast<std::size_t>(e.kind)];
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::resource_lease,false,3,observationOwner_,it->first,static_cast<unsigned>(e.kind),e.bytes,e.residentBytes,e.gpuEpoch,used_);
+#endif
     used_-=e.bytes;usage.used-=e.bytes;usage.staging-=e.bytes-e.residentBytes;
     if(e.pendingRelease){usage.pendingRelease-=e.bytes;--pendingReleaseCount_;}
     return entries_.erase(it);
   }
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+  const std::uint64_t observationOwner_=foundation::internal::g5::nextId();
+#endif
   bool closed_=false;
   BudgetLimits limits_;std::size_t used_=0,pendingReleaseCount_=0;std::uint64_t next_=0;
   Entries entries_;

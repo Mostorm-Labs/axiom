@@ -1,0 +1,113 @@
+TAP version 13
+# Subtest: decodes actual observed commit Scene submit and completion fields
+not ok 1 - decodes actual observed commit Scene submit and completion fields
+  ---
+  duration_ms: 0.833625
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'found.values(...).next(...).value is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+    Module.decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:19:14)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: foreign completion or mismatched Scene cannot be repaired by copying expected fields
+not ok 2 - foreign completion or mismatched Scene cannot be repaired by copying expected fields
+  ---
+  duration_ms: 0.08825
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: 'found.values(...).next(...).value is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+    Module.decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:24:66)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: Scene intent publication can precede the callsite observation of its returned commit record
+not ok 3 - Scene intent publication can precede the callsite observation of its returned commit record
+  ---
+  duration_ms: 0.099125
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:27:1'
+  failureType: 'testCodeFailure'
+  error: 'found.values(...).next(...).value is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+    Module.decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:29:14)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: scope exclusive time and GPU callback ordering preserve raw facts
+ok 4 - scope exclusive time and GPU callback ordering preserve raw facts
+  ---
+  duration_ms: 0.186125
+  ...
+# file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19
+#   return found.values().next().value();
+#                                ^
+# TypeError: found.values(...).next(...).value is not a function
+#     at ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+#     at decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+#     at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/compile_run.mjs:6:15
+# Node.js v22.14.0
+# Subtest: actual compiler rejects another Runtime committing the same generation
+not ok 5 - actual compiler rejects another Runtime committing the same generation
+  ---
+  duration_ms: 34.412667
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:40:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Command failed: /Users/qing/.nvm/versions/node/v22.14.0/bin/node verification/runners/g5/ur0/compile_run.mjs /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/ur0-foreign-qd1jKz
+    file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19
+      return found.values().next().value();
+                                   ^
+    
+    TypeError: found.values(...).next(...).value is not a function
+        at ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+        at decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+        at file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/compile_run.mjs:6:15
+    
+    Node.js v22.14.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    ownerFor (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:19:32)
+    decodeTrace (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/decode_trace.mjs:29:16)
+    file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/compile_run.mjs:6:15
+    genericNodeError (node:internal/errors:983:15)
+    wrappedFn (node:internal/errors:537:14)
+    checkExecSyncError (node:child_process:882:11)
+    execFileSync (node:child_process:918:15)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_decode.test.mjs:48:3)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75.541

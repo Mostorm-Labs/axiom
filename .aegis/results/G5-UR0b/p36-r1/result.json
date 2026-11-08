@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b",
+  "stage": "P36-r1",
+  "status": "BLOCKED_EVIDENCE",
+  "return_surface": "CONTROL_REVIEW",
+  "root_cause_class": "IMPLEMENTATION_DEFECT",
+  "reason": "R4 actual compiler cannot associate accepted canonical completions with the successful job among repeated same-frame preparation attempts; conditional sampling halted.",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b/package.json",
+    "sha256": "420f44b4d762664541381a6a99c758c72a085820ce9cbe85ec24e119f2aecc10"
+  },
+  "authorization_ref": {
+    "path": ".aegis/results/G5-UR0b/control-reverification-r1/repair-authorization.json",
+    "sha256": "007f4a09e625b4d1c1999c50577498c0cbf9570ceae190158559db8540b202f7"
+  },
+  "starting_revision": "f66592001012444cd99db968961014497c0f120f",
+  "result_revision": "f66592001012444cd99db968961014497c0f120f",
+  "source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "head_contains_dirty_changes": false,
+  "materialized_ref": {
+    "kind": "shared-controlled-worktree-content-addressed-bundle",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1",
+    "manifest_sha256": "ec20501acf288828177293e9661c7fdbb4ed90c34f31233d3d022cd469754300"
+  },
+  "validation_results": {
+    "status": "AFFECTED_REGRESSIONS_VERIFIED",
+    "native_tests": 22,
+    "node_tests": 81,
+    "python_tests": 26,
+    "boundary_contracts": 120,
+    "full_ctest": "CORROBORATIVE_ONLY_NOT_RERUN; existing historical failures not repaired or relabeled",
+    "positive_browser_chain": "NEW_FAILURE retained separately; passing unit tests do not close it"
+  },
+  "worker_outcomes": {
+    "original": {
+      "ARCHIVED_IMMUTABLE": 3
+    },
+    "diagnostic": {
+      "COMPLETED": 2
+    },
+    "qualification": {
+      "COMPLETED": 3,
+      "CONTROL_STOP": 1,
+      "MISSING": 8
+    },
+    "separate": {
+      "MISSING": 9
+    },
+    "main": {
+      "MISSING": 30
+    }
+  },
+  "matrix_ledger_ref": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/worker-ledger.json",
+  "correctness_status": "AFFECTED_COMPONENT_REGRESSIONS_PASS; COMBINED_WEB_CORRECTNESS_MISSING",
+  "evidence_status": "INCOMPLETE_CANONICAL_POSITIVE_CHAIN; full raw and failure provenance preserved",
+  "performance_status": "NOT_EVALUATED; diagnostic and incomplete qualification timings not adopted",
+  "scope_audit": {
+    "status": "QUALIFIED_SCOPE_ONLY",
+    "tracked_changed": [
+      "CMakeLists.txt",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/foundation/CMakeLists.txt",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/interaction/src/editor_history.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/render/src/direct_reference_source.cpp",
+      "runtime/render/src/gpu_resource_retirement.hpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/render/src/skia_gpu_lifetime.hpp",
+      "runtime/render/src/skia_headless_backend.cpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/skia_navigation_tiles.cpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+      "runtime/scene/include/canvas/scene/shared_scene_value.hpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sdk/common/session.cpp",
+      "sdk/web/CMakeLists.txt",
+      "sdk/web/bridge.cpp"
+    ],
+    "untracked_source": [
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/foundation/src/g5_observation.cpp",
+      "runtime/foundation/tests/g5_observation_test.cpp",
+      "runtime/render/tests/g5_observation_identity_test.cpp",
+      "verification/runners/g5/ur0/boundary_audit.mjs",
+      "verification/runners/g5/ur0/build_variants.py",
+      "verification/runners/g5/ur0/compile_run.mjs",
+      "verification/runners/g5/ur0/consumer.html",
+      "verification/runners/g5/ur0/consumer.mjs",
+      "verification/runners/g5/ur0/correctness_driver.mjs",
+      "verification/runners/g5/ur0/decode_trace.mjs",
+      "verification/runners/g5/ur0/external_metrics.mjs",
+      "verification/runners/g5/ur0/fixture_oracle.cpp",
+      "verification/runners/g5/ur0/fixture_plan.mjs",
+      "verification/runners/g5/ur0/metrics_compiler.mjs",
+      "verification/runners/g5/ur0/observed_worker.py",
+      "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/runners/g5/ur0/run_matrix.py",
+      "verification/runners/g5/ur0/schedule.mjs",
+      "verification/runners/g5/ur0/source_identity.py",
+      "verification/runners/g5/ur0/stream_transfer.mjs",
+      "verification/runners/g5/ur0/trace_validation.mjs",
+      "verification/runners/g5/ur0/validate_metrics.py",
+      "verification/runners/g5/ur0/worker.mjs",
+      "verification/tests/g5_ur0_boundary.test.mjs",
+      "verification/tests/g5_ur0_compiler.test.mjs",
+      "verification/tests/g5_ur0_decode.test.mjs",
+      "verification/tests/g5_ur0_external_metrics.test.mjs",
+      "verification/tests/g5_ur0_fixture.test.mjs",
+      "verification/tests/g5_ur0_identity.test.mjs",
+      "verification/tests/g5_ur0_pixels.test.mjs",
+      "verification/tests/g5_ur0_schedule.test.mjs",
+      "verification/tests/g5_ur0_transfer.test.mjs",
+      "verification/tests/test_g5_ur0_budget.py",
+      "verification/tests/test_g5_ur0_fixture_oracle.py",
+      "verification/tests/test_g5_ur0_matrix.py",
+      "verification/tests/test_g5_ur0_repair_runner.py",
+      "verification/tests/test_g5_ur0_rss.py",
+      "verification/tests/test_g5_ur0_source_identity.py"
+    ],
+    "violations": [],
+    "public_api_change": false,
+    "product_optimization": false
+  },
+  "open_boundaries": [
+    "Successful canonical attempt/provider/work/completion join remains unresolved",
+    "Qualification admission accepted partial guard/loss/shape checks too early; remaining cohort stopped, no retry",
+    "30 main, 3 realtime and 6 combined Web correctness outcomes are MISSING",
+    "32/96 candidate artifact not built after this control stop",
+    "Product input rejection remains preserved; observation task does not repair product editing",
+    "No physical display/pure GPU duration or multi-platform acceptance claimed"
+  ],
+  "original_result_unchanged": true,
+  "official_gate_pass": false,
+  "continue_execution": false,
+  "stop_after": "UR0b",
+  "committed": false,
+  "pushed": false
+}

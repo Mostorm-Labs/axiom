@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 1 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 171.205292
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 2 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 39.80425
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 3 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 36.300333
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 4 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 1.087833
+  ...
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+ok 5 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 38.353583
+  ...
+# Subtest: canonical admission proof reconciles real raw completions, decoded links and metric receipts
+not ok 6 - canonical admission proof reconciles real raw completions, decoded links and metric receipts
+  ---
+  duration_ms: 0.561458
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    canonical positive-chain admission proof missing
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:59:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 7 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 34.704083
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 8 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 34.673458
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+ok 9 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 34.29675
+  ...
+# Subtest: actual metrics retain separate Runtime owners for simultaneous navigation demands
+ok 10 - actual metrics retain separate Runtime owners for simultaneous navigation demands
+  ---
+  duration_ms: 35.710459
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 478.985416

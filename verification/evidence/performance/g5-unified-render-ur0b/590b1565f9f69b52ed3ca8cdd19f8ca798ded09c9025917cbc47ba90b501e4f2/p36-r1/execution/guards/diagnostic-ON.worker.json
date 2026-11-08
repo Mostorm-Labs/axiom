@@ -1,0 +1,31 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/worker.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192/sdk/web",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/execution/raw-runs/diagnostic-ON",
+    "fixture",
+    "navigation",
+    "ON"
+  ],
+  "reason": "completed",
+  "returncode": 0,
+  "elapsed_s": 35.54123899998376,
+  "peak_process_family_rss_kib": 1937856,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 90,
+  "last_stage": {
+    "stage": "complete",
+    "status": "OBSERVED",
+    "trace": {
+      "loss": {
+        "statistical": 0,
+        "critical": 0
+      },
+      "pending_gpu": 0,
+      "records": 43953
+    }
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

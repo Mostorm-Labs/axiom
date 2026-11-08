@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "status": "FROZEN_FOR_UR0b",
+  "materialization": "shared controlled worktree plus content-addressed result bundle. Design baseline separately committed before production write; final source Git revision+full dirty-tree hash+all SDK artifacts/runner/fixture/evidence SHA256; no claim that HEAD contains uncommitted bytes.",
+  "future_result_root": ".aegis/results/G5-UR0b/",
+  "future_evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<source-tree-sha>/",
+  "blocking_obligations": [
+    "UR0b-PRIVATE",
+    "UR0b-CLOCK-INPUT",
+    "UR0b-COMMIT-SCENE",
+    "UR0b-ROUTES-TARGETS",
+    "UR0b-WORK-COUNTERS",
+    "UR0b-GPU-QUEUE",
+    "UR0b-FIXTURE",
+    "UR0b-PIXEL-SEMANTICS",
+    "UR0b-OVERHEAD",
+    "UR0b-MATRIX",
+    "UR0b-REGRESSION"
+  ],
+  "required_artifact_groups": {
+    "UR0b-PRIVATE": [
+      "collector-tests.json",
+      "normal-qualification-boundary.json",
+      "normal-artifact-manifest.json"
+    ],
+    "UR0b-CLOCK-INPUT": [
+      "driver-tests.json",
+      "clock-calibration.json",
+      "input-plan-and-delivery.jsonl"
+    ],
+    "UR0b-COMMIT-SCENE": [
+      "stage-trace.jsonl",
+      "commit-scene-reconciliation.json"
+    ],
+    "UR0b-ROUTES-TARGETS": [
+      "routes-observed.json",
+      "target-leaf-reconciliation.json",
+      "raw-trace.jsonl"
+    ],
+    "UR0b-WORK-COUNTERS": [
+      "work-counter-capabilities.json",
+      "work-costs.json"
+    ],
+    "UR0b-GPU-QUEUE": [
+      "gpu-queue-timeline.jsonl",
+      "gpu-retirement-tests.json",
+      "gpu-convergence.json"
+    ],
+    "UR0b-FIXTURE": [
+      "fixture-qualification.json",
+      "snapshot-inputs.json",
+      "exact-query-oracle.json"
+    ],
+    "UR0b-PIXEL-SEMANTICS": [
+      "pixel-oracle.json",
+      "semantic-state.json",
+      "receipt-oracle.json"
+    ],
+    "UR0b-OVERHEAD": [
+      "overhead-pairs.json",
+      "overhead-qualification.json"
+    ],
+    "UR0b-MATRIX": [
+      "matrix-ledger.json",
+      "raw-runs/",
+      "metrics/",
+      "baseline-summary.json"
+    ],
+    "UR0b-REGRESSION": [
+      "regression.json",
+      "ctest.log",
+      "node.log",
+      "python.log",
+      "boundary.log",
+      "source-scope-audit.json"
+    ]
+  },
+  "run_identity": [
+    "source revision and full tree hash",
+    "package/activation/runner/fixture SHA256",
+    "matched rootJS/declarations/internalJS/WASM/resources +BuildInfo",
+    "browser/GPU/toolchain/device/clock/actual capability",
+    "window900x650,mount800x500,DPR2,initial camera/cache",
+    "actual profile/package/config/seed and immutable document snapshot",
+    "original planned schedule/arrivals/admission/rejects",
+    "job/attempt/decision/leaf and full Runtime basis",
+    "real target/lease/GPU group/retirement",
+    "critical/statistical loss and capability tags"
+  ],
+  "result_fields": [
+    "status",
+    "package_sha256",
+    "activation_ref",
+    "starting_revision",
+    "result_revision",
+    "source_tree_sha256",
+    "worktree_dirty_paths",
+    "materialized_ref",
+    "output_sha256",
+    "validation_results",
+    "matrix_ledger_ref",
+    "correctness_status",
+    "evidence_status",
+    "performance_status",
+    "scope_audit",
+    "open_boundaries",
+    "next_phase_prerequisites"
+  ],
+  "facts_owner": "run raw artifacts and deterministic validators own totals; execution return references them, not hand-entered second totals.",
+  "prohibited_claims": [
+    "all43routes migrated/COVERED from minimal matrix",
+    "GPU target means Skia has no CPU software coverage",
+    "navigation canonical receipt",
+    "engineering/host probe means physical multi-platform PASS",
+    "performance PASS or UR0c threshold change",
+    "official Gate/P34 PASS"
+  ],
+  "source_preservation": "UR0a output hashes/old evidence and R2/R3 source identities unchanged; do not rerun UR0a scope validator as a new-worktree policy after deliberately adding successor package files. Verify exact UR0a frozen bytes and its before-successor validation instead.",
+  "design_materialization_revision": "92a67b1484d9d3407a6cb2a3db3d917061a81683"
+}

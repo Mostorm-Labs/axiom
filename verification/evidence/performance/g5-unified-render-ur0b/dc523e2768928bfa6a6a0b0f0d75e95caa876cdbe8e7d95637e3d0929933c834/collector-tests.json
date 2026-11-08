@@ -1,0 +1,14 @@
+{
+  "status": "QUALIFIED_NATIVE_MODELS",
+  "native_tests": [
+    "G5Ur0Observation",
+    "G5Ur0ObservationIdentity"
+  ],
+  "log": "preflight-and-regression/ctest-required-evidence.log",
+  "source_tests": [
+    "runtime/foundation/tests/g5_observation_test.cpp",
+    "runtime/render/tests/g5_observation_identity_test.cpp"
+  ],
+  "assertions": "bounded critical priority/overflow, callback-before-submit, duplicate completion, abandon/loss, reset/pinning, borrowed buffer, identity precision",
+  "not_physical_device_or_full_instrumentation_qualification": true
+}

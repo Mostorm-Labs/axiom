@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "affine_bounds.hpp"
@@ -528,6 +530,8 @@ static foundation::Result<ReferenceDrawList> buildSources(
     const FrameState& frame,
     const VisibilityResult& visibility,
     const RuntimeScene& runtimeScene,bool canonical) {
+    G5_SCOPE(g5Reference,g5::Tag::reference_build,g5::Purpose::none);
+
     if (frame.sceneGeneration != visibility.sceneGeneration ||
         frame.sceneReadToken != visibility.sceneReadToken ||
         frame.sceneGeneration != runtimeScene.generation()) {
@@ -616,11 +620,16 @@ static foundation::Result<ReferenceDrawList> buildSources(
     if (!canonical) list.visibleRecords = list.entries.size();
     if(canonical){
       AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
+      G5_SCOPE(g5Encode,g5::Tag::reference_encode,g5::Purpose::none);
       list.canonicalBytes = canonicalBytes(list);
+      G5_SCOPE_END(g5Encode);
+      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,1,list.canonicalBytes.size());
       AXIOM_FRAME_TIMING_END(encodeTiming);
       AXIOM_FRAME_TIMING_ADD(encoded_bytes,list.canonicalBytes.size());
       AXIOM_FRAME_TIMING_SCOPE(digestTiming,reference_digest);
+      G5_SCOPE(g5Digest,g5::Tag::reference_digest,g5::Purpose::none);
       list.digest = stableDigest(list.canonicalBytes);
+      G5_SCOPE_END(g5Digest);
     }
     return foundation::Result<ReferenceDrawList>::success(std::move(list));
 }

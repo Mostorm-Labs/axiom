@@ -1,0 +1,41 @@
+FFF
+======================================================================
+FAIL: test_hard_guard_stop_cannot_be_interpreted_as_product_red (test_g5_ur0_repair_runner.RepairRunnerTest.test_hard_guard_stop_cannot_be_interpreted_as_product_red)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 20, in test_hard_guard_stop_cannot_be_interpreted_as_product_red
+    m=self.module();self.assertTrue(m.hard_stop({'reason':'rss_limit','cleanup_complete':True,'returncode':0}))
+      ^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 6, in module
+    path=ROOT/'verification/runners/g5/ur0/repair_runner.py';self.assertTrue(path.is_file(),'P36 bounded continuation runner missing')
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : P36 bounded continuation runner missing
+
+======================================================================
+FAIL: test_new_qualification_order_and_no_replacement_of_a_failed_pair (test_g5_ur0_repair_runner.RepairRunnerTest.test_new_qualification_order_and_no_replacement_of_a_failed_pair)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 13, in test_new_qualification_order_and_no_replacement_of_a_failed_pair
+    m=self.module();rows=m.plan();q=[r for r in rows if r['phase']=='qualification']
+      ^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 6, in module
+    path=ROOT/'verification/runners/g5/ur0/repair_runner.py';self.assertTrue(path.is_file(),'P36 bounded continuation runner missing')
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : P36 bounded continuation runner missing
+
+======================================================================
+FAIL: test_original_and_new_worker_envelopes_share_one_unchanged_cap (test_g5_ur0_repair_runner.RepairRunnerTest.test_original_and_new_worker_envelopes_share_one_unchanged_cap)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 9, in test_original_and_new_worker_envelopes_share_one_unchanged_cap
+    m=self.module();plan=m.plan();self.assertEqual(sum(r['limit_seconds'] for r in plan),7740)
+      ^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 6, in module
+    path=ROOT/'verification/runners/g5/ur0/repair_runner.py';self.assertTrue(path.is_file(),'P36 bounded continuation runner missing')
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : P36 bounded continuation runner missing
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+FAILED (failures=3)

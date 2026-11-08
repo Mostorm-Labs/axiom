@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 1 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 45.262458
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 2 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 34.283583
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 3 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 35.914583
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 4 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 0.789708
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 5 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 35.029125
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 6 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 33.991875
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+not ok 7 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 1.840291
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    '300' !== '400'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '400'
+  actual: '300'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_compiler.test.mjs:67:46)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 236.605041

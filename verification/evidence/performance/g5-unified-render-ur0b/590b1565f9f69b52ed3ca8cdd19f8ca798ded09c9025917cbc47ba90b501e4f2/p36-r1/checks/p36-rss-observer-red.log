@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_retains_owned_pid_samples_without_changing_guard_or_killing_others (verification.tests.test_g5_ur0_rss.RssObserver.test_retains_owned_pid_samples_without_changing_guard_or_killing_others)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_rss.py", line 6, in test_retains_owned_pid_samples_without_changing_guard_or_killing_others
+    self.assertTrue(path.exists(),'bounded per-process observer unavailable')
+AssertionError: False is not true : bounded per-process observer unavailable
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

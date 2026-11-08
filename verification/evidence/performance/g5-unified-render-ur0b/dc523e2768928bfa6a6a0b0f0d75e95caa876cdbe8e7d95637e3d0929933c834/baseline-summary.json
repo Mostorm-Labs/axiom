@@ -1,0 +1,29 @@
+{
+  "status": "NOT_ADMITTED",
+  "performance_status": "NOT_EVALUATED",
+  "primary_timing_adopted": false,
+  "matrix_outcomes": {
+    "MISSING": 30
+  },
+  "overhead_outcomes": {
+    "COMPLETED": 2,
+    "RSS_LIMIT": 1,
+    "MISSING": 9
+  },
+  "cause": {
+    "status": "FROZEN_VERIFICATION_FAILURE",
+    "blocking_obligation": "UR0b-OVERHEAD",
+    "qualification": {
+      "status": "FAILED",
+      "reason": "all six independent pairs required",
+      "boundary_reason": "paired artifact/document/terminal/product result differs or is missing",
+      "blocked_execution": "frozen guard/cleanup stop at overhead-p2-B",
+      "pairs_ref": "overhead-pairs.json",
+      "automatic_rerun": false
+    },
+    "primary_timing_adopted": false,
+    "scope": "no policy/threshold change or retry selection"
+  },
+  "diagnostic_reruns": 0,
+  "rss_interpretation": "sum of owned process RSS, shared pages may count repeatedly; not unique physical bytes, GPU memory, or Renderer cache budget"
+}

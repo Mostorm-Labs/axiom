@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: independent pixel comparator allows only reference geometric AA edges
+ok 1 - independent pixel comparator allows only reference geometric AA edges
+  ---
+  duration_ms: 0.524209
+  ...
+# Subtest: pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+ok 2 - pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+  ---
+  duration_ms: 0.21625
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43.862125

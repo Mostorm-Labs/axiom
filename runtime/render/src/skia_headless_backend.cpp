@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "skia_erase_mask.hpp"
 #include "canvas/render/skia_headless_backend.hpp"
@@ -1046,6 +1048,8 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
             catch(const std::bad_alloc&) {cache->clear();}
         }
         if (!cached) {
+            G5_ROUTE(g5DirectRoute,entry.record.eraseMasks.empty()?g5::Route::canonical_direct:g5::Route::edit_mask_direct);
+            G5_CANVAS(canvas,false);
             if (cache) cache->noteDirect();
             canvas.save();
             if (isolatedInk) canvas.saveLayer(nullptr, nullptr);

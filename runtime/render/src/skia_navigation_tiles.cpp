@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "skia_navigation_tiles.hpp"
 #include "resource_reclaim.hpp"
 #include "skia_gpu_lifetime.hpp"
@@ -400,10 +402,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // Compose the highest-density valid sources in disjoint regions. A complete
     // coarse plane must never overwrite sharper valid pixels in the overlap.
     if(dirty_&&work.coverageComplete){
-        gpu.touch();compose(*target,patches,camera,frame);
+        gpu.touch();
+        G5_ROUTE(g5NavCompose,g5::Route::nav_retained);
+        G5_TARGET(acquired.frame.surface,true);
+        compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
-        const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
+        const auto result=provider.present();
+        G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
+        if(result.code!=BackendSubmissionCode::kAccepted)return result;
         work.presented=true;dirty_=false;++work.feedbackFirst;
     }
     if(!release.active){
@@ -596,6 +603,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(alpha)job->coverage=SkSurfaces::Raster(SkImageInfo::MakeA8(extent,extent));
             if(!job->coverage)job->coverage=job->cpuCoverage?SkSurfaces::Raster(coverageInfo):target->makeSurface(coverageInfo);
             if(!job->surface||!job->coverage){deferred=true;break;}
+            G5_ROUTE(g5NavTarget,job->cpuCoverage?g5::Route::nav_coarse_cpu:(job->gpuCoarse?g5::Route::nav_coarse_gpu:g5::Route::nav_unprepared));
+            G5_TARGET(job->coverage,!job->cpuCoverage);
             job->surface->getCanvas()->clear(SK_ColorTRANSPARENT);
             const auto b=grid_.bounds(*next);const float s=std::ldexp(1.F,next->scale);
             auto demand=b;
@@ -697,6 +706,9 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(expired()){deferred=true;break;}
         }
         auto& job=*job_;(void)job.lease.markGpuUse();
+        G5_ROUTE(g5NavJob,job.cpuCoverage?g5::Route::nav_coarse_cpu:(job.gpuCoarse?g5::Route::nav_coarse_gpu:g5::Route::nav_unprepared));
+        G5_TARGET(job.coverage,!job.cpuCoverage);
+        G5_TARGET(job.surface,true);
         if(job.source>=job.sources->entries.size()){
             // A fixed ticket can retire at most eight publications. Defer
             // additional cells; never allocate unbounded callback payloads.
@@ -812,10 +824,15 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     work.pending=bool(job_)||bool(refinement_)||!work.coverageComplete;
     for(const auto key:keys)work.pending|=!ready(key)&&needsFine(key);
     if(dirty_&&work.coverageComplete&&!work.presented){
-        gpu.touch();compose(*target,patches,camera,frame);
+        gpu.touch();
+        G5_ROUTE(g5NavCompose,g5::Route::nav_retained);
+        G5_TARGET(acquired.frame.surface,true);
+        compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
-        const auto result=provider.present();if(result.code!=BackendSubmissionCode::kAccepted)return result;
+        const auto result=provider.present();
+        G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
+        if(result.code!=BackendSubmissionCode::kAccepted)return result;
         work.presented=true;dirty_=false;
     }
     // A ready refinement produced after the early feedback present still

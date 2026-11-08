@@ -1,0 +1,61 @@
+{
+  "official_gate_pass": false,
+  "terminal": "FROZEN_VERIFICATION_FAILURE",
+  "items": [
+    {
+      "id": "UR0b-PRIVATE",
+      "status": "QUALIFIED",
+      "evidence_ref": "normal-qualification-boundary.json"
+    },
+    {
+      "id": "UR0b-CLOCK-INPUT",
+      "status": "PARTIAL",
+      "evidence_ref": "clock-calibration.json"
+    },
+    {
+      "id": "UR0b-COMMIT-SCENE",
+      "status": "PARTIAL",
+      "evidence_ref": "commit-scene-reconciliation.json"
+    },
+    {
+      "id": "UR0b-ROUTES-TARGETS",
+      "status": "PARTIAL_UNQUALIFIED",
+      "evidence_ref": "routes-observed.json"
+    },
+    {
+      "id": "UR0b-WORK-COUNTERS",
+      "status": "INCOMPLETE_STATISTICAL_LOSS",
+      "evidence_ref": "work-counter-capabilities.json"
+    },
+    {
+      "id": "UR0b-GPU-QUEUE",
+      "status": "PARTIAL_UNQUALIFIED",
+      "evidence_ref": "gpu-convergence.json"
+    },
+    {
+      "id": "UR0b-FIXTURE",
+      "status": "QUALIFIED_INITIAL_ONLY",
+      "evidence_ref": "fixture-qualification.json"
+    },
+    {
+      "id": "UR0b-PIXEL-SEMANTICS",
+      "status": "MISSING",
+      "evidence_ref": "pixel-oracle.json"
+    },
+    {
+      "id": "UR0b-OVERHEAD",
+      "status": "FAILED_FROZEN_RSS_STOP",
+      "evidence_ref": "overhead-qualification.json"
+    },
+    {
+      "id": "UR0b-MATRIX",
+      "status": "NOT_ADMITTED",
+      "evidence_ref": "matrix-ledger.json"
+    },
+    {
+      "id": "UR0b-REGRESSION",
+      "status": "QUALIFIED_AFFECTED",
+      "evidence_ref": "regression.json"
+    }
+  ]
+}

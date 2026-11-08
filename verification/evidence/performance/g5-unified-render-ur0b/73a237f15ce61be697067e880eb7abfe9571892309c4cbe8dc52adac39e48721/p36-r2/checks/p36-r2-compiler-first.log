@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 1 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 165.151916
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 2 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 41.508666
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 3 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 36.600125
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 4 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 0.91325
+  ...
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+ok 5 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 38.839917
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 6 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 35.250333
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 7 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 35.625417
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+ok 8 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 35.144958
+  ...
+# Subtest: actual metrics retain separate Runtime owners for simultaneous navigation demands
+ok 9 - actual metrics retain separate Runtime owners for simultaneous navigation demands
+  ---
+  duration_ms: 35.849209
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 472.0405

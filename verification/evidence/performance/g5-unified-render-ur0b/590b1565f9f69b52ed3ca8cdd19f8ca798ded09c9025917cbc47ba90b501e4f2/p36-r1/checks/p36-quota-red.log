@@ -1,0 +1,36 @@
+F
+======================================================================
+FAIL: test_actual_normal_and_qualification_quota_at_boundary (verification.tests.test_g5_ur0_budget.RetirementQuota.test_actual_normal_and_qualification_quota_at_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_budget.py", line 26, in test_actual_normal_and_qualification_quota_at_boundary
+    self.assertEqual(run('qualified',charge,'OFF'),boundary,'qualification OFF changed product admission/retirement')
+AssertionError: Lists differ: [{'admitted': False, 'charged': 0, 'delayed': 0, 'compl[174 chars]: 0}] != [{'admitted': True, 'charged': 496, 'delayed': 496, 'co[185 chars]: 0}]
+
+First differing element 0:
+{'admitted': False, 'charged': 0, 'delayed': 0, 'completed': 0, 'closed': 0}
+{'admitted': True, 'charged': 496, 'delayed': 496, 'completed': 0, 'closed': 0}
+
+- [{'admitted': False, 'charged': 0, 'closed': 0, 'completed': 0, 'delayed': 0},
+-  {'admitted': False, 'charged': 0, 'closed': 0, 'completed': 0, 'delayed': 0},
+-  {'admitted': False, 'charged': 0, 'closed': 0, 'completed': 0, 'delayed': 0}]
++ [{'admitted': True,
++   'charged': 496,
++   'closed': 0,
++   'completed': 0,
++   'delayed': 496},
++  {'admitted': True,
++   'charged': 496,
++   'closed': 0,
++   'completed': 496,
++   'delayed': 496},
++  {'admitted': True,
++   'charged': 496,
++   'closed': 0,
++   'completed': 0,
++   'delayed': 496}] : qualification OFF changed product admission/retirement
+
+----------------------------------------------------------------------
+Ran 1 test in 3.878s
+
+FAILED (failures=1)

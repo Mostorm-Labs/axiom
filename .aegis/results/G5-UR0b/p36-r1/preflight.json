@@ -1,0 +1,16 @@
+{
+  "status": "VERIFIED",
+  "authority_sha256": "007f4a09e625b4d1c1999c50577498c0cbf9570ceae190158559db8540b202f7",
+  "reviewed_source_tree_sha256": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834",
+  "ownership": "Existing product owners/branches/order unchanged; collector owns bounded sidecars, actual compiler owns fail-closed joins, runner owns cold transport/measurement guards",
+  "public_api_impact": "NONE",
+  "unresolved_semantic_decisions": [],
+  "repair_order": [
+    "R1 quota-neutral GPU sidecar",
+    "R2 actual full-owner compiler joins",
+    "R3 bounded lease compression",
+    "R4 real metrics/realtime/correctness",
+    "I1 cold transport and RSS diagnostic",
+    "authorized bounded diagnostic then conditional cohort"
+  ]
+}

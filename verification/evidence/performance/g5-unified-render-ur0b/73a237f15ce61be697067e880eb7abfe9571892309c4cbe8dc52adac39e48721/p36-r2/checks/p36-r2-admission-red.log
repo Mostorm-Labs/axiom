@@ -1,0 +1,41 @@
+F..FF.F
+======================================================================
+FAIL: test_frozen_sampling_stop_applies_even_to_a_fresh_output_directory (test_g5_ur0_repair_runner.RepairRunnerTest.test_frozen_sampling_stop_applies_even_to_a_fresh_output_directory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 46, in test_frozen_sampling_stop_applies_even_to_a_fresh_output_directory
+    m=self.module();self.assertTrue(callable(getattr(m,'assert_sampling_authority_open',None)),'consumed authorization guard missing')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : consumed authorization guard missing
+
+======================================================================
+FAIL: test_no_observed_completion_is_distinct_from_a_positive_chain (test_g5_ur0_repair_runner.RepairRunnerTest.test_no_observed_completion_is_distinct_from_a_positive_chain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 35, in test_no_observed_completion_is_distinct_from_a_positive_chain
+    m=self.module();self.assertTrue(callable(getattr(m,'require_canonical_chain',None)),'positive canonical admission gate missing')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : positive canonical admission gate missing
+
+======================================================================
+FAIL: test_old_qualified_label_without_a_bound_positive_diagnostic_never_claims_a_cohort (test_g5_ur0_repair_runner.RepairRunnerTest.test_old_qualified_label_without_a_bound_positive_diagnostic_never_claims_a_cohort)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 40, in test_old_qualified_label_without_a_bound_positive_diagnostic_never_claims_a_cohort
+    m=self.module();self.assertTrue(callable(getattr(m,'require_qualified_diagnostic',None)),'canonical prerequisite check missing')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : canonical prerequisite check missing
+
+======================================================================
+FAIL: test_schema_and_zero_loss_cannot_admit_a_missing_canonical_chain (test_g5_ur0_repair_runner.RepairRunnerTest.test_schema_and_zero_loss_cannot_admit_a_missing_canonical_chain)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 28, in test_schema_and_zero_loss_cannot_admit_a_missing_canonical_chain
+    m=self.module();self.assertTrue(callable(getattr(m,'require_canonical_chain',None)),'positive canonical admission gate missing')
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : positive canonical admission gate missing
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.012s
+
+FAILED (failures=4)

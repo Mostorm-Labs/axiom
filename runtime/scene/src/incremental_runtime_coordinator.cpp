@@ -1,3 +1,5 @@
+#include "canvas/foundation/internal/g5_observation.hpp"
+namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 
 #include "incremental_runtime_full_materialization_bridge.hpp"
@@ -148,6 +150,7 @@ void IncrementalRuntimeCoordinator::publishPending(void* context) noexcept {
         self->publicationGate_.transactionActive = false;
         self->publicationGate_.observation = nullptr;
         self->publicationGate_.observationContext = nullptr;
+        G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,self->pendingGeneration_.value(),self->runtimeScene_.generation().value(),self->binding_._scene.revision().value());
     }
 }
 
@@ -201,7 +204,11 @@ void IncrementalRuntimeCoordinator::commitIntent() noexcept {
     // The owner must check intentBasisMatches() before starting canonical writes.
     if (!intentScene_ || !intentRuntime_) return;
     binding_._scene.commitIntent(std::move(intentScene_));
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    const auto observedIntentGeneration=intentRuntime_->projection.generation.value();
+#endif
     runtimeScene_.publish(std::move(*intentRuntime_));
+    G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,observedIntentGeneration,runtimeScene_.generation().value(),binding_._scene.revision().value());
     intentRuntime_.reset();
     if (testPublicationObserver_ != nullptr)
         testPublicationObserver_(testPublicationObserverContext_);
@@ -243,6 +250,8 @@ foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
 foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     const ISemanticSceneCompiler& compiler,
     const SceneCommitInput& input) {
+    G5_SCOPE(g5Scene,g5::Tag::scene_apply,g5::Purpose::none);
+
     if (input.changes == nullptr) {
         // A dropped ChangeSet is a recovery condition, not an incremental
         // terminal error. Rebuild from the authoritative post-state.
@@ -361,6 +370,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
 foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     const ISemanticSceneCompiler& compiler,
     const SceneCommitInput& input) {
+    G5_SCOPE(g5Recovery,g5::Tag::scene_apply,g5::Purpose::none);
+
     if (input.changes != nullptr) {
         return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kInvalidRevision,
@@ -412,6 +423,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     publicationGate_.transactionActive = false;
     publicationGate_.observation = nullptr;
     publicationGate_.observationContext = nullptr;
+    G5_OBSERVE(g5::Kind::Scene,g5::Tag::scene_apply,true,input.after_generation.value(),runtimeScene_.generation().value(),binding_._scene.revision().value());
     return result;
 }
 
