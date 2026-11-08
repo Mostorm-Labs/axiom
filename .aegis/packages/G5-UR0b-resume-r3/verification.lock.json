@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "parent_verification_lock_ref": {
+    "path": ".aegis/packages/G5-UR0b/verification.lock.json",
+    "sha256": "4ca4133f137f69753cd16f3b38ef3c36ff205ade56dc220970ab3814eb8c140a",
+    "identity_kind": "local-content-addressed"
+  },
+  "parent_execution_contract_ref": {
+    "path": ".aegis/packages/G5-UR0b/execution-contract.json",
+    "sha256": "aef73854b9f8d2fb99131ff9a059f8fee766d3e0c4197bc4599990c7e75a2e50",
+    "identity_kind": "local-content-addressed"
+  },
+  "accepted_offline_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-p36-r2/result.json",
+    "sha256": "55ae20bdf2486896c7d8385becc3ee6f52c3d37f6e53f871e5edc4d8ccf4b8d2",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "id": "RESUME-IDENTITY",
+      "requirement": "Preserve accepted repair and original evidence; one new explicit authority only.",
+      "oracle": "Exact package refs, ancestry, source delta, hash-bound archived manifests and old-authority rejection tests.",
+      "acceptance": "Old authority stays closed even with a new output path; new authorization only accepts declared source/artifact proof and controlled branch.",
+      "evidence_required": [
+        "position-check",
+        "binding-preflight",
+        "source-scope-audit",
+        "old-authority-negative-test"
+      ]
+    },
+    {
+      "id": "RESUME-BUDGET",
+      "requirement": "Do not reset old worker consumption or permit hidden re-runs.",
+      "oracle": "historical-budget.json + per-run guards + pure ledger/admission tests before browsers.",
+      "acceptance": "Historical debit597s, future53runs max7470s, cumulative8067s <=8370s. Reserve full limit before spawn. Preserve CLAIMED/RUNNING and count interruption at full limit absent guard. Relocated output/duplicate IDs/second process cannot obtain another allowance.",
+      "evidence_required": [
+        "cumulative-ledger",
+        "duplicate-claim/closed-authority/overbudget negatives",
+        "guard/cleanup records"
+      ]
+    },
+    {
+      "id": "RESUME-PROOF",
+      "requirement": "Fresh compiler and exact artifact provenance before new observations.",
+      "oracle": "87Node/32Python-equivalent existing suites plus new continuation tests;120boundary checks; source/dependency byte comparison with accepted builds.",
+      "acceptance": "Fresh mechanism proof binds current full tree and compiler. Exact64/192 and32/96 artifacts available before matrix. Reused artifact retains original build identity and has unchanged product/build-input proof; never relabel old BuildInfo as rebuilt.",
+      "evidence_required": [
+        "mechanism-proofs",
+        "artifact-reuse-or-build-provenance",
+        "qualified_sdk_artifacts",
+        "qualified_sdk32_artifacts"
+      ]
+    },
+    {
+      "id": "RESUME-QUALIFY",
+      "requirement": "Qualified observation before main measurements.",
+      "oracle": "Fresh oneOFF/ON diagnostic then sixAB/BA pairs in frozen order; bound canonical positive chain from actual raw data.",
+      "acceptance": "Diagnostic has raw/decoded/metric agreement; overhead thresholds/noise rules unchanged. No archived observation can satisfy fresh admission. Any failure ends this window.",
+      "evidence_required": [
+        "fresh diagnostic-result",
+        "canonical-chain proof",
+        "overhead-qualification",
+        "all raw/compiled inputs"
+      ]
+    },
+    {
+      "id": "RESUME-CLOSURE",
+      "requirement": "Finish original separate workers/matrix only after prerequisites.",
+      "oracle": "ParentUR0b frozen fixture/pixel/semantic/receipt and metrics schema oracles.",
+      "acceptance": "All required prerequisites pass, all53new IDs plus15historical IDs accounted; truthful stop/MISSING/RED retained. No product orP34PASS.",
+      "evidence_required": [
+        "separate-result",
+        "matrix-ledger",
+        "baseline-summary",
+        "result/manifest"
+      ]
+    }
+  ]
+}

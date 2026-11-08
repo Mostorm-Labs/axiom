@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "parent_ref": {
+      "path": ".aegis/packages/G5-UR0b/execution-contract.json",
+      "sha256": "aef73854b9f8d2fb99131ff9a059f8fee766d3e0c4197bc4599990c7e75a2e50",
+      "identity_kind": "local-content-addressed"
+    },
+    "required_changes": [
+      "Bind a new continuation entry to this exact package, retaining the closed old-authority behavior. Reuse repair_runner mechanisms; a small new adapter or explicit parameterization is allowed.",
+      "Import full historical debit and implement durable single-window claim/accounting; keep frozen parent watchdog and limits.",
+      "Refresh exact source/compiler/mechanism proof. Reuse unchanged accepted SDK/test artifacts with exact provenance, or build matching normal/qualifier Axiom artifacts using locked prebuilt dependencies. Complete missing32/96 proof before its matrix rows.",
+      "Run the new diagnostic,qualification,separate,main phases in order without intermediate permission prompts if predicates hold.",
+      "Archive honest outcomes and return exact result/evidence refs."
+    ],
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/runners/g5/ur0/resume_runner.py",
+      "verification/tests/test_g5_ur0_repair_runner.py",
+      "verification/tests/test_g5_ur0_resume_runner.py"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/resume-r3/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/resume-r3/**",
+      "out/ur0b/resume-r3/**"
+    ],
+    "forbidden_changes": [
+      "Runtime/SDK product or observation implementation changes",
+      "collector/compiler/fixture/schema/threshold changes beyond approved runner auth/accounting adaptation",
+      "frozen shared bounded_worker.py change",
+      "old packages/results/archives alteration",
+      "source_identity exclusions expansion",
+      "dependency rebuild or lock change",
+      "scheduling/routing/budget optimization",
+      "new public API",
+      "commit/push",
+      "automatic extension intoUR0c/UR1"
+    ],
+    "preserved_work": [
+      "UR0a and parentUR0b authority",
+      "P36-r2 accepted offline repair and all original raw archives",
+      "existing accepted mechanism tests/native product build bytes"
+    ],
+    "tests": {
+      "required": [
+        "Existing UR0Node andPython suites plus meaningful continuation admission/accounting regressions",
+        "runtime boundary checker",
+        "Parent affected22CTest results revalidated/reused only with exact unchanged binary/build-input provenance; fresh run if affected",
+        "Normal/qualifier artifact/export/install boundaries retained or revalidated with unchanged-source proof",
+        "All parent fixture/semantic/pixel/receipt/clock oracles under their existing required phase"
+      ],
+      "regression_reuse": "Do not re-run browser smokes outside the53 authorized worker IDs. Accepted unchanged smoke and build evidence may be inherited with exact hashes and source projection proof. If a required incompatible rebuild needs an extra browser worker, return TASK_PACKAGE_DEFECT before spawning; do not silently consume residual time.",
+      "new_negative_cases": [
+        "old authority/new directory remains closed",
+        "duplicate or concurrently claimed window rejected",
+        "spent run cannot be restarted after interruption",
+        "missing guard charges full limit",
+        "historical preflight cannot be omitted",
+        "overbudget claim rejected before spawn",
+        "changed compiler/proof/artifact rejected",
+        "archived offline chain cannot qualify fresh run"
+      ]
+    },
+    "execution_limits": {
+      "historical_debit_seconds": 597,
+      "historical_budget_ref": {
+        "path": ".aegis/results/G5-UR0b/control-continuation-r3/historical-budget.json",
+        "sha256": "ef0c3913a0baea3c45540cbee1a8b1a5d43d03f99e1779683ff80128c0533e81",
+        "identity_kind": "local-content-addressed"
+      },
+      "all_workers_cap_seconds": 8370,
+      "new_worker_count_max": 53,
+      "new_worker_seconds_max": 7470,
+      "cumulative_seconds_max": 8067,
+      "unallocated_seconds": 303,
+      "unallocated_is_retry_authorization": false,
+      "concurrency": 1,
+      "process_family_rss_bytes": 3221225472,
+      "diagnostic_memory_bytes": 16777216,
+      "critical_reserve_bytes": 1048576,
+      "render_budget_pairs_mib": [
+        [
+          32,
+          96
+        ],
+        [
+          64,
+          192
+        ]
+      ],
+      "new_window_id": "G5-UR0b-resume-r3",
+      "phases": [
+        {
+          "id": "diagnostic",
+          "count": 2,
+          "per_worker_seconds": 90,
+          "order": [
+            "OFF",
+            "ON"
+          ]
+        },
+        {
+          "id": "qualification",
+          "count": 12,
+          "per_worker_seconds": 90,
+          "order": [
+            "AB",
+            "BA",
+            "BA",
+            "AB",
+            "AB",
+            "BA"
+          ]
+        },
+        {
+          "id": "separate",
+          "count": 9,
+          "per_worker_seconds": 90,
+          "realtime_hz": [
+            60,
+            120,
+            240
+          ],
+          "correctness_count": 6
+        },
+        {
+          "id": "main",
+          "count": 30,
+          "per_worker_seconds": 180,
+          "matrix_ref": {
+            "path": "docs/planning/g5-unified-render/ur0a/matrix.json",
+            "sha256": "519ac706e0a6e8b71085adfc2d7c1cb9f5885b552a0a8fddb13ec4814438de5c",
+            "identity_kind": "local-content-addressed"
+          }
+        }
+      ],
+      "qualification_thresholds": "Exactly inherited. No automatic NOISY rerun. Diagnostic is mechanism-only, not overhead qualification.",
+      "claim_policy": "Use a single fixed durable window ledger under.aegis/results/G5-UR0b/resume-r3 before any browser spawn, with exclusive window ownership. Alternative --output cannot restart an existing claimed/completed/stopped run or authority. A claimed but provably unstarted row is not elapsed; unknown started rows charge full limit. Preserve prior result/guard immutability.",
+      "stop_policy": "Any hard timeout/RSS/observer failure/cleanup failure or qualification/proof failure closes this entire continuation window; cleanup owned processes, mark remaining IDs MISSING, return CONTROL_REVIEW. Do not use residual seconds for a retry.",
+      "extra_browser_preflights": false,
+      "builds_and_unit_tests": "Separate from sampling wall cap as original plan; no new hidden browser performance probes in those labels."
+    },
+    "evidence": {
+      "blocking": [
+        "ParentUR0b blocking obligations plus five continuation obligations inverification.lock.json"
+      ],
+      "corroborative": [
+        "fullCTest",
+        "prior failed performance traces"
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "terminal_success": {
+      "all_of": [
+        "All inherited mandatory obligations satisfied at exact reviewer-accessible boundary",
+        "New bounded diagnostic+qualification+separate+main accounted and evidence compiled with correct identity",
+        "No ignored loss/failure or stale artifact attribution",
+        "READY_FOR_CONTROL_REVIEW returned with complete manifests"
+      ],
+      "clarification": "Frozen stop is an honest partial return, not fullUR0b completion."
+    },
+    "terminal_blockers": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "stop_after": "UR0b",
+      "official_gate_pass": false
+    }
+  }
+}

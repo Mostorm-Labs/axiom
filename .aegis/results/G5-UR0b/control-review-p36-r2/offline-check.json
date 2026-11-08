@@ -1,0 +1,85 @@
+{
+  "scope": "P36-r2 offline compilation only",
+  "rows": [
+    {
+      "run": "diagnostic-OFF",
+      "status": "NOT_OBSERVED",
+      "raw_accepted": 0,
+      "decoded": 0,
+      "receipts": 0,
+      "successful_jobs": [],
+      "metrics_equal_archive": true,
+      "recorded_behavior_unchanged": true
+    },
+    {
+      "run": "diagnostic-ON",
+      "status": "QUALIFIED",
+      "raw_accepted": 2,
+      "decoded": 2,
+      "receipts": 2,
+      "successful_jobs": [
+        {
+          "job": "1582",
+          "basis": "1582",
+          "attempt_jobs": 24,
+          "completion_seq": "30074"
+        },
+        {
+          "job": "2498",
+          "basis": "2498",
+          "attempt_jobs": 24,
+          "completion_seq": "58331"
+        }
+      ],
+      "metrics_equal_archive": true,
+      "recorded_behavior_unchanged": true
+    },
+    {
+      "run": "qualification-p1-A",
+      "status": "NOT_OBSERVED",
+      "raw_accepted": 0,
+      "decoded": 0,
+      "receipts": 0,
+      "successful_jobs": [],
+      "metrics_equal_archive": true,
+      "recorded_behavior_unchanged": true
+    },
+    {
+      "run": "qualification-p1-B",
+      "status": "QUALIFIED",
+      "raw_accepted": 1,
+      "decoded": 1,
+      "receipts": 1,
+      "successful_jobs": [
+        {
+          "job": "2761",
+          "basis": "2761",
+          "attempt_jobs": 24,
+          "completion_seq": "115402"
+        }
+      ],
+      "metrics_equal_archive": true,
+      "recorded_behavior_unchanged": true
+    },
+    {
+      "run": "qualification-p2-B",
+      "status": "QUALIFIED",
+      "raw_accepted": 1,
+      "decoded": 1,
+      "receipts": 1,
+      "successful_jobs": [
+        {
+          "job": "2449",
+          "basis": "2449",
+          "attempt_jobs": 24,
+          "completion_seq": "129302"
+        }
+      ],
+      "metrics_equal_archive": true,
+      "recorded_behavior_unchanged": true
+    }
+  ],
+  "total_accepted": 4,
+  "new_browser_workers": 0,
+  "primary_timing_adopted": false
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "g5-ur0b-continuation-control-decision-v1",
+  "status": "AUTHORIZED_BOUNDED_CONTINUATION",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r3/package.json",
+    "sha256": "bd6777505dddd474a111c52e1c477001a82ed11b5e445ce293f40368ba27f915"
+  },
+  "position_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r3/position-check.json",
+    "sha256": "0a7ec5453f1db698b16771970c4c602cab7fe74d2884ad49753b8a5ef320c933"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r3/validation.json",
+    "sha256": "9af2d9ad1d338e36c0ed3693ffea2d7b8a791c2928bac4ad8e26d9b474de54e4"
+  },
+  "historical_budget_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r3/historical-budget.json",
+    "sha256": "ef0c3913a0baea3c45540cbee1a8b1a5d43d03f99e1779683ff80128c0533e81"
+  },
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "independent_read_only_cross_checks": {
+    "budget_cache_audit": "No budget/claim/stop contradiction; runner negatives required before sampling",
+    "ur0a_handoff_review": "No package/source/artifact reuse or inherited-threshold contradiction"
+  },
+  "blocking_findings": [],
+  "sampling_started_by_control": false,
+  "official_gate_pass": false,
+  "parent_ur0b_complete": false,
+  "source_commit_push_by_control": false,
+  "decision_scope": "Authorize one successor window with preflight gates, not qualification or product performance acceptance."
+}
