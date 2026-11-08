@@ -1,0 +1,1717 @@
+{
+  "schema": "ur0b-independent-current-compiler-reuse-v1",
+  "status": "ACCEPTED_EXACT_RECORDED_PREREQUISITES_FOR_CURRENT_COMPILER",
+  "owner": "aegis-gate-review / independent control",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "compiler_source_reviewed_at": "118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b",
+  "compiler_file_sha256": {
+    "compile_run.mjs": "2f121b5cb69d36706b5e5f79d98283f8bd70bf75fec9f4a89ebb3e3b17749ac5",
+    "decode_trace.mjs": "26eeb2ef7fd4f009cea90321e9c53a1c8d5b85b91dc1b35f76cefa2ccf5e1ba8",
+    "metrics_compiler.mjs": "201d3a144aed8ef3d0dce1687f15df6de29801e58bd626f52877b5e123e058c0",
+    "canonical_chain.mjs": "415c8e1346ffb8ad0d190ba8e1f0dfd4e567bf5420578cf1f99dae5d80b3ff26",
+    "external_metrics.mjs": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+    "schedule.mjs": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+    "validate_metrics.py": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad",
+    "initialization_basis.mjs": "4ff42563451353fbdd38aa36c5823d8fc2cd9e3e47cd8a12e635d880214236ca"
+  },
+  "repaired_worker_and_helpers": {
+    "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+    "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+    "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+    "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+    "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
+    "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+    "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+  },
+  "independent_reconciliation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/recorded-reuse-check.json",
+    "sha256": "3f328e86b9e137c2a672d003596f8fb24a9b5aa0153919ff3df621eb819cbbe2",
+    "identity_kind": "local-content-addressed"
+  },
+  "independent_materialization_scope_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/identity-check.json",
+    "sha256": "d1040dba8dd6eead67dd1d75890afed8a90773d63591f840b616ebf853d03237",
+    "identity_kind": "local-content-addressed"
+  },
+  "old_independent_overhead_acceptance_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/reuse-acceptance.json",
+    "sha256": "838f284592d524bc0ea56ead42acc14491c301033a66d169ed24ad52b8bd8ea3",
+    "identity_kind": "local-content-addressed"
+  },
+  "old_independent_overhead_calculation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/overhead-check.json",
+    "sha256": "2b10dde8c755f4d8672aa6be4b23096a6ab756d086e839f6ac030090485705fb",
+    "identity_kind": "local-content-addressed"
+  },
+  "records": [
+    {
+      "run_id": "diagnostic-OFF",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/worker-result.json",
+          "sha256": "f75c5d2946028c3aca112562c0d16a215dd08730816f543ed30fba323422959e",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-OFF/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/diagnostic-OFF/compiled-summary.json",
+        "sha256": "886564eb50233cc476135095e3bfdd568fa6fc09fd49a2946b093835f8c2a651"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/diagnostic-OFF/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/diagnostic-OFF/compiled-summary.json",
+        "sha256": "e9ca6b923cb6ce745a053248ef5db9075d806affb0054a8ccccce7029e64d5a5"
+      }
+    },
+    {
+      "run_id": "diagnostic-ON",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/raw-trace.jsonl",
+          "sha256": "a54e5299a5520cc35e4545e3506e04a3b07638a94f7452585c9c07623eb2132a",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/worker-result.json",
+          "sha256": "31f7a653ef3ea4c27675f248c05db490b69aa4276868a3838d58047b0c1d61f6",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/diagnostic-ON/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/diagnostic-ON/compiled-summary.json",
+        "sha256": "b8691977709ec1c6db99a198e54c3800e626e24841594db9396739cc19b3db0d"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/diagnostic-ON/canonical-chain.json",
+        "sha256": "a82b188f1f4a52067b886e1a569a780cf4f1a9f52a2f9e102c4a242d5a0025db"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/diagnostic-ON/compiled-summary.json",
+        "sha256": "5810e299f2c33d3b361419df37d0d6def8881538dfc9a370ba9f9ad291e3350d"
+      }
+    },
+    {
+      "run_id": "qualification-p1-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/worker-result.json",
+          "sha256": "9a04d9f965773f99c1645b78c270251832c0d512ae92871b8e3cd9ce30e1d796",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p1-A/compiled-summary.json",
+        "sha256": "09bab8900066589f85a986b0703b9f8bc75c26d45526b0fb2f2268f5c0bc571d"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p1-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p1-A/compiled-summary.json",
+        "sha256": "5e84c11addab2868a715591ee973363a1b3919a306d0b75e28f7e7cff6e03b80"
+      }
+    },
+    {
+      "run_id": "qualification-p1-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/raw-trace.jsonl",
+          "sha256": "d25f1e9e1b3ea2a73baaf18ddcf9c66a334e6785436ba670857066c963922499",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/worker-result.json",
+          "sha256": "02526fa47378ad3afff9e163f260d9803a6efda1a5b8435d13d899c6b74fc183",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p1-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p1-B/compiled-summary.json",
+        "sha256": "acd366e77966040a9b110275dea08c1a2705e194123423e911d5bfdb9cff6f1b"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p1-B/canonical-chain.json",
+        "sha256": "cbb1820be54ab5b24dc8af4d2ab797872a99916b96a7702b9034deee2df084e6"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 2,
+        "metric_receipt_count": 2,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p1-B/compiled-summary.json",
+        "sha256": "2e7f6d63baff4b799d841927ddf096057ec95c809628e6c2834803b1928c9420"
+      }
+    },
+    {
+      "run_id": "qualification-p2-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/worker-result.json",
+          "sha256": "7701f28d1d201ddf647fdf5b42a4f6dd5bb788cf3aa2593fabeeb4b330ed7a92",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p2-A/compiled-summary.json",
+        "sha256": "51f33b2c56386bcfe596f508f4b0499bf8010fe969571203b6a362ffdd9541ea"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p2-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p2-A/compiled-summary.json",
+        "sha256": "9b49336221d881bc9e891adc35552391087443fcf3fa05d07317e71828dad6d1"
+      }
+    },
+    {
+      "run_id": "qualification-p2-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/raw-trace.jsonl",
+          "sha256": "cdd091ec1f3eb2a96abf055658468e4b04585fd9e9ca86673057fe4c699806ed",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/worker-result.json",
+          "sha256": "d5c484899bb2b6128cf258459ea9518b01bc173707450b9ccc0146c1f6f96366",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p2-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p2-B/compiled-summary.json",
+        "sha256": "6d61d84a0894f1ab17c1f331750d2d7235dfa72fb2c9f2249fb12eb747a90609"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p2-B/canonical-chain.json",
+        "sha256": "0216e743009ed56f005007d285994206d102fe043aeca03bad5cc195a64fd63d"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p2-B/compiled-summary.json",
+        "sha256": "c2f0e81df9832481531fc828d7f7607251996e034e03d894adb3c8c1c186c250"
+      }
+    },
+    {
+      "run_id": "qualification-p3-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/worker-result.json",
+          "sha256": "28299a798ef059f618b9261701b3a6988f00ba0d38ce5573afcc1a38b51edcb9",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p3-A/compiled-summary.json",
+        "sha256": "097839d4a6d16f53d910713958c986b8557219fe2950ecc391c2d6e894493ca9"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p3-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p3-A/compiled-summary.json",
+        "sha256": "7ba2496c3c097b8ce2aaeccb7071c079dcea3f8fe85aa8f7259d50cd1cbd1932"
+      }
+    },
+    {
+      "run_id": "qualification-p3-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/raw-trace.jsonl",
+          "sha256": "6c5c2ef4c6d03225d7bcd92564adbd510a1def04b091b2fada2308bec3a6bf0d",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/worker-result.json",
+          "sha256": "3d84ac30b511d6345b234b61e164b4773124082da5b0cd79cbc446df9cdb44b7",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p3-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p3-B/compiled-summary.json",
+        "sha256": "d67b0f9f0fe92f65184c41fc8f612743ebd9f1e7d5ac9e2bd3d47f52471b1c0d"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p3-B/canonical-chain.json",
+        "sha256": "5ae1fc7930b944215f534efc72c17e2f93be2b9fe2745abb1a2c8b6ec7455309"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p3-B/compiled-summary.json",
+        "sha256": "b9525cb894f930a06f0eeb5fed00ee4cee4108f6b961e2426e3be344735cbfab"
+      }
+    },
+    {
+      "run_id": "qualification-p4-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/worker-result.json",
+          "sha256": "7b5423df8794d21ebe6f0e872ce417c63a9a1baac5582c252a704dfb6034a669",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p4-A/compiled-summary.json",
+        "sha256": "ae1d5c269e9f10b65fa2c385c39fa8b50c61ff6495036861b9f3ba988d58b7df"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p4-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p4-A/compiled-summary.json",
+        "sha256": "4c0998fa23896c40187382ed7be765e9adeabd94ea9695dd8a1a3ea6ae9f3b64"
+      }
+    },
+    {
+      "run_id": "qualification-p4-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/raw-trace.jsonl",
+          "sha256": "9c46d734f10c7ecf727a9f832877113af06efc86f9f6dd334c9b075874653829",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/worker-result.json",
+          "sha256": "de3f0548db1c1f45d4a610a287e568b4272ce3cbfd80a3c766b304c62a4fc249",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p4-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p4-B/compiled-summary.json",
+        "sha256": "a406a15f0ed71509d61fc52195ac29377495afb5b3a322d8315694618fb7c5c0"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p4-B/canonical-chain.json",
+        "sha256": "34aa489732213f83b6a6fa14c198dee97019cad4c8f93a097af2939dd01491c4"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p4-B/compiled-summary.json",
+        "sha256": "fa2559640a8a43c981e9b62d88c55024c3c41046c478c1fc524613cbab6128bc"
+      }
+    },
+    {
+      "run_id": "qualification-p5-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/worker-result.json",
+          "sha256": "62d0996783155676dc9248d95f3a83a5b91fdd6e3b9553b204fdbe97efcd0daf",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p5-A/compiled-summary.json",
+        "sha256": "1a2945d6187732f45db90177e625e8f12ee866211df143c090ce2a7492385131"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p5-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p5-A/compiled-summary.json",
+        "sha256": "4ed971929bb058783c15067719815b4938ce96baeccf95dcbec30a20ff682898"
+      }
+    },
+    {
+      "run_id": "qualification-p5-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/raw-trace.jsonl",
+          "sha256": "bffefac34a96af4d49e39289761cc50104798043e8394a2bf53c2aa4245e6314",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/worker-result.json",
+          "sha256": "8d68ab03f90df60d220e6e39da9ee1dce19ffe04708419ead221b57e4e9669c5",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p5-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p5-B/compiled-summary.json",
+        "sha256": "e85086f15eda71236ba3eaa692ec2707ac603445dade969f4572452ba153b3a4"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p5-B/canonical-chain.json",
+        "sha256": "0be227264b53cacff58dbe9b32de70b102b9d7773f005a2a0f2ac59a193aa604"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p5-B/compiled-summary.json",
+        "sha256": "f90db628adb40761e78106c73a627303cbb91b05d0bd9a0b571e098735460c62"
+      }
+    },
+    {
+      "run_id": "qualification-p6-A",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/raw-trace.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/worker-result.json",
+          "sha256": "91d3985195aeff030912a077db062a526dbdfc7fcd2ae368d89319eb8b0c1923",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-A/run-inputs.json",
+          "sha256": "a1fdc9f4cb03675a99eb775df508a2e913d56138f38ad0df2b82c195ab6f110b",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p6-A/compiled-summary.json",
+        "sha256": "53899a7899ca631f16531b46544d78013243c26fd011f64554512a83a2bb107b"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p6-A/canonical-chain.json",
+        "sha256": "d344b747a9cbf14c77ba59965d08dca8d64183be52a528fa99c30d498421cba8"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 0,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 0,
+        "metric_receipt_count": 0,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p6-A/compiled-summary.json",
+        "sha256": "21cd35f4db3f40842c5541c838031a4224041c697f8a50261625c33bf88be91c"
+      }
+    },
+    {
+      "run_id": "qualification-p6-B",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/raw-trace.jsonl",
+          "sha256": "c5d4b9289473a10a015293a3af5f0df5d4d13ceb16495de20e7589e7333fa1bc",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/worker-result.json",
+          "sha256": "88c27e6329f777489f2f1df92a9d61bdc3871c793e62811c37ab293ddadfda85",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/qualification-p6-B/run-inputs.json",
+          "sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p6-B/compiled-summary.json",
+        "sha256": "77b48097f669c53821faef6800e4c65ab5256ea7edb782fc3630f60944e57538"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/qualification-p6-B/canonical-chain.json",
+        "sha256": "cc5a3ff27bd3cc2d7518cbcbbc8be666148fe393f962d9237b1afd1a8a51b2c0"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 1,
+        "qualified_initialization_count": 0,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/qualification-p6-B/compiled-summary.json",
+        "sha256": "9aba2b1cd95dd3208e0852c60a6dceec3c5182c2626f9c9df39427d6e26f789c"
+      }
+    },
+    {
+      "run_id": "realtime-60",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/raw-trace.jsonl",
+          "sha256": "8561e0d73918a00d9100c64c51e9fe0db9eef72c2e4a17f7d60f5b52449d8fa7",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/worker-result.json",
+          "sha256": "32114d1cca7fcd35282979b331ded6bcacca5ba1ac5c52df3c21db7d995eff62",
+          "identity_kind": "local-content-addressed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/execution/raw-runs/realtime-60/run-inputs.json",
+          "sha256": "d14b2ef8876034491391aae36ae2c68719b9c0cca001ec77472cb8875558a3a6",
+          "identity_kind": "local-content-addressed"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-60/compiled-summary.json",
+        "sha256": "44d26b7efbf1a26956187e2355e72e106c2a5b096437037d4b8d0e1a40c308fc"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-60/canonical-chain.json",
+        "sha256": "e07d20cac8ba6196dbeb70989954b75c8744a6deeaaf68b432f6c8d471cd9728"
+      },
+      "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/offline-execution/reverification-final/realtime-60/compiled-summary.json",
+        "sha256": "4e1d8c4a25704fdbef718cd8e2a5ff12ea5ac4b4c51ee2df1251d8f354f30c12"
+      }
+    },
+    {
+      "run_id": "realtime-120",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/raw-trace.jsonl",
+          "sha256": "e009ff785573b2cfba4aca87c71fcc57b8d4d63d4d06a39419913dc3ed209eed"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/worker-result.json",
+          "sha256": "f500dd5c854bdf0a928f645ba667bc2cb288ebc4f0f34fa77741ecedb8ba52e1"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/run-inputs.json",
+          "sha256": "b86c78a678b7f6ef701d1f205c3317741cb0e34e41bcf7edc05e554f846e157f"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-120/compiled-summary.json",
+        "sha256": "5521c395b7383d3623212aacd862d51a80feb094d3578c9497449472ce2344ab"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-120/canonical-chain.json",
+        "sha256": "3b0a210fddca85d47293392688c13831de56a35da79ca5a2c39b3ee929e2a3c1"
+      },
+      "recording_source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/compiled-summary.json",
+        "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987"
+      }
+    },
+    {
+      "run_id": "realtime-240",
+      "recorded_input_refs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/raw-trace.jsonl",
+          "sha256": "56edb6b8b9a7c794971c3949251c4aaf200e285c9449d53ddf66ffb873cfe992"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/worker-result.json",
+          "sha256": "6656c11c40cab493ae38389d95a3e23956d5c14cdd12293119491239c58733a2"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/run-inputs.json",
+          "sha256": "da7437cd325d552562427a4bf0fb3107c431f44a0814d15c48909c69696dce8a"
+        }
+      ],
+      "summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-240/compiled-summary.json",
+        "sha256": "c590cc581ee08f630a798d2445617d190572b0d257981c57d1c9cfadb1b0a7ec"
+      },
+      "proof_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/recompiled-recordings/realtime-240/canonical-chain.json",
+        "sha256": "5e120fb7ae5a06e50b4a10813504b417eade58b9c6abd057b6d8a99dd37c93ea"
+      },
+      "recording_source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "mode": "OFFLINE_REVERIFICATION",
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      },
+      "accepted_artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "baseline_summary_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/compiled-summary.json",
+        "sha256": "378e56df36b11409cf5efec6a48497b7db713bcd3dfcf4b5e985a60fd8b26a36"
+      }
+    }
+  ],
+  "accepted_prerequisites": {
+    "diagnostic_off_on": true,
+    "six_pair_overhead": true,
+    "realtime_hz": [
+      60,
+      120,
+      240
+    ]
+  },
+  "applicability": [
+    "Exactly the17 listed immutable recordings and the current8-file compiler plus exact repaired worker/helper tuple; retain each recording source, OFFLINE mode, raw/input/artifact identity and accepted proof counts.",
+    "Canonical chains, decoded data, metrics and external statistics are byte-equal to already accepted baselines, independently compared; no new measured timings or primary data are created.",
+    "Current worker changes are cold-correctness-gated; original primary input/calibration/server/shim/native observer/artifacts and measured workloads remain unchanged. Snapshot exhaustion validation is cold transport and is not primary measured work.",
+    "Original overhead values/ABBA order/MAD/limits stay unchanged. This accepts recorded applicability, not an unmeasured new cohort.",
+    "Any compiler/profile/artifact/input/primary-workload change requires an explicit applicability decision. Old packets/readers remain immutable and continue to reject stale compiler bindings.",
+    "New main rows must use the exact approved32/96 or64/192 SDK artifacts, their original budgets and original corpus/SDK semantics."
+  ],
+  "historical_r4_packet_now_valid": false,
+  "recorded_is_fresh": false,
+  "new_sampling_authorized_by_this_record": false,
+  "full_ur0b_or_performance_or_P34_PASS": false
+}

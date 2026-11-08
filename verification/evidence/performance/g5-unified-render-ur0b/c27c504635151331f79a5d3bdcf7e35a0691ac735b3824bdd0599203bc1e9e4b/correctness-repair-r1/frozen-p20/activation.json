@@ -1,0 +1,33 @@
+{
+  "schema": "ur0b-correctness-harness-dispatch-v1",
+  "status": "READY_TO_DISPATCH",
+  "primary_owner": "aegis-verification",
+  "specialist_route": "Prior Gate handoff -> Aegis router -> P20 verification correction -> adjacent implementation owner",
+  "explicit_repair_and_resume_authority": "Existing user delegation/continue request; current user asks to break mutual waiting. Work order authorizes only the concrete offline harness repair.",
+  "project_control_bootstrap": {
+    "schema_version": "0.6",
+    "manifest_files_read": [
+      "project.json",
+      "authorities.json",
+      "gates.json",
+      "evidence.json",
+      "integrations.json"
+    ],
+    "ur0_entries_present": false,
+    "state_cache_is_authority": false,
+    "scope": "Task-local frozen UR0 packages/results and user authority; no global Gate status edit or new release/integration claim."
+  },
+  "spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    "identity_kind": "local-content-addressed"
+  },
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+    "identity_kind": "local-content-addressed"
+  },
+  "new_sampling_authorized": false,
+  "implementation_authorized": true,
+  "no_second_approval_if_preflight_clean": true
+}

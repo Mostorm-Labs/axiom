@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    "identity_kind": "local-content-addressed"
+  },
+  "acceptance_oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/oracle-cases.json",
+    "sha256": "96d392b4dca7e204d4901b5646e89812d27ac96ff7e14b97e6a2de46a3131712",
+    "identity_kind": "local-content-addressed"
+  },
+  "evidence_inputs_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/evidence-inputs.json",
+    "sha256": "77b0c611ed9a1d0134b7db04b0c11bd6ffebda329653312727770f0f8a1ae268",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "id": "REAL-OLD-HUD-RED",
+      "requirement": "REAL-OLD-HUD-RED",
+      "oracle": "Run the original comparator/request against archived OFF1 and assert16112 differences; show the new retained-selection request handles the same archived public selection bounds. Preserve original FAILED and label recomputation OFFLINE.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "RETAINED-SELECTION",
+      "requirement": "RETAINED-SELECTION",
+      "oracle": "Hand tool with count1 still excludes the public selection perimeter; count0 excludes none. Reject missing/nonfinite/unordered bounds instead of returning green.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "LIVE-SUBJECT",
+      "requirement": "LIVE-SUBJECT",
+      "oracle": "Independently compute fixed expected transform from before public bounds and rectangle center; compare after public selection and native-decoded snapshot object transform. Wrong target/id/camera, no move, unsnapped12, wrong generation or incomplete Up must fail applicability.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "HUD-SUPPORT",
+      "requirement": "HUD-SUPPORT",
+      "oracle": "Freeze projected public before+expected-live bounds, 7px perimeter and rotation support to38px above top; only the fixed live horizontal guide y260 +/-2logicalpx may be added. Validate DPR1/2/4 projection and20% cap. No guide mask afterUp/hand.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "BODY-MUTANTS",
+      "requirement": "BODY-MUTANTS",
+      "oracle": "A body-interior pixel mutation outside HUD/reference AA must still FAIL. Include a lower-z overlap/order or opacity error outside HUD, wrong transform, and mask leakage. These can be deterministic synthetic/reference fixtures; masks must not depend on candidate bytes.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "ACTUAL-OFF0-DIAGNOSTIC",
+      "requirement": "ACTUAL-OFF0-DIAGNOSTIC",
+      "oracle": "Recompare archived OFF0 with the frozen independent HUD recipe; preserve all residual mismatches and their coordinates. Do not require it to become green; the outcome is offline diagnosis, not a new paired correctness result.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "BOUNDED-TRANSFER",
+      "requirement": "BOUNDED-TRANSFER",
+      "oracle": "Byte-for-byte roundtrip0/1/32768/batch boundary/multi-MiB data; exact offsets/length and SHA. Reject duplicate, overlap, gaps, out of order, over-limit batch, bad encoding and incomplete release. Retain allocation ownership and cancellation.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "STAGE-TERMINALS",
+      "requirement": "STAGE-TERMINALS",
+      "oracle": "Deterministic fake await timeout records the exact last-started stage; every completed stage has paired begin/end and monotonic clock. Assert original30s phase timer and90s worker guard unchanged. No resetting the timer at toggle/step/batch.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "CREATION-PROFILES",
+      "requirement": "CREATION-PROFILES",
+      "oracle": "Original exact worker/consumer profile remains valid; the one exact repaired worker profile is additionally pinned with unchanged consumer and all new cold helpers. Unknown or mismatched worker/consumer/helper hashes fail. No wildcard/current-file-hash auto-acceptance.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "PAIRED-INIT-OWNERS",
+      "requirement": "PAIRED-INIT-OWNERS",
+      "oracle": "If paired reload emits an initialization completion, it must match exactly one recorded public init or paired_init state by full native owner/epoch/view, with generation0/empty/no-operation and existing chain checks. Foreign, ambiguous, restored/nonempty or absent state stays UNRESOLVED; do not invent an Operation or substitute lastCommit epoch.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "OLD17-INVARIANCE",
+      "requirement": "OLD17-INVARIANCE",
+      "oracle": "Recompile17 immutable complete inputs into a new directory. Existing canonical populations, committed receipts, metrics/common stats, snapshot/terminal outcomes and source/artifact identity remain identical apart from explicit compiler provenance. OFFLINE is never fresh.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    },
+    {
+      "id": "FROZEN-SCOPE",
+      "requirement": "FROZEN-SCOPE",
+      "oracle": "Diff confirms product/SDK/collector/consumer/input schedule and all non-correctness work unchanged. No browser/qualification oracle probe, rebuild, old-window mutation, deadline/AA change or new sampling in this offline package. The two existing malformed-snapshot native unit checks are allowed and separately counted.",
+      "acceptance": "Satisfy the exact frozen oracle without changing thresholds, subjects, or historical verdicts.",
+      "evidence_required": [
+        "Named offline execution record",
+        "Exact immutable input references"
+      ]
+    }
+  ],
+  "live_reference_contract": {
+    "fixture_unchanged": "Existing257-point round-handdrawn-v4 stroke, rectangle from(280,150)to(540,370), lower-z selected stroke, down(100,100), move/up(124,112), fixed camera scale1,x0,y0.",
+    "expected_transform": "Before selection bounds B and identity transform are required. Expected tx=24; ty=260-(B.top+B.bottom)/2. This is the fixed center-alignment fixture expectation, not a general reimplementation of snapping. Expected committed matrix[1,0,0,1,24,ty].",
+    "applicability": "Same document, selected stroke ID, two object identities/order, unchanged camera/DPR across live capture and post-Up reference. Capture before/live/after public state. Before/live generation unchanged; afterUp exactly one transform commit, activeContacts0, canonical completion. The public after transform and native-decoded snapshot object transform must match the independent expected matrix within1e-4logical units. Wrong fixture rejects; no adaptive movement/search.",
+    "reference": "Use actual afterUp opaque snapshot through unchanged native pixel oracle for live candidate only after subject checks; the expected move and same final pointer position define the target state. Snapshot remains original bytes; no candidate-derived geometry. If the live body differs from that expected state outside permitted HUD/reference AA, retain FAILED.",
+    "hud": {
+      "source": "Only fixed fixture geometry plus archived/current public selection bounds, camera and viewport metrics; never candidate colors/difference support.",
+      "selection_perimeter_halfwidth_logical_px": 7,
+      "rotation_support": "center x +/-7logicalpx; from top-38 through top.38 covers32px gap+4px grip+stroke/AA support.",
+      "live_bounds": "Project original public bounds and the independent expected translated bounds. Do not blindly add raw pointer delta12 or use post-state to choose a convenient expected transform.",
+      "live_guide": "Only lower-z step0: horizontal fixed fixture alignment y260 +/-2logicalpx, clipped to canvas width. At other steps no guide strip.",
+      "hand_step": "Read actual selection; use its public bounds if retained, including in hand mode. No assumption that tool change clears selection.",
+      "max_excluded_fraction": 0.2
+    },
+    "pixel_tolerance": "UNCHANGED: <=2 channel levels outside independent native geometry AA edge and declared HUD; no compared pixels or HUD>20% ->MISSING; retained differences ->FAILED.",
+    "semantic_and_other_cases": "Retain six original correctness cases and OFF/ON pairing rules, masks, transparency, background, resource pressure, DPR and feedback requirements. No PRODUCT_RED_IN_BOTH without complete matching pair."
+  },
+  "cold_transport_and_stage_contract": {
+    "scope": "Correctness worker only. Primary timing/input scheduling, diagnostic/cohort/RT paths and public SDK remain unchanged.",
+    "unit_bytes_max": 32768,
+    "batch_decoded_bytes_max": 262144,
+    "batch_units_max": 8,
+    "representation": "Bounded base64/binary-safe encoding is allowed across the verification host boundary. Existing snapshotChunk/pixelChunk can be invoked several times inside one page.evaluate, preserving each32KiB unit. Never return a document/frame-sized numeric JS array.",
+    "validation": "Sequential exact offset/length, per-unit and batch bounds, exact final byte count and source/received SHA256; explicit finish/cancel ownership and no duplicate read. Pixel source hash is computed once in cold path if needed, not during primary sampling.",
+    "stage_markers": [
+      "correctnessNext/render/settle begin/end",
+      "pixel readback/hash begin/end",
+      "pixel transfer begin/end",
+      "snapshot acquire/transfer begin/end",
+      "native reference/compare begin/end",
+      "close begin/end",
+      "metrics override/reload begin/end",
+      "ON init/setup begin/end"
+    ],
+    "markers_rule": "Coarse stage records only, not per pixel/sample. If render and readback remain one browser evaluate, add coarse browser markers in the existing correctnessDriver; do not claim exact await attribution beyond available brackets.",
+    "correctness_phase_ms": 30000,
+    "outer_worker_seconds": 90,
+    "deadline": "Keep original phase coverage and arm placement; ON/steps/batches never reset30s. A new timeout still closes its separately authorized future window."
+  },
+  "initialization_profile_compatibility": {
+    "old_profile": "Preserve both original exact worker and consumer hashes. No migration of historical raw evidence.",
+    "new_profile": "May add one exact repaired-worker profile, with the original consumer hash unchanged and helper/driver/pixel hashes pinned. Materialize final literal hashes before use in proof. Original createRuntime/server/shim/clock/raw collection and all non-correctness branches must be unchanged apart from imported cold-only helpers/correctness-gated code. No hash wildcard or accepting whatever current file exists.",
+    "paired_state": "For the repaired correctness profile only, public init and paired_init may be distinct recorded state candidates. Match each initialization completion to a unique state by document+attachment+view+document epoch and the existing full owner/native chain. Enforce all current fresh-empty restrictions and count every accepted raw record.",
+    "historical_reuse": "Original15 plus120/240 keep their exact recorded profiles and identities. All17 must recompile unchanged; repaired profile identity is a distinct applicability case, not historical source rewriting."
+  },
+  "quality_evidence_gate": {
+    "required": [
+      "All12 bounded oracle groups",
+      "Node/Python/boundary suites appropriate to allowed changes",
+      "No old archive/source authority edits; no browser/build/qualification oracle probe in this offline slice. Existing malformed-snapshot native unit checks only are permitted and counted.",
+      "Return READY_FOR_CONTROL_REVIEW or explicit frozen blocker and notify control thread"
+    ],
+    "official_gate_pass": false
+  }
+}

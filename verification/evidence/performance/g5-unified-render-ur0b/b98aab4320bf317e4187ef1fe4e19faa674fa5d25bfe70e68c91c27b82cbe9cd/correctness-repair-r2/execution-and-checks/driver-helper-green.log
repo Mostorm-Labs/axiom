@@ -1,0 +1,80 @@
+TAP version 13
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794121982261.517","sequence":1,"monotonic_ns":"185597291"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794121982261.517","sequence":2,"monotonic_ns":"186020875","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794121982261.517","sequence":3,"monotonic_ns":"186093750"}
+# Subtest: REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+ok 1 - REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+  ---
+  duration_ms: 106.472959
+  ...
+# Subtest: RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+ok 2 - RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+  ---
+  duration_ms: 0.4785
+  ...
+# Subtest: LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+ok 3 - LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+  ---
+  duration_ms: 2.887583
+  ...
+# Subtest: LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+ok 4 - LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+  ---
+  duration_ms: 0.390584
+  ...
+# Subtest: HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+ok 5 - HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+  ---
+  duration_ms: 36.422166
+  ...
+# Subtest: BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+ok 6 - BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+  ---
+  duration_ms: 12.413833
+  ...
+# Subtest: STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+ok 7 - STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+  ---
+  duration_ms: 0.366125
+  ...
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794121982261.517","sequence":4,"monotonic_ns":"194077708","status":"completed"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"begin","domain":"browser:1794121982261.517","sequence":5,"monotonic_ns":"194133916"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"end","domain":"browser:1794121982261.517","sequence":6,"monotonic_ns":"194175958","status":"completed"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794121982261.517","sequence":7,"monotonic_ns":"346546166"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794121982261.517","sequence":8,"monotonic_ns":"346639916","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794121982261.517","sequence":9,"monotonic_ns":"346705458"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794121982261.517","sequence":10,"monotonic_ns":"350922541","status":"completed"}
+# Subtest: DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+ok 8 - DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+  ---
+  duration_ms: 312.256917
+  ...
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+ok 9 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 67.139834
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+ok 10 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.203792
+  ...
+# Subtest: BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+ok 11 - BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+  ---
+  duration_ms: 379.269167
+  ...
+# Subtest: BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+ok 12 - BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+  ---
+  duration_ms: 13.951917
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 524.63075

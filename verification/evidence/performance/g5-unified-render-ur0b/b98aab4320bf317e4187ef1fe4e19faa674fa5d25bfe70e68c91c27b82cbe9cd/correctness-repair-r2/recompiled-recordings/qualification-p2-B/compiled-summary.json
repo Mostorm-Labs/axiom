@@ -1,0 +1,277 @@
+{
+  "status": "OBSERVED",
+  "source_stable": true,
+  "artifacts_stable": true,
+  "common": {
+    "p95_ns": "300000",
+    "wall_ns": "3970300000",
+    "dispatch_population": 330
+  },
+  "critical_loss": 0,
+  "statistical_loss": 0,
+  "identity_errors": [],
+  "missing": [],
+  "clock": "QUALIFIED",
+  "terminal": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 2,
+      "x": -399.9998779296875,
+      "y": -249.99984741210938
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": false,
+      "byteCapacity": 33554432,
+      "capacity": 1024,
+      "closing": false,
+      "fault": false,
+      "latest": null,
+      "pending": 0,
+      "pendingBytes": 0,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "99999999999999999999999999999999",
+    "eraserMode": 2,
+    "generation": "17",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "b4a3c498884d1d29a711f8f8a015c669",
+      "ordinal": "17",
+      "presentedGeneration": "17",
+      "runtimeEpoch": "1"
+    },
+    "objects": 16,
+    "primary": "b5a3c498884d1d29a711f8f8a015c626",
+    "selected": [
+      "b5a3c498884d1d29a711f8f8a015c626"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "17",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 500,
+      "width": 800
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        0,
+        0
+      ],
+      "sequence": "1",
+      "session": "0"
+    },
+    "tool": 2
+  },
+  "final_snapshot_sha256": "6891ed66f7756756fc04150ecf273be56a052b220d84723150ca8c63e7aa4cac",
+  "product_errors": [
+    {
+      "at_ns": "19357000000",
+      "event_id": null,
+      "error": "AxiomError: INPUT_REJECTED"
+    }
+  ],
+  "artifact_identity": {
+    "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+    "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+    "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+    "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+    "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+    "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+    "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+    "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+    "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+    "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+    "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+    "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+    "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+    "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+    "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+    "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+    "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+    "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+    "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+    "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+    "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+    "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+    "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+    "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+    "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+    "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+    "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+    "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+    "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+    "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+    "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+    "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+    "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+    "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+    "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+    "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+    "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+    "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+  },
+  "schema_status": "VALID",
+  "schema_reason": null,
+  "actual_observations": {
+    "raw_records": 77430,
+    "owners": 449,
+    "leaves": 1502,
+    "commits": 1,
+    "qualified_completions": 1,
+    "initialization_completions": 0
+  },
+  "canonical_chain": {
+    "schema": "g5-ur0b-canonical-chain-proof-v2",
+    "scope": "NATIVE_AND_METRICS",
+    "status": "QUALIFIED",
+    "accepted_raw_count": 1,
+    "qualified_initialization_count": 0,
+    "qualified_committed_count": 1,
+    "qualified_decoded_count": 1,
+    "observed_qualified_decoded_count": 1,
+    "metric_receipt_count": 1,
+    "unresolved_accepted_count": 0,
+    "accepted_records": [
+      {
+        "completion_seq": "107113",
+        "work_id": "21",
+        "classification": "COMMITTED"
+      }
+    ],
+    "initialization_chains": [],
+    "chains": [
+      {
+        "work_id": "21",
+        "basis": {
+          "runtime_instance": "1",
+          "lifetime_generation": "1",
+          "attachment_epoch": "2",
+          "document_id": "99999999999999999999999999999999",
+          "document_epoch": "1",
+          "resource_generation": "0",
+          "view_id": "1",
+          "committed_generation": "17",
+          "scene_generation": "17",
+          "scene_revision": "17",
+          "camera_generation": "74",
+          "surface_generation": "1",
+          "metrics_generation": "1",
+          "frame_id": "120",
+          "operation_id": "b4a3c498884d1d29a711f8f8a015c669",
+          "commit_revision": "17"
+        },
+        "draw_job": "2754",
+        "draw_basis": "2754",
+        "attempt_jobs": [
+          "2510",
+          "2522",
+          "2533",
+          "2544",
+          "2553",
+          "2564",
+          "2575",
+          "2585",
+          "2596",
+          "2607",
+          "2617",
+          "2628",
+          "2639",
+          "2650",
+          "2659",
+          "2670",
+          "2681",
+          "2690",
+          "2701",
+          "2712",
+          "2722",
+          "2733",
+          "2744",
+          "2754"
+        ],
+        "draw_seq": "106588",
+        "provider_seq": "107095",
+        "capture_seq": "107108",
+        "completion_seq": "107113",
+        "provenance": [
+          "107107",
+          "107105",
+          "107108",
+          "107095",
+          "106588",
+          "9498",
+          "9575",
+          "9600",
+          "107113"
+        ]
+      }
+    ],
+    "unresolved": [],
+    "timing_scope": "native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance"
+  },
+  "canonical_chain_ref": {
+    "path": "canonical-chain.json",
+    "sha256": "0216e743009ed56f005007d285994206d102fe043aeca03bad5cc195a64fd63d"
+  },
+  "initialization_lifecycle": [],
+  "analysis": {
+    "mode": "OFFLINE_REVERIFICATION",
+    "input_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+    "raw_trace_sha256": "cdd091ec1f3eb2a96abf055658468e4b04585fd9e9ca86673057fe4c699806ed",
+    "worker_result_sha256": "d5c484899bb2b6128cf258459ea9518b01bc173707450b9ccc0146c1f6f96366",
+    "run_inputs_sha256": "323ea1022851d0ce9c763950289012fc7248de1eb0c94e552fd92abd94fd0a75",
+    "compiler_files": {
+      "compile_run.mjs": "2f121b5cb69d36706b5e5f79d98283f8bd70bf75fec9f4a89ebb3e3b17749ac5",
+      "decode_trace.mjs": "26eeb2ef7fd4f009cea90321e9c53a1c8d5b85b91dc1b35f76cefa2ccf5e1ba8",
+      "metrics_compiler.mjs": "201d3a144aed8ef3d0dce1687f15df6de29801e58bd626f52877b5e123e058c0",
+      "canonical_chain.mjs": "415c8e1346ffb8ad0d190ba8e1f0dfd4e567bf5420578cf1f99dae5d80b3ff26",
+      "external_metrics.mjs": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+      "schedule.mjs": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+      "validate_metrics.py": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad",
+      "initialization_basis.mjs": "4ff42563451353fbdd38aa36c5823d8fc2cd9e3e47cd8a12e635d880214236ca"
+    },
+    "verification_spec_ref": {
+      "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+      "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e"
+    },
+    "completion_contract_ref": {
+      "path": ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json",
+      "sha256": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd"
+    }
+  }
+}

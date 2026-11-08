@@ -7,6 +7,7 @@ export class SnapshotTransfer {
   if(!this.#bytes)throw Error('no active snapshot');
   if(!Number.isInteger(count)||count<1||count>32768)throw Error('snapshot chunk must be bounded');
   if(offset!==this.#offset)throw Error('snapshot offset is not sequential');
+  if(offset>=this.#bytes.length)throw Error('snapshot exhausted');
   const end=Math.min(offset+count,this.#bytes.length),bytes=Array.from(this.#bytes.subarray(offset,end));this.#offset=end;
   return{offset,bytes};
  }

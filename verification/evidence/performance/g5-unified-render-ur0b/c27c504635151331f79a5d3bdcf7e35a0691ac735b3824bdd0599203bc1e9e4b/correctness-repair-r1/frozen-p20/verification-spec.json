@@ -1,0 +1,127 @@
+{
+  "schema": "ur0b-correctness-harness-verification-v1",
+  "status": "CURRENT_FOR_SUCCESSOR_HARNESS_REPAIR",
+  "role": "aegis-verification / P20, control conversation",
+  "authority": {
+    "user": "Existing explicit design/control here and implementation in adjacent conversation; latest user identified the mutual-wait deadlock. Resolve the known verification gap and dispatch the previously authorized next step.",
+    "predecessor_handoff_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r4/ownership-handoff.json",
+      "sha256": "a57e8a68211141295b587e3f6de0761d1ce2f33a6be1045681056c6bc6e7cbcb",
+      "identity_kind": "local-content-addressed"
+    },
+    "inherited": [
+      {
+        "path": ".aegis/packages/G5-UR0b/verification.lock.json",
+        "sha256": "4ca4133f137f69753cd16f3b38ef3c36ff205ade56dc220970ab3814eb8c140a",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+        "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json",
+        "sha256": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd",
+        "identity_kind": "local-content-addressed"
+      }
+    ]
+  },
+  "objective": "Repair the already-frozen lower-z live/canonical correctness evidence and bound its cold transport, without changing product rendering or weakening its oracle.",
+  "non_goals": [
+    "No Render/Brush/Input/Operation/Scene/SDK/API change",
+    "No performance optimization or UR0c/UR1",
+    "No new browser runs/main matrix in this repair slice",
+    "No official P34 or performance PASS"
+  ],
+  "required_analysis": [
+    "Current Runtime owns transform/snapping and selection decoration; SDK remains root public facade.",
+    "Pixel candidate is an actual framebuffer; reference remains the existing independent native CPU geometry/AA oracle, never candidate pixels.",
+    "Cold transport and paired fixture work must be separated from product latency and primary sampling."
+  ],
+  "live_reference_contract": {
+    "fixture_unchanged": "Existing257-point round-handdrawn-v4 stroke, rectangle from(280,150)to(540,370), lower-z selected stroke, down(100,100), move/up(124,112), fixed camera scale1,x0,y0.",
+    "expected_transform": "Before selection bounds B and identity transform are required. Expected tx=24; ty=260-(B.top+B.bottom)/2. This is the fixed center-alignment fixture expectation, not a general reimplementation of snapping. Expected committed matrix[1,0,0,1,24,ty].",
+    "applicability": "Same document, selected stroke ID, two object identities/order, unchanged camera/DPR across live capture and post-Up reference. Capture before/live/after public state. Before/live generation unchanged; afterUp exactly one transform commit, activeContacts0, canonical completion. The public after transform and native-decoded snapshot object transform must match the independent expected matrix within1e-4logical units. Wrong fixture rejects; no adaptive movement/search.",
+    "reference": "Use actual afterUp opaque snapshot through unchanged native pixel oracle for live candidate only after subject checks; the expected move and same final pointer position define the target state. Snapshot remains original bytes; no candidate-derived geometry. If the live body differs from that expected state outside permitted HUD/reference AA, retain FAILED.",
+    "hud": {
+      "source": "Only fixed fixture geometry plus archived/current public selection bounds, camera and viewport metrics; never candidate colors/difference support.",
+      "selection_perimeter_halfwidth_logical_px": 7,
+      "rotation_support": "center x +/-7logicalpx; from top-38 through top.38 covers32px gap+4px grip+stroke/AA support.",
+      "live_bounds": "Project original public bounds and the independent expected translated bounds. Do not blindly add raw pointer delta12 or use post-state to choose a convenient expected transform.",
+      "live_guide": "Only lower-z step0: horizontal fixed fixture alignment y260 +/-2logicalpx, clipped to canvas width. At other steps no guide strip.",
+      "hand_step": "Read actual selection; use its public bounds if retained, including in hand mode. No assumption that tool change clears selection.",
+      "max_excluded_fraction": 0.2
+    },
+    "pixel_tolerance": "UNCHANGED: <=2 channel levels outside independent native geometry AA edge and declared HUD; no compared pixels or HUD>20% ->MISSING; retained differences ->FAILED.",
+    "semantic_and_other_cases": "Retain six original correctness cases and OFF/ON pairing rules, masks, transparency, background, resource pressure, DPR and feedback requirements. No PRODUCT_RED_IN_BOTH without complete matching pair."
+  },
+  "cold_transport_and_stage_contract": {
+    "scope": "Correctness worker only. Primary timing/input scheduling, diagnostic/cohort/RT paths and public SDK remain unchanged.",
+    "unit_bytes_max": 32768,
+    "batch_decoded_bytes_max": 262144,
+    "batch_units_max": 8,
+    "representation": "Bounded base64/binary-safe encoding is allowed across the verification host boundary. Existing snapshotChunk/pixelChunk can be invoked several times inside one page.evaluate, preserving each32KiB unit. Never return a document/frame-sized numeric JS array.",
+    "validation": "Sequential exact offset/length, per-unit and batch bounds, exact final byte count and source/received SHA256; explicit finish/cancel ownership and no duplicate read. Pixel source hash is computed once in cold path if needed, not during primary sampling.",
+    "stage_markers": [
+      "correctnessNext/render/settle begin/end",
+      "pixel readback/hash begin/end",
+      "pixel transfer begin/end",
+      "snapshot acquire/transfer begin/end",
+      "native reference/compare begin/end",
+      "close begin/end",
+      "metrics override/reload begin/end",
+      "ON init/setup begin/end"
+    ],
+    "markers_rule": "Coarse stage records only, not per pixel/sample. If render and readback remain one browser evaluate, add coarse browser markers in the existing correctnessDriver; do not claim exact await attribution beyond available brackets.",
+    "correctness_phase_ms": 30000,
+    "outer_worker_seconds": 90,
+    "deadline": "Keep original phase coverage and arm placement; ON/steps/batches never reset30s. A new timeout still closes its separately authorized future window."
+  },
+  "initialization_profile_compatibility": {
+    "old_profile": "Preserve both original exact worker and consumer hashes. No migration of historical raw evidence.",
+    "new_profile": "May add one exact repaired-worker profile, with the original consumer hash unchanged and helper/driver/pixel hashes pinned. Materialize final literal hashes before use in proof. Original createRuntime/server/shim/clock/raw collection and all non-correctness branches must be unchanged apart from imported cold-only helpers/correctness-gated code. No hash wildcard or accepting whatever current file exists.",
+    "paired_state": "For the repaired correctness profile only, public init and paired_init may be distinct recorded state candidates. Match each initialization completion to a unique state by document+attachment+view+document epoch and the existing full owner/native chain. Enforce all current fresh-empty restrictions and count every accepted raw record.",
+    "historical_reuse": "Original15 plus120/240 keep their exact recorded profiles and identities. All17 must recompile unchanged; repaired profile identity is a distinct applicability case, not historical source rewriting."
+  },
+  "evidence_qualification": {
+    "failure_mode": "HUD or wrong live reference can report false render defects or hide actual order/alpha/mask/transform defects; cold extraction can exhaust a correctness deadline without identifying the stalled stage.",
+    "impact": "Incorrect prerequisite admission or repeated premature stops prevent valid G5 performance comparison.",
+    "existing_independent_coverage": "Native independent CPU geometry/AA oracle, semantic fixtures, actual OFF archives and original native render regressions.",
+    "residual_proof_gap": "Same-subject live-vs-canonical applicability and candidate-independent HUD handling in the actual browser harness.",
+    "new_evidence_unique_detection_value": "Real archived RED plus targeted body/order/alpha negatives establish that excluding known decorations does not exclude document errors; byte-exact transport tests protect captured evidence.",
+    "blocking_justification": "Direct repair of the already-frozen six-case prerequisite; no new product closure target.",
+    "corroborative": "Additional marker detail and cleaner failure text improve diagnosis; no independent product Gate is added for them."
+  },
+  "required_output": [
+    "Minimal harness repair and tested old-archive RED",
+    "17 immutable-input invariant recompilations",
+    "New source/profile identity, honest residual pixel findings, content-addressed result and reuse assessment",
+    "Prepared future six-correctness-plus30main continuation position, not executed"
+  ],
+  "quality_evidence_gate": {
+    "required": [
+      "All12 bounded oracle groups",
+      "Node/Python/boundary suites appropriate to allowed changes",
+      "No old archive/source authority edits; no browser/build/qualification oracle probe in this offline slice. Existing malformed-snapshot native unit checks only are permitted and counted.",
+      "Return READY_FOR_CONTROL_REVIEW or explicit frozen blocker and notify control thread"
+    ],
+    "official_gate_pass": false
+  },
+  "handoff": {
+    "next_owner": "aegis-implementation in adjacent thread",
+    "work_order": "implementation-request.json",
+    "instruction": "Materialize P31 from the approved exact work order, then perform the whole offline repair; do not wait for another approval when preflight is clean."
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/oracle-cases.json",
+    "sha256": "96d392b4dca7e204d4901b5646e89812d27ac96ff7e14b97e6a2de46a3131712",
+    "identity_kind": "local-content-addressed"
+  },
+  "inputs_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/evidence-inputs.json",
+    "sha256": "77b0c611ed9a1d0134b7db04b0c11bd6ffebda329653312727770f0f8a1ae268",
+    "identity_kind": "local-content-addressed"
+  },
+  "supersession": "Additive successor Verification for the new harness repair only. Originalr4 package/window and all prior failures/thresholds stay immutable."
+}

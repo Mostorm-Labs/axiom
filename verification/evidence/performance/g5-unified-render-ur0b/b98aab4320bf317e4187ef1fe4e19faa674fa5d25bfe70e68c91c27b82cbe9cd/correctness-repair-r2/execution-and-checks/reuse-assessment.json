@@ -1,0 +1,23 @@
+{
+  "status": "RECORDED_OBSERVATIONS_INVARIANT_CURRENT_COMPILER_REACCEPTANCE_REQUIRED",
+  "accepted_reuse_packet_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/reuse-inputs.json",
+    "sha256": "d2bb8fcddd1ec771e771de067a1f697fa27946b3cb949212f38c06613d966dbc"
+  },
+  "changed_compiler_bindings": {
+    "initialization_basis.mjs": {
+      "accepted_sha256": "aa1161609fd32082df8ca1965c2734b063170a46977b81535be35c22bb385a9e",
+      "current_sha256": "4ff42563451353fbdd38aa36c5823d8fc2cd9e3e47cd8a12e635d880214236ca"
+    }
+  },
+  "old_fresh_admission_status": "REJECTED_AS_REQUIRED",
+  "reader_error": "current compiler differs from accepted reuse compiler",
+  "reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+    "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+  },
+  "eligibility": "Exact old diagnostic/cohort/60/120/240 recordings remain invariant; independent control must accept current compiler/proof identities before future continuation. No fresh relabeling or automatic sampling permission.",
+  "old_acceptance_not_rewritten": true,
+  "rerun_cohort": false,
+  "new_sampling_workers": 0
+}

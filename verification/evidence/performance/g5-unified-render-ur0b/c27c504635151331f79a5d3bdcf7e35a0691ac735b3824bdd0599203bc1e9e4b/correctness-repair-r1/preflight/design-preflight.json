@@ -1,0 +1,37 @@
+{
+  "status": "TASK_PACKAGE_DEFECT",
+  "authority_conflict": false,
+  "verification_threshold_conflict": false,
+  "package_scope_conflict": true,
+  "current_owner_path": [
+    "worker init/state and recorded source map",
+    "initialization_basis.mjs",
+    "decode_trace.mjs / canonical_chain.mjs",
+    "remaining_runner.require_fresh -> resume_runner.check_worker",
+    "repair_runner.require_canonical_chain -> exact old source_profile guard"
+  ],
+  "required_change": "An exact additional repaired worker profile and full paired-init ownership checks.",
+  "conflict": "The enforcing Python reader only accepts the old exact two-hash profile, and it is not in the frozen source scope. Changing only allowed JS producers cannot truthfully make the repaired profile pass this reader.",
+  "reader_guard": {
+    "path": "verification/runners/g5/ur0/repair_runner.py",
+    "function": "require_canonical_chain",
+    "condition": "origin.get('source_profile')!=profile",
+    "accepted_proof_ref": {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/compiled-summary.json",
+      "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987"
+    },
+    "line": 69,
+    "file_sha256": "de0696386fb0b641eca48faa5aeba4d8ac0683f68755464ad2b06961334bf7d7"
+  },
+  "reproduction_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/profile-preflight.json",
+    "sha256": "fe7e93dcf2153271d3ea74eb6df06e83292f79dcd443403b0975c8a829c92f58"
+  },
+  "minimal_scope_reconciliation": [
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "required_reader_semantics": "Accept only the original profile and one exact new tuple; validate all pinned worker/consumer/helper hashes and full provenance; keep foreign/unknown/mismatched profiles and ambiguous paired owners rejected. No wildcard.",
+  "implementation_started": false,
+  "evidence_contract_preflight": "BLOCKED_SOURCE_SCOPE_DEPENDENCY"
+}

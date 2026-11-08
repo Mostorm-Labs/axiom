@@ -1,0 +1,17 @@
+G5-UR0b-correctness-test-reverify-r1 已完成，终态 READY_FOR_CONTROL_REVIEW。已按P36只修 verification/tests/test_g5_ur0_remaining_runner.py；r2 harness/compiler/reader/profile及所有旧证据原样保留。本次不是仅交提案。
+
+修复方法：原历史正例从固定 df214581c1c80c2d546939271f3db2dc0e77a38b 的Git blob读取8个compiler文件，逐一核对原r4 packet SHA256后构造临时HERE；accepted_reuse/admit_record/canonical/mode/source/receipt/artifact全走真实检查，只隔离该单一历史compiler环境，并在finally恢复。另加独立实际current compiler负例，原r4 packet仍必须报current compiler differs from accepted reuse compiler。无reader/packet放宽，无success mock、skip/xfail/expectedFailure，旧negative均保留。此修复不签发当前compiler复用许可。
+
+精确身份：
+HEAD df214581c1c80c2d546939271f3db2dc0e77a38b，dirty，受控分支codex/geometry-navigation-integration。相对P36起点仅该一个测试文件变化。
+full-source SHA256 118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b。
+package .aegis/packages/G5-UR0b-correctness-test-reverify-r1/package.json SHA256 1198fb988e286eda097f4016258291ac5d4e667eaf0e172f7d7482ce285660af。
+result .aegis/results/G5-UR0b/correctness-test-reverify-r1/result.json SHA256 7afd8befa682549490c9c473350836bc68e1c61da6c5c6cca52a17af497ef553。
+bundle /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b/correctness-test-reverify-r1
+manifest SHA256 69c18b309aa2def6629c3af56a92ac8f0a94cd1d0c25c8976eda6bd99b81460e，32个payload逐一rehash；result/manifest envelope分别绑定，无循环hash。
+
+验证已真实完成：原focused RED保留；focused reuse4/4、remaining-runner module13/13通过；完整Node114/114、完整Python61/61、boundary120和git diff --check全部通过。新full Python包括2次获准malformed-snapshot native checks；额外valid native qualification probe0。见validation.json、focused-red/green.log、module/node/python/boundary.log。
+
+r2保留：原result SHA256 926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4及原FAILED状态不改；188个r2 payload全部hash复核；compiler8文件和harness/profile字节均未变。r2的12 oracle和17 recording重编译复核结果通过精确refs复用，不重复执行。reverification SHA256 918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0；preservation.json包含全部绑定与源范围审计。fixture-provenance.json及归档8份历史compiler字节可供独立复核。
+
+本轮browser sampling0/build0/commit-push0，历史仍33starts/1251秒，旧窗口CLOSED，不进入UR0c/UR1。无产品/性能/平台/P34 PASS。请接续独立控制审查，并由控制面完成当前compiler与原17记录的精确reuse acceptance，然后再决定未来6correctness+30main新窗口授权；producer未代签该许可，也未启动任何一项。按用户约定主动回传，无需用户两边转述。

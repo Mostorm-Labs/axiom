@@ -1,0 +1,18 @@
+{
+  "status": "NARROW_P36_TEST_REPAIR_SENT",
+  "target_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "hostId": "local",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/package.json",
+    "sha256": "1198fb988e286eda097f4016258291ac5d4e667eaf0e172f7d7482ce285660af"
+  },
+  "tool": "mcp__codex_app__send_message_to_thread",
+  "tool_return_threadId": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "package_bindings_verified": 17,
+  "independently_reproduced_error": "current compiler differs from accepted reuse compiler",
+  "mutable_source_paths": ["verification/tests/test_g5_ur0_remaining_runner.py"],
+  "harness_and_compiler_mutation_authorized": false,
+  "new_sampling_workers_authorized": 0,
+  "terminal_notification_required": true,
+  "review_state": "r2 payload188 and exact subject refs verified; harness diff reviewed; final regression and independent compiler-reuse acceptance pending"
+}

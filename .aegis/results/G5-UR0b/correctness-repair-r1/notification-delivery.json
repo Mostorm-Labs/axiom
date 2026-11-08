@@ -1,0 +1,16 @@
+{
+  "status": "DELIVERED",
+  "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "hostId": "local",
+  "authorization_policy": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+  "prompt": "G5-UR0b-correctness-repair-r1 已到明确终态 TASK_PACKAGE_DEFECT（P31 source-scope omission），不是等待确认，也没有声称完成 harness 修复。已从 reconciled df214581 完整读取 P20 并冻结六文件 P31；仓库/游标/精确输入绑定通过，随后 full proof-path design preflight 复现了一个实际准入依赖缺口，未越界修改源码。\n\n具体问题：P20 要求新增唯一的 repaired worker creation profile，但 verification/runners/g5/ur0/repair_runner.py::require_canonical_chain 第74行将 initialization_basis.source_profile 与旧 consumer/worker 两哈希字典做严格相等比较。任何 changed worker SHA 必定拒绝；remaining_runner.require_fresh -> resume_runner.check_worker 在未来 correctness ON 准入中实际调用它。repair_runner.py 及其 Python 回归测试均不在这次11个允许源码路径中。仅改 JS producer，或者假报旧 worker hash，都无法诚实闭合这条准入链。\n\n可复现证据：.aegis/results/G5-UR0b/correctness-repair-r1/profile-preflight.py/json。真实归档 RT120 proof（sha 3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987）原样能通过；只在内存修改 profile 的两个明确标注 counterfactual 输入（distinct worker same consumer / additive exact helper tuple）均在该等值检查被拒绝，错误 canonical initialization recording/source/input basis missing。它们不是新采样、新有效 profile 或 recording，原档案未改。\n\n最小修正请求：在修订后的确切 work order/package 中增加 verification/runners/g5/ur0/repair_runner.py 与 verification/tests/test_g5_ur0_repair_runner.py，授权 reader 仅接受旧 profile + 唯一精确 repaired worker/consumer/helper tuple，覆盖正例及 unknown/mismatched/foreign/ambiguous 拒绝，不放宽 oracle/阈值/预算。不需要重设计12组oracle或扩大产品范围。当前 producer 未自行修改冻结 P20 或扩 scope。\n\n身份：\n- HEAD/origin仍 df214581c1c80c2d546939271f3db2dc0e77a38b；dirty，仅新增P31包及结果/证据。\n- 起点source 2f2bb538dd7c4e9d3e5fa93822678c6099b3c77f4c064dc5f40c3f05528bff5b。\n- 新full-source c27c504635151331f79a5d3bdcf7e35a0691ac735b3824bdd0599203bc1e9e4b，差异严格为6个新P31文件。所有既有 source/collector/SDK/Runtime/worker/consumer/旧package与tracked证据未变。\n- package .aegis/packages/G5-UR0b-correctness-repair-r1/package.json SHA256 5ef9e7cd0de640376c7f03537319867a729a1a8a12042db4f67b796cb21c8ff3。\n- result .aegis/results/G5-UR0b/correctness-repair-r1/result.json SHA256 0fd519be6caa21417acd3472b05161d8edd5c194997bbde15c2b18e689a056d4。\n- bundle verification/evidence/performance/g5-unified-render-ur0b/c27c504635151331f79a5d3bdcf7e35a0691ac735b3824bdd0599203bc1e9e4b/correctness-repair-r1/\n  manifest SHA256 dd239f487646127a1fa90550e2d355c07a8cbcee0c6ab933a26b8b8e689d579b，29个payload文件已逐一rehash；result envelope另绑定manifest，避免循环hash。\n\n验证：现有 initialization Node 13/13、Python reader 11/11 控制回归通过；binding preflight及profile-only反例已实际运行。因实施前scope blocker，本次未运行12组修复oracle、17次重编译或完整mandatory suites，未把原OFF0/OFF1升级为新结果。见 validation.json、oracle-coverage.json、design-preflight.json、ownership-handoff.json。既有编译器/旧17录制字节不变，不用原地改写证据。上一个checkpoint turn的56项Python全套包含2次获准malformed native checks；本次续接preflight为0 native calls，未追加native qualification probes。\n\n采样新增0、build0、commit/push0；历史仍33次/1251秒，旧窗口CLOSED不变。全部harness修复与12oracle/17复编译仍待scope补齐后执行；6 correctness +30main未启动且本包不授权。未进入UR0c/UR1，无性能/P34 PASS。请按用户要求在控制面接续这个具体范围修正；收到修订后的明确包后本会话可直接继续，不需用户两边转述。",
+  "receipt": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"threadId\":\"01a1b6f3-e69a-7fe2-8d9b-0222e8741f03\"}"
+      }
+    ],
+    "isError": false
+  }
+}

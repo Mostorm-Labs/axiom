@@ -1,0 +1,17 @@
+........................E...................................
+======================================================================
+ERROR: test_explicit_accepted_reuse_keeps_old_modes_and_sources (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_explicit_accepted_reuse_keeps_old_modes_and_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 29, in test_explicit_accepted_reuse_keeps_old_modes_and_sources
+    m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json');result=m.accepted_reuse(inputs)
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/remaining_runner.py", line 73, in accepted_reuse
+    if any(sha(HERE/name)!=digest for name,digest in inputs['compiler_file_sha256'].items()):raise RuntimeError('current compiler differs from accepted reuse compiler')
+                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: current compiler differs from accepted reuse compiler
+
+----------------------------------------------------------------------
+Ran 60 tests in 15.500s
+
+FAILED (errors=1)

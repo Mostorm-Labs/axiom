@@ -1,4 +1,4 @@
-import copy,hashlib,importlib.util,json,multiprocessing,tempfile,unittest
+import copy,hashlib,importlib.util,json,multiprocessing,subprocess,tempfile,unittest
 from pathlib import Path
 from types import SimpleNamespace
 ROOT=Path(__file__).resolve().parents[2]
@@ -26,9 +26,28 @@ class RemainingRunnerTest(unittest.TestCase):
    with self.assertRaises(RuntimeError):m.verify_history(bad)
   self.assertEqual(m.resume.charge(None,90),90)
  def test_explicit_accepted_reuse_keeps_old_modes_and_sources(self):
-  m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json');result=m.accepted_reuse(inputs)
+  m=module();packet=m.PACKAGE.parent/'reuse-inputs.json';original_packet=packet.read_bytes();inputs=m.load(packet);current_here=m.HERE
+  # This positive proves the frozen historical acceptance, whose compiler was
+  # checkpointed at this exact revision. It must not borrow ambient new hashes.
+  revision='df214581c1c80c2d546939271f3db2dc0e77a38b'
+  with tempfile.TemporaryDirectory(prefix='ur0b-historical-compiler-') as temporary:
+   historical=Path(temporary)
+   for name,expected in inputs['compiler_file_sha256'].items():
+    data=subprocess.check_output(['git','show',revision+':verification/runners/g5/ur0/'+name],cwd=ROOT)
+    self.assertEqual(hashlib.sha256(data).hexdigest(),expected,name)
+    (historical/name).write_bytes(data)
+   try:
+    m.HERE=historical
+    result=m.accepted_reuse(inputs)
+   finally:m.HERE=current_here
+  self.assertIs(m.HERE,current_here);self.assertEqual(packet.read_bytes(),original_packet)
   self.assertEqual(result['status'],'ACCEPTED_RECORDED_REUSE');self.assertEqual(len(result['records']),15);self.assertTrue(result['overhead_qualified'])
   self.assertEqual({r['mode'] for r in result['records']},{'OFFLINE_REVERIFICATION'});self.assertEqual(result['recording_source_tree_sha256'],'dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5')
+ def test_actual_current_compiler_rejects_the_unchanged_historical_reuse_packet(self):
+  m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json')
+  self.assertEqual(m.HERE,ROOT/'verification/runners/g5/ur0')
+  self.assertTrue(any(m.sha(m.HERE/name)!=expected for name,expected in inputs['compiler_file_sha256'].items()),'current compiler must actually differ for this rejection case')
+  with self.assertRaisesRegex(RuntimeError,'current compiler differs from accepted reuse compiler'):m.accepted_reuse(inputs)
  def test_changed_or_foreign_review_input_compiler_and_proof_fail_before_claim(self):
   m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json')
   for change in [lambda r:r.update(status='UNACCEPTED'),lambda r:r['independent_review_ref'].update(sha256='0'*64),lambda r:r['records'][0]['recorded_input_refs'][0].update(sha256='0'*64),lambda r:r['compiler_file_sha256'].update({'decode_trace.mjs':'0'*64}),lambda r:r['records'][0]['accepted_v2_proof_ref'].update(sha256='0'*64)]:

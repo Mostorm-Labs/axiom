@@ -1,4 +1,4 @@
-import copy,hashlib,importlib.util,json,tempfile,unittest
+import copy,hashlib,importlib.util,json,subprocess,tempfile,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 class RepairRunnerTest(unittest.TestCase):
@@ -91,4 +91,61 @@ class RepairRunnerTest(unittest.TestCase):
    with self.subTest(change=change),self.assertRaises(RuntimeError):m.require_canonical_chain(s)
   legacy=self.summary();legacy['canonical_chain']['schema']='g5-ur0b-canonical-chain-proof-v2'
   with self.assertRaises(RuntimeError):m.require_canonical_chain(legacy)
+ def repaired_v2(self):
+  s=self.mixed_v2();origin=s['canonical_chain']['initialization_chains'][0]['initialization_basis']
+  names=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs']
+  origin['source_profile']={'verification/runners/g5/ur0/'+n:hashlib.sha256((ROOT/'verification/runners/g5/ur0'/n).read_bytes()).hexdigest() for n in names}
+  origin['recording_mode']='correctness';origin['state_path']='worker-result.json/paired_init/state'
+  foreign=copy.deepcopy(origin['public_state']);foreign['target']['viewId']='9'
+  origin['recorded_states']=[{'state_path':'worker-result.json/init/state','public_state':foreign},{'state_path':origin['state_path'],'public_state':copy.deepcopy(origin['public_state'])}]
+  return s
+ def test_repaired_exact_profile_and_unique_paired_owner_are_accepted(self):
+  m=self.module();m.require_canonical_chain(self.repaired_v2(),require_positive=True)
+ def test_repaired_worker_keeps_primary_init_only_profile_qualification(self):
+  m=self.module()
+  for mode in ['fixture','main','realtime','legacy','setup']:
+   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
+   m.require_canonical_chain(s,require_positive=True)
+ def test_repaired_unknown_partial_helper_or_foreign_ambiguous_owner_are_rejected(self):
+  m=self.module();base=self.repaired_v2()
+  changes=[lambda o:o.update(recording_mode='realtime'),lambda o:o.update(state_path='worker-result.json/other/state'),lambda o:o['recorded_states'].append(copy.deepcopy(o['recorded_states'][1])),lambda o:o['recorded_states'][1]['public_state']['target'].update(viewId='2'),lambda o:o.pop('recorded_states')]
+  for name in base['canonical_chain']['initialization_chains'][0]['initialization_basis']['source_profile']:
+   changes.extend([lambda o,n=name:o['source_profile'].update({n:'f'*64}),lambda o,n=name:o['source_profile'].pop(n)])
+  for change in changes:
+   s=copy.deepcopy(base);change(s['canonical_chain']['initialization_chains'][0]['initialization_basis'])
+   with self.subTest(change=change),self.assertRaises(RuntimeError):m.require_canonical_chain(s)
+ def test_actual_js_producer_and_python_reader_share_exact_profile_and_bound_recorded_states(self):
+  script="""
+import fs from 'node:fs';import {createHash} from 'node:crypto';
+import {decodeTrace} from './verification/runners/g5/ur0/decode_trace.mjs';
+import {canonicalChainProof} from './verification/runners/g5/ur0/canonical_chain.mjs';
+import {repairedInitializationProfile} from './verification/runners/g5/ur0/initialization_basis.mjs';
+const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json'));
+const dir=inputs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
+const run=JSON.parse(fs.readFileSync(dir+'/worker-result.json'));run.mode='correctness';
+run.source_before.files=Object.fromEntries(Object.entries(repairedInitializationProfile).map(([k,v])=>[k,{sha256:v}]));
+run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
+const raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
+const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
+const h=x=>createHash('sha256').update(x).digest('hex');const input_refs={raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)};
+const recording={...text,input_refs,run};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);
+console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
+"""
+  value=json.loads(subprocess.check_output(['node','--input-type=module','-e',script],cwd=ROOT,text=True));m=self.module()
+  self.assertEqual(value['proof']['status'],'QUALIFIED');origin=value['proof']['initialization_chains'][0]['initialization_basis']
+  self.assertEqual(origin['source_profile'],m.REPAIRED_INITIALIZATION_PROFILE)
+  self.assertEqual(origin['state_path'],'worker-result.json/paired_init/state')
+  summary={'critical_loss':0,'identity_errors':[],'canonical_chain':value['proof']};m.require_canonical_chain(summary,require_metrics=False)
+  with tempfile.TemporaryDirectory() as tmp:
+   directory=Path(tmp);recording=value['recording']
+   for name,key in [('raw-trace.jsonl','raw_trace_jsonl'),('worker-result.json','worker_result_json'),('run-inputs.json','run_inputs_json')]:(directory/name).write_text(recording[key])
+   summary['analysis']={'mode':'WORKER_COMPILE','input_source_tree_sha256':recording['run']['source_before']['source_tree_sha256'],**recording['input_refs'],'compiler_files':{n:hashlib.sha256((m.HERE/n).read_bytes()).hexdigest() for n in ['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py','initialization_basis.mjs']}}
+   for key,name in [('verification_spec_ref','verification-spec.json'),('completion_contract_ref','completion-contract.json')]:
+    p=ROOT/'.aegis/verification/G5-UR0b-initialization-v1'/name;summary['analysis'][key]={'path':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+   def bind():
+    (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
+   bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
+   bad=copy.deepcopy(recording['run']);bad['paired_init']['state']['target']['viewId']='77';(directory/'worker-result.json').write_text(json.dumps(bad));changed=hashlib.sha256((directory/'worker-result.json').read_bytes()).hexdigest()
+   summary['analysis']['worker_result_sha256']=changed;origin['input_refs']['worker_result_sha256']=changed;bind()
+   with self.assertRaisesRegex(RuntimeError,'states differ'):m.require_bound_compilation(directory,summary,proof)
 if __name__=='__main__':unittest.main()

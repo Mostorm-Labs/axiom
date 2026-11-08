@@ -10,6 +10,8 @@ import {execFileSync} from 'node:child_process';
 import {calibrate} from './fixture_plan.mjs';
 import {copySnapshot} from './stream_transfer.mjs';
 import {compareSnapshotPixels} from './pixel_oracle.mjs';
+import {copyCorrectnessBytes,createStageRecorder} from './correctness_transfer.mjs';
+import {validateLiveSubject} from './correctness_contract.mjs';
 const here=path.dirname(fileURLToPath(import.meta.url)),repo=path.resolve(here,'../../../..');
 const [sdkArg,outArg,mode='fixture',branch='masked_drag',toggle='ON']=process.argv.slice(2),sdkRoot=path.resolve(sdkArg),out=path.resolve(outArg);
 await fs.mkdir(out,{recursive:true});
@@ -48,7 +50,22 @@ try{
  await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');
  await page.waitForFunction(()=>!!window.ur0);stage({stage:'initializing'});
  result.init=await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
+ const correctnessStages=mode==='correctness'?createStageRecorder({domain:'node',clock:()=>String(process.hrtime.bigint()),emit:stage}):null;
+ const coldRelease=(channel,cancel)=>page.evaluate(({channel,cancel})=>channel==='snapshot'?ur0.snapshotRelease(cancel):ur0.pixelRelease(cancel),{channel,cancel});
+ const coldCopy=(channel,length,source_sha256,file)=>copyCorrectnessBytes({length,source_sha256,
+  pullBatch:offset=>page.evaluate(async({channel,length,offset})=>{
+   const {encodeChunkBatch}=await import('/ur0/correctness_transfer.mjs');
+   return encodeChunkBatch({length,offset,pull:(o,n)=>channel==='snapshot'?ur0.snapshotChunk(o,n):ur0.pixelChunk(o,n)});
+  },{channel,length,offset}),write:chunk=>file.writeFile(chunk),finish:()=>coldRelease(channel,false),cancel:()=>coldRelease(channel,true)});
+ const correctnessCapture=async label=>{
+  const row=await correctnessStages.run('snapshot acquire '+label,()=>page.evaluate(label=>ur0.checkpoint(label),label));
+  const file=await fs.open(path.join(out,label+'.axsnap'),'wx').catch(async error=>{await coldRelease('snapshot',true);throw error;});let copied;
+  try{copied=await correctnessStages.run('snapshot transfer '+label,()=>coldCopy('snapshot',row.snapshot.byte_length,row.snapshot.source_sha256,file));}finally{await file.close();}
+  row.snapshot={...row.snapshot,path:label+'.axsnap',sha256:copied.received_sha256,transport:'cold base64; sequential <=32768-byte units, <=8 units/262144 decoded bytes per evaluate; source/received SHA256 identical'};
+  await write(label+'.json',row);return row;
+ };
  const capture=async label=>{
+  if(mode==='correctness')return correctnessCapture(label);
   stage({stage:'cold-snapshot-'+label+'-begin'});const row=await page.evaluate(label=>ur0.checkpoint(label),label);
   const file=await fs.open(path.join(out,label+'.axsnap'),'wx'),digest=createHash('sha256');
   try{await copySnapshot({length:row.snapshot.byte_length,pull:(offset,count)=>page.evaluate(({offset,count})=>ur0.snapshotChunk(offset,count),{offset,count}),write:async chunk=>{await file.writeFile(chunk);digest.update(chunk);}});}
@@ -65,18 +82,28 @@ try{
   result.setup=await page.evaluate(kind=>ur0.correctnessSetup(kind,false),branch);arm('correctness-only',30000);
   for(const pairedToggle of ['OFF','ON']){
    if(pairedToggle==='ON'){
-    await page.evaluate(()=>ur0.close());await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});
-    await page.reload();await page.waitForFunction(()=>!!window.ur0);result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);
+    await correctnessStages.run('close OFF',()=>page.evaluate(()=>ur0.close()));
+    await correctnessStages.run('metrics override/reload',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});await page.reload();await page.waitForFunction(()=>!!window.ur0);});
+    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
    }
    for(let n=0;n<2;++n){
     const label=pairedToggle.toLowerCase()+'-'+n,before=await capture(label+'-before');
-    if(branch==='dpr_switch'||branch==='warm_miss_pressure'&&n===1){await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:n?4:2,mobile:false});await page.waitForTimeout(100);}
-    const pixels=await page.evaluate(()=>ur0.correctnessNext()),file=await fs.open(path.join(out,label+'.candidate.rgba'),'wx');
-    try{await copySnapshot({length:pixels.byte_length,pull:(offset,count)=>page.evaluate(({offset,count})=>ur0.pixelChunk(offset,count),{offset,count}),write:chunk=>file.writeFile(chunk)});}finally{await file.close();}
-    await page.evaluate(()=>ur0.pixelRelease(false));const after=await capture(label+'-after');
+    if(branch==='dpr_switch'||branch==='warm_miss_pressure'&&n===1)await correctnessStages.run('metrics override step',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:n?4:2,mobile:false});await page.waitForTimeout(100);});
+    const pixels=await correctnessStages.run('correctnessNext/render/settle',()=>page.evaluate(()=>ur0.correctnessNext()));
+    const file=await fs.open(path.join(out,label+'.candidate.rgba'),'wx').catch(async error=>{await coldRelease('pixel',true);throw error;});let transferred;
+    try{transferred=await correctnessStages.run('pixel transfer',()=>coldCopy('pixel',pixels.byte_length,pixels.source_sha256,file));}finally{await file.close();}
+    const after=await capture(label+'-after');
     const reference=pixels.reference==='before'?before:after,actual=await fs.readFile(path.join(out,label+'.candidate.rgba'));
-    const compared=await compareSnapshotPixels({oracle,snapshot:path.join(out,reference.snapshot.path),request:pixels.request,actual,prefix:path.join(out,label+'.reference')});
-    const entry={case_id:branch,toggle:pairedToggle,step:n,...pixels,comparison:compared,candidate_sha256:hash(actual),reference_snapshot_sha256:reference.snapshot.sha256};
+    let applicability=null;
+    if(branch==='lower_z_translucent_drag'&&n===0)applicability=await correctnessStages.run('native subject decode',async()=>{
+     const decode=row=>JSON.parse(execFileSync(oracle,[path.join(out,row.snapshot.path)],{encoding:'utf8',timeout:10000,maxBuffer:1024*1024}));
+     const nativeBefore=decode(before),nativeAfter=decode(after);
+     if(pixels.subject?.before.state.generation!==before.state.generation||pixels.subject?.after.state.generation!==after.state.generation)throw Error('public capture/reference generation changed');
+     const proof=validateLiveSubject({...pixels.subject,nativeBefore,nativeAfter,capturedBefore:before,capturedAfter:after});
+     await write(label+'.subject.json',{proof,nativeBefore,nativeAfter,before_snapshot_sha256:before.snapshot.sha256,after_snapshot_sha256:after.snapshot.sha256});return proof;
+    });
+    const compared=await correctnessStages.run('native reference/compare',()=>compareSnapshotPixels({oracle,snapshot:path.join(out,reference.snapshot.path),request:pixels.request,actual,prefix:path.join(out,label+'.reference')}));
+    const entry={case_id:branch,toggle:pairedToggle,step:n,...pixels,applicability,transport:transferred,comparison:compared,candidate_sha256:hash(actual),reference_snapshot_sha256:reference.snapshot.sha256};
     result.correctness.push(entry);await write(label+'.correctness.json',entry);
    }
   }
@@ -114,7 +141,7 @@ try{
    if(!pressure.length)result.correctness_status='BLOCKED_EVIDENCE';
   }
  }
- result.close=await page.evaluate(()=>ur0.close());if(!result.close.closed)throw Error('Runtime did not close');
+ result.close=correctnessStages?await correctnessStages.run('close final',()=>page.evaluate(()=>ur0.close())):await page.evaluate(()=>ur0.close());if(!result.close.closed)throw Error('Runtime did not close');
  if(toggle!=='NORMAL'){
   const stream=await fs.open(path.join(out,'raw-cleanup.jsonl'),'wx');let total=0,last;
   try{for(let i=0;i<4096;++i){const p=await page.evaluate(()=>ur0.drain());last=p;total+=p.records.length;await stream.writeFile(p.records.map(r=>JSON.stringify(r)+'\n').join(''));if(p.finished)break;if(i===4095)throw Error('bounded cleanup drain exhausted');}}

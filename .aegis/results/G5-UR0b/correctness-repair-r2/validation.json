@@ -1,0 +1,63 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "executions": [
+    {
+      "command": "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "exit_code": 0,
+      "tests": 114,
+      "passed": 114,
+      "failed": 0,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "command": "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+      "exit_code": 1,
+      "tests": 60,
+      "passed": 59,
+      "errors": 1,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/python.log",
+        "sha256": "1ad1c8fe818834480d1e670c4d8c53401c01a57bd704d1dd472d5e09fa918931"
+      },
+      "failure_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json",
+        "sha256": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180"
+      }
+    },
+    {
+      "command": "python3.12 tools/check_runtime_boundaries.py --root .",
+      "exit_code": 0,
+      "contracts": 120,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/boundary.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "recording_reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+    "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+  },
+  "new_sampling_workers": 0,
+  "new_builds": 0,
+  "new_native_qualification_probes": 0,
+  "native_unit_invocations": {
+    "count": 2,
+    "allowed": true,
+    "test_module": "verification/tests/test_g5_ur0_fixture_oracle.py",
+    "cases": [
+      "test_pixel_oracle_decodes_the_public_snapshot_and_rejects_invalid_bytes",
+      "test_malformed_snapshot_is_rejected"
+    ],
+    "input": "malformed snapshot only",
+    "included_in_full_python_suite": true
+  },
+  "no_claim_of_complete_mandatory_suite_PASS": true
+}

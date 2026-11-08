@@ -1,0 +1,45 @@
+{
+  "historical_git_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "compiler_file_tuple": {
+    "compile_run.mjs": {
+      "sha256": "2f121b5cb69d36706b5e5f79d98283f8bd70bf75fec9f4a89ebb3e3b17749ac5",
+      "git_blob_oid": "95b034305bd76dd5581d451977b4d39f1caf44e4"
+    },
+    "decode_trace.mjs": {
+      "sha256": "26eeb2ef7fd4f009cea90321e9c53a1c8d5b85b91dc1b35f76cefa2ccf5e1ba8",
+      "git_blob_oid": "106507538c747a3af4ee970ef044b6b3048e8f47"
+    },
+    "metrics_compiler.mjs": {
+      "sha256": "201d3a144aed8ef3d0dce1687f15df6de29801e58bd626f52877b5e123e058c0",
+      "git_blob_oid": "62e05c7bc9396eba431d4c377570ca5188ee0f17"
+    },
+    "canonical_chain.mjs": {
+      "sha256": "415c8e1346ffb8ad0d190ba8e1f0dfd4e567bf5420578cf1f99dae5d80b3ff26",
+      "git_blob_oid": "aabc1dde4b270932c1c4b96e37ab62f808816850"
+    },
+    "external_metrics.mjs": {
+      "sha256": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+      "git_blob_oid": "b42e930148bf0f732e6f080b40142345b253ee6a"
+    },
+    "schedule.mjs": {
+      "sha256": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+      "git_blob_oid": "e3d3faac7c3f698bc00416b11657dda7b8f2645f"
+    },
+    "validate_metrics.py": {
+      "sha256": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad",
+      "git_blob_oid": "95c02ef9857987e7ce6c9721f254a907646c551a"
+    },
+    "initialization_basis.mjs": {
+      "sha256": "aa1161609fd32082df8ca1965c2734b063170a46977b81535be35c22bb385a9e",
+      "git_blob_oid": "5ceae9ad349791566ec412ca7a68e058f0697b25"
+    }
+  },
+  "matches_frozen_packet_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/reuse-inputs.json",
+    "sha256": "d2bb8fcddd1ec771e771de067a1f697fa27946b3cb949212f38c06613d966dbc"
+  },
+  "actual_behavior": "accepted_reuse/admit_record/canonical checks execute unmocked; only the module HERE path is temporarily isolated and restored in finally.",
+  "positive": "15 original OFFLINE records, original source, artifacts and receipts checked by the real reader.",
+  "negative": "actual current compiler rejects the unchanged r4 packet with the existing compiler-mismatch error.",
+  "current_compiler_reuse_permission": "NOT_GRANTED; independent control acceptance remains required."
+}

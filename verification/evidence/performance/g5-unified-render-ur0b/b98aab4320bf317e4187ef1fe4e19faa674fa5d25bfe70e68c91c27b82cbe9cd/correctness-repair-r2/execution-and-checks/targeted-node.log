@@ -1,0 +1,175 @@
+TAP version 13
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794122075354.204","sequence":1,"monotonic_ns":"187194917"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794122075354.204","sequence":2,"monotonic_ns":"187627833","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794122075354.204","sequence":3,"monotonic_ns":"187708833"}
+# Subtest: REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+ok 1 - REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled
+  ---
+  duration_ms: 105.856
+  ...
+# Subtest: RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+ok 2 - RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed
+  ---
+  duration_ms: 0.560833
+  ...
+# Subtest: LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+ok 3 - LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center
+  ---
+  duration_ms: 3.587958
+  ...
+# Subtest: LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+ok 4 - LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject
+  ---
+  duration_ms: 0.443292
+  ...
+# Subtest: LIVE-SUBJECT: a transform-only commit cannot also change the stroke body or its masks
+ok 5 - LIVE-SUBJECT: a transform-only commit cannot also change the stroke body or its masks
+  ---
+  duration_ms: 0.297417
+  ...
+# Subtest: HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+ok 6 - HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step
+  ---
+  duration_ms: 37.1745
+  ...
+# Subtest: BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+ok 7 - BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail
+  ---
+  duration_ms: 12.661625
+  ...
+# Subtest: STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+ok 8 - STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans
+  ---
+  duration_ms: 0.427625
+  ...
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794122075354.204","sequence":4,"monotonic_ns":"195273833","status":"completed"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"begin","domain":"browser:1794122075354.204","sequence":5,"monotonic_ns":"195326125"}
+# UR0_STAGE {"stage":"post-Up canonical settle","event":"end","domain":"browser:1794122075354.204","sequence":6,"monotonic_ns":"195367542","status":"completed"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"begin","domain":"browser:1794122075354.204","sequence":7,"monotonic_ns":"355930375"}
+# UR0_STAGE {"stage":"correctnessNext/render/settle","event":"end","domain":"browser:1794122075354.204","sequence":8,"monotonic_ns":"356032417","status":"completed"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"begin","domain":"browser:1794122075354.204","sequence":9,"monotonic_ns":"356099958"}
+# UR0_STAGE {"stage":"pixel readback/hash","event":"end","domain":"browser:1794122075354.204","sequence":10,"monotonic_ns":"361120750","status":"completed"}
+# Subtest: DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+ok 9 - DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+  ---
+  duration_ms: 332.738333
+  ...
+# Subtest: ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+ok 10 - ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+  ---
+  duration_ms: 1592.793667
+  ...
+# Subtest: INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+ok 11 - INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+  ---
+  duration_ms: 90.577584
+  ...
+# Subtest: MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+ok 12 - MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+  ---
+  duration_ms: 126.840666
+  ...
+# Subtest: RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+ok 13 - RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+  ---
+  duration_ms: 334.506667
+  ...
+# Subtest: CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+ok 14 - CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+  ---
+  duration_ms: 69.513875
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+ok 15 - LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness
+  ---
+  duration_ms: 69.9455
+  ...
+# Subtest: FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+ok 16 - FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+  ---
+  duration_ms: 305.253291
+  ...
+# Subtest: DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+ok 17 - DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+  ---
+  duration_ms: 58.993167
+  ...
+# Subtest: NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+ok 18 - NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+  ---
+  duration_ms: 33.2175
+  ...
+# Subtest: MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+ok 19 - MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+  ---
+  duration_ms: 546.42075
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+ok 20 - LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+  ---
+  duration_ms: 36.675166
+  ...
+# Subtest: NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+ok 21 - NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+  ---
+  duration_ms: 50.897333
+  ...
+# Subtest: OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+ok 22 - OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+  ---
+  duration_ms: 13.872833
+  ...
+# Subtest: CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+ok 23 - CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does
+  ---
+  duration_ms: 492.847375
+  ...
+# Subtest: CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+ok 24 - CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash
+  ---
+  duration_ms: 392.557458
+  ...
+# Subtest: PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+ok 25 - PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state
+  ---
+  duration_ms: 255.875541
+  ...
+# Subtest: independent pixel comparator allows only reference geometric AA edges
+ok 26 - independent pixel comparator allows only reference geometric AA edges
+  ---
+  duration_ms: 0.697625
+  ...
+# Subtest: pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+ok 27 - pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+  ---
+  duration_ms: 0.321041
+  ...
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+ok 28 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 64.156041
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+ok 29 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.165542
+  ...
+# Subtest: BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+ok 30 - BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA
+  ---
+  duration_ms: 395.055541
+  ...
+# Subtest: BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+ok 31 - BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once
+  ---
+  duration_ms: 15.311958
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4786.365541

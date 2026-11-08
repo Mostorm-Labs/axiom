@@ -1,0 +1,66 @@
+TAP version 13
+# Subtest: DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+not ok 1 - DRIVER-INTEGRATION: fixed pointer recipe produces snapped live HUD and retained hand selection, without a browser
+  ---
+  duration_ms: 10.099083
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_correctness.test.mjs:75:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        [
+          76,
+          70,
+          724,
+    ...
+          100,
+    +     82,
+    -     80,
+          748,
+    +     442
+    -     440
+        ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 76
+      1: 70
+      2: 724
+      3: 430
+    1:
+      0: 100
+      1: 80
+      2: 748
+      3: 440
+  actual:
+    0:
+      0: 76
+      1: 70
+      2: 724
+      3: 430
+    1:
+      0: 100
+      1: 82
+      2: 748
+      3: 442
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur0_correctness.test.mjs:83:53)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66.496375

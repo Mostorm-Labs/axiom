@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "materialization": "Shared controlled worktree, exact result/content-addressed bundle with SHA256; no commit/push.",
+  "result_root": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/",
+  "required": [
+    "Only the one test changed; harness/compiler/r2 records unchanged",
+    "Historical positive and current mismatch negative pass with all relevant/full mandatory suites",
+    "Exact result/source/bundle and preserved r2 evidence refs; no false reuse or performance claim",
+    "Return READY_FOR_CONTROL_REVIEW and proactively notify control"
+  ],
+  "preserved_r2_result_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+    "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4",
+    "identity_kind": "local-content-addressed"
+  },
+  "preserved_reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+    "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0",
+    "identity_kind": "local-content-addressed"
+  },
+  "notification": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  }
+}

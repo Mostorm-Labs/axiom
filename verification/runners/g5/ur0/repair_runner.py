@@ -6,6 +6,16 @@ sys.path.insert(0,str(HERE))
 import source_identity,observed_worker,run_matrix
 AUTH=ROOT/'.aegis/results/G5-UR0b/control-reverification-r1/repair-authorization.json'
 AUTH_SHA='007f4a09e625b4d1c1999c50577498c0cbf9570ceae190158559db8540b202f7'
+OLD_INITIALIZATION_PROFILE={'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'}
+REPAIRED_INITIALIZATION_PROFILE={
+ "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+ "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+ "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+ "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+ "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
+ "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+ "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+}
 CASES=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical']
 def load(p):return json.loads(Path(p).read_text())
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -34,6 +44,18 @@ def assert_sampling_authority_open(previous_return,authorization_sha):
   previous=load(previous_return)
   if previous.get('authorization_ref',{}).get('sha256')==authorization_sha and previous.get('continue_execution') is False:
    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
+def valid_initialization_profile(origin,basis):
+ profile=origin.get('source_profile')
+ if profile==OLD_INITIALIZATION_PROFILE:return True
+ if profile!=REPAIRED_INITIALIZATION_PROFILE or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in REPAIRED_INITIALIZATION_PROFILE.values()) or origin.get('recording_mode') not in ['correctness','fixture','main','realtime','legacy','setup']:return False
+ rows=origin.get('recorded_states')
+ paths=['worker-result.json/init/state']+(['worker-result.json/paired_init/state'] if origin['recording_mode']=='correctness' else [])
+ if not isinstance(rows,list) or not 1<=len(rows)<=len(paths) or any(not isinstance(r,dict) or r.get('state_path') not in paths for r in rows) or len({r['state_path'] for r in rows})!=len(rows):return False
+ def matches(row):
+  s=row.get('public_state',{});t=s.get('target',{})
+  return s.get('documentId')==basis.get('document_id') and t.get('attachmentEpoch')==basis.get('attachment_epoch') and t.get('viewId')==basis.get('view_id') and t.get('runtimeEpoch')==basis.get('document_epoch')
+ selected=[r for r in rows if matches(r)]
+ return len(selected)==1 and selected[0]['state_path']==origin.get('state_path') and selected[0]['public_state']==origin.get('public_state')
 def require_canonical_chain(summary,require_positive=False,require_metrics=True):
  chain=summary.get('canonical_chain')
  if not chain or chain.get('schema') not in ['g5-ur0b-canonical-chain-proof-v1','g5-ur0b-canonical-chain-proof-v2']:raise RuntimeError('canonical positive-chain proof missing')
@@ -64,9 +86,8 @@ def require_canonical_chain(summary,require_positive=False,require_metrics=True)
   if not uint(link.get('draw_job')) or not uint(link.get('draw_basis')) or not uint(link.get('work_id')) or link['draw_job'] not in link.get('attempt_jobs',[]):raise RuntimeError('canonical successful attempt provenance missing')
   if initial:
    origin=link.get('initialization_basis',{});s=origin.get('public_state',{});target=s.get('target',{});last=s.get('lastCommit',{})
-   profile={'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'}
    if 'operation_id' not in basis or basis['operation_id'] is not None or link.get('operation_reason')!='NOT_APPLICABLE_INITIALIZATION' or any(basis[k]!='0' for k in ['committed_generation','scene_generation','scene_revision','commit_revision']):raise RuntimeError('canonical initialization forged an Operation or nonzero state')
-   if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or origin.get('source_profile')!=profile or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+   if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or not valid_initialization_profile(origin,basis) or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
    if s.get('documentId')!=basis['document_id'] or s.get('generation')!='0' or type(s.get('objects')) is not int or s['objects']!=0 or last.get('ordinal')!='0' or last.get('operationId')!='0'*32 or target.get('runtimeEpoch')!=basis['document_epoch'] or target.get('attachmentEpoch')!=basis['attachment_epoch'] or target.get('viewId')!=basis['view_id']:raise RuntimeError('canonical initialization public initial-state basis differs from native')
   key=link['completion_seq']
   if key in seen:raise RuntimeError('duplicate canonical completion chain')
@@ -92,6 +113,15 @@ def require_bound_compilation(directory,summary,proof):
    if ref.get('path')!='.aegis/verification/G5-UR0b-initialization-v1/'+name or ref.get('sha256')!=digest or sha(ROOT/ref['path'])!=digest:raise RuntimeError('canonical initialization Verification binding changed')
   for chain in summary['canonical_chain'].get('initialization_chains',[]):
    if chain.get('initialization_basis',{}).get('input_refs')!={k:analysis.get(k) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']}:raise RuntimeError('canonical initialization input basis differs from bound compiler input')
+   origin=chain.get('initialization_basis',{})
+   if origin.get('source_profile')==REPAIRED_INITIALIZATION_PROFILE:
+    run=load(directory/'worker-result.json')
+    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in REPAIRED_INITIALIZATION_PROFILE.items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
+    rows=[]
+    for key in (['init','paired_init'] if run.get('mode')=='correctness' else ['init']):
+     if not run.get(key,{}).get('state'):continue
+     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}}})
+    if origin.get('recorded_states')!=rows or not valid_initialization_profile(origin,chain['basis']):raise RuntimeError('repaired initialization states differ from actual recording or owner')
  if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
 def require_qualified_diagnostic(out,proof):
  out=Path(out);decision=out/'diagnostic-result.json';summary_path=out/'raw-runs/diagnostic-ON/compiled-summary.json'

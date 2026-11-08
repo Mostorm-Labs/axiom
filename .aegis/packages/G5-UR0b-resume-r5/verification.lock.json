@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "inherited_verification_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/verification.lock.json",
+    "sha256": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57",
+    "identity_kind": "local-content-addressed"
+  },
+  "initialization_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e",
+    "identity_kind": "local-content-addressed"
+  },
+  "accepted_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/reuse-acceptance.json",
+    "sha256": "9fb07bc5798cd455d9a98a3b8b8cf23d7eb42b7c6e68c51edd3adf50f1e4798d",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "requirement": "Explicitly consume the new control acceptance, not the old r4 packet. Bind each of17 listed recordings to its own original source, input hashes, current derived compiler and exact proof/cardinality/artifact. Old15 and newRT2 have distinct source groups; never collapse them into one invented source or mark them fresh.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    },
+    {
+      "requirement": "Keep current frozen compiler/profile/SDK/corpus identities, native proof and actual OFFLINE-vs-WORKER_COMPILE separation. No SDK rebuild or diagnostic/cohort/RT rerun.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    },
+    {
+      "requirement": "Use current canonical/admission helpers with all ownership, commit, clock, metrics, source/artifact and receipt checks. Main requires all6 fresh correctness prerequisites satisfy inherited exact QUALIFIED or complete matching PRODUCT_RED_IN_BOTH_OFF_ON criteria; preserve any product RED as such.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    },
+    {
+      "requirement": "Bind each fresh worker to current source/mechanism and actual SDK artifacts. Native/cold surfaces and viewport requirements remain unchanged.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    },
+    {
+      "requirement": "A single fixed r5 state root with durable exclusive claim prevents concurrency, restart, relocation or second invocation from obtaining another allowance. Test runner/ledger/admission rules offline first; such tests may not start browsers.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    },
+    {
+      "requirement": "Return guard-primary failure cause before missing-summary diagnostics; preserve every raw reason and honest unknown status. No success synthesis or skipping required rows.",
+      "oracle": "Exact frozen input/guard/admission validation, offline tests before starts, then actual named workers only.",
+      "acceptance": "No invented source/receipt/worker status, no stale or incomplete pair admitted.",
+      "evidence_required": [
+        "Bound machine facts and test logs",
+        "Actual guards/window/cleanup/fresh-or-recorded proof identities"
+      ]
+    }
+  ],
+  "required_tests": [
+    "New runner offline unit tests for exact17 reuse, source groups, stale compiler/profile/input/artifact/proof rejection, scope and fresh/recorded separation",
+    "Offline ledger tests: prior33/1251 retained, reserve-before-spawn, unknown charge, overrun honesty, concurrency/restart/relocation refusal, no hidden starts and6-correctness-before-main gating",
+    "Full existing Node/Python/boundary regression and git diff --check before browser starts;2 existing malformed native unit checks allowed/counted, no new qualification oracle/build",
+    "New exact mechanism proof and immutable SDK artifact checks before claiming the one r5 window",
+    "All36 frozen planned evidence runs, or exact early frozen failure with all remaining items explicitly MISSING"
+  ],
+  "pixel_tolerance_and_correctness_phase": "Unchanged inherited specification; no new acceptance threshold."
+}

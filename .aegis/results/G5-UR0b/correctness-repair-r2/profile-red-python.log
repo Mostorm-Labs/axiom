@@ -1,0 +1,17 @@
+........E....
+======================================================================
+ERROR: test_repaired_exact_profile_and_unique_paired_owner_are_accepted (test_g5_ur0_repair_runner.RepairRunnerTest.test_repaired_exact_profile_and_unique_paired_owner_are_accepted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 103, in test_repaired_exact_profile_and_unique_paired_owner_are_accepted
+    m=self.module();m.require_canonical_chain(self.repaired_v2(),require_positive=True)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 69, in require_canonical_chain
+    if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or origin.get('source_profile')!=profile or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+                                                                                                                                                                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical initialization recording/source/input basis missing
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.026s
+
+FAILED (errors=1)

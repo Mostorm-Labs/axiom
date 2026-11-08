@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-test-reverify-r1",
+  "status": "AUTHORIZED_TEST_FIXTURE_REPAIR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+    "accepted_source_sha256": "b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd",
+    "position_ref": {
+      "path": ".aegis/results/G5-UR0b/control-resume-after-df214581/position.json",
+      "sha256": "c6c9e140908d63632784b7be739cf690f870463ce99e2a6cbc4152d8a1871cd5",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "Implemented r2 harness, all12 offline oracle groups and17 invariant recompilations; full Python one stale positive fixture error.",
+    "next_action": "Repair only the legacy reuse test context, preserve real current mismatch rejection, run mandatory regression and return.",
+    "predecessor_return_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+      "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4",
+      "identity_kind": "local-content-addressed"
+    },
+    "source_delta_rule": "Seven files in this package are authorized additive control inputs; compute new source identity rather than requiring b98 equality."
+  },
+  "authorization": {
+    "repair_authorization_ref": {
+      "path": ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json",
+      "sha256": "350aac6898194c858a3fbc3f57ba49cb3d8fc15ec7e3d3bda37cdd9185be28fb",
+      "identity_kind": "local-content-addressed"
+    },
+    "new_sampling_workers_max": 0,
+    "commit_push": false
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "TEST_FIXTURE_REVERIFICATION",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "c06fc1137ae096e6ed0110701697fbcc7f0bddd657773fca3a01ee49b63f3cd3"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "01b5647a004524dc4a06e9e3b3138c13aa12ca295d98accb175bedee7d3602af"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "23d78407db83399e2ec2dfc420bf4c44761fab16f24e9c46dbc1cda9d2e8b3f0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "54ef95ea7fba2e57ef416d34cb196d2d76c91cddc5a2a0d5b94c62d2ac121a96"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "534c154169c8d9c3f27e48d7a2063afc5dff7f5635b6a42903b39f1a7453803f"
+  },
+  "supersedes_for_execution": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json",
+    "sha256": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736",
+    "identity_kind": "local-content-addressed"
+  },
+  "stage": "P36_CODE_REVERIFY"
+}

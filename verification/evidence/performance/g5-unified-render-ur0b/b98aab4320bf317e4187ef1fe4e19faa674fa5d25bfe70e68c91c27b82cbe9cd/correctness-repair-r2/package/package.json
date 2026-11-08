@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-repair-r2",
+  "status": "AUTHORIZED_OFFLINE_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+    "accepted_source_sha256": "c27c504635151331f79a5d3bdcf7e35a0691ac735b3824bdd0599203bc1e9e4b",
+    "position_ref": {
+      "path": ".aegis/results/G5-UR0b/control-resume-after-df214581/position.json",
+      "sha256": "c6c9e140908d63632784b7be739cf690f870463ce99e2a6cbc4152d8a1871cd5",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "r1 bindings and full proof-path preflight; independently confirmed literal-profile reader rejection. No harness code changed.",
+    "next_action": "Execute all pending frozen offline repair items with the13-path allowance, including the coherent Python consumer; no further approval for a clean preflight.",
+    "predecessor_return_ref": {
+      "path": ".aegis/results/G5-UR0b/correctness-repair-r1/result.json",
+      "sha256": "0fd519be6caa21417acd3472b05161d8edd5c194997bbde15c2b18e689a056d4",
+      "identity_kind": "local-content-addressed"
+    },
+    "source_delta_rule": "The new seven r2 package files are approved additive control inputs; compute the current full-source identity before code rather than requiring equality with the predecessor c27c source."
+  },
+  "authorization": {
+    "work_order_ref": {
+      "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+      "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+      "identity_kind": "local-content-addressed"
+    },
+    "new_sampling_workers_max": 0,
+    "commit_push": false,
+    "scope_amendment_ref": {
+      "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/scope-amendment.json",
+      "sha256": "6746b75588937fec22865dc97cf71a03cd0d37732cc632dc327867605b969846",
+      "identity_kind": "local-content-addressed"
+    },
+    "effective_source_paths": [
+      "verification/runners/g5/ur0/correctness_driver.mjs",
+      "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "verification/runners/g5/ur0/stream_transfer.mjs",
+      "verification/runners/g5/ur0/correctness_transfer.mjs",
+      "verification/runners/g5/ur0/correctness_contract.mjs",
+      "verification/runners/g5/ur0/worker.mjs",
+      "verification/runners/g5/ur0/initialization_basis.mjs",
+      "verification/tests/g5_ur0_pixels.test.mjs",
+      "verification/tests/g5_ur0_initialization.test.mjs",
+      "verification/tests/g5_ur0_correctness.test.mjs",
+      "verification/tests/g5_ur0_transfer.test.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/tests/test_g5_ur0_repair_runner.py"
+    ]
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "OFFLINE_CORRECTNESS_HARNESS_REPAIR",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "d8c0f0c82f348706cec232aaf01a540426683753a9113ef9989e3f0134dbcb1a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "22f6456726c53ac579d3fcc2396e631f97356da73e123b44174ce74aba8250a2"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "5fc5e4d116c57bf3c49aa0bf94b9d31f402889e8fcdddce04bb914d7cbae1af1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "75790ff806099ca4471a7abb8c33a350d7bad946c69f9b6b43b0374571afb4a7"
+  },
+  "supersedes_for_execution": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r1/package.json",
+    "sha256": "5ef9e7cd0de640376c7f03537319867a729a1a8a12042db4f67b796cb21c8ff3",
+    "identity_kind": "local-content-addressed"
+  }
+}

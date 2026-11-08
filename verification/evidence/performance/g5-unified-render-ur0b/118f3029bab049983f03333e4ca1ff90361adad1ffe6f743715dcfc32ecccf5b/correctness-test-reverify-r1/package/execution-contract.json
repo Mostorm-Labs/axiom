@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "authorized_source_paths": [
+      "verification/tests/test_g5_ur0_remaining_runner.py"
+    ],
+    "read_only": [
+      "All Runtime/SDK/collector/consumer/render/brush/semantic/build/dependency sources",
+      "All UR0 harness, compiler, Python readers and their exact profiles, including remaining_runner.py",
+      "All old P20/packages/results/evidence/windows including r2 terminal records"
+    ],
+    "required_changes": [
+      "Repair only the stale positive reuse test fixture/context. Its positive case must explicitly model the accepted historical compiler rather than require ambient current files to have old hashes.",
+      "Add an explicit actual-current-compiler negative for the unchanged r4 packet, expecting current compiler differs from accepted reuse compiler. Keep old recording mode/source/receipt/artifact checks.",
+      "For matching historical context, prefer exact archived/pinned compiler bytes in a temporary fixture (the accepted df214581 git blob is available). A narrowly controlled unit condition is permitted, but never mock accepted_reuse, admit_record, canonical validation or the entire success result, never change the packet, and restore context at test exit.",
+      "Retain all existing negatives and closure/guard tests; do not skip, xfail, mark expectedFailure or delete coverage.",
+      "Hash-check unchanged compiler/harness files and r2 evidence; reference the existing12-group/17-input evidence without rerunning unchanged compilation. Independent reuse acceptance is a control responsibility, not a producer-issued PASS."
+    ],
+    "required_tests": [
+      "Focused original test RED already independently reproduced; preserve the error and test hash",
+      "Focused repaired historical positive plus current-compiler negative and remaining_runner test module",
+      "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+      "python3.12 tools/check_runtime_boundaries.py --root .",
+      "git diff --check"
+    ],
+    "forbidden_changes": [
+      "Any browser sampling/smoke/hidden probe, qualification oracle probe or build in this offline repair. Exception: the two existing test_g5_ur0_fixture_oracle.py malformed-snapshot native unit checks in the mandatory suite; record them accurately and do not call their count0.",
+      "Changing30s/90s/RSS/AA/interior tolerance or original worker phase boundaries",
+      "Candidate-color/difference-derived HUD, treating every residual as an AA edge, or masking body interiors",
+      "Opening/modifying any oldwindow or claiming remaining budget authorizes new runs",
+      "Changing Runtime/API/SDK/renderer/consumer/performance schedule or source_identity exclusions",
+      "Commit/push or UR0c/UR1",
+      "Any reader/compiler/profile/harness mutation or loosening compiler matching",
+      "Overwriting prior r2 results with new green status or issuing compiler-reuse acceptance on behalf of control"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/correctness-test-reverify-r1/**",
+      "out/ur0b/correctness-test-reverify-r1/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/correctness-test-reverify-r1/**"
+    ],
+    "preserved_source_baseline_sha256": "b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd",
+    "new_package_control_delta": "Seven files in this package are authorized additive control inputs; compute new source identity rather than requiring b98 equality.",
+    "new_sampling_workers_max": 0,
+    "prior_sampling_starts": 33,
+    "prior_sampling_seconds": 1251,
+    "commit_push": false,
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "terminal_success": {
+      "all_of": [
+        "Only the one test changed; harness/compiler/r2 records unchanged",
+        "Historical positive and current mismatch negative pass with all relevant/full mandatory suites",
+        "Exact result/source/bundle and preserved r2 evidence refs; no false reuse or performance claim",
+        "Return READY_FOR_CONTROL_REVIEW and proactively notify control"
+      ]
+    },
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "stop_after": "TEST_FIXTURE_REVERIFICATION",
+    "notify_terminal": {
+      "required": true,
+      "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit blocker/frozen stop"
+      ],
+      "contents": [
+        "task/package/status",
+        "revision/dirty/full-source hash",
+        "result/bundle paths andSHA256",
+        "test/RED/17-input reconciliation and any residual differences",
+        "sampling0 and all remaining work"
+      ],
+      "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+    }
+  }
+}

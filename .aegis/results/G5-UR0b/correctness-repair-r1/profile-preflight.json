@@ -1,0 +1,71 @@
+{
+  "schema": "ur0b-correctness-profile-preflight-v1",
+  "status": "REPRODUCED_SCOPE_CONFLICT",
+  "baseline": {
+    "input_ref": {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/compiled-summary.json",
+      "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987"
+    },
+    "observed": "ACCEPTED",
+    "qualified_initialization_count": 1,
+    "qualified_committed_count": 1
+  },
+  "counterfactuals": [
+    {
+      "name": "distinct_worker_same_consumer",
+      "input_kind": "COUNTERFACTUAL_PROFILE_ONLY_NOT_SAMPLED",
+      "observed": "REJECTED",
+      "exception": "canonical initialization recording/source/input basis missing",
+      "source_profile": {
+        "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+        "verification/runners/g5/ur0/worker.mjs": "dc65b8fd8dc74f7f495503a53ac4e0be284fd59c760de329bdcbfa3d01f3c674"
+      }
+    },
+    {
+      "name": "additive_exact_helper_tuple",
+      "input_kind": "COUNTERFACTUAL_PROFILE_ONLY_NOT_SAMPLED",
+      "observed": "REJECTED",
+      "exception": "canonical initialization recording/source/input basis missing",
+      "source_profile": {
+        "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+        "verification/runners/g5/ur0/worker.mjs": "a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1",
+        "verification/runners/g5/ur0/correctness_driver.mjs": "92e97fe4db352bf544dcd0b77043b4c239b9b30d05065fff1ccf796e45de985a",
+        "verification/runners/g5/ur0/pixel_oracle.mjs": "ef9fed64ab66bd4fafb1c7fc082357941ea9132fa60d5de4754430798ff20cde",
+        "verification/runners/g5/ur0/stream_transfer.mjs": "f95a55f49e3b1bb0e6cfb1386995e4d5ba35a9c4c225db8a889c1c3f20b80eb9"
+      }
+    }
+  ],
+  "worker_hash_witness": {
+    "original_file_ref": {
+      "path": "verification/runners/g5/ur0/worker.mjs",
+      "sha256": "a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1"
+    },
+    "suffix_utf8": "\n// Nonexecuted hash-inequality witness for reader preflight only.\n",
+    "derived_sha256": "dc65b8fd8dc74f7f495503a53ac4e0be284fd59c760de329bdcbfa3d01f3c674",
+    "executed": false,
+    "is_repaired_creation_profile": false
+  },
+  "reader_ref": {
+    "path": "verification/runners/g5/ur0/repair_runner.py",
+    "sha256": "de0696386fb0b641eca48faa5aeba4d8ac0683f68755464ad2b06961334bf7d7"
+  },
+  "call_path_refs": [
+    {
+      "path": "verification/runners/g5/ur0/remaining_runner.py",
+      "sha256": "96bc6dd3c979a12079ed2e9872c11801a945d8c2d89690b94f59af9f94430cb4"
+    },
+    {
+      "path": "verification/runners/g5/ur0/resume_runner.py",
+      "sha256": "0a48e1962075a82d3b436269f6f2cf6114f78445cbe9a0d4323e94b6f1a79137"
+    }
+  ],
+  "conclusion": "The exact old two-hash equality rejects every changed worker hash. A truthful new repaired creation-profile proof cannot pass the existing future correctness admission path. The enforcing reader is outside the frozen source allowance; no product behavior or old recording was changed.",
+  "required_scope_repair": [
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "not_implemented": "No helper/driver/worker/profile repair performed before scope reconciliation.",
+  "new_sampling_workers": 0,
+  "native_oracle_invocations": 0,
+  "builds": 0
+}

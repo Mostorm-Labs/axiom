@@ -1,0 +1,63 @@
+{
+  "status": "SUBJECTS_MATERIALIZATION_SCOPE_AND_PROFILES_VERIFIED",
+  "subjects": [
+    {
+      "task": "correctness-repair-r2",
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+        "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2/manifest.json",
+        "sha256": "484abb287d46d4775e8ea0bfea6ab099fc9c39e9bb912d380f2d1c67f2b13a7d"
+      },
+      "payload_files": 188
+    },
+    {
+      "task": "correctness-test-reverify-r1",
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/result.json",
+        "sha256": "7afd8befa682549490c9c473350836bc68e1c61da6c5c6cca52a17af497ef553"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b/correctness-test-reverify-r1/manifest.json",
+        "sha256": "69c18b309aa2def6629c3af56a92ac8f0a94cd1d0c25c8976eda6bd99b81460e"
+      },
+      "payload_files": 32
+    }
+  ],
+  "repository_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "source_tree_sha256": "118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b",
+  "dirty": true,
+  "source_delta_from_r2": [
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/authority.lock.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/execution-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/implementation-context.md",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/package.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/verification.lock.json",
+    "verification/tests/test_g5_ur0_remaining_runner.py"
+  ],
+  "compiler_file_sha256": {
+    "compile_run.mjs": "2f121b5cb69d36706b5e5f79d98283f8bd70bf75fec9f4a89ebb3e3b17749ac5",
+    "decode_trace.mjs": "26eeb2ef7fd4f009cea90321e9c53a1c8d5b85b91dc1b35f76cefa2ccf5e1ba8",
+    "metrics_compiler.mjs": "201d3a144aed8ef3d0dce1687f15df6de29801e58bd626f52877b5e123e058c0",
+    "canonical_chain.mjs": "415c8e1346ffb8ad0d190ba8e1f0dfd4e567bf5420578cf1f99dae5d80b3ff26",
+    "external_metrics.mjs": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+    "schedule.mjs": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+    "validate_metrics.py": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad",
+    "initialization_basis.mjs": "4ff42563451353fbdd38aa36c5823d8fc2cd9e3e47cd8a12e635d880214236ca"
+  },
+  "repaired_profile": {
+    "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+    "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
+    "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
+    "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+    "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
+    "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
+    "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
+  },
+  "old_r2_failure_preserved": true,
+  "one_test_only_repair_confirmed": true
+}

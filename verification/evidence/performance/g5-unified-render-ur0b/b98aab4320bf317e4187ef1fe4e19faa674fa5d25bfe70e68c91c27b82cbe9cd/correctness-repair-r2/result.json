@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-repair-r2",
+  "stage": "P32_OFFLINE_HARNESS_REPAIR",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "root_cause": "TEST_CONTRACT_DRIFT_OUTSIDE_ALLOWED_SOURCE_SCOPE",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "dirty": true,
+  "source_tree_sha256": "b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json",
+    "sha256": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/validation.json",
+    "sha256": "894f1a3a741b22710dfe6981c0939acba8211549874953fe980c22db01a28054"
+  },
+  "oracle_coverage_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/oracle-coverage.json",
+    "sha256": "2c45c43cccad591ee89e05447204a73b88fa2653ba7a54c0d2da951f6b224413"
+  },
+  "reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+    "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+  },
+  "repaired_profile_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/repaired-profile.json",
+    "sha256": "5224f8a9c24e462f5c5196e69cd6828477ea88fbc11dc20c8cc96da90424dc24"
+  },
+  "scope_audit_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/source-scope-audit.json",
+    "sha256": "ed3eb84df24fdc4174d4435710550d6f2b2d6ccbbd16a2b2bb5461bf2684b99c"
+  },
+  "reuse_assessment_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reuse-assessment.json",
+    "sha256": "f56ea594c956100a5a9aca5595b7f7a2a5c21ddd61227c87a8aa71805ebe0ce4"
+  },
+  "failure_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json",
+    "sha256": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180"
+  },
+  "handoff_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/ownership-handoff.json",
+    "sha256": "fde469242bcdd913ca291952c37aeaf01a97353ecacb3458a0cbeea67c1466fd"
+  },
+  "pixel_diagnostic_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/pixel-diagnostic.json",
+    "sha256": "5bfd09b84d82e90f14d2d517f51a673a3f1af1f09cde8684066fad86f7df1cb2"
+  },
+  "future_position_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/future-continuation-position.json",
+    "sha256": "74fcb669f8e12ccdab45a1d4f910a427021082a2b19c8561ab15da46db8495f8"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_BUNDLE",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2",
+    "manifest_sha256": "484abb287d46d4775e8ea0bfea6ab099fc9c39e9bb912d380f2d1c67f2b13a7d"
+  },
+  "completed_scope": "Authorized harness/JS-Python profile implementation, offline oracle coverage and 17 invariant recompilations; mandatory suite has one unresolved test contract drift.",
+  "remaining": [
+    "Control classification and narrow correction of the one unchanged r4 positive reuse test",
+    "Independent control review and current compiler/recording-reuse acceptance",
+    "Separately authorized six correctness then 30 main workers, not run here"
+  ],
+  "performance_or_official_gate_PASS": false
+}

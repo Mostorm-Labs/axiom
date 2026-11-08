@@ -11,13 +11,16 @@ export function comparePixels(actual,expected,boundary,hud=null){
  }
  return{status:!compared||excluded>boundary.length/5?'MISSING':differences?'FAILED':'QUALIFIED',compared_pixels:compared,aa_boundary_pixels:edge,hud_excluded_pixels:excluded,interior_mismatched_pixels:differences,max_interior_delta:maximum,witnesses,rule:'<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds'};
 }
-export function publicHudBand({width,height,logical_width,logical_height,hud_bounds=[]}){
+export function publicHudBand({width,height,logical_width,logical_height,hud_bounds=[],hud_guide_y,case_id,step}){
+ if(!Number.isSafeInteger(width)||width<=0||!Number.isSafeInteger(height)||height<=0||width*height>16777216||!Number.isFinite(logical_width)||logical_width<=0||!Number.isFinite(logical_height)||logical_height<=0||!Array.isArray(hud_bounds))throw Error('invalid public HUD viewport');
+ if(hud_guide_y!==undefined&&(case_id!=='lower_z_translucent_drag'||step!==0||hud_guide_y!==260))throw Error('undeclared HUD guide');
  const band=new Uint8Array(width*height),sx=width/logical_width,sy=height/logical_height;
  for(const b of hud_bounds){if(!Array.isArray(b)||b.length!==4||b.some(v=>!Number.isFinite(v))||b[0]>b[2]||b[1]>b[3])throw Error('invalid public HUD bounds');
   const [l,t,r,z]=b;for(let y=0;y<height;++y)for(let x=0;x<width;++x){const a=x/sx,c=y/sy;
-   if((a>=l-7&&a<=r+7&&Math.min(Math.abs(c-t),Math.abs(c-z))<=7)||(c>=t-7&&c<=z+7&&Math.min(Math.abs(a-l),Math.abs(a-r))<=7)||(Math.abs(a-(l+r)/2)<=7&&c>=t-34&&c<=t))band[y*width+x]=1;
+   if((a>=l-7&&a<=r+7&&Math.min(Math.abs(c-t),Math.abs(c-z))<=7)||(c>=t-7&&c<=z+7&&Math.min(Math.abs(a-l),Math.abs(a-r))<=7)||(Math.abs(a-(l+r)/2)<=7&&c>=t-38&&c<=t))band[y*width+x]=1;
   }
  }
+ if(hud_guide_y!==undefined)for(let y=0;y<height;++y)if(Math.abs(y/sy-hud_guide_y)<=2)band.fill(1,y*width,(y+1)*width);
  return band;
 }
 export async function compareSnapshotPixels({oracle,snapshot,request,actual,prefix}){

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "continuation_request_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/continuation-request.json",
+    "sha256": "151aad4d4625a671c4132fc614416c9536e76d74c7f23722b2677ef29b93e501",
+    "identity_kind": "local-content-addressed"
+  },
+  "materialization": "Shared controlled worktree content-addressed bundle, exact result/manifest SHA256; no commit/push.",
+  "result_root": ".aegis/results/G5-UR0b/resume-r5/",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/resume-r5/",
+  "required": [
+    "All exact17 reuse/source/artifact/compiler/native proofs",
+    "Offline runner/mandatory test logs plus2 explicitly permitted malformed native unit checks",
+    "Source/scope/mechanism/artifact proof before the sole claim",
+    "Durable historical33/1251 plus actual new starts/ceil charges/unknowns/reservations ledger",
+    "Every started run guard/raw/compiler/receipt/correctness result and owned process cleanup",
+    "All remaining rows MISSING on first hard stop, preserving cause before missing-summary errors",
+    "READY_FOR_CONTROL_REVIEW or exact explicit blocker, with proactive terminal notice"
+  ],
+  "notification": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work",
+      "all planned/executed/missing run IDs and actual guard/cleanup results",
+      "original33 starts1251s plus new starts/actual charged seconds/reservations and whether the window is closed",
+      "actual OFF/ON correctness verdicts or product RED, current/fresh vs reused source/proof/artifact identities"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  },
+  "no_official_gate_pass": true
+}

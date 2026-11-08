@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "all_of": [
+      "Frozen scope implemented and all required tests/oracles pass",
+      "17 recorded populations/metrics/terminal outcomes invariant",
+      "Old evidence unchanged; exact new source and profile hashes, tests, offline residual findings and content-addressed result/bundle",
+      "READY_FOR_CONTROL_REVIEW or explicit blocker; proactively notify the control conversation"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "stop_after": "OFFLINE_CORRECTNESS_HARNESS_REPAIR",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/correctness_driver.mjs",
+      "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "verification/runners/g5/ur0/stream_transfer.mjs",
+      "verification/runners/g5/ur0/correctness_transfer.mjs",
+      "verification/runners/g5/ur0/correctness_contract.mjs",
+      "verification/runners/g5/ur0/worker.mjs",
+      "verification/runners/g5/ur0/initialization_basis.mjs",
+      "verification/tests/g5_ur0_pixels.test.mjs",
+      "verification/tests/g5_ur0_initialization.test.mjs",
+      "verification/tests/g5_ur0_correctness.test.mjs",
+      "verification/tests/g5_ur0_transfer.test.mjs"
+    ],
+    "read_only": [
+      "Runtime, SDK, public docs/API/dependencies/locks/build/collector",
+      "consumer.mjs and all input/scheduling code",
+      "All old packages/results/evidence/window/ledger bytes",
+      "AllP20 files in this directory"
+    ],
+    "required_changes": [
+      "Implement frozen live subject/HUD contract and real old OFF1 RED.",
+      "Implement byte-exact bounded cold-only batched transfer and coarse stage diagnosis; keep deadlines and non-correctness behavior.",
+      "Pin one exact repaired creation profile additively; handle paired_init only with uniquely matched full native ownership and all existing fresh-empty checks.",
+      "Complete targeted positive/negative tests and all17 immutable recompilations; preserve every original verdict and source identity.",
+      "Assess reuse of accepted old diagnostic/cohort/60/120/240 for a future continuation; report any changed applicable condition honestly."
+    ],
+    "required_tests": [
+      "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+      "python3.12 tools/check_runtime_boundaries.py --root .",
+      "12 frozen oracle groups with old real archive RED;17 recorded input recompilations to separate output",
+      "git diff --check"
+    ],
+    "forbidden_changes": [
+      "Any browser sampling/smoke/hidden probe, qualification oracle probe or build in this offline repair. Exception: the two existing test_g5_ur0_fixture_oracle.py malformed-snapshot native unit checks in the mandatory suite; record them accurately and do not call their count0.",
+      "Changing30s/90s/RSS/AA/interior tolerance or original worker phase boundaries",
+      "Candidate-color/difference-derived HUD, treating every residual as an AA edge, or masking body interiors",
+      "Opening/modifying any oldwindow or claiming remaining budget authorizes new runs",
+      "Changing Runtime/API/SDK/renderer/consumer/performance schedule or source_identity exclusions",
+      "Commit/push or UR0c/UR1"
+    ],
+    "authorized_outputs": [
+      ".aegis/packages/G5-UR0b-correctness-repair-r1/**",
+      ".aegis/results/G5-UR0b/correctness-repair-r1/**",
+      "out/ur0b/correctness-repair-r1/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/correctness-repair-r1/**"
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "blocking_evidence": [
+      "All12 bounded oracle groups",
+      "Node/Python/boundary suites appropriate to allowed changes",
+      "No old archive/source authority edits; no browser/build/qualification oracle probe in this offline slice. Existing malformed-snapshot native unit checks only are permitted and counted.",
+      "Return READY_FOR_CONTROL_REVIEW or explicit frozen blocker and notify control thread"
+    ],
+    "corroborative_evidence": "Additional marker detail and cleaner failure text improve diagnosis; no independent product Gate is added for them.",
+    "new_sampling_workers_max": 0,
+    "commit_push": false,
+    "prior_sampling_starts": 33,
+    "prior_sampling_seconds": 1251,
+    "notify_terminal": {
+      "required": true,
+      "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit blocker/frozen stop"
+      ],
+      "contents": [
+        "task/package/status",
+        "revision/dirty/full-source hash",
+        "result/bundle paths andSHA256",
+        "test/RED/17-input reconciliation and any residual differences",
+        "sampling0 and all remaining work"
+      ],
+      "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+    }
+  }
+}

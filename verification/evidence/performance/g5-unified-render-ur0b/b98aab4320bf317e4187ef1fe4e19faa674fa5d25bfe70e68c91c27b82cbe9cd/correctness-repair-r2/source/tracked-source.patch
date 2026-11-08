@@ -1,0 +1,442 @@
+diff --git a/verification/runners/g5/ur0/correctness_driver.mjs b/verification/runners/g5/ur0/correctness_driver.mjs
+index d9501036..2d889e81 100644
+--- a/verification/runners/g5/ur0/correctness_driver.mjs
++++ b/verification/runners/g5/ur0/correctness_driver.mjs
+@@ -1,18 +1,26 @@
+ // Public SDK consumer only. All brush/mask geometry is produced by Runtime.
+ import {SnapshotTransfer} from './stream_transfer.mjs';
++import {selectionHudRequest} from './correctness_contract.mjs';
++import {createStageRecorder} from './correctness_transfer.mjs';
+ export const correctnessCases=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical'];
+ export function correctnessDriver({sdk,pointer,raf,settled,diag}){
+  const transfer=new SnapshotTransfer();let kind,step=0;
++ const stages=createStageRecorder({domain:'browser:'+String(performance.timeOrigin),clock:()=>String(Math.floor(performance.now()*1e6)),emit:event=>console.log('UR0_STAGE '+JSON.stringify(event))});
+  const wait=async()=>{await settled(performance.now()+10000);};
+  const erase=async(points,finish=true)=>{await sdk.setEraser({mode:2,diameter:32});await sdk.selectTool('partialEraser');pointer('down',...points[0]);for(const p of points.slice(1)){pointer('move',...p);await raf();}if(finish){pointer('up',...points.at(-1));await wait();}};
+- const rawPixels=(hud_bounds=[],live_erase=null)=>{
++ const publicState=()=>{
++  const gl=sdk.canvas.getContext('webgl2'),r=sdk.canvas.getBoundingClientRect();
++  return{state:sdk.readState(),selection:sdk.readSelection(),metrics:{width:gl.drawingBufferWidth,height:gl.drawingBufferHeight,logical_width:r.width,logical_height:r.height,dpr:globalThis.devicePixelRatio??gl.drawingBufferWidth/r.width}};
++ };
++ const rawPixels=async(hud,live_erase=null)=>stages.run('pixel readback/hash',async()=>{
+   const gl=sdk.canvas.getContext('webgl2'),width=gl.drawingBufferWidth,height=gl.drawingBufferHeight,raw=new Uint8Array(width*height*4),top=new Uint8Array(raw.length);
+   gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);
+   if(gl.getError()!==gl.NO_ERROR)throw Error('actual framebuffer readback failed');
+   for(let y=0;y<height;++y)top.set(raw.subarray(y*width*4,(y+1)*width*4),(height-1-y)*width*4);
++  const source_sha256=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',top))).map(v=>v.toString(16).padStart(2,'0')).join('');
+   transfer.begin(top);const r=sdk.canvas.getBoundingClientRect();
+-  return{byte_length:top.length,request:{width,height,logical_width:r.width,logical_height:r.height,camera:sdk.readState().camera,hud_bounds,...(live_erase?{live_erase}:{})}};
+- };
++  return{byte_length:top.length,source_sha256,request:{width,height,logical_width:r.width,logical_height:r.height,camera:sdk.readState().camera,...hud,...(live_erase?{live_erase}:{})}};
++ });
+  return{
+   async setup(value,on){
+    if(!correctnessCases.includes(value))throw Error('unknown frozen correctness case');kind=value;step=0;if(diag())diag().control(on?1:0,0);
+@@ -28,16 +36,16 @@ export function correctnessDriver({sdk,pointer,raf,settled,diag}){
+    return{state:sdk.readState(),selection:sdk.readSelection(),config:sdk.readBrushConfig(),case_id:kind,steps:2};
+   },
+   async next(){
+-   if(step>=2)throw Error('correctness steps exhausted');const n=step++;let reference='after',live_erase=null,hud=[];
++   if(step>=2)throw Error('correctness steps exhausted');const n=step++;let reference='after',live_erase=null,finish=null,before=null;
++   await stages.run('correctnessNext/render/settle',async()=>{
+    if(kind==='lower_z_translucent_drag'){
+-    if(n===0){const b=sdk.readSelection().bounds;if(!b)throw Error('public selection bounds missing');pointer('down',100,100);pointer('move',124,112);for(let f=0;f<8;++f)await raf();
+-     const c=sdk.readState().camera;const convert=b=>[b[0]*c.scale+c.x,b[1]*c.scale+c.y,b[2]*c.scale+c.x,b[3]*c.scale+c.y];const original=convert(b);hud=[original,original.map((v,i)=>v+(i%2?12:24))];
+-     const pixels=rawPixels(hud);pointer('up',124,112);await wait();return{...pixels,reference,stage:'live-lower-z-drag',state:sdk.readState()};
+-    }await sdk.selectTool('hand');await wait();
++    if(n===0){before=publicState();selectionHudRequest({selection:before.selection,camera:before.state.camera,caseId:kind,step:n,before});pointer('down',100,100);pointer('move',124,112);for(let f=0;f<8;++f)await raf();
++     finish=async()=>{pointer('up',124,112);await wait();};
++    }else{await sdk.selectTool('hand');await wait();}
+    }else if(['permanent_live_mask','feedback_canonical'].includes(kind)){
+     if(n===0){const points=[[260,240],[310,300],[360,340]];await erase(points,false);for(let f=0;f<8;++f)await raf();live_erase={view_points:points,diameter:32};reference='before';
+-     const pixels=rawPixels([],live_erase);pointer('up',...points.at(-1));await wait();return{...pixels,reference,stage:'permanent-plus-live-mask',state:sdk.readState()};
+-    }await wait();
++     finish=async()=>{pointer('up',...points.at(-1));await wait();};
++    }else await wait();
+    }else if(kind==='transparent_color_bg'){
+     await sdk.setBackground({mode:'plain',color:n?[.2,.4,.7,1]:[0,0,0,0],patternColor:[0,0,0,0]});await wait();
+    }else if(kind==='warm_miss_pressure'){
+@@ -46,7 +54,12 @@ export function correctnessDriver({sdk,pointer,raf,settled,diag}){
+     // The browser worker changes real deviceScaleFactor before this step.
+     await sdk.panBy(n?-1:1,0);await wait();
+    }
+-   return{...rawPixels(hud,live_erase),reference,stage:kind+'-'+n,state:sdk.readState()};
++   });
++   const live=publicState(),hud=selectionHudRequest({selection:live.selection,camera:live.state.camera,caseId:kind,step:n,before});
++   const pixels=await rawPixels(hud,live_erase);
++   if(finish)await stages.run('post-Up canonical settle',finish);
++   const after=publicState();
++   return{...pixels,reference,stage:before?'live-lower-z-drag':live_erase?'permanent-plus-live-mask':kind+'-'+n,state:after.state,...(before?{subject:{before,live,after}}:{})};
+   },pull:(offset,count)=>transfer.pull(offset,count),release:cancel=>transfer.end(cancel)
+  };
+ }
+diff --git a/verification/runners/g5/ur0/initialization_basis.mjs b/verification/runners/g5/ur0/initialization_basis.mjs
+index 5ceae9ad..86dea176 100644
+--- a/verification/runners/g5/ur0/initialization_basis.mjs
++++ b/verification/runners/g5/ur0/initialization_basis.mjs
+@@ -5,11 +5,24 @@ export const initializationProfile=Object.freeze({
+  'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7',
+  'verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'
+ });
++// Exact final worker/cold-helper tuple, frozen before proof use.
++// Never read current files to authorize an arbitrary recording.
++export const repairedInitializationProfile=Object.freeze({
++ "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
++ "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
++ "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
++ "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
++ "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
++ "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
++ "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
++});
+ const hash=x=>createHash('sha256').update(x).digest('hex');
+ const hex=x=>typeof x==='string'&&/^[0-9a-f]{64}$/.test(x);
+ const uint=x=>typeof x==='string'&&/^(0|[1-9][0-9]*)$/.test(x)&&BigInt(x)<2n**64n;
+ const ownerFields=['runtime','lifetime','attachment','document','documentEpoch','resource','view'];
+ const sameOwner=(a,b)=>a&&b&&ownerFields.every(k=>a[k]!==undefined&&a[k]===b[k]);
++const publicState=s=>({documentId:s.documentId,generation:s.generation,objects:s.objects,lastCommit:{ordinal:s.lastCommit?.ordinal,operationId:s.lastCommit?.operationId},target:{runtimeEpoch:s.target?.runtimeEpoch,attachmentEpoch:s.target?.attachmentEpoch,viewId:s.target?.viewId}});
++const matchesState=(s,c)=>s?.documentId===c.document&&s.target?.attachmentEpoch===c.attachment&&s.target?.viewId===c.view&&s.target?.runtimeEpoch===c.documentEpoch;
+ export function initializationBasis(completion,decoded,raw,recording){
+  const absent=reason=>({status:'UNRESOLVED',reason});
+  if(decoded.errors?.length||decoded.loss?.critical)return absent('loss or identity error prevents initialization proof');
+@@ -21,8 +34,13 @@ export function initializationBasis(completion,decoded,raw,recording){
+   run=JSON.parse(recording.worker_result_json);JSON.parse(recording.run_inputs_json);
+   if(!isDeepStrictEqual(run,recording.run)||!isDeepStrictEqual(raw,recording.raw_trace_jsonl.trim().split('\n').filter(Boolean).map(JSON.parse)))return absent('initial-state recording differs from actual input bytes');
+  }catch{return absent('malformed initial-state recording input');}
+- if(!hex(run.source_before?.source_tree_sha256)||Object.entries(initializationProfile).some(([name,expected])=>run.source_before?.files?.[name]?.sha256!==expected))return absent('fresh-empty creation source profile unproved');
+- const s=run.init?.state,c=completion;
++ const matches=p=>Object.entries(p).every(([name,expected])=>hex(expected)&&run.source_before?.files?.[name]?.sha256===expected);
++ const old=matches(initializationProfile),repaired=!old&&['correctness','fixture','main','realtime','legacy','setup'].includes(run.mode)&&matches(repairedInitializationProfile);
++ if(!hex(run.source_before?.source_tree_sha256)||!old&&!repaired)return absent('fresh-empty creation source profile unproved');
++ const c=completion,candidates=(repaired&&run.mode==='correctness'?['init','paired_init']:['init']).filter(k=>run[k]?.state).map(k=>({state_path:'worker-result.json/'+k+'/state',state:run[k].state}));
++ const matching=old?[{state_path:'worker-result.json/init/state',state:run.init?.state}]:candidates.filter(r=>matchesState(r.state,c));
++ if(matching.length!==1)return absent('public initialization state absent, foreign or ambiguous');
++ const s=matching[0].state;
+  if(!s||s.documentId!==c.document||s.generation!=='0'||s.objects!==0||s.lastCommit?.ordinal!=='0'||s.lastCommit?.operationId!=='0'.repeat(32))return absent('missing/nonempty/restored or contradictory public initial state');
+  if(s.target?.attachmentEpoch!==c.attachment||s.target?.viewId!==c.view||s.target?.runtimeEpoch!==c.documentEpoch)return absent('public initial target differs from actual native attachment/view/document epoch');
+  if(!/^[0-9a-f]{32}$/.test(c.document??'')||ownerFields.filter(k=>k!=='document').some(k=>!uint(c[k]))||['work','frame','camera','surface','metrics','job','basis','capture_seq','capture_ns','at_ns'].some(k=>!uint(c[k])))return absent('incomplete/lossy native initialization identity');
+@@ -32,8 +50,9 @@ export function initializationBasis(completion,decoded,raw,recording){
+   const binding=decoded.owner_bindings?.find(o=>o.context_key===r.job+'/'+r.basis);
+   if(!binding||binding.ambiguous||binding.owners.length!==1||sameOwner(binding.owners[0],c))return absent('matching or unproved-owner commit/Scene at or before initialization capture');
+  }
+- return {status:'PROVEN_FRESH_EMPTY_INITIALIZATION',state_path:'worker-result.json/init/state',
+-  public_state:{documentId:s.documentId,generation:s.generation,objects:s.objects,lastCommit:{ordinal:s.lastCommit.ordinal,operationId:s.lastCommit.operationId},target:{runtimeEpoch:s.target.runtimeEpoch,attachmentEpoch:s.target.attachmentEpoch,viewId:s.target.viewId}},
+-  source_profile:{...initializationProfile},recording_source_tree_sha256:run.source_before.source_tree_sha256,input_refs:{...recording.input_refs},
++ return {status:'PROVEN_FRESH_EMPTY_INITIALIZATION',state_path:matching[0].state_path,
++  public_state:publicState(s),
++  source_profile:{...(old?initializationProfile:repairedInitializationProfile)},recording_source_tree_sha256:run.source_before.source_tree_sha256,input_refs:{...recording.input_refs},
++  ...(repaired?{recording_mode:run.mode,recorded_states:candidates.map(r=>({state_path:r.state_path,public_state:publicState(r.state)}))}:{}),
+   applicability:'frozen fresh-empty createRuntime recording plus actual native chain; no synthetic Operation or Scene'};
+ }
+diff --git a/verification/runners/g5/ur0/pixel_oracle.mjs b/verification/runners/g5/ur0/pixel_oracle.mjs
+index 2689848e..da2a59e2 100644
+--- a/verification/runners/g5/ur0/pixel_oracle.mjs
++++ b/verification/runners/g5/ur0/pixel_oracle.mjs
+@@ -11,13 +11,16 @@ export function comparePixels(actual,expected,boundary,hud=null){
+  }
+  return{status:!compared||excluded>boundary.length/5?'MISSING':differences?'FAILED':'QUALIFIED',compared_pixels:compared,aa_boundary_pixels:edge,hud_excluded_pixels:excluded,interior_mismatched_pixels:differences,max_interior_delta:maximum,witnesses,rule:'<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds'};
+ }
+-export function publicHudBand({width,height,logical_width,logical_height,hud_bounds=[]}){
++export function publicHudBand({width,height,logical_width,logical_height,hud_bounds=[],hud_guide_y,case_id,step}){
++ if(!Number.isSafeInteger(width)||width<=0||!Number.isSafeInteger(height)||height<=0||width*height>16777216||!Number.isFinite(logical_width)||logical_width<=0||!Number.isFinite(logical_height)||logical_height<=0||!Array.isArray(hud_bounds))throw Error('invalid public HUD viewport');
++ if(hud_guide_y!==undefined&&(case_id!=='lower_z_translucent_drag'||step!==0||hud_guide_y!==260))throw Error('undeclared HUD guide');
+  const band=new Uint8Array(width*height),sx=width/logical_width,sy=height/logical_height;
+  for(const b of hud_bounds){if(!Array.isArray(b)||b.length!==4||b.some(v=>!Number.isFinite(v))||b[0]>b[2]||b[1]>b[3])throw Error('invalid public HUD bounds');
+   const [l,t,r,z]=b;for(let y=0;y<height;++y)for(let x=0;x<width;++x){const a=x/sx,c=y/sy;
+-   if((a>=l-7&&a<=r+7&&Math.min(Math.abs(c-t),Math.abs(c-z))<=7)||(c>=t-7&&c<=z+7&&Math.min(Math.abs(a-l),Math.abs(a-r))<=7)||(Math.abs(a-(l+r)/2)<=7&&c>=t-34&&c<=t))band[y*width+x]=1;
++   if((a>=l-7&&a<=r+7&&Math.min(Math.abs(c-t),Math.abs(c-z))<=7)||(c>=t-7&&c<=z+7&&Math.min(Math.abs(a-l),Math.abs(a-r))<=7)||(Math.abs(a-(l+r)/2)<=7&&c>=t-38&&c<=t))band[y*width+x]=1;
+   }
+  }
++ if(hud_guide_y!==undefined)for(let y=0;y<height;++y)if(Math.abs(y/sy-hud_guide_y)<=2)band.fill(1,y*width,(y+1)*width);
+  return band;
+ }
+ export async function compareSnapshotPixels({oracle,snapshot,request,actual,prefix}){
+diff --git a/verification/runners/g5/ur0/repair_runner.py b/verification/runners/g5/ur0/repair_runner.py
+index 47ee346e..e515eaf3 100644
+--- a/verification/runners/g5/ur0/repair_runner.py
++++ b/verification/runners/g5/ur0/repair_runner.py
+@@ -6,6 +6,16 @@ sys.path.insert(0,str(HERE))
+ import source_identity,observed_worker,run_matrix
+ AUTH=ROOT/'.aegis/results/G5-UR0b/control-reverification-r1/repair-authorization.json'
+ AUTH_SHA='007f4a09e625b4d1c1999c50577498c0cbf9570ceae190158559db8540b202f7'
++OLD_INITIALIZATION_PROFILE={'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'}
++REPAIRED_INITIALIZATION_PROFILE={
++ "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
++ "verification/runners/g5/ur0/worker.mjs": "3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735",
++ "verification/runners/g5/ur0/correctness_driver.mjs": "0e97e180e3111b99f935922b07a4be70b210c03b79194d98cd6f043d0ec64721",
++ "verification/runners/g5/ur0/pixel_oracle.mjs": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
++ "verification/runners/g5/ur0/stream_transfer.mjs": "4dd695cd3b0f01e41b1ea08d741a8bc9a0e146b881bddcaea4173d4da0d39210",
++ "verification/runners/g5/ur0/correctness_transfer.mjs": "87565a69adf1c167a888365f0b9c74ffee588667651c30a8eeb3a730eaf5a3c8",
++ "verification/runners/g5/ur0/correctness_contract.mjs": "682080e52acf98d8cbd0d5c5b7cfa2f3f8ded04a80cb54ae6cbf42334b316da0"
++}
+ CASES=['lower_z_translucent_drag','permanent_live_mask','transparent_color_bg','warm_miss_pressure','dpr_switch','feedback_canonical']
+ def load(p):return json.loads(Path(p).read_text())
+ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+@@ -34,6 +44,18 @@ def assert_sampling_authority_open(previous_return,authorization_sha):
+   previous=load(previous_return)
+   if previous.get('authorization_ref',{}).get('sha256')==authorization_sha and previous.get('continue_execution') is False:
+    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
++def valid_initialization_profile(origin,basis):
++ profile=origin.get('source_profile')
++ if profile==OLD_INITIALIZATION_PROFILE:return True
++ if profile!=REPAIRED_INITIALIZATION_PROFILE or any(re.fullmatch(r'[0-9a-f]{64}',v) is None for v in REPAIRED_INITIALIZATION_PROFILE.values()) or origin.get('recording_mode') not in ['correctness','fixture','main','realtime','legacy','setup']:return False
++ rows=origin.get('recorded_states')
++ paths=['worker-result.json/init/state']+(['worker-result.json/paired_init/state'] if origin['recording_mode']=='correctness' else [])
++ if not isinstance(rows,list) or not 1<=len(rows)<=len(paths) or any(not isinstance(r,dict) or r.get('state_path') not in paths for r in rows) or len({r['state_path'] for r in rows})!=len(rows):return False
++ def matches(row):
++  s=row.get('public_state',{});t=s.get('target',{})
++  return s.get('documentId')==basis.get('document_id') and t.get('attachmentEpoch')==basis.get('attachment_epoch') and t.get('viewId')==basis.get('view_id') and t.get('runtimeEpoch')==basis.get('document_epoch')
++ selected=[r for r in rows if matches(r)]
++ return len(selected)==1 and selected[0]['state_path']==origin.get('state_path') and selected[0]['public_state']==origin.get('public_state')
+ def require_canonical_chain(summary,require_positive=False,require_metrics=True):
+  chain=summary.get('canonical_chain')
+  if not chain or chain.get('schema') not in ['g5-ur0b-canonical-chain-proof-v1','g5-ur0b-canonical-chain-proof-v2']:raise RuntimeError('canonical positive-chain proof missing')
+@@ -64,9 +86,8 @@ def require_canonical_chain(summary,require_positive=False,require_metrics=True)
+   if not uint(link.get('draw_job')) or not uint(link.get('draw_basis')) or not uint(link.get('work_id')) or link['draw_job'] not in link.get('attempt_jobs',[]):raise RuntimeError('canonical successful attempt provenance missing')
+   if initial:
+    origin=link.get('initialization_basis',{});s=origin.get('public_state',{});target=s.get('target',{});last=s.get('lastCommit',{})
+-   profile={'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'}
+    if 'operation_id' not in basis or basis['operation_id'] is not None or link.get('operation_reason')!='NOT_APPLICABLE_INITIALIZATION' or any(basis[k]!='0' for k in ['committed_generation','scene_generation','scene_revision','commit_revision']):raise RuntimeError('canonical initialization forged an Operation or nonzero state')
+-   if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or origin.get('source_profile')!=profile or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
++   if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or not valid_initialization_profile(origin,basis) or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+    if s.get('documentId')!=basis['document_id'] or s.get('generation')!='0' or type(s.get('objects')) is not int or s['objects']!=0 or last.get('ordinal')!='0' or last.get('operationId')!='0'*32 or target.get('runtimeEpoch')!=basis['document_epoch'] or target.get('attachmentEpoch')!=basis['attachment_epoch'] or target.get('viewId')!=basis['view_id']:raise RuntimeError('canonical initialization public initial-state basis differs from native')
+   key=link['completion_seq']
+   if key in seen:raise RuntimeError('duplicate canonical completion chain')
+@@ -92,6 +113,15 @@ def require_bound_compilation(directory,summary,proof):
+    if ref.get('path')!='.aegis/verification/G5-UR0b-initialization-v1/'+name or ref.get('sha256')!=digest or sha(ROOT/ref['path'])!=digest:raise RuntimeError('canonical initialization Verification binding changed')
+   for chain in summary['canonical_chain'].get('initialization_chains',[]):
+    if chain.get('initialization_basis',{}).get('input_refs')!={k:analysis.get(k) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']}:raise RuntimeError('canonical initialization input basis differs from bound compiler input')
++   origin=chain.get('initialization_basis',{})
++   if origin.get('source_profile')==REPAIRED_INITIALIZATION_PROFILE:
++    run=load(directory/'worker-result.json')
++    if run.get('mode')!=origin.get('recording_mode') or any(run.get('source_before',{}).get('files',{}).get(n,{}).get('sha256')!=v for n,v in REPAIRED_INITIALIZATION_PROFILE.items()) or origin.get('recording_source_tree_sha256')!=run.get('source_before',{}).get('source_tree_sha256'):raise RuntimeError('repaired initialization profile differs from actual recording')
++    rows=[]
++    for key in (['init','paired_init'] if run.get('mode')=='correctness' else ['init']):
++     if not run.get(key,{}).get('state'):continue
++     s=run[key]['state'];rows.append({'state_path':'worker-result.json/'+key+'/state','public_state':{'documentId':s.get('documentId'),'generation':s.get('generation'),'objects':s.get('objects'),'lastCommit':{k:s.get('lastCommit',{}).get(k) for k in ['ordinal','operationId']},'target':{k:s.get('target',{}).get(k) for k in ['runtimeEpoch','attachmentEpoch','viewId']}}})
++    if origin.get('recorded_states')!=rows or not valid_initialization_profile(origin,chain['basis']):raise RuntimeError('repaired initialization states differ from actual recording or owner')
+  if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
+ def require_qualified_diagnostic(out,proof):
+  out=Path(out);decision=out/'diagnostic-result.json';summary_path=out/'raw-runs/diagnostic-ON/compiled-summary.json'
+diff --git a/verification/runners/g5/ur0/stream_transfer.mjs b/verification/runners/g5/ur0/stream_transfer.mjs
+index ded199e9..e2823c5b 100644
+--- a/verification/runners/g5/ur0/stream_transfer.mjs
++++ b/verification/runners/g5/ur0/stream_transfer.mjs
+@@ -7,6 +7,7 @@ export class SnapshotTransfer {
+   if(!this.#bytes)throw Error('no active snapshot');
+   if(!Number.isInteger(count)||count<1||count>32768)throw Error('snapshot chunk must be bounded');
+   if(offset!==this.#offset)throw Error('snapshot offset is not sequential');
++  if(offset>=this.#bytes.length)throw Error('snapshot exhausted');
+   const end=Math.min(offset+count,this.#bytes.length),bytes=Array.from(this.#bytes.subarray(offset,end));this.#offset=end;
+   return{offset,bytes};
+  }
+diff --git a/verification/runners/g5/ur0/worker.mjs b/verification/runners/g5/ur0/worker.mjs
+index daeb8cbc..36b48ac8 100644
+--- a/verification/runners/g5/ur0/worker.mjs
++++ b/verification/runners/g5/ur0/worker.mjs
+@@ -10,6 +10,8 @@ import {execFileSync} from 'node:child_process';
+ import {calibrate} from './fixture_plan.mjs';
+ import {copySnapshot} from './stream_transfer.mjs';
+ import {compareSnapshotPixels} from './pixel_oracle.mjs';
++import {copyCorrectnessBytes,createStageRecorder} from './correctness_transfer.mjs';
++import {validateLiveSubject} from './correctness_contract.mjs';
+ const here=path.dirname(fileURLToPath(import.meta.url)),repo=path.resolve(here,'../../../..');
+ const [sdkArg,outArg,mode='fixture',branch='masked_drag',toggle='ON']=process.argv.slice(2),sdkRoot=path.resolve(sdkArg),out=path.resolve(outArg);
+ await fs.mkdir(out,{recursive:true});
+@@ -48,7 +50,22 @@ try{
+  await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');
+  await page.waitForFunction(()=>!!window.ur0);stage({stage:'initializing'});
+  result.init=await page.evaluate(()=>ur0.init());await write('init.json',result.init);stage({stage:'setup'});
++ const correctnessStages=mode==='correctness'?createStageRecorder({domain:'node',clock:()=>String(process.hrtime.bigint()),emit:stage}):null;
++ const coldRelease=(channel,cancel)=>page.evaluate(({channel,cancel})=>channel==='snapshot'?ur0.snapshotRelease(cancel):ur0.pixelRelease(cancel),{channel,cancel});
++ const coldCopy=(channel,length,source_sha256,file)=>copyCorrectnessBytes({length,source_sha256,
++  pullBatch:offset=>page.evaluate(async({channel,length,offset})=>{
++   const {encodeChunkBatch}=await import('/ur0/correctness_transfer.mjs');
++   return encodeChunkBatch({length,offset,pull:(o,n)=>channel==='snapshot'?ur0.snapshotChunk(o,n):ur0.pixelChunk(o,n)});
++  },{channel,length,offset}),write:chunk=>file.writeFile(chunk),finish:()=>coldRelease(channel,false),cancel:()=>coldRelease(channel,true)});
++ const correctnessCapture=async label=>{
++  const row=await correctnessStages.run('snapshot acquire '+label,()=>page.evaluate(label=>ur0.checkpoint(label),label));
++  const file=await fs.open(path.join(out,label+'.axsnap'),'wx').catch(async error=>{await coldRelease('snapshot',true);throw error;});let copied;
++  try{copied=await correctnessStages.run('snapshot transfer '+label,()=>coldCopy('snapshot',row.snapshot.byte_length,row.snapshot.source_sha256,file));}finally{await file.close();}
++  row.snapshot={...row.snapshot,path:label+'.axsnap',sha256:copied.received_sha256,transport:'cold base64; sequential <=32768-byte units, <=8 units/262144 decoded bytes per evaluate; source/received SHA256 identical'};
++  await write(label+'.json',row);return row;
++ };
+  const capture=async label=>{
++  if(mode==='correctness')return correctnessCapture(label);
+   stage({stage:'cold-snapshot-'+label+'-begin'});const row=await page.evaluate(label=>ur0.checkpoint(label),label);
+   const file=await fs.open(path.join(out,label+'.axsnap'),'wx'),digest=createHash('sha256');
+   try{await copySnapshot({length:row.snapshot.byte_length,pull:(offset,count)=>page.evaluate(({offset,count})=>ur0.snapshotChunk(offset,count),{offset,count}),write:async chunk=>{await file.writeFile(chunk);digest.update(chunk);}});}
+@@ -65,18 +82,28 @@ try{
+   result.setup=await page.evaluate(kind=>ur0.correctnessSetup(kind,false),branch);arm('correctness-only',30000);
+   for(const pairedToggle of ['OFF','ON']){
+    if(pairedToggle==='ON'){
+-    await page.evaluate(()=>ur0.close());await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});
+-    await page.reload();await page.waitForFunction(()=>!!window.ur0);result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);
++    await correctnessStages.run('close OFF',()=>page.evaluate(()=>ur0.close()));
++    await correctnessStages.run('metrics override/reload',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:2,mobile:false});await page.reload();await page.waitForFunction(()=>!!window.ur0);});
++    await correctnessStages.run('ON init/setup',async()=>{result.paired_init=await page.evaluate(()=>ur0.init());await page.evaluate(kind=>ur0.correctnessSetup(kind,true),branch);});
+    }
+    for(let n=0;n<2;++n){
+     const label=pairedToggle.toLowerCase()+'-'+n,before=await capture(label+'-before');
+-    if(branch==='dpr_switch'||branch==='warm_miss_pressure'&&n===1){await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:n?4:2,mobile:false});await page.waitForTimeout(100);}
+-    const pixels=await page.evaluate(()=>ur0.correctnessNext()),file=await fs.open(path.join(out,label+'.candidate.rgba'),'wx');
+-    try{await copySnapshot({length:pixels.byte_length,pull:(offset,count)=>page.evaluate(({offset,count})=>ur0.pixelChunk(offset,count),{offset,count}),write:chunk=>file.writeFile(chunk)});}finally{await file.close();}
+-    await page.evaluate(()=>ur0.pixelRelease(false));const after=await capture(label+'-after');
++    if(branch==='dpr_switch'||branch==='warm_miss_pressure'&&n===1)await correctnessStages.run('metrics override step',async()=>{await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:650,deviceScaleFactor:n?4:2,mobile:false});await page.waitForTimeout(100);});
++    const pixels=await correctnessStages.run('correctnessNext/render/settle',()=>page.evaluate(()=>ur0.correctnessNext()));
++    const file=await fs.open(path.join(out,label+'.candidate.rgba'),'wx').catch(async error=>{await coldRelease('pixel',true);throw error;});let transferred;
++    try{transferred=await correctnessStages.run('pixel transfer',()=>coldCopy('pixel',pixels.byte_length,pixels.source_sha256,file));}finally{await file.close();}
++    const after=await capture(label+'-after');
+     const reference=pixels.reference==='before'?before:after,actual=await fs.readFile(path.join(out,label+'.candidate.rgba'));
+-    const compared=await compareSnapshotPixels({oracle,snapshot:path.join(out,reference.snapshot.path),request:pixels.request,actual,prefix:path.join(out,label+'.reference')});
+-    const entry={case_id:branch,toggle:pairedToggle,step:n,...pixels,comparison:compared,candidate_sha256:hash(actual),reference_snapshot_sha256:reference.snapshot.sha256};
++    let applicability=null;
++    if(branch==='lower_z_translucent_drag'&&n===0)applicability=await correctnessStages.run('native subject decode',async()=>{
++     const decode=row=>JSON.parse(execFileSync(oracle,[path.join(out,row.snapshot.path)],{encoding:'utf8',timeout:10000,maxBuffer:1024*1024}));
++     const nativeBefore=decode(before),nativeAfter=decode(after);
++     if(pixels.subject?.before.state.generation!==before.state.generation||pixels.subject?.after.state.generation!==after.state.generation)throw Error('public capture/reference generation changed');
++     const proof=validateLiveSubject({...pixels.subject,nativeBefore,nativeAfter,capturedBefore:before,capturedAfter:after});
++     await write(label+'.subject.json',{proof,nativeBefore,nativeAfter,before_snapshot_sha256:before.snapshot.sha256,after_snapshot_sha256:after.snapshot.sha256});return proof;
++    });
++    const compared=await correctnessStages.run('native reference/compare',()=>compareSnapshotPixels({oracle,snapshot:path.join(out,reference.snapshot.path),request:pixels.request,actual,prefix:path.join(out,label+'.reference')}));
++    const entry={case_id:branch,toggle:pairedToggle,step:n,...pixels,applicability,transport:transferred,comparison:compared,candidate_sha256:hash(actual),reference_snapshot_sha256:reference.snapshot.sha256};
+     result.correctness.push(entry);await write(label+'.correctness.json',entry);
+    }
+   }
+@@ -114,7 +141,7 @@ try{
+    if(!pressure.length)result.correctness_status='BLOCKED_EVIDENCE';
+   }
+  }
+- result.close=await page.evaluate(()=>ur0.close());if(!result.close.closed)throw Error('Runtime did not close');
++ result.close=correctnessStages?await correctnessStages.run('close final',()=>page.evaluate(()=>ur0.close())):await page.evaluate(()=>ur0.close());if(!result.close.closed)throw Error('Runtime did not close');
+  if(toggle!=='NORMAL'){
+   const stream=await fs.open(path.join(out,'raw-cleanup.jsonl'),'wx');let total=0,last;
+   try{for(let i=0;i<4096;++i){const p=await page.evaluate(()=>ur0.drain());last=p;total+=p.records.length;await stream.writeFile(p.records.map(r=>JSON.stringify(r)+'\n').join(''));if(p.finished)break;if(i===4095)throw Error('bounded cleanup drain exhausted');}}
+diff --git a/verification/tests/g5_ur0_initialization.test.mjs b/verification/tests/g5_ur0_initialization.test.mjs
+index 3b32a2bf..3ad8c784 100644
+--- a/verification/tests/g5_ur0_initialization.test.mjs
++++ b/verification/tests/g5_ur0_initialization.test.mjs
+@@ -103,3 +103,23 @@ test('NEXT-INTERACTION: delayed initial completion cannot confirm a later mutati
+ test('OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation',()=>{
+  const {proof}=analyze([],recording([]),{interactions:[]});assert.equal(proof.status,'NOT_OBSERVED');assert.equal(proof.accepted_raw_count,0);assert.equal(proof.qualified_initialization_count,0);assert.equal(proof.qualified_committed_count,0);
+ });
++const repairedFiles=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs'].map(n=>'verification/runners/g5/ur0/'+n);
++function repairedRun(){const run=modelRun();run.mode='correctness';run.source_before.files=Object.fromEntries(repairedFiles.map(n=>[n,{sha256:digest(fs.readFileSync(path.join(root,n)))}]));return run;}
++test('CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does',()=>{
++ const rows=prefix(),run=repairedRun();assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED','approved repaired worker profile missing');
++ for(const n of repairedFiles){for(const change of [r=>r.source_before.files[n].sha256='f'.repeat(64),r=>delete r.source_before.files[n]]){const bad=repairedRun();change(bad);assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING',n);}}
++ const bad=repairedRun();bad.mode='unsupported';assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING');
++});
++test('CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash',()=>{
++ for(const mode of ['fixture','main','realtime','legacy','setup']){
++  const rows=prefix(),run=repairedRun();run.mode=mode;assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED',mode);
++  run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';assert.equal(analyze(rows,recording(rows,run)).proof.status,'MISSING','primary mode must not use paired_init');
++ }
++});
++test('PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state',()=>{
++ const rows=prefix(),run=repairedRun();run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
++ const good=analyze(rows,recording(rows,run)).proof;assert.equal(good.status,'QUALIFIED');assert.equal(good.initialization_chains[0].initialization_basis.state_path,'worker-result.json/paired_init/state');
++ for(const change of [r=>r.init=structuredClone(r.paired_init),r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
++  const bad=structuredClone(run);change(bad);const p=analyze(rows,recording(rows,bad)).proof;assert.equal(p.status,'MISSING');assert.equal(p.unresolved_accepted_count,1);
++ }
++});
+diff --git a/verification/tests/g5_ur0_transfer.test.mjs b/verification/tests/g5_ur0_transfer.test.mjs
+index 60014287..58246523 100644
+--- a/verification/tests/g5_ur0_transfer.test.mjs
++++ b/verification/tests/g5_ur0_transfer.test.mjs
+@@ -14,3 +14,23 @@ test('snapshot transport rejects overlap, missing bytes, duplicate begin and ove
+  assert.throws(()=>transfer.begin(new Uint8Array(3)),/active/);assert.throws(()=>transfer.pull(0,32769),/bounded/);
+  transfer.pull(0,100);assert.throws(()=>transfer.pull(0,1),/offset/);assert.throws(()=>transfer.end(),/incomplete/);transfer.end(true);
+ });
++let cold={};try{cold=await import('../runners/g5/ur0/correctness_transfer.mjs');}catch(e){if(e.code!=='ERR_MODULE_NOT_FOUND')throw e;}
++const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
++test('BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA',async()=>{
++ assert.equal(typeof cold.copyCorrectnessBytes,'function');assert.equal(typeof cold.encodeChunkBatch,'function');
++ for(const length of [0,1,32768,262144,262145,3*1024*1024+17]){
++  const bytes=Uint8Array.from({length},(_,i)=>i%251),s=new api.SnapshotTransfer();s.begin(bytes);const parts=[];let done=0,cancel=0,maxBatch=0;
++  const result=await cold.copyCorrectnessBytes({length,source_sha256:sha(bytes),pullBatch:offset=>{const b=cold.encodeChunkBatch({length,offset,pull:(o,n)=>s.pull(o,n)});assert.ok(b.units.length<=8);assert.ok(b.units.every(u=>u.byte_length<=32768));maxBatch=Math.max(maxBatch,b.decoded_bytes);return b;},write:b=>parts.push(b),finish:()=>{s.end();++done;},cancel:()=>{s.end(true);++cancel;}});
++  assert.equal(result.received_sha256,sha(bytes));assert.equal(sha(Buffer.concat(parts)),sha(bytes));assert.ok(maxBatch<=262144);assert.equal(done,1);assert.equal(cancel,0);
++ }
++});
++test('BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once',async()=>{
++ assert.equal(typeof cold.copyCorrectnessBytes,'function');
++ for(const corrupt of [b=>b.offset++,b=>b.units[0].offset++,b=>b.units.push(b.units[0]),b=>b.decoded_bytes++,b=>b.units[0].base64='***',b=>b.units[0].base64='AB==',b=>b.units[0].byte_length++,b=>b.units=[],b=>b.next_offset--,b=>b.units=Array(9).fill(b.units[0])]){
++  const bytes=new Uint8Array(32769),s=new api.SnapshotTransfer();s.begin(bytes);let cancelled=0,finished=0;
++  await assert.rejects(cold.copyCorrectnessBytes({length:bytes.length,source_sha256:sha(bytes),pullBatch:offset=>{const b=cold.encodeChunkBatch({length:bytes.length,offset,pull:(o,n)=>s.pull(o,n)});corrupt(b);return b;},write:()=>{},finish:()=>++finished,cancel:()=>{s.end(true);++cancelled;}}));
++  assert.equal(cancelled,1);assert.equal(finished,0);
++ }
++ for(const why of ['hash','write']){let cancelled=0;const s=new api.SnapshotTransfer();s.begin(Uint8Array.of(1));await assert.rejects(cold.copyCorrectnessBytes({length:1,source_sha256:sha(Uint8Array.of(why==='hash'?2:1)),pullBatch:offset=>cold.encodeChunkBatch({length:1,offset,pull:(o,n)=>s.pull(o,n)}),write:()=>{if(why==='write')throw Error('disk');},finish:()=>s.end(),cancel:()=>{s.end(true);++cancelled;}}));assert.equal(cancelled,1);}
++ const exhausted=new api.SnapshotTransfer();exhausted.begin(Uint8Array.of(1));exhausted.pull(0,1);assert.throws(()=>exhausted.pull(1,1),/exhausted/);exhausted.end();
++});
+diff --git a/verification/tests/test_g5_ur0_repair_runner.py b/verification/tests/test_g5_ur0_repair_runner.py
+index 1b9a5d00..705e6fc5 100644
+--- a/verification/tests/test_g5_ur0_repair_runner.py
++++ b/verification/tests/test_g5_ur0_repair_runner.py
+@@ -1,4 +1,4 @@
+-import copy,hashlib,importlib.util,json,tempfile,unittest
++import copy,hashlib,importlib.util,json,subprocess,tempfile,unittest
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[2]
+ class RepairRunnerTest(unittest.TestCase):
+@@ -91,4 +91,61 @@ class RepairRunnerTest(unittest.TestCase):
+    with self.subTest(change=change),self.assertRaises(RuntimeError):m.require_canonical_chain(s)
+   legacy=self.summary();legacy['canonical_chain']['schema']='g5-ur0b-canonical-chain-proof-v2'
+   with self.assertRaises(RuntimeError):m.require_canonical_chain(legacy)
++ def repaired_v2(self):
++  s=self.mixed_v2();origin=s['canonical_chain']['initialization_chains'][0]['initialization_basis']
++  names=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs']
++  origin['source_profile']={'verification/runners/g5/ur0/'+n:hashlib.sha256((ROOT/'verification/runners/g5/ur0'/n).read_bytes()).hexdigest() for n in names}
++  origin['recording_mode']='correctness';origin['state_path']='worker-result.json/paired_init/state'
++  foreign=copy.deepcopy(origin['public_state']);foreign['target']['viewId']='9'
++  origin['recorded_states']=[{'state_path':'worker-result.json/init/state','public_state':foreign},{'state_path':origin['state_path'],'public_state':copy.deepcopy(origin['public_state'])}]
++  return s
++ def test_repaired_exact_profile_and_unique_paired_owner_are_accepted(self):
++  m=self.module();m.require_canonical_chain(self.repaired_v2(),require_positive=True)
++ def test_repaired_worker_keeps_primary_init_only_profile_qualification(self):
++  m=self.module()
++  for mode in ['fixture','main','realtime','legacy','setup']:
++   s=self.repaired_v2();o=s['canonical_chain']['initialization_chains'][0]['initialization_basis'];o.update(recording_mode=mode,state_path='worker-result.json/init/state');o['recorded_states']=[{'state_path':o['state_path'],'public_state':copy.deepcopy(o['public_state'])}]
++   m.require_canonical_chain(s,require_positive=True)
++ def test_repaired_unknown_partial_helper_or_foreign_ambiguous_owner_are_rejected(self):
++  m=self.module();base=self.repaired_v2()
++  changes=[lambda o:o.update(recording_mode='realtime'),lambda o:o.update(state_path='worker-result.json/other/state'),lambda o:o['recorded_states'].append(copy.deepcopy(o['recorded_states'][1])),lambda o:o['recorded_states'][1]['public_state']['target'].update(viewId='2'),lambda o:o.pop('recorded_states')]
++  for name in base['canonical_chain']['initialization_chains'][0]['initialization_basis']['source_profile']:
++   changes.extend([lambda o,n=name:o['source_profile'].update({n:'f'*64}),lambda o,n=name:o['source_profile'].pop(n)])
++  for change in changes:
++   s=copy.deepcopy(base);change(s['canonical_chain']['initialization_chains'][0]['initialization_basis'])
++   with self.subTest(change=change),self.assertRaises(RuntimeError):m.require_canonical_chain(s)
++ def test_actual_js_producer_and_python_reader_share_exact_profile_and_bound_recorded_states(self):
++  script="""
++import fs from 'node:fs';import {createHash} from 'node:crypto';
++import {decodeTrace} from './verification/runners/g5/ur0/decode_trace.mjs';
++import {canonicalChainProof} from './verification/runners/g5/ur0/canonical_chain.mjs';
++import {repairedInitializationProfile} from './verification/runners/g5/ur0/initialization_basis.mjs';
++const inputs=JSON.parse(fs.readFileSync('.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json'));
++const dir=inputs.inputs.find(r=>r.run_id==='realtime-60').input_directory;
++const run=JSON.parse(fs.readFileSync(dir+'/worker-result.json'));run.mode='correctness';
++run.source_before.files=Object.fromEntries(Object.entries(repairedInitializationProfile).map(([k,v])=>[k,{sha256:v}]));
++run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
++const raw=fs.readFileSync(dir+'/raw-trace.jsonl','utf8').trim().split('\\n').map(JSON.parse).filter(r=>BigInt(r.seq)<=55n);
++const text={raw_trace_jsonl:raw.map(r=>JSON.stringify(r)+'\\n').join(''),worker_result_json:JSON.stringify(run),run_inputs_json:fs.readFileSync(dir+'/run-inputs.json','utf8')};
++const h=x=>createHash('sha256').update(x).digest('hex');const input_refs={raw_trace_sha256:h(text.raw_trace_jsonl),worker_result_sha256:h(text.worker_result_json),run_inputs_sha256:h(text.run_inputs_json)};
++const recording={...text,input_refs,run};const decoded=decodeTrace(raw,{critical:0,statistical:0},recording);
++console.log(JSON.stringify({recording,proof:canonicalChainProof(raw,decoded,null,recording)}));
++"""
++  value=json.loads(subprocess.check_output(['node','--input-type=module','-e',script],cwd=ROOT,text=True));m=self.module()
++  self.assertEqual(value['proof']['status'],'QUALIFIED');origin=value['proof']['initialization_chains'][0]['initialization_basis']
++  self.assertEqual(origin['source_profile'],m.REPAIRED_INITIALIZATION_PROFILE)
++  self.assertEqual(origin['state_path'],'worker-result.json/paired_init/state')
++  summary={'critical_loss':0,'identity_errors':[],'canonical_chain':value['proof']};m.require_canonical_chain(summary,require_metrics=False)
++  with tempfile.TemporaryDirectory() as tmp:
++   directory=Path(tmp);recording=value['recording']
++   for name,key in [('raw-trace.jsonl','raw_trace_jsonl'),('worker-result.json','worker_result_json'),('run-inputs.json','run_inputs_json')]:(directory/name).write_text(recording[key])
++   summary['analysis']={'mode':'WORKER_COMPILE','input_source_tree_sha256':recording['run']['source_before']['source_tree_sha256'],**recording['input_refs'],'compiler_files':{n:hashlib.sha256((m.HERE/n).read_bytes()).hexdigest() for n in ['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py','initialization_basis.mjs']}}
++   for key,name in [('verification_spec_ref','verification-spec.json'),('completion_contract_ref','completion-contract.json')]:
++    p=ROOT/'.aegis/verification/G5-UR0b-initialization-v1'/name;summary['analysis'][key]={'path':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
++   def bind():
++    (directory/'canonical-chain.json').write_text(json.dumps(summary['canonical_chain']));summary['canonical_chain_ref']={'path':'canonical-chain.json','sha256':hashlib.sha256((directory/'canonical-chain.json').read_bytes()).hexdigest()}
++   bind();proof={'source_tree_sha256':summary['analysis']['input_source_tree_sha256']};m.require_bound_compilation(directory,summary,proof)
++   bad=copy.deepcopy(recording['run']);bad['paired_init']['state']['target']['viewId']='77';(directory/'worker-result.json').write_text(json.dumps(bad));changed=hashlib.sha256((directory/'worker-result.json').read_bytes()).hexdigest()
++   summary['analysis']['worker_result_sha256']=changed;origin['input_refs']['worker_result_sha256']=changed;bind()
++   with self.assertRaisesRegex(RuntimeError,'states differ'):m.require_bound_compilation(directory,summary,proof)
+ if __name__=='__main__':unittest.main()

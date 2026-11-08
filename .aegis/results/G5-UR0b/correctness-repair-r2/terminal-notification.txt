@@ -1,0 +1,20 @@
+G5-UR0b-correctness-repair-r2 已实际完成授权的harness源码修复和离线证据再验证，终态为 FROZEN_VERIFICATION_FAILURE，原因是 mandatory Python 中一个未修改的 r4 正向复用测试发生契约漂移。不是又停在P31提案，也不是等待确认；请保留本次已完成实现并接续这个具体测试范围问题。
+
+完成内容：actual selection HUD（含hand保留selection、7px/38px和live固定y260±2）、独立固定24/center-snap transform、before/live/after public/native snapshot身份/顺序/几何/Up/commit核对；correctness专用32KiB单位、每批最多8个/256KiB decoded的base64传输及源/收端SHA256和finish/cancel；coarse render/settle/readback/hash/transfer/snapshot/native/reload/close阶段标记；JS/Python共同唯一exact repaired worker/consumer/helper tuple；严格unique paired-init owner选择，主矩阵等其他mode维持init-only。旧worker/consumer profile仍有效。非correctness执行分支、primary capture、server/shim/clock/raw trace，以及30s arm placement和90s外guard静态核验未改。产品Runtime/SDK/consumer/collector均未改。
+
+本次精确身份：
+HEAD仍df214581c1c80c2d546939271f3db2dc0e77a38b，dirty。full-source b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd；12个改变的源码/测试路径均在13-path allowance内。
+package .aegis/packages/G5-UR0b-correctness-repair-r2/package.json SHA256 769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736。
+result .aegis/results/G5-UR0b/correctness-repair-r2/result.json SHA256 926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4。
+bundle /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd/correctness-repair-r2，manifest SHA256 484abb287d46d4775e8ea0bfea6ab099fc9c39e9bb912d380f2d1c67f2b13a7d，188 payload文件已逐一rehash（result/manifest envelope另绑定，避免循环）。
+repaired worker SHA256 3e3d5e7946900d053b8561720354c7bc8c5a7d852d0ed5b509fa56bda1a5b735；完整literal tuple在 repaired-profile.json、JS和Python中一致。
+
+验证：完整Node 114/114、boundary120通过。完整Python运行60项，59通过、1 error：test_g5_ur0_remaining_runner.RemainingRunnerTest.test_explicit_accepted_reuse_keeps_old_modes_and_sources。所有12个冻结oracle组已有离线证据；17份完整immutable recording全部独立重编译，canonical-chain.json、decoded.json、metrics.json、external-metrics.json对accepted baselines逐字节相等，summary除explicit compiler provenance外完全相等，snapshots/outcomes/source/artifacts不变。OFFLINE→fresh尝试被拒绝。见reverification.json、oracle-coverage.json、validation.json。
+
+像素原始RED保留：actual OFF1原比较16112差异已复现；按冻结独立public HUD recipe复算后OFF0/1均0残余（原OFF0为2463）。原FAILED/timeout124不改；这只是file-only诊断，原live public capture缺失，不追认旧worker通过或配对通过。
+
+唯一残留的mandatory失败：test_g5_ur0_remaining_runner.py 的 test_explicit_accepted_reuse_keeps_old_modes_and_sources 直接调用 accepted_reuse(r4 frozen packet)，要求当前compiler仍等于旧tuple；原packet compiler_file_sha256里仅 initialization_basis.mjs 与当前发生授权内变化。remaining_runner.py 因 current compiler differs from accepted reuse compiler 正确fail closed。该reader和旧reuse packet不应被放宽或改写。测试文件不在13-path源码allowance内，所以没有越界改它，也没有skip/伪造PASS。frozen-failure.json附该test/reader hashes和唯一compiler差异；reuse-assessment.json说明17份原观测可供独立重新接受，但当前compiler复用权限尚未更新。
+
+请控制面分类此测试契约漂移并在最小修订里授权 verification/tests/test_g5_ur0_remaining_runner.py 的针对性修正，保留“改变compiler须拒绝旧packet”的行为、原记录mode/source/receipt checks。之后独立绑定当前compiler与17份不变记录的reuse acceptance，供未来新continuation包使用。无需重新做已完成harness实现或丢弃cohort。现r2 result/bundle冻结保留；若需新task包/例外由控制面决定，producer不自行扩scope。
+
+本轮browser sampling0、build0、valid native qualification probes0；mandatory Python包括2次明确获准malformed-snapshot native checks并已准确记录。没有新window、commit/push、UR0c/UR1。历史仍33 starts /1251秒且旧窗口CLOSED。prepared future position仅列6 correctness+30main，未授权且未启动。无性能/平台/P34 PASS。按用户通知约定现主动回传，请从本次具体终态接续，无需用户转述。

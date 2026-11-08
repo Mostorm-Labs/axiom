@@ -1,0 +1,39 @@
+{
+  "status": "PREIMPLEMENTATION_CHECKS_ONLY",
+  "controls": [
+    {
+      "command": "node --test verification/tests/g5_ur0_initialization.test.mjs",
+      "exit_code": 0,
+      "tests": 13,
+      "failures": 0,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r1/initialization-control-tests.log",
+        "sha256": "10d24d7298f36f5a98fde7d29a1e73f39a0a796d358cdde1385f6161eafca476"
+      }
+    },
+    {
+      "command": "python3.12 -m unittest discover -s verification/tests -p test_g5_ur0_repair_runner.py",
+      "exit_code": 0,
+      "tests": 11,
+      "failures": 0,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r1/reader-control-tests.log",
+        "sha256": "395f4ba177429a162b2f04a7e5dd660a39233158ce91c848b5b64fb547fbd0ed"
+      }
+    }
+  ],
+  "profile_compatibility_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/profile-preflight.json",
+    "sha256": "fe7e93dcf2153271d3ea74eb6df06e83292f79dcd443403b0975c8a829c92f58"
+  },
+  "mandatory_full_suites": "NOT_RUN_IN_THIS_CONTINUATION_PREIMPLEMENTATION_SCOPE_BLOCKER",
+  "mandatory_native_malformed_checks": {
+    "existing_checks_in_full_python_suite": 2,
+    "this_continuation_executed": 0,
+    "checkpoint_commit_validation_before_this_continuation": 2,
+    "checkpoint_context": "The preceding commit/push turn ran 56 Python tests, including these two allowed checks. Not a new repair closure run."
+  },
+  "new_native_qualification_probes": 0,
+  "new_browser_sampling_workers": 0,
+  "new_builds": 0
+}

@@ -1,0 +1,154 @@
+{
+  "status": "FROZEN_ORACLE_GROUPS_COVERED_OFFLINE_MANDATORY_SUITE_STILL_BLOCKED",
+  "groups": [
+    {
+      "id": "REAL-OLD-HUD-RED",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "REAL-OLD-HUD-RED: actual OFF1 remains FAILED with 16112 differences until retained public selection is handled"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      },
+      "actual_old_RED_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/red-precondition.json",
+        "sha256": "26dc3d19a93d12d93214d78177bc1860dbd6b1ccc38cc48428ee37d747bad921"
+      }
+    },
+    {
+      "id": "RETAINED-SELECTION",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "RETAINED-SELECTION: hand mode does not clear the selection; malformed bounds fail closed"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "LIVE-SUBJECT",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "LIVE-SUBJECT: expected transform is independently fixed by before bounds and rectangle center",
+        "LIVE-SUBJECT: opaque snapshot capture state must agree with the driver public subject",
+        "LIVE-SUBJECT: a transform-only commit cannot also change the stroke body or its masks"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "HUD-SUPPORT",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "HUD-SUPPORT: fixed live translation uses snapped expectation, guide exists only in lower-z live step"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "BODY-MUTANTS",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "BODY-MUTANTS: body/order/opacity/wrong-transform/mask leakage outside HUD and AA still fail"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "ACTUAL-OFF0-DIAGNOSTIC",
+      "status": "SATISFIED_OFFLINE",
+      "evidence_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/pixel-diagnostic.json",
+        "sha256": "5bfd09b84d82e90f14d2d517f51a673a3f1af1f09cde8684066fad86f7df1cb2"
+      }
+    },
+    {
+      "id": "BOUNDED-TRANSFER",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "BOUNDED-TRANSFER: cold batches roundtrip zero, unit, batch boundary and multi-MiB with source and received SHA",
+        "BOUNDED-TRANSFER: corrupt offsets, encoding, count, batch bounds, hash and interrupted writes cancel ownership exactly once"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "STAGE-TERMINALS",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "STAGE-TERMINALS: pending await retains exact last-started stage with paired monotonic completed spans"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      },
+      "original_timers_and_primary_path_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/source-scope-audit.json",
+        "sha256": "ed3eb84df24fdc4174d4435710550d6f2b2d6ccbbd16a2b2bb5461bf2684b99c"
+      },
+      "actual_new_browser_timeout_diagnosis": "NOT_OBSERVED_NO_NEW_BROWSER_RUN"
+    },
+    {
+      "id": "CREATION-PROFILES",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does",
+        "CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      },
+      "exact_profile_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/repaired-profile.json",
+        "sha256": "5224f8a9c24e462f5c5196e69cd6828477ea88fbc11dc20c8cc96da90424dc24"
+      },
+      "python_coherence_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/profile-coherence.log",
+        "sha256": "7cd44cec83fff6a97b20ec63049981406b5776a2d2510d3bd6464871e3a40548"
+      }
+    },
+    {
+      "id": "PAIRED-INIT-OWNERS",
+      "status": "SATISFIED_OFFLINE",
+      "passed_tests": [
+        "PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state"
+      ],
+      "test_log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/node.log",
+        "sha256": "eac2cd5dc47a99569e7590d6933b3c8d5ecd626263b770af837f92d483beb449"
+      }
+    },
+    {
+      "id": "OLD17-INVARIANCE",
+      "status": "SATISFIED_OFFLINE",
+      "evidence_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+        "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+      }
+    },
+    {
+      "id": "FROZEN-SCOPE",
+      "status": "SATISFIED_OFFLINE",
+      "evidence_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/source-scope-audit.json",
+        "sha256": "ed3eb84df24fdc4174d4435710550d6f2b2d6ccbbd16a2b2bb5461bf2684b99c"
+      }
+    }
+  ],
+  "mandatory_suite_failure_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json",
+    "sha256": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180"
+  },
+  "no_performance_or_platform_qualification": true
+}

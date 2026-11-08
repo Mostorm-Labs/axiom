@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "package_sha256": "1198fb988e286eda097f4016258291ac5d4e667eaf0e172f7d7482ce285660af",
+  "source_sha256": "d6acff75f1944d430551d692c958e41ed3a0c9ca35978e168585ac88bca7b0a1",
+  "approved_control_delta": [
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/authority.lock.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/execution-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/implementation-context.md",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/package.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/verification.lock.json"
+  ],
+  "bindings": {
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/authority.lock.json": "c06fc1137ae096e6ed0110701697fbcc7f0bddd657773fca3a01ee49b63f3cd3",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/verification.lock.json": "01b5647a004524dc4a06e9e3b3138c13aa12ca295d98accb175bedee7d3602af",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/execution-contract.json": "23d78407db83399e2ec2dfc420bf4c44761fab16f24e9c46dbc1cda9d2e8b3f0",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/implementation-context.md": "54ef95ea7fba2e57ef416d34cb196d2d76c91cddc5a2a0d5b94c62d2ac121a96",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/evidence-contract.json": "534c154169c8d9c3f27e48d7a2063afc5dff7f5635b6a42903b39f1a7453803f",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736",
+    ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json": "350aac6898194c858a3fbc3f57ba49cb3d8fc15ec7e3d3bda37cdd9185be28fb",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/verification.lock.json": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57",
+    ".aegis/results/G5-UR0b/correctness-repair-r2/result.json": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4",
+    ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180",
+    ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+  },
+  "scope": [
+    "verification/tests/test_g5_ur0_remaining_runner.py"
+  ],
+  "new_workers": 0
+}

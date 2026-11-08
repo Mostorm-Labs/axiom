@@ -1,0 +1,17 @@
+{
+  "type": "ownership_handoff",
+  "from_owner": "aegis-implementation",
+  "to": "aegis",
+  "reason": "earlier_untrusted_layer",
+  "requested_stage": "P31",
+  "earliest_untrusted_layer": "Required regression test contract outside the frozen source allowance",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "suggested_next_stage": "Classify test contract drift and authorize its narrow correction",
+  "evidence_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json",
+    "sha256": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180"
+  },
+  "requested_action": "Classify this stale positive test and authorize its narrowly scoped update; independently reaccept the byte-invariant recordings under the new compiler in a future continuation package. Keep exact compiler/input/profile checks and old windows closed.",
+  "preserve_implementation": true,
+  "repeat_already_satisfied_repair_oracles": false
+}

@@ -1,0 +1,429 @@
+{
+  "status": "OFFLINE_HUD_DIAGNOSTIC_COMPLETE",
+  "rows": [
+    {
+      "step": 0,
+      "analysis": "OFFLINE_DIAGNOSTIC_NOT_FRESH_OR_PAIRED",
+      "original": {
+        "status": "FAILED",
+        "compared_pixels": 1334815,
+        "aa_boundary_pixels": 46033,
+        "hud_excluded_pixels": 219152,
+        "interior_mismatched_pixels": 2463,
+        "max_interior_delta": 163,
+        "witnesses": [
+          {
+            "pixel": 140047,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 140048,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141644,
+            "actual": [
+              194,
+              192,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141645,
+            "actual": [
+              145,
+              142,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141646,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141647,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141648,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141649,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "new_request": {
+        "width": 1600,
+        "height": 1000,
+        "logical_width": 800,
+        "logical_height": 500,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "hud_bounds": [
+          [
+            76,
+            70.0748062133789,
+            724,
+            428.9136657714844
+          ],
+          [
+            100,
+            80.58057022094727,
+            748,
+            439.41942977905273
+          ]
+        ],
+        "case_id": "lower_z_translucent_drag",
+        "step": 0,
+        "hud_guide_y": 260
+      },
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1328776,
+        "aa_boundary_pixels": 45653,
+        "hud_excluded_pixels": 225571,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "expected_transform": [
+        1,
+        0,
+        0,
+        1,
+        24,
+        10.50576400756836
+      ],
+      "residual_coordinates": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/off-0.residual-coordinates.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "count": 0
+      },
+      "inputs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0.correctness.json",
+          "sha256": "c3e039478721a4ddcdd82493a0d8f0407f3cb6dff1f5e153cf1dcd899b1e1b14"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-before.json",
+          "sha256": "c946d467c112c8db0371ec21a0e7ec3aa18a20668b336fd6ff4cbfc10c1f6ded"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-after.json",
+          "sha256": "d690b8e580fd0250c0658ef376192be2d564e79f6479edd3ffe4470469f1db44"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0.candidate.rgba",
+          "sha256": "00e6a9ae775217edb2bdb8cda62c01eb69185a7b047199e7f1ba93973441008e"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0.reference.rgba",
+          "sha256": "62269f89437c73a2d726535e76dfb529e68b9dc8d66052abff65dfd6f2afe7f0"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0.reference.edge",
+          "sha256": "0884011e0697c00e0b68df46b8c7c6aafedfb559b63cb69dc0958c059428d36e"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-after.axsnap",
+          "sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c"
+        }
+      ],
+      "original_verdict_preserved": true
+    },
+    {
+      "step": 1,
+      "analysis": "OFFLINE_DIAGNOSTIC_NOT_FRESH_OR_PAIRED",
+      "original": {
+        "status": "FAILED",
+        "compared_pixels": 1551883,
+        "aa_boundary_pixels": 48117,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 16112,
+        "max_interior_delta": 213,
+        "witnesses": [
+          {
+            "pixel": 254598,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254599,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254600,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254601,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254602,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254603,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254604,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254605,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "new_request": {
+        "width": 1600,
+        "height": 1000,
+        "logical_width": 800,
+        "logical_height": 500,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "hud_bounds": [
+          [
+            100,
+            80.58057403564453,
+            748,
+            439.41943359375
+          ]
+        ],
+        "case_id": "lower_z_translucent_drag",
+        "step": 1
+      },
+      "comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1436374,
+        "aa_boundary_pixels": 47666,
+        "hud_excluded_pixels": 115960,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "residual_coordinates": {
+        "path": ".aegis/results/G5-UR0b/correctness-repair-r2/off-1.residual-coordinates.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "count": 0
+      },
+      "inputs": [
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1.correctness.json",
+          "sha256": "c5eb079d288ede092c371a7842b59d7a1696a7a3860653165f57cf1f04e73b3d"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1-before.json",
+          "sha256": "7375a058221c0b6ca559af50460f96d58ce378d413b6ce00ddb6c9188732fa11"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1-after.json",
+          "sha256": "29b5759d62f1ea4a4224ac1ce69b670ab68083902d99ff165907b3a7d578f71f"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1.candidate.rgba",
+          "sha256": "7089f028d05a8a12c1f6b63cbbe897e6518f6d9964eb7926102cea80616f3822"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1.reference.rgba",
+          "sha256": "62269f89437c73a2d726535e76dfb529e68b9dc8d66052abff65dfd6f2afe7f0"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1.reference.edge",
+          "sha256": "0884011e0697c00e0b68df46b8c7c6aafedfb559b63cb69dc0958c059428d36e"
+        },
+        {
+          "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/correctness-lower_z_translucent_drag/off-1-after.axsnap",
+          "sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c"
+        }
+      ],
+      "original_verdict_preserved": true
+    }
+  ],
+  "browser_runs": 0,
+  "native_reference_reruns": 0,
+  "original_live_public_capture": "MISSING_IN_ORIGINAL_ARCHIVE; no retrospective full live-subject qualification",
+  "AA_and_channel_thresholds": "UNCHANGED",
+  "candidate_independent_HUD": true
+}

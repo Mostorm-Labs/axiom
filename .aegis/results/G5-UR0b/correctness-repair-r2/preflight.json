@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "package_sha256": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736",
+  "source_sha256": "8b7997b11d1f4e4c6dfd1b99e5832839ac0c15a9443099565c0e1dca7c091a1b",
+  "approved_control_delta": [
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/authority.lock.json",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/evidence-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/execution-contract.json",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/implementation-context.md",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/scope-amendment.json",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/verification.lock.json"
+  ],
+  "bindings": {
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/authority.lock.json": "d8c0f0c82f348706cec232aaf01a540426683753a9113ef9989e3f0134dbcb1a",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/verification.lock.json": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/execution-contract.json": "22f6456726c53ac579d3fcc2396e631f97356da73e123b44174ce74aba8250a2",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/implementation-context.md": "5fc5e4d116c57bf3c49aa0bf94b9d31f402889e8fcdddce04bb914d7cbae1af1",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/evidence-contract.json": "75790ff806099ca4471a7abb8c33a350d7bad946c69f9b6b43b0374571afb4a7",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/activation.json": "abddf7f98ed410adc50cd1a7676da413428583e21d0d0b6d5ca7cd4f9426bcd4",
+    ".aegis/results/G5-UR0b/control-resume-after-df214581/position.json": "c6c9e140908d63632784b7be739cf690f870463ce99e2a6cbc4152d8a1871cd5",
+    ".aegis/packages/G5-UR0b-correctness-repair-r2/scope-amendment.json": "6746b75588937fec22865dc97cf71a03cd0d37732cc632dc327867605b969846",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/oracle-cases.json": "96d392b4dca7e204d4901b5646e89812d27ac96ff7e14b97e6a2de46a3131712",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/evidence-inputs.json": "77b0c611ed9a1d0134b7db04b0c11bd6ffebda329653312727770f0f8a1ae268",
+    ".aegis/packages/G5-UR0b-correctness-repair-r1/package.json": "5ef9e7cd0de640376c7f03537319867a729a1a8a12042db4f67b796cb21c8ff3",
+    ".aegis/results/G5-UR0b/correctness-repair-r1/result.json": "0fd519be6caa21417acd3472b05161d8edd5c194997bbde15c2b18e689a056d4",
+    ".aegis/results/G5-UR0b/correctness-repair-r1/profile-preflight.json": "fe7e93dcf2153271d3ea74eb6df06e83292f79dcd443403b0975c8a829c92f58"
+  },
+  "design": "JS/Python exact profiles repaired together; no unresolved semantic decision or scope conflict",
+  "sampling_workers": 0
+}

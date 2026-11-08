@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r5",
+  "status": "AUTHORIZED_BOUNDED_REVERIFICATION_CONTINUATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+    "accepted_source_sha256": "118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b",
+    "completed_through": "Independently accepted offline r2 harness/P36 test repair and17 exact recorded prerequisites under current compiler.",
+    "next_action": "Materialize new P31, implement/test the new-window runner in the two allowed paths, bind its mechanism/artifacts, then run6correctness and conditionally30main until terminal result."
+  },
+  "authorization": {
+    "continuation_request_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/continuation-request.json",
+      "sha256": "151aad4d4625a671c4132fc614416c9536e76d74c7f23722b2677ef29b93e501",
+      "identity_kind": "local-content-addressed"
+    },
+    "commit_push": false
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "UR0b",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "234a37182b1562af99009d00d742b7cfee27fafd2adf0352ea761502c41e4b9d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "1e18dd278837d9b583af840b97205aea57ffca39df1db9b10c6c5e50934d8fb3"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "09476b7951a7bd1aecafec221b4cf9198f330cb14b2e95775354f484240d6e94"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3cab88e2ca471af077ec5652a5bc0f0072c81836610b5eb2e16fa332d699d6e5"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "c2e95296af00977028cf836dd686d390d1099fa619178782c13c87608dfc5028"
+  },
+  "run_plan_ref": {
+    "path": "run-plan.json",
+    "sha256": "8506692699863cfaed74a5d4dd69feca2a3afb91e7192ebc88cee63c46e41632"
+  }
+}

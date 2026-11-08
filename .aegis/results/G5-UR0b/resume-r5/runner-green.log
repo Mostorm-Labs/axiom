@@ -1,0 +1,69 @@
+EE..EE.......
+======================================================================
+ERROR: test_actual_elapsed_overrun_is_charged_honestly_without_clipping (test_g5_ur0_reverified_remaining_runner.ReverifiedRemainingTest.test_actual_elapsed_overrun_is_charged_honestly_without_clipping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_reverified_remaining_runner.py", line 82, in test_actual_elapsed_overrun_is_charged_honestly_without_clipping
+    with m.Window(state,Path(tmp)/'out','proof') as w:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 125, in __init__
+    self.state=Path(state);self.out=Path(out).resolve();self.rows=copy.deepcopy(plan() if rows is None else rows);validate_plan(self.rows)
+                                                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 34, in validate_plan
+    need(prior['status']==row['predecessor_status'] and prior.get('admission_status')==row['predecessor_admission_status'],'predecessor row identity changed')
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 19, in need
+    if not condition:raise RuntimeError(message)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: predecessor row identity changed
+
+======================================================================
+ERROR: test_claim_rejects_concurrency_restart_relocation_and_unknown_or_reordered_rows (test_g5_ur0_reverified_remaining_runner.ReverifiedRemainingTest.test_claim_rejects_concurrency_restart_relocation_and_unknown_or_reordered_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_reverified_remaining_runner.py", line 91, in test_claim_rejects_concurrency_restart_relocation_and_unknown_or_reordered_rows
+    with m.Window(state,out,'proof') as w:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 125, in __init__
+    self.state=Path(state);self.out=Path(out).resolve();self.rows=copy.deepcopy(plan() if rows is None else rows);validate_plan(self.rows)
+                                                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 34, in validate_plan
+    need(prior['status']==row['predecessor_status'] and prior.get('admission_status')==row['predecessor_admission_status'],'predecessor row identity changed')
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 19, in need
+    if not condition:raise RuntimeError(message)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: predecessor row identity changed
+
+======================================================================
+ERROR: test_durable_full_reservation_and_unknown_interruption_charge_before_any_new_start (test_g5_ur0_reverified_remaining_runner.ReverifiedRemainingTest.test_durable_full_reservation_and_unknown_interruption_charge_before_any_new_start)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_reverified_remaining_runner.py", line 74, in test_durable_full_reservation_and_unknown_interruption_charge_before_any_new_start
+    with m.Window(state,Path(tmp)/'out','proof') as w:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 125, in __init__
+    self.state=Path(state);self.out=Path(out).resolve();self.rows=copy.deepcopy(plan() if rows is None else rows);validate_plan(self.rows)
+                                                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 34, in validate_plan
+    need(prior['status']==row['predecessor_status'] and prior.get('admission_status')==row['predecessor_admission_status'],'predecessor row identity changed')
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 19, in need
+    if not condition:raise RuntimeError(message)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: predecessor row identity changed
+
+======================================================================
+ERROR: test_exact36_order_and_limits_do_not_repeat_RT_or_expand_allowance (test_g5_ur0_reverified_remaining_runner.ReverifiedRemainingTest.test_exact36_order_and_limits_do_not_repeat_RT_or_expand_allowance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_reverified_remaining_runner.py", line 19, in test_exact36_order_and_limits_do_not_repeat_RT_or_expand_allowance
+    m.validate_plan(rows)
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 34, in validate_plan
+    need(prior['status']==row['predecessor_status'] and prior.get('admission_status')==row['predecessor_admission_status'],'predecessor row identity changed')
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/reverified_remaining_runner.py", line 19, in need
+    if not condition:raise RuntimeError(message)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: predecessor row identity changed
+
+----------------------------------------------------------------------
+Ran 13 tests in 2.278s
+
+FAILED (errors=4)

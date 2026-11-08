@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "inherited_verification_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/verification.lock.json",
+    "sha256": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57",
+    "identity_kind": "local-content-addressed"
+  },
+  "inherited_oracles_unchanged": true,
+  "obligations": [
+    {
+      "requirement": "Historical reuse success is conditional on the pinned compiler; current mismatch rejects.",
+      "oracle": "Exercise accepted_reuse in explicitly isolated historical matching compiler context and in actual mismatching current context.",
+      "acceptance": "Historical positive retains15 OFFLINE records/original source/counts/artifacts/receipt checks; current mismatching compiler raises the existing exact rejection. No skip, expectedFailure or global success mock.",
+      "evidence_required": [
+        "Focused old test RED",
+        "Repaired positive/negative tests",
+        "Full Python regression",
+        "Exact unchanged compiler/harness/r2 evidence refs"
+      ]
+    }
+  ]
+}

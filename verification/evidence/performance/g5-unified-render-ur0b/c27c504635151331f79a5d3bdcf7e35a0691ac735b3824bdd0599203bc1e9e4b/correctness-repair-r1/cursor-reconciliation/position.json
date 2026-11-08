@@ -1,0 +1,33 @@
+{
+  "schema": "ur0b-harness-resume-position-v1",
+  "status": "DESCENDANT_CURSOR_RECONCILED",
+  "primary_owner": "aegis-implementation",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "accepted_predecessor_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "observed_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "local_origin_equal": true,
+  "dirty_at_review": false,
+  "accepted_predecessor_source_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+  "current_source_sha256": "2f2bb538dd7c4e9d3e5fa93822678c6099b3c77f4c064dc5f40c3f05528bff5b",
+  "source_delta": [
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/activation.json",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/evidence-inputs.json",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/oracle-cases.json",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/prepare-design.py",
+    ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json"
+  ],
+  "source_delta_classification": "Only approved additive P20 control files; all predecessor Runtime/SDK/collector/runner bytes unchanged",
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452"
+  },
+  "next_action": "Materialize .aegis/packages/G5-UR0b-correctness-repair-r1 and execute the authorized offline harness repair until terminal return, without another approval checkpoint",
+  "scope_or_evidence_change": false,
+  "new_sampling_workers_authorized": 0,
+  "prior_sampling_starts": 33,
+  "prior_sampling_seconds": 1251,
+  "notify_control_at_terminal": true,
+  "no_commit_push_authorized_by_this_continuation": true
+}

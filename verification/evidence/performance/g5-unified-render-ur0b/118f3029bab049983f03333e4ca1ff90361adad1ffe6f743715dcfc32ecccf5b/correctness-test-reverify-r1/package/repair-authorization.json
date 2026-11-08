@@ -1,0 +1,26 @@
+{
+  "schema": "aegis-p35-test-defect-v1",
+  "status": "IMPLEMENTATION_OWNED_TEST_FIXTURE_REPAIR_AUTHORIZED",
+  "primary_owner": "aegis-gate-review",
+  "stage": "P35/P36",
+  "subject_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+    "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4",
+    "identity_kind": "local-content-addressed"
+  },
+  "failure_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/frozen-failure.json",
+    "sha256": "874451c8c661f780da5dcd33e1784c365948ec8712cc6f71dab66a641785a180",
+    "identity_kind": "local-content-addressed"
+  },
+  "classification": "IMPLEMENTATION_DEFECT_TEST_FIXTURE_CONTEXT",
+  "frozen_requirement": "Exact compiler-bound accepted reuse must retain old recording identities and reject compiler mismatch; all mandatory regression tests must pass.",
+  "actual_cause": "The unchanged positive integration test evaluates an explicitly frozen historical reuse packet against ambient current compiler files, although initialization_basis.mjs legitimately changed under the authorized repair. The current-compiler mismatch is expected fail-closed behavior, not an admission regression.",
+  "independent_reproduction": "Focused original positive test rerun: ERROR at remaining_runner.py accepted_reuse, current compiler differs from accepted reuse compiler. Subject refs and all188 archived payload files verified.",
+  "owning_layer_reason": "The acceptance rule and independent old recording proof remain explicit and trusted. Correct the test environment/applicability to that rule; no new requirement/oracle/threshold or reader policy is introduced.",
+  "allowed_source_paths": [
+    "verification/tests/test_g5_ur0_remaining_runner.py"
+  ],
+  "preserve": "All completed r2 harness code,12-group offline evidence,17 invariant recompilations, original r2 failure and all old packages/windows.",
+  "official_gate_pass": false
+}

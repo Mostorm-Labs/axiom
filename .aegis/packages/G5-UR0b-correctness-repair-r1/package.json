@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-repair-r1",
+  "status": "AUTHORIZED_OFFLINE_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+    "accepted_source_sha256": "2f2bb538dd7c4e9d3e5fa93822678c6099b3c77f4c064dc5f40c3f05528bff5b",
+    "position_ref": {
+      "path": ".aegis/results/G5-UR0b/control-resume-after-df214581/position.json",
+      "sha256": "c6c9e140908d63632784b7be739cf690f870463ce99e2a6cbc4152d8a1871cd5",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "Initialization repair and reviewed r4 terminal, then checkpoint commit/push.",
+    "next_action": "Binding and full proof-path design preflight; then exact offline repair or explicit blocker."
+  },
+  "authorization": {
+    "work_order_ref": {
+      "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+      "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+      "identity_kind": "local-content-addressed"
+    },
+    "new_sampling_workers_max": 0,
+    "commit_push": false
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "OFFLINE_CORRECTNESS_HARNESS_REPAIR",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "77d5c007bf9ee92e396b5e619cbb8ffcfa47a86db054110db8e35cedce8ae68a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "0eae1008645fd8a68c2d65349fa8a5890de3943597a9f0e41130c2b709ac5c57"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "a1f9ac28fd3bbb1f0942f5009b4dc025a02ed8ed6df3fe4cac7ca7565b097512"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "5761470555cb4cbc82fda070c902cf08b7abb45d4473ba4458c4941b3e280fa0"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "23ee4f04bdf48ca617cfa75a99a55bc95c3183eb02bfc511a632a243c06f1c70"
+  }
+}

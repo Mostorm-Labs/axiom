@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "source_before_sha256": "8b7997b11d1f4e4c6dfd1b99e5832839ac0c15a9443099565c0e1dca7c091a1b",
+  "source_after_sha256": "b98aab4320bf317e4187ef1fe4e19faa674fa5d25bfe70e68c91c27b82cbe9cd",
+  "changed_source_paths": [
+    "verification/runners/g5/ur0/correctness_contract.mjs",
+    "verification/runners/g5/ur0/correctness_driver.mjs",
+    "verification/runners/g5/ur0/correctness_transfer.mjs",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/pixel_oracle.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/runners/g5/ur0/stream_transfer.mjs",
+    "verification/runners/g5/ur0/worker.mjs",
+    "verification/tests/g5_ur0_correctness.test.mjs",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/g5_ur0_transfer.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "unchanged_outside_allowance": true,
+  "worker_static_checks": {
+    "server_factory_shim_clock_init": "BYTE_IDENTICAL",
+    "primary_modes_and_measurement": "BYTE_IDENTICAL",
+    "trace_and_pressure_collection": "BYTE_IDENTICAL",
+    "cleanup_trace_and_finalization": "BYTE_IDENTICAL"
+  },
+  "primary_capture_unchanged": true,
+  "phase_arm_function_calls_and_placement_unchanged": true,
+  "phase_ms": 30000,
+  "outer_worker_seconds": 90,
+  "static_not_new_browser_timing": true,
+  "native_oracle_sha256": "8605c7fd45d118a4cdd8b9bee3ba5c8a8c64b9eb7dbc09c4e74a81058ab06fa0",
+  "native_oracle_cpp_ref": {
+    "path": "verification/runners/g5/ur0/fixture_oracle.cpp",
+    "sha256": "076e69f47006082abad806c4838e874b3b26ad805ab250e1fad7db616d654722"
+  },
+  "profile_literal_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/repaired-profile.json",
+    "sha256": "5224f8a9c24e462f5c5196e69cd6828477ea88fbc11dc20c8cc96da90424dc24"
+  },
+  "source_identity_exclusions_unchanged": true
+}

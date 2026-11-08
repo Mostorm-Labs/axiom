@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-test-reverify-r1",
+  "stage": "P36_CODE_REVERIFY",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "dirty": true,
+  "source_tree_sha256": "118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/package.json",
+    "sha256": "1198fb988e286eda097f4016258291ac5d4e667eaf0e172f7d7482ce285660af"
+  },
+  "repair_authorization_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json",
+    "sha256": "350aac6898194c858a3fbc3f57ba49cb3d8fc15ec7e3d3bda37cdd9185be28fb"
+  },
+  "preflight_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/preflight.json",
+    "sha256": "21dcc777c50b411fa2d8f63abc97b4b854cd9cf2215763b5512570efb267b5be"
+  },
+  "red_precondition_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/red-precondition.json",
+    "sha256": "9a4f0138d9077c38b4944d8cba23be8bc39093ca072e988acf14b443c1198bf6"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/validation.json",
+    "sha256": "2afe1267fc8aee45714c608f316fe1e39e18cb63abf815ca03d55c6956d3a51c"
+  },
+  "preservation_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/preservation.json",
+    "sha256": "554fde77622a15cfa820a0f7b62d449a15181aedfc1a6a880ce021ed253e3ec0"
+  },
+  "fixture_provenance_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/fixture-provenance.json",
+    "sha256": "54096c7e9f8076c30b9bc606ec9f3118c25e684121194aa1da296a783d518e69"
+  },
+  "preserved_r2_result_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+    "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4"
+  },
+  "preserved_17_recording_reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/reverification.json",
+    "sha256": "918b3cdd3e081e034cfa0cd7e9651bf9fcc1043388e14e2ff1d37c6e458d86a0"
+  },
+  "preserved_12_oracle_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/oracle-coverage.json",
+    "sha256": "2c45c43cccad591ee89e05447204a73b88fa2653ba7a54c0d2da951f6b224413"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_BUNDLE",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b/correctness-test-reverify-r1",
+    "manifest_sha256": "69c18b309aa2def6629c3af56a92ac8f0a94cd1d0c25c8976eda6bd99b81460e"
+  },
+  "next_action": "Independent control review and exact current compiler/recording reuse acceptance; separate future sampling authorization only afterwards.",
+  "remaining_sampling": "6 correctness plus 30 main remain unexecuted and unauthorized here.",
+  "current_compiler_reuse_accepted_by_producer": false,
+  "performance_or_official_gate_PASS": false
+}

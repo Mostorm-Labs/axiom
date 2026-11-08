@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "red_precondition_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/red-precondition.json",
+    "sha256": "9a4f0138d9077c38b4944d8cba23be8bc39093ca072e988acf14b443c1198bf6"
+  },
+  "executions": [
+    {
+      "command": "python3.12 -m unittest discover -s verification/tests -p test_g5_ur0_remaining_runner.py -k reuse",
+      "exit_code": 0,
+      "tests": 4,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/focused-green.log",
+        "sha256": "62b3016ad2e3981873b367f188d4a36f5c279a45f01e7c10140daff7bf7caf02"
+      }
+    },
+    {
+      "command": "python3.12 -m unittest discover -s verification/tests -p test_g5_ur0_remaining_runner.py",
+      "exit_code": 0,
+      "tests": 13,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/module.log",
+        "sha256": "666a54c7b7d2adbaadc2f8281bdf4a883d76c62e5c52529f305aa2207333b012"
+      }
+    },
+    {
+      "command": "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "exit_code": 0,
+      "tests": 114,
+      "passed": 114,
+      "failed": 0,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/node.log",
+        "sha256": "97648eaa023addeecbf5680fc67dcc6a377272d4330ed7d9d619e50d5594ec54"
+      }
+    },
+    {
+      "command": "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+      "exit_code": 0,
+      "tests": 61,
+      "passed": 61,
+      "failed": 0,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/python.log",
+        "sha256": "e149c2d3c811ba865c97742a46bd937dd21b4e8fa84b75cda30ca55173eeecd0"
+      }
+    },
+    {
+      "command": "python3.12 tools/check_runtime_boundaries.py --root .",
+      "exit_code": 0,
+      "contracts": 120,
+      "log_ref": {
+        "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/boundary.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "new_browser_sampling_workers": 0,
+  "new_builds": 0,
+  "new_native_qualification_probes": 0,
+  "native_unit_invocations": {
+    "count": 2,
+    "included_in": "Full mandatory Python suite",
+    "input": "malformed snapshots only",
+    "allowed_by_package": true
+  },
+  "historical_sampling_starts": 33,
+  "historical_sampling_seconds": 1251,
+  "old_windows": "CLOSED_UNCHANGED",
+  "new_window_opened": false
+}

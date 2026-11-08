@@ -1,0 +1,28 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "test": "test_g5_ur0_remaining_runner.RemainingRunnerTest.test_explicit_accepted_reuse_keeps_old_modes_and_sources",
+  "test_source_ref": {
+    "path": "verification/tests/test_g5_ur0_remaining_runner.py",
+    "sha256": "36875a66036ad1d20fa41f6290aa292751e6e5036a89e20d75b9242a1b3eacda"
+  },
+  "enforcing_reader_ref": {
+    "path": "verification/runners/g5/ur0/remaining_runner.py",
+    "sha256": "96bc6dd3c979a12079ed2e9872c11801a945d8c2d89690b94f59af9f94430cb4"
+  },
+  "root_cause": "TEST_CONTRACT_DRIFT_AFTER_AUTHORIZED_INITIALIZATION_VERIFIER_CHANGE",
+  "changed_compiler_bindings": {
+    "initialization_basis.mjs": {
+      "accepted_sha256": "aa1161609fd32082df8ca1965c2734b063170a46977b81535be35c22bb385a9e",
+      "current_sha256": "4ff42563451353fbdd38aa36c5823d8fc2cd9e3e47cd8a12e635d880214236ca"
+    }
+  },
+  "reason": "The unchanged test expects accepted_reuse(r4 packet) to succeed against the current compiler. The frozen packet pins the previous initialization_basis.mjs; rejection is correct after this authorized repair. Do not weaken the reader or edit the old packet.",
+  "out_of_scope_paths": [
+    "verification/tests/test_g5_ur0_remaining_runner.py"
+  ],
+  "requested_control_action": "Classify this stale positive test and authorize its narrowly scoped update; independently reaccept the byte-invariant recordings under the new compiler in a future continuation package. Keep exact compiler/input/profile checks and old windows closed.",
+  "full_python_log_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r2/python.log",
+    "sha256": "1ad1c8fe818834480d1e670c4d8c53401c01a57bd704d1dd472d5e09fa918931"
+  }
+}

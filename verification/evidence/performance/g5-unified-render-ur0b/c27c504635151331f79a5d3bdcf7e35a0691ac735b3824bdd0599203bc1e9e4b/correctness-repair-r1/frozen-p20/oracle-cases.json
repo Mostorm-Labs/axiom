@@ -1,0 +1,55 @@
+{
+  "schema": "ur0b-correctness-harness-oracles-v1",
+  "cases": [
+    {
+      "id": "REAL-OLD-HUD-RED",
+      "oracle": "Run the original comparator/request against archived OFF1 and assert16112 differences; show the new retained-selection request handles the same archived public selection bounds. Preserve original FAILED and label recomputation OFFLINE.",
+      "red_required": true
+    },
+    {
+      "id": "RETAINED-SELECTION",
+      "oracle": "Hand tool with count1 still excludes the public selection perimeter; count0 excludes none. Reject missing/nonfinite/unordered bounds instead of returning green."
+    },
+    {
+      "id": "LIVE-SUBJECT",
+      "oracle": "Independently compute fixed expected transform from before public bounds and rectangle center; compare after public selection and native-decoded snapshot object transform. Wrong target/id/camera, no move, unsnapped12, wrong generation or incomplete Up must fail applicability."
+    },
+    {
+      "id": "HUD-SUPPORT",
+      "oracle": "Freeze projected public before+expected-live bounds, 7px perimeter and rotation support to38px above top; only the fixed live horizontal guide y260 +/-2logicalpx may be added. Validate DPR1/2/4 projection and20% cap. No guide mask afterUp/hand."
+    },
+    {
+      "id": "BODY-MUTANTS",
+      "oracle": "A body-interior pixel mutation outside HUD/reference AA must still FAIL. Include a lower-z overlap/order or opacity error outside HUD, wrong transform, and mask leakage. These can be deterministic synthetic/reference fixtures; masks must not depend on candidate bytes."
+    },
+    {
+      "id": "ACTUAL-OFF0-DIAGNOSTIC",
+      "oracle": "Recompare archived OFF0 with the frozen independent HUD recipe; preserve all residual mismatches and their coordinates. Do not require it to become green; the outcome is offline diagnosis, not a new paired correctness result."
+    },
+    {
+      "id": "BOUNDED-TRANSFER",
+      "oracle": "Byte-for-byte roundtrip0/1/32768/batch boundary/multi-MiB data; exact offsets/length and SHA. Reject duplicate, overlap, gaps, out of order, over-limit batch, bad encoding and incomplete release. Retain allocation ownership and cancellation."
+    },
+    {
+      "id": "STAGE-TERMINALS",
+      "oracle": "Deterministic fake await timeout records the exact last-started stage; every completed stage has paired begin/end and monotonic clock. Assert original30s phase timer and90s worker guard unchanged. No resetting the timer at toggle/step/batch."
+    },
+    {
+      "id": "CREATION-PROFILES",
+      "oracle": "Original exact worker/consumer profile remains valid; the one exact repaired worker profile is additionally pinned with unchanged consumer and all new cold helpers. Unknown or mismatched worker/consumer/helper hashes fail. No wildcard/current-file-hash auto-acceptance."
+    },
+    {
+      "id": "PAIRED-INIT-OWNERS",
+      "oracle": "If paired reload emits an initialization completion, it must match exactly one recorded public init or paired_init state by full native owner/epoch/view, with generation0/empty/no-operation and existing chain checks. Foreign, ambiguous, restored/nonempty or absent state stays UNRESOLVED; do not invent an Operation or substitute lastCommit epoch."
+    },
+    {
+      "id": "OLD17-INVARIANCE",
+      "oracle": "Recompile17 immutable complete inputs into a new directory. Existing canonical populations, committed receipts, metrics/common stats, snapshot/terminal outcomes and source/artifact identity remain identical apart from explicit compiler provenance. OFFLINE is never fresh."
+    },
+    {
+      "id": "FROZEN-SCOPE",
+      "oracle": "Diff confirms product/SDK/collector/consumer/input schedule and all non-correctness work unchanged. No browser/qualification oracle probe, rebuild, old-window mutation, deadline/AA change or new sampling in this offline package. The two existing malformed-snapshot native unit checks are allowed and separately counted."
+    }
+  ],
+  "classification": "Required for this narrow harness repair only; not new G5 product features or a new performance Gate"
+}

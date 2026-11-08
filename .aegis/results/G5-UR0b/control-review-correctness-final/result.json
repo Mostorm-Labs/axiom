@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-independent-control-review",
+  "primary_owner": "aegis-gate-review",
+  "status": "ACCEPTED_OFFLINE_REPAIR_AND_EXACT_RECORDED_REUSE",
+  "subject_refs": [
+    {
+      "path": ".aegis/results/G5-UR0b/correctness-repair-r2/result.json",
+      "sha256": "926ab4219a0aa1181432281fb3f26a871ea6850757ace6f67459de4572d870e4"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/correctness-test-reverify-r1/result.json",
+      "sha256": "7afd8befa682549490c9c473350836bc68e1c61da6c5c6cca52a17af497ef553"
+    }
+  ],
+  "repository_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "source_tree_sha256": "118f3029bab049983f03333e4ca1ff90361adad1ffe6f743715dcfc32ecccf5b",
+  "dirty": true,
+  "frozen_requirement_audit": {
+    "passed": [
+      "P20 fixed subject/HUD rules and bounded cold transport implemented within r2 allowance",
+      "Exact additive JS/Python creation profile with unique paired-init ownership; old profile retained",
+      "P36 changed only stale regression fixture, preserving actual current-compiler mismatch rejection",
+      "12 frozen offline groups,17-recording invariance, mandatory regressions and immutable old failure records"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "payload_files_verified": 220,
+    "independent_recordings_reconciled": 17,
+    "node_passed": 114,
+    "python_passed": 61,
+    "boundary_contracts": 120,
+    "new_browser_workers": 0,
+    "new_builds": 0,
+    "valid_native_qualification_probes": 0,
+    "malformed_native_unit_checks_in_reviewer_python_suite": 2
+  },
+  "repository_reality_audit": {
+    "runtime_sdk_consumer_collector_unchanged": true,
+    "one_test_only_p36_delta_verified": true,
+    "code_review": "Reviewed r2 worker/driver/transfer/HUD/subject/profile diffs and the P36 exact-Git-blob fixture. No success mocks or check weakening. Original timers/primary branches and old profile retained."
+  },
+  "findings": {
+    "blocking": [],
+    "non_blocking": [
+      "Pixel comparator explanatory rule text still describes bounds-only HUD, while the frozen lower-z request also explicitly records the independently defined y260 guide strip. Actual request/mask and20% cap are verified; wording can be cleaned in successor work without changing qualification.",
+      "Native snapshot metadata equality corroborates identity/config/count invariance; it is not a full body digest. Independent pixel reference and existing unchanged Semantic transform coverage remain the relevant detection mechanisms."
+    ]
+  },
+  "reuse_acceptance_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-correctness-final/reuse-acceptance.json",
+    "sha256": "9fb07bc5798cd455d9a98a3b8b8cf23d7eb42b7c6e68c51edd3adf50f1e4798d",
+    "identity_kind": "local-content-addressed"
+  },
+  "full_ur0b_status": "BLOCKED_EVIDENCE_PENDING_REAL_BROWSER_CORRECTNESS_AND_MAIN_MATRIX",
+  "uncompleted": [
+    "6 real paired correctness workers",
+    "30 main matrix rows"
+  ],
+  "historical_sampling": {
+    "starts": 33,
+    "seconds": 1251,
+    "old_windows": "CLOSED_UNCHANGED"
+  },
+  "official_P34_or_platform_or_performance_PASS": false,
+  "refs": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/identity-check.json",
+      "sha256": "d1040dba8dd6eead67dd1d75890afed8a90773d63591f840b616ebf853d03237",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/recorded-reuse-check.json",
+      "sha256": "3f328e86b9e137c2a672d003596f8fb24a9b5aa0153919ff3df621eb819cbbe2",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/node.log",
+      "sha256": "2e9f27927e6edd79caeee4cfe592dd080b9f77291fcc5666e2a45d279f68bada",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/python.log",
+      "sha256": "4dbfa96d395451f682c1fe24ad212dbd823b6c75d2afccd6d65db976ff639f96",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-correctness-final/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "identity_kind": "local-content-addressed"
+    }
+  ]
+}

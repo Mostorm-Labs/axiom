@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT_FOR_NARROW_P36",
+  "predecessor_package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json",
+    "sha256": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736",
+    "identity_kind": "local-content-addressed"
+  },
+  "repair_authorization_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-test-reverify-r1/repair-authorization.json",
+    "sha256": "350aac6898194c858a3fbc3f57ba49cb3d8fc15ec7e3d3bda37cdd9185be28fb",
+    "identity_kind": "local-content-addressed"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    "identity_kind": "local-content-addressed"
+  },
+  "rule": "Existing human design/control and implementation delegation authorizes this implementation-owned test repair. This current P36 scope authorizes only the single named regression test beyond prior r2 allowance; existing harness and readers are now read-only."
+}

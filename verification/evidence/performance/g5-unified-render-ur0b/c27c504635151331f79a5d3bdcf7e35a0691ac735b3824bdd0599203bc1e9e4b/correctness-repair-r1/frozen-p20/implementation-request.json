@@ -1,0 +1,137 @@
+{
+  "schema": "ur0b-correctness-harness-work-order-v1",
+  "status": "AUTHORIZED_OFFLINE_HARNESS_REPAIR",
+  "owner": "aegis-implementation in existing adjacent conversation",
+  "stage_request": [
+    "P30/P31 exact package materialization",
+    "P32 offline repair until terminal return"
+  ],
+  "authorization": "User explicitly delegated design/control here and implementation to adjacent thread, requested continuation and terminal notification, and now identified the mutual-wait handoff. This work order makes that already-authorized repair concrete; no separate reconfirmation is needed.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "resume_cursor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "dirty": true,
+    "accepted_predecessor_source_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+    "new_control_delta": ".aegis/verification/G5-UR0b-correctness-harness-v1/** is an explicitly authorized additive control input. Compute actual current full source in the new proof; do not require it to equal the predecessor hash or discard the new control files.",
+    "preserve_existing_dirty_work": true,
+    "next_action": "Materialize exact new package and begin offline harness repair now."
+  },
+  "current_verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65",
+    "identity_kind": "local-content-addressed"
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/oracle-cases.json",
+    "sha256": "96d392b4dca7e204d4901b5646e89812d27ac96ff7e14b97e6a2de46a3131712",
+    "identity_kind": "local-content-addressed"
+  },
+  "evidence_input_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/evidence-inputs.json",
+    "sha256": "77b0c611ed9a1d0134b7db04b0c11bd6ffebda329653312727770f0f8a1ae268",
+    "identity_kind": "local-content-addressed"
+  },
+  "package_to_materialize": ".aegis/packages/G5-UR0b-correctness-repair-r1/package.json",
+  "package_rule": "Freeze required/forbidden source scope, tests, exact bindings and terminal criteria before code. Clean scope preflight authorizes implementation without another handoff pause. Producer may not change P20 or self-issue official Gate PASS.",
+  "source_scope": [
+    "verification/runners/g5/ur0/correctness_driver.mjs",
+    "verification/runners/g5/ur0/pixel_oracle.mjs",
+    "verification/runners/g5/ur0/stream_transfer.mjs",
+    "verification/runners/g5/ur0/correctness_transfer.mjs",
+    "verification/runners/g5/ur0/correctness_contract.mjs",
+    "verification/runners/g5/ur0/worker.mjs",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/tests/g5_ur0_pixels.test.mjs",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/g5_ur0_correctness.test.mjs",
+    "verification/tests/g5_ur0_transfer.test.mjs"
+  ],
+  "scope_details": "New helper paths are optional. Existing stream API remains compatible; the exact existing test is g5_ur0_transfer.test.mjs. No arbitrary wildcard source allowance.",
+  "read_only": [
+    "Runtime, SDK, public docs/API/dependencies/locks/build/collector",
+    "consumer.mjs and all input/scheduling code",
+    "All old packages/results/evidence/window/ledger bytes",
+    "AllP20 files in this directory"
+  ],
+  "output_paths": [
+    ".aegis/packages/G5-UR0b-correctness-repair-r1/**",
+    ".aegis/results/G5-UR0b/correctness-repair-r1/**",
+    "out/ur0b/correctness-repair-r1/**",
+    "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/correctness-repair-r1/**"
+  ],
+  "required_changes": [
+    "Implement frozen live subject/HUD contract and real old OFF1 RED.",
+    "Implement byte-exact bounded cold-only batched transfer and coarse stage diagnosis; keep deadlines and non-correctness behavior.",
+    "Pin one exact repaired creation profile additively; handle paired_init only with uniquely matched full native ownership and all existing fresh-empty checks.",
+    "Complete targeted positive/negative tests and all17 immutable recompilations; preserve every original verdict and source identity.",
+    "Assess reuse of accepted old diagnostic/cohort/60/120/240 for a future continuation; report any changed applicable condition honestly."
+  ],
+  "required_tests": [
+    "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+    "python3.12 -m unittest discover -s verification/tests -p 'test_g5_*.py'",
+    "python3.12 tools/check_runtime_boundaries.py --root .",
+    "12 frozen oracle groups with old real archive RED;17 recorded input recompilations to separate output",
+    "git diff --check"
+  ],
+  "not_required": [
+    "FullCTest or SDK rebuild for unchanged product bytes",
+    "New browser proof before returning this offline implementation slice",
+    "A requirement for archived OFF0 to become green",
+    "Fixing old misleading remaining_runner stop wording"
+  ],
+  "forbidden": [
+    "Any browser sampling/smoke/hidden probe, qualification oracle probe or build in this offline repair. Exception: the two existing test_g5_ur0_fixture_oracle.py malformed-snapshot native unit checks in the mandatory suite; record them accurately and do not call their count0.",
+    "Changing30s/90s/RSS/AA/interior tolerance or original worker phase boundaries",
+    "Candidate-color/difference-derived HUD, treating every residual as an AA edge, or masking body interiors",
+    "Opening/modifying any oldwindow or claiming remaining budget authorizes new runs",
+    "Changing Runtime/API/SDK/renderer/consumer/performance schedule or source_identity exclusions",
+    "Commit/push or UR0c/UR1"
+  ],
+  "closure": {
+    "all_of": [
+      "Frozen scope implemented and all required tests/oracles pass",
+      "17 recorded populations/metrics/terminal outcomes invariant",
+      "Old evidence unchanged; exact new source and profile hashes, tests, offline residual findings and content-addressed result/bundle",
+      "READY_FOR_CONTROL_REVIEW or explicit blocker; proactively notify the control conversation"
+    ],
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "stop_after": "OFFLINE_CORRECTNESS_HARNESS_REPAIR",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ]
+  },
+  "new_sampling_workers_max": 0,
+  "prior_sampling_starts": 33,
+  "prior_sampling_seconds": 1251,
+  "future_uncompleted": "Six correctness workers (first old attempt incomplete) then30 main; two realtime qualifications remain accepted exact recordings.",
+  "commit_push": false,
+  "performance_or_official_gate_PASS": false,
+  "notify_terminal": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  }
+}

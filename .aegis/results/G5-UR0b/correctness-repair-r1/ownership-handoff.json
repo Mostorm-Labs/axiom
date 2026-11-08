@@ -1,0 +1,15 @@
+{
+  "type": "ownership_handoff",
+  "from_owner": "aegis-implementation",
+  "to": "aegis",
+  "reason": "earlier_untrusted_layer",
+  "requested_stage": "P31",
+  "earliest_untrusted_layer": "P31 source-scope contract frozen by the P20 work order",
+  "status": "TASK_PACKAGE_DEFECT",
+  "suggested_next_stage": "P31 scope reconciliation",
+  "evidence_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/design-preflight.json",
+    "sha256": "81d0c7934c7148562c948d832511310d46f542f5fef8c57eb0c7491377bcb37e"
+  },
+  "requested_action": "Reissue the exact work order/package scope to include the Python profile reader and its regression tests, without changing the accepted 12-oracle/17-recording closure, thresholds or sampling limit."
+}

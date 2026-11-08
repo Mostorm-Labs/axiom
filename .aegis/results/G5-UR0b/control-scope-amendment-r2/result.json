@@ -1,0 +1,24 @@
+{
+  "status": "CORRECTED_P31_PACKAGE_READY",
+  "classification": "TASK_PACKAGE_DEFECT_SOURCE_ALLOWANCE_FIXED",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/package.json",
+    "sha256": "769a4f59f45e87d23e58fb7b89b95d735c729b8657122e0d8a4bc73623ee3736",
+    "identity_kind": "local-content-addressed"
+  },
+  "scope_amendment_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/scope-amendment.json",
+    "sha256": "6746b75588937fec22865dc97cf71a03cd0d37732cc632dc327867605b969846",
+    "identity_kind": "local-content-addressed"
+  },
+  "added_source_paths": [
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "effective_source_paths_count": 13,
+  "p20_and12_oracle_groups_unchanged": true,
+  "tests_and_thresholds_unchanged": true,
+  "new_sampling_workers_max": 0,
+  "reconfirmation_needed": false,
+  "independent_reproduction": "Actual old RT120 accepted; both profile-only counterfactuals rejected at literal old-profile guard; all29 returned payload files verified."
+}

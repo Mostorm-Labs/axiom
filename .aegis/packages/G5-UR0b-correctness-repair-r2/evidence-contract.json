@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+    "identity_kind": "local-content-addressed"
+  },
+  "materialization": "Shared controlled worktree, content-addressed payload and exact result/manifest references; no commit/push.",
+  "result_root": ".aegis/results/G5-UR0b/correctness-repair-r2/",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-sha>/correctness-repair-r2/",
+  "required": [
+    "Frozen scope implemented and all required tests/oracles pass",
+    "17 recorded populations/metrics/terminal outcomes invariant",
+    "Old evidence unchanged; exact new source and profile hashes, tests, offline residual findings and content-addressed result/bundle",
+    "READY_FOR_CONTROL_REVIEW or explicit blocker; proactively notify the control conversation"
+  ],
+  "identity_policy": "Separate historical recording identity and verdicts from current compiler/package provenance. No offline-to-fresh relabeling.",
+  "terminal_blocker_policy": "Return exact failed preflight and reproduction. Mark unexecuted implementation/tests explicitly; never claim complete repair.",
+  "notification": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  },
+  "scope_amendment_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r2/scope-amendment.json",
+    "sha256": "6746b75588937fec22865dc97cf71a03cd0d37732cc632dc327867605b969846",
+    "identity_kind": "local-content-addressed"
+  }
+}

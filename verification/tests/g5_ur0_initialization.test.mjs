@@ -103,3 +103,23 @@ test('NEXT-INTERACTION: delayed initial completion cannot confirm a later mutati
 test('OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation',()=>{
  const {proof}=analyze([],recording([]),{interactions:[]});assert.equal(proof.status,'NOT_OBSERVED');assert.equal(proof.accepted_raw_count,0);assert.equal(proof.qualified_initialization_count,0);assert.equal(proof.qualified_committed_count,0);
 });
+const repairedFiles=['consumer.mjs','worker.mjs','correctness_driver.mjs','pixel_oracle.mjs','stream_transfer.mjs','correctness_transfer.mjs','correctness_contract.mjs'].map(n=>'verification/runners/g5/ur0/'+n);
+function repairedRun(){const run=modelRun();run.mode='correctness';run.source_before.files=Object.fromEntries(repairedFiles.map(n=>[n,{sha256:digest(fs.readFileSync(path.join(root,n)))}]));return run;}
+test('CREATION-PROFILES: exactly pinned repaired correctness worker qualifies, unknown consumer/worker/helper never does',()=>{
+ const rows=prefix(),run=repairedRun();assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED','approved repaired worker profile missing');
+ for(const n of repairedFiles){for(const change of [r=>r.source_before.files[n].sha256='f'.repeat(64),r=>delete r.source_before.files[n]]){const bad=repairedRun();change(bad);assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING',n);}}
+ const bad=repairedRun();bad.mode='unsupported';assert.equal(analyze(rows,recording(rows,bad)).proof.status,'MISSING');
+});
+test('CREATION-PROFILES: unchanged primary modes keep init-only admission under the exact repaired worker hash',()=>{
+ for(const mode of ['fixture','main','realtime','legacy','setup']){
+  const rows=prefix(),run=repairedRun();run.mode=mode;assert.equal(analyze(rows,recording(rows,run)).proof.status,'QUALIFIED',mode);
+  run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';assert.equal(analyze(rows,recording(rows,run)).proof.status,'MISSING','primary mode must not use paired_init');
+ }
+});
+test('PAIRED-INIT-OWNERS: repaired reload selects one fully matching state and rejects ambiguity/restored/nonempty/foreign state',()=>{
+ const rows=prefix(),run=repairedRun();run.paired_init=structuredClone(run.init);run.init.state.target.viewId='99';
+ const good=analyze(rows,recording(rows,run)).proof;assert.equal(good.status,'QUALIFIED');assert.equal(good.initialization_chains[0].initialization_basis.state_path,'worker-result.json/paired_init/state');
+ for(const change of [r=>r.init=structuredClone(r.paired_init),r=>delete r.paired_init,r=>r.paired_init.state.objects=1,r=>r.paired_init.state.generation='1',r=>r.paired_init.state.lastCommit.operationId='f'.repeat(32),r=>r.paired_init.state.target.runtimeEpoch='99',r=>r.paired_init.state.documentId='b'.repeat(32)]){
+  const bad=structuredClone(run);change(bad);const p=analyze(rows,recording(rows,bad)).proof;assert.equal(p.status,'MISSING');assert.equal(p.unresolved_accepted_count,1);
+ }
+});

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-correctness-repair-r1",
+  "stage": "P31_P32_DESIGN_PREFLIGHT",
+  "status": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "result_revision": "df214581c1c80c2d546939271f3db2dc0e77a38b",
+  "dirty": true,
+  "source_tree_sha256": "c27c504635151331f79a5d3bdcf7e35a0691ac735b3824bdd0599203bc1e9e4b",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r1/package.json",
+    "sha256": "5ef9e7cd0de640376c7f03537319867a729a1a8a12042db4f67b796cb21c8ff3"
+  },
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/verification-spec.json",
+    "sha256": "0d6169f832ea8eeabcafcad24e9f212e9272b13591658a8cc6247051fcc44b65"
+  },
+  "position_ref": {
+    "path": ".aegis/results/G5-UR0b/control-resume-after-df214581/position.json",
+    "sha256": "c6c9e140908d63632784b7be739cf690f870463ce99e2a6cbc4152d8a1871cd5"
+  },
+  "binding_preflight_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/binding-preflight.json",
+    "sha256": "2e2b4ae323b6b658402019c3879128278c4d06a0fb29442f1ee21f4bf686e625"
+  },
+  "design_preflight_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/design-preflight.json",
+    "sha256": "81d0c7934c7148562c948d832511310d46f542f5fef8c57eb0c7491377bcb37e"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/validation.json",
+    "sha256": "47018899105486cbca294a0482024bcdc6cb3372c3769edb8cf4f68dcb4ee603"
+  },
+  "preservation_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/preservation.json",
+    "sha256": "8617d0088c75b2fb0c38bfa132546090c146573c99969a3c41bb4b64ab422e81"
+  },
+  "oracle_coverage_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/oracle-coverage.json",
+    "sha256": "f3f126e7eff330c8fa271ad64641499c6d6b68d208e0de3ee294bae73ab6676b"
+  },
+  "ownership_handoff_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/ownership-handoff.json",
+    "sha256": "ed2d0c8ecc6e400a900d9abb9e850f2c7d487e8004f479ea65b4692be5766483"
+  },
+  "materialized_ref": {
+    "kind": "SHARED_WORKTREE_CONTENT_ADDRESSED_PAYLOAD",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/c27c504635151331f79a5d3bdcf7e35a0691ac735b3824bdd0599203bc1e9e4b/correctness-repair-r1",
+    "manifest_sha256": "dd239f487646127a1fa90550e2d355c07a8cbcee0c6ab933a26b8b8e689d579b"
+  },
+  "implementation_source_changes": [],
+  "remaining": [
+    "Implement frozen live subject/HUD contract and real old OFF1 RED.",
+    "Implement byte-exact bounded cold-only batched transfer and coarse stage diagnosis; keep deadlines and non-correctness behavior.",
+    "Pin one exact repaired creation profile additively; handle paired_init only with uniquely matched full native ownership and all existing fresh-empty checks.",
+    "Complete targeted positive/negative tests and all17 immutable recompilations; preserve every original verdict and source identity.",
+    "Assess reuse of accepted old diagnostic/cohort/60/120/240 for a future continuation; report any changed applicable condition honestly."
+  ],
+  "future_sampling": "Six correctness workers then 30 main remain unexecuted and unauthorized by this package.",
+  "performance_or_official_gate_PASS": false,
+  "notification_policy": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths andSHA256",
+      "test/RED/17-input reconciliation and any residual differences",
+      "sampling0 and all remaining work"
+    ],
+    "delivery_failure": "Save exact notification text and tool failure with terminal result; never pretend it was sent."
+  }
+}

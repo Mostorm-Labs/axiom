@@ -1,0 +1,40 @@
+{
+  "schema": "aegis-p31-scope-correction-v1",
+  "status": "AUTHORIZED",
+  "owner": "aegis-implementation / P31 control",
+  "classification": "TASK_PACKAGE_DEFECT",
+  "original_work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-correctness-harness-v1/implementation-request.json",
+    "sha256": "30f005f237f654959592ec899df5ca9a0ca6e43076b48d3b78c8c19b14972452",
+    "identity_kind": "local-content-addressed"
+  },
+  "original_package_ref": {
+    "path": ".aegis/packages/G5-UR0b-correctness-repair-r1/package.json",
+    "sha256": "5ef9e7cd0de640376c7f03537319867a729a1a8a12042db4f67b796cb21c8ff3",
+    "identity_kind": "local-content-addressed"
+  },
+  "terminal_result_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/result.json",
+    "sha256": "0fd519be6caa21417acd3472b05161d8edd5c194997bbde15c2b18e689a056d4",
+    "identity_kind": "local-content-addressed"
+  },
+  "witness_ref": {
+    "path": ".aegis/results/G5-UR0b/correctness-repair-r1/profile-preflight.json",
+    "sha256": "fe7e93dcf2153271d3ea74eb6df06e83292f79dcd443403b0975c8a829c92f58",
+    "identity_kind": "local-content-addressed"
+  },
+  "why": "The already-required exact repaired creation profile must also be accepted by the existing Python canonical-chain admission owner. Its literal old-profile equality cannot accept a changed worker tuple. Omitting this consumer and its regression test from source allowance made r1 incomplete.",
+  "authority": "Existing human authorization to control/design here, implement in adjacent conversation, continue to completion and proactively report terminal results; this is the minimal package correction for that same approved work.",
+  "added_source_paths": [
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/tests/test_g5_ur0_repair_runner.py"
+  ],
+  "allowed_changes_in_added_paths": "Only support the existing P20 old exact profile plus the single exact repaired worker/consumer/helper profile, and test their acceptance/rejection through require_canonical_chain. Preserve all identity, generation, input-hash, count, committed/mutation-receipt, closed-window, artifact and timing checks.",
+  "profile_rule": "Keep one coherent explicit allowlist across JS producer and Python reader, bound to the P20-approved exact profiles. Reject unknown/partial/mismatched tuple, changed consumer/helper, foreign/ambiguous owner and forged initialization. Never substitute the old worker hash for a new worker.",
+  "precedence": "This current r2 P31 correction overrides only the old work-order/r1 source_scope omission and task/output locations. The original P20 spec, all12 oracle groups and all other original obligations/non-goals remain exact. No further P20 change or approval is required for this correction.",
+  "new_sampling_workers_max": 0,
+  "prior_sampling_starts": 33,
+  "prior_sampling_seconds": 1251,
+  "old_packages_results_and_windows_immutable": true,
+  "commit_push": false
+}

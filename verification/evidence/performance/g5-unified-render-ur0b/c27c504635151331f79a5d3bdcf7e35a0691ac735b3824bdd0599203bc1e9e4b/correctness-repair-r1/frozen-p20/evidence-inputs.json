@@ -1,0 +1,80 @@
+{
+  "schema": "ur0b-correctness-harness-inputs-v1",
+  "refs": [
+    {
+      "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+      "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r4/result.json",
+      "sha256": "f9496717077bd9de9890abb38d0e33fbc466e09cd6efa87ef09e6f8fd443df2f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r4/pixel-diagnostic.json",
+      "sha256": "8b6da0b742c91dd879703078e4825cef116e180f5f5b599d3807e7eb147fc245",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r4/timing-diagnostic.json",
+      "sha256": "bc2511837d697a6d4ad796744c65ddf0a68819b7aa4e8cc04fcfc50fb3582afc",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r4/recompilation-check.json",
+      "sha256": "f58773f56fe0bfa1fff63d76f354ba65b0a90c6599aa8ae1808a2e919fcbe8b3",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/reuse-acceptance.json",
+      "sha256": "838f284592d524bc0ea56ead42acc14491c301033a66d169ed24ad52b8bd8ea3",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/worker-result.json",
+      "sha256": "f500dd5c854bdf0a928f645ba667bc2cb288ebc4f0f34fa77741ecedb8ba52e1",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/raw-trace.jsonl",
+      "sha256": "e009ff785573b2cfba4aca87c71fcc57b8d4d63d4d06a39419913dc3ed209eed",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/run-inputs.json",
+      "sha256": "b86c78a678b7f6ef701d1f205c3317741cb0e34e41bcf7edc05e554f846e157f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-120/compiled-summary.json",
+      "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/worker-result.json",
+      "sha256": "6656c11c40cab493ae38389d95a3e23956d5c14cdd12293119491239c58733a2",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/raw-trace.jsonl",
+      "sha256": "56edb6b8b9a7c794971c3949251c4aaf200e285c9449d53ddf66ffb873cfe992",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/run-inputs.json",
+      "sha256": "da7437cd325d552562427a4bf0fb3107c431f44a0814d15c48909c69696dce8a",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/execution-and-checks/execution/raw-runs/realtime-240/compiled-summary.json",
+      "sha256": "378e56df36b11409cf5efec6a48497b7db713bcd3dfcf4b5e985a60fd8b26a36",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "immutable_recompilation_population": "15 original initialization-v1 inputs plus archived realtime120 and240 =17 complete recordings",
+  "partial_case": "r4 lower_z_translucent_drag OFF0/OFF1 only; use archived RGBA, AA edge, public state and request for offline RED/diagnosis, never relabel original worker",
+  "prior_cumulative_starts": 33,
+  "prior_cumulative_seconds": 1251,
+  "all_old_windows": "CLOSED_UNCHANGED"
+}
