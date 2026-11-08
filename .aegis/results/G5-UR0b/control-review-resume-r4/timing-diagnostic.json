@@ -1,0 +1,54 @@
+{
+  "status": "FILE_ONLY_COARSE_STAGE_RECONSTRUCTION",
+  "source": {
+    "path": "out/ur0b/resume-r4/execution/guards/correctness-lower_z_translucent_drag.rss.jsonl",
+    "sha256": "3fbb4d2fadb02bd92b7bad4d914985bf4fbbacfe2c75d15d83774b8b72c90a27"
+  },
+  "guard_ref": {
+    "path": "out/ur0b/resume-r4/execution/guards/correctness-lower_z_translucent_drag.worker.json",
+    "sha256": "03c35d3dc04c02a9e46cb79573edc30daa5be90055defee14230cabf1fd08d75"
+  },
+  "timeline": [
+    {
+      "elapsed_from_first_guard_sample_seconds": 0.0,
+      "last_reported_stage": null
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 2.982437125,
+      "last_reported_stage": "initializing"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 3.085393917,
+      "last_reported_stage": "setup"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 4.115533458,
+      "last_reported_stage": "cold-snapshot-off-0-before-complete"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 19.204631667,
+      "last_reported_stage": "cold-snapshot-off-0-after-complete"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 19.495925292,
+      "last_reported_stage": "cold-snapshot-off-1-before-complete"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 33.308430125,
+      "last_reported_stage": "cold-snapshot-off-1-after-begin"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 33.403858958,
+      "last_reported_stage": "cold-snapshot-off-1-after-complete"
+    },
+    {
+      "elapsed_from_first_guard_sample_seconds": 34.093488208,
+      "last_reported_stage": "phase-timeout"
+    }
+  ],
+  "sample_count": 345,
+  "known": "Frozen correctness-only phase deadline fired; both OFF comparisons completed before termination; no completed ON pair.",
+  "unresolved": "correctnessNext/render/settle, RGBA transfer, close, reload and ON initialization do not have individual brackets here. No unique pending await or rendering-vs-transport root cause can be assigned.",
+  "not_a_product_latency_measurement": true,
+  "deadline_unchanged": true
+}

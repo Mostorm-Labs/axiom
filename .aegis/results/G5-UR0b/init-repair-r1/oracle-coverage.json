@@ -1,0 +1,285 @@
+{
+  "status": "ALL_16_FROZEN_ORACLE_GROUPS_SATISFIED",
+  "cases": {
+    "ACTUAL-RT60": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "raw=2; initialization=1; committed=1; unresolved=0; mutation receipts=1; v2 QUALIFIED; original metrics schema VALID.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/init-repair-r1/offline-reverification.json",
+          "sha256": "f66253235bc24d6d1f1c095b89914269537c59c1f77d2e31dddc170f6bf8b479"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "COMMITTED-ONLY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "All existing committed counts, successful job, attempts, receipt identities and metrics preserved; initialization=0.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/init-repair-r1/offline-reverification.json",
+          "sha256": "f66253235bc24d6d1f1c095b89914269537c59c1f77d2e31dddc170f6bf8b479"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "OFF-NO-OBSERVATIONS": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "No native record invented; zero counts; NOT_OBSERVED, existing schema/metrics preserved.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/init-repair-r1/offline-reverification.json",
+          "sha256": "f66253235bc24d6d1f1c095b89914269537c59c1f77d2e31dddc170f6bf8b479"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "INIT-ONLY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "v2 population can qualify initialization; zero canonical mutation receipts; require_positive rejects it.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/python-final.log",
+          "sha256": "0e15bc87ec04d1c9454405b8c03526ad85a1f76cd2f9cd9db280bbabec7186d6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_repair_runner.py",
+          "sha256": "748a9937d453ea625f4f0d5262e1fb91a56a3982b76a36022771f145b88d2de6"
+        }
+      ]
+    },
+    "MISSING-INIT-ANCHOR": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "UNRESOLVED; no implicit initialization or receipt.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "RESTORED-OR-NONEMPTY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "UNRESOLVED; zero alone is insufficient.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "CONTRADICTORY-GENERATION": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Must not classify INITIALIZATION. Missing valid committed chain remains UNRESOLVED.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "FOREIGN-OWNER-OR-TARGET": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Unqualified/identity error; no state-derived filling or fallback exemption.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "DUPLICATE-OR-OMITTED": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Population/bijection failure; never pass by silently reducing the denominator.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/python-final.log",
+          "sha256": "0e15bc87ec04d1c9454405b8c03526ad85a1f76cd2f9cd9db280bbabec7186d6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_repair_runner.py",
+          "sha256": "748a9937d453ea625f4f0d5262e1fb91a56a3982b76a36022771f145b88d2de6"
+        }
+      ]
+    },
+    "NONZERO-WITHOUT-SCENE": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "UNRESOLVED; initial-state handling cannot repair it.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "MISSING-MUTATION-RECEIPT": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "MISSING; init chain cannot compensate for committed receipt.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/python-final.log",
+          "sha256": "0e15bc87ec04d1c9454405b8c03526ad85a1f76cd2f9cd9db280bbabec7186d6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_repair_runner.py",
+          "sha256": "748a9937d453ea625f4f0d5262e1fb91a56a3982b76a36022771f145b88d2de6"
+        }
+      ]
+    },
+    "LOSS-OR-AMBIGUITY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Existing rejection remains; preserve all preparation attempts.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "NEXT-INTERACTION": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Init is never assigned to Up/commit or allowed to retire newer preview/feedback; existing receipt matching unchanged.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    },
+    "NATIVE-ONLY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "No new measurement fabricated; native population obeys same rules; metric_receipt_count=null in native-only scope.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/python-final.log",
+          "sha256": "0e15bc87ec04d1c9454405b8c03526ad85a1f76cd2f9cd9db280bbabec7186d6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_repair_runner.py",
+          "sha256": "748a9937d453ea625f4f0d5262e1fb91a56a3982b76a36022771f145b88d2de6"
+        }
+      ]
+    },
+    "BINDING-AND-CLOSED-AUTH": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Binding/freshness checks reject; old authorities and window stay CLOSED.",
+      "evidence_refs": [
+        {
+          "path": "out/ur0b/init-repair-r1/python-final.log",
+          "sha256": "0e15bc87ec04d1c9454405b8c03526ad85a1f76cd2f9cd9db280bbabec7186d6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_repair_runner.py",
+          "sha256": "748a9937d453ea625f4f0d5262e1fb91a56a3982b76a36022771f145b88d2de6"
+        },
+        {
+          "path": "verification/tests/test_g5_ur0_resume_runner.py",
+          "sha256": "c41495527e2c96798e95b7b2efec67575d2b37d37342111f2d41140968d3666d"
+        }
+      ]
+    },
+    "REUSE-APPLICABILITY": {
+      "status": "SATISFIED_FOR_OFFLINE_SLICE",
+      "expected": "Eligible for unchanged-observer overhead reuse only when invariance holds. No new run or eligibility treated as Gate PASS.",
+      "evidence_refs": [
+        {
+          "path": ".aegis/results/G5-UR0b/init-repair-r1/offline-reverification.json",
+          "sha256": "f66253235bc24d6d1f1c095b89914269537c59c1f77d2e31dddc170f6bf8b479"
+        },
+        {
+          "path": ".aegis/results/G5-UR0b/init-repair-r1/reuse-assessment.json",
+          "sha256": "437f05af834c3eba2e33187ff3b8773295b5708a0ecd8c10e9f37620f17d10bc"
+        },
+        {
+          "path": "out/ur0b/init-repair-r1/node-final.log",
+          "sha256": "b0076c9a3e002125ff514e31a5bbcd27bf842125c0bcc4ca7ffaa2422d2214d7"
+        },
+        {
+          "path": "verification/tests/g5_ur0_initialization.test.mjs",
+          "sha256": "792a5c9959d0b55a825b8ffdedd32247a5c0e108389dc6d4dd6168037968307c"
+        }
+      ]
+    }
+  }
+}

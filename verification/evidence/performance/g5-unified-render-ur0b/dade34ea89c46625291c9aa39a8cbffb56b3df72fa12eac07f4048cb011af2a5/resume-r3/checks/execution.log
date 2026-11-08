@@ -1,0 +1,32 @@
+{"stage": "diagnostic-OFF"}
+{"stage": "diagnostic-ON"}
+{"stage": "qualification-p1-A"}
+{"stage": "qualification-p1-B"}
+{"stage": "qualification-p2-B"}
+{"stage": "qualification-p2-A"}
+{"stage": "qualification-p3-B"}
+{"stage": "qualification-p3-A"}
+{"stage": "qualification-p4-A"}
+{"stage": "qualification-p4-B"}
+{"stage": "qualification-p5-A"}
+{"stage": "qualification-p5-B"}
+{"stage": "qualification-p6-B"}
+{"stage": "qualification-p6-A"}
+{"stage": "realtime-60"}
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 174, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 173, in main
+    p=argparse.ArgumentParser();p.add_argument('--sdk64',type=Path,required=True);p.add_argument('--sdk32',type=Path,required=True);p.add_argument('--proofs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);return run(p.parse_args())
+                                                                                                                                                                                                                                                 ^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 164, in run
+    outcome=repair.execute(copy.deepcopy(row),sdk,out);window.finish(row['run_id'],outcome);check_worker(row,outcome,proof)
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 137, in check_worker
+    repair.require_canonical_chain(s,require_positive=row['phase']=='diagnostic',require_metrics=row.get('mode')!='correctness');repair.require_bound_compilation(Path(outcome['raw_directory']),s,proof)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 41, in require_canonical_chain
+    if summary.get('critical_loss')!=0 or summary.get('identity_errors')!=[] or chain.get('unresolved')!=[]:raise RuntimeError('canonical observation has loss, identity error or unresolved links')
+                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical observation has loss, identity error or unresolved links

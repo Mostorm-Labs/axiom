@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/implementation-request.json",
+    "sha256": "4f78456fd79ff23ba2075924b72d412a27bcccfb2a85f0e3b4e0052b6393547c",
+    "identity_kind": "local-content-addressed"
+  },
+  "materialization": "Shared controlled worktree content-addressed bundle with result/manifest SHA256; no commit/push",
+  "result_root": ".aegis/results/G5-UR0b/init-repair-r1/",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/init-repair-r1/",
+  "required": [
+    "All specified code/reader/test changes satisfy the frozen spec and scope",
+    "Old behavior RED then new positive/negative cases green",
+    "15 immutable archives recompiled and agreed with frozen expectations; original evidence still unchanged",
+    "External/common observation and committed receipt invariance plus explicit reuse applicability report",
+    "New exact source/artifact/compiler/spec/recorded-input identities, reviewer-accessible content-addressed result/bundle",
+    "READY_FOR_CONTROL_REVIEW or explicit blocker; no product/P34PASS"
+  ],
+  "identity_policy": "Separate recording source/artifact identity from current compiler/spec/source tree; include exact immutable-input hashes, source delta and all retained old manifests. OFFLINE_REVERIFICATION cannot qualify as fresh WORKER_COMPILE.",
+  "reuse_policy": "Emit eligibility pending independent control acceptance; preserve six-pair samples without rerun; no automatic sampling authorization.",
+  "required_terminal_notice": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "user_policy_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+      "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190",
+      "identity_kind": "local-content-addressed"
+    },
+    "contents": [
+      "task/package and terminal status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths withSHA256",
+      "tests, unchanged archives,15input reconciliation,reuse assessment",
+      "uncompleted/blocker and whether any forbidden sampling occurred"
+    ],
+    "if_unavailable": "Save terminal result and explicitly mark notification not delivered; never claim delivery."
+  }
+}

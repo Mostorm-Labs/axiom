@@ -36,24 +36,47 @@ def assert_sampling_authority_open(previous_return,authorization_sha):
    raise RuntimeError('sampling authorization is closed by the preserved return; control review must explicitly reopen it, even for a fresh output directory')
 def require_canonical_chain(summary,require_positive=False,require_metrics=True):
  chain=summary.get('canonical_chain')
- if not chain or chain.get('schema')!='g5-ur0b-canonical-chain-proof-v1':raise RuntimeError('canonical positive-chain proof missing')
+ if not chain or chain.get('schema') not in ['g5-ur0b-canonical-chain-proof-v1','g5-ur0b-canonical-chain-proof-v2']:raise RuntimeError('canonical positive-chain proof missing')
+ v2=chain['schema']=='g5-ur0b-canonical-chain-proof-v2'
  if chain.get('scope') not in ['NATIVE_AND_METRICS','NATIVE_ONLY']:raise RuntimeError('canonical proof scope unknown')
  if summary.get('critical_loss')!=0 or summary.get('identity_errors')!=[] or chain.get('unresolved')!=[]:raise RuntimeError('canonical observation has loss, identity error or unresolved links')
  n=chain.get('accepted_raw_count');qualified=chain.get('qualified_decoded_count');metric=chain.get('metric_receipt_count');links=chain.get('chains')
- if type(n) is not int or n<0 or type(qualified) is not int or qualified!=n or not isinstance(links,list) or len(links)!=n:raise RuntimeError('canonical raw/decoded/chain populations disagree')
- if require_metrics and (chain.get('scope')!='NATIVE_AND_METRICS' or type(metric) is not int or metric!=n):raise RuntimeError('canonical metric receipt population missing')
- if chain.get('status')!=('QUALIFIED' if n else 'NOT_OBSERVED') or require_positive and not n:raise RuntimeError('positive canonical completion chain not observed')
+ committed=chain.get('qualified_committed_count') if v2 else n
+ initialized=chain.get('qualified_initialization_count') if v2 else 0
+ initial_links=chain.get('initialization_chains') if v2 else []
+ if any(type(x) is not int or x<0 for x in [n,qualified,committed,initialized]) or qualified!=committed or not isinstance(links,list) or len(links)!=committed:raise RuntimeError('canonical raw/decoded/chain populations disagree')
+ if v2 and (type(chain.get('unresolved_accepted_count')) is not int or chain['unresolved_accepted_count']!=0 or n!=initialized+committed or not isinstance(initial_links,list) or len(initial_links)!=initialized):raise RuntimeError('canonical initialization/committed partition missing or inconsistent')
+ if not v2 and qualified!=n:raise RuntimeError('canonical legacy committed population differs from raw')
+ if require_metrics and chain.get('scope')!='NATIVE_AND_METRICS':raise RuntimeError('canonical metric receipt population missing')
+ if (require_metrics or v2 and chain['scope']=='NATIVE_AND_METRICS') and (type(metric) is not int or metric!=committed):raise RuntimeError('canonical mutation metric receipt population missing')
+ if v2 and chain['scope']=='NATIVE_ONLY' and metric is not None:raise RuntimeError('canonical native-only proof invented metric receipts')
+ if chain.get('status')!=('QUALIFIED' if n else 'NOT_OBSERVED') or require_positive and not committed:raise RuntimeError('positive canonical committed completion chain not observed')
  uint=lambda s:isinstance(s,str) and re.fullmatch(r'\d+',s) is not None and int(s)<2**64
+ digest=lambda s:isinstance(s,str) and re.fullmatch(r'[0-9a-f]{64}',s) is not None
  numeric=['runtime_instance','lifetime_generation','attachment_epoch','document_epoch','resource_generation','view_id','committed_generation','scene_generation','scene_revision','camera_generation','surface_generation','metrics_generation','frame_id','commit_revision']
- seen=set()
- for link in links:
+ seen=set();membership=[]
+ for link in links+initial_links:
+  initial=any(link is item for item in initial_links)
   basis=link.get('basis',{});sequences=[link.get(k) for k in ['draw_seq','provider_seq','capture_seq','completion_seq']]
-  if any(not uint(basis.get(k)) for k in numeric) or any(not isinstance(basis.get(k),str) or re.fullmatch(r'[0-9a-f]{32}',basis[k]) is None for k in ['document_id','operation_id']):raise RuntimeError('canonical full identity missing or lossy')
+  if any(not uint(basis.get(k)) for k in numeric) or not isinstance(basis.get('document_id'),str) or re.fullmatch(r'[0-9a-f]{32}',basis['document_id']) is None:raise RuntimeError('canonical full identity missing or lossy')
+  if not initial and (not isinstance(basis.get('operation_id'),str) or re.fullmatch(r'[0-9a-f]{32}',basis['operation_id']) is None):raise RuntimeError('canonical committed operation identity missing')
   if any(not uint(v) for v in sequences) or not all(int(a)<int(b) for a,b in zip(sequences,sequences[1:])):raise RuntimeError('canonical draw/submit/capture/completion sequence invalid')
   if not uint(link.get('draw_job')) or not uint(link.get('draw_basis')) or not uint(link.get('work_id')) or link['draw_job'] not in link.get('attempt_jobs',[]):raise RuntimeError('canonical successful attempt provenance missing')
-  key=(tuple(sorted(basis.items())),link['work_id'],link['completion_seq'])
+  if initial:
+   origin=link.get('initialization_basis',{});s=origin.get('public_state',{});target=s.get('target',{});last=s.get('lastCommit',{})
+   profile={'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'}
+   if 'operation_id' not in basis or basis['operation_id'] is not None or link.get('operation_reason')!='NOT_APPLICABLE_INITIALIZATION' or any(basis[k]!='0' for k in ['committed_generation','scene_generation','scene_revision','commit_revision']):raise RuntimeError('canonical initialization forged an Operation or nonzero state')
+   if origin.get('status')!='PROVEN_FRESH_EMPTY_INITIALIZATION' or origin.get('source_profile')!=profile or not digest(origin.get('recording_source_tree_sha256')) or any(not digest(origin.get('input_refs',{}).get(k)) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']):raise RuntimeError('canonical initialization recording/source/input basis missing')
+   if s.get('documentId')!=basis['document_id'] or s.get('generation')!='0' or type(s.get('objects')) is not int or s['objects']!=0 or last.get('ordinal')!='0' or last.get('operationId')!='0'*32 or target.get('runtimeEpoch')!=basis['document_epoch'] or target.get('attachmentEpoch')!=basis['attachment_epoch'] or target.get('viewId')!=basis['view_id']:raise RuntimeError('canonical initialization public initial-state basis differs from native')
+  key=link['completion_seq']
   if key in seen:raise RuntimeError('duplicate canonical completion chain')
   seen.add(key)
+  membership.append((link['completion_seq'],link['work_id'],'INITIALIZATION' if initial else 'COMMITTED'))
+ if v2:
+  members=chain.get('accepted_records')
+  if not isinstance(members,list) or len(members)!=n or any(not isinstance(m,dict) or not uint(m.get('completion_seq')) or not uint(m.get('work_id')) or m.get('classification') not in ['INITIALIZATION','COMMITTED'] for m in members):raise RuntimeError('canonical accepted-record partition membership missing')
+  actual=[(m['completion_seq'],m['work_id'],m['classification']) for m in members]
+  if len({m[0] for m in actual})!=n or sorted(actual)!=sorted(membership):raise RuntimeError('canonical accepted-record membership not a bijection')
 def require_bound_compilation(directory,summary,proof):
  directory=Path(directory);analysis=summary.get('analysis',{});ref=summary.get('canonical_chain_ref',{})
  if analysis.get('mode')!='WORKER_COMPILE':raise RuntimeError('canonical offline reverification is not a fresh sampling admission')
@@ -62,6 +85,13 @@ def require_bound_compilation(directory,summary,proof):
   if not (directory/name).is_file() or analysis.get(key)!=sha(directory/name):raise RuntimeError('canonical diagnostic input binding changed: '+name)
  if ref.get('path')!='canonical-chain.json' or not (directory/'canonical-chain.json').is_file() or ref.get('sha256')!=sha(directory/'canonical-chain.json') or load(directory/'canonical-chain.json')!=summary.get('canonical_chain'):raise RuntimeError('canonical proof bytes do not match compiled summary')
  expected=['compile_run.mjs','decode_trace.mjs','metrics_compiler.mjs','canonical_chain.mjs','external_metrics.mjs','schedule.mjs','validate_metrics.py']
+ if summary.get('canonical_chain',{}).get('schema')=='g5-ur0b-canonical-chain-proof-v2':
+  expected.append('initialization_basis.mjs')
+  for key,name,digest in [('verification_spec_ref','verification-spec.json','74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e'),('completion_contract_ref','completion-contract.json','19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd')]:
+   ref=analysis.get(key,{})
+   if ref.get('path')!='.aegis/verification/G5-UR0b-initialization-v1/'+name or ref.get('sha256')!=digest or sha(ROOT/ref['path'])!=digest:raise RuntimeError('canonical initialization Verification binding changed')
+  for chain in summary['canonical_chain'].get('initialization_chains',[]):
+   if chain.get('initialization_basis',{}).get('input_refs')!={k:analysis.get(k) for k in ['raw_trace_sha256','worker_result_sha256','run_inputs_sha256']}:raise RuntimeError('canonical initialization input basis differs from bound compiler input')
  if analysis.get('compiler_files')!={name:sha(HERE/name) for name in expected}:raise RuntimeError('canonical compiler source binding changed')
 def require_qualified_diagnostic(out,proof):
  out=Path(out);decision=out/'diagnostic-result.json';summary_path=out/'raw-runs/diagnostic-ON/compiled-summary.json'

@@ -1,0 +1,139 @@
+{
+  "schema": "g5-ur0b-completion-applicability-v2",
+  "status": "CURRENT_FOR_OFFLINE_UR0b_INITIALIZATION_REPAIR",
+  "stage": "P20",
+  "effective_scope": "Supplemental completion classification/proof for UR0b. Preserve original protocol, metric schema, product mutation/presentation semantics and old results. This corrects the all-raw population predicate only.",
+  "trusted_basis_refs": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/protocol.md",
+      "sha256": "f69e5d8250eaf06324c6827032447a21ba17ae2af16f7f5cf0b9014e0a6207f6",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur0a/metrics.schema.json",
+      "sha256": "ce4bbe957ea5cf50264b777deafbe62d7cf5c620b3d52e9eee802975b38a237b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/ur0/consumer.mjs",
+      "sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/ur0/worker.mjs",
+      "sha256": "a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/result.json",
+      "sha256": "69def72e8c09dc82e21eeaa73b10c21ff2e5a6dc2553723908d3c2cbc2119bce",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "population": {
+    "universe": "Every raw record with kind=12,tag=29,values[0]=1 in the immutable trace. Do not truncate by metric window, generation or operation before accounting.",
+    "classes": [
+      "INITIALIZATION",
+      "COMMITTED",
+      "UNRESOLVED"
+    ],
+    "partition": "Each actual accepted record sequence belongs to exactly one class and remains referenced in the proof. Conflicting/duplicate identity is UNRESOLVED and blocks; rejected/raw callback-entry records remain separately retained.",
+    "equations": [
+      "accepted_raw_count = qualified_initialization_count + qualified_committed_count + unresolved_accepted_count",
+      "qualified_decoded_count = qualified_committed_count (legacy field retains its mutation-only meaning)",
+      "metric_receipt_count = qualified_committed_count for NATIVE_AND_METRICS",
+      "len(initialization_chains) = qualified_initialization_count",
+      "len(chains) = qualified_committed_count"
+    ],
+    "no_default_ids": "A real recorded zero is a value; absent identity is not zero. Initialization operation_id is null with explicit NOT_APPLICABLE meaning, never a fabricated all-zero Operation."
+  },
+  "common_native_chain": {
+    "required": "Retain the existing full owner/runtime/lifetime/attachment/document/epoch/resource/view and actual frame/Scene/camera/surface/metrics/work stamps, unique successful provider job/basis and draw→provider→capture→accepted-completion chronology. Compare exact lossless native values. Keep all preparation attempts. A GPU/resource epoch never substitutes for a document/resource generation.",
+    "fail_closed": [
+      "missing/ambiguous owner or draw/provider/work",
+      "foreign lifetime,attachment,document,epoch,view,resource,camera,surface,metrics or frame",
+      "duplicate accepted sequence/work",
+      "stale or contradictory capture/submit",
+      "critical loss or existing identity error"
+    ]
+  },
+  "initialization": {
+    "label": "INITIALIZATION",
+    "scope": "Fresh empty document created through the frozen UR0b consumer init() createRuntime call, without snapshot/resource document import. This v1 amendment does not qualify arbitrary restored generation-zero documents.",
+    "recording_basis": {
+      "consumer_sha256": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+      "worker_sha256": "a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1",
+      "check_against": "The archived run.source_before.files identities and exact immutable input binding; do not replace them with current decoder source or a caller true flag."
+    },
+    "required_all": [
+      "Common native chain is complete and uniquely matched; initial draw/capture have actual semanticGeneration=0, sceneGeneration=0, sceneRevision=0 and commitRevision=0. These zeros alone never qualify a frame.",
+      "Archived run.init.state is a real public createRuntime return state: documentId matches native document; generation=0, objects=0, lastCommit.ordinal=0. The archived public lastCommit all-zero Operation sentinel means absence only; it is not an Operation identity.",
+      "Public init.state.target attachmentEpoch, viewId and runtimeEpoch match native attachment/view/document epoch. Public target.runtimeEpoch is document epoch, not runtime instance or lastCommit.runtimeEpoch; lifetime/runtime instance must come from the actual native chain.",
+      "The frozen fresh-empty init harness/source identities are proven. Missing public initial state, a nonempty/restored document, a different source profile or unproved creation context stays UNRESOLVED.",
+      "No matching-owner semantic commit/Scene publication exists before the initialization draw/capture. Any observed matching-owner commit at or before capture, nonzero commit basis or contradictory generation defeats INITIALIZATION. Preserve completion identity even if an independently accepted old initialization callback occurs later; never let it confirm later commit state.",
+      "Keep every source seq and the public-state/source/input hash references in initialization_chains; do not fabricate an Operation or Scene publication event."
+    ],
+    "public_measurement_before": "Not mandatory: separate correctness workers may lack it. When present it is a later observation, not automatically the initial anchor; a setup fixture may already have committed by that time. It may corroborate fresh initial state but cannot replace a missing run.init.state.",
+    "metric_treatment": "Do not create a canonical interaction receipt or Up/Commit→Canonical timing for initialization. Record its lifecycle completion separately in proof/provenance. Existing job terminal state may become Completed only by its own actual accepted completion, leaving operation absent and without attributing it to a stroke/erase.",
+    "outside_scope": "Other lifecycle/restored frames remain UNRESOLVED unless supported by a later explicit basis. Do not infer initialization from operation=null or generation=0 alone."
+  },
+  "committed": {
+    "label": "COMMITTED",
+    "requirements": "All existing Operation/commit→Scene→draw/provider/capture→accepted completion identity, successful-attempt, clock and metric-receipt requirements remain. Initialization handling cannot satisfy missing post-commit proof.",
+    "positive_gate": "require_positive=True always requires qualified_committed_count>0, even when all accepted frames are valid INITIALIZATION. Native-only scope can omit metric receipts but cannot omit the committed native chain.",
+    "metrics": "Only COMMITTED contributes to decoded.qualified_completions (or an explicitly named equivalent committed list) and mutation canonical_receipts. Preserve existing measured values and receipt basis exactly."
+  },
+  "proof": {
+    "output_schema": "g5-ur0b-canonical-chain-proof-v2",
+    "fields": {
+      "schema": "version v2",
+      "scope": "NATIVE_AND_METRICS or NATIVE_ONLY",
+      "accepted_raw_count": "all actual accepted raw records",
+      "qualified_initialization_count": "initialization chains satisfying the full basis",
+      "qualified_committed_count": "committed native chains satisfying the unchanged contract",
+      "qualified_decoded_count": "legacy alias for qualified_committed_count; not total lifecycle completions",
+      "metric_receipt_count": "mutation receipts only, or null in NATIVE_ONLY",
+      "unresolved_accepted_count": "unqualified accepted records",
+      "initialization_chains": "one per qualified init completion, actual native identity and provenance plus state/source basis; operation_id=null and reason NOT_APPLICABLE_INITIALIZATION",
+      "chains": "unchanged committed-chain identity/provenance",
+      "unresolved": "Every unproved accepted completion plus critical/identity or population errors"
+    },
+    "qualified": "All equations and bijections hold, unresolved_accepted_count=0, unresolved=[], no critical loss or identity errors. accepted_raw_count>0 -> QUALIFIED; no accepted frames -> NOT_OBSERVED. No new scope-specific metrics receipt for initialization.",
+    "legacy": "Preserve archived v1 bytes. If v1 remains readable it retains the original strict committed-only meaning, requires its old equality and cannot claim initialization support. New compiler output uses v2; do not relabel a v1 record as v2.",
+    "reader_coherence": "Update every actual admission consumer of the changed proof fields consistently, especially repair_runner.require_canonical_chain and resume_runner. Old stopped authorities stay closed. No permission to start a new window."
+  },
+  "provenance": {
+    "recorded_vs_compiled": "Keep recorded raw/source/SDK/harness identity separate from current compiler/spec identity. Hash-bound archive input/output + compiler identities are mandatory. OFFLINE_REVERIFICATION stays offline and cannot be passed into require_bound_compilation as fresh WORKER_COMPILE.",
+    "archive_preservation": "Read archived raw/results/manifests; write derived results to a new result/evidence directory. No source_identity exclusion change.",
+    "reuse_conditions": [
+      "All original runtime/SDK, collector, worker/consumer, corpus, diagnostic toggle, budgets and original run identities remain byte-identical.",
+      "Recompiled external/common statistics, final snapshot/terminal/product outcomes, actual accepted record set and all committed canonical receipts/metrics remain equal.",
+      "Corrected proof accounts for initialization separately and does not manufacture missing results. Every old run remains independently identified.",
+      "The existing diagnostic and overhead cohort remain valid observations eligible for later explicit continuation binding; offline replay is not new sampling or a fresh cohort."
+    ],
+    "reuse_verdict": "Implementation emits eligible/pending independent review assessment. Control review approves applicability before any future continuation; no overhead cohort rerun is needed solely because an offline decoder changed if the above holds.",
+    "new_sampling_authorized": false
+  },
+  "explicit_non_goals": [
+    "Renderer/Brush/Operation/Scene/Skia algorithm or production surface change",
+    "Canonical semantic schema or public SDK API change",
+    "Pixel/AA/receipt/clock/performance threshold relaxation",
+    "Browser sampling, artifact rebuilding or reopening r3",
+    "Global authority/project-state or historical P34 changes"
+  ]
+}

@@ -1,0 +1,1011 @@
+{
+  "schema": "g5-ur0b-r3-mechanism-proof-v1",
+  "status": "MECHANISMS_VERIFIED",
+  "scope": "fresh runner/compiler regressions, exact unchanged product/build projection and both budget artifacts; no browser qualification claimed",
+  "package_sha256": "bd6777505dddd474a111c52e1c477001a82ed11b5e445ce293f40368ba27f915",
+  "source_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "files": [
+    {
+      "path": "out/host/runtime/render/axiom_ur0_fixture_oracle",
+      "sha256": "8605c7fd45d118a4cdd8b9bee3ba5c8a8c64b9eb7dbc09c4e74a81058ab06fa0"
+    },
+    {
+      "path": "out/ur0b/p36-binary-boundary.log",
+      "sha256": "b466bdf8f61e79d09d3f517b173c26873c93ff0b9e5e3c7712df614a7572df4c"
+    },
+    {
+      "path": "out/ur0b/p36-build-observation-2.log",
+      "sha256": "e106965b42ea453d6b594d872c77c774192535c3e57d1b075a82d97c86649445"
+    },
+    {
+      "path": "out/ur0b/p36-build-observation.log",
+      "sha256": "f413176b96e5f655467c7f63d6e61b797a4ad75b53f9679ee9e449c1b04e5bf2"
+    },
+    {
+      "path": "out/ur0b/p36-build-pixel-oracle-final.log",
+      "sha256": "ad6829716059f7146e4c144234bfd928701e6c9e893521d7d25df9b06788c11a"
+    },
+    {
+      "path": "out/ur0b/p36-build-pixel-oracle-r2.log",
+      "sha256": "ec6393e2bc17f4bb3c1fb44ab54ef013469a44145da7a0550a69e247d3532d7d"
+    },
+    {
+      "path": "out/ur0b/p36-build-pixel-oracle-r3.log",
+      "sha256": "825d4ca0f4d2ffd75dfd43c964101616902db7113b591146f24827e1781df0d1"
+    },
+    {
+      "path": "out/ur0b/p36-build-pixel-oracle-r4.log",
+      "sha256": "825d4ca0f4d2ffd75dfd43c964101616902db7113b591146f24827e1781df0d1"
+    },
+    {
+      "path": "out/ur0b/p36-build-pixel-oracle.log",
+      "sha256": "1a7cd29d7b8ed9ff8ff89e6ac231e9099eb23ca9bb4fbda876eaefbb563ed595"
+    },
+    {
+      "path": "out/ur0b/p36-busy-green-r2.log",
+      "sha256": "4e17aad561a217d6dc075bcff02ec3271ab30e022788dfb88e5f4d421df8f5ec"
+    },
+    {
+      "path": "out/ur0b/p36-busy-green.log",
+      "sha256": "fd1e607e113613f3bbdfbc3532a27b52524902af5b9e03a697fca6dd2921de78"
+    },
+    {
+      "path": "out/ur0b/p36-busy-red.log",
+      "sha256": "bdb167392378bcfd1e9b683fe4ed59de99c9a3f37c23c95dd80e8edf151a24ce"
+    },
+    {
+      "path": "out/ur0b/p36-compiler-green.log",
+      "sha256": "d68cd06e964f365c1fc588a75fbc379c0df9338a2f3ac19efb492282aeb06623"
+    },
+    {
+      "path": "out/ur0b/p36-compiler-red.log",
+      "sha256": "985d20e0c357d22fac879be7e0216454f8d7e8f548b9a2bca7c777951076fb23"
+    },
+    {
+      "path": "out/ur0b/p36-ctest-required.log",
+      "sha256": "63802986b4f94e6d14a2c7e4805bfd48f756d30fb62b2373e5bca2291d706dd3"
+    },
+    {
+      "path": "out/ur0b/p36-decode-red.log",
+      "sha256": "eb627f38b6c4d5d7c5e6cf2897655754ccc9479f25529c58398332e0929020bf"
+    },
+    {
+      "path": "out/ur0b/p36-decode-transition.log",
+      "sha256": "ed473c500c798e1ab9e5363cc619312352778945f4ddaded39d3b3c1e64ee430"
+    },
+    {
+      "path": "out/ur0b/p36-feedback-compiler-red.log",
+      "sha256": "32dd2dad960832430642de96989f7d104c8b5ab733ae332f70b16afe7aa62c7a"
+    },
+    {
+      "path": "out/ur0b/p36-final-repair-runner.log",
+      "sha256": "8eae2b9341a0dcb125032f79cad90f202e4eb531cdb3380fe7f24c8dd0b7dda6"
+    },
+    {
+      "path": "out/ur0b/p36-final-ur0-node.log",
+      "sha256": "44f67627d03596b52165029cda589384a007eadb1696ed99a65bd05c8e0e83c1"
+    },
+    {
+      "path": "out/ur0b/p36-fixture-semantic-oracle.json",
+      "sha256": "b094f180a708c55a74491fb0286a0e05dd9bf6abc695b9590be4e91b7c989581"
+    },
+    {
+      "path": "out/ur0b/p36-fixture-semantic-oracle.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ur0b/p36-install-normal.log",
+      "sha256": "f15edaed4bb9862dfafa30b5b8f5b801882abd6728ed54c8cea8dce3ef56cd7e"
+    },
+    {
+      "path": "out/ur0b/p36-install-qualified-rejected.log",
+      "sha256": "c035469502f680a8063b80a5c25cae48e3a54a5451db79a83de9a29c89046092"
+    },
+    {
+      "path": "out/ur0b/p36-lease-decode-red.log",
+      "sha256": "1a9d5b8dbda67451d822e37d897e784ac5875fcf0ee242cabe286572cb8e20fb"
+    },
+    {
+      "path": "out/ur0b/p36-lease-green-build.log",
+      "sha256": "f2a32db518b4a1a096b38588e0fa4a04eb1775514521906b432e277e8a1566dc"
+    },
+    {
+      "path": "out/ur0b/p36-lease-green.log",
+      "sha256": "cdac1e3d63242a82a5b5c8dbfa399e9f3ccfe0c19be29ec7f6f09d181c42f040"
+    },
+    {
+      "path": "out/ur0b/p36-lease-red-build.log",
+      "sha256": "17d982d3e0312f225ade67f01b6115289a1f09b8ebb09bc4920672fcf9860606"
+    },
+    {
+      "path": "out/ur0b/p36-lease-red.log",
+      "sha256": "10e980d1ff4c79225817e995bff174c35f1418716a38b1b7910eecc0b6220637"
+    },
+    {
+      "path": "out/ur0b/p36-navigation-owners-green.log",
+      "sha256": "cec0de5238fc9a2e61d37e7e7cd11592c5e014494a3ef6a4fe62d15d28ac488f"
+    },
+    {
+      "path": "out/ur0b/p36-navigation-owners-red.log",
+      "sha256": "98f0e6b2fa0e5b6b1d33aef7d1be1da0e85bfc511eb2af9df229d1d4f4c33866"
+    },
+    {
+      "path": "out/ur0b/p36-node-required-final.log",
+      "sha256": "8b9d077761da3365d91dd9df4cdc9bcea0382d9a07b0e20cf9473c903a953c6f"
+    },
+    {
+      "path": "out/ur0b/p36-node-required.log",
+      "sha256": "91beb20451400579c38a68385adcf2dfcaef0a4081a061b1093cfb4041389690"
+    },
+    {
+      "path": "out/ur0b/p36-normal-artifact-comparison.json",
+      "sha256": "a386179570093c150982473edab97322683802ae5fe0c771762f6352045c92cf"
+    },
+    {
+      "path": "out/ur0b/p36-normal-consumer-smoke-binding.json",
+      "sha256": "0b44a82b58a991c43435030c506ccf46159fd367f55be1618b62139ff6adaf36"
+    },
+    {
+      "path": "out/ur0b/p36-normal-qualification-boundary.json",
+      "sha256": "0d39a33657154d1de12aa2351c5e7b9c83ea51c5fca91633fbea2685abdd2591"
+    },
+    {
+      "path": "out/ur0b/p36-observation-tests-2.log",
+      "sha256": "30c2a082e35f5ed5ac7802993e2e4fe9f3d0d74cbdce7211fc1648cb1a02afff"
+    },
+    {
+      "path": "out/ur0b/p36-observation-tests.log",
+      "sha256": "74b52a5609bbf5866c7ef13d64bab942bc9f1790aa3ef1845e28b520999e077b"
+    },
+    {
+      "path": "out/ur0b/p36-pixel-oracle-red.log",
+      "sha256": "e5a1090dcf7d172e9c0632709959032d0cf5aa0f190016a1c9bfafd713ef0f9a"
+    },
+    {
+      "path": "out/ur0b/p36-pixels-green.log",
+      "sha256": "73eb23f7f70ae6befeea70421bfbe4a765d52b3900cabe349a643a6a6f97f4f9"
+    },
+    {
+      "path": "out/ur0b/p36-pixels-red.log",
+      "sha256": "04a5c8a1b17e1e0dc79fbd0eabeb1a876c1bb189d0e36b5991ce87e3d993c6ae"
+    },
+    {
+      "path": "out/ur0b/p36-preorigin-red.log",
+      "sha256": "be87752a4f82b825d0e4af546e48d761d860c7ed045afd612f720acc8b2daebc"
+    },
+    {
+      "path": "out/ur0b/p36-pressure-green-build.log",
+      "sha256": "e24dc7f089da5d2b9e1d7fc180559cff8449209bb5fec166ce629a3f9edd65a5"
+    },
+    {
+      "path": "out/ur0b/p36-pressure-green.log",
+      "sha256": "010838a5aee823716f1a6c783ee2394b9e0d9dda88e954e7f96e5a8081abfac9"
+    },
+    {
+      "path": "out/ur0b/p36-pressure-red-build.log",
+      "sha256": "cd6a182bda48d6a1af70df4641dd27190982ec98eb768976832933000247cdc3"
+    },
+    {
+      "path": "out/ur0b/p36-pressure-red.log",
+      "sha256": "de24e54a80afbaf7407b2d8ab34e5974895f79339ceb503e495ba62552355ebd"
+    },
+    {
+      "path": "out/ur0b/p36-python-required.log",
+      "sha256": "7296cf0728b4b30ec22f34ac580a13d18cc1408a7958b245e88c348186bd8d3a"
+    },
+    {
+      "path": "out/ur0b/p36-quota-green.log",
+      "sha256": "ceb859e3dd6ca0b1c6fd5846553efa31d75ce486628aaed34dfbc247e72cb8bf"
+    },
+    {
+      "path": "out/ur0b/p36-quota-lifecycle-green.log",
+      "sha256": "6dab5bebb17cc253b4acda6a8310713933ccd3c750b2bac04998a855b18c886d"
+    },
+    {
+      "path": "out/ur0b/p36-quota-red.log",
+      "sha256": "f50bff475e02d79ce544508ece9fc8539757ca40cf32156f66cf601768ad3441"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/CMakeCache.txt",
+      "sha256": "5de5b4f5a52206ba72673470647a0a56f9e7b5367ae9acb9aaa7965709b2349d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/build.log",
+      "sha256": "c5362d75aa1ea15aa736ecf97dd0be19f702217f23d71733a7e8084514558b35"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/configure.log",
+      "sha256": "77b5c0be53b45918f76c3ba1bdb197f4a9727d7b4c39a290a9e9933722e3034d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXX.dd",
+      "sha256": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json",
+      "sha256": "18981f5070e1c946134947b19c4cd1dcadb70d8f481f59d53ec0c53e29f4e388"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXXModules.json",
+      "sha256": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o",
+      "sha256": "c64ae5e9dd24475db707e50f433657e28cd5dbba0a0749508ce081860256cc2a"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi",
+      "sha256": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d",
+      "sha256": "4713e70053c86c1e1bfb43cd099509377703689a21914d1bf02f70bdb550c4a5"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd",
+      "sha256": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json",
+      "sha256": "4f823e4739a1063f7e66b74c057e9a7c66728878ec6411b363eaefc55f413c77"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json",
+      "sha256": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o",
+      "sha256": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi",
+      "sha256": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d",
+      "sha256": "9fb40e4436aab750b581049a75c04bde0afa3d26cf2da7b7e38d5bf70af44427"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/README.md",
+      "sha256": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/axiom.d.mts",
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/axiom.mjs",
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/demo-controls.d.mts",
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/demo-controls.mjs",
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/internal/controller.mjs",
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/internal/transport.d.mts",
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/internal/transport.mjs",
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/api/internal/values.mjs",
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/axiom.d.mts",
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/axiom.data",
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/axiom.mjs",
+      "sha256": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/axiom.wasm",
+      "sha256": "d88896b8e96ca1d0e566cba957809e2b83a94340f10d96a6c74ebcd7cdaccc6d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/cmake_install.cmake",
+      "sha256": "0d5646ff941c813f06b9ffcc910e09de10fb08d7ed19ba065fd65349cd59d307"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/example.html",
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/internal/axiom.data",
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/internal/axiom.mjs",
+      "sha256": "1059019c7645e47ffd45fd3264844cce496a4d0dd4ff914c1b95148fe3e5c27e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/internal/axiom.wasm",
+      "sha256": "d88896b8e96ca1d0e566cba957809e2b83a94340f10d96a6c74ebcd7cdaccc6d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/libaxiom_web_runtime_adapter.a",
+      "sha256": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/fonts/Excalifont/OFL.txt",
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/nlohmann-json-LICENSE.MIT",
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/noto-cjk-LICENSE.txt",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/noto-cjk-NOTICE.txt",
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/semantic/Abseil.txt",
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/semantic/Protobuf.txt",
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/semantic/utf8_range.txt",
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/Expat.txt",
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/FreeType.txt",
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/HarfBuzz.txt",
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/ICU.txt",
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/Skia.txt",
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/Wuffs.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/libjpeg-turbo.txt",
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/libpng.txt",
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/libwebp.txt",
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/licenses/skia/zlib.txt",
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/package.json",
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/pointer_input.mjs",
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/serve.py",
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/sdk/web/text_input.mjs",
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-normal-64-192/ur0b-build-request.json",
+      "sha256": "7b134ea41e77132ecdabfd1b3fff28d426fe5f3447a8fb0d44ec95ebaad4ef7b"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/CMakeCache.txt",
+      "sha256": "5f96a28866f80500a881dee3b2003d29c4a05c57dd67815b8bd838f45b4be638"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/build.log",
+      "sha256": "72660058a445c65569de35d2b7233856041834861229c408f368b512f5c700e7"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/configure.log",
+      "sha256": "27e2a0716d2e87b0187c0c55182db9fb8ef359370afcc1ebea574c13361aaad7"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXX.dd",
+      "sha256": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json",
+      "sha256": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/CXXModules.json",
+      "sha256": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o",
+      "sha256": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi",
+      "sha256": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d",
+      "sha256": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd",
+      "sha256": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json",
+      "sha256": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json",
+      "sha256": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o",
+      "sha256": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi",
+      "sha256": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d",
+      "sha256": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/README.md",
+      "sha256": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/axiom.d.mts",
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/axiom.mjs",
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/demo-controls.d.mts",
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/demo-controls.mjs",
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/internal/controller.mjs",
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/internal/transport.d.mts",
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/internal/transport.mjs",
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/api/internal/values.mjs",
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/axiom.d.mts",
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/axiom.data",
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/axiom.mjs",
+      "sha256": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/axiom.wasm",
+      "sha256": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/cmake_install.cmake",
+      "sha256": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/example.html",
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/internal/axiom.data",
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/internal/axiom.mjs",
+      "sha256": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/internal/axiom.wasm",
+      "sha256": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/libaxiom_web_runtime_adapter.a",
+      "sha256": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/fonts/Excalifont/OFL.txt",
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/nlohmann-json-LICENSE.MIT",
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/noto-cjk-LICENSE.txt",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/noto-cjk-NOTICE.txt",
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/semantic/Abseil.txt",
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/semantic/Protobuf.txt",
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/semantic/utf8_range.txt",
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/Expat.txt",
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/FreeType.txt",
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/HarfBuzz.txt",
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/ICU.txt",
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/Skia.txt",
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/Wuffs.txt",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/libjpeg-turbo.txt",
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/libpng.txt",
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/libwebp.txt",
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/licenses/skia/zlib.txt",
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/package.json",
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/pointer_input.mjs",
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/serve.py",
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/sdk/web/text_input.mjs",
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/ur0b-build-request.json",
+      "sha256": "c7ce012e584376125114e500b79b95a417996aa16c5ca0c3cff5e3c24fbeebb1"
+    },
+    {
+      "path": "out/ur0b/p36-r1/pixel-mechanism/final-result.json",
+      "sha256": "c8f20c9cce1f6843eb3d676b3e6d5da27a7c25ae3911a2318fed5dd94b312fd1"
+    },
+    {
+      "path": "out/ur0b/p36-recompiled-original-final.log",
+      "sha256": "32dbb766f0efaf557150bd00e2294f7d374598f9c052cd8e1fd3883bda72556c"
+    },
+    {
+      "path": "out/ur0b/p36-recompiled-original-on.log",
+      "sha256": "32dbb766f0efaf557150bd00e2294f7d374598f9c052cd8e1fd3883bda72556c"
+    },
+    {
+      "path": "out/ur0b/p36-repair-runner-green.log",
+      "sha256": "58976e1ebef02b28fad1bcf93e82831c9ac8cc4bf93fac3ea64e4eed88432c50"
+    },
+    {
+      "path": "out/ur0b/p36-repair-runner-red.log",
+      "sha256": "1e4e33dd46d6aefb465d6a1f0c051d89575284ff1052cc47c127be475749a317"
+    },
+    {
+      "path": "out/ur0b/p36-required-native-build.log",
+      "sha256": "5fb016a22233b2e21573a69158db6b824a3f13d8f9e348fb4c442d89c022aa77"
+    },
+    {
+      "path": "out/ur0b/p36-rss-observer-red.log",
+      "sha256": "08052a2dc6b794dcbcdc9ac92cfb00a9acf719cb1a767d2894ab72c13320f1f1"
+    },
+    {
+      "path": "out/ur0b/p36-runtime-boundaries-r2.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    {
+      "path": "out/ur0b/p36-runtime-boundaries.log",
+      "sha256": "075dfe2e6037c39fda68e8284811852435629eacba823c9e58ce7959fa820352"
+    },
+    {
+      "path": "out/ur0b/p36-smoke-fixture-decode.json",
+      "sha256": "a5998870292c746699fe53c73fc6565ee4a23ca397f3eb6c82caa68102a17f8b"
+    },
+    {
+      "path": "out/ur0b/p36-stale-submit-red.log",
+      "sha256": "bd712cd0a7b586eac0c98f685eae3c65ffc3d06ce968408bb2ca4240c891f1c0"
+    },
+    {
+      "path": "out/ur0b/p36-transfer-red.log",
+      "sha256": "4ebe1c143d14beb300a2fc4e3d5e082a90beffbdfdfdd17f5be71e450ef0edbf"
+    },
+    {
+      "path": "out/ur0b/p36-web-normal-final.log",
+      "sha256": "3fd96bf99cf098f0e493e635c6c83cd0991a649cff940dcc770c1e663fda5f29"
+    },
+    {
+      "path": "out/ur0b/p36-web-normal.log",
+      "sha256": "3fd96bf99cf098f0e493e635c6c83cd0991a649cff940dcc770c1e663fda5f29"
+    },
+    {
+      "path": "out/ur0b/p36-web-qualified-final.log",
+      "sha256": "3a01afffc04bfbd9ec85f13d9b502ac8a431f0e46768c1ca91b6d1a2e41466fb"
+    },
+    {
+      "path": "out/ur0b/p36-web-qualified.log",
+      "sha256": "3a01afffc04bfbd9ec85f13d9b502ac8a431f0e46768c1ca91b6d1a2e41466fb"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/resume-r3/artifact-provenance.json",
+      "sha256": "1eed339c4958f45ac56db147663a223177620245248ba056f525246b584c04b3"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/resume-r3/full-source-identity.json",
+      "sha256": "02abe7ac54045edf703bcc41c7e12fe54c552f0e775b38f5db342dc8ac03365c"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/resume-r3/source-scope-audit.json",
+      "sha256": "54a0850492fb597195c4033c4806348ff1943e5e312a250c658adddd01bc35cc"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/resume-r3/regression.json",
+      "sha256": "b5f95539107c105f45d01c5737d0793e26bb4293665fbbac429c8e1fb510dc31"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/resume-r3/prepare-proofs.py",
+      "sha256": "72e3b764eaada94d03cfd3ba3f5ea265a68bbe57c0bf1915420f1f5bc02235c9"
+    },
+    {
+      "path": "out/ur0b/resume-r3/node-final.log",
+      "sha256": "98dd23ba13bb7d2d3c4bd7e7dee0efee2ac691486a0872a563d0540dad6d7d5b"
+    },
+    {
+      "path": "out/ur0b/resume-r3/python-final.log",
+      "sha256": "ca7d0cbc82df966b2e2d3e7bdf5c29f6d06bd2314cf6e7512ca712478881f645"
+    },
+    {
+      "path": "out/ur0b/resume-r3/native-final.log",
+      "sha256": "8f726b7075eee13d4e5dc28f7587119a21017f1518d23ebc5410ecd9421f4665"
+    },
+    {
+      "path": "out/ur0b/resume-r3/native-test-command.json",
+      "sha256": "80468499cc476a6dc61d74f9597668941a837e7db2f7940f9196977deaf40965"
+    },
+    {
+      "path": "out/ur0b/resume-r3/boundary-final.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    {
+      "path": "out/ur0b/resume-r3/admission-red-checked.log",
+      "sha256": "df2df57371e93f851097b81f2334fdeb8b636759dfa08c74e3f8a72b3714ec88"
+    },
+    {
+      "path": "out/ur0b/resume-r3/admission-green.log",
+      "sha256": "ee77575e9792889cf800586981e8dea7f2cf78cea1b3fa151873f2e2f76c858f"
+    },
+    {
+      "path": "out/ur0b/resume-r3/boundary-artifact-64.json",
+      "sha256": "0d39a33657154d1de12aa2351c5e7b9c83ea51c5fca91633fbea2685abdd2591"
+    },
+    {
+      "path": "out/ur0b/resume-r3/boundary-artifact-64.log",
+      "sha256": "b466bdf8f61e79d09d3f517b173c26873c93ff0b9e5e3c7712df614a7572df4c"
+    },
+    {
+      "path": "out/ur0b/resume-r3/boundary-artifact-32.json",
+      "sha256": "0d39a33657154d1de12aa2351c5e7b9c83ea51c5fca91633fbea2685abdd2591"
+    },
+    {
+      "path": "out/ur0b/resume-r3/boundary-artifact-32.log",
+      "sha256": "b466bdf8f61e79d09d3f517b173c26873c93ff0b9e5e3c7712df614a7572df4c"
+    },
+    {
+      "path": "verification/runners/g5/ur0/compile_run.mjs",
+      "sha256": "df8ca211885678e8b687414eb51db9987990c90c42566d187352d19214e1fa58"
+    },
+    {
+      "path": "verification/runners/g5/ur0/decode_trace.mjs",
+      "sha256": "062d14a29a1948436087d013c84b04d413440264b79a1ead184c4de3488e53ae"
+    },
+    {
+      "path": "verification/runners/g5/ur0/metrics_compiler.mjs",
+      "sha256": "970185f5b97c2123d3a0371cbad2e60822b3ea36e64bef9f4c20d33a97dec2cb"
+    },
+    {
+      "path": "verification/runners/g5/ur0/canonical_chain.mjs",
+      "sha256": "756920ea04c282324dc80ff75f8bdbe78990d23c5fb95526c7d5bf88f9ed4e32"
+    },
+    {
+      "path": "verification/runners/g5/ur0/external_metrics.mjs",
+      "sha256": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe"
+    },
+    {
+      "path": "verification/runners/g5/ur0/schedule.mjs",
+      "sha256": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247"
+    },
+    {
+      "path": "verification/runners/g5/ur0/validate_metrics.py",
+      "sha256": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad"
+    },
+    {
+      "path": "verification/runners/g5/ur0/resume_runner.py",
+      "sha256": "cbb194db40faae1d5ae83d0e168f2569663da1d2913975453c9f7ffec54a2b93"
+    },
+    {
+      "path": "verification/runners/g5/ur0/repair_runner.py",
+      "sha256": "3f3f8423b0310401b7a43cbf80e9cba3f59d2ef61b761b2b929e07c4730ff13a"
+    },
+    {
+      "path": "verification/runners/g5/ur0/observed_worker.py",
+      "sha256": "09da2c5ca9c72350bd6e08b33c46ab4b043bc888125d00b23d6254df30346fbc"
+    },
+    {
+      "path": "verification/runners/g5/ur0/source_identity.py",
+      "sha256": "7db7588faa8e57d83b00bb193eec8b955d97be7a40eee2965f9a33f58c60083d"
+    },
+    {
+      "path": "verification/runners/g5/ur0/build_variants.py",
+      "sha256": "0476c95235ec021f890ad84f608ef439125bfcf0198c91e141a4e8d8cf42f88c"
+    },
+    {
+      "path": "verification/tests/test_g5_ur0_resume_runner.py",
+      "sha256": "7e91b3919909f51f0150e1a0a8d2d98ec6ffb4005710aef47d20f070dab20b13"
+    },
+    {
+      "path": "out/ur0b/p36-r1/build-qualified-64-192/build.ninja",
+      "sha256": "e3baf104ab1ca8b53e46dad3c03ec1a0b00ae7f7c42e1dd6ce3b82b8a8c8d4b3"
+    },
+    {
+      "path": "out/ur0b/resume-r3/build-qualified-32-96/ur0b-build-request.json",
+      "sha256": "226f35917beb1577aeb5c191aab2c3bfef79c1cd501d0aab6a326dbf886dfb1b"
+    },
+    {
+      "path": "out/ur0b/resume-r3/build-qualified-32-96/CMakeCache.txt",
+      "sha256": "0e8b73f8e1fd2ee9cc2b973c60226fa9e1f953033e31fbd7d295533fb3b8b17b"
+    },
+    {
+      "path": "out/ur0b/resume-r3/build-qualified-32-96/build.ninja",
+      "sha256": "089a7c3b7cc2bdf02c76fdc91be2e60276f4065652ea876f15a07884b4883a87"
+    },
+    {
+      "path": "out/ur0b/resume-r3/build-qualified-32-96/configure.log",
+      "sha256": "434c212171cfe0831862b7fbe5c7ebb37b99b4cdb033714a854d24f30dae2866"
+    },
+    {
+      "path": "out/ur0b/resume-r3/build-qualified-32-96/build.log",
+      "sha256": "d2189c74bfb8eec10a0a39a8c71b2589f84e322c1c065ca7330a542c7b004099"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/p36-r1/mechanism-proofs.json",
+      "sha256": "1abdac349f8ef0a85628770cd53e026629b42932ebbff6e0148b6fd1edf1ff69"
+    }
+  ],
+  "compiler_files": {
+    "compile_run.mjs": "df8ca211885678e8b687414eb51db9987990c90c42566d187352d19214e1fa58",
+    "decode_trace.mjs": "062d14a29a1948436087d013c84b04d413440264b79a1ead184c4de3488e53ae",
+    "metrics_compiler.mjs": "970185f5b97c2123d3a0371cbad2e60822b3ea36e64bef9f4c20d33a97dec2cb",
+    "canonical_chain.mjs": "756920ea04c282324dc80ff75f8bdbe78990d23c5fb95526c7d5bf88f9ed4e32",
+    "external_metrics.mjs": "6cdf0eb19c6fb8e39ab28b34d9c2bcc717d467a2dc386218d2a2dc008d43fefe",
+    "schedule.mjs": "c5d2f0007bb003dc056da5f8e600661841efcbc98fdb38518f4f11b7995b3247",
+    "validate_metrics.py": "b775014825a088daa3c053b173fdaf591a6e7e44bbb6c3f9a5414862d4abedad"
+  },
+  "qualified_sdk_artifacts": {
+    "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+    "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+    "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+    "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+    "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+    "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+    "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+    "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+    "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+    "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+    "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+    "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+    "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+    "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+    "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+    "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+    "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+    "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+    "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+    "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+    "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+    "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+    "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+    "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+    "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+    "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+    "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+    "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+    "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+    "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+    "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+    "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+    "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+    "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+    "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+    "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+    "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+    "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+  },
+  "qualified_sdk32_artifacts": {
+    "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+    "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "bc5cfa54fcee906498e60b3b19e4d2b36a2c891fa25a054b7108c36d1ee3c5a0",
+    "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+    "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "8f2f22cbf44da9b61cac3cd79291d32a42b7b2538c8c27ab87b9e0cefcc3f828",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "d3aaccc3503254cca22aba70319cdbba893b8109125ed92d1b07ee4662f3278a",
+    "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+    "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+    "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+    "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+    "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+    "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+    "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+    "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+    "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+    "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+    "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+    "axiom.wasm": "c30f4785cc971ec32fd83a5459717413f939708a44be9b32b11732f2ed2f5ddc",
+    "cmake_install.cmake": "5c9fb8dde1a979d0482f63abedd647fdea355e20bd6da07dd7fb9a3fde9c5723",
+    "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+    "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+    "internal/axiom.wasm": "c30f4785cc971ec32fd83a5459717413f939708a44be9b32b11732f2ed2f5ddc",
+    "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+    "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+    "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+    "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+    "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+    "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+    "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+    "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+    "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+    "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+    "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+    "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+    "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+    "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+    "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+    "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+    "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+    "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+    "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+    "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+  },
+  "historical_charged_seconds": 597,
+  "artifact_provenance_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/artifact-provenance.json",
+    "sha256": "1eed339c4958f45ac56db147663a223177620245248ba056f525246b584c04b3"
+  },
+  "starting_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "build_identities_retained": true,
+  "performance_pass": false
+}

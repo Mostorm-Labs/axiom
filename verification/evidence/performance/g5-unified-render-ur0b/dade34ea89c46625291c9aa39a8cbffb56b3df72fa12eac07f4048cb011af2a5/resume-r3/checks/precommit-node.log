@@ -1,0 +1,435 @@
+TAP version 13
+# Subtest: a partial process, wrong axis count or component cannot qualify root SDK
+ok 1 - a partial process, wrong axis count or component cannot qualify root SDK
+  ---
+  duration_ms: 0.85625
+  ...
+# Subtest: point tiers count canonical points rather than objects or input samples
+ok 2 - point tiers count canonical points rather than objects or input samples
+  ---
+  duration_ms: 0.08925
+  ...
+# Subtest: resource caps preserve the last stage and never manufacture success
+ok 3 - resource caps preserve the last stage and never manufacture success
+  ---
+  duration_ms: 0.226667
+  ...
+# Subtest: tier coverage requires an honest outcome for every declared tier
+ok 4 - tier coverage requires an honest outcome for every declared tier
+  ---
+  duration_ms: 0.488084
+  ...
+# Subtest: cache occupancy is a peak gauge; absent diagnostics stay unavailable
+ok 5 - cache occupancy is a peak gauge; absent diagnostics stay unavailable
+  ---
+  duration_ms: 1.856625
+  ...
+# Subtest: a leaked worker or wrong DPR remains blocked despite a good object count
+ok 6 - a leaked worker or wrong DPR remains blocked despite a good object count
+  ---
+  duration_ms: 0.17275
+  ...
+# Subtest: nested contour scopes do not make coverage CPU disappear or double count
+ok 7 - nested contour scopes do not make coverage CPU disappear or double count
+  ---
+  duration_ms: 1.329792
+  ...
+# Subtest: unavailable diagnostics are not measured zero CPU
+ok 8 - unavailable diagnostics are not measured zero CPU
+  ---
+  duration_ms: 0.155541
+  ...
+# Subtest: canonical attempts before pointer Up stay outside recovery totals
+ok 9 - canonical attempts before pointer Up stay outside recovery totals
+  ---
+  duration_ms: 0.18625
+  ...
+# Subtest: ABBA separates a10ms source effect from linear2ms order drift
+ok 10 - ABBA separates a10ms source effect from linear2ms order drift
+  ---
+  duration_ms: 1.61225
+  ...
+# Subtest: a short pilot cannot establish nonregression even with perfect signs
+ok 11 - a short pilot cannot establish nonregression even with perfect signs
+  ---
+  duration_ms: 0.486959
+  ...
+# Subtest: eight independent signs distinguish nonregression,regression and ties
+ok 12 - eight independent signs distinguish nonregression,regression and ties
+  ---
+  duration_ms: 0.261
+  ...
+# Subtest: all local sampler imports can be fetched as JavaScript modules
+ok 13 - all local sampler imports can be fetched as JavaScript modules
+  ---
+  duration_ms: 34.171625
+  ...
+# Subtest: fixture routing does not expose the SDK or an arbitrary local path
+ok 14 - fixture routing does not expose the SDK or an arbitrary local path
+  ---
+  duration_ms: 0.44775
+  ...
+# Subtest: an early process exit cannot qualify unfinished native GPU work
+ok 15 - an early process exit cannot qualify unfinished native GPU work
+  ---
+  duration_ms: 0.448792
+  ...
+# Subtest: stderr rejection cannot be hidden by a zero process exit
+ok 16 - stderr rejection cannot be hidden by a zero process exit
+  ---
+  duration_ms: 0.063875
+  ...
+# Subtest: only completed native work without browser or native errors passes
+ok 17 - only completed native work without browser or native errors passes
+  ---
+  duration_ms: 0.052583
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 0
+ok 18 - navigation corroboration rejects unsupported DPR 0
+  ---
+  duration_ms: 315.827208
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR 5
+ok 19 - navigation corroboration rejects unsupported DPR 5
+  ---
+  duration_ms: 243.894625
+  ...
+# Subtest: navigation corroboration rejects unsupported DPR not-a-number
+ok 20 - navigation corroboration rejects unsupported DPR not-a-number
+  ---
+  duration_ms: 227.429334
+  ...
+# Subtest: exact coverage metadata and replay counts are separate and missing counters stay unknown
+ok 21 - exact coverage metadata and replay counts are separate and missing counters stay unknown
+  ---
+  duration_ms: 1.895208
+  ...
+# Subtest: navigation summary retains tails and sums diagnostic deltas
+ok 22 - navigation summary retains tails and sums diagnostic deltas
+  ---
+  duration_ms: 0.405875
+  ...
+# Subtest: missing diagnostic rows remain unavailable rather than invented zero
+ok 23 - missing diagnostic rows remain unavailable rather than invented zero
+  ---
+  duration_ms: 0.070291
+  ...
+# Subtest: input display gap includes the first response and excludes exact settle
+ok 24 - input display gap includes the first response and excludes exact settle
+  ---
+  duration_ms: 0.0735
+  ...
+# Subtest: prepared geometry deltas are summed while resident bytes are a peak gauge
+ok 25 - prepared geometry deltas are summed while resident bytes are a peak gauge
+  ---
+  duration_ms: 0.182958
+  ...
+# Subtest: an interrupted selection receipt cannot qualify navigation settlement
+ok 26 - an interrupted selection receipt cannot qualify navigation settlement
+  ---
+  duration_ms: 0.422625
+  ...
+# Subtest: GPU admission deltas remain separate from CPU and unknown old counters
+ok 27 - GPU admission deltas remain separate from CPU and unknown old counters
+  ---
+  duration_ms: 0.41025
+  ...
+# Subtest: presented source quality uses gauges and observed time, including unrecovered debt
+ok 28 - presented source quality uses gauges and observed time, including unrecovered debt
+  ---
+  duration_ms: 0.566958
+  ...
+# Subtest: old or incomplete source quality diagnostics remain unavailable
+ok 29 - old or incomplete source quality diagnostics remain unavailable
+  ---
+  duration_ms: 2.212833
+  ...
+# Subtest: shared-source gauges and query deltas stay distinct from historical missing rows
+ok 30 - shared-source gauges and query deltas stay distinct from historical missing rows
+  ---
+  duration_ms: 1.051292
+  ...
+# Subtest: coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+ok 31 - coarse CPU mask encoding counts stay distinct from GPU work and old missing observations
+  ---
+  duration_ms: 0.455542
+  ...
+# Subtest: navigation components and region compactions preserve old unknown diagnostics
+ok 32 - navigation components and region compactions preserve old unknown diagnostics
+  ---
+  duration_ms: 0.286625
+  ...
+# Subtest: v2 starts at real input and separates clear activity,content return and coarse receipt
+ok 33 - v2 starts at real input and separates clear activity,content return and coarse receipt
+  ---
+  duration_ms: 0.710417
+  ...
+# Subtest: v2 clear-only work cannot hide a censored content gap
+ok 34 - v2 clear-only work cannot hide a censored content gap
+  ---
+  duration_ms: 0.224625
+  ...
+# Subtest: v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+ok 35 - v2 legacy timestamps remain unavailable and input callback work is not scheduler delay
+  ---
+  duration_ms: 0.666709
+  ...
+# Subtest: v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+ok 36 - v2 accepted Runtime submits qualify empty-view feedback while retries and unknown logs do not
+  ---
+  duration_ms: 0.986833
+  ...
+# Subtest: runtime submit identities reject numeric or overwide IDs rather than losing precision
+ok 37 - runtime submit identities reject numeric or overwide IDs rather than losing precision
+  ---
+  duration_ms: 0.229
+  ...
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 38 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 16.891291
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 39 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 0.435667
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 40 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.105333
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 41 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.261083
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 42 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.095625
+  ...
+# Subtest: private observation exports must be exactly the qualifier-only delta
+ok 43 - private observation exports must be exactly the qualifier-only delta
+  ---
+  duration_ms: 0.777166
+  ...
+# Subtest: release minified exports resolve through actual generated JS bindings
+ok 44 - release minified exports resolve through actual generated JS bindings
+  ---
+  duration_ms: 0.516583
+  ...
+# Subtest: normal install rejects internal archives and private observation headers
+ok 45 - normal install rejects internal archives and private observation headers
+  ---
+  duration_ms: 0.075458
+  ...
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 46 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 65.669166
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 47 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 53.124041
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 48 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 39.791959
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 49 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 0.990125
+  ...
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+ok 50 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 42.657833
+  ...
+# Subtest: canonical admission proof reconciles real raw completions, decoded links and metric receipts
+ok 51 - canonical admission proof reconciles real raw completions, decoded links and metric receipts
+  ---
+  duration_ms: 1.849334
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 52 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 41.687958
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 53 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 42.161291
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+ok 54 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 45.267584
+  ...
+# Subtest: actual metrics retain separate Runtime owners for simultaneous navigation demands
+ok 55 - actual metrics retain separate Runtime owners for simultaneous navigation demands
+  ---
+  duration_ms: 40.665875
+  ...
+# Subtest: same-frame retries select the unique accepted provider job and preserve every attempt
+ok 56 - same-frame retries select the unique accepted provider job and preserve every attempt
+  ---
+  duration_ms: 2.863041
+  ...
+# Subtest: an unrelated later attempt never replaces the job that actually submitted
+ok 57 - an unrelated later attempt never replaces the job that actually submitted
+  ---
+  duration_ms: 1.061958
+  ...
+# Subtest: provider job, basis, camera, Scene and chronology mismatches remain unqualified
+ok 58 - provider job, basis, camera, Scene and chronology mismatches remain unqualified
+  ---
+  duration_ms: 5.421084
+  ...
+# Subtest: duplicate accepted submits and ambiguous draws within the successful job fail closed
+ok 59 - duplicate accepted submits and ambiguous draws within the successful job fail closed
+  ---
+  duration_ms: 0.891792
+  ...
+# Subtest: decodes actual observed commit Scene submit and completion fields
+ok 60 - decodes actual observed commit Scene submit and completion fields
+  ---
+  duration_ms: 0.271917
+  ...
+# Subtest: foreign completion or mismatched Scene cannot be repaired by copying expected fields
+ok 61 - foreign completion or mismatched Scene cannot be repaired by copying expected fields
+  ---
+  duration_ms: 0.286875
+  ...
+# Subtest: Scene intent publication can precede the callsite observation of its returned commit record
+ok 62 - Scene intent publication can precede the callsite observation of its returned commit record
+  ---
+  duration_ms: 0.355917
+  ...
+# Subtest: scope exclusive time and GPU callback ordering preserve raw facts
+ok 63 - scope exclusive time and GPU callback ordering preserve raw facts
+  ---
+  duration_ms: 0.3195
+  ...
+# Subtest: actual compiler rejects another Runtime committing the same generation
+ok 64 - actual compiler rejects another Runtime committing the same generation
+  ---
+  duration_ms: 81.897125
+  ...
+# Subtest: foreign same-generation noise cannot replace the actual matching operation
+ok 65 - foreign same-generation noise cannot replace the actual matching operation
+  ---
+  duration_ms: 0.496667
+  ...
+# Subtest: lifetime attachment resource missing or ambiguous render owners fail closed
+ok 66 - lifetime attachment resource missing or ambiguous render owners fail closed
+  ---
+  duration_ms: 0.297542
+  ...
+# Subtest: compact lease lifecycles restore all actual identities, times and ordered events
+ok 67 - compact lease lifecycles restore all actual identities, times and ordered events
+  ---
+  duration_ms: 0.726334
+  ...
+# Subtest: common OFF/ON metrics retain rejected feedback in the planned denominator
+ok 68 - common OFF/ON metrics retain rejected feedback in the planned denominator
+  ---
+  duration_ms: 0.885625
+  ...
+# Subtest: an incomplete dispatch has a lower bound and is not a zero successful sample
+ok 69 - an incomplete dispatch has a lower bound and is not a zero successful sample
+  ---
+  duration_ms: 0.178333
+  ...
+# Subtest: realtime batching retains every literal sample and separates terminal contacts
+ok 70 - realtime batching retains every literal sample and separates terminal contacts
+  ---
+  duration_ms: 9.445708
+  ...
+# Subtest: clock brackets reject incompatible domains rather than manufacture queue time
+ok 71 - clock brackets reject incompatible domains rather than manufacture queue time
+  ---
+  duration_ms: 0.262
+  ...
+# Subtest: overhead gate retains all six pairs and rejects critical loss
+ok 72 - overhead gate retains all six pairs and rejects critical loss
+  ---
+  duration_ms: 0.367875
+  ...
+# Subtest: missing dispatch samples cannot qualify as a zero-cost overhead pair
+ok 73 - missing dispatch samples cannot qualify as a zero-cost overhead pair
+  ---
+  duration_ms: 0.07075
+  ...
+# Subtest: legacy input remains an unquantized 28.796 second anchor
+ok 74 - legacy input remains an unquantized 28.796 second anchor
+  ---
+  duration_ms: 2.977292
+  ...
+# Subtest: real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+ok 75 - real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+  ---
+  duration_ms: 1.491792
+  ...
+# Subtest: foreign or stale completion never qualifies a different execution
+ok 76 - foreign or stale completion never qualifies a different execution
+  ---
+  duration_ms: 1.780709
+  ...
+# Subtest: Scene generation must match committed generation, not merely the static schema shape
+ok 77 - Scene generation must match committed generation, not merely the static schema shape
+  ---
+  duration_ms: 0.339667
+  ...
+# Subtest: requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+ok 78 - requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+  ---
+  duration_ms: 0.241208
+  ...
+# Subtest: independent pixel comparator allows only reference geometric AA edges
+ok 79 - independent pixel comparator allows only reference geometric AA edges
+  ---
+  duration_ms: 0.549833
+  ...
+# Subtest: pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+ok 80 - pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+  ---
+  duration_ms: 0.213208
+  ...
+# Subtest: a blocked Down never shifts the next original planned time or drops Up
+ok 81 - a blocked Down never shifts the next original planned time or drops Up
+  ---
+  duration_ms: 0.946959
+  ...
+# Subtest: rejects a reversed plan and retains thrown dispatch as failure
+ok 82 - rejects a reversed plan and retains thrown dispatch as failure
+  ---
+  duration_ms: 0.310459
+  ...
+# Subtest: failure/censoring stays in the denominator and large ns values remain exact
+ok 83 - failure/censoring stays in the denominator and large ns values remain exact
+  ---
+  duration_ms: 0.270125
+  ...
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+ok 84 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 56.7315
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+ok 85 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.212875
+  ...
+1..85
+# tests 85
+# suites 0
+# pass 85
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 861.60825

@@ -11,7 +11,7 @@ export function compileMetrics(run,raw,meta){
  if(!/^[0-9a-f]{40}$/.test(run.source_before?.revision??'')||!/^[0-9a-f]{64}$/.test(meta.fixture_sha256??''))throw Error('missing source/fixture identity; no fabricated schema identity');
  if(!/^\d+$/.test(run.init?.environment?.reported_resolution_ns??''))throw Error('missing measured browser clock resolution');
  const m=run.measurement;if(!m?.origin_ns||!m.end_ns||!m.after)throw Error('incomplete actual measurement return shape');
- const decoded=decodeTrace(raw,run.trace?.loss??{critical:0,statistical:0}),records=expandLeaseCycles(raw),external=externalMetrics(m);
+ const decoded=decodeTrace(raw,run.trace?.loss??{critical:0,statistical:0},meta.recording??null),records=expandLeaseCycles(raw),external=externalMetrics(m);
  const recordBySeq=new Map(records.map(r=>[r.seq,r]));
  const scopeOwner=r=>{const entry=decoded.owner_bindings?.find(o=>o.context_key===r.job+'/'+r.basis);return entry&&!entry.ambiguous?entry.owners[0]:null;};
  const ownerEqual=(a,b)=>!!a&&!!b&&ownerFields.every(k=>a[k]!==undefined&&a[k]===b[k]);

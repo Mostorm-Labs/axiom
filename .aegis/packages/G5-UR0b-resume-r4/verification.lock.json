@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "parent_verification_lock_ref": {
+    "path": ".aegis/packages/G5-UR0b/verification.lock.json",
+    "sha256": "4ca4133f137f69753cd16f3b38ef3c36ff205ade56dc220970ab3814eb8c140a",
+    "identity_kind": "local-content-addressed"
+  },
+  "parent_execution_contract_ref": {
+    "path": ".aegis/packages/G5-UR0b/execution-contract.json",
+    "sha256": "aef73854b9f8d2fb99131ff9a059f8fee766d3e0c4197bc4599990c7e75a2e50",
+    "identity_kind": "local-content-addressed"
+  },
+  "initialization_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e",
+    "identity_kind": "local-content-addressed"
+  },
+  "initialization_oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/oracle-cases.json",
+    "sha256": "785d936f6957b205bd326513196a2d0b8674d3ef81daef141bec345bc8bbf3af",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "id": "R4-REUSE",
+      "requirement": "Consume accepted evidence explicitly while keeping fresh input admission strict.",
+      "oracle": "Exact review/reuse/raw/v2 proof hashes, eight current compiler hashes and100Node/44Python accepted mechanisms; new negative tests.",
+      "acceptance": "Only the declared original diagnostic/cohort/60Hz evidence is reused. Foreign/changed/unaccepted reuse rejected; archived OFFLINE never passes fresh check; new worker output must be fresh.",
+      "evidence_required": [
+        "reuse-binding-preflight",
+        "reused-prerequisites manifest",
+        "fresh source/compiler/artifact proof",
+        "reuse/fresh-negative-tests"
+      ]
+    },
+    {
+      "id": "R4-ACCOUNTING",
+      "requirement": "Continue only unstarted rows without reset, extra probes or repeated qualification.",
+      "oracle": "historical-budget + run-plan + closed old window + durable new ledger claim tests.",
+      "acceptance": "Historical30starts/1133s retained; new38 only; full timeout reservation before spawn, unknown interrupted started run charged full limit, actual terminal guard charged ceil. Fixed one-use state prevents concurrent/relocated/output restarts.",
+      "evidence_required": [
+        "cumulative-worker-ledger",
+        "plan/claim/stop tests",
+        "all guards and cleanup"
+      ]
+    },
+    {
+      "id": "R4-SEPARATE",
+      "requirement": "Finish remaining real-time and independent correctness prerequisites.",
+      "oracle": "Original120/240Hz driver/corpus,clock/input/coalesced/terminal verification and six original correctness workers/oracles.",
+      "acceptance": "Inherit exact original profile. No real-time label-only claim, no dropped confirmed or fabricated timing. Correctness QUALIFIED or existing PRODUCT_RED_IN_BOTH_OFF_ON permitted. Mechanism/identity/oracle failure closes window.",
+      "evidence_required": [
+        "eight raw runs",
+        "clock/input/semantic/pixel/receipt results",
+        "separate-result"
+      ]
+    },
+    {
+      "id": "R4-MATRIX",
+      "requirement": "Execute original30main rows only after separate prerequisites.",
+      "oracle": "Frozen original matrix, existing compiler/metrics schema, independent fixture/semantic/pixel/receipt rules.",
+      "acceptance": "All30 original IDs, budgets and ordering unchanged; every row has executed outcome or frozen-stop MISSING. Slow/productRED/censored baseline remains truthful; no performance or route-completeness PASS.",
+      "evidence_required": [
+        "30row ledger",
+        "matched source/artifact raw and metrics",
+        "baseline summary",
+        "exact result/manifest"
+      ]
+    }
+  ],
+  "scope_rule": "These are execution bindings for already frozen obligations; do not add new acceptance thresholds or require historical CTest cleanup. A missing upstream decision routes to its owner, not adaptive benchmark changes."
+}

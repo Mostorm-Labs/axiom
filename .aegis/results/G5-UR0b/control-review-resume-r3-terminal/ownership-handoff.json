@@ -1,0 +1,31 @@
+{
+  "schema": "aegis-ownership-handoff-v1",
+  "from_primary": "aegis-gate-review",
+  "to_primary": "aegis",
+  "required_owner": "aegis-verification",
+  "earliest_untrusted_stage": "P20",
+  "reason": "VERIFICATION_DESIGN_DEFECT: initialization accepted provider completions have no Operation, while current all-raw admission uses mutation-qualified receipts as its denominator. Frozen verification lacks an initialization basis/population contract.",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r3/package.json",
+    "sha256": "bd6777505dddd474a111c52e1c477001a82ed11b5e445ce293f40368ba27f915"
+  },
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/result.json",
+    "sha256": "81f44aca6da61e86ae11eedca3645ae2f13c18881493f078d3f6a83befbc07d0"
+  },
+  "accepted_work": [
+    "actual diagnostic OFF/ON chain",
+    "six-pair overhead qualification",
+    "existing exact artifacts/build provenance",
+    "immutable raw/results and bounded accounting"
+  ],
+  "decisions_needed": [
+    "Initialization vs operation-bound completion applicability and oracle",
+    "Population reconciliation that retains every accepted raw record without minting an Operation",
+    "Reuse applicability for unchanged actual artifacts/collector with corrected offline compilation"
+  ],
+  "execution_authorized_by_this_handoff": false,
+  "new_sampling_authorized": false,
+  "old_window_status": "CLOSED",
+  "next_action": "Resolve Verification scope first, validate stored inputs offline, then freeze applicable implementation/continuation authority."
+}

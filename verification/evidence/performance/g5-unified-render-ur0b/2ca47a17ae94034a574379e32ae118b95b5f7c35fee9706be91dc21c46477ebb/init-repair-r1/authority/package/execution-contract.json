@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "all_of": [
+      "All specified code/reader/test changes satisfy the frozen spec and scope",
+      "Old behavior RED then new positive/negative cases green",
+      "15 immutable archives recompiled and agreed with frozen expectations; original evidence still unchanged",
+      "External/common observation and committed receipt invariance plus explicit reuse applicability report",
+      "New exact source/artifact/compiler/spec/recorded-input identities, reviewer-accessible content-addressed result/bundle",
+      "READY_FOR_CONTROL_REVIEW or explicit blocker; no product/P34PASS"
+    ],
+    "continue_until_terminal_state": true,
+    "stop_after": "OFFLINE_INIT_REPAIR",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "TASK_PACKAGE_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "return_surface": "CONTROL_REVIEW",
+    "authorized_source_paths": [
+      "verification/runners/g5/ur0/decode_trace.mjs",
+      "verification/runners/g5/ur0/initialization_basis.mjs",
+      "verification/runners/g5/ur0/canonical_chain.mjs",
+      "verification/runners/g5/ur0/compile_run.mjs",
+      "verification/runners/g5/ur0/metrics_compiler.mjs",
+      "verification/runners/g5/ur0/trace_validation.mjs",
+      "verification/runners/g5/ur0/repair_runner.py",
+      "verification/runners/g5/ur0/resume_runner.py",
+      "verification/tests/g5_ur0_decode.test.mjs",
+      "verification/tests/g5_ur0_compiler.test.mjs",
+      "verification/tests/g5_ur0_identity.test.mjs",
+      "verification/tests/g5_ur0_initialization.test.mjs",
+      "verification/tests/test_g5_ur0_repair_runner.py",
+      "verification/tests/test_g5_ur0_resume_runner.py"
+    ],
+    "read_only_frozen_paths": [
+      "All previous packages, results, bundles and existing tests/code outside source_scope",
+      "worker.mjs,consumer.mjs,source_identity.py,metrics.schema.json,validate_metrics.py",
+      "Runtime/SDK/collector/build/dependency/semantic paths"
+    ],
+    "required_changes": [
+      "Use exact v2 classification with complete accepted-record accounting and no fake operation/Scene.",
+      "Update existing decode/compile/admission readers coherently without weakening post-commit identity/receipt rules or reopening old authorities.",
+      "Run genuine old-behavior RED before fixes; implement all positive/negative cases and recompile all15 bound inputs to new outputs.",
+      "Compare unchanged external/common metrics, final snapshot/terminal/product outcomes, all committed receipts and attempts; keep source/artifact/compiler/protocol identities distinct.",
+      "Emit eligible/pending-review reuse assessment and exact result/evidence identities."
+    ],
+    "required_tests": [
+      "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+      "python3.12 -m unittest discover -s verification/tests -p test_g5_*.py",
+      "python3.12 tools/check_runtime_boundaries.py --root .",
+      "15 immutable-input compiler runs with frozen count/status expectations and old strict metrics schema",
+      "All frozen16 oracle groups, including coherent v2 reader negatives and old authority/new directory closed tests",
+      "git diff --check"
+    ],
+    "authorized_control_paths": [
+      ".aegis/packages/G5-UR0b-init-repair-r1/**"
+    ],
+    "authorized_outputs": [
+      ".aegis/results/G5-UR0b/init-repair-r1/**",
+      "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/init-repair-r1/**",
+      "out/ur0b/init-repair-r1/**"
+    ],
+    "forbidden_changes": [
+      "Any browser worker/performance sampling, hidden smoke/probe or new diagnostic pair",
+      "Changing old CLOSED windows/results/ledgers or any prior raw/compiled evidence",
+      "Changing semantic or metric schema authority, clock/AA/performance limits or filling missing IDs with0",
+      "Runtime/SDK/collector/harness policy optimization or artifact rebuild",
+      "source_identity exclusions expansion",
+      "Commit/push or UR0c/UR1 work"
+    ],
+    "native_reuse": "No native rebuild/test rerun required when all production/build-input bytes unchanged; hash-verify existing relevant evidence instead.",
+    "new_sampling_workers_max": 0,
+    "prior_sampling_debit_seconds": 1133,
+    "remaining_time_is_authorization": false,
+    "commit_push": false,
+    "notify_terminal": {
+      "required": true,
+      "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "user_policy_ref": {
+        "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+        "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190",
+        "identity_kind": "local-content-addressed"
+      },
+      "contents": [
+        "task/package and terminal status",
+        "revision/dirty/full-source hash",
+        "result/bundle paths withSHA256",
+        "tests, unchanged archives,15input reconciliation,reuse assessment",
+        "uncompleted/blocker and whether any forbidden sampling occurred"
+      ],
+      "if_unavailable": "Save terminal result and explicitly mark notification not delivered; never claim delivery."
+    }
+  }
+}

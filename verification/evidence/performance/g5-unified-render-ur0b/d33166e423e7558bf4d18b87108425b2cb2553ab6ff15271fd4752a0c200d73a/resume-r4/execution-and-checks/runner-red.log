@@ -1,0 +1,125 @@
+FFFFFFFFFF
+======================================================================
+FAIL: test_actual_ceil_missing_guard_and_overbudget_are_not_clipped_or_retried (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_actual_ceil_missing_guard_and_overbudget_are_not_clipped_or_retried)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 69, in test_actual_ceil_missing_guard_and_overbudget_are_not_clipped_or_retried
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_changed_or_foreign_review_input_compiler_and_proof_fail_before_claim (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_changed_or_foreign_review_input_compiler_and_proof_fail_before_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 32, in test_changed_or_foreign_review_input_compiler_and_proof_fail_before_claim
+    m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json')
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_explicit_accepted_reuse_keeps_old_modes_and_sources (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_explicit_accepted_reuse_keeps_old_modes_and_sources)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 28, in test_explicit_accepted_reuse_keeps_old_modes_and_sources
+    m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json');result=m.accepted_reuse(inputs)
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_full_reservation_is_durable_before_spawn_and_unknown_interruption_charges_full (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_full_reservation_is_durable_before_spawn_and_unknown_interruption_charges_full)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 61, in test_full_reservation_is_durable_before_spawn_and_unknown_interruption_charges_full
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_history_cannot_omit_early_or_unknown_guard_start_or_reset_debit (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_history_cannot_omit_early_or_unknown_guard_start_or_reset_debit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 22, in test_history_cannot_omit_early_or_unknown_guard_start_or_reset_debit
+    m=module();history=m.load(m.PACKAGE.parent/'historical-budget.json');self.assertEqual(m.verify_history(history),1133);self.assertEqual(len(history['rows']),30)
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_main_requires_accepted_reuse_and_all_eight_admitted_separate_rows (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_main_requires_accepted_reuse_and_all_eight_admitted_separate_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 78, in test_main_requires_accepted_reuse_and_all_eight_admitted_separate_rows
+    m=module();rows=m.plan();accepted={'status':'ACCEPTED_RECORDED_REUSE','overhead_qualified':True,'diagnostic_qualified':True,'realtime60_qualified':True}
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_only_38_frozen_unstarted_rows_in_order_and_with_fixed_budgets (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_only_38_frozen_unstarted_rows_in_order_and_with_fixed_budgets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 16, in test_only_38_frozen_unstarted_rows_in_order_and_with_fixed_budgets
+    m=module();rows=m.plan();self.assertEqual(len(rows),38);self.assertEqual(sum(r['limit_seconds'] for r in rows),6120)
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_recorded_proof_cannot_hide_wrong_source_mode_or_artifact (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_recorded_proof_cannot_hide_wrong_source_mode_or_artifact)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 37, in test_recorded_proof_cannot_hide_wrong_source_mode_or_artifact
+    m=module();inputs=m.load(m.PACKAGE.parent/'reuse-inputs.json');row=inputs['records'][1];summary=m.bound(row['accepted_derived_summary_ref']);chain=m.bound(row['accepted_v2_proof_ref']);artifacts=m.bound(inputs['existing_artifact_provenance_ref'])['tiers']['64-192']['artifacts']
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_sdk_bytes_and_new_worker_fresh_source_checks_are_independent_of_reuse (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_sdk_bytes_and_new_worker_fresh_source_checks_are_independent_of_reuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 43, in test_sdk_bytes_and_new_worker_fresh_source_checks_are_independent_of_reuse
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+======================================================================
+FAIL: test_single_fixed_window_rejects_concurrency_relocation_and_restart (test_g5_ur0_remaining_runner.RemainingRunnerTest.test_single_fixed_window_rejects_concurrency_relocation_and_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 52, in test_single_fixed_window_rejects_concurrency_relocation_and_restart
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_remaining_runner.py", line 6, in module
+    if not p.is_file():raise AssertionError('r4 remaining runner missing')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r4 remaining runner missing
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+FAILED (failures=10)

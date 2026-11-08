@@ -1,0 +1,35 @@
+{
+  "schema": "g5-ur0b-verification-design-return-v1",
+  "status": "READY_FOR_OFFLINE_IMPLEMENTATION",
+  "primary_owner": "aegis-verification/P20",
+  "user_authorization": "\u7ee7\u7eed\u4e0b\u4e00\u6b65",
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e"
+  },
+  "work_order_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/implementation-request.json",
+    "sha256": "4f78456fd79ff23ba2075924b72d412a27bcccfb2a85f0e3b4e0052b6393547c"
+  },
+  "design_manifest_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/manifest.json",
+    "sha256": "65b67b3eefd556eb66479dbc037232b4a6d8c155039264d5d21b9edf69c7c382"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/verification-initialization-v1/validation.json",
+    "sha256": "874233aec50eec37eb8791015a3941e4aebecd4e587f44c230bfb1dddcbc2c34"
+  },
+  "earlier_gap": "Resolved initialization vs committed accepted-completion applicability and complete population reconciliation without product semantics change.",
+  "decisions_frozen": [
+    "All accepted raw records partition into initialization, committed, unresolved; unresolved blocks.",
+    "Fresh empty initialization needs actual public state, recognized recording profile and complete native chain.",
+    "Mutation receipts and positive canonical prerequisites stay committed-only.",
+    "15 immutable recordings and unchanged common/timing/artifact/committed receipt basis retained for later reuse assessment."
+  ],
+  "implementation_owner": "aegis-implementation in thread01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "production_source_edits_by_designer": false,
+  "new_browser_workers": 0,
+  "old_window_reopened": false,
+  "official_gate_pass": false,
+  "handoff": "Separate P31 offline task package and full authorized offline execution; return for independent control review and notify this thread."
+}

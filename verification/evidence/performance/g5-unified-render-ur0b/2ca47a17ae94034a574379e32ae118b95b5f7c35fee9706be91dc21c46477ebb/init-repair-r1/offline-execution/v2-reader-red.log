@@ -1,0 +1,17 @@
+.........E.
+======================================================================
+ERROR: test_v2_complete_partition_keeps_initialization_out_of_positive_mutation_gate (test_g5_ur0_repair_runner.RepairRunnerTest.test_v2_complete_partition_keeps_initialization_out_of_positive_mutation_gate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_repair_runner.py", line 81, in test_v2_complete_partition_keeps_initialization_out_of_positive_mutation_gate
+    m=self.module();s=self.mixed_v2();m.require_canonical_chain(s,require_positive=True)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/repair_runner.py", line 39, in require_canonical_chain
+    if not chain or chain.get('schema')!='g5-ur0b-canonical-chain-proof-v1':raise RuntimeError('canonical positive-chain proof missing')
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: canonical positive-chain proof missing
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.019s
+
+FAILED (errors=1)

@@ -1,0 +1,65 @@
+FFFFF
+======================================================================
+FAIL: test_concurrent_or_relocated_window_is_not_a_new_allowance (test_g5_ur0_resume_runner.ResumeRunnerTest.test_concurrent_or_relocated_window_is_not_a_new_allowance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 25, in test_concurrent_or_relocated_window_is_not_a_new_allowance
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 6, in module
+    if not path.is_file():raise AssertionError('r3 continuation adapter missing')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r3 continuation adapter missing
+
+======================================================================
+FAIL: test_frozen_new_plan_contains_only_53_ids_and_7470_seconds (test_g5_ur0_resume_runner.ResumeRunnerTest.test_frozen_new_plan_contains_only_53_ids_and_7470_seconds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 16, in test_frozen_new_plan_contains_only_53_ids_and_7470_seconds
+    m=module();rows=m.new_plan();self.assertEqual(len(rows),53);self.assertEqual(sum(r['limit_seconds'] for r in rows),7470);self.assertEqual(len({r['run_id'] for r in rows}),53)
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 6, in module
+    if not path.is_file():raise AssertionError('r3 continuation adapter missing')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r3 continuation adapter missing
+
+======================================================================
+FAIL: test_historical_debit_includes_preflights_and_missing_guard (test_g5_ur0_resume_runner.ResumeRunnerTest.test_historical_debit_includes_preflights_and_missing_guard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 19, in test_historical_debit_includes_preflights_and_missing_guard
+    m=module();history=json.loads((ROOT/'.aegis/results/G5-UR0b/control-continuation-r3/historical-budget.json').read_text())
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 6, in module
+    if not path.is_file():raise AssertionError('r3 continuation adapter missing')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r3 continuation adapter missing
+
+======================================================================
+FAIL: test_overbudget_reservation_and_duplicate_run_rejected_before_spawn (test_g5_ur0_resume_runner.ResumeRunnerTest.test_overbudget_reservation_and_duplicate_run_rejected_before_spawn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 43, in test_overbudget_reservation_and_duplicate_run_rejected_before_spawn
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 6, in module
+    if not path.is_file():raise AssertionError('r3 continuation adapter missing')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r3 continuation adapter missing
+
+======================================================================
+FAIL: test_reservation_precedes_execution_and_interruption_cannot_restart (test_g5_ur0_resume_runner.ResumeRunnerTest.test_reservation_precedes_execution_and_interruption_cannot_restart)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 33, in test_reservation_precedes_execution_and_interruption_cannot_restart
+    m=module()
+      ^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 6, in module
+    if not path.is_file():raise AssertionError('r3 continuation adapter missing')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: r3 continuation adapter missing
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+FAILED (failures=5)

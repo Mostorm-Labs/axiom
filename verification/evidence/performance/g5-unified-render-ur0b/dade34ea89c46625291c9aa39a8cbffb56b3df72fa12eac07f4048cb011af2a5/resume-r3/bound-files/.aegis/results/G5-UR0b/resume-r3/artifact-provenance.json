@@ -1,0 +1,245 @@
+{
+  "status": "EXACT_ARTIFACT_PROVENANCE_VERIFIED",
+  "orchestration_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "orchestration_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "inherited_mechanism_proof_ref": {
+    "path": ".aegis/results/G5-UR0b/p36-r1/mechanism-proofs.json",
+    "sha256": "1abdac349f8ef0a85628770cd53e026629b42932ebbff6e0148b6fd1edf1ff69"
+  },
+  "accepted_build_source_tree_sha256": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2",
+  "unchanged_build_input_paths": 1079,
+  "build_input_projection_sha256": "eb1a54bb0f613c2e64f1950449fd4cfe2f265be87dbd4a8555a440e9cced930e",
+  "changed_build_input_paths": [],
+  "native_validation": {
+    "mode": "FRESH_RUN_OF_EXISTING_EXECUTABLES_NO_REBUILD",
+    "tests": [
+      "G5RenderCache",
+      "G5LiveEraseGpuMiss",
+      "G5LiveEraseDpr",
+      "G5TranslatedV4Drag",
+      "G5InkBodyMaskReuse",
+      "G5RegionalMaskValidity",
+      "G5MaskedNavigationProgress",
+      "G5V4CoverageFallback",
+      "G5MaskedCanonicalRecovery",
+      "G5ErasedMixedNavigation",
+      "G5RetainedZoomReentry",
+      "G5MixedNavigationReentry",
+      "G5PreparedGeometry",
+      "G5SkiaChunkRangeEntry",
+      "G3DirectReference",
+      "G4CanonicalHandoff",
+      "G4EraserSession",
+      "G4EditorHistory",
+      "SDKContactRecovery",
+      "InkV2NativeSession",
+      "G5Ur0Observation",
+      "G5Ur0ObservationIdentity"
+    ],
+    "executable_sha256": {
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/foundation/axiom_g5_observation_tests": "5fe2a9394409eb6f94c0999aead398241cdd75ee8da8a9d3c483142f58c182c5",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/interaction/axiom_eraser_session_tests": "dc1bc0b52fcf8329078a152ed7f053238c9bbd1536f66d1157f548e2765ba8ad",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/interaction/axiom_editor_history_tests": "e1aeec209f60c6c8eee7f1ca372550d993ac0624ded4e51ddcf0318ca888205d",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_render_cache_tests": "8e4c09e17e7e3f03ba4a9011ae188a4d01c2fead03f8abfadff79b8b16b41a12",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_render_skia_chunk_range_entry_tests": "1997f66045f6a2967fb2d2e8991e6423b32771975ae5f8b4fb073e3b79aab878",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_prepared_geometry_tests": "075a5dd997566090a3afeb2b990c8da6603827c658a5c366dd110a3bb69269a7",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_render_direct_reference_tests": "d8a62bfa10959a4feb3101ccfebfa67aa58cf2d998471c633ead4f5aefa0a84a",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_canonical_handoff_tests": "3cc2dd5ec2864889a77fb34bb34d25a2c102059c8f690872a6e1685d95af3396",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/runtime/render/axiom_g5_observation_identity_tests": "5bbeb50d5a64dcef31d8fd6bdd12452d10628c1fdc967bcfc847bbe960b3100e",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/sdk/common/axiom_contact_recovery_tests": "6511185646fd059f36b2ec1665bc6987e8221ca467516abb40da175412dbbe53",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/host/sdk/common/axiom_ink_v2_native_session_tests": "3cabb0779c7cdf775af899fe0b0a2214ec0f2e622fa0e23374d05e480eb63684"
+    },
+    "log_ref": {
+      "path": "out/ur0b/resume-r3/native-final.log",
+      "sha256": "8f726b7075eee13d4e5dc28f7587119a21017f1518d23ebc5410ecd9421f4665"
+    }
+  },
+  "tiers": {
+    "64-192": {
+      "mode": "REUSED_EXACT_ACCEPTED_BYTES",
+      "build_directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192",
+      "sdk_directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192/sdk/web",
+      "artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "55e5156158037b31d80e54da9b6fab20cb47e92c4586da239717da5c78f9e489",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "4e002f2a74e0ae4259cc1ff77e0f242ec9e58b1acdaa9d3aeb6e670b0331b498",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "85b92c5ca5b5850af2f81ba63944906576c91d8e730696f3f0c2baee5db0fc9f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "cmake_install.cmake": "a235642f0199e2787cc5b3739c96f05fa217899ce6723d9922945cc2f799d2e7",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "77799f8810ea51d9cd13a811fec91de9e5a9e2aa4116121e1c1f9e3e490a2eac",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "build_identity_definitions": "DEFINES = -DAXIOM_BUILD_CONFIGURATION=\\\"Release\\\" -DAXIOM_BUILD_DIRTY=1 -DAXIOM_BUILD_PLATFORM=\\\"web\\\" -DAXIOM_BUILD_SOURCE_REVISION=\\\"f66592001012444cd99db968961014497c0f120f\\\" -DAXIOM_BUILD_VERSION=\\\"0.1.0\\\" -DAXIOM_G5_UR0_DIAGNOSTICS=1",
+      "build_proof_refs": [
+        {
+          "path": "out/ur0b/p36-r1/build-qualified-64-192/ur0b-build-request.json",
+          "sha256": "c7ce012e584376125114e500b79b95a417996aa16c5ca0c3cff5e3c24fbeebb1"
+        },
+        {
+          "path": "out/ur0b/p36-r1/build-qualified-64-192/CMakeCache.txt",
+          "sha256": "5f96a28866f80500a881dee3b2003d29c4a05c57dd67815b8bd838f45b4be638"
+        },
+        {
+          "path": "out/ur0b/p36-r1/build-qualified-64-192/build.ninja",
+          "sha256": "e3baf104ab1ca8b53e46dad3c03ec1a0b00ae7f7c42e1dd6ce3b82b8a8c8d4b3"
+        },
+        {
+          "path": "out/ur0b/p36-r1/build-qualified-64-192/configure.log",
+          "sha256": "27e2a0716d2e87b0187c0c55182db9fb8ef359370afcc1ebea574c13361aaad7"
+        },
+        {
+          "path": "out/ur0b/p36-r1/build-qualified-64-192/build.log",
+          "sha256": "72660058a445c65569de35d2b7233856041834861229c408f368b512f5c700e7"
+        }
+      ],
+      "boundary_audit_ref": {
+        "path": "out/ur0b/resume-r3/boundary-artifact-64.json",
+        "sha256": "0d39a33657154d1de12aa2351c5e7b9c83ea51c5fca91633fbea2685abdd2591"
+      }
+    },
+    "32-96": {
+      "mode": "FRESH_AXIOM_CONSUMER_BUILD",
+      "build_directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r3/build-qualified-32-96",
+      "sdk_directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r3/build-qualified-32-96/sdk/web",
+      "artifacts": {
+        "CMakeFiles/axiom_js_runtime.dir/CXX.dd": "8c314e6b2104debbe3f9cfd845f7bff926c180f47a702c4b8db83eab0863102e",
+        "CMakeFiles/axiom_js_runtime.dir/CXXDependInfo.json": "bc5cfa54fcee906498e60b3b19e4d2b36a2c891fa25a054b7108c36d1ee3c5a0",
+        "CMakeFiles/axiom_js_runtime.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o": "ced66694d9db3c8d78db344f3afbee6d2bd7b63110f4291ac2462072d1e4e368",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi": "575901d4d02d08e47b33dffc0371506b994828b31ff47e181dec52b5b50eafe9",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.ddi.d": "837663af84ba86e3d7094d13dfbe0d7518caf8ede50fe1964362fe9ba6eb1eb1",
+        "CMakeFiles/axiom_js_runtime.dir/bridge.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXX.dd": "acb67048efe5044b08981d69e0dfa772868260304f5b9fa8342f26276366fb1f",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXDependInfo.json": "8f2f22cbf44da9b61cac3cd79291d32a42b7b2538c8c27ab87b9e0cefcc3f828",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/CXXModules.json": "bb599b4a6665316d3cc27d14c2566b8d7aa4b3a3a3a17e6ec2de255be93a1369",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o": "dff9972d35050a1f60837a65f78c741af84b6ccf62273799933a874438d138d9",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi": "d06199c293465ed4705826759fd522bd888fe89047c9a57c875dd51ffb6bc0e8",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.ddi.d": "d3aaccc3503254cca22aba70319cdbba893b8109125ed92d1b07ee4662f3278a",
+        "CMakeFiles/axiom_sdk_web_runtime_adapter.dir/web_runtime_adapter.cpp.o.modmap": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+        "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+        "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+        "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+        "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+        "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+        "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+        "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+        "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+        "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+        "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "axiom.wasm": "c30f4785cc971ec32fd83a5459717413f939708a44be9b32b11732f2ed2f5ddc",
+        "cmake_install.cmake": "5c9fb8dde1a979d0482f63abedd647fdea355e20bd6da07dd7fb9a3fde9c5723",
+        "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "internal/axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "internal/axiom.mjs": "eb1175407a9fbc7e09a830554b42f6599d345abc1e44c8b69eceeafbb2697e53",
+        "internal/axiom.wasm": "c30f4785cc971ec32fd83a5459717413f939708a44be9b32b11732f2ed2f5ddc",
+        "libaxiom_web_runtime_adapter.a": "e1355a777a0e34ce26672dc3cd5e3fe250c1bb454c3b739967f9df25d12879f9",
+        "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+        "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+        "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+        "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+        "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+        "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+        "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+        "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+        "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+        "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+        "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+        "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+        "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+        "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+        "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+        "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+        "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+        "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+        "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+      },
+      "build_identity_definitions": "DEFINES = -DAXIOM_BUILD_CONFIGURATION=\\\"Release\\\" -DAXIOM_BUILD_DIRTY=0 -DAXIOM_BUILD_PLATFORM=\\\"web\\\" -DAXIOM_BUILD_SOURCE_REVISION=\\\"f651523a40c9b383b7d8e2115fcd32f75ddc38a7\\\" -DAXIOM_BUILD_VERSION=\\\"0.1.0\\\" -DAXIOM_G5_UR0_DIAGNOSTICS=1",
+      "build_proof_refs": [
+        {
+          "path": "out/ur0b/resume-r3/build-qualified-32-96/ur0b-build-request.json",
+          "sha256": "226f35917beb1577aeb5c191aab2c3bfef79c1cd501d0aab6a326dbf886dfb1b"
+        },
+        {
+          "path": "out/ur0b/resume-r3/build-qualified-32-96/CMakeCache.txt",
+          "sha256": "0e8b73f8e1fd2ee9cc2b973c60226fa9e1f953033e31fbd7d295533fb3b8b17b"
+        },
+        {
+          "path": "out/ur0b/resume-r3/build-qualified-32-96/build.ninja",
+          "sha256": "089a7c3b7cc2bdf02c76fdc91be2e60276f4065652ea876f15a07884b4883a87"
+        },
+        {
+          "path": "out/ur0b/resume-r3/build-qualified-32-96/configure.log",
+          "sha256": "434c212171cfe0831862b7fbe5c7ebb37b99b4cdb033714a854d24f30dae2866"
+        },
+        {
+          "path": "out/ur0b/resume-r3/build-qualified-32-96/build.log",
+          "sha256": "d2189c74bfb8eec10a0a39a8c71b2589f84e322c1c065ca7330a542c7b004099"
+        }
+      ],
+      "boundary_audit_ref": {
+        "path": "out/ur0b/resume-r3/boundary-artifact-32.json",
+        "sha256": "0d39a33657154d1de12aa2351c5e7b9c83ea51c5fca91633fbea2685abdd2591"
+      }
+    }
+  },
+  "normal_smoke": {
+    "mode": "INHERITED_EXACT_ACCEPTED_64_192_PAYLOAD_NO_NEW_BROWSER",
+    "binding_ref": {
+      "path": "out/ur0b/p36-normal-consumer-smoke-binding.json",
+      "sha256": "0b44a82b58a991c43435030c506ccf46159fd367f55be1618b62139ff6adaf36"
+    },
+    "all_inherited_proof_files_rehashed": 182
+  },
+  "dependency_rebuild": false,
+  "no_relabeling_of_build_info": true
+}

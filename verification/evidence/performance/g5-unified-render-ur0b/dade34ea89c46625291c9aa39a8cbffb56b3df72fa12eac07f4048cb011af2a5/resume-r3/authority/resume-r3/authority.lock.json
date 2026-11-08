@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT_BOUNDED_UR0b_CONTINUATION",
+  "parent_package_ref": {
+    "path": ".aegis/packages/G5-UR0b/package.json",
+    "sha256": "420f44b4d762664541381a6a99c758c72a085820ce9cbe85ec24e119f2aecc10",
+    "identity_kind": "local-content-addressed"
+  },
+  "parent_authority_lock_ref": {
+    "path": ".aegis/packages/G5-UR0b/authority.lock.json",
+    "sha256": "d856bcce1d5bdf7c6c5c36306b0736ffa0218786b0ae072f5a49b28c1964a21e",
+    "identity_kind": "local-content-addressed"
+  },
+  "parent_activation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-activation.json",
+    "sha256": "da0918fc537ee13a73cd3bc626db2ea6eebad9f585e1ed39078ef3a83d3ea9a2",
+    "identity_kind": "local-content-addressed"
+  },
+  "accepted_offline_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-p36-r2/result.json",
+    "sha256": "55ae20bdf2486896c7d8385becc3ee6f52c3d37f6e53f871e5edc4d8ccf4b8d2",
+    "identity_kind": "local-content-addressed"
+  },
+  "previous_closed_authorization_ref": {
+    "path": ".aegis/results/G5-UR0b/control-reverification-r1/repair-authorization.json",
+    "sha256": "007f4a09e625b4d1c1999c50577498c0cbf9570ceae190158559db8540b202f7",
+    "identity_kind": "local-content-addressed"
+  },
+  "preserved_returns": [
+    {
+      "path": ".aegis/results/G5-UR0b/result.json",
+      "sha256": "aaefaff53371f897b876da219d5f9a3c3c1478805757053a383e5cb1e82324e4",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/p36-r1/result.json",
+      "sha256": "c35860d6ebe4528516c449bafcc81d301c66d2420b6a0235c70f1760b84ae7ea",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/p36-r2/result.json",
+      "sha256": "b115d492f28bbe8e8acd9482f10db06f6f7751c52e755cf8b5dfd30069ebd536",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "position_check_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r3/position-check.json",
+    "sha256": "0a7ec5453f1db698b16771970c4c602cab7fe74d2884ad49753b8a5ef320c933",
+    "identity_kind": "local-content-addressed"
+  },
+  "historical_budget_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r3/historical-budget.json",
+    "sha256": "ef0c3913a0baea3c45540cbee1a8b1a5d43d03f99e1779683ff80128c0533e81",
+    "identity_kind": "local-content-addressed"
+  },
+  "user_authorization": "继续下一步吧（核算剩余额度，授权隔壁继续资格验证及后续矩阵）",
+  "trusted_scope": "Inherit exact UR0b observation/baseline obligations, fixed corpus, oracles, thresholds and SDK boundaries. This successor only opens one new named bounded window after accepted offline repair; it does not reopen any previous authority or change product policy.",
+  "accounting_decision": "All observed historical browser workers, including development preflights, are charged; native bounded oracle is included conservatively. Terminal guard elapsed is rounded UP individually; missing terminal guard is charged full90s. This is explicit control reconciliation of previously omitted preflight accounting, not an amendment to old records or the8370s ceiling.",
+  "not_authorized": [
+    "UR0c/UR1",
+    "product optimization",
+    "semantic or SDK contract change",
+    "extra sampling/retry from residual time",
+    "commit/push"
+  ]
+}

@@ -1,0 +1,602 @@
+{
+  "schema": "g5-ur0b-remaining-run-plan-v1",
+  "window_id": "G5-UR0b-resume-r4",
+  "predecessor_closed_window_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/window.json",
+    "sha256": "3d51c1f28b2cc71796a8eb0818be5e8cf17841627a2bb4aa8248060b8ddc34b7",
+    "identity_kind": "local-content-addressed"
+  },
+  "frozen_matrix_ref": {
+    "path": "docs/planning/g5-unified-render/ur0a/matrix.json",
+    "sha256": "519ac706e0a6e8b71085adfc2d7c1cb9f5885b552a0a8fddb13ec4814438de5c",
+    "identity_kind": "local-content-addressed"
+  },
+  "rows": [
+    {
+      "run_id": "realtime-120",
+      "phase": "separate",
+      "mode": "realtime",
+      "branch": "120",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/realtime-120",
+      "predecessor_run_id": "realtime-120",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "realtime-240",
+      "phase": "separate",
+      "mode": "realtime",
+      "branch": "240",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/realtime-240",
+      "predecessor_run_id": "realtime-240",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-lower_z_translucent_drag",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "lower_z_translucent_drag",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-lower_z_translucent_drag",
+      "predecessor_run_id": "correctness-lower_z_translucent_drag",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-permanent_live_mask",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "permanent_live_mask",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-permanent_live_mask",
+      "predecessor_run_id": "correctness-permanent_live_mask",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-transparent_color_bg",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "transparent_color_bg",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-transparent_color_bg",
+      "predecessor_run_id": "correctness-transparent_color_bg",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-warm_miss_pressure",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "warm_miss_pressure",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-warm_miss_pressure",
+      "predecessor_run_id": "correctness-warm_miss_pressure",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-dpr_switch",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "dpr_switch",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-dpr_switch",
+      "predecessor_run_id": "correctness-dpr_switch",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "correctness-feedback_canonical",
+      "phase": "separate",
+      "mode": "correctness",
+      "branch": "feedback_canonical",
+      "limit_seconds": 90,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/correctness-feedback_canonical",
+      "predecessor_run_id": "correctness-feedback_canonical",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_32_96-r1",
+      "row_id": "LEGACY9_DRAG_DPR2_32_96",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_32_96-r1",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_32_96-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_32_96-r2",
+      "row_id": "LEGACY9_DRAG_DPR2_32_96",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_32_96-r2",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_32_96-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_32_96-r3",
+      "row_id": "LEGACY9_DRAG_DPR2_32_96",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_32_96-r3",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_32_96-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_32_96-r1",
+      "row_id": "LEGACY16_ERASE_DPR2_32_96",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_32_96-r1",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_32_96-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_32_96-r2",
+      "row_id": "LEGACY16_ERASE_DPR2_32_96",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_32_96-r2",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_32_96-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_32_96-r3",
+      "row_id": "LEGACY16_ERASE_DPR2_32_96",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_32_96-r3",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_32_96-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_32_96-r1",
+      "row_id": "IMMEDIATE_REERASE_DPR2_32_96",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_32_96-r1",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_32_96-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_32_96-r2",
+      "row_id": "IMMEDIATE_REERASE_DPR2_32_96",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_32_96-r2",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_32_96-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_32_96-r3",
+      "row_id": "IMMEDIATE_REERASE_DPR2_32_96",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_32_96-r3",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_32_96-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_32_96",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_32_96",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_32_96",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 32,
+        "shared_hard": 96
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_64_192-r1",
+      "row_id": "LEGACY9_DRAG_DPR2_64_192",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_64_192-r1",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_64_192-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_64_192-r2",
+      "row_id": "LEGACY9_DRAG_DPR2_64_192",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_64_192-r2",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_64_192-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY9_DRAG_DPR2_64_192-r3",
+      "row_id": "LEGACY9_DRAG_DPR2_64_192",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy9_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY9_DRAG_DPR2_64_192-r3",
+      "predecessor_run_id": "LEGACY9_DRAG_DPR2_64_192-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_64_192-r1",
+      "row_id": "LEGACY16_ERASE_DPR2_64_192",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_64_192-r1",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_64_192-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_64_192-r2",
+      "row_id": "LEGACY16_ERASE_DPR2_64_192",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_64_192-r2",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_64_192-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "LEGACY16_ERASE_DPR2_64_192-r3",
+      "row_id": "LEGACY16_ERASE_DPR2_64_192",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "legacy16_erase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/LEGACY16_ERASE_DPR2_64_192-r3",
+      "predecessor_run_id": "LEGACY16_ERASE_DPR2_64_192-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_64_192-r1",
+      "row_id": "IMMEDIATE_REERASE_DPR2_64_192",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_64_192-r1",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_64_192-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_64_192-r2",
+      "row_id": "IMMEDIATE_REERASE_DPR2_64_192",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_64_192-r2",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_64_192-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_REERASE_DPR2_64_192-r3",
+      "row_id": "IMMEDIATE_REERASE_DPR2_64_192",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_reerase",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_REERASE_DPR2_64_192-r3",
+      "predecessor_run_id": "IMMEDIATE_REERASE_DPR2_64_192-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_64_192",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_64_192",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+      "row_id": "IMMEDIATE_NAVIGATION_DPR2_64_192",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_navigation",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+      "predecessor_run_id": "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192",
+      "repetition": 1,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192",
+      "repetition": 2,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+      "predecessor_status": "MISSING_UNSTARTED"
+    },
+    {
+      "run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3",
+      "row_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192",
+      "repetition": 3,
+      "budget_mib": {
+        "navigation": 64,
+        "shared_hard": 192
+      },
+      "case": "immediate_masked_drag",
+      "phase": "main",
+      "limit_seconds": 180,
+      "status": "PLANNED",
+      "window_run_key": "G5-UR0b-resume-r4/IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3",
+      "predecessor_run_id": "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3",
+      "predecessor_status": "MISSING_UNSTARTED"
+    }
+  ],
+  "counts": {
+    "realtime": 2,
+    "correctness": 6,
+    "main": 30,
+    "total": 38
+  },
+  "nominal_worker_seconds_sum": 6120,
+  "phase_order": [
+    "separate",
+    "main"
+  ],
+  "reused_not_repeated": [
+    "diagnostic-OFF",
+    "diagnostic-ON",
+    "sixAB_BA_pairs",
+    "realtime-60"
+  ],
+  "no_automatic_extra_rows": true
+}

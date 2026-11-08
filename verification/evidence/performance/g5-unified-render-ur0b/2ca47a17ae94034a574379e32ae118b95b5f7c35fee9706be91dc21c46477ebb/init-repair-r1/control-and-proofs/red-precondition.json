@@ -1,0 +1,29 @@
+{
+  "status": "EXPECTED_ACTUAL_BEHAVIOR_RED_OBSERVED",
+  "oracle": "ACTUAL-RT60",
+  "failure": "complete actual init+commit evidence rejected as MISSING by the old all-raw committed-only proof",
+  "not_missing_import_or_field": true,
+  "old_counts": {
+    "raw": 2,
+    "qualified_committed": 1,
+    "metric_receipts": 1
+  },
+  "required_partition": {
+    "raw": 2,
+    "initialization": 1,
+    "committed": 1,
+    "unresolved": 0
+  },
+  "actual_native_prefix_and_public_state_assertions_passed": true,
+  "log_ref": {
+    "path": "out/ur0b/init-repair-r1/actual-rt60-red.log",
+    "sha256": "322871f652f5bf36128d74d90625ae0ced9ae2b0bc227170f0c00a6f998fa117"
+  },
+  "old_compiler_files": {
+    "canonical_chain.mjs": "756920ea04c282324dc80ff75f8bdbe78990d23c5fb95526c7d5bf88f9ed4e32",
+    "decode_trace.mjs": "062d14a29a1948436087d013c84b04d413440264b79a1ead184c4de3488e53ae",
+    "compile_run.mjs": "df8ca211885678e8b687414eb51db9987990c90c42566d187352d19214e1fa58",
+    "metrics_compiler.mjs": "970185f5b97c2123d3a0371cbad2e60822b3ea36e64bef9f4c20d33a97dec2cb",
+    "repair_runner.py": "3f3f8423b0310401b7a43cbf80e9cba3f59d2ef61b761b2b929e07c4730ff13a"
+  }
+}

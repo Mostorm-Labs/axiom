@@ -1,0 +1,141 @@
+{
+  "schema": "g5-ur0b-canonical-chain-proof-v2",
+  "scope": "NATIVE_AND_METRICS",
+  "status": "QUALIFIED",
+  "accepted_raw_count": 2,
+  "qualified_initialization_count": 1,
+  "qualified_committed_count": 1,
+  "qualified_decoded_count": 1,
+  "observed_qualified_decoded_count": 1,
+  "metric_receipt_count": 1,
+  "unresolved_accepted_count": 0,
+  "accepted_records": [
+    {
+      "completion_seq": "47",
+      "work_id": "2",
+      "classification": "INITIALIZATION"
+    },
+    {
+      "completion_seq": "64538",
+      "work_id": "3",
+      "classification": "COMMITTED"
+    }
+  ],
+  "initialization_chains": [
+    {
+      "work_id": "2",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "0",
+        "scene_generation": "0",
+        "scene_revision": "0",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "2",
+        "operation_id": null,
+        "commit_revision": "0"
+      },
+      "draw_job": "3",
+      "draw_basis": "3",
+      "attempt_jobs": [
+        "3"
+      ],
+      "draw_seq": "15",
+      "provider_seq": "32",
+      "capture_seq": "42",
+      "completion_seq": "47",
+      "provenance": [
+        "41",
+        "39",
+        "42",
+        "32",
+        "15",
+        "47"
+      ],
+      "operation_reason": "NOT_APPLICABLE_INITIALIZATION",
+      "initialization_basis": {
+        "status": "PROVEN_FRESH_EMPTY_INITIALIZATION",
+        "state_path": "worker-result.json/init/state",
+        "public_state": {
+          "documentId": "99999999999999999999999999999999",
+          "generation": "0",
+          "objects": 0,
+          "lastCommit": {
+            "ordinal": "0",
+            "operationId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "runtimeEpoch": "1",
+            "attachmentEpoch": "2",
+            "viewId": "1"
+          }
+        },
+        "source_profile": {
+          "verification/runners/g5/ur0/consumer.mjs": "4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7",
+          "verification/runners/g5/ur0/worker.mjs": "a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1"
+        },
+        "recording_source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+        "input_refs": {
+          "raw_trace_sha256": "56edb6b8b9a7c794971c3949251c4aaf200e285c9449d53ddf66ffb873cfe992",
+          "worker_result_sha256": "6656c11c40cab493ae38389d95a3e23956d5c14cdd12293119491239c58733a2",
+          "run_inputs_sha256": "da7437cd325d552562427a4bf0fb3107c431f44a0814d15c48909c69696dce8a"
+        },
+        "applicability": "frozen fresh-empty createRuntime recording plus actual native chain; no synthetic Operation or Scene"
+      }
+    }
+  ],
+  "chains": [
+    {
+      "work_id": "3",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "3",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "12636",
+      "draw_basis": "12636",
+      "attempt_jobs": [
+        "12615",
+        "12628",
+        "12636"
+      ],
+      "draw_seq": "64038",
+      "provider_seq": "64519",
+      "capture_seq": "64533",
+      "completion_seq": "64538",
+      "provenance": [
+        "64532",
+        "64530",
+        "64533",
+        "64519",
+        "64038",
+        "63036",
+        "63043",
+        "63050",
+        "64538"
+      ]
+    }
+  ],
+  "unresolved": [],
+  "timing_scope": "native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance"
+}

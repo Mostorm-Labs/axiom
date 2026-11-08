@@ -1,0 +1,36 @@
+{
+  "schema": "g5-ur0b-r4-control-activation-v1",
+  "status": "AUTHORIZED_REMAINING_BASELINE_WINDOW",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/package.json",
+    "sha256": "2cadd6e12c73dc4006fd20691feca9402974a9f31fe705b2200c4654e020b569"
+  },
+  "validation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r4/validation.json",
+    "sha256": "229144e9bf3769a75b8829d496f1355d9ca8a52342559b628c0a6c6ed74dcf66"
+  },
+  "position_ref": {
+    "path": ".aegis/results/G5-UR0b/control-continuation-r4/position-check.json",
+    "sha256": "5946b57687c5d8c5efe918130e0536ff5cecab617e0c8c0f427bef3fe502c911"
+  },
+  "historical_budget_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/historical-budget.json",
+    "sha256": "d03f6302a48acd47e36e271dc94d4ff23f22f957c529c0beba8ca77e91c9aa6c"
+  },
+  "reuse_acceptance_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/reuse-acceptance.json",
+    "sha256": "838f284592d524bc0ea56ead42acc14491c301033a66d169ed24ad52b8bd8ea3"
+  },
+  "user_instruction": "继续下一步，准备好后通知隔壁开始执行，同样让它执行完后再通知你这边",
+  "authorized_new_worker_count": 38,
+  "planned_cumulative_seconds": 7253,
+  "original_cap_seconds": 8370,
+  "new_workers_started_by_control": 0,
+  "code_writer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "independent_final_review_required": true,
+  "old_window_status": "CLOSED_UNCHANGED",
+  "terminal_notification_required": true,
+  "official_gate_pass": false,
+  "commit_push": false
+}

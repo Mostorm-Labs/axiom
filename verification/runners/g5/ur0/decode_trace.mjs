@@ -1,5 +1,6 @@
 // Numeric record decoder. Every join cites actual record sequence numbers.
 // Unknown/absent fields stay absent; no placeholder zero or expected-stamp fill.
+import {initializationBasis} from './initialization_basis.mjs';
 const hexWord=value=>{let n=BigInt(value),s='';for(let i=0;i<8;++i){s+=(n&255n).toString(16).padStart(2,'0');n>>=8n;}return s;};
 const id=(a,b)=>hexWord(a)+hexWord(b);
 const routeNames=['NONE','CAN-PREP-V4','CAN-DIRECT','EDIT-PLAIN','EDIT-MASK-ISOLATED','EDIT-MASK-DIRECT','ERASE-LAYERS','ERASE-RESIDENT','ERASE-MISS','NAV-COARSE-GPU','NAV-COARSE-CPU','NAV-UNPREPARED','NAV-RETAINED','PREVIEW-PREFIX','PREVIEW-TAIL','CREATION-CANONICAL','CREATION-TRANSIENT','RECORDING'];
@@ -18,8 +19,9 @@ export function expandLeaseCycles(records){
  for(let i=1;i<expanded.length;++i)if(expanded[i-1].seq===expanded[i].seq)throw Error('duplicate expanded lease sequence');
  return expanded;
 }
-export function decodeTrace(records,loss){
- const out={schema:'g5-ur0b-decoded-v1',errors:[],missing:[],commits:[],scenes:[],frames:[],qualified_completions:[],unqualified_completions:[],decisions:[],leaves:[],spans:[],gpu:[],counters:[],loss};
+export function decodeTrace(records,loss,recording=null){
+ const rawRecords=records;
+ const out={schema:'g5-ur0b-decoded-v1',errors:[],missing:[],commits:[],scenes:[],frames:[],qualified_completions:[],initialization_completions:[],unqualified_completions:[],decisions:[],leaves:[],spans:[],gpu:[],counters:[],loss};
  const fail=(reason,r)=>out.errors.push({reason,seq:r?.seq??null});
  if(loss?.critical)fail('critical record loss');
  if(records.some(r=>!Array.isArray(r.values)||r.values.some(v=>typeof v!=='string'||!/^\d+$/.test(v)))){fail('malformed lossless record values');return out;}
@@ -130,5 +132,13 @@ export function decodeTrace(records,loss){
   else s.status='RIGHT_CENSORED';out.spans.push(s);
  }
  for(const g of groups.values()){g.callback_before_submit_return=g.submit_ns!==null&&g.completed_ns!==null&&BigInt(g.completed_ns)<BigInt(g.submit_ns);g.status=g.abandoned||g.physical_lost?'LOST':g.retired_ns?'RETIRED':g.completed_ns?'COMPLETED_WAITING_RETIREMENT':g.submit_ns?'PENDING':'MISSING_SUBMIT';out.gpu.push(g);}
+ out.unqualified_completions=out.unqualified_completions.filter(c=>{
+  if(c.qualification!=='MISSING_SETUP_SCENE_OBSERVATION')return true;
+  const initial=initializationBasis(c,out,rawRecords,recording);
+  if(initial.status!=='PROVEN_FRESH_EMPTY_INITIALIZATION'){c.initialization_unresolved=initial.reason;return true;}
+  out.initialization_completions.push({...c,qualification:'QUALIFIED_INITIALIZATION',initialization_basis:initial});
+  out.missing=out.missing.filter(m=>!(m.reason==='frame Scene publication outside observed window'&&m.seq===c.capture_seq&&m.work===c.work));
+  return false;
+ });
  return out;
 }

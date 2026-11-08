@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r3",
+  "parent_task_id": "G5-UR0b",
+  "stage": "P33-r3",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "return_surface": "CONTROL_REVIEW",
+  "starting_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "result_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "dirty": true,
+  "dirty_source_paths": [
+    "verification/runners/g5/ur0/resume_runner.py",
+    "verification/tests/test_g5_ur0_resume_runner.py"
+  ],
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r3/package.json",
+    "sha256": "bd6777505dddd474a111c52e1c477001a82ed11b5e445ce293f40368ba27f915"
+  },
+  "mechanism_proof_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/mechanism-proofs.json",
+    "sha256": "908dabba074432fb1ad1ad55edd43df827362b8ae03c390ba693a08a0b8f1bfa"
+  },
+  "terminal_analysis_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/terminal-analysis.json",
+    "sha256": "e237dfa3a82a27ec1fd2db3811184ec7acd32c2e4a5787663e21b362f13d59bf"
+  },
+  "terminal_witness_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/terminal-witness.json",
+    "sha256": "9df5f7d66d3903e53acf8c68f26a766d8040748f424a31b503c2612219d20593"
+  },
+  "materialized_ref": {
+    "kind": "shared-controlled-worktree-content-addressed-bundle",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3",
+    "manifest_sha256": "4f091a17c23847ef40c438b69c097df7f30a6689ff0eb6da1aeff2d1c406f624"
+  },
+  "completed": [
+    "exact authority/ancestry and historical debit",
+    "durable single-use reserve/claim/stop ledger",
+    "fresh mechanism regressions",
+    "two exact budget artifacts and provenance/export/install boundaries",
+    "diagnostic OFF/ON with positive canonical proof",
+    "one full six-pair AB/BA overhead cohort QUALIFIED",
+    "realtime60 browser execution and guard cleanup"
+  ],
+  "blocker": {
+    "class": "FROZEN_VERIFICATION_FAILURE",
+    "area": "VERIFICATION_INITIALIZATION_CANONICAL_CHAIN",
+    "run_id": "realtime-60",
+    "detail": "raw accepted2 vs qualified decoded1/metric receipt1; unmatched generation-zero pre-operation initialization frame",
+    "owning_followup": "Independent control/Verification review; compiler/observation scope repair is outside this package",
+    "not_established": "New product rendering/performance defect"
+  },
+  "validation_results": {
+    "status": "REQUIRED_MECHANISMS_VERIFIED",
+    "node_passed": 87,
+    "python_passed": 40,
+    "native_passed": 22,
+    "boundary_contracts": 120,
+    "new_browser_workers": 0,
+    "negative_tests": [
+      "closed old authority/new directory",
+      "concurrent/relocated/single-use claim",
+      "unknown interruption full charge",
+      "all historical rows retained",
+      "overbudget rejected before spawn",
+      "changed compiler/proof/product/two artifact tiers rejected",
+      "offline chain cannot admit fresh sampling",
+      "nonzero worker exit rejected"
+    ],
+    "development_findings": [
+      {
+        "finding": "explicit absent guard caused terminal accounting exception",
+        "resolution": "full-limit UNKNOWN_GUARD recorded durably",
+        "red_ref": {
+          "path": "out/ur0b/resume-r3/admission-red-checked.log",
+          "sha256": "df2df57371e93f851097b81f2334fdeb8b636759dfa08c74e3f8a72b3714ec88"
+        },
+        "green_ref": {
+          "path": "out/ur0b/resume-r3/admission-green.log",
+          "sha256": "ee77575e9792889cf800586981e8dea7f2cf78cea1b3fa151873f2e2f76c858f"
+        }
+      },
+      {
+        "finding": "worker could retain OBSERVED summary before nonzero exit",
+        "resolution": "completed zero-exit guard is required",
+        "red_ref": {
+          "path": "out/ur0b/resume-r3/admission-red-checked.log",
+          "sha256": "df2df57371e93f851097b81f2334fdeb8b636759dfa08c74e3f8a72b3714ec88"
+        },
+        "green_ref": {
+          "path": "out/ur0b/resume-r3/admission-green.log",
+          "sha256": "ee77575e9792889cf800586981e8dea7f2cf78cea1b3fa151873f2e2f76c858f"
+        }
+      }
+    ],
+    "full_ctest": "NOT_RERUN; only frozen affected 22 required",
+    "performance_qualification": "NOT_STARTED",
+    "official_gate_pass": false
+  },
+  "accounting": {
+    "historical_starts": 15,
+    "historical_charged_seconds": 597,
+    "new_planned": 53,
+    "new_started": 15,
+    "new_completed_guard": 15,
+    "new_admitted": 14,
+    "new_proof_blocked": 1,
+    "new_missing": 38,
+    "new_charged_seconds": 536,
+    "cumulative_charged_seconds": 1133,
+    "cumulative_authorized_max_seconds": 8067,
+    "original_cap_seconds": 8370,
+    "reserved_seconds": 0,
+    "remaining_budget_is_retry_authorization": false
+  },
+  "guard_summary": {
+    "timeouts": 0,
+    "rss_stops": 0,
+    "nonzero_exits": 0,
+    "cleanup_failures": 0,
+    "maximum_process_family_rss_kib": 1964912,
+    "rss_limit_kib": 3145728
+  },
+  "phase_counts": {
+    "diagnostic": {
+      "planned": 2,
+      "executed": 2,
+      "missing": 0
+    },
+    "qualification": {
+      "planned": 12,
+      "executed": 12,
+      "missing": 0
+    },
+    "separate": {
+      "planned": 9,
+      "executed": 1,
+      "missing": 8
+    },
+    "main": {
+      "planned": 30,
+      "executed": 0,
+      "missing": 30
+    }
+  },
+  "uncompleted": [
+    "realtime120 and240",
+    "six independent Web correctness workers",
+    "30 main matrix rows",
+    "complete UR0b evidence and independent control acceptance"
+  ],
+  "history_preservation": [
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/result.json",
+        "sha256": "aaefaff53371f897b876da219d5f9a3c3c1478805757053a383e5cb1e82324e4"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/manifest.json",
+        "sha256": "e9853be4994fb8bb032c0257450f0bf7cd6a4173f0a033448cd51c8482592f93"
+      },
+      "file_count": 236,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/p36-r1/result.json",
+        "sha256": "c35860d6ebe4528516c449bafcc81d301c66d2420b6a0235c70f1760b84ae7ea"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/manifest.json",
+        "sha256": "ec20501acf288828177293e9661c7fdbb4ed90c34f31233d3d022cd469754300"
+      },
+      "file_count": 266,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/p36-r2/result.json",
+        "sha256": "b115d492f28bbe8e8acd9482f10db06f6f7751c52e755cf8b5dfd30069ebd536"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721/p36-r2/manifest.json",
+        "sha256": "29c30b7b804ece42c19480330d1104b2dea8f1c55f30712a81e282345d9f7bd4"
+      },
+      "file_count": 83,
+      "all_bytes_unchanged": true
+    }
+  ],
+  "official_gate_pass": false,
+  "performance_pass": false,
+  "primary_timings_adopted": false,
+  "continue_execution": false,
+  "automatic_retry": false,
+  "committed": false,
+  "pushed": false,
+  "notification_policy_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+    "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190"
+  }
+}

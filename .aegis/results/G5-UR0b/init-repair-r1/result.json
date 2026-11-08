@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-init-repair-r1",
+  "stage": "P32_OFFLINE_INIT_REPAIR",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "scope": "OFFLINE_INITIALIZATION_REPAIR_ONLY",
+  "return_surface": "CONTROL_REVIEW",
+  "starting_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "result_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "source_tree_sha256": "2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb",
+  "dirty": true,
+  "dirty_source_paths": [
+    "verification/runners/g5/ur0/canonical_chain.mjs",
+    "verification/runners/g5/ur0/compile_run.mjs",
+    "verification/runners/g5/ur0/decode_trace.mjs",
+    "verification/runners/g5/ur0/metrics_compiler.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/runners/g5/ur0/resume_runner.py",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_resume_runner.py"
+  ],
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-init-repair-r1/package.json",
+    "sha256": "247da63294671d763da805758e88bf449db111150f7c37ff7fa2c1272781e710"
+  },
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e"
+  },
+  "completion_contract_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json",
+    "sha256": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd"
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/oracle-cases.json",
+    "sha256": "785d936f6957b205bd326513196a2d0b8674d3ef81daef141bec345bc8bbf3af"
+  },
+  "immutable_input_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+    "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f"
+  },
+  "materialized_ref": {
+    "kind": "shared-controlled-worktree-content-addressed-bundle",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1",
+    "manifest_sha256": "b046d70f598c606a436f38d7331c9d44ce887fd09a3f990b4876bb2dc584b660"
+  },
+  "verification_results": {
+    "status": "OFFLINE_INITIALIZATION_REPAIR_VERIFIED",
+    "node_passed": 100,
+    "python_passed": 44,
+    "boundary_contracts": 120,
+    "oracle_groups": 16,
+    "immutable_inputs_recompiled": 15,
+    "accepted_completion_records": 10,
+    "initialization_completion_records": 1,
+    "committed_completion_records": 9,
+    "unresolved_accepted_records": 0,
+    "note": "Completion counts are frame records, not counts of semantic mutations.",
+    "metrics_and_external_bytes_unchanged": true,
+    "committed_receipts_attempts_and_snapshot_outcomes_unchanged": true,
+    "native_cpp": "Existing22CTest and11 executable hashes retained; not rebuilt/rerun",
+    "new_browser_workers": 0,
+    "new_artifact_builds": 0,
+    "old_window_status": "CLOSED",
+    "sampling_debit_seconds": 1133,
+    "reuse_status": "ELIGIBLE_PENDING_INDEPENDENT_CONTROL_REVIEW",
+    "official_gate_pass": false,
+    "performance_pass": false
+  },
+  "offline_reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/offline-reverification.json",
+    "sha256": "f66253235bc24d6d1f1c095b89914269537c59c1f77d2e31dddc170f6bf8b479"
+  },
+  "reuse_assessment_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/reuse-assessment.json",
+    "sha256": "437f05af834c3eba2e33187ff3b8773295b5708a0ecd8c10e9f37620f17d10bc"
+  },
+  "scope_audit_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/source-scope-audit.json",
+    "sha256": "68f70b074cd93fb8cde17b8b45264393151c2ecf7635511dfd1a75db9f9e8ac6"
+  },
+  "preservation_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/preservation.json",
+    "sha256": "31d13b80f58580a94df12885a3507e4a22b8d847aa9e0989a7d19ec97a780c11"
+  },
+  "oracle_coverage_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/oracle-coverage.json",
+    "sha256": "755838273c037d405bcc58ff92a7c1dd21e4606716013ebebd1225a7f8e91ddf"
+  },
+  "parent_UR0b_complete": false,
+  "old_sampling_window": "CLOSED_UNCHANGED",
+  "uncompleted_parent_sampling": [
+    "realtime120/240",
+    "six independent Web correctness workers",
+    "30 main matrix rows"
+  ],
+  "new_sampling_workers": 0,
+  "new_artifact_builds": 0,
+  "prior_sampling_debit_seconds": 1133,
+  "performance_pass": false,
+  "official_gate_pass": false,
+  "continue_execution": false,
+  "committed": false,
+  "pushed": false,
+  "notification_policy_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+    "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190",
+    "identity_kind": "local-content-addressed"
+  },
+  "next_action": "Independent control review of the completed offline slice and unchanged cohort reuse applicability; no sampling authorization inferred"
+}

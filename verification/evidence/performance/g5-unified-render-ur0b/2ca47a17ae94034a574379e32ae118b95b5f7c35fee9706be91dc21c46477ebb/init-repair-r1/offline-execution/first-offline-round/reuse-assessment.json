@@ -1,0 +1,28 @@
+{
+  "status": "ELIGIBLE_PENDING_INDEPENDENT_CONTROL_REVIEW",
+  "scope": "Existing r3 diagnostic and six-pair overhead observations only; not a fresh cohort or continuation authorization",
+  "current_compiler_source_tree_sha256": "bc2b02cb4c90b55a5c75792f744a0413bc289f23ef17148ba4c49e54a26e0dfe",
+  "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "invariance": {
+    "all_fifteen_input_bindings_unchanged": true,
+    "all_actual_metrics_and_external_bytes_unchanged": true,
+    "all_committed_receipts_and_attempts_unchanged": true,
+    "snapshot_terminal_product_outcomes_unchanged": true,
+    "observer_workload_artifact_collector_consumer_unchanged": "source-scope/product projection is verified at materialization",
+    "original_six_pair_values_unchanged": true,
+    "overhead_verdict_unchanged": true
+  },
+  "overhead_ref": {
+    "path": "out/ur0b/init-repair-r1/recompiled-overhead-qualification.json",
+    "sha256": "bda1b80a74337f5b9c925e911fbca7c5ea037ba4b310930a415a0be253cb29bf"
+  },
+  "prior_sampling_debit_seconds": 1133,
+  "new_browser_workers": 0,
+  "new_sampling": false,
+  "old_window_status": "CLOSED",
+  "old_window_sha256": "3d51c1f28b2cc71796a8eb0818be5e8cf17841627a2bb4aa8248060b8ddc34b7",
+  "performance_pass": false,
+  "official_gate_pass": false,
+  "independent_acceptance_required": true,
+  "eligible_samples_not_adopted_as_fresh": true
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "g5-ur0b-independent-reuse-acceptance-v1",
+  "status": "ACCEPTED_EXACT_RECORDED_DIAGNOSTIC_AND_OVERHEAD_REUSE",
+  "subject_reuse_assessment_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/reuse-assessment.json",
+    "sha256": "437f05af834c3eba2e33187ff3b8773295b5708a0ecd8c10e9f37620f17d10bc"
+  },
+  "recording_source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "current_compiler_source_tree_sha256": "2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb",
+  "recording_bundle_manifest_ref": {
+    "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/manifest.json",
+    "sha256": "4f091a17c23847ef40c438b69c097df7f30a6689ff0eb6da1aeff2d1c406f624"
+  },
+  "current_offline_result_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/result.json",
+    "sha256": "5a2a36131ef0b4ad5c389a9179873f51a6fa63a5db15557c6f9fe83b10707773"
+  },
+  "independent_replay_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/offline-check.json",
+    "sha256": "5ecb469613439ca414b5e31ad146bb7636dee74094c9ae5083f0bb4b4ece4136"
+  },
+  "independent_pair_calculation_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/overhead-check.json",
+    "sha256": "2b10dde8c755f4d8672aa6be4b23096a6ab756d086e839f6ac030090485705fb"
+  },
+  "overhead_measurements": {
+    "p95_ns": {
+      "off_median_ns": 300000.0,
+      "off_mad_ns": 0.0,
+      "paired_median_increment_ns": 50000.0,
+      "limit_ns": 1000000,
+      "noisy": false
+    },
+    "wall_ns": {
+      "off_median_ns": 4090950000.0,
+      "off_mad_ns": 27950000.0,
+      "paired_median_increment_ns": -91850000.0,
+      "limit_ns": 204547500.0,
+      "noisy": false
+    }
+  },
+  "accepted_scope": "Exact original r3 OFF/ON diagnostic and six-pair AB/BA cohort under its frozen workload/budget/target conditions; existing60Hz recording has a now-qualified canonical proof but is not a new run.",
+  "frozen_conditions": [
+    "Recorded artifacts/collector/worker/consumer/corpus and measured original inputs unchanged",
+    "New v2 proof is bound to exact archived raw/state/input plus current compiler/spec identity",
+    "Common/external timing, final snapshot/terminal/product outcomes and committed chains/receipts unchanged",
+    "Original six-pair order/values/median/MAD/thresholds remain exact",
+    "A future package consumes this accepted reuse record explicitly; require_bound_compilation must keep rejecting OFFLINE_REVERIFICATION as fresh"
+  ],
+  "new_sampling_authorized": false,
+  "old_window_status": "CLOSED_UNCHANGED",
+  "sampling_debit_seconds": 1133,
+  "official_gate_pass": false,
+  "product_performance_pass": false
+}

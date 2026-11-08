@@ -1,0 +1,101 @@
+{
+  "schema": "g5-ur0b-independent-control-review-v1",
+  "status": "ACCEPTED_OFFLINE_REPAIR_SLICE",
+  "task": "G5-UR0b",
+  "subject_stage": "P36-r2",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR0b/p36-r2/result.json",
+    "sha256": "b115d492f28bbe8e8acd9482f10db06f6f7751c52e755cf8b5dfd30069ebd536"
+  },
+  "review_notes_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-p36-r2/review.md",
+    "sha256": "97ae04f0037283c09053d5b3799947382609db61ef6d3c47c1f61eece2c3841d"
+  },
+  "reviewed_source_tree_sha256": "73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "head": "f66592001012444cd99db968961014497c0f120f",
+    "head_contains_implementation": false
+  },
+  "frozen_requirement_audit": {
+    "successful_attempt_full_identity_join": "ACCEPTED",
+    "all_preparation_attempts_preserved": "ACCEPTED",
+    "positive_canonical_admission": "ACCEPTED",
+    "recording_and_compiler_identity_binding": "ACCEPTED",
+    "offline_results_not_promoted_to_fresh_sampling": "ACCEPTED",
+    "consumed_authorization_remains_closed": "ACCEPTED"
+  },
+  "frozen_evidence_audit": {
+    "original_bundle_files": 236,
+    "p36_r1_bundle_files": 266,
+    "p36_r2_bundle_files": 83,
+    "hash_mismatches": 0,
+    "offline_inputs_recompiled": 5,
+    "on_inputs": 3,
+    "raw_accepted_completions": 4,
+    "decoded_qualified_completions": 4,
+    "metric_receipts": 4,
+    "attempt_jobs_per_chain": [
+      24,
+      24,
+      24,
+      24
+    ],
+    "node_passed": 87,
+    "python_passed": 32,
+    "boundary_contracts": 120
+  },
+  "repository_reality_audit": {
+    "declared_seven_offline_source_paths_only": true,
+    "runtime_sdk_build_dependency_changes_in_r2": false,
+    "production_edits_by_reviewer": false,
+    "historical_raw_and_results_preserved": true
+  },
+  "blocking_findings": [],
+  "non_blocking_boundaries": [
+    "Four completion records are frame completions, not four semantic mutations.",
+    "Unobserved helper outcomes remain MISSING; exact commit-time metrics cannot use returned-record time as an exact instant.",
+    "The bound and tested compiler is the trusted producer for admission; digest checking is not an independent recomputation of arbitrary manually forged summaries. No normal-path false qualification was reproduced."
+  ],
+  "parent_ur0b_complete": false,
+  "sampling_authorization": "CLOSED_UNCHANGED",
+  "new_browser_workers": 0,
+  "performance_verdict": "NOT_EVALUATED",
+  "official_gate_pass": false,
+  "commit_push": false,
+  "next_action": "Issue an explicitly bounded continuation tied to exact source/artifacts and cumulative old worker accounting before any fresh qualification. Do not reopen by changing directories or reusing old labels. No need to redo accepted offline repairs.",
+  "checks": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/identity-check.json",
+      "sha256": "513b1261b4ff6abd572f071065d3f98399820b8900f63730eb0a02436788e749"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/offline-recheck.mjs",
+      "sha256": "4be10ec81835eb490a37c094b69314aee8fc0b9e7f03d591be543b32c18f7d0f"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/offline-check.json",
+      "sha256": "e487bd410fcff76cc49780fd66b96f22ec1b82eca6e9682be4347d6d43f8a306"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/sampling-closed-check.json",
+      "sha256": "78e3b4deb10ba2047ff9e2f8ba775dc002b5d9ec897b780e4587069c3e6f81ad"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/node.log",
+      "sha256": "681345f6988a53139d2b7caffdbe2a67011ee1562bb20d2300921eb4c398b66d"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/python.log",
+      "sha256": "f76f2580f2883e3fcf7f947c58a44b0434d5ee987ea1aa829a2e55819c0673c1"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-p36-r2/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  ]
+}

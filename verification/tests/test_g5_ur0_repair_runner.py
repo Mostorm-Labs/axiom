@@ -2,6 +2,14 @@ import copy,hashlib,importlib.util,json,tempfile,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 class RepairRunnerTest(unittest.TestCase):
+ def mixed_v2(self):
+  s=self.summary();p=s['canonical_chain'];initial=copy.deepcopy(p['chains'][0]);initial.update(work_id='2',draw_job='2',draw_basis='2',attempt_jobs=['2'],draw_seq='1',provider_seq='2',capture_seq='3',completion_seq='4')
+  initial['basis'].update(committed_generation='0',scene_generation='0',scene_revision='0',commit_revision='0',operation_id=None)
+  initial['operation_reason']='NOT_APPLICABLE_INITIALIZATION'
+  initial['initialization_basis']={'status':'PROVEN_FRESH_EMPTY_INITIALIZATION','public_state':{'documentId':'0'*32,'generation':'0','objects':0,'lastCommit':{'ordinal':'0','operationId':'0'*32},'target':{'runtimeEpoch':'1','attachmentEpoch':'1','viewId':'1'}},
+   'source_profile':{'verification/runners/g5/ur0/consumer.mjs':'4512faa07223db9a9a761eeccdc2210e8fef65becf65a9b3e46135553117aee7','verification/runners/g5/ur0/worker.mjs':'a483fcc8763eb8ed8a47005e81d12316ad4e9fa04fa08165eec42b8a100425f1'},
+   'recording_source_tree_sha256':'d'*64,'input_refs':{'raw_trace_sha256':'a'*64,'worker_result_sha256':'b'*64,'run_inputs_sha256':'c'*64}}
+  p.update(schema='g5-ur0b-canonical-chain-proof-v2',accepted_raw_count=2,qualified_initialization_count=1,qualified_committed_count=1,unresolved_accepted_count=0,initialization_chains=[initial],accepted_records=[{'completion_seq':'4','work_id':'2','classification':'INITIALIZATION'},{'completion_seq':'10','work_id':'1','classification':'COMMITTED'}]);return s
  def summary(self):
   basis={k:'1' for k in ['runtime_instance','lifetime_generation','attachment_epoch','document_epoch','resource_generation','view_id','committed_generation','scene_generation','scene_revision','camera_generation','surface_generation','metrics_generation','frame_id','commit_revision']}
   basis.update(document_id='0'*32,operation_id='1'*32)
@@ -69,4 +77,18 @@ class RepairRunnerTest(unittest.TestCase):
     with self.assertRaises(RuntimeError):m.require_bound_compilation(directory,bad,{'source_tree_sha256':'tree'})
    (directory/'raw-trace.jsonl').write_text('changed\n')
    with self.assertRaisesRegex(RuntimeError,'input binding'):m.require_bound_compilation(directory,summary,{'source_tree_sha256':'tree'})
+ def test_v2_complete_partition_keeps_initialization_out_of_positive_mutation_gate(self):
+  m=self.module();s=self.mixed_v2();m.require_canonical_chain(s,require_positive=True)
+  p=s['canonical_chain'];p.update(accepted_raw_count=1,qualified_committed_count=0,qualified_decoded_count=0,metric_receipt_count=0,chains=[]);p['accepted_records']=p['accepted_records'][:1]
+  m.require_canonical_chain(s,require_positive=False)
+  with self.assertRaises(RuntimeError):m.require_canonical_chain(s,require_positive=True)
+  p.update(scope='NATIVE_ONLY',metric_receipt_count=None);m.require_canonical_chain(s,require_positive=False,require_metrics=False)
+ def test_v2_reader_rejects_population_membership_and_initial_state_exemptions(self):
+  m=self.module()
+  changes=[lambda p:p.update(accepted_raw_count=1),lambda p:p.update(qualified_decoded_count=2),lambda p:p.update(metric_receipt_count=2),lambda p:p.update(unresolved_accepted_count=1),lambda p:p.update(accepted_records=p['accepted_records'][1:]),lambda p:p['accepted_records'][0].update(classification='COMMITTED'),lambda p:p['initialization_chains'][0]['basis'].pop('operation_id'),lambda p:p['initialization_chains'][0]['initialization_basis']['public_state']['target'].update(runtimeEpoch='0'),lambda p:p['initialization_chains'][0]['initialization_basis'].pop('input_refs'),lambda p:p['initialization_chains'][0]['initialization_basis']['source_profile'].update({'verification/runners/g5/ur0/worker.mjs':'0'*64})]
+  for change in changes:
+   s=self.mixed_v2();change(s['canonical_chain'])
+   with self.subTest(change=change),self.assertRaises(RuntimeError):m.require_canonical_chain(s)
+  legacy=self.summary();legacy['canonical_chain']['schema']='g5-ur0b-canonical-chain-proof-v2'
+  with self.assertRaises(RuntimeError):m.require_canonical_chain(legacy)
 if __name__=='__main__':unittest.main()

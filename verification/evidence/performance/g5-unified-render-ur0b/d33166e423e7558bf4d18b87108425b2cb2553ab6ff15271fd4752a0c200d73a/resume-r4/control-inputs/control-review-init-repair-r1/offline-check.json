@@ -1,0 +1,185 @@
+{
+  "status": "INDEPENDENT_OFFLINE_REPLAY_AND_ISOLATION_VERIFIED",
+  "rows": [
+    {
+      "run_id": "diagnostic-OFF",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "diagnostic-ON",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p1-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p1-B",
+      "accepted_raw_count": 2,
+      "initialization": 0,
+      "committed": 2,
+      "unresolved": 0,
+      "mutation_receipts": 2,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p2-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p2-B",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p3-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p3-B",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p4-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p4-B",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p5-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p5-B",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p6-A",
+      "accepted_raw_count": 0,
+      "initialization": 0,
+      "committed": 0,
+      "unresolved": 0,
+      "mutation_receipts": 0,
+      "status": "NOT_OBSERVED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "qualification-p6-B",
+      "accepted_raw_count": 1,
+      "initialization": 0,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    },
+    {
+      "run_id": "realtime-60",
+      "accepted_raw_count": 2,
+      "initialization": 1,
+      "committed": 1,
+      "unresolved": 0,
+      "mutation_receipts": 1,
+      "status": "QUALIFIED",
+      "metrics_bytes_equal": true,
+      "producer_output_equal": true
+    }
+  ],
+  "totals": {
+    "accepted_raw_count": 10,
+    "initialization": 1,
+    "committed": 9,
+    "unresolved": 0,
+    "mutation_receipts": 9
+  },
+  "all_metrics_external_bytes_unchanged": true,
+  "all_committed_native_chains_unchanged": true,
+  "all_offline_promotions_rejected": true,
+  "initialization_only_positive_gate": "REJECTED",
+  "legacy_actual_behavior": "MISSING_raw2_decoded1_receipt1",
+  "new_actual_behavior": "QUALIFIED_raw2_init1_committed1_unresolved0_receipt1",
+  "public_document_epoch_is_target_not_lastCommit": true,
+  "new_browser_workers": 0
+}

@@ -1,0 +1,285 @@
+TAP version 13
+# Subtest: private observation exports must be exactly the qualifier-only delta
+ok 1 - private observation exports must be exactly the qualifier-only delta
+  ---
+  duration_ms: 1.39
+  ...
+# Subtest: release minified exports resolve through actual generated JS bindings
+ok 2 - release minified exports resolve through actual generated JS bindings
+  ---
+  duration_ms: 0.410333
+  ...
+# Subtest: normal install rejects internal archives and private observation headers
+ok 3 - normal install rejects internal archives and private observation headers
+  ---
+  duration_ms: 0.068583
+  ...
+# Subtest: actual metric document preserves rejected feedback and validates frozen shape/semantics
+ok 4 - actual metric document preserves rejected feedback and validates frozen shape/semantics
+  ---
+  duration_ms: 59.6705
+  ...
+# Subtest: refresh callbacks before measurement origin do not create negative metric timestamps
+ok 5 - refresh callbacks before measurement origin do not create negative metric timestamps
+  ---
+  duration_ms: 41.650125
+  ...
+# Subtest: post-commit input error keeps the operation and does not invent exact publication time
+ok 6 - post-commit input error keeps the operation and does not invent exact publication time
+  ---
+  duration_ms: 39.092083
+  ...
+# Subtest: same canonical demand groups different frame attempts without changing their actual results
+ok 7 - same canonical demand groups different frame attempts without changing their actual results
+  ---
+  duration_ms: 0.95375
+  ...
+# Subtest: repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+ok 8 - repeated-frame canonical metrics keep all attempts and only the actual successful receipt
+  ---
+  duration_ms: 40.738
+  ...
+# Subtest: canonical admission proof reconciles real raw completions, decoded links and metric receipts
+ok 9 - canonical admission proof reconciles real raw completions, decoded links and metric receipts
+  ---
+  duration_ms: 2.057083
+  ...
+# Subtest: transient feedback uses its own trace demand and full provider submit
+ok 10 - transient feedback uses its own trace demand and full provider submit
+  ---
+  duration_ms: 38.11025
+  ...
+# Subtest: native navigation feedback has pose/source/region proof and no canonical receipt
+ok 11 - native navigation feedback has pose/source/region proof and no canonical receipt
+  ---
+  duration_ms: 38.769541
+  ...
+# Subtest: superseded viewport demands form one busy interval and stale pose cannot shorten it
+ok 12 - superseded viewport demands form one busy interval and stale pose cannot shorten it
+  ---
+  duration_ms: 39.318708
+  ...
+# Subtest: actual metrics retain separate Runtime owners for simultaneous navigation demands
+ok 13 - actual metrics retain separate Runtime owners for simultaneous navigation demands
+  ---
+  duration_ms: 42.3145
+  ...
+# Subtest: same-frame retries select the unique accepted provider job and preserve every attempt
+ok 14 - same-frame retries select the unique accepted provider job and preserve every attempt
+  ---
+  duration_ms: 3.62225
+  ...
+# Subtest: an unrelated later attempt never replaces the job that actually submitted
+ok 15 - an unrelated later attempt never replaces the job that actually submitted
+  ---
+  duration_ms: 0.625292
+  ...
+# Subtest: provider job, basis, camera, Scene and chronology mismatches remain unqualified
+ok 16 - provider job, basis, camera, Scene and chronology mismatches remain unqualified
+  ---
+  duration_ms: 2.356875
+  ...
+# Subtest: duplicate accepted submits and ambiguous draws within the successful job fail closed
+ok 17 - duplicate accepted submits and ambiguous draws within the successful job fail closed
+  ---
+  duration_ms: 0.44825
+  ...
+# Subtest: decodes actual observed commit Scene submit and completion fields
+ok 18 - decodes actual observed commit Scene submit and completion fields
+  ---
+  duration_ms: 0.141042
+  ...
+# Subtest: foreign completion or mismatched Scene cannot be repaired by copying expected fields
+ok 19 - foreign completion or mismatched Scene cannot be repaired by copying expected fields
+  ---
+  duration_ms: 0.255042
+  ...
+# Subtest: Scene intent publication can precede the callsite observation of its returned commit record
+ok 20 - Scene intent publication can precede the callsite observation of its returned commit record
+  ---
+  duration_ms: 0.916125
+  ...
+# Subtest: scope exclusive time and GPU callback ordering preserve raw facts
+ok 21 - scope exclusive time and GPU callback ordering preserve raw facts
+  ---
+  duration_ms: 0.162542
+  ...
+# Subtest: actual compiler rejects another Runtime committing the same generation
+ok 22 - actual compiler rejects another Runtime committing the same generation
+  ---
+  duration_ms: 67.611417
+  ...
+# Subtest: foreign same-generation noise cannot replace the actual matching operation
+ok 23 - foreign same-generation noise cannot replace the actual matching operation
+  ---
+  duration_ms: 0.46175
+  ...
+# Subtest: lifetime attachment resource missing or ambiguous render owners fail closed
+ok 24 - lifetime attachment resource missing or ambiguous render owners fail closed
+  ---
+  duration_ms: 0.284084
+  ...
+# Subtest: compact lease lifecycles restore all actual identities, times and ordered events
+ok 25 - compact lease lifecycles restore all actual identities, times and ordered events
+  ---
+  duration_ms: 0.69425
+  ...
+# Subtest: common OFF/ON metrics retain rejected feedback in the planned denominator
+ok 26 - common OFF/ON metrics retain rejected feedback in the planned denominator
+  ---
+  duration_ms: 0.773584
+  ...
+# Subtest: an incomplete dispatch has a lower bound and is not a zero successful sample
+ok 27 - an incomplete dispatch has a lower bound and is not a zero successful sample
+  ---
+  duration_ms: 0.162417
+  ...
+# Subtest: realtime batching retains every literal sample and separates terminal contacts
+ok 28 - realtime batching retains every literal sample and separates terminal contacts
+  ---
+  duration_ms: 14.231
+  ...
+# Subtest: clock brackets reject incompatible domains rather than manufacture queue time
+ok 29 - clock brackets reject incompatible domains rather than manufacture queue time
+  ---
+  duration_ms: 0.318708
+  ...
+# Subtest: overhead gate retains all six pairs and rejects critical loss
+ok 30 - overhead gate retains all six pairs and rejects critical loss
+  ---
+  duration_ms: 0.423583
+  ...
+# Subtest: missing dispatch samples cannot qualify as a zero-cost overhead pair
+ok 31 - missing dispatch samples cannot qualify as a zero-cost overhead pair
+  ---
+  duration_ms: 0.083042
+  ...
+# Subtest: legacy input remains an unquantized 28.796 second anchor
+ok 32 - legacy input remains an unquantized 28.796 second anchor
+  ---
+  duration_ms: 5.160417
+  ...
+# Subtest: real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+ok 33 - real commit/Scene/frame basis qualifies without confusing scene revision and semantic generation
+  ---
+  duration_ms: 0.668959
+  ...
+# Subtest: foreign or stale completion never qualifies a different execution
+ok 34 - foreign or stale completion never qualifies a different execution
+  ---
+  duration_ms: 2.001458
+  ...
+# Subtest: Scene generation must match committed generation, not merely the static schema shape
+ok 35 - Scene generation must match committed generation, not merely the static schema shape
+  ---
+  duration_ms: 0.35825
+  ...
+# Subtest: requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+ok 36 - requested GPU and matching numerical IDs cannot hide wrong leaf or dropped identity
+  ---
+  duration_ms: 0.256667
+  ...
+# Subtest: ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+ok 37 - ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt
+  ---
+  duration_ms: 1502.804542
+  ...
+# Subtest: INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+ok 38 - INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before
+  ---
+  duration_ms: 85.453667
+  ...
+# Subtest: MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+ok 39 - MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved
+  ---
+  duration_ms: 123.111958
+  ...
+# Subtest: RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+ok 40 - RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected
+  ---
+  duration_ms: 249.114416
+  ...
+# Subtest: CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+ok 41 - CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization
+  ---
+  duration_ms: 66.3125
+  ...
+# Subtest: FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+ok 42 - FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match
+  ---
+  duration_ms: 296.515375
+  ...
+# Subtest: DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+ok 43 - DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator
+  ---
+  duration_ms: 52.646458
+  ...
+# Subtest: NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+ok 44 - NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame
+  ---
+  duration_ms: 31.129791
+  ...
+# Subtest: MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+ok 45 - MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt
+  ---
+  duration_ms: 515.022792
+  ...
+# Subtest: LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+ok 46 - LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker
+  ---
+  duration_ms: 35.360042
+  ...
+# Subtest: NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+ok 47 - NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt
+  ---
+  duration_ms: 76.504833
+  ...
+# Subtest: OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+ok 48 - OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation
+  ---
+  duration_ms: 38.733333
+  ...
+# Subtest: independent pixel comparator allows only reference geometric AA edges
+ok 49 - independent pixel comparator allows only reference geometric AA edges
+  ---
+  duration_ms: 0.502875
+  ...
+# Subtest: pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+ok 50 - pixel comparator rejects missing/corrupt artifacts instead of counting them as zero
+  ---
+  duration_ms: 0.211209
+  ...
+# Subtest: a blocked Down never shifts the next original planned time or drops Up
+ok 51 - a blocked Down never shifts the next original planned time or drops Up
+  ---
+  duration_ms: 0.944875
+  ...
+# Subtest: rejects a reversed plan and retains thrown dispatch as failure
+ok 52 - rejects a reversed plan and retains thrown dispatch as failure
+  ---
+  duration_ms: 0.308041
+  ...
+# Subtest: failure/censoring stays in the denominator and large ns values remain exact
+ok 53 - failure/censoring stays in the denominator and large ns values remain exact
+  ---
+  duration_ms: 0.26375
+  ...
+# Subtest: public snapshot transport keeps exact bytes with a bounded single chunk
+ok 54 - public snapshot transport keeps exact bytes with a bounded single chunk
+  ---
+  duration_ms: 57.262958
+  ...
+# Subtest: snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+ok 55 - snapshot transport rejects overlap, missing bytes, duplicate begin and oversized chunks
+  ---
+  duration_ms: 0.222083
+  ...
+1..55
+# tests 55
+# suites 0
+# pass 55
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3440.114959

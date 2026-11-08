@@ -1,0 +1,47 @@
+{
+  "status": "REQUIRED_MECHANISMS_VERIFIED",
+  "node_passed": 87,
+  "python_passed": 40,
+  "native_passed": 22,
+  "boundary_contracts": 120,
+  "new_browser_workers": 0,
+  "negative_tests": [
+    "closed old authority/new directory",
+    "concurrent/relocated/single-use claim",
+    "unknown interruption full charge",
+    "all historical rows retained",
+    "overbudget rejected before spawn",
+    "changed compiler/proof/product/two artifact tiers rejected",
+    "offline chain cannot admit fresh sampling",
+    "nonzero worker exit rejected"
+  ],
+  "development_findings": [
+    {
+      "finding": "explicit absent guard caused terminal accounting exception",
+      "resolution": "full-limit UNKNOWN_GUARD recorded durably",
+      "red_ref": {
+        "path": "out/ur0b/resume-r3/admission-red-checked.log",
+        "sha256": "df2df57371e93f851097b81f2334fdeb8b636759dfa08c74e3f8a72b3714ec88"
+      },
+      "green_ref": {
+        "path": "out/ur0b/resume-r3/admission-green.log",
+        "sha256": "ee77575e9792889cf800586981e8dea7f2cf78cea1b3fa151873f2e2f76c858f"
+      }
+    },
+    {
+      "finding": "worker could retain OBSERVED summary before nonzero exit",
+      "resolution": "completed zero-exit guard is required",
+      "red_ref": {
+        "path": "out/ur0b/resume-r3/admission-red-checked.log",
+        "sha256": "df2df57371e93f851097b81f2334fdeb8b636759dfa08c74e3f8a72b3714ec88"
+      },
+      "green_ref": {
+        "path": "out/ur0b/resume-r3/admission-green.log",
+        "sha256": "ee77575e9792889cf800586981e8dea7f2cf78cea1b3fa151873f2e2f76c858f"
+      }
+    }
+  ],
+  "full_ctest": "NOT_RERUN; only frozen affected 22 required",
+  "performance_qualification": "NOT_STARTED",
+  "official_gate_pass": false
+}

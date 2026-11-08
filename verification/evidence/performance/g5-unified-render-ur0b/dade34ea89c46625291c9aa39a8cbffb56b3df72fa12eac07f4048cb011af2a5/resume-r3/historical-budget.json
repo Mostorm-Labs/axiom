@@ -1,0 +1,209 @@
+{
+  "schema": "g5-ur0b-historical-worker-debit-v1",
+  "policy": "All archived browser preflights and formal workers included, plus native bounded fixture oracle conservatively. Completed guarded runs use individually rounded-up elapsed seconds; missing guard uses full worker limit. Unstarted MISSING is not execution. Archive/out mirrors counted once.",
+  "rows": [
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p1-A-guard.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p1-A-guard.worker.json",
+        "sha256": "e766229dd67de9b35b0a5cc45e718f409c437008f1b19dbb182b0403ddd9ebed"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 32.58973458298715,
+      "charged_seconds": 33,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p1-B-guard.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p1-B-guard.worker.json",
+        "sha256": "834b3a2138000dd60f58eca45576907f58846518453fe7c67ea3c7fb4cf76f50"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 38.268624584015924,
+      "charged_seconds": 39,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p2-B-guard.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/cohort/raw-runs/overhead-p2-B-guard.worker.json",
+        "sha256": "8f363513bd37b454fc2615c7c4ba1a03f58e2c502bf4597d7e3c439d5ec239c7"
+      },
+      "outcome": "rss_limit",
+      "elapsed_seconds": 29.33363016700605,
+      "charged_seconds": 30,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/fixture-mechanism.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/fixture-mechanism.worker.json",
+        "sha256": "6faefded76dbec9e60b6dd8f25392eb3785812fe7e08fc4642d75d94d98846d7"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 44.846287665946875,
+      "charged_seconds": 45,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90.0,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/fixture-oracle-qualified.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/fixture-oracle-qualified.worker.json",
+        "sha256": "925caee9bdc10bf0c931a72686e005aa007a344b28899093a9afcff1f6d91f12"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 38.26392083300743,
+      "charged_seconds": 39,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90.0,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/normal-root-smoke-data-guard.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/normal-root-smoke-data-guard.worker.json",
+        "sha256": "c046fc6b91f0f893c332cb7d118a7a92403e46d12dbfdba20761c4afb02fbfdc"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 25.132715375046246,
+      "charged_seconds": 26,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-compact-mechanism.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-compact-mechanism.worker.json",
+        "sha256": "b82f510996f2c39f2738282c4996a76f20c9e2929e1121de4f9b2768637a8f99"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 40.79257170797791,
+      "charged_seconds": 41,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90.0,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-mechanism.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-mechanism.worker.json",
+        "sha256": "c8bb641111b698fa87dd05c4bed961923ec848ceba410d5f1f76aed56e48f68a"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 40.603553083958104,
+      "charged_seconds": 41,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90.0,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-priority-mechanism.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/preflight-and-regression/on-priority-mechanism.worker.json",
+        "sha256": "3c6daaf097dbd0d2721e3680d82cfc459f5f4a485a2575dbbc99de2b99040285"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 36.44565941696055,
+      "charged_seconds": 37,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90.0,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/diagnostic-OFF.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/diagnostic-OFF.worker.json",
+        "sha256": "1a64e4b99500488a70d3deebe50d305b889b32bd26a5e37c6565eb4d6c2f60ea"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 32.8266539159813,
+      "charged_seconds": 33,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/diagnostic-ON.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/diagnostic-ON.worker.json",
+        "sha256": "24c25146866464e4a031ddbca8eaf9f9f790b057ff7cbbe80212e40853d11b8e"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 35.54123899998376,
+      "charged_seconds": 36,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p1-A.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p1-A.worker.json",
+        "sha256": "df44582ed25e02853bd1a7476001c1f3ef301a2a5060cff2934615975197f07a"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 32.80798629199853,
+      "charged_seconds": 33,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p1-B.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p1-B.worker.json",
+        "sha256": "29a9e12752f7014173f55c4205c20cc82b88be63ac0d129bef229c67d995cd4d"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 36.99744708300568,
+      "charged_seconds": 37,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p2-B.worker.json",
+      "guard_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/guards/qualification-p2-B.worker.json",
+        "sha256": "6463c5033ede7d5fdca619ed8a1075dc85d8f7876203817d98bd0eaf521fa2d5"
+      },
+      "outcome": "completed",
+      "elapsed_seconds": 36.870214458031114,
+      "charged_seconds": 37,
+      "charge_basis": "CEIL_VERIFIED_GUARD_ELAPSED",
+      "worker_limit_seconds": 90,
+      "cleanup_complete": true
+    },
+    {
+      "run_key": "p36-r1/qualification-p2-A",
+      "ledger_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/execution/worker-ledger.json",
+        "sha256": "db636ce2e97a512fbf29c3b88c4903b42e8dffd624dbd022f8f835f4ca758302"
+      },
+      "outcome": "CONTROL_STOP",
+      "elapsed_seconds": null,
+      "charged_seconds": 90,
+      "charge_basis": "FULL_LIMIT_MISSING_GUARD",
+      "worker_limit_seconds": 90
+    }
+  ],
+  "guard_records": 14,
+  "missing_guard_workers": 1,
+  "historical_charged_seconds": 597,
+  "future_authorized_max_seconds": 7470,
+  "cumulative_max_seconds": 8067,
+  "original_cap_seconds": 8370,
+  "unallocated_seconds": 303,
+  "extra_workers_authorized": false,
+  "accounting_correction": "Do not use old formal-only 8280 ceiling as whole-session accounting. This continuation explicitly resolves the earlier omitted preflight accounting; original evidence stays unchanged."
+}

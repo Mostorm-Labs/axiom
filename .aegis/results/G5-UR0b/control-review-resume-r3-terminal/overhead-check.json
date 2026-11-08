@@ -1,0 +1,114 @@
+{
+  "status": "QUALIFIED_OBSERVATION_OVERHEAD_ONLY",
+  "independent_common_metrics_from_raw_handler_plans": true,
+  "pairs": [
+    {
+      "pair": 1,
+      "off": {
+        "p95_ns": "300000",
+        "wall_ns": "4080100000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "400000",
+        "wall_ns": "4071300000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    },
+    {
+      "pair": 2,
+      "off": {
+        "p95_ns": "400000",
+        "wall_ns": "4031100000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "300000",
+        "wall_ns": "3970300000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    },
+    {
+      "pair": 3,
+      "off": {
+        "p95_ns": "300000",
+        "wall_ns": "4102700000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "300000",
+        "wall_ns": "3965400000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    },
+    {
+      "pair": 4,
+      "off": {
+        "p95_ns": "400000",
+        "wall_ns": "4135100000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "300000",
+        "wall_ns": "4000400000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    },
+    {
+      "pair": 5,
+      "off": {
+        "p95_ns": "300000",
+        "wall_ns": "4020000000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "400000",
+        "wall_ns": "3993400000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    },
+    {
+      "pair": 6,
+      "off": {
+        "p95_ns": "300000",
+        "wall_ns": "4101800000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      },
+      "on": {
+        "p95_ns": "400000",
+        "wall_ns": "3978900000",
+        "dispatch_population": 330,
+        "critical_loss": 0
+      }
+    }
+  ],
+  "measurements": {
+    "p95_ns": {
+      "off_median_ns": 300000.0,
+      "off_mad_ns": 0.0,
+      "paired_median_increment_ns": 50000.0,
+      "limit_ns": 1000000,
+      "noisy": false
+    },
+    "wall_ns": {
+      "off_median_ns": 4090950000.0,
+      "off_mad_ns": 27950000.0,
+      "paired_median_increment_ns": -91850000.0,
+      "limit_ns": 204547500.0,
+      "noisy": false
+    }
+  },
+  "product_performance_pass": false,
+  "new_browser_workers": 0
+}

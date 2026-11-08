@@ -1,0 +1,40 @@
+{
+  "findings": [
+    {
+      "id": "HUD-1",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "owner": "correctness harness",
+      "finding": "The second lower-z test step supplies empty hud_bounds after selecting hand, although archived public readSelection reports one selected object and Runtime intentionally renders its read-only selection outline.",
+      "witness": "All 16112 originally mismatching pixels fall in the same existing publicHudBand constructed solely from archived public selection bounds; the diagnostic comparison has zero remaining mismatches.",
+      "effect": "The original OFF1 FAILED result cannot identify a canonical body rendering error. It is retained unchanged, and the diagnostic does not retroactively qualify the worker.",
+      "repair_direction": "Use actual public selection state for the already-defined HUD exclusion; test retained-selection hand mode and empty selection. No product change or broader pixel tolerance is justified."
+    },
+    {
+      "id": "LIVE-HUD-2",
+      "classification": "VERIFICATION_DESIGN_DEFECT",
+      "earliest_untrusted_stage": "P20",
+      "finding": "The live drag candidate can contain snap guides and handle chrome, while its reference is a post-Up canonical snapshot and HUD eligibility is restricted to public selection bounds. The driver assumes a 24/12 move but the committed transform is 24/10.505767822265625.",
+      "witness": "Adding archived actual public bounds leaves 2441 OFF0 mismatches; common colors agree with known snap-guide/chrome colors, but color agreement does not prove all remaining pixels are HUD. Current SDK readSelection does not publish the live snap-guide geometry.",
+      "residual_proof_gap": "A trustworthy live-transient-vs-canonical reference applicability and HUD separation rule for the already-frozen lower-z correctness case. Existing AA masks exclude stroke edges, not independent interaction decorations.",
+      "required_resolution": "Verification owner must define the applicable transform/time and candidate-independent HUD handling or a bounded fixture/reference correction that still detects lower-z transparency/order defects. Do not mask by observed differences, accept unknown mismatches, expose Runtime internals, or modify product snapping to make the test green.",
+      "blocking_basis": "Frozen paired lower-z correctness obligation is already incomplete; this review adds no new product Gate or threshold."
+    },
+    {
+      "id": "TIME-3",
+      "classification": "FROZEN_REQUIREMENT_FAILURE",
+      "owning_root_cause": "UNRESOLVED",
+      "finding": "The combined OFF/ON correctness-only phase exhausted the existing 30000ms timer. OFF0 and OFF1 each have long unseparated render/readback/transport brackets; no ON comparison completed.",
+      "required_resolution": "Preserve the frozen deadline and guard result. Locate individual awaits in a separately authorized harness repair/diagnostic scope before any deadline change. This result is not evidence that the product hangs during close or that GPU coverage fails."
+    },
+    {
+      "id": "STOP-4",
+      "classification": "NON_BLOCKING_HARDENING",
+      "owner": "remaining_runner diagnostics",
+      "finding": "require_fresh checks missing summary/mode before guard exit, so the retained stop text says fresh WORKER_COMPILE is required while the primary cause is phase exit124.",
+      "effect": "Raw guard and final return preserve the actual cause. Admission still fails closed; no unsafe result was accepted.",
+      "repair_direction": "Optional successor diagnostic precedence fix; never rewrite the old stop or use this to authorize a retry."
+    }
+  ],
+  "new_product_requirements": [],
+  "original_pixel_verdicts_preserved": true
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "g5-ur0b-initialization-oracles-v1",
+  "red_precondition": {
+    "required": true,
+    "input": "ACTUAL-RT60",
+    "known_old_behavior": "Frozen v1 compiler yields raw2/decoded1/metric1 and MISSING although the native init chain and fresh empty state are proven.",
+    "acceptance_oracle": "Expect the v2 partition2=1+1+0 while retaining the actual single mutation receipt. Run the oracle before changes; do not get RED merely by an import error or absence of a new field."
+  },
+  "cases": [
+    {
+      "id": "ACTUAL-RT60",
+      "setup": "Use immutable realtime-60 and full verified init-state/native chain.",
+      "expected": "raw=2; initialization=1; committed=1; unresolved=0; mutation receipts=1; v2 QUALIFIED; original metrics schema VALID."
+    },
+    {
+      "id": "COMMITTED-ONLY",
+      "setup": "All seven ON diagnostic/qualification archives and existing same-frame retry corpus.",
+      "expected": "All existing committed counts, successful job, attempts, receipt identities and metrics preserved; initialization=0."
+    },
+    {
+      "id": "OFF-NO-OBSERVATIONS",
+      "setup": "Seven OFF archive inputs.",
+      "expected": "No native record invented; zero counts; NOT_OBSERVED, existing schema/metrics preserved."
+    },
+    {
+      "id": "INIT-ONLY",
+      "setup": "Model real initialization prefix with recognized initial-state/source proof and no mutation.",
+      "expected": "v2 population can qualify initialization; zero canonical mutation receipts; require_positive rejects it."
+    },
+    {
+      "id": "MISSING-INIT-ANCHOR",
+      "setup": "Remove init.state or its creation/source binding from valid generation-zero native frame.",
+      "expected": "UNRESOLVED; no implicit initialization or receipt."
+    },
+    {
+      "id": "RESTORED-OR-NONEMPTY",
+      "setup": "Native zero basis with initial state objects>0 or unproved restored input/profile.",
+      "expected": "UNRESOLVED; zero alone is insufficient."
+    },
+    {
+      "id": "CONTRADICTORY-GENERATION",
+      "setup": "Change initial public generation/ordinal or native semantic/Scene/commit revision; or put matching commit before initial capture.",
+      "expected": "Must not classify INITIALIZATION. Missing valid committed chain remains UNRESOLVED."
+    },
+    {
+      "id": "FOREIGN-OWNER-OR-TARGET",
+      "setup": "Change any runtime/lifetime/attachment/document/epoch/resource/view/camera/surface/metrics/frame or successful job/basis independently.",
+      "expected": "Unqualified/identity error; no state-derived filling or fallback exemption."
+    },
+    {
+      "id": "DUPLICATE-OR-OMITTED",
+      "setup": "Duplicate accepted work/seq, remove a raw accepted record from summary membership, or provide inconsistent counts.",
+      "expected": "Population/bijection failure; never pass by silently reducing the denominator."
+    },
+    {
+      "id": "NONZERO-WITHOUT-SCENE",
+      "setup": "Genuine post-commit/nonzero frame without matching observed commit/Scene.",
+      "expected": "UNRESOLVED; initial-state handling cannot repair it."
+    },
+    {
+      "id": "MISSING-MUTATION-RECEIPT",
+      "setup": "Mixed initialization+commit input with missing/foreign compiled mutation receipt.",
+      "expected": "MISSING; init chain cannot compensate for committed receipt."
+    },
+    {
+      "id": "LOSS-OR-AMBIGUITY",
+      "setup": "Critical loss, conflicting owner, repeated accepted provider or ambiguous successful draw.",
+      "expected": "Existing rejection remains; preserve all preparation attempts."
+    },
+    {
+      "id": "NEXT-INTERACTION",
+      "setup": "Init completion near/after another interaction, and existing A/B/stale receipt tests.",
+      "expected": "Init is never assigned to Up/commit or allowed to retire newer preview/feedback; existing receipt matching unchanged."
+    },
+    {
+      "id": "NATIVE-ONLY",
+      "setup": "Correctness-shaped run metadata with valid init.state but no measurement.before/metric document.",
+      "expected": "No new measurement fabricated; native population obeys same rules; metric_receipt_count=null in native-only scope."
+    },
+    {
+      "id": "BINDING-AND-CLOSED-AUTH",
+      "setup": "Change raw/worker/inputs/compiler/spec hash or reuse offline output as fresh; call old r1/r3 with different output directory.",
+      "expected": "Binding/freshness checks reject; old authorities and window stay CLOSED."
+    },
+    {
+      "id": "REUSE-APPLICABILITY",
+      "setup": "Recompile all15 inputs; compare recorded common/external statistics, final snapshots, outcomes and all committed receipts.",
+      "expected": "Eligible for unchanged-observer overhead reuse only when invariance holds. No new run or eligibility treated as Gate PASS."
+    }
+  ],
+  "independent_fact_witness_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/offline-check.json",
+    "sha256": "17ae7208b50c56083b386845bb8e859441202f053d65e1ac796e08db5686e6b2",
+    "identity_kind": "local-content-addressed"
+  },
+  "frozen_input_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+    "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+    "identity_kind": "local-content-addressed"
+  }
+}

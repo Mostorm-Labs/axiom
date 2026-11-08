@@ -1,0 +1,587 @@
+{
+  "status": "FILE_ONLY_DIAGNOSTIC_ORIGINAL_VERDICTS_UNCHANGED",
+  "reference_oracle_rerun": false,
+  "browser_runs": 0,
+  "thresholds_unchanged": true,
+  "mask_source": "Archived public before/after selection bounds only; no candidate-difference-derived masks",
+  "rows": [
+    {
+      "step": 0,
+      "original": {
+        "status": "FAILED",
+        "compared_pixels": 1334815,
+        "aa_boundary_pixels": 46033,
+        "hud_excluded_pixels": 219152,
+        "interior_mismatched_pixels": 2463,
+        "max_interior_delta": 163,
+        "witnesses": [
+          {
+            "pixel": 140047,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 140048,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141644,
+            "actual": [
+              194,
+              192,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141645,
+            "actual": [
+              145,
+              142,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141646,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141647,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141648,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141649,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "publicState": {
+        "tool": 1,
+        "selection_count": 1,
+        "selection_bounds": [
+          100,
+          80.58057403564453,
+          748,
+          439.41943359375
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          1,
+          24,
+          10.505767822265625
+        ]
+      },
+      "original_hud_bounds": [
+        [
+          76,
+          70.0748062133789,
+          724,
+          428.9136657714844
+        ],
+        [
+          100,
+          82.0748062133789,
+          748,
+          440.9136657714844
+        ]
+      ],
+      "diagnostic_hud_bounds": [
+        [
+          76,
+          70.0748062133789,
+          724,
+          428.9136657714844
+        ],
+        [
+          100,
+          82.0748062133789,
+          748,
+          440.9136657714844
+        ],
+        [
+          76,
+          70.0748062133789,
+          724,
+          428.9136657714844
+        ],
+        [
+          100,
+          80.58057403564453,
+          748,
+          439.41943359375
+        ]
+      ],
+      "diagnostic_only_comparison": {
+        "status": "FAILED",
+        "compared_pixels": 1334527,
+        "aa_boundary_pixels": 46033,
+        "hud_excluded_pixels": 219440,
+        "interior_mismatched_pixels": 2441,
+        "max_interior_delta": 163,
+        "witnesses": [
+          {
+            "pixel": 140047,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 140048,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141644,
+            "actual": [
+              194,
+              192,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141645,
+            "actual": [
+              145,
+              142,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141646,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141647,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141648,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141649,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "exact_known_selection_chrome_mismatches": 36,
+      "old_mismatches_in_added_public_band": 22,
+      "old_difference_bounds_pixels": [
+        215,
+        87,
+        1481,
+        520
+      ],
+      "most_common_different_candidate_colors": [
+        [
+          "92,199,227,255",
+          1086
+        ],
+        [
+          "84,154,177,255",
+          1032
+        ],
+        [
+          "63,171,202,255",
+          259
+        ],
+        [
+          "105,101,255,255",
+          36
+        ],
+        [
+          "194,192,255,255",
+          4
+        ],
+        [
+          "111,107,255,255",
+          4
+        ],
+        [
+          "125,122,255,255",
+          4
+        ],
+        [
+          "221,220,255,255",
+          4
+        ],
+        [
+          "243,243,255,255",
+          2
+        ],
+        [
+          "145,142,255,255",
+          2
+        ]
+      ]
+    },
+    {
+      "step": 1,
+      "original": {
+        "status": "FAILED",
+        "compared_pixels": 1551883,
+        "aa_boundary_pixels": 48117,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 16112,
+        "max_interior_delta": 213,
+        "witnesses": [
+          {
+            "pixel": 254598,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254599,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254600,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254601,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254602,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254603,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254604,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254605,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "publicState": {
+        "tool": 3,
+        "selection_count": 1,
+        "selection_bounds": [
+          100,
+          80.58057403564453,
+          748,
+          439.41943359375
+        ],
+        "transform": [
+          1,
+          0,
+          0,
+          1,
+          24,
+          10.505767822265625
+        ]
+      },
+      "original_hud_bounds": [],
+      "diagnostic_hud_bounds": [
+        [
+          100,
+          80.58057403564453,
+          748,
+          439.41943359375
+        ]
+      ],
+      "diagnostic_only_comparison": {
+        "status": "QUALIFIED",
+        "compared_pixels": 1436606,
+        "aa_boundary_pixels": 47666,
+        "hud_excluded_pixels": 115728,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "exact_known_selection_chrome_mismatches": 0,
+      "old_mismatches_in_added_public_band": 16112,
+      "old_difference_bounds_pixels": [
+        198,
+        159,
+        1497,
+        880
+      ],
+      "most_common_different_candidate_colors": [
+        [
+          "42,170,219,255",
+          8056
+        ],
+        [
+          "183,226,243,255",
+          2600
+        ],
+        [
+          "114,199,231,255",
+          2588
+        ],
+        [
+          "148,212,237,255",
+          1439
+        ],
+        [
+          "148,213,237,255",
+          1070
+        ],
+        [
+          "149,213,237,255",
+          359
+        ]
+      ]
+    }
+  ]
+}

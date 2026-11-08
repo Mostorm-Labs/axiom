@@ -78,7 +78,7 @@ class Window:
  def finish(self,key,outcome):
   r=self.row(key)
   if r['status']!='RUNNING':raise RuntimeError('completion without reserved run')
-  cost=charge(outcome.get('guard'),r['limit_seconds']);r.update(status=outcome.get('guard',{}).get('reason','UNKNOWN_GUARD').upper(),charged_seconds=cost,outcome=outcome)
+  cost=charge(outcome.get('guard'),r['limit_seconds']);r.update(status=(outcome.get('guard') or {}).get('reason','UNKNOWN_GUARD').upper(),charged_seconds=cost,outcome=outcome)
   self.data['new_spent_seconds']+=cost;self.data['reserved_seconds']=0;self.data['charged_seconds']=597+self.data['new_spent_seconds'];self.save()
  def close(self,reason,status='BLOCKED_EVIDENCE'):
   if not self.data or self.data['status']!='OPEN':return
@@ -127,7 +127,7 @@ def verify_proof(path,p,c,sdk64,sdk32):
  return proof
 def check_worker(row,outcome,proof):
  guard=outcome['guard'];s=outcome.get('summary')
- if repair.hard_stop(guard):raise RuntimeError('frozen guard/cleanup stop at '+row['run_id'])
+ if guard.get('reason')!='completed' or guard.get('returncode')!=0 or repair.hard_stop(guard):raise RuntimeError('frozen guard/cleanup stop at '+row['run_id'])
  if outcome.get('worker_status')!='OBSERVED' or not s or not s['source_stable'] or not s['artifacts_stable']:raise RuntimeError('worker/source/artifact mechanism failure at '+row['run_id'])
  expected=proof['qualified_sdk32_artifacts'] if row['phase']=='main' and row['budget_mib']['navigation']==32 else proof['qualified_sdk_artifacts']
  if s['artifact_identity']!=expected:raise RuntimeError('worker artifact identity differs from its budget tier')
@@ -149,6 +149,7 @@ def phase_result(out,rows,which):
  elif which=='separate':atomic(out/'separate-result.json',{'status':'QUALIFIED','product_RED_preserved':True})
  else:atomic(out/'main-result.json',{'status':'READY_FOR_CONTROL_REVIEW','performance_pass':False})
 def run(a):
+ if (STATE/'window.json').exists():raise RuntimeError('r3 window already claimed or closed; output relocation cannot restart it')
  p,c,history=authority();proof=verify_proof(a.proofs,p,c,a.sdk64.resolve(),a.sdk32.resolve());out=a.output.resolve()
  with Window(STATE,out,PACKAGE_SHA,sha(a.proofs),new_plan()) as window:
   window.data['historical_rows']=history['rows'];window.data['source_tree_sha256']=proof['source_tree_sha256'];window.save()

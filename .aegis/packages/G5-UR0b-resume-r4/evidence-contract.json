@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "parent_evidence_contract_ref": {
+    "path": ".aegis/packages/G5-UR0b/evidence-contract.json",
+    "sha256": "0dd36cdb8c1b5a57a9448b58121b1d05fe132adcb60866554496953c321b6ae9",
+    "identity_kind": "local-content-addressed"
+  },
+  "reviewer_accessible_boundary": "Shared controlled worktree plus exact content-addressed result/evidence bundle; no commit/push needed or authorized.",
+  "result_root": ".aegis/results/G5-UR0b/resume-r4/",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/resume-r4/",
+  "required": [
+    "Exact package/spec/accepted-review/reuse/raw-and-compiled refs",
+    "Fresh current source identity after new runner plus explicit accepted-source delta only two new source paths/package additions",
+    "Two exact artifact tiers with original BuildInfo/build-input/source projection",
+    "Explicit reused-prerequisites manifest keeping recorded and compiler source identities separate",
+    "Fixed durable window/worker ledger importing30historical rows plus38new IDs, reservations/actual charges/stop-MISSING reasons",
+    "Per-run raw,source,browser/context/clock/corpus/input/failure/censoring,canonical chains,pixel/semantic andguard/cleanup evidence",
+    "Combined baseline/report/phase decisions rooted in original obligation set; no all-route or productPASS",
+    "Exact result revision+dirty/full-source hash+manifest and evidence SHA256"
+  ],
+  "timing_qualification": "Original raw cohort is reused under the exact independent acceptance. Every newly sampled row must still bind actual source+artifact+WORKER_COMPILE+current compiler/spec. Never modify old analysis mode, source stamp, outcome or scope to fit the new phase.",
+  "source_identity": "Retain existing excluded self-output roots; include this package and the two new runner/test sources in full source hash.",
+  "facts_owner": "Reference actual run/proof/guard artifacts and deterministic compiler totals, do not hand-author an alternate successful ledger.",
+  "return_states": [
+    "READY_FOR_CONTROL_REVIEW",
+    "FROZEN_VERIFICATION_FAILURE",
+    "BLOCKED_EVIDENCE",
+    "TASK_PACKAGE_DEFECT",
+    "VERIFICATION_DESIGN_DEFECT",
+    "ENVIRONMENT_BLOCKER"
+  ],
+  "official_gate_pass": false
+}

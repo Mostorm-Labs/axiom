@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "CURRENT",
+  "verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e",
+    "identity_kind": "local-content-addressed"
+  },
+  "acceptance_oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/oracle-cases.json",
+    "sha256": "785d936f6957b205bd326513196a2d0b8674d3ef81daef141bec345bc8bbf3af",
+    "identity_kind": "local-content-addressed"
+  },
+  "immutable_input_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+    "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+    "identity_kind": "local-content-addressed"
+  },
+  "obligations": [
+    {
+      "id": "INIT-APPLICABILITY",
+      "requirement": "Initialization can be proven without inventing an Operation.",
+      "invariant": "Recognized actual initial state plus native chain; generation0 alone insufficient.",
+      "failure_mode": "False acceptance of stale/unproven frame or false rejection of legitimate initialization.",
+      "impact": "Could invalidate or falsely accept the prerequisite evidence for all later performance conclusions.",
+      "existing_independent_coverage": "Existing post-commit identity tests and actual SDK init/target state.",
+      "residual_proof_gap": "No explicit init applicability in previous proof population.",
+      "oracle": "ACTUAL-RT60,INIT-ONLY,MISSING-INIT-ANCHOR,RESTORED-OR-NONEMPTY,CONTRADICTORY-GENERATION,FOREIGN-OWNER-OR-TARGET",
+      "exact_execution_method": "Offline existing immutable input compilation and deterministic positive/negative tests; no browser.",
+      "evidence_required": "initialization basis/provenance + negative test results",
+      "classification": "BLOCKING_FOR_OFFLINE_SLICE",
+      "new_evidence_unique_detection_value": "Directly distinguishes the observed failure/false-acceptance mode using recorded native facts and independent public init state.",
+      "blocking_justification": "The actual admission mechanism currently cannot represent a valid native initialization population; weakening it without the partition could hide a failed mutation receipt.",
+      "gate_criterion": "All listed relevant corpus expectations and unchanged existing checks hold, with independent result review."
+    },
+    {
+      "id": "COMPLETE-POPULATION",
+      "requirement": "Every raw accepted frame is accounted exactly once.",
+      "invariant": "total=init+committed+unresolved with unique seq membership; unresolved blocks.",
+      "failure_mode": "A dropped or duplicate accepted frame silently improves evidence completeness.",
+      "impact": "Could invalidate or falsely accept the prerequisite evidence for all later performance conclusions.",
+      "existing_independent_coverage": "Earlier raw-vs-decoded positive-chain tests.",
+      "residual_proof_gap": "Earlier equality only represents post-commit frames.",
+      "oracle": "DUPLICATE-OR-OMITTED,NONZERO-WITHOUT-SCENE,LOSS-OR-AMBIGUITY",
+      "exact_execution_method": "Offline existing immutable input compilation and deterministic positive/negative tests; no browser.",
+      "evidence_required": "v2 canonical proof, archived input refs and tests",
+      "classification": "BLOCKING_FOR_OFFLINE_SLICE",
+      "new_evidence_unique_detection_value": "Directly distinguishes the observed failure/false-acceptance mode using recorded native facts and independent public init state.",
+      "blocking_justification": "The actual admission mechanism currently cannot represent a valid native initialization population; weakening it without the partition could hide a failed mutation receipt.",
+      "gate_criterion": "All listed relevant corpus expectations and unchanged existing checks hold, with independent result review."
+    },
+    {
+      "id": "MUTATION-ISOLATION",
+      "requirement": "Only committed frames satisfy mutation receipt/latency.",
+      "invariant": "Full old commit→Scene chain and metric receipt remain required; positive needs committed>0.",
+      "failure_mode": "Init gets counted as a stroke completion or clears newer feedback.",
+      "impact": "Could invalidate or falsely accept the prerequisite evidence for all later performance conclusions.",
+      "existing_independent_coverage": "Existing operation identity/A-B/foreign receipt and navigation tests.",
+      "residual_proof_gap": "Init must not leak into these existing metrics.",
+      "oracle": "MISSING-MUTATION-RECEIPT,NEXT-INTERACTION,INIT-ONLY,COMMITTED-ONLY,NATIVE-ONLY",
+      "exact_execution_method": "Offline existing immutable input compilation and deterministic positive/negative tests; no browser.",
+      "evidence_required": "mutation receipt/metric comparison and reader tests",
+      "classification": "BLOCKING_FOR_OFFLINE_SLICE",
+      "new_evidence_unique_detection_value": "Directly distinguishes the observed failure/false-acceptance mode using recorded native facts and independent public init state.",
+      "blocking_justification": "The actual admission mechanism currently cannot represent a valid native initialization population; weakening it without the partition could hide a failed mutation receipt.",
+      "gate_criterion": "All listed relevant corpus expectations and unchanged existing checks hold, with independent result review."
+    },
+    {
+      "id": "OFFLINE-REUSE",
+      "requirement": "Correct the offline proof without changing the measured workload.",
+      "invariant": "Immutable old runs/artifacts/collector plus separate recorded/compiler identity; external stats unchanged.",
+      "failure_mode": "Old recordings masquerade as fresh runs or observer timing changes are hidden.",
+      "impact": "Could invalidate or falsely accept the prerequisite evidence for all later performance conclusions.",
+      "existing_independent_coverage": "Existing raw/artifact/compiler hash preflight and independent overhead recalculation.",
+      "residual_proof_gap": "New v2 derived proof needs explicit applicability and closure bindings.",
+      "oracle": "OFF-NO-OBSERVATIONS,BINDING-AND-CLOSED-AUTH,REUSE-APPLICABILITY",
+      "exact_execution_method": "Offline existing immutable input compilation and deterministic positive/negative tests; no browser.",
+      "evidence_required": "15run reconciliation, reuse-assessment, old hash preservation and fresh-mode negatives",
+      "classification": "BLOCKING_FOR_OFFLINE_SLICE",
+      "new_evidence_unique_detection_value": "Directly distinguishes the observed failure/false-acceptance mode using recorded native facts and independent public init state.",
+      "blocking_justification": "The actual admission mechanism currently cannot represent a valid native initialization population; weakening it without the partition could hide a failed mutation receipt.",
+      "gate_criterion": "All listed relevant corpus expectations and unchanged existing checks hold, with independent result review."
+    }
+  ],
+  "quality_evidence_gate": {
+    "required": [
+      "RED precondition exposing the real old failure, not a mere missing-field failure",
+      "All16 oracle groups and15 frozen inputs reconciled",
+      "Existing87Node/40Python baseline suites plus new tests;120boundary; old metric schema still valid",
+      "Original recording/snapshot/semantic/SDK/collector/threshold identity preserved"
+    ],
+    "native_and_platform": "No native/platform test rerun or browser probe required for a pure offline change. Existing hash-bound22CTest remains corroboration for unchanged production bytes.",
+    "official_gate_pass": false
+  },
+  "oracle_precondition": {
+    "required": true,
+    "input": "ACTUAL-RT60",
+    "known_old_behavior": "Frozen v1 compiler yields raw2/decoded1/metric1 and MISSING although the native init chain and fresh empty state are proven.",
+    "acceptance_oracle": "Expect the v2 partition2=1+1+0 while retaining the actual single mutation receipt. Run the oracle before changes; do not get RED merely by an import error or absence of a new field."
+  }
+}

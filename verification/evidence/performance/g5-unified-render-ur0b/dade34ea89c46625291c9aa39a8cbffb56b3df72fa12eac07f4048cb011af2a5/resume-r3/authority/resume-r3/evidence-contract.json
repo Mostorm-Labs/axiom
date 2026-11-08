@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "parent_ref": {
+    "path": ".aegis/packages/G5-UR0b/evidence-contract.json",
+    "sha256": "0dd36cdb8c1b5a57a9448b58121b1d05fe132adcb60866554496953c321b6ae9",
+    "identity_kind": "local-content-addressed"
+  },
+  "materialization": "Shared controlled worktree content-addressed bundle is reviewer accessible. No new commit/push required or authorized. Preserve currentHEAD and report actual dirty-tree hash.",
+  "result_root": ".aegis/results/G5-UR0b/resume-r3/",
+  "evidence_root": "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/resume-r3/",
+  "required": [
+    "package SHA256 + accepted review + exact historical debit refs",
+    "single durable continuation window claim and per-worker outcome ledger",
+    "current source identity with no new exclusions; starting/result revision and dirty paths",
+    "artifact build-source provenance distinct from current orchestration-source identity",
+    "mechanism proof containing both qualified_sdk_artifacts and qualified_sdk32_artifacts",
+    "original raw, worker-result, run-inputs, compiler hashes and canonical-chain proof",
+    "phase decisions, regression evidence, cleanup, missing/censoring/productRED",
+    "result.json and evidence manifest SHA256"
+  ],
+  "scope_delta_rule": "Package additions change full-source hash legitimately. Only declared package control files plus allowed runner/test changes can differ from accepted73a237 tree; runtime/SDK/build inputs must stay byte-identical for artifact reuse.",
+  "reuse_rule": "Hash-verify existing proofs; do not overwrite their source_revision/tree/BuildInfo. New mechanism proof explicitly links inherited proof and unchanged artifact build-input projection alongside fresh runner/compiler source. No old timing qualifies the new cohort.",
+  "claim_prohibitions": [
+    "full UR0b/P34/performancePASS",
+    "normal build has diagnostic exports",
+    "navigation canonical receipt",
+    "CPU-free inferred solely from GPU target",
+    "MISSING treated as0",
+    "changing old record status to reopen execution"
+  ]
+}

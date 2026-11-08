@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "status": "AUTHORIZED_OBSERVATION_ONLY",
+  "allowed_existing_source_files": [
+    "CMakeLists.txt",
+    "runtime/foundation/CMakeLists.txt",
+    "runtime/composition/src/runtime_composition.cpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/interaction/src/canvas_partial_erase.cpp",
+    "runtime/interaction/src/editor_history.cpp",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp",
+    "runtime/scene/src/runtime_scene_projection.cpp",
+    "runtime/scene/include/canvas/scene/shared_scene_value.hpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/direct_reference_source.cpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_compact_material.cpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_prepared_geometry.hpp",
+    "runtime/render/src/skia_surface_provider.cpp",
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/src/gpu_resource_retirement.hpp",
+    "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+    "sdk/common/session.cpp",
+    "sdk/web/bridge.cpp",
+    "sdk/web/web_runtime_adapter.cpp",
+    "sdk/web/CMakeLists.txt",
+    "runtime/render/src/skia_gpu_lifetime.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp"
+  ],
+  "allowed_new_source_files": [
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+    "runtime/foundation/src/g5_observation.cpp",
+    "runtime/foundation/tests/g5_observation_test.cpp",
+    "runtime/render/tests/g5_observation_identity_test.cpp"
+  ],
+  "allowed_new_roots": [
+    "verification/runners/g5/ur0/",
+    "verification/tests/g5_ur0_",
+    "verification/tests/test_g5_ur0_",
+    "verification/evidence/performance/g5-unified-render-ur0b/",
+    ".aegis/results/G5-UR0b/"
+  ],
+  "path_rule": "g5_ur0_ and test_g5_ur0_ are explicit new Node/Python test basename prefixes under verification/tests, not replacement of unrelated existing tests.",
+  "source_edit_rule": "qualifier-gated observation only; unchanged branch conditions/algorithms/return/commit/present/recovery/budget ordering. CMake only private option/exports/non-install variant and tests.",
+  "read_only_root_sdk": [
+    "sdk/web/axiom.mjs",
+    "sdk/web/axiom.d.mts",
+    "sdk/web/package.json",
+    "sdk/api/",
+    "sdk/windows/"
+  ],
+  "preserved_roots": [
+    ".aegis/packages/G5-UR0a/",
+    ".aegis/results/G5-UR0a/",
+    "docs/planning/g5-unified-render/ur0a/",
+    "docs/planning/g5-unified-render/design-r3/",
+    "verification/evidence/performance/g5-live-dpr-drag/",
+    ".aegis/packages/G5-UR0b-candidate-r1/",
+    ".aegis/packages/G5-UR0b/"
+  ],
+  "preserved_exact_files": [
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08.json",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+    "docs/planning/G5_UNIFIED_RENDER_EXECUTION_2026_11_08_R3.json",
+    "docs/planning/g5-unified-render/design-r3/amendment.json",
+    "verification/runners/g5/drag_copies.mjs",
+    "verification/runners/g5/cumulative_erase.mjs",
+    "verification/runners/g5/navigation_sampling.html",
+    "verification/runners/g5/bounded_worker.py",
+    "semantic-sdk.lock.json",
+    "r1-full-skia-sdk.lock.json",
+    ".aegis/results/G5-UR0b/control-review.json",
+    ".aegis/results/G5-UR0b/scope-correction.json",
+    ".aegis/results/G5-UR0b/control-activation.json"
+  ],
+  "forbidden": [
+    "normal root JS/DLL public API or exports",
+    "new Session debug/business commands or Runtime mutable accessors",
+    "Skia/Protobuf rebuild or dependency/descriptor/schema lock edit",
+    "Brush/coverage/routing/History/Scene/scheduler/cache policy optimization",
+    "default or benchmark budget changes",
+    "navigation canonical receipt/new sync completion wait",
+    "historical evidence rewrites",
+    "CI/release/version/publication changes",
+    "product bug fixes outside observation instrumentation",
+    "commit/push without applicable separate authorization",
+    "new threads/subagents/outbound messages by implication"
+  ],
+  "private_build": {
+    "option": "AXIOM_G5_UR0_DIAGNOSTICS",
+    "default": false,
+    "target": "explicit Web/WASM qualification variant only",
+    "normal_install": "no new private exports/headers/archives or qualification interface; qualification artifact cannot be released as normal consumer SDK",
+    "private_wasm_exports": [
+      "_axiom_g5_trace_control",
+      "_axiom_g5_trace_bytes",
+      "_axiom_g5_trace_size"
+    ],
+    "root_facade_changes": false,
+    "raw_access": "only verification loader captures internal module in isolated staging; root createRuntime used for all business/input work",
+    "transport": {
+      "control_arguments": "fixed opcode uint32 plus uint32 value; unknown/reentrant/late lifecycle op rejects safely",
+      "opcodes": [
+        "OFF",
+        "ON",
+        "RESET_RUN",
+        "CLOCK_SNAPSHOT",
+        "DRAIN",
+        "BEGIN_DIAGNOSTIC_EVENT",
+        "END_DIAGNOSTIC_EVENT"
+      ],
+      "buffer": "module-owned borrowed bytes, uint32 length; invalid after next control/reset/close, copy immediately, no caller free/transfer",
+      "identities": "u64 decimal strings and128-bit hex on out-of-band drain; pointer values never canonical IDs",
+      "thread": "existing owner thread; GPU callback diagnostics use lifetime-safe bounded state, never capture Runtime/provider"
+    },
+    "native_unit_test_exception": "Collector-only native test targets may enable target-local observation objects; never linked or installed into ordinary native consumer SDKs."
+  },
+  "diagnostic_capacity_bytes": 16777216,
+  "critical_reserve_bytes": 1048576,
+  "diagnostic_budget_rule": "aggregate across pending diagnostic runs; not extra Render coverage/staging quota; exhaustion never changes product result; critical loss invalidates affected evidence",
+  "default_optimization_or_policy_change": false,
+  "control_correction_ref": {
+    "path": ".aegis/results/G5-UR0b/scope-correction.json",
+    "sha256": "7036ad41d0530968c02f3fb53c4813194032c504aa26afc6cc33049712fbfe91",
+    "identity_kind": "local-content-addressed"
+  }
+}

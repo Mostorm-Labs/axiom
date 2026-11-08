@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r4",
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "return_surface": "CONTROL_REVIEW",
+  "starting_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "result_revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+  "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+  "dirty": true,
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/package.json",
+    "sha256": "2cadd6e12c73dc4006fd20691feca9402974a9f31fe705b2200c4654e020b569"
+  },
+  "mechanism_proof_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/mechanism-proofs.json",
+    "sha256": "c2f0919ddcd4bc561224643b93f90ecf8eeff4c078015a898a08009a0caf4a38"
+  },
+  "accepted_reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/reused-prerequisites.json",
+    "sha256": "3496ae5d207dcb6a4061cc28a3c2fc29d2523722acce53e3cd6d194ff698f1d6"
+  },
+  "terminal_analysis_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/terminal-analysis.json",
+    "sha256": "eee60e24636480a70db65569e397085749fdb406a51733dd1f5c170abf3c271f"
+  },
+  "cleanup_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/cleanup-verification.json",
+    "sha256": "67d0f6052f1e1e47c50153ffc801c5196f68ee8923ad0cc0b2308aef0ceb317b"
+  },
+  "materialized_ref": {
+    "kind": "shared-controlled-worktree-content-addressed-bundle",
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4",
+    "manifest_sha256": "389fecdb88c6899b74f9e8f61203b413c279e1d77b41703b593da5eaf2b81f78"
+  },
+  "validation_results": {
+    "status": "MECHANISMS_VERIFIED",
+    "node_passed": 100,
+    "python_passed": 56,
+    "new_r4_test_count": 12,
+    "boundary_contracts": 120,
+    "native_cpp": "Existing hash-bound22CTest/11executables reused without rerun",
+    "new_browser_workers": 0,
+    "new_artifact_builds": 0,
+    "old_r3_status": "CLOSED",
+    "historical_starts": 30,
+    "historical_debit_seconds": 1133,
+    "new_plan_count": 38,
+    "new_nominal_limit_seconds": 6120,
+    "cumulative_planned_seconds": 7253,
+    "original_cap_seconds": 8370,
+    "public_api_impact": "NONE",
+    "performance_pass": false
+  },
+  "fresh_admitted_runs": [
+    {
+      "run_id": "realtime-120",
+      "summary_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-120/compiled-summary.json",
+        "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987"
+      },
+      "proof_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-120/canonical-chain.json",
+        "sha256": "3b0a210fddca85d47293392688c13831de56a35da79ca5a2c39b3ee929e2a3c1"
+      },
+      "mode": "WORKER_COMPILE",
+      "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "guard_reason": "completed",
+      "guard_elapsed_s": 40.936125790991355,
+      "clock": "QUALIFIED",
+      "planned_events": 3601,
+      "handler_events": 3601,
+      "phase_lifecycle": {
+        "active_contacts_after": 0
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "run_id": "realtime-240",
+      "summary_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-240/compiled-summary.json",
+        "sha256": "378e56df36b11409cf5efec6a48497b7db713bcd3dfcf4b5e985a60fd8b26a36"
+      },
+      "proof_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-240/canonical-chain.json",
+        "sha256": "5e120fb7ae5a06e50b4a10813504b417eade58b9c6abd057b6d8a99dd37c93ea"
+      },
+      "mode": "WORKER_COMPILE",
+      "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "guard_reason": "completed",
+      "guard_elapsed_s": 41.928229166020174,
+      "clock": "QUALIFIED",
+      "planned_events": 7200,
+      "handler_events": 7200,
+      "phase_lifecycle": {
+        "active_contacts_after": 0
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    }
+  ],
+  "blocker": {
+    "class": "FROZEN_VERIFICATION_FAILURE",
+    "kind": "CORRECTNESS_PHASE_DEADLINE",
+    "run_id": "correctness-lower_z_translucent_drag",
+    "guard_exit_code": 124,
+    "phase_limit_ms": 30000,
+    "precise_underlying_await": "UNRESOLVED_FROM_EXISTING_STAGE_MARKERS",
+    "partial_OFF_pixel_failures_preserved": true,
+    "paired_ON_complete": false,
+    "not_eligible_for_PRODUCT_RED_IN_BOTH_OFF_ON": true,
+    "owner_followup": "Independent control/Verification/harness review; no timer/threshold/code repair or retry in this window"
+  },
+  "accounting": {
+    "prior_starts": 30,
+    "prior_seconds": 1133,
+    "new_starts": 3,
+    "new_charged_seconds": 118,
+    "cumulative_starts": 33,
+    "cumulative_charged_seconds": 1251,
+    "new_planned": 38,
+    "new_admitted": 2,
+    "new_guard_stopped": 1,
+    "new_missing": 35,
+    "new_nominal_max_seconds": 6120,
+    "original_cap_seconds": 8370,
+    "reserved_seconds": 0,
+    "remaining_budget_is_retry_authorization": false
+  },
+  "guard_totals": {
+    "completed": 2,
+    "phase_timeout_exit124": 1,
+    "rss_stops": 0,
+    "cleanup_failures": 0,
+    "max_process_family_rss_kib": 2056224,
+    "rss_limit_kib": 3145728
+  },
+  "unstarted_remaining_ids": [
+    "correctness-permanent_live_mask",
+    "correctness-transparent_color_bg",
+    "correctness-warm_miss_pressure",
+    "correctness-dpr_switch",
+    "correctness-feedback_canonical",
+    "LEGACY9_DRAG_DPR2_32_96-r1",
+    "LEGACY9_DRAG_DPR2_32_96-r2",
+    "LEGACY9_DRAG_DPR2_32_96-r3",
+    "LEGACY16_ERASE_DPR2_32_96-r1",
+    "LEGACY16_ERASE_DPR2_32_96-r2",
+    "LEGACY16_ERASE_DPR2_32_96-r3",
+    "IMMEDIATE_REERASE_DPR2_32_96-r1",
+    "IMMEDIATE_REERASE_DPR2_32_96-r2",
+    "IMMEDIATE_REERASE_DPR2_32_96-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_32_96-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_32_96-r3",
+    "LEGACY9_DRAG_DPR2_64_192-r1",
+    "LEGACY9_DRAG_DPR2_64_192-r2",
+    "LEGACY9_DRAG_DPR2_64_192-r3",
+    "LEGACY16_ERASE_DPR2_64_192-r1",
+    "LEGACY16_ERASE_DPR2_64_192-r2",
+    "LEGACY16_ERASE_DPR2_64_192-r3",
+    "IMMEDIATE_REERASE_DPR2_64_192-r1",
+    "IMMEDIATE_REERASE_DPR2_64_192-r2",
+    "IMMEDIATE_REERASE_DPR2_64_192-r3",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r1",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r2",
+    "IMMEDIATE_NAVIGATION_DPR2_64_192-r3",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r1",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r2",
+    "IMMEDIATE_MASKED_DRAG_DPR2_64_192-r3"
+  ],
+  "uncompleted_required_evidence": [
+    "lower_z_translucent_drag paired correctness",
+    "five unstarted correctness cases",
+    "30 unstarted main matrix rows"
+  ],
+  "recorded_vs_fresh": "Recorded reuse keeps original OFFLINE/recorded source and accepted compiler identity; two new real-time rows retain WORKER_COMPILE/current source; incomplete guard-stopped worker not promoted.",
+  "old_windows_unchanged": true,
+  "history_preservation": [
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/result.json",
+        "sha256": "aaefaff53371f897b876da219d5f9a3c3c1478805757053a383e5cb1e82324e4"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/manifest.json",
+        "sha256": "e9853be4994fb8bb032c0257450f0bf7cd6a4173f0a033448cd51c8482592f93"
+      },
+      "file_count": 236,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/p36-r1/result.json",
+        "sha256": "c35860d6ebe4528516c449bafcc81d301c66d2420b6a0235c70f1760b84ae7ea"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/manifest.json",
+        "sha256": "ec20501acf288828177293e9661c7fdbb4ed90c34f31233d3d022cd469754300"
+      },
+      "file_count": 266,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/p36-r2/result.json",
+        "sha256": "b115d492f28bbe8e8acd9482f10db06f6f7751c52e755cf8b5dfd30069ebd536"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721/p36-r2/manifest.json",
+        "sha256": "29c30b7b804ece42c19480330d1104b2dea8f1c55f30712a81e282345d9f7bd4"
+      },
+      "file_count": 83,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/resume-r3/result.json",
+        "sha256": "81f44aca6da61e86ae11eedca3645ae2f13c18881493f078d3f6a83befbc07d0"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/manifest.json",
+        "sha256": "4f091a17c23847ef40c438b69c097df7f30a6689ff0eb6da1aeff2d1c406f624"
+      },
+      "file_count": 780,
+      "all_bytes_unchanged": true
+    },
+    {
+      "result_ref": {
+        "path": ".aegis/results/G5-UR0b/init-repair-r1/result.json",
+        "sha256": "5a2a36131ef0b4ad5c389a9179873f51a6fa63a5db15557c6f9fe83b10707773"
+      },
+      "manifest_ref": {
+        "path": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/manifest.json",
+        "sha256": "b046d70f598c606a436f38d7331c9d44ce887fd09a3f990b4876bb2dc584b660"
+      },
+      "file_count": 418,
+      "all_bytes_unchanged": true
+    }
+  ],
+  "new_artifact_builds": 0,
+  "new_diagnostic_or_overhead_workers": 0,
+  "new_browser_starts": 3,
+  "official_gate_pass": false,
+  "performance_pass": false,
+  "primary_timings_adopted": false,
+  "continue_execution": false,
+  "automatic_retry": false,
+  "committed": false,
+  "pushed": false,
+  "next_action": "Independent review of bounded stop, paired correctness phase lifecycle and partial OFF oracle results. Any repair or new execution requires separate explicit authority."
+}

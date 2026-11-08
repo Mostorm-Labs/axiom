@@ -1,0 +1,17 @@
+{"stage": "realtime-120"}
+{"stage": "realtime-240"}
+{"stage": "correctness-lower_z_translucent_drag"}
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/remaining_runner.py", line 189, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/remaining_runner.py", line 188, in main
+    p=argparse.ArgumentParser();p.add_argument('--sdk64',type=Path,required=True);p.add_argument('--sdk32',type=Path,required=True);p.add_argument('--proofs',type=Path,required=True);p.add_argument('--output',type=Path,required=True);return run(p.parse_args())
+                                                                                                                                                                                                                                                 ^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/remaining_runner.py", line 177, in run
+    require_fresh(row,outcome,proof);window.admit(current)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/remaining_runner.py", line 115, in require_fresh
+    if analysis.get('mode')!='WORKER_COMPILE':raise RuntimeError('new worker requires fresh WORKER_COMPILE, never recorded reuse')
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: new worker requires fresh WORKER_COMPILE, never recorded reuse

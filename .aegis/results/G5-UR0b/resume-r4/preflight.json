@@ -1,0 +1,45 @@
+{
+  "status": "REPOSITORY_PACKAGE_EVIDENCE_REUSE_AND_MECHANISM_BOUND",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/package.json",
+    "sha256": "2cadd6e12c73dc4006fd20691feca9402974a9f31fe705b2200c4654e020b569"
+  },
+  "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+  "proof_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/mechanism-proofs.json",
+    "sha256": "c2f0919ddcd4bc561224643b93f90ecf8eeff4c078015a898a08009a0caf4a38"
+  },
+  "reuse_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/reused-prerequisites.json",
+    "sha256": "3496ae5d207dcb6a4061cc28a3c2fc29d2523722acce53e3cd6d194ff698f1d6"
+  },
+  "history_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/historical-budget.json",
+    "sha256": "d03f6302a48acd47e36e271dc94d4ff23f22f957c529c0beba8ca77e91c9aa6c"
+  },
+  "plan_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/run-plan.json",
+    "sha256": "1a2a64525c35403538bb55d458e8af0b7883415392dc710c60fe1a435baa9257"
+  },
+  "old_r3_window_status": "CLOSED",
+  "new_window_claimed": false,
+  "regression": {
+    "status": "MECHANISMS_VERIFIED",
+    "node_passed": 100,
+    "python_passed": 56,
+    "new_r4_test_count": 12,
+    "boundary_contracts": 120,
+    "native_cpp": "Existing hash-bound22CTest/11executables reused without rerun",
+    "new_browser_workers": 0,
+    "new_artifact_builds": 0,
+    "old_r3_status": "CLOSED",
+    "historical_starts": 30,
+    "historical_debit_seconds": 1133,
+    "new_plan_count": 38,
+    "new_nominal_limit_seconds": 6120,
+    "cumulative_planned_seconds": 7253,
+    "original_cap_seconds": 8370,
+    "public_api_impact": "NONE",
+    "performance_pass": false
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "g5-ur0b-independent-control-review-v1",
+  "status": "ACCEPTED_BOUNDED_RETURN_BLOCKED_ON_VERIFICATION_DESIGN",
+  "gate_verdict": "BLOCKED_EVIDENCE",
+  "official_gate_pass": false,
+  "task": "G5-UR0b-resume-r3",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r3/result.json",
+    "sha256": "81f44aca6da61e86ae11eedca3645ae2f13c18881493f078d3f6a83befbc07d0"
+  },
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r3/package.json",
+    "sha256": "bd6777505dddd474a111c52e1c477001a82ed11b5e445ce293f40368ba27f915"
+  },
+  "review_notes_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/review.md",
+    "sha256": "cd9c2203c19a26b7fda781e9bb4012e3d01caf6ca9844ee0e3d077172c1ed1cb"
+  },
+  "source_tree_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+  "frozen_requirement_audit": {
+    "RESUME-IDENTITY": "ACCEPTED",
+    "RESUME-BUDGET": "ACCEPTED",
+    "RESUME-PROOF": "ACCEPTED_FOR_COVERED_MECHANISMS",
+    "RESUME-QUALIFY": "ACCEPTED_OBSERVATION_OVERHEAD_ONLY",
+    "RESUME-CLOSURE": "BLOCKED_INITIALIZATION_POPULATION_SCOPE"
+  },
+  "frozen_evidence_audit": {
+    "new_bundle_files": 780,
+    "preserved_bundle_files": 585,
+    "hash_mismatches": 0,
+    "mechanism_refs_verified": 218,
+    "offline_inputs_recompiled": 15,
+    "node_passed": 87,
+    "python_passed": 40,
+    "boundary_contracts": 120,
+    "native_evidence": "22 tests independently hash-audited; not rerun by reviewer"
+  },
+  "repository_reality_audit": {
+    "only_two_authorized_runner_test_paths_dirty": true,
+    "runtime_sdk_collector_compiler_fixture_threshold_changed": false,
+    "artifact_maps": {
+      "64-192": 54,
+      "32-96": 54
+    },
+    "new_runs_all_used_64_192": 15,
+    "32_96_actual_sampling": "NOT_RUN"
+  },
+  "blocking_findings": [
+    {
+      "id": "UR0B-INIT-POPULATION",
+      "requirement_status": "FROZEN_REQUIREMENT_FAILURE",
+      "root_cause": "VERIFICATION_DESIGN_DEFECT",
+      "owner": "P20 Verification",
+      "failure_mode": "Raw accepted initialization frame cannot have the operation/commit\u2192Scene proof demanded of mutation-qualified receipts, leaving valid initialization and genuine unproved mutation indistinguishable in admission.",
+      "impact": "Blocks calibration and required later matrix. Bypassing or discarding raw data would weaken identity evidence.",
+      "existing_coverage": "Post-commit canonical chains, foreign/stale identities and attempt matching have passing tests; initialization applicability is unspecified.",
+      "witness_ref": {
+        "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/offline-check.json",
+        "sha256": "17ae7208b50c56083b386845bb8e859441202f053d65e1ac796e08db5686e6b2"
+      },
+      "not_established": "Product rendering/performance defect",
+      "repair_authorized": false
+    }
+  ],
+  "non_blocking_findings": [
+    {
+      "id": "REGRESSION-SCOPE-LABEL",
+      "note": "validation_results.new_browser_workers=0 and performance_qualification=NOT_STARTED are pre-sampling regression scope; the result accounting correctly reports actual15 new workers and a qualified overhead cohort. Interpret those labels using their regression scope."
+    }
+  ],
+  "observed_overhead_qualified": true,
+  "main_matrix_started": false,
+  "parent_ur0b_complete": false,
+  "performance_pass": false,
+  "new_browser_workers_by_reviewer": 0,
+  "continue_execution": false,
+  "sampling_authorization": "CLOSED_UNCHANGED",
+  "ownership_handoff_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/ownership-handoff.json",
+    "sha256": "05d666046402ce3fe0787439dd1f280b752e3daa74ba3e1f2ad9421e5eb681fc"
+  },
+  "checks": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/identity-check.json",
+      "sha256": "a77697fd761624db99720af8bbc1930d1a07a8e221f1ccd35bfc633703ef2d0b"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/check_identity.py",
+      "sha256": "616f130a5082596d26ee10adf6a258ce5faadede76284ff02bec37aab3f32f95"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/offline-check.json",
+      "sha256": "17ae7208b50c56083b386845bb8e859441202f053d65e1ac796e08db5686e6b2"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/recompile.mjs",
+      "sha256": "54e9a1f292a362253faf0702515b78a69e7fc3a24dfcb065bf22ed8a96a3815c"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/overhead-check.json",
+      "sha256": "2b10dde8c755f4d8672aa6be4b23096a6ab756d086e839f6ac030090485705fb"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/check_overhead.py",
+      "sha256": "44eba2bbcb08e15f7d6bc29bdfdb0b56237f6427e172547b4858e852fc3c0f31"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/node.log",
+      "sha256": "32eda04b2a53f4d1fbfc99da787acb83ccfbf891e2e8331b43bee0b4bb34ee7f"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/python.log",
+      "sha256": "b56b6529e25e66c50114f0731e4639fc9c99323cc56ecd3be81d3a84aa3e3c07"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-terminal/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  ]
+}

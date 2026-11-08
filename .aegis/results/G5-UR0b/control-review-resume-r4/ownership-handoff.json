@@ -1,0 +1,36 @@
+{
+  "schema": "aegis-ownership-handoff-v1",
+  "from_primary": "aegis-gate-review",
+  "to_primary": "aegis",
+  "required_owner": "aegis-verification",
+  "earliest_untrusted_stage": "P20",
+  "reason": "LIVE-HUD-2: establish same-subject live pixel reference and independent handling of selection/snap/handle HUD for the existing lower-z correctness case before authorizing harness repair or fresh sampling.",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-resume-r4/package.json",
+    "sha256": "2cadd6e12c73dc4006fd20691feca9402974a9f31fe705b2200c4654e020b569"
+  },
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR0b/resume-r4/result.json",
+    "sha256": "d764ac56a2de69a47b9048a5556470a2e4bb68eb4cfe9a395b24a45ddd8094c3"
+  },
+  "findings_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-resume-r4/findings.json",
+    "sha256": "a23ba8203a04398a0e3ae7d0924ecf78c25216f26cee96fec467f63f4dd1e3ac"
+  },
+  "accepted_work": [
+    "exact historical prerequisite reuse",
+    "fresh realtime120/240 raw evidence and independent recompilation",
+    "two new runner/test paths within scope",
+    "bounded stop and cumulative ledger",
+    "all immutable historical and new archives"
+  ],
+  "decisions_needed": [
+    "Independent live reference/HUD applicability without candidate-derived exclusions or weaker document-body checks",
+    "Bounded transport/stage repair scope preserving exact byte identity, original correctness deadlines, guard ownership and no primary-timing readback",
+    "Reuse of accepted realtime qualifications and historical prerequisites after any explicitly scoped harness change"
+  ],
+  "execution_authorized_by_this_handoff": false,
+  "new_sampling_authorized": false,
+  "old_window_status": "CLOSED",
+  "next_action": "Resolve the earliest verification gap, then freeze the minimal implementation-owned harness repair package. No automatic rerun or product optimization from this return."
+}

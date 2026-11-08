@@ -1,0 +1,144 @@
+{
+  "schema": "g5-ur0b-offline-repair-work-order-v1",
+  "status": "AUTHORIZED_OFFLINE_REPAIR_SCOPE",
+  "authorization_source": "User continued the explicitly proposed initialization-verification correction and implementation handoff; design/control here, implementation in thread01a0dacd.",
+  "owner": "aegis-implementation; separate execution conversation",
+  "stage_request": [
+    "P30/P31 materialize exact offline package",
+    "P32 complete authorized offline repair and return for independent review"
+  ],
+  "current_verification_spec_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/verification-spec.json",
+    "sha256": "74f54eb0d460d1076520be9e6b941878bf8ae02d1ad3ab0615b9c79f01a2fd4e",
+    "identity_kind": "local-content-addressed"
+  },
+  "completion_contract_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/completion-contract.json",
+    "sha256": "19a9a403f05c4756ad8df310a71d8aafc417d2470df8247a415dc192357e87dd",
+    "identity_kind": "local-content-addressed"
+  },
+  "oracle_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/oracle-cases.json",
+    "sha256": "785d936f6957b205bd326513196a2d0b8674d3ef81daef141bec345bc8bbf3af",
+    "identity_kind": "local-content-addressed"
+  },
+  "frozen_input_ref": {
+    "path": ".aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json",
+    "sha256": "d1834f86466baaed9f03e1d10cd62807233288bbbb473f6733efbb10beabde2f",
+    "identity_kind": "local-content-addressed"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "accepted_dirty_source_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+    "completed_through": "accepted bounded r3 return, overhead qualification and control-classified initialization verification gap",
+    "next_action": "Materialize a separate offline task package and bindings; demonstrate old actual-input RED; fix offline classification/readers; run all frozen tests/15 inputs; archive new evidence."
+  },
+  "package_to_materialize": ".aegis/packages/G5-UR0b-init-repair-r1/package.json",
+  "package_rule": "Approved work order freezes scope/closure. Materialize same-directory authority/verification/closure/context/evidence refs with SHA256 and all bindings before code; existing user authorization covers that exact package and execution. No additional approval roundtrip is needed if preflight has no conflict. Producer may not expand this work order or issue the independent final Gate decision.",
+  "source_scope": [
+    "verification/runners/g5/ur0/decode_trace.mjs",
+    "verification/runners/g5/ur0/initialization_basis.mjs",
+    "verification/runners/g5/ur0/canonical_chain.mjs",
+    "verification/runners/g5/ur0/compile_run.mjs",
+    "verification/runners/g5/ur0/metrics_compiler.mjs",
+    "verification/runners/g5/ur0/trace_validation.mjs",
+    "verification/runners/g5/ur0/repair_runner.py",
+    "verification/runners/g5/ur0/resume_runner.py",
+    "verification/tests/g5_ur0_decode.test.mjs",
+    "verification/tests/g5_ur0_compiler.test.mjs",
+    "verification/tests/g5_ur0_identity.test.mjs",
+    "verification/tests/g5_ur0_initialization.test.mjs",
+    "verification/tests/test_g5_ur0_repair_runner.py",
+    "verification/tests/test_g5_ur0_resume_runner.py"
+  ],
+  "read_only_frozen_paths": [
+    "All previous packages, results, bundles and existing tests/code outside source_scope",
+    "worker.mjs,consumer.mjs,source_identity.py,metrics.schema.json,validate_metrics.py",
+    "Runtime/SDK/collector/build/dependency/semantic paths"
+  ],
+  "new_control_paths": [
+    ".aegis/packages/G5-UR0b-init-repair-r1/**"
+  ],
+  "output_paths": [
+    ".aegis/results/G5-UR0b/init-repair-r1/**",
+    "verification/evidence/performance/g5-unified-render-ur0b/<new-source-tree-sha>/init-repair-r1/**",
+    "out/ur0b/init-repair-r1/**"
+  ],
+  "required_changes": [
+    "Use exact v2 classification with complete accepted-record accounting and no fake operation/Scene.",
+    "Update existing decode/compile/admission readers coherently without weakening post-commit identity/receipt rules or reopening old authorities.",
+    "Run genuine old-behavior RED before fixes; implement all positive/negative cases and recompile all15 bound inputs to new outputs.",
+    "Compare unchanged external/common metrics, final snapshot/terminal/product outcomes, all committed receipts and attempts; keep source/artifact/compiler/protocol identities distinct.",
+    "Emit eligible/pending-review reuse assessment and exact result/evidence identities."
+  ],
+  "required_tests": [
+    "node --test verification/tests/g5_*.test.mjs verification/sdk_web_external/pointer_input_test.mjs verification/sdk_web_external/control_api_test.mjs",
+    "python3.12 -m unittest discover -s verification/tests -p test_g5_*.py",
+    "python3.12 tools/check_runtime_boundaries.py --root .",
+    "15 immutable-input compiler runs with frozen count/status expectations and old strict metrics schema",
+    "All frozen16 oracle groups, including coherent v2 reader negatives and old authority/new directory closed tests",
+    "git diff --check"
+  ],
+  "native_reuse": "No native rebuild/test rerun required when all production/build-input bytes unchanged; hash-verify existing relevant evidence instead.",
+  "forbidden": [
+    "Any browser worker/performance sampling, hidden smoke/probe or new diagnostic pair",
+    "Changing old CLOSED windows/results/ledgers or any prior raw/compiled evidence",
+    "Changing semantic or metric schema authority, clock/AA/performance limits or filling missing IDs with0",
+    "Runtime/SDK/collector/harness policy optimization or artifact rebuild",
+    "source_identity exclusions expansion",
+    "Commit/push or UR0c/UR1 work"
+  ],
+  "closure": {
+    "all_of": [
+      "All specified code/reader/test changes satisfy the frozen spec and scope",
+      "Old behavior RED then new positive/negative cases green",
+      "15 immutable archives recompiled and agreed with frozen expectations; original evidence still unchanged",
+      "External/common observation and committed receipt invariance plus explicit reuse applicability report",
+      "New exact source/artifact/compiler/spec/recorded-input identities, reviewer-accessible content-addressed result/bundle",
+      "READY_FOR_CONTROL_REVIEW or explicit blocker; no product/P34PASS"
+    ],
+    "continue_until_terminal_state": true,
+    "stop_after": "OFFLINE_INIT_REPAIR",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "TASK_PACKAGE_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "BLOCKED_EVIDENCE",
+      "ENVIRONMENT_BLOCKER"
+    ],
+    "return_surface": "CONTROL_REVIEW"
+  },
+  "new_sampling_workers_max": 0,
+  "prior_sampling_debit_seconds": 1133,
+  "remaining_time_is_authorization": false,
+  "commit_push": false,
+  "notify_terminal": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "user_policy_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+      "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190",
+      "identity_kind": "local-content-addressed"
+    },
+    "contents": [
+      "task/package and terminal status",
+      "revision/dirty/full-source hash",
+      "result/bundle paths withSHA256",
+      "tests, unchanged archives,15input reconciliation,reuse assessment",
+      "uncompleted/blocker and whether any forbidden sampling occurred"
+    ],
+    "if_unavailable": "Save terminal result and explicitly mark notification not delivered; never claim delivery."
+  }
+}

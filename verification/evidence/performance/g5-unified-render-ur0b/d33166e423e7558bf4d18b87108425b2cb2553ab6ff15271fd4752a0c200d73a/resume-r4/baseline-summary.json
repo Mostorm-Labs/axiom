@@ -1,0 +1,421 @@
+{
+  "status": "INCOMPLETE_FROZEN_GUARD_STOP",
+  "recorded_prerequisites": "ACCEPTED_RECORDED_REUSE",
+  "fresh_admitted": [
+    {
+      "run_id": "realtime-120",
+      "summary_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-120/compiled-summary.json",
+        "sha256": "3ae3e7458dfda5a3900f4a258e83268d0e7f6ac2ec6310c52a9b68b52f243987"
+      },
+      "proof_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-120/canonical-chain.json",
+        "sha256": "3b0a210fddca85d47293392688c13831de56a35da79ca5a2c39b3ee929e2a3c1"
+      },
+      "mode": "WORKER_COMPILE",
+      "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "guard_reason": "completed",
+      "guard_elapsed_s": 40.936125790991355,
+      "clock": "QUALIFIED",
+      "planned_events": 3601,
+      "handler_events": 3601,
+      "phase_lifecycle": {
+        "active_contacts_after": 0
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    },
+    {
+      "run_id": "realtime-240",
+      "summary_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-240/compiled-summary.json",
+        "sha256": "378e56df36b11409cf5efec6a48497b7db713bcd3dfcf4b5e985a60fd8b26a36"
+      },
+      "proof_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/realtime-240/canonical-chain.json",
+        "sha256": "5e120fb7ae5a06e50b4a10813504b417eade58b9c6abd057b6d8a99dd37c93ea"
+      },
+      "mode": "WORKER_COMPILE",
+      "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+      "guard_reason": "completed",
+      "guard_elapsed_s": 41.928229166020174,
+      "clock": "QUALIFIED",
+      "planned_events": 7200,
+      "handler_events": 7200,
+      "phase_lifecycle": {
+        "active_contacts_after": 0
+      },
+      "counts": {
+        "accepted_raw_count": 2,
+        "qualified_initialization_count": 1,
+        "qualified_committed_count": 1,
+        "metric_receipt_count": 1,
+        "unresolved_accepted_count": 0
+      }
+    }
+  ],
+  "correctness": "INCOMPLETE_OFF_PIXEL_FAILURES_AND_PHASE_TIMEOUT; no paired ON verdict",
+  "main": "NOT_STARTED_MISSING",
+  "history": {
+    "prior_starts": 30,
+    "prior_seconds": 1133,
+    "new_starts": 3,
+    "new_charged_seconds": 118,
+    "cumulative_starts": 33,
+    "cumulative_charged_seconds": 1251,
+    "new_planned": 38,
+    "new_admitted": 2,
+    "new_guard_stopped": 1,
+    "new_missing": 35,
+    "new_nominal_max_seconds": 6120,
+    "original_cap_seconds": 8370,
+    "reserved_seconds": 0,
+    "remaining_budget_is_retry_authorization": false
+  },
+  "partial_off_pixel_results": [
+    {
+      "case": "lower_z_translucent_drag",
+      "toggle": "OFF",
+      "step": 0,
+      "status": "FAILED",
+      "interior_mismatched_pixels": 2463,
+      "max_interior_delta": 163,
+      "comparison": {
+        "status": "FAILED",
+        "compared_pixels": 1334815,
+        "aa_boundary_pixels": 46033,
+        "hud_excluded_pixels": 219152,
+        "interior_mismatched_pixels": 2463,
+        "max_interior_delta": 163,
+        "witnesses": [
+          {
+            "pixel": 140047,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 140048,
+            "actual": [
+              243,
+              243,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141644,
+            "actual": [
+              194,
+              192,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141645,
+            "actual": [
+              145,
+              142,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141646,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141647,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141648,
+            "actual": [
+              105,
+              101,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 141649,
+            "actual": [
+              111,
+              107,
+              255,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "00e6a9ae775217edb2bdb8cda62c01eb69185a7b047199e7f1ba93973441008e",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "artifact_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag/off-0.correctness.json",
+        "sha256": "c3e039478721a4ddcdd82493a0d8f0407f3cb6dff1f5e153cf1dcd899b1e1b14"
+      }
+    },
+    {
+      "case": "lower_z_translucent_drag",
+      "toggle": "OFF",
+      "step": 1,
+      "status": "FAILED",
+      "interior_mismatched_pixels": 16112,
+      "max_interior_delta": 213,
+      "comparison": {
+        "status": "FAILED",
+        "compared_pixels": 1551883,
+        "aa_boundary_pixels": 48117,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 16112,
+        "max_interior_delta": 213,
+        "witnesses": [
+          {
+            "pixel": 254598,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254599,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254600,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254601,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254602,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254603,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254604,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 254605,
+            "actual": [
+              183,
+              226,
+              243,
+              255
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 2,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag/off-1-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling"
+      },
+      "candidate_sha256": "7089f028d05a8a12c1f6b63cbbe897e6518f6d9964eb7926102cea80616f3822",
+      "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c",
+      "artifact_ref": {
+        "path": "out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag/off-1.correctness.json",
+        "sha256": "c5eb079d288ede092c371a7842b59d7a1696a7a3860653165f57cf1f04e73b3d"
+      }
+    }
+  ],
+  "guard_failure": {
+    "classification": "CORRECTNESS_PHASE_DEADLINE",
+    "guard_ref": {
+      "path": "out/ur0b/resume-r4/execution/guards/correctness-lower_z_translucent_drag.worker.json",
+      "sha256": "03c35d3dc04c02a9e46cb79573edc30daa5be90055defee14230cabf1fd08d75"
+    },
+    "reason": "nonzero_exit",
+    "returncode": 124,
+    "phase": {
+      "stage": "phase-timeout",
+      "phase": "correctness-only",
+      "limit_ms": 30000
+    },
+    "elapsed_s": 34.21428754198132,
+    "rss_peak_kib": 1852016,
+    "rss_limit_kib": 3145728,
+    "cleanup_complete": true
+  },
+  "primary_timings_adopted": false,
+  "performance_pass": false,
+  "official_gate_pass": false
+}

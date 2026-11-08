@@ -1,0 +1,35 @@
+....E..FF
+======================================================================
+ERROR: test_missing_terminal_guard_is_durably_charged_at_full_limit (test_g5_ur0_resume_runner.ResumeRunnerTest.test_missing_terminal_guard_is_durably_charged_at_full_limit) (outcome={'guard': None})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 57, in test_missing_terminal_guard_is_durably_charged_at_full_limit
+    w.begin('diagnostic-OFF');w.finish('diagnostic-OFF',outcome)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 81, in finish
+    cost=charge(outcome.get('guard'),r['limit_seconds']);r.update(status=outcome.get('guard',{}).get('reason','UNKNOWN_GUARD').upper(),charged_seconds=cost,outcome=outcome)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+FAIL: test_worker_nonzero_exit_cannot_admit_an_observed_summary (test_g5_ur0_resume_runner.ResumeRunnerTest.test_worker_nonzero_exit_cannot_admit_an_observed_summary) (reason='nonzero_exit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 66, in test_worker_nonzero_exit_cannot_admit_an_observed_summary
+    with self.subTest(reason=reason),self.assertRaisesRegex(RuntimeError,'guard|exit|stop'):
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_worker_nonzero_exit_cannot_admit_an_observed_summary (test_g5_ur0_resume_runner.ResumeRunnerTest.test_worker_nonzero_exit_cannot_admit_an_observed_summary) (reason='completed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 66, in test_worker_nonzero_exit_cannot_admit_an_observed_summary
+    with self.subTest(reason=reason),self.assertRaisesRegex(RuntimeError,'guard|exit|stop'):
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.310s
+
+FAILED (failures=2, errors=1)

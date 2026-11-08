@@ -1,0 +1,105 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {decodeTrace} from '../runners/g5/ur0/decode_trace.mjs';
+import {compileMetrics} from '../runners/g5/ur0/metrics_compiler.mjs';
+import {canonicalChainProof} from '../runners/g5/ur0/canonical_chain.mjs';
+const root=path.resolve(import.meta.dirname,'../..');
+const inputs=JSON.parse(fs.readFileSync(path.join(root,'.aegis/verification/G5-UR0b-initialization-v1/evidence-inputs.json')));
+const entry=inputs.inputs.find(r=>r.run_id==='realtime-60'),directory=path.join(root,entry.input_directory);
+const read=name=>fs.readFileSync(path.join(directory,name));
+const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+const rawBytes=read('raw-trace.jsonl'),runBytes=read('worker-result.json'),inputBytes=read('run-inputs.json');
+for(const ref of entry.immutable_inputs)assert.equal(digest(fs.readFileSync(path.join(root,ref.path))),ref.sha256);
+const actualRaw=rawBytes.toString().trim().split('\n').map(JSON.parse),actualRun=JSON.parse(runBytes),actualInputs=JSON.parse(inputBytes);
+const actualRecording={run:actualRun,raw_trace_jsonl:rawBytes.toString(),worker_result_json:runBytes.toString(),run_inputs_json:inputBytes.toString(),input_refs:{raw_trace_sha256:digest(rawBytes),worker_result_sha256:digest(runBytes),run_inputs_sha256:digest(inputBytes)}};
+const prefix=()=>structuredClone(actualRaw.filter(r=>BigInt(r.seq)<=55n));
+const modelRun=()=>({init:structuredClone(actualRun.init),source_before:{source_tree_sha256:actualRun.source_before.source_tree_sha256,files:Object.fromEntries(['verification/runners/g5/ur0/consumer.mjs','verification/runners/g5/ur0/worker.mjs'].map(n=>[n,structuredClone(actualRun.source_before.files[n])]))},trace:{loss:{critical:0,statistical:0}}});
+function recording(raw,run=modelRun()){
+ const raw_trace_jsonl=raw.map(r=>JSON.stringify(r)+'\n').join(''),worker_result_json=JSON.stringify(run),run_inputs_json=JSON.stringify(actualInputs);
+ return {run,raw_trace_jsonl,worker_result_json,run_inputs_json,input_refs:{raw_trace_sha256:digest(raw_trace_jsonl),worker_result_sha256:digest(worker_result_json),run_inputs_sha256:digest(run_inputs_json)}};
+}
+function analyze(raw,context=recording(raw),document=null,loss={critical:0,statistical:0}){
+ const decoded=decodeTrace(raw,loss,context);return {decoded,proof:canonicalChainProof(raw,decoded,document,context)};
+}
+let actualCompiled;
+function compiledActual(){return actualCompiled??=compileMetrics(actualRun,actualRaw,{run_id:'realtime-60',row_id:'realtime-60',repetition:1,fixture_sha256:actualInputs.fixture_sha256,recording:actualRecording});}
+test('ACTUAL-RT60: full initial native frame plus first committed stroke reconciles without a second mutation receipt',()=>{
+ const compiled=compiledActual();
+ const initial=compiled.decoded.frames.find(f=>f.work==='2');
+ assert.equal(initial.semanticGeneration,'0');assert.equal(initial.operation,null);
+ assert.equal(initial.draw_seq,'15');assert.equal(initial.provider_seq,'32');assert.equal(initial.capture_seq,'42');
+ assert.equal(actualRun.init.state.objects,0);assert.equal(actualRun.init.state.target.runtimeEpoch,initial.documentEpoch);
+ assert.equal(actualRun.init.state.target.attachmentEpoch,initial.attachment);
+ const proof=canonicalChainProof(actualRaw,compiled.decoded,compiled.document,actualRecording);
+ assert.equal(proof.status,'QUALIFIED','complete actual init+commit evidence must qualify; old all-raw committed-only equality is MISSING');
+ assert.equal(proof.schema,'g5-ur0b-canonical-chain-proof-v2');
+ assert.equal(proof.accepted_raw_count,2);assert.equal(proof.qualified_initialization_count,1);
+ assert.equal(proof.qualified_committed_count,1);assert.equal(proof.unresolved_accepted_count,0);
+ assert.equal(proof.metric_receipt_count,1);assert.equal(compiled.document.interactions.flatMap(i=>i.canonical_receipts).length,1);
+});
+test('INIT-ONLY and NATIVE-ONLY: initialization is a lifecycle population with no mutation receipt or measurement.before',()=>{
+ const rows=prefix(),context=recording(rows);delete context.run.measurement;
+ const {decoded,proof}=analyze(rows,context);
+ assert.equal(proof.status,'QUALIFIED');assert.equal(proof.scope,'NATIVE_ONLY');assert.equal(proof.metric_receipt_count,null);
+ assert.equal(proof.qualified_initialization_count,1);assert.equal(proof.qualified_committed_count,0);assert.equal(decoded.qualified_completions.length,0);
+ assert.equal(proof.initialization_chains[0].basis.operation_id,null);
+ assert.equal(proof.initialization_chains[0].operation_reason,'NOT_APPLICABLE_INITIALIZATION');
+ assert.equal(decoded.commits.length,0);assert.equal(decoded.scenes.length,0);
+ const withMetrics=analyze(rows,context,{interactions:[]}).proof;assert.equal(withMetrics.status,'QUALIFIED');assert.equal(withMetrics.metric_receipt_count,0);
+});
+test('MISSING-INIT-ANCHOR: generation zero without complete state, recording profile and input binding is unresolved',()=>{
+ const changes=[c=>delete c.run.init.state,c=>delete c.run.source_before,c=>delete c.input_refs,c=>{c.input_refs.worker_result_sha256='f'.repeat(64);},c=>{c.run.init.state.documentId='a'.repeat(32);}];
+ for(const change of changes){const rows=prefix(),context=recording(rows);change(context);const p=analyze(rows,context).proof;assert.equal(p.status,'MISSING');assert.equal(p.unresolved_accepted_count,1);}
+});
+test('RESTORED-OR-NONEMPTY and CONTRADICTORY-GENERATION: a consistently bound but inapplicable public init is rejected',()=>{
+ const changes=[r=>{delete r.init.state;},r=>{delete r.source_before;},r=>{r.init.state.objects=1;},r=>{r.init.state.generation='1';},r=>{r.init.state.lastCommit.ordinal='1';},r=>{r.source_before.files['verification/runners/g5/ur0/consumer.mjs'].sha256='f'.repeat(64);},r=>{r.init.state.target.runtimeEpoch='0';},r=>{r.init.state.target.attachmentEpoch='3';},r=>{r.init.state.target.viewId='2';},r=>{r.init.state.lastCommit.operationId='1'.repeat(32);}];
+ for(const change of changes){const rows=prefix(),run=modelRun();change(run);const p=analyze(rows,recording(rows,run)).proof;assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,0);}
+});
+test('CONTRADICTORY-GENERATION: a real matching-owner commit or Scene at/before capture defeats initialization',()=>{
+ for(const kind of ['commit','scene']){
+  const rows=prefix(),native=structuredClone(actualRaw.find(r=>r.kind===(kind==='commit'?6:7)&&r.tag===(kind==='commit'?27:9)));
+  const owner=structuredClone(actualRaw.find(r=>r.kind===5&&r.tag===1&&r.job===native.job&&r.basis===native.basis));
+  owner.seq='100001';native.seq='100002';native.at_ns='335200000';rows.push(owner,native);
+  const p=analyze(rows).proof;assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,0);
+ }
+});
+test('LOSS-OR-AMBIGUITY: an unknown commit time or duplicated native provenance cannot prove initial emptiness',()=>{
+ const rows=prefix(),commit=structuredClone(actualRaw.find(r=>r.kind===6&&r.tag===27)),owner=structuredClone(actualRaw.find(r=>r.kind===5&&r.tag===1&&r.job===commit.job&&r.basis===commit.basis));
+ commit.at_ns='unknown';rows.push(owner,commit);assert.equal(analyze(rows).proof.status,'MISSING');
+ const duplicated=prefix();duplicated.push(structuredClone(duplicated.find(r=>r.seq==='39')));assert.equal(analyze(duplicated).proof.status,'MISSING');
+});
+test('FOREIGN-OWNER-OR-TARGET: every independent native owner/frame stamp and successful job must match',()=>{
+ const edits=[...[1,2,3,4,5,6,8,9,10].map(i=>['41','values',i]),...[1,2,3,4,5,6].map(i=>['42','values',i]),...[2,3,4,5,6,7,8,9,10].map(i=>['47','values',i]),['15','job'],['32','basis']];
+ for(const [seq,key,index] of edits){const rows=prefix(),r=rows.find(r=>r.seq===seq);if(key==='values')r.values[index]='999';else r[key]='999';const p=analyze(rows).proof;assert.equal(p.status,'MISSING',`${seq}/${key}/${index}`);assert.equal(p.qualified_initialization_count,0);}
+});
+test('DUPLICATE-OR-OMITTED: repeated accepted work/sequence or omitted decoded member cannot improve the denominator',()=>{
+ for(const duplicateSeq of [true,false]){const rows=prefix(),copy=structuredClone(rows.find(r=>r.seq==='47'));if(!duplicateSeq)copy.seq='100000';rows.push(copy);const p=analyze(rows).proof;assert.equal(p.status,'MISSING');assert.equal(p.accepted_raw_count,2);assert.ok(p.unresolved_accepted_count>0);}
+ const rows=prefix(),context=recording(rows),d=decodeTrace(rows,{critical:0,statistical:0},context);d.initialization_completions=[];
+ const p=canonicalChainProof(rows,d,null,context);assert.equal(p.status,'MISSING');assert.equal(p.accepted_raw_count,1);assert.equal(p.unresolved_accepted_count,1);
+});
+test('NONZERO-WITHOUT-SCENE: initial state never repairs an unproved nonzero canonical frame',()=>{
+ const rows=prefix();for(const r of rows){if(r.seq==='15'){r.values[2]='1';r.values[3]='1';}if(r.seq==='32'){r.values[2]='1';r.values[3]='1';}if(r.seq==='41'){r.values[7]='1';r.values[9]='1';}if(r.seq==='42'){r.values[3]='1';r.values[4]='1';}if(['46','47'].includes(r.seq)){r.values[7]='1';r.values[8]='1';}}
+ const p=analyze(rows).proof;assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,0);assert.equal(p.qualified_committed_count,0);
+});
+test('MISSING-MUTATION-RECEIPT: an initialization chain cannot replace a missing or foreign committed receipt',()=>{
+ const compiled=compiledActual();
+ for(const foreign of [false,true]){const doc=structuredClone(compiled.document);for(const i of doc.interactions){if(foreign){for(const r of i.canonical_receipts)r.basis.operation_id='f'.repeat(32);}else i.canonical_receipts=[];}
+  const p=canonicalChainProof(actualRaw,compiled.decoded,doc,actualRecording);assert.equal(p.status,'MISSING');assert.equal(p.qualified_initialization_count,1);assert.equal(p.unresolved_accepted_count,1);
+ }
+});
+test('LOSS-OR-AMBIGUITY: loss, repeated provider or ambiguous draw remains a blocker',()=>{
+ const rows=prefix();assert.equal(analyze(rows,recording(rows),null,{critical:1,statistical:0}).proof.status,'MISSING');
+ for(const seq of ['15','32']){const raw=prefix(),r=structuredClone(raw.find(r=>r.seq===seq));r.seq='100000';raw.splice(raw.findIndex(x=>x.seq===seq),0,r);assert.equal(analyze(raw).proof.status,'MISSING');}
+});
+test('NEXT-INTERACTION: delayed initial completion cannot confirm a later mutation or interaction receipt',()=>{
+ const rows=prefix(),accepted=rows.find(r=>r.seq==='47');accepted.at_ns='31000000000';accepted.seq='100003';
+ const commit=structuredClone(actualRaw.find(r=>r.kind===6&&r.tag===27)),owner=structuredClone(actualRaw.find(r=>r.kind===5&&r.tag===1&&r.job===commit.job&&r.basis===commit.basis));
+ rows.push(owner,commit);const {proof,decoded}=analyze(rows);
+ assert.equal(proof.status,'QUALIFIED');assert.equal(proof.qualified_initialization_count,1);assert.equal(proof.qualified_committed_count,0);assert.equal(decoded.qualified_completions.length,0);assert.equal(proof.metric_receipt_count,null);
+});
+test('OFF-NO-OBSERVATIONS: initial public state cannot invent any native observation',()=>{
+ const {proof}=analyze([],recording([]),{interactions:[]});assert.equal(proof.status,'NOT_OBSERVED');assert.equal(proof.accepted_raw_count,0);assert.equal(proof.qualified_initialization_count,0);assert.equal(proof.qualified_committed_count,0);
+});

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/worker.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/p36-r1/build-qualified-64-192/sdk/web",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag",
+    "correctness",
+    "lower_z_translucent_drag",
+    "ON"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 124,
+  "elapsed_s": 34.21428754198132,
+  "peak_process_family_rss_kib": 1852016,
+  "rss_limit_kib": 3145728,
+  "timeout_s": 90,
+  "last_stage": {
+    "stage": "phase-timeout",
+    "phase": "correctness-only",
+    "limit_ms": 30000
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

@@ -1,0 +1,250 @@
+{
+  "case_id": "lower_z_translucent_drag",
+  "toggle": "OFF",
+  "step": 0,
+  "byte_length": 6400000,
+  "request": {
+    "width": 1600,
+    "height": 1000,
+    "logical_width": 800,
+    "logical_height": 500,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "hud_bounds": [
+      [
+        76,
+        70.0748062133789,
+        724,
+        428.9136657714844
+      ],
+      [
+        100,
+        82.0748062133789,
+        748,
+        440.9136657714844
+      ]
+    ]
+  },
+  "reference": "after",
+  "stage": "live-lower-z-drag",
+  "state": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": false,
+      "byteCapacity": 33554432,
+      "capacity": 1024,
+      "closing": false,
+      "fault": false,
+      "latest": null,
+      "pending": 0,
+      "pendingBytes": 0,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "99999999999999999999999999999999",
+    "eraserMode": 2,
+    "generation": "3",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "a7a3c498884d1da9a711f8f8a015c669",
+      "ordinal": "3",
+      "presentedGeneration": "3",
+      "runtimeEpoch": "1"
+    },
+    "objects": 2,
+    "primary": "a4a3c498884d1d29a711f8f8a015c626",
+    "selected": [
+      "a4a3c498884d1d29a711f8f8a015c626"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "3",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 500,
+      "width": 800
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        0,
+        0
+      ],
+      "sequence": "1",
+      "session": "0"
+    },
+    "tool": 1
+  },
+  "comparison": {
+    "status": "FAILED",
+    "compared_pixels": 1334815,
+    "aa_boundary_pixels": 46033,
+    "hud_excluded_pixels": 219152,
+    "interior_mismatched_pixels": 2463,
+    "max_interior_delta": 163,
+    "witnesses": [
+      {
+        "pixel": 140047,
+        "actual": [
+          243,
+          243,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 140048,
+        "actual": [
+          243,
+          243,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141644,
+        "actual": [
+          194,
+          192,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141645,
+        "actual": [
+          145,
+          142,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141646,
+        "actual": [
+          111,
+          107,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141647,
+        "actual": [
+          105,
+          101,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141648,
+        "actual": [
+          105,
+          101,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "pixel": 141649,
+        "actual": [
+          111,
+          107,
+          255,
+          255
+        ],
+        "reference": [
+          255,
+          255,
+          255,
+          255
+        ]
+      }
+    ],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+    "reference": {
+      "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+      "edge_bytes": 1600000,
+      "height": 1000,
+      "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+      "objects": 2,
+      "private_frame_ids": "oracle-local only; not production receipts",
+      "rgba_bytes": 6400000,
+      "status": "REFERENCE_RENDERED",
+      "width": 1600
+    },
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/ur0b/resume-r4/execution/raw-runs/correctness-lower_z_translucent_drag/off-0-after.axsnap",
+    "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+    "readback": "correctness-only cold worker; not primary performance sampling"
+  },
+  "candidate_sha256": "00e6a9ae775217edb2bdb8cda62c01eb69185a7b047199e7f1ba93973441008e",
+  "reference_snapshot_sha256": "2fa499ff23e77690d1498cb24e348464c44e782b0643c322a0bf2c7470a0d06c"
+}

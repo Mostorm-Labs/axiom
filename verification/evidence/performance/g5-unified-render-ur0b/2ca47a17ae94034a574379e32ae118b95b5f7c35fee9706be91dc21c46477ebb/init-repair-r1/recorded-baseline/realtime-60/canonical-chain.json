@@ -1,0 +1,66 @@
+{
+  "schema": "g5-ur0b-canonical-chain-proof-v1",
+  "scope": "NATIVE_AND_METRICS",
+  "status": "MISSING",
+  "accepted_raw_count": 2,
+  "qualified_decoded_count": 1,
+  "metric_receipt_count": 1,
+  "chains": [
+    {
+      "work_id": "3",
+      "basis": {
+        "runtime_instance": "1",
+        "lifetime_generation": "1",
+        "attachment_epoch": "2",
+        "document_id": "99999999999999999999999999999999",
+        "document_epoch": "1",
+        "resource_generation": "0",
+        "view_id": "1",
+        "committed_generation": "1",
+        "scene_generation": "1",
+        "scene_revision": "1",
+        "camera_generation": "1",
+        "surface_generation": "1",
+        "metrics_generation": "1",
+        "frame_id": "3",
+        "operation_id": "a4a3c498884d1d29a711f8f8a015c669",
+        "commit_revision": "1"
+      },
+      "draw_job": "12636",
+      "draw_basis": "12636",
+      "attempt_jobs": [
+        "12615",
+        "12628",
+        "12636"
+      ],
+      "draw_seq": "64038",
+      "provider_seq": "64519",
+      "capture_seq": "64533",
+      "completion_seq": "64538",
+      "provenance": [
+        "64532",
+        "64530",
+        "64533",
+        "64519",
+        "64038",
+        "63036",
+        "63043",
+        "63050",
+        "64538"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "completion_seq": "47",
+      "reason": "accepted raw completion lacks a unique qualified decoded chain"
+    },
+    {
+      "reason": "raw accepted and qualified decoded completion populations differ"
+    },
+    {
+      "reason": "raw accepted and compiled metric receipt populations differ"
+    }
+  ],
+  "timing_scope": "native accepted/software submission correlation; no physical display, pure GPU duration or performance acceptance"
+}

@@ -1,0 +1,17 @@
+.............E.......
+======================================================================
+ERROR: test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn (test_g5_ur0_resume_runner.ResumeRunnerTest.test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 106, in test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn
+    with self.assertRaisesRegex(RuntimeError,'closed|claimed'):m.run(args)
+                                                               ^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/resume_runner.py", line 152, in run
+    p,c,history=authority();proof=verify_proof(a.proofs,p,c,a.sdk64.resolve(),a.sdk32.resolve());out=a.output.resolve()
+                                               ^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'proofs'
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.540s
+
+FAILED (errors=1)

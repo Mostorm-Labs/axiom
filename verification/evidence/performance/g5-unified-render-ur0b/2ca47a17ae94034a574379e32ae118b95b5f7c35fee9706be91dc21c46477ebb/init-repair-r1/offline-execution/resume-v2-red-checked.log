@@ -1,0 +1,18 @@
+..F.......
+======================================================================
+FAIL: test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn (test_g5_ur0_resume_runner.ResumeRunnerTest.test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn)
+----------------------------------------------------------------------
+RuntimeError: changed/missing exact mechanism proof
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 106, in test_closed_r3_authority_rejects_relocated_output_before_proof_or_spawn
+    with self.assertRaisesRegex(RuntimeError,'closed|claimed'):m.run(args)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "closed|claimed" does not match "changed/missing exact mechanism proof"
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.890s
+
+FAILED (failures=1)

@@ -1,0 +1,105 @@
+{
+  "schema": "g5-ur0b-independent-control-review-v1",
+  "status": "ACCEPTED_OFFLINE_INITIALIZATION_REPAIR_AND_RECORDED_COHORT_REUSE",
+  "task": "G5-UR0b-init-repair-r1",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR0b/init-repair-r1/result.json",
+    "sha256": "5a2a36131ef0b4ad5c389a9179873f51a6fa63a5db15557c6f9fe83b10707773"
+  },
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR0b-init-repair-r1/package.json",
+    "sha256": "247da63294671d763da805758e88bf449db111150f7c37ff7fa2c1272781e710"
+  },
+  "review_notes_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/review.md",
+    "sha256": "74aa788135f8bfcf40ef4467c4077f3dec13415413a11c6c4d76b89a17459b82"
+  },
+  "source_tree_sha256": "2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb",
+  "frozen_requirement_audit": {
+    "INIT-APPLICABILITY": "ACCEPTED",
+    "COMPLETE-POPULATION": "ACCEPTED",
+    "MUTATION-ISOLATION": "ACCEPTED",
+    "OFFLINE-REUSE": "ACCEPTED_EXACT_RECORDED_CONDITIONS"
+  },
+  "frozen_evidence_audit": {
+    "new_bundle_files": 418,
+    "historical_bundle_files": 1365,
+    "hash_mismatches": 0,
+    "immutable_inputs_independently_recompiled": 15,
+    "raw_accepted": 10,
+    "qualified_initialization": 1,
+    "qualified_committed": 9,
+    "unresolved_accepted": 0,
+    "mutation_receipts": 9,
+    "all_metric_external_bytes_unchanged": true,
+    "node_tests": 100,
+    "python_tests": 44,
+    "boundary_contracts": 120,
+    "native_evidence": "22CTest and11 executable hashes retained; not rerun by reviewer"
+  },
+  "repository_reality_audit": {
+    "ten_allowed_source_paths_only": true,
+    "product_sdk_collector_harness_schema_locks_thresholds_changed": false,
+    "source_entries": 27618,
+    "sdk_artifact_files": {
+      "64-192": 54,
+      "32-96": 54
+    },
+    "official_p34_records_changed": false
+  },
+  "blocking_findings": [],
+  "non_blocking_boundaries": [
+    "This verifies an offline completion-applicability correction and exact recorded-cohort reuse, not new sampled measurements or product performance.",
+    "The complete source hash and ten-path delta cover the two new untracked source files; tracked-only dirty_source_paths is not the full review identity."
+  ],
+  "verification_design_gap_closed": true,
+  "reuse_acceptance_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/reuse-acceptance.json",
+    "sha256": "838f284592d524bc0ea56ead42acc14491c301033a66d169ed24ad52b8bd8ea3"
+  },
+  "old_r3_window": "CLOSED_UNCHANGED",
+  "new_sampling_authorized": false,
+  "new_browser_workers_by_reviewer": 0,
+  "sampling_debit_seconds": 1133,
+  "remaining_parent_workers": 38,
+  "parent_ur0b_complete": false,
+  "official_gate_pass": false,
+  "performance_pass": false,
+  "next_action": "Prepare an explicit bounded continuation for the remaining120/240Hz,6correctness and30main workers, binding accepted recorded-cohort reuse without changing original fresh checks or reopening old windows. No repeat of accepted offline repairs is required.",
+  "checks": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/identity-check.json",
+      "sha256": "8a36a9e30c95d0ce749ceed55f47bb725306710f567712d1a3f3838809ee017e"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/check_materialization.py",
+      "sha256": "0aa73f4aa44d291edf197b8a2d2f91a1c80cb08f20d1d50791fe4b54d529beec"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/offline-check.json",
+      "sha256": "5ecb469613439ca414b5e31ad146bb7636dee74094c9ae5083f0bb4b4ece4136"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/recompile.py",
+      "sha256": "93de13921a37ecab74355e46a2e8b038902bc31325ff6e4722aa0053bd3c56bd"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/artifact-check.json",
+      "sha256": "e6baeaab106dce8a9d78063ed06c148b4c1727d39ecdfc4369fc53c8edc6fea9"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/node.log",
+      "sha256": "b497d6abe62195b60babb06cc48f228a759a9209cb560ce7d9a9fa15187387bb"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/python.log",
+      "sha256": "30f4be5ee7114c75b39102e9cd4c0a26182545b82a149b36575063c30ce8a7a8"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-init-repair-r1/boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  ]
+}

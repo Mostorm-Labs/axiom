@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-resume-r4",
+  "parent_task_id": "G5-UR0b",
+  "status": "AUTHORIZED_REMAINING_BASELINE_CONTINUATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "accepted_dirty_source_sha256": "2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb",
+    "completed_through": "Independently accepted offline init repair and exact recorded diagnostic/cohort reuse;15r3 starts retained, old window CLOSED",
+    "next_action": "Prepare/test r4-only remaining runner and reuse admission, bind current mechanism/artifacts, then execute8separate and conditional30main under this new window."
+  },
+  "authorization": {
+    "user_instruction": "继续下一步，准备好后通知隔壁开始执行，同样让它执行完后再通知你这边",
+    "new_sampling_workers_max": 38,
+    "source_scope": "Two new Python runner/test files only; no product changes",
+    "commit_push": false
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "UR0b",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "terminal_notification": {
+    "required": true,
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "user_policy_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-resume-r3-checkpoint/notification-policy.md",
+      "sha256": "8657b1492a5abd7460d2473f372aa98ec146e6abbe94d8373e2ec394da2dc190",
+      "identity_kind": "local-content-addressed"
+    },
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit blocker/frozen stop"
+    ],
+    "contents": [
+      "task/package/status",
+      "revision/dirty/current source SHA256",
+      "result/bundle path andSHA256",
+      "tests,phase/guard/cleanup/cumulative budget and remaining rows",
+      "recorded-reuse vs fresh-run identity and all known blockers"
+    ],
+    "fallback": "Save exact terminal result and explicitly mark notification not delivered if tool unavailable."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "15657311d13b3b50923aed0d2ae6c9b2062296241a939002e3be50c1bc1e1666"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "08c07b0b9760f4212823f6026b9529da0613eb0c6ae838ebe6145fe3a902ef8f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "3616c36d68750b59bb3ad7074d60fdf66efc0ebf90921ee0807b64dbfb780df5"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "02e5c4c434be17f051ee6cf1130bc4b92ccdff8387b622a3c79d60faa21a9f49"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "d9a8660fc7579a6ae297c6860a01d7bb804cb3570afcd867db75d2860ffd352c"
+  }
+}

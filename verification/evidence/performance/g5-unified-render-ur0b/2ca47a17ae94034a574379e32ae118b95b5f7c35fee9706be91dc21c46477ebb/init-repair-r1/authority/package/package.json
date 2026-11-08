@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "G5-UR0b-init-repair-r1",
+  "status": "AUTHORIZED_OFFLINE_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "a2d99bfd9e2dc89b159cc7a2ba583c3f53d6129e",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "f651523a40c9b383b7d8e2115fcd32f75ddc38a7",
+    "accepted_dirty_source_sha256": "dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5",
+    "completed_through": "accepted bounded r3 return, overhead qualification and control-classified initialization verification gap",
+    "next_action": "Materialize a separate offline task package and bindings; demonstrate old actual-input RED; fix offline classification/readers; run all frozen tests/15 inputs; archive new evidence."
+  },
+  "authorization": {
+    "work_order_ref": {
+      "path": ".aegis/verification/G5-UR0b-initialization-v1/implementation-request.json",
+      "sha256": "4f78456fd79ff23ba2075924b72d412a27bcccfb2a85f0e3b4e0052b6393547c",
+      "identity_kind": "local-content-addressed"
+    },
+    "new_sampling_workers_max": 0,
+    "build_probe": false,
+    "commit_push": false
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "stop_after": "OFFLINE_INIT_REPAIR",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "ba2dc3123cf70c2b9653fae214f68ff8fa682f03c9e06a968b55c1fa22be674f"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "9098de61eaaa1a3d9fd8d7dc1074fd8abf6a0fad226209e19fdb44edd98a6e2c"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ad2468afdd9ce7f96692f315c75945fac395d08689a10e2cfb3bb3b0347c253e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "8920b57dba2bd00a0f1cc53ebeca449c3c95976e767e0d29e44866c2439634cc"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "96c7ab7282e6e2e1c3c31ff7a8f7b673afd089a0f66bb77272168211a189fcd5"
+  }
+}

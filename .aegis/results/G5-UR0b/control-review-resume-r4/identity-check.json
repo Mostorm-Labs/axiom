@@ -1,0 +1,55 @@
+{
+  "status": "MATERIALIZATION_SCOPE_AND_GUARDS_VERIFIED",
+  "result_sha256": "d764ac56a2de69a47b9048a5556470a2e4bb68eb4cfe9a395b24a45ddd8094c3",
+  "package_sha256": "2cadd6e12c73dc4006fd20691feca9402974a9f31fe705b2200c4654e020b569",
+  "source_tree_sha256": "d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a",
+  "source_entries": 27629,
+  "code_delta": [
+    "verification/runners/g5/ur0/remaining_runner.py",
+    "verification/tests/test_g5_ur0_remaining_runner.py"
+  ],
+  "manifest_checks": [
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/d33166e423e7558bf4d18b87108425b2cb2553ab6ff15271fd4752a0c200d73a/resume-r4/manifest.json",
+      "files": 217,
+      "mismatches": []
+    },
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/dc523e2768928bfa6a6a0b0f0d75e95caa876cdbe8e7d95637e3d0929933c834/manifest.json",
+      "files": 236,
+      "mismatches": []
+    },
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/590b1565f9f69b52ed3ca8cdd19f8ca798ded09c9025917cbc47ba90b501e4f2/p36-r1/manifest.json",
+      "files": 266,
+      "mismatches": []
+    },
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/73a237f15ce61be697067e880eb7abfe9571892309c4cbe8dc52adac39e48721/p36-r2/manifest.json",
+      "files": 83,
+      "mismatches": []
+    },
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/dade34ea89c46625291c9aa39a8cbffb56b3df72fa12eac07f4048cb011af2a5/resume-r3/manifest.json",
+      "files": 780,
+      "mismatches": []
+    },
+    {
+      "manifest": "verification/evidence/performance/g5-unified-render-ur0b/2ca47a17ae94034a574379e32ae118b95b5f7c35fee9706be91dc21c46477ebb/init-repair-r1/manifest.json",
+      "files": 418,
+      "mismatches": []
+    }
+  ],
+  "references_verified": 76,
+  "new_starts": 3,
+  "new_charge_seconds": 118,
+  "cumulative_charge_seconds": 1251,
+  "unstarted_rows": 35,
+  "guard_reasons": {
+    "completed": 2,
+    "nonzero_exit": 1
+  },
+  "actual_stop": "correctness-only30s timer exit124",
+  "old_stop_text_retained": "new worker requires fresh WORKER_COMPILE, never recorded reuse",
+  "new_browser_workers_by_reviewer": 0
+}

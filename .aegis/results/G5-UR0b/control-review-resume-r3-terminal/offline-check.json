@@ -1,0 +1,184 @@
+{
+  "status": "OFFLINE_RESULTS_REPRODUCED",
+  "inputs": [
+    {
+      "run_id": "diagnostic-OFF",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "diagnostic-ON",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p1-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p1-B",
+      "raw": 2,
+      "decoded": 2,
+      "metrics": 2,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p2-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p2-B",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p3-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p3-B",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p4-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p4-B",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p5-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p5-B",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p6-A",
+      "raw": 0,
+      "decoded": 0,
+      "metrics": 0,
+      "canonical_status": "NOT_OBSERVED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "qualification-p6-B",
+      "raw": 1,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "QUALIFIED",
+      "schema": "VALID"
+    },
+    {
+      "run_id": "realtime-60",
+      "raw": 2,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "MISSING",
+      "schema": "VALID"
+    }
+  ],
+  "overhead": {
+    "status": "QUALIFIED",
+    "critical_loss": false,
+    "measurements": {
+      "p95_ns": {
+        "off_median_ns": 300000,
+        "off_mad_ns": 0,
+        "paired_median_increment_ns": 50000,
+        "limit_ns": 1000000,
+        "noisy": false
+      },
+      "wall_ns": {
+        "off_median_ns": 4090950000,
+        "off_mad_ns": 27950000,
+        "paired_median_increment_ns": -91850000,
+        "limit_ns": 204547500,
+        "noisy": false
+      }
+    }
+  },
+  "witness": {
+    "status": "REPRODUCED_UNACCOUNTED_INITIALIZATION_FRAME",
+    "draw_seq": "15",
+    "provider_seq": "32",
+    "capture_seq": "42",
+    "completion_seq": "47",
+    "successful_draw_job": "3",
+    "work_id": "2",
+    "generation": "0",
+    "scene_revision": "0",
+    "actual_operation_present": false,
+    "owner_values": [
+      "1",
+      "1",
+      "2",
+      "11068046444225730969",
+      "11068046444225730969",
+      "1",
+      "0",
+      "1"
+    ],
+    "first_commit_seq": "63043",
+    "first_commit_at_ns": "30845100000",
+    "initial_completion_at_ns": "343800000",
+    "before_state_generation": "0",
+    "before_state_objects": 0,
+    "after_state_generation": "1",
+    "after_state_objects": 1,
+    "raw_completions_accounted_by_legacy_proof": {
+      "run_id": "realtime-60",
+      "raw": 2,
+      "decoded": 1,
+      "metrics": 1,
+      "canonical_status": "MISSING",
+      "schema": "VALID"
+    },
+    "scope": "Read-only fact witness; does not newly qualify or omit the initialization frame"
+  },
+  "new_browser_workers": 0
+}
