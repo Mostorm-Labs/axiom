@@ -1,0 +1,166 @@
+{
+  "schema": "g5-execution-closure-v1",
+  "implementation": {
+    "required_changes": [
+      "Complete the exact checkpoint/archive/restoration step before normal product editing; verify frozen preimages/UR1a retention and preserve all archived UR2/WIP. Do not mix a new UR1 source baseline with unreviewed UR2 changes.",
+      "Record a short implementation design: existing owner/data path, concrete request/result fields and route migration, actual allocation/target verification, lease/retry lifetime and negative-path tests. Ordinary resolved details continue without another approval.",
+      "Implement the private common decision in existing Render and migrate real v4 canonical/full-transient-edit coverage leaves. Keep complete FramePlan validation and cache-hit bypass. Eliminate implicit caller booleans in migrated paths; compatibility wrappers for other routes remain declared and preserve their behavior.",
+      "Use actual allocation kind/context and explicit reasons for GPU, CPU, cache reuse, Pending/terminal. Fix requested-compatible vs actual-target retention keys if applicable. Keep supported GPU allocation pressure resumable; retain explicit bounded CPU reference/export/Raster/unsupported routes.",
+      "Account actual Direct coverage separately and reconcile migrated decisions with actual leaves using existing bounded observations. Do not create a global monitoring system or require whole UR0 closure.",
+      "Run focused correctness/negative/recovery tests and build normal+qualification candidates from accepted prebuilt SDKs. Execute the two frozen functional workers, save all failed-stage cold data before assertions, serve normal candidate on new port, archive and notify."
+    ],
+    "authorized_source_paths": [
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_scene_renderer.cpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/render/src/compact_raster_internal.hpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/tests/render_execution_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "verification/runners/g5/render_execution*",
+      "verification/tests/g5_render_execution*",
+      "verification/tests/test_g5_render_execution*",
+      ".aegis/packages/G5-UR1b-render-execution/**",
+      "runtime/render/tests/render_cache_test.cpp"
+    ],
+    "restoration_only_paths": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/composition/CMakeLists.txt"
+    ],
+    "quarantine_only_paths": [
+      "runtime/composition/tests/eraser_readmission_test.cpp",
+      "verification/runners/g5/eraser_readmission.mjs",
+      "verification/runners/g5/eraser_readmission_runner.py",
+      "verification/tests/g5_eraser_readmission.test.mjs",
+      "verification/tests/test_g5_eraser_readmission.py"
+    ],
+    "forbidden_changes": [
+      "New post-Up admission/History/Scene/sealed/overlay/canonical receipt protocol implementation; completing or renaming suspended UR2.",
+      "Brush/semantic schemas or algorithms, dependency locks/third-party builds, budgets, GPU queue watermarks, new coverage algorithm, new cache/document/History owner or worker threads.",
+      "Public SDK JS/DLL API/ABI/version, SDK exports/package internals exposure, new normal-consumer qualification/debug commands.",
+      "Changing old UR0/UR1/UR2 evidence/artifacts/closed attempt outcomes, old Demo reload/overwrite, source writes during a functional worker, hidden retry/smoke/seed, reset/clean or commit/push."
+    ],
+    "preserve": "All accepted UR1a source changes and existing G5 baseline fixes; all UR2 sources/evidence kept in hash-bound quarantine, no discard."
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true
+  },
+  "tests": {
+    "required": [
+      {
+        "obligation": "U1B-00",
+        "command_or_oracle": "Archive current exact sources plus binary delta/manifest against14ce and accepted UR1. Restore only4frozen preimages and quarantine5new UR2-only source files after archive. Verify every before hash and accepted UR1a files.",
+        "expected_result": "No data/work loss, no reset/clean/branch switch, no UR1a regression; normal new baseline has no active UR2 source or test dependency. Old4283and all evidence remain immutable.",
+        "blocking_reason": "Separate the accepted UR1 baseline from shelved unaccepted UR2."
+      },
+      {
+        "obligation": "U1B-01",
+        "command_or_oracle": "Executable route tests through real FramePlan->SkiaRenderer canonical and renderTransientOverlay, both invoking the decision and consumed allocation result. Static bidirectional route table maps entry->decision->leaf and every changed Raster/makeSurface site->entry.",
+        "expected_result": "Not a decorative wrapper: migrated leaves consume the common result, no caller default-false GPU decision. Explicit KEEP/DEFERRED compatibility routes remain honest; no all-path claim.",
+        "blocking_reason": "Canonical/edit v4 actually use the shared private execution owner."
+      },
+      {
+        "obligation": "U1B-02",
+        "command_or_oracle": "Request/capability/algorithm/composition table plus actual surface classification: GPU-intended allocation returns Raster, GPU allocation fails, CPU oracle/Raster path, cache reuse, unsupported legacy/range, wrong target/context/generation and lost resource. Real Web GPU leaf positive observed in qualification artifact.",
+        "expected_result": "No Raster labeled GPU, no target cache slot keyed only by requested-compatible while storing wrong actual kind/context, reason counters/trace distinguish each. No silent CPU work for a Pending supported GPU interaction.",
+        "blocking_reason": "Decision and actual target/fallback agree."
+      },
+      {
+        "obligation": "U1B-03",
+        "command_or_oracle": "Actual Skia/native canonical/transient reference comparison with v4 transformed/masked/translucent lower-z/mixed kinds atDPR1/2/4, cache hit/miss, wrong basis rejection and cancellation. Public candidate snapshot/Undo/Redo/native oracle on saved S0/S2 fixtures.",
+        "expected_result": "Preserve geometry/material/order/masks and existing independent GPU-AA acceptance; no threshold expansion. Move changes no semantic state, Up commits once, cancel none; existing qualified receipt remains strict.",
+        "blocking_reason": "Existing pixels, document and completion semantics stay correct."
+      },
+      {
+        "obligation": "U1B-04",
+        "command_or_oracle": "Allocator failure/temporary resource denial then recovery with unchanged demand; loss/rebind and stale generation; lease/pending-release cleanup through existing owner. No busy-wait and no complete-history CPU fallback in a supported migrated GPU job.",
+        "expected_result": "Explicit Pending retains needed progress; recovery makes finite progress once resources are available. Unsupported/permanently impossible demand is terminal, not endless Retry. Existing budgets and queue/work limits unchanged.",
+        "blocking_reason": "Pressure/retry is bounded and progress-preserving."
+      },
+      {
+        "obligation": "U1B-05",
+        "command_or_oracle": "Use existing g5 observation/frame-timing mechanisms plus small Render counters, without extra content scans. Reconcile decisions/ReusePixels/coverage/Direct/target allocation outcomes and negative fallback reasons for real tested roots.",
+        "expected_result": "Zero legacy coverageTiles cannot hide Direct. Parent GPU context alone does not assert GPU coverage. No unbounded event buffers, profile/readback/hashing in timed live path, or new public debug/qualification API.",
+        "blocking_reason": "Direct and all migrated leaf work is honestly observable."
+      },
+      {
+        "obligation": "U1B-06",
+        "command_or_oracle": "Relevant DirectReference/FramePlan/cache/coverage/transform/erase/History/receipt tests, new execution-owner tests, affected Node/Python runner tests,120 boundary checks and diff check. Two fixed public browser functional workers: qualification then normal, eachS0/S2 page cases, matching assets and failure buffers.",
+        "expected_result": "All affected correctness checks pass; inherited unrelated failures listed separately. Qualification traces are not performance evidence; normal artifact uses no qualification-only interfaces. Exact artifact/source identity and all attempts preserved.",
+        "blocking_reason": "Focused native/boundary and real Web consumers pass."
+      },
+      {
+        "obligation": "U1B-07",
+        "command_or_oracle": "Hash-bound result, scoped delta, restore/quarantine manifest, routes, tests, real target facts and candidate normal SDK Demo on new unused port; proactively notify control.",
+        "expected_result": "READY_FOR_CONTROL_REVIEW for UR1b scope only; explicit remainingUR1c/UR1d and UR2 blockers. No claim fullUR1/G5/P34/platform/performance PASS or commit/push.",
+        "blocking_reason": "Deliver a reviewable next UR1 slice without restarting UR2."
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "browser_window": {
+    "ids": [
+      "UR1B-Q1",
+      "UR1B-N1"
+    ],
+    "new_browser_starts_max": 2,
+    "concurrency": 1,
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 44,
+    "historical_charged_seconds": 1433,
+    "original_cumulative_cap_seconds": 8370,
+    "new_nominal_seconds_max": 360,
+    "cohort": "Qualification functional actual-target/leaf evidence then normal consumer functional/pixel check. Each uses existingS0/S2 matched checkpoint envelopes (binding1, distinct live vs checkpoint generation), canonical and preselected48Move drag/cancel; no immediate-reerase or UR2 handoff criterion. No newseed/A-Bspeed claim.",
+    "scope": "Qualification trace enabled only in dedicated qualification build with existing mechanisms, no qualification hooks in normal SDK. Keep JS/WASM/resources matching each build. No broadUR0 compiler/admission work.",
+    "safety": "Reserve/log each start and actual ceil duration/cleanup. A hard resource/environment/identity guard stops remaining attempts; independent product cases retain failures. After2no silent extra retries. Save cold buffers/snapshot/state before assertions; use original oracle and fixed AA policy. Source/build/driver frozen during run."
+  },
+  "evidence": {
+    "blocking": [
+      "Exact before/current/quarantine/source identities",
+      "Actual common-root/leaf allocation reason outcomes plus focused correctness/pressure negatives",
+      "Both candidate functional attempts or explicit terminal missing evidence",
+      "Matching normal Demo and result/ledger/cleanup"
+    ],
+    "corroborative": [
+      "Native timing/lookup statistics without full UR1c claim",
+      "HistoricalUR1a and UR2 findings"
+    ],
+    "materialization": "Shared controlled worktree SHA256-bound source delta/result/build facts and raw evidence, no evidence-only commit required."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "U1B-00..07 satisfied for scoped consumers",
+      "Normal new Demo ready, independent qualification vs normal results honestly classified",
+      "Proactive terminal notification delivered or delivery failure recorded"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "REPOSITORY_IDENTITY_OR_PREIMAGE_MISMATCH",
+      "AUTHORITY_SCOPE_CONFLICT",
+      "PRODUCT_CORRECTNESS_REGRESSION",
+      "MISSING_REQUIRED_BUILD_INPUT",
+      "REQUIRED_EVIDENCE_OR_GUARD_FAILURE"
+    ],
+    "behavior": "Preserve checkpoint, valid partial code and all outputs; exact blocker, no wholeUR0 dependency or invented new proof obligations."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "no_extra_approval": "User has authorized reprioritization and sole writer implementation. Do not stop at checkpoint/design/native/build when remaining frozen items can run."
+  }
+}

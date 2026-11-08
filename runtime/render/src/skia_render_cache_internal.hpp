@@ -31,6 +31,7 @@ class SkiaRenderCache final {
     RenderCacheWork work{};
     RenderDamage damage{};
     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {});
+    CompactCoverageTargets& executionTargets() noexcept {coverageTargets_.budget=budget;return coverageTargets_;}
     bool canRetainCompact(const SkCanvas&,const ReferenceTraversalEntry&) const noexcept;
     // Called only after full plan validation. False executes permanent Direct.
     bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true,bool allowBuild=true);

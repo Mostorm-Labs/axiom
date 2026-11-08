@@ -1,0 +1,201 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1a-attribution-r1",
+  "status": "AUTHORIZED_BOUNDED_DIAGNOSIS_ONLY",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "completed_through": "Native-verified UR1a dirty implementation and immutable A/B SDKs retained. First local A attempt failed before exporting phase/state/errors; user reports B slower on separately hand-drawn documents.",
+    "next_action": "Preserve products/artifacts, fix diagnostic failure export, build one common public snapshot fixture and execute this exact new local plan."
+  },
+  "role": "Control freezes minimal attribution proof/P31; adjacent conversation is the sole source writer and executes verification-only changes. Product repair is a successor after attributable evidence.",
+  "authority": {
+    "human": "User reports4281 slower than4280 and requests continued investigation; main control has ongoing authorization for scoped diagnosis and implementation delegation.",
+    "scope": "Diagnose an un-attributed user experience regression on matched documents. No full UR0 dependency, new framework, budget tuning or GPU/product patch.",
+    "existing_refs": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/packages/G5-UR1a-transient-reference/package.json",
+        "sha256": "4684e95bbddc713226581e92a426a6bc9e30ed48eb350cf82668fcdc9360d4be",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-transient-reference/result.json",
+        "sha256": "a325afb2eb42ab3069d31a1e1b206b62036e486eaa213b03ebc9ab2191805f7c",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-transient-reference/A-artifacts.json",
+        "sha256": "7c54a8769c8ba2efb4c6b3deeeb87202d5ecb20cc888c654604eb7430f96482a",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-transient-reference/B-artifacts.json",
+        "sha256": "165f67386c4c657c7d66fed730ed6de3c9a9745eb8629d84b5afed738b904123",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-transient-reference-control-review/result.json",
+        "sha256": "08793f9ff159b2cf2706a756a8df0e57b5d8aa98a2c01ae684ef382f3a10e05b",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": "docs/planning/g5-unified-render/ur0a/fixtures/continuous-30s-v1.json",
+        "sha256": "b604377ff64982570de61bc9d085f1d9c891e89406af715b2aa6711a25572f69",
+        "identity_kind": "local-content-addressed"
+      }
+    ]
+  },
+  "invariants": [
+    "A/B product source, JS/WASM/resources and32/96MiB budgets stay immutable. Exact WASM/source hashes identify them, not identical BuildInfo labels.",
+    "All old failures, UR0/UR1a windows and measurements remain unchanged; this is an independent named diagnosis.",
+    "Same exact snapshot bytes/metadata, viewport/DPR, public input event plan and initial selection/tool/config on A/B.",
+    "Product assertions remain assertions. Case failure may be observed and compared, never recast as PASS or silently skipped."
+  ],
+  "hypotheses_to_distinguish": [
+    "Unmatched hand-authored document point counts, self-intersection or masks explain the apparent regression.",
+    "Removing CPU serialization changes submission cadence or exposes queued GPU/CPU work, affecting feedback or post-Up convergence; do not assume this without observations.",
+    "Immediate-nextDown hits the existing dirty-canonical eraserBegin gate or a different input admission/driver assumption. Actual contacts/tool/state/SDK errors and timing must distinguish these.",
+    "A/B may be equivalent on the matched corpus; a non-reproduction is an honest result, not proof that user feedback is invalid."
+  ],
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "authorized_source_paths": [
+      "verification/runners/g5/transient_reference.mjs",
+      "verification/runners/g5/transient_attribution.mjs",
+      "verification/runners/g5/transient_attribution_runner.py",
+      "verification/runners/g5/transient_attribution_observer.mjs",
+      "verification/runners/g5/transient_attribution.html",
+      "verification/tests/g5_transient_reference.test.mjs",
+      "verification/tests/g5_transient_attribution.test.mjs",
+      "verification/tests/test_g5_transient_attribution.py",
+      ".aegis/packages/G5-UR1a-attribution-r1/**"
+    ],
+    "authorized_outputs": [
+      "out/g5-ur1a-attribution-r1/**",
+      ".aegis/results/G5-UR1a-attribution-r1/**",
+      "verification/evidence/performance/g5-ur1a-attribution-r1/**"
+    ],
+    "required_changes": [
+      "Add failure-safe export of the already collected phases/actual before-afterUp-afterNextDown state, activeContacts/tool, complete SDK onError and page errors. Record immutable failure label and actual predicate value. End observation in finally; expose a read-only diagnostic dump and attempt cold export before close when safe. Never drop a completed earlier phase because a later assertion throws.",
+      "Flush coarse case boundaries and failed state to Node output as well as terminal JSON, so an outer timeout retains last completed progress. Do not log per-Move data across the process boundary or add waits between the measured Up and nextDown.",
+      "Use existing public SDK captureSnapshot/restore. Prepare the common fixture once from A, then restore those exact bytes in fresh isolated pages for every measured case on both artifacts; do not independently redraw it in each variant.",
+      "Prepare S0 with the pinned7200-event v4 stroke plus15 near-overlapping duplicates. Prepare S2 from the same S0 with exactly two accepted local erases, allowing canonical completion between them only during fixture preparation. Save actual snapshot bytes/metadata/hash and object/point/mask facts; do not invent missing identities. If S2 preparation fails, retain why and do not fabricate it.",
+      "Read restore resourceBinding from sdk.resources.list().binding and checkpointDigest from captureSnapshot; use actual document/generation/revision and the existing documented recovery-frontier input. No hardcoded guessed resource/semantic identities. Do not read HEAP or private Runtime in the browser.",
+      "New runner isolates three cases in fresh snapshot-restored pages: plain drag(S0), two erases with immediate nextDown(S0), and masked drag(S2). This lets a failed immediate-input case retain its failure without hiding the independent masked-drag evidence.",
+      "Reuse existing nonintrusive JS/GL observation. Record handler intervals, scheduled-vs-actual event times, actual default-framebuffer content writes/gaps, SDK RAF callback work and post-input convergence. Optionally observe only existing fenceSync/clientWaitSync/deleteSync/finish/readPixels calls, with diagnostic labels and statuses. Never issue new GPU fences, polling, finish/readback or CPU profiles inside timed phases.",
+      "Label fence submit-to-signal-observed elapsed as a completion/polling interval, not pure GPU execution time. GPU coverage selection/internal CPU raster work remains unavailable if not exposed by normal artifacts; never infer it from GPU target or CPU percentage.",
+      "Use existing independent snapshot/native pixel oracle cold, outside timing, for cases that finish canonically. Preserve Undo/Redo checks after successful drag outside timing. Failed/active/cancelled cases retain their own status and any missing oracle; no fake completion.",
+      "Provide a minimal manual compare page using the same S0/S2 fixture and the same frozen A/B public SDKs, on a new unused port. Existing4280/4281 services and user documents remain untouched. The comparison page may expose only public select/hand/partialErase/undo/redo controls; no brush geometry or duplicate semantic owner."
+    ],
+    "frozen_local_plan": {
+      "fixture_input": "Exact current continuous-30s-v1 fixture; round-handdrawn revision4,7200 events,16 objects, same budgets32/96MiB,800x500 logical viewport,DPR2.",
+      "attempts": [
+        "UR1ATTR-SEED-A0",
+        "UR1ATTR-A1",
+        "UR1ATTR-B1",
+        "UR1ATTR-B2",
+        "UR1ATTR-A2"
+      ],
+      "seed": "One fixture-only browser worker through frozen normal A creates/hashes S0/S2 via public APIs and closes. No measured performance is claimed from seed.",
+      "measured_worker_cases": [
+        "plain-drag:S0;48 Move events",
+        "immediate-reerase:S0;two32-Move erases, Up->nextDown planned4ms, no presentation barrier",
+        "masked-drag:S2;48 Move events"
+      ],
+      "isolation": "Fresh SDK/runtime/page per declared case, no mutation shared between cases. All pages remain within their one guarded browser family and are closed sequentially. Page lifecycle is diagnostic provenance, not a synthetic native epoch.",
+      "schedule": "Fixed positions/content timestamps and planned16.666667ms Move cadence for A/B; preserve actual dispatch/lateness and do not wait for prior presentation before next event. Retain all planned events, failed terminal controls and actual delivered count. Do not lower point/copy/mask counts to get green.",
+      "failure_policy": "A product assertion ends that case with explicit failed status, actual data and public cleanup; continue the next independent predeclared case and next variant after cleanup. This is diagnostic continuation, not retry or product PASS. A hard RSS/outer timeout, source/artifact mismatch, unexpected crash or cleanup failure closes this new window and marks remaining rows MISSING. Unavailable S2 is reported; never invented or regenerated as a smaller fixture."
+    },
+    "limits": {
+      "new_browser_workers_max": 5,
+      "concurrency": 1,
+      "outer_seconds_per_worker": 180,
+      "case_deadline_seconds": 40,
+      "rss_mib_per_family": 3072,
+      "new_nominal_seconds_max": 900,
+      "historical_starts": 36,
+      "historical_charged_seconds": 1304,
+      "cumulative_nominal_after_new_plan_seconds": 2204,
+      "original_cap_seconds": 8370,
+      "accounting": "Durably reserve before spawn; charge ceil actual elapsed or full180s if unknown. Keep A0 and all failed starts. No retry, extra smoke/profile/cohort or hidden relocation. Native unit tests disclosed separately. Serving manual pages is not an automated browser attempt."
+    },
+    "required_offline_checks": [
+      "RED: injected nextDown assertion failure exports its actual contact value/state/SDK errors and earlier completed phases; old driver loses these. Keep the original A1 failure unchanged.",
+      "Assert identical snapshot input hashes/metadata/config across all restored cases; stale/foreign metadata and mismatched A/B artifact fail before actions.",
+      "Test case-level product failure vs hard guard failure: product RED remains RED and permits an independent planned B case; resource/source/cleanup failure stops. No duplicate attempt/case or changed count, no automatic retry.",
+      "Assert no new GPU API work or per-event process logging, cold oracle outside timing, and explicit unavailable GPU metrics.",
+      "Run focused local runner tests, public pointer/control contract tests and git diff --check; no new broad native/render suite or full UR0 run."
+    ],
+    "read_only": [
+      "runtime/**",
+      "sdk/**",
+      "all frozen A/B normal SDK artifacts/builds",
+      "old packages/locks/results/attempts/ledgers and UR0 code",
+      "existing shared observers and pixel/semantic oracle implementation"
+    ],
+    "forbidden": [
+      "Product/GPU/budget/Brush/semantic/History/receipt/API change",
+      "New SDK or third-party build",
+      "Whole UR0 reopening or observability framework expansion",
+      "Suppressing activeContacts/input/receipt/pixel assertions to claim improvement",
+      "Dropping failed phases or pretending unavailable CPU/GPU data is0",
+      "Commit/push, retries or extra unplanned browser starts"
+    ],
+    "evidence": {
+      "required": [
+        "Failure-export RED/offline tests",
+        "S0/S2 exact public snapshot/metadata and source/artifact identities",
+        "All five planned attempt statuses, cases, partial data, guards/cleanup/ledger",
+        "Phase-wise A/B raw data and comparisons restricted to equivalent completed phases and correct output",
+        "Bounded causal assessment and minimal next product fix location, or explicit unresolved/non-reproduced result",
+        "Matched-snapshot manual comparison URL and SHA manifest"
+      ],
+      "not_required": [
+        "Complete UR0",
+        "New native identity epochs/renderer counters",
+        "A statistically universal speed conclusion or G5/P34 PASS"
+      ]
+    },
+    "terminal_success": "READY_FOR_CONTROL_REVIEW with attribution packet, all planned attempts accounted and scoped conclusion (including product RED/non-reproduction/unresolved). Preserve old implementation acceptance and browser evidence gaps; do not manufacture a regression cause.",
+    "terminal_blockers": [
+      "Artifact/source divergence",
+      "Fixture snapshot impossible under public contract",
+      "Hard guard or cleanup failure",
+      "Specific authority conflict affecting this slice"
+    ],
+    "continue_until_terminal_state": true,
+    "notify_terminal": {
+      "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "required": true,
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "explicit blocker"
+      ],
+      "include": [
+        "result/package/source/artifact/fixture hashes",
+        "actual contacts/errors plus preserved failed phases",
+        "A/B comparable stage results and uncertainty",
+        "new worker starts/charges/cleanup and manual URL",
+        "minimal proposed product correction with actual supporting evidence; no product edit yet"
+      ]
+    }
+  },
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "continue_until_terminal_state": true
+}

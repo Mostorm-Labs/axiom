@@ -106,6 +106,7 @@ class SkiaRenderer final {
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;
     std::uint64_t rasterizations_ = 0;
+    RenderCacheWork executionWork_;
     struct CompactCache;
     std::shared_ptr<CompactCache> compactCache_;
     CompactWork compactWork_{};

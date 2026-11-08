@@ -8,6 +8,7 @@
 #include "include/core/SkMatrix.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkRegion.h"
+#include "render_execution.hpp"
 #include <array>
 #include <functional>
 
@@ -19,9 +20,15 @@ class CompactCoverageTargets final {
  public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     sk_sp<SkSurface> acquire(SkCanvas&,int width,int height,bool compatible,CompactRasterWork*,bool scalar=false);
+    struct Allocation final {
+        sk_sp<SkSurface> surface;
+        ExecutionRoute outcome=ExecutionRoute::kRejected;
+        ExecutionReason reason=ExecutionReason::kInvalidGeometry;
+    };
+    Allocation acquire(SkCanvas&,int,int,const ExecutionDecision&,CompactRasterWork*,bool scalar=false);
     void clear() noexcept {for(auto& slot:slots_)slot=Slot{};}
  private:
-    struct Slot {sk_sp<SkSurface> surface;resources::ResourceLease lease;bool compatible=false,scalar=false;std::uint64_t used=0;};
+    struct Slot {sk_sp<SkSurface> surface;resources::ResourceLease lease;bool scalar=false;const void* context=nullptr;ExecutionBasis basis{};std::uint64_t used=0;};
     std::array<Slot,8> slots_{};
     std::uint64_t tick_=0;
 };

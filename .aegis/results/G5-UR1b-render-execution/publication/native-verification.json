@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-UR1b-render-execution/build-native",
+      "--target",
+      "axiom_render_execution_tests",
+      "axiom_transient_reference_tests",
+      "axiom_render_direct_reference_tests",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-UR1b-render-execution/build-native",
+      "--output-on-failure",
+      "-R",
+      "^(G5RenderExecution|G5TransientReference|G3DirectReference)$"
+    ],
+    "returncode": 0
+  }
+]

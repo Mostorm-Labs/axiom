@@ -1,0 +1,19 @@
+[
+  {
+    "command": [
+      "python3",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "returncode": 0
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "returncode": 0
+  }
+]

@@ -526,10 +526,13 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
 
 } // namespace
 
+enum class SourceSelection { kComplete, kNavigation };
+enum class SourceEncoding { kNone, kCanonical };
+
 static foundation::Result<ReferenceDrawList> buildSources(
     const FrameState& frame,
     const VisibilityResult& visibility,
-    const RuntimeScene& runtimeScene,bool canonical) {
+    const RuntimeScene& runtimeScene, SourceSelection selection, SourceEncoding encoding) {
     G5_SCOPE(g5Reference,g5::Tag::reference_build,g5::Purpose::none);
 
     if (frame.sceneGeneration != visibility.sceneGeneration ||
@@ -580,9 +583,9 @@ static foundation::Result<ReferenceDrawList> buildSources(
         auto command = commandFor(*record);
         if (!command) return foundation::Result<ReferenceDrawList>::failure(command.error());
         bool fullObject=false;
-        const auto span = canonical ? std::nullopt
+        const auto span = selection == SourceSelection::kComplete ? std::nullopt
                                     : navigationSpan(*record, command.value(), visibility.queryWorldRect,list.diagnostics,fullObject);
-        if (!canonical && (std::holds_alternative<CompactStrokeReferenceCommand>(command.value()) ||
+        if (selection == SourceSelection::kNavigation && (std::holds_alternative<CompactStrokeReferenceCommand>(command.value()) ||
                            std::holds_alternative<BrushStrokeReferenceCommand>(command.value())) &&
             record->geometryChunks.size() > 0U && !span && !fullObject) {
             continue;
@@ -617,8 +620,8 @@ static foundation::Result<ReferenceDrawList> buildSources(
         list.entries.push_back(std::move(entry));
     }
     AXIOM_FRAME_TIMING_END(entriesTiming);
-    if (!canonical) list.visibleRecords = list.entries.size();
-    if(canonical){
+    if (selection == SourceSelection::kNavigation) list.visibleRecords = list.entries.size();
+    if (encoding == SourceEncoding::kCanonical) {
       AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
       G5_SCOPE(g5Encode,g5::Tag::reference_encode,g5::Purpose::none);
       list.canonicalBytes = canonicalBytes(list);
@@ -636,11 +639,15 @@ static foundation::Result<ReferenceDrawList> buildSources(
 
 foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
     const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
-    return buildSources(frame,visibility,scene,true);
+    return buildSources(frame,visibility,scene,SourceSelection::kComplete,SourceEncoding::kCanonical);
+}
+foundation::Result<ReferenceDrawList> DirectReferenceSource::buildTransient(
+    const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
+    return buildSources(frame,visibility,scene,SourceSelection::kComplete,SourceEncoding::kNone);
 }
 foundation::Result<ReferenceDrawList> DirectReferenceSource::buildNavigation(
     const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
-    return buildSources(frame,visibility,scene,false);
+    return buildSources(frame,visibility,scene,SourceSelection::kNavigation,SourceEncoding::kNone);
 }
 
 } // namespace canvas::render

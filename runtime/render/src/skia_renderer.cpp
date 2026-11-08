@@ -3,6 +3,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
 #include "resource_reclaim.hpp"
+#include "render_execution.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -342,6 +343,16 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
         internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+    internal::RenderExecutionScope execution(internal::ExecutionPurpose::kCanonical,plan,
+        *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
+        renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
+    if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
+    if(gpuContext&&!gpu.ready()){
+        const bool permanent=!provider.gpuCompletionService();
+        internal::ExecutionDecision unavailable;
+        execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
+        provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
+    }
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
     if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;
@@ -357,7 +368,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});
-        cache=renderCache_.get();
+        cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
     } catch(const std::bad_alloc&) {clearRenderCache();}
     if(preparation && cache){
         auto* target=acquired.frame.surface->getCanvas();target->save();
@@ -396,15 +407,19 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
         if(prepared==internal::SkiaRenderCache::Preparation::kPending ||
            prepared==internal::SkiaRenderCache::Preparation::kResourcePending){
-            provider.release();return BackendSubmissionResult::retry("exact cache preparation pending");
+            provider.release();return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("exact cache preparation pending");
         }
     }
+    if(!renderCache_){cache=nullptr;execution.unbindTargets();}
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
     const auto result = (preparation && cache && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
     AXIOM_FRAME_TIMING_END(sceneTiming);
+    if(execution.pending()||execution.rejected()){
+        provider.release();return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("coverage target pending");
+    }
     if(result.code==BackendSubmissionCode::kAccepted){
         AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,navigation_snapshot);
         try {
@@ -692,7 +707,7 @@ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneReco
     const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
     return eraseQueries_->query(record,geometry,resourceBudget_,capacity);
 }
-RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
+RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);return result;}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
@@ -723,6 +738,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     const auto validation=internal::validateReferencePlan(plan);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,
+        *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
+        renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
+    if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
     const bool gpuLiveV4=renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;});
     if(gpuLiveV4){
         // Retire obsolete masked material before starting a GPU read epoch.
@@ -740,6 +759,12 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
         internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+    if(gpuContext&&!gpu.ready()){
+        const bool permanent=!provider.gpuCompletionService();
+        internal::ExecutionDecision unavailable;
+        execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
+        provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
+    }
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
     if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;
@@ -752,7 +777,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         renderCache_->sourcePool=sourceRetention_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
-            selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();
+            selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
         if(gpuLiveV4){
             const auto navigation=std::weak_ptr<internal::SkiaNavigationTiles>(navigationTiles_);
             cache->reclaimPreparation=[this,navigation,frame=plan.frame,providerIdentity=&provider](std::size_t bytes){
@@ -768,6 +793,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
             };
         }
     }catch(const std::bad_alloc&){clearRenderCache();}
+    if(!renderCache_){cache=nullptr;execution.unbindTargets();}
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -839,6 +865,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         canvas->restoreToCount(sceneSaveCount);clearRenderCache();
         scene=BackendSubmissionResult::retry("transient scene allocation unavailable");
     }
+    if(execution.pending()||execution.rejected())scene=execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("coverage target pending");
     if (scene.code != BackendSubmissionCode::kAccepted) {
         damageRestore.restore();
         provider.release();

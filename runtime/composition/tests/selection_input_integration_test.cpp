@@ -584,3 +584,27 @@ TEST(SelectionGroupScope, KeepsAndUpdatesGroupOutlineDuringChildDrag) {
     EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[2].y,previewOutline.corners[2].y,0.1F);
     EXPECT_TRUE(c.close());
 }
+
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+#include "canvas/foundation/internal/frame_timing.hpp"
+namespace {
+TEST_F(SelectionInput, TransientMovesDoNotEncodeDiscardedCanonicalBytes) {
+    click(140,130);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,140,130));
+    const auto before=snapshot();
+    namespace timing=foundation::internal::frame_timing;
+    timing::Context observed;
+    const auto previous=timing::active;
+    timing::active=&observed;
+    const bool accepted=pointer(input::PointerPhase::kMove,168,149);
+    timing::active=previous;
+    ASSERT_TRUE(accepted);
+    const auto bytes=observed.counters[static_cast<std::size_t>(timing::Counter::encoded_bytes)];
+    EXPECT_EQ(bytes,0U) << "actual transient Move encoded then discarded canonical bytes";
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+    EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
+    ASSERT_TRUE(pointer(input::PointerPhase::kCancel,168,149));
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+}
+}
+#endif

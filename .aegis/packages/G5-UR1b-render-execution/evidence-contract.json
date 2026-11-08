@@ -1,0 +1,36 @@
+{
+  "schema": "g5-local-evidence-contract-v1",
+  "authorized_outputs": [
+    "out/G5-UR1b-render-execution/**",
+    ".aegis/results/G5-UR1b-render-execution/**",
+    "verification/evidence/performance/g5-ur1b-render-execution/**"
+  ],
+  "quarantine_policy": "Save exact bytes and path/mode/sha plus aggregate/scoped delta before restoring or moving anything. Shelved new test/runner files live in hash-bound source quarantine with a restoration map. Never delete the only copy.",
+  "materialization": "Shared-worktree result.json, source/routes/diff/build/artifact/test/worker manifests and exact hashes. No commit/push required.",
+  "blocking_obligations": [
+    "U1B-00",
+    "U1B-01",
+    "U1B-02",
+    "U1B-03",
+    "U1B-04",
+    "U1B-05",
+    "U1B-06",
+    "U1B-07"
+  ],
+  "notification": {
+    "required": true,
+    "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "explicit terminal blocker"
+    ],
+    "include": [
+      "package/result/source/quarantine/artifact hashes",
+      "actual migrated routes/target outcomes/remainingcompatibility",
+      "tests/faileddata and ledger/cleanup",
+      "normal Demo URL and remainingUR1/UR2"
+    ],
+    "failure": "Preserve exact notification/tool error; never claim delivery without response."
+  }
+}

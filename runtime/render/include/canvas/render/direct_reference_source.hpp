@@ -12,6 +12,11 @@ class DirectReferenceSource final {
         const FrameState& frame,
         const VisibilityResult& visibility,
         const RuntimeScene& runtimeScene);
+    // Complete frame-local sources, before temporary transforms/masks are
+    // applied. Unlike navigation this never culls or truncates commands; unlike
+    // canonical build it produces no serialized bytes or canonical digest.
+    [[nodiscard]] static foundation::Result<ReferenceDrawList> buildTransient(
+        const FrameState&, const VisibilityResult&, const RuntimeScene&);
     // Navigation has no canonical digest/receipt. It shares command mapping
     // without serializing every confirmed sample on each tile request.
     [[nodiscard]] static foundation::Result<ReferenceDrawList> buildNavigation(

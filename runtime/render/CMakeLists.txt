@@ -167,7 +167,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_sources(canvas_runtime_render PRIVATE src/skia_text_resources.cpp)
     target_sources(canvas_runtime_render PRIVATE src/brush_outline_skia_path.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
-    target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp src/render_execution.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
@@ -206,6 +206,9 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_execution_tests tests/render_execution_test.cpp)
+    target_link_libraries(axiom_render_execution_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    add_test(NAME G5RenderExecution COMMAND axiom_render_execution_tests)
     add_executable(axiom_erase_hit_tests tests/erase_hit_test.cpp)
     target_link_libraries(axiom_erase_hit_tests PRIVATE canvas_runtime_render)
     add_test(NAME G5EraseExactHit COMMAND axiom_erase_hit_tests)
@@ -582,6 +585,16 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     add_test(NAME G3DirectReference COMMAND axiom_render_direct_reference_tests)
 
+    if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+        add_executable(axiom_transient_reference_tests tests/transient_reference_test.cpp)
+        target_link_libraries(axiom_transient_reference_tests PRIVATE
+            canvas_runtime_render canvas_runtime_ink CanvasSkia::Skia)
+        target_include_directories(axiom_transient_reference_tests PRIVATE
+            ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+        target_compile_features(axiom_transient_reference_tests PRIVATE cxx_std_20)
+        add_test(NAME G5TransientReference COMMAND axiom_transient_reference_tests)
+    endif()
+
     add_executable(axiom_render_frame_orchestration_tests
         tests/frame_orchestration_test.cpp)
     target_link_libraries(axiom_render_frame_orchestration_tests
@@ -629,6 +642,14 @@ endif()
 
 if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION AND NOT EMSCRIPTEN)
   if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(g5_transient_reference_component
+      ${PROJECT_SOURCE_DIR}/verification/runners/g5/native/transient_reference.cpp)
+    target_link_libraries(g5_transient_reference_component PRIVATE
+      canvas_runtime_render canvas_runtime_ink)
+    target_include_directories(g5_transient_reference_component PRIVATE
+      ${PROJECT_SOURCE_DIR}/runtime/semantic/src
+      ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+    target_compile_features(g5_transient_reference_component PRIVATE cxx_std_20)
     add_executable(axiom_ur0_fixture_oracle
       ${PROJECT_SOURCE_DIR}/verification/runners/g5/ur0/fixture_oracle.cpp
       ${PROJECT_SOURCE_DIR}/runtime/ink/src/compact_brush_session.cpp

@@ -1,0 +1,76 @@
+["node", "--test", "verification/tests/g5_render_execution.test.mjs", "verification/tests/g5_transient_reference.test.mjs", "verification/tests/g5_transient_attribution.test.mjs"]
+TAP version 13
+# Subtest: UR1b frozen endpoints exclude suspended UR2 flow
+ok 1 - UR1b frozen endpoints exclude suspended UR2 flow
+  ---
+  duration_ms: 0.770125
+  ...
+# Subtest: cold transaction preserves all available stages before a failed pixel predicate
+ok 2 - cold transaction preserves all available stages before a failed pixel predicate
+  ---
+  duration_ms: 0.456541
+  ...
+# Subtest: cold capture failure preserves its completed prefix
+ok 3 - cold capture failure preserves its completed prefix
+  ---
+  duration_ms: 0.226833
+  ...
+# Subtest: a nextDown product failure preserves actual predicate, prior phase and SDK error
+ok 4 - a nextDown product failure preserves actual predicate, prior phase and SDK error
+  ---
+  duration_ms: 0.551916
+  ...
+# Subtest: successful action retains output and read-only diagnostic export
+ok 5 - successful action retains output and read-only diagnostic export
+  ---
+  duration_ms: 0.292666
+  ...
+# Subtest: restored live semantic clock is independent of source and external checkpoint clocks
+ok 6 - restored live semantic clock is independent of source and external checkpoint clocks
+  ---
+  duration_ms: 0.530875
+  ...
+# Subtest: caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+ok 7 - caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+  ---
+  duration_ms: 0.555875
+  ...
+# Subtest: consumer module promise waits for deliberately delayed installation
+ok 8 - consumer module promise waits for deliberately delayed installation
+  ---
+  duration_ms: 0.249042
+  ...
+# Subtest: only exact same snapshot and complete metadata may enter measured cases
+ok 9 - only exact same snapshot and complete metadata may enter measured cases
+  ---
+  duration_ms: 0.143
+  ...
+# Subtest: optional GPU wrappers only forward preexisting calls once and label polling interval
+ok 10 - optional GPU wrappers only forward preexisting calls once and label polling interval
+  ---
+  duration_ms: 0.33775
+  ...
+# Subtest: no per-Move process logging, no timed readback and cold work is separate
+ok 11 - no per-Move process logging, no timed readback and cold work is separate
+  ---
+  duration_ms: 3.484708
+  ...
+# Subtest: local timings retain a long handler and actual content submission gaps
+ok 12 - local timings retain a long handler and actual content submission gaps
+  ---
+  duration_ms: 1.150416
+  ...
+# Subtest: missing real content writes cannot be reported as a zero submission gap
+ok 13 - missing real content writes cannot be reported as a zero submission gap
+  ---
+  duration_ms: 0.2015
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64.478042

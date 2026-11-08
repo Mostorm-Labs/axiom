@@ -1,0 +1,272 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1a-transient-reference",
+  "status": "AUTHORIZED_SCOPED_PRODUCTION_OPTIMIZATION",
+  "profile": "standard, isolated optimization slice",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "a00dc4a2d4b4ad3a5ea1353d44794228a8355ca7",
+    "completed_through": "UR0a accepted, UR0b partial; verification-only dirty work preserved. No product change for this slice yet.",
+    "next_action": "Close current sole-writer tooling checkpoint, materialize this package unchanged, capture a matched pre-edit normal SDK and execute this isolated slice."
+  },
+  "role": "Control thread owns P30/P31 and independent review; adjacent thread owns implementation under this frozen package.",
+  "authority": {
+    "human": "User correction: stop blocking all performance changes on full UR0; revise dependencies and dispatch an independently verifiable product slice now.",
+    "policy_path": "progress-policy.md",
+    "parent_design": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+    "scope": "Only discarded transient reference encoding, already identified in R3. No broader UR1 or GPU architecture authorization.",
+    "preserve": "All prior UR0 locks, evidence and closed failure states; semantic and SDK authority unchanged."
+  },
+  "scope_and_api": {
+    "owner": "CanvasEditingRuntime::presentTransientOverlayFrame -> DirectReferenceSource -> FramePlan -> existing SkiaRenderer/provider",
+    "command_commit_path": "Existing Runtime/OperationEngine/Scene/History/presentation owner remains unchanged.",
+    "api_impact": "Private Render construction API only; no public JS/DLL API, ABI, SDK version or package export change.",
+    "source_finding": "DirectReferenceSource::buildSources currently couples complete source and canonical encoding in one bool. presentTransientOverlayFrame calls build(), modifies commands, then clears bytes/digest. buildNavigation(false) also selects/drops chunks, so it cannot replace the transient call."
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "required_changes": [
+      "Separate full-command construction from optional canonical serialization. Add a clearly named internal full-source/no-encoding builder; use it only in presentTransientOverlayFrame.",
+      "Canonical build() output, digest sensitivity, errors and identity validation stay unchanged. Navigation filtering and chunk behavior stay unchanged.",
+      "Preserve all transient entries and order, immutable payload sharing, transforms, clip, properties, live/permanent masks, opacity and composition. Do not use buildNavigation as a shortcut.",
+      "Remove redundant clear/discard operations in that transient function if appropriate; do not expand into canonical-path cleanup, cache, GPU, mask or Scene redesign.",
+      "Produce minimal matched before/after evidence, start matched baseline A and candidate B normal Web SDK Demos on two unused ports, and notify control with both URLs and test instructions.",
+      "Copy progress-policy.md to docs/planning/g5-unified-render/optimization-slices-r1.md when materializing this new package."
+    ],
+    "authorized_source_paths": [
+      "runtime/render/include/canvas/render/direct_reference_source.hpp",
+      "runtime/render/src/direct_reference_source.cpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/render/tests/direct_reference_source_test.cpp",
+      "runtime/render/tests/transient_reference_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/composition/tests/public_selection_input_test.cpp",
+      "runtime/composition/tests/selection_input_integration_test.cpp",
+      "runtime/composition/tests/ink_v2_runtime_test.cpp",
+      "verification/runners/g5/transient_reference.mjs",
+      "verification/runners/g5/transient_reference_runner.py",
+      "verification/runners/g5/native/transient_reference.cpp",
+      "verification/runners/g5/native/CMakeLists.txt",
+      "verification/tests/g5_transient_reference.test.mjs",
+      "verification/tests/test_g5_transient_reference.py",
+      ".aegis/packages/G5-UR1a-transient-reference/**",
+      "docs/planning/g5-unified-render/optimization-slices-r1.md"
+    ],
+    "authorized_outputs": [
+      "out/g5-ur1a-transient-reference/**",
+      ".aegis/results/G5-UR1a-transient-reference/**",
+      "verification/evidence/performance/g5-ur1a-transient-reference/**"
+    ],
+    "implementation_steps": [
+      "End the current tooling source-write checkpoint. Preserve its result or precise independent blocker. Do not expand that tooling repair before starting this slice.",
+      "Read the canonical/digest consumers and freeze the local driver; preserve a matching pre-edit normal Release Web SDK and exact source/build/artifact facts before modifying product sources. Do not reset/checkout the controlled branch.",
+      "Record a RED mechanism case showing real unwanted encoded bytes on the old complete transient construction, not merely a missing new-method compilation failure.",
+      "Implement the narrow source-mode split and caller change; run native command/pixel/state regressions and the native component comparison.",
+      "Build the matched candidate normal Release SDK with the same dependency/toolchain/options/budgets. Build Axiom only, using accepted prebuilt Semantic and Skia SDKs.",
+      "Run the four fixed local browser workers below after both artifacts and the common driver are frozen. Keep source unchanged during execution. No UR0 compiler/admission prerequisite.",
+      "Start candidate Demo on an unused local port, leave existing user demos intact, archive results and proactively notify control."
+    ],
+    "frozen_verification": {
+      "mechanism": {
+        "failure_mode": "Every transient frame serializes and hashes entire long-stroke histories, then discards the results.",
+        "oracle": "Old actual complete build has nonzero encoding. New full transient builder and actual transient caller produce no canonical bytes/digest; canonical build retains the same golden bytes/digest and mutation sensitivity.",
+        "criterion": "Zero discarded transient encoding, with positive canonical encoding and unchanged output.",
+        "blocking": true
+      },
+      "commands_and_pixels": {
+        "failure_mode": "A no-encoding shortcut drops geometry, order or mask semantics, especially moved/offscreen chunks or translucent lower-z content.",
+        "oracle": "Compare full canonical and transient command entries/identities/geometry/clip/properties/masks/payload ownership; render both through actual existing Skia helpers and compare pixels. Include translated/rotated/scaled v4, moved/far chunks, masks, lower-z opacity and mixed kinds at DPR1/2/4. Both reject stale frame/visibility/Scene inputs. Retain navigation regression.",
+        "criterion": "Only bytes/digest differ; complete command and pixel equivalence. No tolerance expansion.",
+        "blocking": true
+      },
+      "state_history_receipt": {
+        "failure_mode": "Temporary feedback mutates document, changes terminal commit/cancel or produces false completion.",
+        "oracle": "Existing owner integration tests plus public-root browser checks: Move leaves generation/Operation unchanged; Up one commit; cancel zero commit; activeContacts0; presentedGeneration==generation; Undo/Redo state/pixel roundtrip. Final committed snapshot independently checked with existing native reference outside timing.",
+        "criterion": "Preserve current semantic/History/receipt contract; no new canonical owner.",
+        "blocking": true
+      },
+      "comparison": {
+        "failure_mode": "A performance claim uses mismatched artifacts, only RAF, hidden retries or readback/profile overhead.",
+        "oracle": "Native isolated old-canonical/new-transient stage comparison and four matched normal SDK browser runs in ABBA order. Record all measurements and actual artifact/source facts. No UR0 trace qualification or repaired startup reader dependency.",
+        "criterion": "Exact identity and honest raw/accounting are required. Report p50/p95/max and worst submission gap, handler/Up/nextDown/canonical waits separately. No invented universal speed threshold or statistical/G5 PASS from two samples per version.",
+        "blocking": "Misidentification/dishonest results block. Slow/noisy timing or an environment/tool failure limits the affected performance conclusion; retain safe implementation and native correctness results."
+      }
+    },
+    "required_checks": [
+      "Mechanism RED and corrected no-encoding assertion through the actual transient call or existing diagnostic seam.",
+      "Full command/native Skia pixel and negative identity coverage above.",
+      "Affected G3DirectReference/G3FrameOrchestration, existing Skia cache/handoff/selection/transform/erase/ink-runtime and History tests. Resolve exact existing CTest names locally; new unrelated baseline failures are reported separately.",
+      "Public Web static/contract tests, local runner tests, the existing120 runtime boundary checks and git diff --check.",
+      "Native stage comparison and all four browser rows attempted or precisely marked MISSING after a guard failure, without hidden retries."
+    ],
+    "not_required": [
+      "Complete UR0b or UR0c, all-path counters, any new full UR0 matrix",
+      "Whole native CTest with known unrelated inherited failures",
+      "Other-platform hardware evidence or 100K/1M final certification"
+    ],
+    "local_workload": {
+      "fixture": "Exact pinned continuous-30s-v1 round-handdrawn v4 public input; no JS stroke geometry authority.",
+      "native_copies": [
+        1,
+        8,
+        16,
+        32
+      ],
+      "browser_copies": 16,
+      "browser_dpr": 2,
+      "browser_each_run": [
+        "Create original long stroke plus15 nearly overlapping duplicates, with identical input plan/seed/config.",
+        "Plain selected drag with48 Move opportunities, no document mutation during Move.",
+        "Two fixed local erases; separately record Up and immediate nextDown.",
+        "Masked selected drag with48 Move opportunities plus live local erase feedback.",
+        "Cold final canonical pixel/reference, cancel and Undo/Redo checks outside timed intervals."
+      ],
+      "budgets": "Same current normal Demo defaults on A and B; record exact values. No budget sweep or budget change.",
+      "timing": "Existing public callbacks/handlers and actual GL default-framebuffer writes; keep readbacks, screenshots, native oracle and profiles outside timed intervals. Stage/native timings are not physical input-to-photon.",
+      "scope_limit": "Pure-stroke Web comparison isolates the encoding cost. Native mixed/DPR coverage does not certify the whole mixed-browser matrix."
+    },
+    "sampling": {
+      "namespace": "G5-UR1a-local, independent of CLOSED UR0 windows",
+      "planned_ids": [
+        "UR1A-A1",
+        "UR1A-B1",
+        "UR1A-B2",
+        "UR1A-A2"
+      ],
+      "concurrency": 1,
+      "outer_seconds_per_worker": 180,
+      "process_family_rss_mib": 3072,
+      "new_browser_starts_max": 4,
+      "new_nominal_seconds_max": 720,
+      "historical_starts": 35,
+      "historical_charged_seconds": 1276,
+      "original_cumulative_cap_seconds": 8370,
+      "accounting": "Reserve each full limit before start; record actual ceil elapsed, failure and cleanup. Unknown interruption charged full reservation. Keep old35/1276, new four nominal720 yields1996 below original cap. Native units/components separately disclosed. No extra browser smoke/probe/retry or fixture reduction.",
+      "stop": "A guard/environment/tool stop cleans owned processes and marks remaining rows MISSING. It does not authorize another unrelated harness project. A product pixel/semantic/identity regression blocks candidate acceptance."
+    },
+    "forbidden": [
+      "Runtime/SDK public contract, semantic/Brush algorithm/History/receipt mutation, second renderer or canonical owner",
+      "Changing GPU strategy, resource budget, Scene/cache/mask architecture, canonical or navigation behavior",
+      "Changes to sdk/**, dependency locks, third-party rebuilds or SDK version/release",
+      "Changing old UR0 code/locks/results/windows, relabelling failed evidence, a new UR0 sample window",
+      "Uncontrolled source writes during sampling, hidden retries, commit or push, any whole-UR0/G5/P34/platform PASS"
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "Exact pre-edit and candidate source/build/JS/WASM/resource hashes and scoped diff",
+        "Targeted mechanism/command/pixel/semantic/History/receipt checks",
+        "All local attempts, raw measurements, guards/cleanup or precise missing evidence"
+      ],
+      "corroborative": [
+        "Whole UR0 diagnostics",
+        "Additional profiling",
+        "Broad final matrix"
+      ],
+      "materialization": "Exact result/dirty source, raw outputs, build facts and source delta in a SHA256 manifest-bound shared-worktree bundle. No evidence-only commit required."
+    },
+    "terminal_success": {
+      "status": "READY_FOR_CONTROL_REVIEW",
+      "all_of": [
+        "Narrow implementation and targeted native correctness pass",
+        "Local before/after attempts accounted, performance conclusion honestly limited by observed data",
+        "Matched baseline A and candidate B normal Web Demos available on unused ports, with identical manual reproduction steps.",
+        "Control notification sent, without waiting for complete UR0"
+      ]
+    },
+    "terminal_blockers": [
+      "Product correctness/identity regression",
+      "No matched product build",
+      "Required native correctness environment failure",
+      "Specific authority/scope conflict affecting this slice"
+    ],
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "no_extra_approval": "Resolved P31 preflight, whole UR0 debt or user relay must not cause an intermediate stop."
+    },
+    "notify_terminal": {
+      "required": true,
+      "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit blocker"
+      ],
+      "contents": [
+        "Package/result/source/artifact hashes",
+        "Actual tests and paired timing results/findings",
+        "Demo URL and exact artifact root",
+        "Sampling counts/charges/cleanup and remaining UR0 debt"
+      ],
+      "delivery_failure": "Save exact notification and tool error; never pretend delivered."
+    }
+  },
+  "materialize_to": ".aegis/packages/G5-UR1a-transient-reference/",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "continue_until_terminal_state": true,
+  "trusted_input_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/direct_reference_source.cpp",
+      "sha256": "8ee43b4ff9753c8cfd53b2a2a398de1351459e96181d5c0bdc79f25648b8cda0",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/direct_reference_source.hpp",
+      "sha256": "522eddef745414dac90bd07cee35a1a26fbbfcb12371fc8de1b95f54289a6f0d",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "590f1f4a4a88db990a7d9770632be5f3f56d12c81209cb3925f2c574e00b2146",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "progress_policy_ref": {
+    "path": "progress-policy.md",
+    "sha256": "45cf907c6b0e40e0c0e4a469876b8b127b8825c26e8f12005178b777933d482b"
+  }
+}

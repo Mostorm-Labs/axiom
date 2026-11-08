@@ -44,6 +44,13 @@ struct RenderPreparationBudget final {
     std::size_t maxCoverageSteps=4096;
 };
 struct RenderCacheWork final {
+    // Private Render execution facts: actual targets/Direct are not inferred
+    // from a requested-compatible bool or the parent GPU context.
+    std::uint64_t executionRasterRoot=0,executionPolicyCpu=0,executionRangeCpu=0,executionLegacyCpu=0;
+    std::uint64_t executionGpuDecisions=0,executionCpuDecisions=0,executionCompatibility=0;
+    std::uint64_t executionGpuAllocations=0,executionCpuAllocations=0,executionTargetReuses=0;
+    std::uint64_t executionGpuTiles=0,executionCpuTiles=0,executionDirectGpuTiles=0,executionDirectCpuTiles=0;
+    std::uint64_t executionPending=0,executionRejected=0,executionAllocationDenials=0,executionTargetMismatches=0,executionPixelReuses=0;
     // Actual destination area admitted for continuous local-erase feedback.
     std::uint64_t eraseFullFrames=0,eraseDamageFrames=0,eraseDamagePixels=0;
     std::uint64_t bodyTileBuilds=0,bodyTileHits=0,maskTileUpdates=0,maskPrimitiveDraws=0,maskTileResets=0;

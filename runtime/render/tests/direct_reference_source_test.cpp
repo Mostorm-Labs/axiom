@@ -342,6 +342,10 @@ void emitsNineKindsInVisibilityOrder() {
     }
     assert(!list.canonicalBytes.empty());
     assert(!list.digest.empty());
+    // Frozen from the pre-UR1a complete nine-kind construction. Transient
+    // serialization removal must not alter canonical encoding or its digest.
+    assert(list.canonicalBytes.size() == 2932U);
+    assert(list.digest == "fnv1a64:e6bc41c591b52e08");
     std::cout << "{\"nine_kind_entries\":9,\"group_zero_pixels\":true,\"order_exact\":true,"
               << "\"canonical_bytes\":" << list.canonicalBytes.size() << ",\"digest\":\""
               << list.digest << "\",\"world_to_view\":[" << list.worldToView.a << ","

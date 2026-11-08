@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><title>Axiom 同文档 A/B 比较</title>
+<style>body{font:15px system-ui;margin:16px}#mount{width:800px;height:500px;border:1px solid #ccd;position:relative}button,select{font:inherit;margin:4px;padding:6px}pre{white-space:pre-wrap;max-width:1000px}</style>
+<p>A：4280 原版；B：4281 候选。加载完全相同的快照。切换版本或文档会新建 Runtime，手动修改不会保存。</p>
+<label>版本 <select id="variant"><option>A</option><option>B</option></select></label>
+<label>文档 <select id="fixture"><option>S0</option><option>S2</option></select></label>
+<button id="reload">重新加载</button>
+<span id="tools"><button data-tool="select">选择</button><button data-tool="hand">平移</button><button data-tool="partialEraser">局部擦除</button><button data-tool="undo">撤销</button><button data-tool="redo">重做</button></span>
+<div id="mount"></div><pre id="status">加载中</pre>
+<script type="module">
+import '/consumer.mjs';
+const params=new URLSearchParams(location.search),variant=document.getElementById('variant'),fixture=document.getElementById('fixture'),status=document.getElementById('status');
+variant.value=params.get('variant')==='B'?'B':'A';fixture.value=params.get('fixture')==='S2'?'S2':'S0';
+const reload=()=>{location.search=new URLSearchParams({variant:variant.value,fixture:fixture.value});};
+variant.onchange=reload;fixture.onchange=reload;document.getElementById('reload').onclick=reload;
+try{const fixtures=await (await fetch('/fixtures/fixtures.json')).json();const input=fixtures[fixture.value];if(!input)throw Error('该快照准备失败，未生成替代文档');
+  const init=await ur1attr.init({variant:variant.value,restore:input,manual:true});status.textContent=JSON.stringify({variant:variant.value,fixture:fixture.value,sha256:input.sha256,objects:init.state.objects,generation:init.state.generation,dpr:init.dpr},null,2);
+  for(const b of document.querySelectorAll('[data-tool]'))b.onclick=async()=>{try{await ur1attr.control(b.dataset.tool);status.textContent=JSON.stringify({variant:variant.value,fixture:fixture.value,sha256:input.sha256,...ur1attr.dump().state.state},null,2);}catch(e){status.textContent=String(e);}};
+}catch(e){status.textContent=String(e);}
+</script></html>

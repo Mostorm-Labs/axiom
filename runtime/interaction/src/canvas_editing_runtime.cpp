@@ -5117,7 +5117,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
   }
-  auto references = render::DirectReferenceSource::build(
+  auto references = render::DirectReferenceSource::buildTransient(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
   applyAppearancePreview(references.value());
@@ -5206,9 +5206,6 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
           entry.command = render::ShapeReferenceCommand{*shape, layout, selected};
         }
       }
-      G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
-    references.value().canonicalBytes.clear();
-      references.value().digest.clear();
     }
   }
   // Apply the same Sticky-as-Shape presentation to the transient drag frame.
@@ -5230,9 +5227,6 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
         parentEntry.command = render::StickyReferenceCommand{
             *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
         childEntry.command = render::GroupReferenceCommand{};
-        G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
-    references.value().canonicalBytes.clear();
-        references.value().digest.clear();
         break;
       }
     }
@@ -5241,8 +5235,6 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   if(objectEraseFeedbackActive()){
     for(auto& entry:references.value().entries)
       for(const auto& [pointer,ids]:objectEraseCandidates_){(void)pointer;if(ids.contains(entry.record.objectId)){entry.presentationOpacity=.2F;break;}}
-    G5_OBSERVE(g5::Kind::Counter,g5::Tag::reference_encode,false,2,references.value().canonicalBytes.size());
-    references.value().canonicalBytes.clear();references.value().digest.clear();
   }
   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) return false;

@@ -1,0 +1,90 @@
+{
+  "schema": "g5-scoped-verification-v1",
+  "obligations": [
+    {
+      "id": "U1B-00",
+      "requirement": "Separate the accepted UR1 baseline from shelved unaccepted UR2.",
+      "oracle": "Archive current exact sources plus binary delta/manifest against14ce and accepted UR1. Restore only4frozen preimages and quarantine5new UR2-only source files after archive. Verify every before hash and accepted UR1a files.",
+      "acceptance": "No data/work loss, no reset/clean/branch switch, no UR1a regression; normal new baseline has no active UR2 source or test dependency. Old4283and all evidence remain immutable.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-01",
+      "requirement": "Canonical/edit v4 actually use the shared private execution owner.",
+      "oracle": "Executable route tests through real FramePlan->SkiaRenderer canonical and renderTransientOverlay, both invoking the decision and consumed allocation result. Static bidirectional route table maps entry->decision->leaf and every changed Raster/makeSurface site->entry.",
+      "acceptance": "Not a decorative wrapper: migrated leaves consume the common result, no caller default-false GPU decision. Explicit KEEP/DEFERRED compatibility routes remain honest; no all-path claim.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-02",
+      "requirement": "Decision and actual target/fallback agree.",
+      "oracle": "Request/capability/algorithm/composition table plus actual surface classification: GPU-intended allocation returns Raster, GPU allocation fails, CPU oracle/Raster path, cache reuse, unsupported legacy/range, wrong target/context/generation and lost resource. Real Web GPU leaf positive observed in qualification artifact.",
+      "acceptance": "No Raster labeled GPU, no target cache slot keyed only by requested-compatible while storing wrong actual kind/context, reason counters/trace distinguish each. No silent CPU work for a Pending supported GPU interaction.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-03",
+      "requirement": "Existing pixels, document and completion semantics stay correct.",
+      "oracle": "Actual Skia/native canonical/transient reference comparison with v4 transformed/masked/translucent lower-z/mixed kinds atDPR1/2/4, cache hit/miss, wrong basis rejection and cancellation. Public candidate snapshot/Undo/Redo/native oracle on saved S0/S2 fixtures.",
+      "acceptance": "Preserve geometry/material/order/masks and existing independent GPU-AA acceptance; no threshold expansion. Move changes no semantic state, Up commits once, cancel none; existing qualified receipt remains strict.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-04",
+      "requirement": "Pressure/retry is bounded and progress-preserving.",
+      "oracle": "Allocator failure/temporary resource denial then recovery with unchanged demand; loss/rebind and stale generation; lease/pending-release cleanup through existing owner. No busy-wait and no complete-history CPU fallback in a supported migrated GPU job.",
+      "acceptance": "Explicit Pending retains needed progress; recovery makes finite progress once resources are available. Unsupported/permanently impossible demand is terminal, not endless Retry. Existing budgets and queue/work limits unchanged.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-05",
+      "requirement": "Direct and all migrated leaf work is honestly observable.",
+      "oracle": "Use existing g5 observation/frame-timing mechanisms plus small Render counters, without extra content scans. Reconcile decisions/ReusePixels/coverage/Direct/target allocation outcomes and negative fallback reasons for real tested roots.",
+      "acceptance": "Zero legacy coverageTiles cannot hide Direct. Parent GPU context alone does not assert GPU coverage. No unbounded event buffers, profile/readback/hashing in timed live path, or new public debug/qualification API.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-06",
+      "requirement": "Focused native/boundary and real Web consumers pass.",
+      "oracle": "Relevant DirectReference/FramePlan/cache/coverage/transform/erase/History/receipt tests, new execution-owner tests, affected Node/Python runner tests,120 boundary checks and diff check. Two fixed public browser functional workers: qualification then normal, eachS0/S2 page cases, matching assets and failure buffers.",
+      "acceptance": "All affected correctness checks pass; inherited unrelated failures listed separately. Qualification traces are not performance evidence; normal artifact uses no qualification-only interfaces. Exact artifact/source identity and all attempts preserved.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    },
+    {
+      "id": "U1B-07",
+      "requirement": "Deliver a reviewable next UR1 slice without restarting UR2.",
+      "oracle": "Hash-bound result, scoped delta, restore/quarantine manifest, routes, tests, real target facts and candidate normal SDK Demo on new unused port; proactively notify control.",
+      "acceptance": "READY_FOR_CONTROL_REVIEW for UR1b scope only; explicit remainingUR1c/UR1d and UR2 blockers. No claim fullUR1/G5/P34/platform/performance PASS or commit/push.",
+      "evidence_required": [
+        "actual test/route/target observation",
+        "exact source and artifact binding"
+      ]
+    }
+  ],
+  "red_precondition": {
+    "required": true,
+    "mechanism": "Execute an old-behavior allocation/route case that demonstrates requested GPU!=actual target or missing actual Direct accounting through a real helper. A missing new-method compile error is not the RED. Use qualification-only injection of allocation failure if necessary; do not fake real GPU positive evidence."
+  },
+  "old_debt": "UR1a relative browser speed and shelvedUR2 nextDown/navigation/visibility failures are preserved, not entry requirements of this private Render slice."
+}

@@ -1,3 +1,4 @@
+#include "render_execution.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
@@ -374,7 +375,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             if(streamFrame_){
                 if(exhausted())return yield();
                 composite_->getCanvas()->drawImage(found->second.image,float(found->second.bounds.left()),float(found->second.bounds.top()));
-                found->second.used=tick_;++work.hits;++steps;
+                found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();++steps;
             }
             continue;
         }
@@ -737,7 +738,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
         G5_CANVAS(canvas,true);
         G5_OBSERVE(g5::Kind::Stage,g5::Tag::cached_pixels,true,g5::word(source.record.objectId,0),g5::word(source.record.objectId,1),targetEpoch_,plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value());
         if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(found->second.image,static_cast<float>(found->second.bounds.left()),static_cast<float>(found->second.bounds.top()));canvas.restore();}
-        found->second.used=tick_;++work.hits;return true;
+        found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();return true;
     }
     // Damage feedback can reuse a complete resident source, but a miss is
     // painted directly under the small destination clip. Never cycle the LRU

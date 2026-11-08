@@ -1,0 +1,64 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1b-render-execution",
+  "status": "AUTHORIZED_USER_REPRIORITIZED_UR1_SLICE",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "local",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1b-render-execution",
+    "content_identity": "package.json SHA256 supplied in handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "checkpoint_ref": {
+      "path": ".aegis/results/G5-UR2a-post-up-repair-r1/checkpoint.json",
+      "sha256": "159c87d22ef3a79c89f33fa8fcdadd3a92d65cc733933a0b8f98cd0d02279bdb",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "UR1a accepted scoped work retained; UR2 repair safely stopped by user after4toolWIP,0newbrowser; source baseline separation not yet executed.",
+    "next_action": "Archive/reconcile checkpoint, restore4UR1 preimages/quarantine5UR2only sources, verify preservedUR1a, then implement real shared Render execution slice."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "130b283ed2a378c121b3fa098db5847fecbce8b15b25711570d25aceea4f8099"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f1af890600760f5b0b21870a67fc66e4a7604824ed1f151695130898be90eb7f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5227988dc9122923b9a79061b67e4171a4c914777438487c8ba2e7560b7efa2b"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "19212b88be69d7aa3552259df13fbf3431fef712ba9c46fe1262f0f3b9fbbff2"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "3eb6808ab6a663f7208deff59193cb70b8d25be31c474bfba9fb68e335f61055"
+  },
+  "supersedes_future_execution_only": [
+    {
+      "path": ".aegis/packages/G5-UR2a-post-up-repair-r1/package.json",
+      "sha256": "f16295bda4c24bef9bcc2e518c3a8bdc2d3655ebadd2fe29d0831071ff21251a",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03"
+}

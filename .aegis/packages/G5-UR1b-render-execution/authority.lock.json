@@ -1,0 +1,110 @@
+{
+  "status": "current_scoped_user_reprioritization",
+  "human": "User explicitly asks to stop premature UR2 expansion, preserve/cancel its current work safely, and switch the workflow back to UR1a and subsequent UR1 prerequisites.",
+  "authority_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "design_refs": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "accepted_UR1a": {
+    "path": ".aegis/results/G5-UR1a-transient-reference-control-review/result.json",
+    "sha256": "08793f9ff159b2cf2706a756a8df0e57b5d8aa98a2c01ae684ef382f3a10e05b",
+    "identity_kind": "local-content-addressed"
+  },
+  "shelved_UR2_checkpoint": {
+    "path": ".aegis/results/G5-UR2a-post-up-repair-r1/checkpoint.json",
+    "sha256": "159c87d22ef3a79c89f33fa8fcdadd3a92d65cc733933a0b8f98cd0d02279bdb",
+    "identity_kind": "local-content-addressed"
+  },
+  "shelved_UR2_source_index": {
+    "path": ".aegis/results/G5-UR2a-post-up-handoff/scoped-source-index.json",
+    "sha256": "8df8a86bae3458ae046d749e940787cacd0a551739d21d0c717fa62f4954b19b",
+    "identity_kind": "local-content-addressed"
+  },
+  "baseline_restore": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "before": "verification/evidence/performance/g5-ur1a-transient-reference/d7e613f1e4e7b7e2fd0fff41f03e5c98f6dc045b4501639745cb04a5e6a7fa10/execution-r1/source/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "before_sha256": "520d967c917da7b578c7e34c05b85b756537d4a5b4276b438b30a05150550071",
+      "after_sha256": "6ab5e8d9bcc0ee20c589157c0713ebd48941153797f0b119ef5120483246448b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "before": "HEAD:runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "before_sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd",
+      "after_sha256": "fb9e165645c140908267259986517d5027332f26cce97fae1e5ae0f1222687f7"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "before": "HEAD:runtime/composition/src/runtime_composition.cpp",
+      "before_sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485",
+      "after_sha256": "8a4759b82cb9a0fe95b190c2a3a73d4cdea3c45580dc3c83575c332b2468423d"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "before": "HEAD:runtime/composition/CMakeLists.txt",
+      "before_sha256": "e7e9af290483e0d3cd0b8d86666056950b08c4989c6d8f7d255c14d413db345e",
+      "after_sha256": "cd4cd1d4dc8e3e70e42be01ee43782b9d0daab34013b8844b0b7eb027534d7cd"
+    }
+  ],
+  "quarantine_only_after_exact_archive": [
+    "runtime/composition/tests/eraser_readmission_test.cpp",
+    "verification/runners/g5/eraser_readmission.mjs",
+    "verification/runners/g5/eraser_readmission_runner.py",
+    "verification/tests/g5_eraser_readmission.test.mjs",
+    "verification/tests/test_g5_eraser_readmission.py"
+  ],
+  "frozen_scope": [
+    "UR1b private shared Render execution decision and actual coverage target allocation/observation; first migrated consumers v4 canonical and full transient edit. Existing SkiaRenderer/cache/allocator/retirement remain owners.",
+    "Purpose, exact-vs-feedback fidelity, full content/frame/view/surface/metrics/resource basis, transform/mask/composition capability and resource condition are explicit inputs. Existing canonical validation remains first.",
+    "Geometry reuse is distinct from pixels. Pixel cache hit may skip all geometry/coverage; do not redraw to prove GPU. Prepared body sharing/index optimization belongs to UR1c.",
+    "GPU coverage decision is not evidence of actual GPU allocation. Target actual recordingContext/kind and compatible context/lifetime must be verified; Skia internal CPU preparation remains UNKNOWN without independent evidence.",
+    "Supported GPU interactive v4 target-allocation pressure yields explicit resumable Pending or honest terminal error, not a hidden whole-frame synchronous CPU fallback. CPU oracle/export/Raster and existing explicitly unsupported compatibility routes remain declared. No new GPU raster algorithm.",
+    "Retain existing32/96MiB budgets, per-job finite work/primitive bounds and no synchronous finish/readback. Threshold invention, provider/public API/schema/Brush changes are forbidden.",
+    "UR2 post-Up input/History/Scene/roster changes are shelved, not mixed into the new baseline or claimed completed."
+  ]
+}

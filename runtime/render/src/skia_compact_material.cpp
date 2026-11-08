@@ -282,6 +282,13 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         // proven exact range path on the bounded CPU coverage/material tiles.
         compatibleCoverage = false;
     }
+    auto* execution=RenderExecutionScope::current();
+    std::optional<ExecutionDecision> decision;
+    if(execution&&config.algorithmVersion==4){
+        decision=execution->select(canvas,config.algorithmVersion,range!=nullptr);
+        if(decision->route==ExecutionRoute::kRejected||decision->route==ExecutionRoute::kPending)return;
+        compatibleCoverage=decision->route==ExecutionRoute::kGpu;
+    }
     if(compatibleCoverage&&targets&&config.algorithmVersion==3&&canvas.recordingContext()){
         CompactStrokeRasterJob job(canvas,config,knots,grid,true,targets->budget);
         // Legacy synchronous callers have no resumable owner. Preserve their
@@ -324,12 +331,13 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
 #endif
         AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);
         AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
-        auto tile=targets?targets->acquire(canvas,w,h,compatibleCoverage,work):nullptr;
-        if(!targets){tile=compatibleCoverage?canvas.makeSurface(SkImageInfo::MakeN32Premul(w,h)):nullptr;
-            if(!tile)tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
-            if(work&&tile){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}}
+        CompactCoverageTargets localTargets;
+        auto* allocationOwner=targets?targets:(execution&&execution->targets()?execution->targets():&localTargets);
+        auto tile=decision?allocationOwner->acquire(canvas,w,h,*decision,work).surface
+                          :allocationOwner->acquire(canvas,w,h,compatibleCoverage,work);
         G5_TARGET(tile,compatibleCoverage);
         if(!tile){
+            if(decision){if(work)work->resourcePending=!execution->rejected();return;}
             if(yieldOnAllocation&&work){work->resourcePending=true;return;}
             if(targets)throw std::bad_alloc();throw std::runtime_error("compact coverage tile allocation failed");
         }
@@ -340,6 +348,7 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
             else AXIOM_FRAME_TIMING_ADD(coverage_target_fallback,1);}
         if(work){if(tile&&tile->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;}
 
+        if(execution)execution->coverage(*tile,true);
         auto* target=tile->getCanvas();target->resetMatrix();target->clear(SK_ColorBLACK);
         target->translate(float(-x),float(-y));target->concat(matrix);
         if(prepared&&config.algorithmVersion==4)prepared->drawContour(*target);
@@ -366,25 +375,55 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
 }
 
 sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bool compatible,CompactRasterWork* work,bool scalar){
-    for(auto& slot:slots_)if(slot.surface&&slot.scalar==scalar&&slot.compatible==compatible&&slot.surface->width()==w&&slot.surface->height()==h){
-        slot.used=++tick_;if(work)++work->targetReuses;return slot.surface;
+    // Explicit legacy wrapper. A compatible request on Raster is CPU truth,
+    // never a retained GPU key. Other compatibility fallbacks remain declared.
+    ExecutionDecision d;d.route=compatible&&canvas.recordingContext()?ExecutionRoute::kGpu:ExecutionRoute::kCpu;
+    d.context=d.route==ExecutionRoute::kGpu?canvas.recordingContext():nullptr;
+    d.allowCpuFallback=true;
+    return acquire(canvas,w,h,d,work,scalar).surface;
+}
+CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,
+    const ExecutionDecision& decision,CompactRasterWork* work,bool scalar){
+    auto* owner=RenderExecutionScope::current();
+    const auto denied=[&](ExecutionReason reason,bool terminal){
+        if(owner)owner->unavailable(decision,reason,terminal);
+        if(work)work->resourcePending=!terminal;
+        return Allocation{nullptr,terminal?ExecutionRoute::kRejected:ExecutionRoute::kPending,reason};
+    };
+    if(decision.route==ExecutionRoute::kRejected||decision.route==ExecutionRoute::kPending){if(work)work->resourcePending=decision.route==ExecutionRoute::kPending;return {nullptr,decision.route,decision.reason};}
+    if(decision.ownerScoped&&(!owner||!owner->accepts(decision)))return denied(ExecutionReason::kStaleBasis,true);
+    if(w<=0||h<=0||std::uint64_t(w)*h>std::numeric_limits<std::size_t>::max()/4)
+        return denied(ExecutionReason::kImpossibleCapacity,true);
+    const auto bytes=std::size_t(w)*h*4;
+    if((decision.ownerScoped||decision.maximumTargetBytes)&&bytes>decision.maximumTargetBytes)return denied(ExecutionReason::kImpossibleCapacity,true);
+    const bool gpu=decision.route==ExecutionRoute::kGpu;
+    if(gpu&&(!decision.context||canvas.recordingContext()!=decision.context))return denied(ExecutionReason::kWrongContext,true);
+    const auto lifetimeMatches=[&](const ExecutionBasis& b){const auto& a=decision.basis;
+        return a.target==b.target&&a.view==b.view&&a.surface==b.surface&&a.metrics==b.metrics&&a.resource==b.resource;};
+    for(auto& slot:slots_)if(slot.surface&&slot.scalar==(!gpu&&scalar)&&slot.context==(gpu?decision.context:nullptr)&&
+        lifetimeMatches(slot.basis)&&slot.surface->width()==w&&slot.surface->height()==h){
+        slot.used=++tick_;if(work)++work->targetReuses;
+        if(owner)owner->allocation(decision,slot.surface.get(),true);
+        return {slot.surface,gpu?ExecutionRoute::kGpu:ExecutionRoute::kCpu,decision.reason};
     }
     auto& slot=*std::min_element(slots_.begin(),slots_.end(),[](const auto& a,const auto& b){return a.used<b.used;});
     slot=Slot{};
-    const auto bytes=std::size_t(w)*h*4;
     auto token=budget?budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
-    if(budget&&!token)return nullptr;
+    if(budget&&!token)return denied(ExecutionReason::kAllocationDenied,false);
     resources::ResourceLease lease(budget,token.value_or(0));
     const auto info=SkImageInfo::MakeN32Premul(w,h);
-    auto target=compatible?canvas.makeSurface(info):nullptr;
-    // v4 white coverage may use A8; Direct remains the independent N32
-    // oracle. Retain the conservative N32 reservation and unsupported fallback.
-    if(!target&&scalar)target=SkSurfaces::Raster(SkImageInfo::MakeA8(w,h));
-    if(!target)target=SkSurfaces::Raster(info);
-    if(!target)return nullptr;
-    slot.surface=target;slot.lease=std::move(lease);slot.compatible=compatible;slot.scalar=scalar;slot.used=++tick_;
+    auto target=gpu?canvas.makeSurface(info):nullptr;
+    if(!target&&(!gpu||decision.allowCpuFallback))target=SkSurfaces::Raster(scalar?SkImageInfo::MakeA8(w,h):info);
+    if(!target)return denied(ExecutionReason::kAllocationDenied,false);
+    if(owner)owner->allocation(decision,target.get(),false);
+    const auto actualContext=target->recordingContext();
+    if(gpu&&actualContext!=decision.context&&!decision.allowCpuFallback)
+        return {nullptr,ExecutionRoute::kRejected,ExecutionReason::kTargetMismatch};
+    slot.surface=target;slot.lease=std::move(lease);slot.context=actualContext;
+    slot.basis=decision.basis;slot.scalar=target->imageInfo().colorType()==kAlpha_8_SkColorType;slot.used=++tick_;
     if(work){++work->allocatedTiles;work->allocatedPixels+=bytes/4;}
-    return target;
+    return {target,actualContext?ExecutionRoute::kGpu:ExecutionRoute::kCpu,
+        gpu&&!actualContext?ExecutionReason::kTargetMismatch:decision.reason};
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
@@ -555,8 +594,14 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         // V4 reuses the same contour/checkpoints on a GPU N32 target. No
         // CPU edge correction. Legacy continuous-gradient coverage keeps its
         // separately qualified hybrid/CPU policy.
-        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&((config.algorithmVersion==4&&canvas.recordingContext())||config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
+        auto* execution=RenderExecutionScope::current();
+        if(execution&&config.algorithmVersion==4){
+            const auto decision=execution->select(canvas,config.algorithmVersion,false);
+            compatible=decision.route==ExecutionRoute::kGpu;
+            tile_=targets.acquire(canvas,w,h,decision,work,!compatible&&config.materialVersion<3).surface;
+        }else tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&((config.algorithmVersion==4&&canvas.recordingContext())||config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
         if(!tile_){resourcePending_=true;return false;}
+        if(execution)execution->coverage(*tile_,false);
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
         if(tile_->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
         else {AXIOM_FRAME_TIMING_ADD(cpu_coverage_tiles,1);
