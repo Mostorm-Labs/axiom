@@ -1,0 +1,1545 @@
+{
+  "schema": "g5-post-up-functional-analysis-v1",
+  "workers": 2,
+  "cases": 8,
+  "public_input_completed": 8,
+  "unexpected_sdk_errors": 0,
+  "final_contacts_zero": true,
+  "pixel_oracles_qualified": 5,
+  "pixel_roundtrip_failed_cases": [
+    "UR2H-C1/preselected-drag",
+    "UR2H-C2/pinch",
+    "UR2H-C2/preselected-drag"
+  ],
+  "navigation_input_phases_with_no_observed_default_framebuffer_color_writes": 6,
+  "limits": [
+    "Observer counts WebGL API writes, not physical present or input-to-photon.",
+    "Three cold failures throw before raw hashes/pixels/snapshot transfer; exact cause cannot be inferred from retained outputs.",
+    "Zero timed navigation color writes means admission/camera success alone does not establish immediate navigation feedback.",
+    "Only these two candidate workers were run. No extra smoke, seed, retry or comparative performance claim."
+  ],
+  "rows": [
+    {
+      "worker": "UR2H-C1",
+      "fixture": "S0",
+      "case": "reerase-cancel-navigation",
+      "status": "COMPLETED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": -160,
+        "y": -40
+      },
+      "generation_final": "5",
+      "presented_generation_final": "5",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 3173,
+        "ended": 3634.899999976158,
+        "ms": 461.89999997615814
+      },
+      "cold_error": null,
+      "cold_oracle": "QUALIFIED",
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 34,
+            "p50": 0.10000002384185791,
+            "p95": 0.5,
+            "max": 57.69999998807907
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 481.80000001192093,
+          "sdk_raf_callbacks": 4,
+          "phase_ms": 743.8999999761581,
+          "worst_content_submission_gap_ms": 481.80000001192093,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 18.0,
+            "lateness_ms": 14.0,
+            "active_contacts_after": 1
+          }
+        },
+        {
+          "id": "erase-1",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 34,
+            "p50": 0.10000002384185791,
+            "p95": 0.5,
+            "max": 44.5
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 472.0,
+          "sdk_raf_callbacks": 5,
+          "phase_ms": 611.3000000119209,
+          "worst_content_submission_gap_ms": 472,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 18.80000001192093,
+            "lateness_ms": 14.800000011920929,
+            "active_contacts_after": 1
+          }
+        },
+        {
+          "id": "erase-2",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.40000003576278687,
+            "max": 44.5
+          },
+          "content_writes": 209,
+          "first_observed_color_write_ms": 469.39999997615814,
+          "sdk_raf_callbacks": 4,
+          "phase_ms": 648.5999999642372,
+          "worst_content_submission_gap_ms": 469.39999997615814
+        },
+        {
+          "id": "cancel-then-pan",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 23,
+            "p50": 0.19999998807907104,
+            "p95": 0.30000001192092896,
+            "max": 0.30000001192092896
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 21,
+          "phase_ms": 339.5,
+          "worst_content_submission_gap_ms": null,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 17.900000035762787,
+            "lateness_ms": 13.900000035762787,
+            "active_contacts_after": 1
+          },
+          "first_camera_input": {
+            "at": 2868,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": -8,
+                "y": -2
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "3",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "0b96b1ce1346d5f7177e54c8b5d3eb89",
+                "ordinal": "3",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "3",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C1",
+      "fixture": "S0",
+      "case": "pan",
+      "status": "COMPLETED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": -160,
+        "y": -40
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 1757.9000000357628,
+        "ended": 2219.7000000476837,
+        "ms": 461.80000001192093
+      },
+      "cold_error": null,
+      "cold_oracle": "QUALIFIED",
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.5999999642372131,
+            "max": 60.59999996423721
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 484.5,
+          "sdk_raf_callbacks": 3,
+          "phase_ms": 725.1999999880791,
+          "worst_content_submission_gap_ms": 484.5
+        },
+        {
+          "id": "post-Up-pan",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 20,
+            "p50": 0.19999998807907104,
+            "p95": 0.3999999761581421,
+            "max": 0.3999999761581421
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 20,
+          "phase_ms": 321.39999997615814,
+          "worst_content_submission_gap_ms": null,
+          "first_camera_input": {
+            "at": 1454.5,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": -8,
+                "y": -2
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "1",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "c6862bff3ca6316550a687c0a2e3fbbd",
+                "ordinal": "1",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "1",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C1",
+      "fixture": "S0",
+      "case": "pinch",
+      "status": "COMPLETED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1.2214027643203735,
+        "x": -88.5611572265625,
+        "y": -55.350616455078125
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 1755.4000000357628,
+        "ended": 2237.2000000476837,
+        "ms": 481.80000001192093
+      },
+      "cold_error": null,
+      "cold_oracle": "QUALIFIED",
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.40000003576278687,
+            "max": 59
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 479.0,
+          "sdk_raf_callbacks": 3,
+          "phase_ms": 718.5,
+          "worst_content_submission_gap_ms": 479
+        },
+        {
+          "id": "post-Up-pinch",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 20,
+            "p50": 0.30000001192092896,
+            "p95": 0.3999999761581421,
+            "max": 0.5
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 21,
+          "phase_ms": 323.9000000357628,
+          "worst_content_submission_gap_ms": null,
+          "first_camera_input": {
+            "at": 1449.9000000357628,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1.0100501775741577,
+                "x": -4.02008056640625,
+                "y": -2.512542724609375
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "1",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "398991b38e75d32e3f62628668470fc3",
+                "ordinal": "1",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "1",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C1",
+      "fixture": "S0",
+      "case": "preselected-drag",
+      "status": "FAILED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 1680.4000000357628,
+        "ended": 1860.9000000357628,
+        "ms": 180.5
+      },
+      "cold_error": "page.evaluate: Error: PRODUCT_CHECK: Undo/Redo pixel roundtrip\n    at check (http://127.0.0.1:54817/probe.html:12:81)\n    at Object.cold (http://127.0.0.1:54817/probe.html:84:5)\n    at async <anonymous>:337:30\n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:125:29)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:142:84",
+      "cold_oracle": null,
+      "phases": [
+        {
+          "id": "preselected-drag",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 50,
+            "p50": 0.10000002384185791,
+            "p95": 0.6000000238418579,
+            "max": 5.100000023841858
+          },
+          "content_writes": 77,
+          "first_observed_color_write_ms": 164.79999995231628,
+          "sdk_raf_callbacks": 5,
+          "phase_ms": 953.8999999761581,
+          "worst_content_submission_gap_ms": 284.10000002384186
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C2",
+      "fixture": "S2",
+      "case": "reerase-cancel-navigation",
+      "status": "COMPLETED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": -160,
+        "y": -40
+      },
+      "generation_final": "5",
+      "presented_generation_final": "5",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 3163.099999964237,
+        "ended": 3601.599999964237,
+        "ms": 438.5
+      },
+      "cold_error": null,
+      "cold_oracle": "QUALIFIED",
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 34,
+            "p50": 0.19999998807907104,
+            "p95": 0.40000003576278687,
+            "max": 130.5
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 476.80000001192093,
+          "sdk_raf_callbacks": 4,
+          "phase_ms": 815.3000000119209,
+          "worst_content_submission_gap_ms": 476.80000001192093,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 18.099999964237213,
+            "lateness_ms": 14.099999964237213,
+            "active_contacts_after": 1
+          }
+        },
+        {
+          "id": "erase-1",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 34,
+            "p50": 0.10000002384185791,
+            "p95": 0.3999999761581421,
+            "max": 45.69999998807907
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 464.9000000357628,
+          "sdk_raf_callbacks": 5,
+          "phase_ms": 603.6000000238419,
+          "worst_content_submission_gap_ms": 464.9000000357628,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 18.900000035762787,
+            "lateness_ms": 14.900000035762787,
+            "active_contacts_after": 1
+          }
+        },
+        {
+          "id": "erase-2",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.30000001192092896,
+            "max": 46.799999952316284
+          },
+          "content_writes": 209,
+          "first_observed_color_write_ms": 470.69999998807907,
+          "sdk_raf_callbacks": 4,
+          "phase_ms": 657.7999999523163,
+          "worst_content_submission_gap_ms": 470.69999998807907
+        },
+        {
+          "id": "cancel-then-pan",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 23,
+            "p50": 0.19999998807907104,
+            "p95": 0.30000001192092896,
+            "max": 0.30000001192092896
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 21,
+          "phase_ms": 341.5,
+          "worst_content_submission_gap_ms": null,
+          "next_down": {
+            "planned_after_up_ms": 4,
+            "actual_after_up_ms": 18.0,
+            "lateness_ms": 14.0,
+            "active_contacts_after": 1
+          },
+          "first_camera_input": {
+            "at": 2866.800000011921,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": -8,
+                "y": -2
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "3",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "73509bf3dd06b4b45c39adca3e9ddc0f",
+                "ordinal": "3",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "3",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C2",
+      "fixture": "S2",
+      "case": "pan",
+      "status": "COMPLETED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": -160,
+        "y": -40
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 1835.9000000357628,
+        "ended": 2284.7000000476837,
+        "ms": 448.80000001192093
+      },
+      "cold_error": null,
+      "cold_oracle": "QUALIFIED",
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.40000003576278687,
+            "max": 131.9000000357628
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 475.39999997615814,
+          "sdk_raf_callbacks": 3,
+          "phase_ms": 788.7999999523163,
+          "worst_content_submission_gap_ms": 475.39999997615814
+        },
+        {
+          "id": "post-Up-pan",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 20,
+            "p50": 0.10000002384185791,
+            "p95": 0.20000004768371582,
+            "max": 0.3999999761581421
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 20,
+          "phase_ms": 320.30000001192093,
+          "worst_content_submission_gap_ms": null,
+          "first_camera_input": {
+            "at": 1534,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": -8,
+                "y": -2
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "1",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "a299180ee7b4d31b010302754300c138",
+                "ordinal": "1",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "1",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C2",
+      "fixture": "S2",
+      "case": "pinch",
+      "status": "FAILED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1.2214027643203735,
+        "x": -88.5611572265625,
+        "y": -55.350616455078125
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 1841.199999988079,
+        "ended": 2331.899999976158,
+        "ms": 490.69999998807907
+      },
+      "cold_error": "page.evaluate: Error: PRODUCT_CHECK: Undo/Redo pixel roundtrip\n    at check (http://127.0.0.1:54914/probe.html:12:81)\n    at Object.cold (http://127.0.0.1:54914/probe.html:84:5)\n    at async <anonymous>:337:30\n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:125:29)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:142:84",
+      "cold_oracle": null,
+      "phases": [
+        {
+          "id": "erase-0",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 33,
+            "p50": 0.10000002384185791,
+            "p95": 0.5,
+            "max": 132
+          },
+          "content_writes": 113,
+          "first_observed_color_write_ms": 475.0999999642372,
+          "sdk_raf_callbacks": 3,
+          "phase_ms": 793.0999999642372,
+          "worst_content_submission_gap_ms": 475.0999999642372
+        },
+        {
+          "id": "post-Up-pinch",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 20,
+            "p50": 0.30000001192092896,
+            "p95": 0.40000003576278687,
+            "max": 0.6000000238418579
+          },
+          "content_writes": 0,
+          "first_observed_color_write_ms": null,
+          "sdk_raf_callbacks": 20,
+          "phase_ms": 321.7999999523163,
+          "worst_content_submission_gap_ms": null,
+          "first_camera_input": {
+            "at": 1537.800000011921,
+            "state": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1.0100501775741577,
+                "x": -4.02008056640625,
+                "y": -2.512542724609375
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "1",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "2736e90baccefa2f65a194e794eda728",
+                "ordinal": "1",
+                "presentedGeneration": "0",
+                "runtimeEpoch": "1"
+              },
+              "objects": 16,
+              "primary": "00000000000000000000000000000000",
+              "selected": [],
+              "selectionMode": 0,
+              "selectionRevision": "1",
+              "shape": 0,
+              "surface": {
+                "available": true,
+                "height": 500,
+                "width": 800
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "selection": {
+              "actions": [
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 1,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 14,
+                  "state": 0
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                },
+                {
+                  "available": false,
+                  "reason": 13,
+                  "state": 2
+                }
+              ],
+              "appearance": null,
+              "bounds": null,
+              "count": 0,
+              "generation": "1",
+              "groupScope": null,
+              "height": 0,
+              "kind": 0,
+              "primary": "00000000000000000000000000000000",
+              "reason": 0,
+              "roots": [],
+              "selectionRevision": "1",
+              "status": 1,
+              "transform": null,
+              "width": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR2H-C2",
+      "fixture": "S2",
+      "case": "preselected-drag",
+      "status": "FAILED",
+      "input_status": "COMPLETED",
+      "unexpected_errors": [],
+      "active_contacts_final": 0,
+      "camera_final": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation_final": "3",
+      "presented_generation_final": "3",
+      "close": {
+        "closed": true,
+        "errors": []
+      },
+      "canonical_wait": {
+        "started": 3372.099999964237,
+        "ended": 3705.399999976158,
+        "ms": 333.30000001192093
+      },
+      "cold_error": "page.evaluate: Error: PRODUCT_CHECK: Undo/Redo pixel roundtrip\n    at check (http://127.0.0.1:54914/probe.html:12:81)\n    at Object.cold (http://127.0.0.1:54914/probe.html:84:5)\n    at async <anonymous>:337:30\n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:125:29)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs:142:84",
+      "cold_oracle": null,
+      "phases": [
+        {
+          "id": "preselected-drag",
+          "status": "INPUT_COMPLETED",
+          "handler_ms": {
+            "count": 50,
+            "p50": 0.10000002384185791,
+            "p95": 0.6000000238418579,
+            "max": 4.399999976158142
+          },
+          "content_writes": 321,
+          "first_observed_color_write_ms": 2575.0,
+          "sdk_raf_callbacks": 1,
+          "phase_ms": 2597.399999976158,
+          "worst_content_submission_gap_ms": 2575
+        }
+      ]
+    }
+  ]
+}

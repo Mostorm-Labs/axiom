@@ -1,0 +1,104 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "task": "G5-UR2a-post-up-handoff",
+  "verdict": "BLOCKED",
+  "official_G5_or_P34_PASS": false,
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR2a-post-up-handoff/package.json",
+    "sha256": "2f4661b23a801077779b07b07a625dd722618c177eda9ffb7cc7d9a8453d51d7"
+  },
+  "result_ref": {
+    "path": ".aegis/results/G5-UR2a-post-up-handoff/result.json",
+    "sha256": "4007e52cf53791c1afcf3140719706063832594931a0353f11387e1ed2cffeed"
+  },
+  "independent_audit": {
+    "repository": "Mostorm-Labs/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "evidence_files_hashed": 166,
+    "large_archives_hashed": 3,
+    "source_files_hashed": 28261,
+    "mismatches": 0,
+    "source_tree_sha256": "b61da8dd1375282509024c3c83f07d48268be04f105c466cadecc0b1ae31ead6",
+    "reviewer_native_rerun": "ctest --test-dir out/G5-UR2a-post-up-handoff/build-native -R ^G5PostUp --output-on-failure:8/8,0.18s",
+    "new_browser_starts": 0
+  },
+  "frozen_requirements": {
+    "locally_supported": [
+      "U2A-01 native actual input plus6 browser nextDown checks",
+      "U2A-02 current Scene independent recovery",
+      "U2A-04 pre-apply History and existing publication owner",
+      "U2A-05 strict actual CanonicalWork/roster/lifecycle tests"
+    ],
+    "not_closed": [
+      "U2A-03/06/10 three Web cold pixel roundtrips failed without diagnostic buffers",
+      "U2A-09/10 six camera phases have no observed framebuffer color write during320-341ms input",
+      "U2A-07 old test requires explicit setup/contract reconciliation"
+    ]
+  },
+  "findings": [
+    {
+      "id": "UR2-CR-01",
+      "class": "FROZEN_REQUIREMENT_FAILURE",
+      "root_owner": "Runtime/Render capability integration; original package restricted Render source scope",
+      "obligations": [
+        "U2A-09",
+        "U2A-10"
+      ],
+      "source": "runtime/render/src/skia_renderer.cpp:565",
+      "fact": "Regional old-plane revalidation requires navigationCache_ already matches current Scene before obtaining background/isolation policy. Runtime current-Scene demand alone cannot bootstrap this proof after erase commit. This can discard useful unchanged regions until a new exact plane or cold tiles exist.",
+      "impact": "Input can be accepted yet visual navigation remains absent; not a completed continuity fix.",
+      "evidence": "All6 immediate navigation phases have zero observed color writes; native small fixture eventually paints. Static dependency is proven, its latency contribution is not.",
+      "repair": "Freeze a narrow Render-owned current composition policy proof independently of rendered pixels; preserve target/resource/source/order/mask/damage correctness. Never remove the policy guard without replacement proof. No new GPU strategy/budget."
+    },
+    {
+      "id": "UR2-CR-02",
+      "class": "IMPLEMENTATION_DEFECT",
+      "root_owner": "Verification runner",
+      "obligations": [
+        "U2A-06",
+        "U2A-10"
+      ],
+      "source": "verification/runners/g5/eraser_readmission.mjs:92",
+      "fact": "cold() throws before storing before/Undo/Redo image buffers, hashes and checkpoint bytes; worker catches the exception as only a string.",
+      "impact": "Cannot distinguish actual interior/mask/position corruption from AA or stale presentation capture in3 failed cases. Native small-fixture coverage cannot substitute for actual failing Web frames.",
+      "repair": "Retain/export every available cold stage and structured predicate before failure; compare with existing independent native/AA oracle, maintaining failed verdict until explained. No pass-by-tolerance-increase."
+    },
+    {
+      "id": "UR2-CR-03",
+      "class": "TASK_PACKAGE_DEFECT",
+      "root_owner": "Control scope/test reconciliation",
+      "obligations": [
+        "U2A-07"
+      ],
+      "source": "runtime/composition/tests/fc02_text_geometry_test.cpp:2311",
+      "fact": "Old direct-seed fixture assumes eraser Down synchronously removes pending Brush preview. New contract explicitly forbids Down render/clear and requires qualified retirement. That test file was omitted from allowed paths.",
+      "repair": "Permit only that test setup to complete a real qualified seed handoff, keep the actual live sweep assertions, add a separate retained-preview identity check. Do not reinstate forced render/clear or drop the existing test."
+    }
+  ],
+  "non_blocking_findings": [
+    {
+      "id": "UR2-CR-04",
+      "source": "runtime/interaction/src/canvas_editing_runtime.cpp:3117",
+      "risk": "Deferred Down hides preview provider even when Brush logical preview is retained. Current new fixtures first finish all Brush handoffs. Check actual Brush-Up->immediate erase visibility, but do not invent a new Brush receipt/supersession rule in this repair. Lack of a proven observed pixel failure here is not used as a new late standalone gate."
+    },
+    {
+      "id": "UR2-CR-05",
+      "source": "runtime/interaction/src/canvas_editing_runtime.cpp:3341",
+      "risk": "Eraser custom post-commit finalization bypasses observeApplied and omits existing low-cost G5 canonical_commit emit. Restore equivalent no-allocation observation when changing this path; not used as sole proof gap because public commit/History evidence exists."
+    },
+    {
+      "id": "UR2-CR-06",
+      "fact": "Failed cold cases final selection is0; HUD mismatch is a hypothesis, not an established explanation. Do not reclassify failures based on it."
+    }
+  ],
+  "routing": "Preserve accepted readmission/state fixes and all failed artifacts. Control scope amendment must allow narrow current-composition proof in shared Render. Then fix runner, repair current-Scene proof integration and rerun only affected native/Web endpoints with a separately bounded successor window. Full UR0 is not a dependency.",
+  "accounting": {
+    "old_window_closed": true,
+    "historical_starts": 44,
+    "historical_seconds": 1433,
+    "remaining_old_authorized_starts": 0
+  },
+  "source_mutations_by_reviewer": false,
+  "commit_or_push_by_reviewer": false
+}

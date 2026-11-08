@@ -1,0 +1,97 @@
+{
+  "package_sha256": "a40e78474eb6b0b8a25c3e9a9cb00a5ec005638956c043b2feecf24bfbf4430d",
+  "entries": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "6ab5e8d9bcc0ee20c589157c0713ebd48941153797f0b119ef5120483246448b",
+      "mode": 420,
+      "action": "restore_preimage"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "fb9e165645c140908267259986517d5027332f26cce97fae1e5ae0f1222687f7",
+      "mode": 420,
+      "action": "restore_preimage"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/runtime/composition/src/runtime_composition.cpp",
+      "sha256": "8a4759b82cb9a0fe95b190c2a3a73d4cdea3c45580dc3c83575c332b2468423d",
+      "mode": 420,
+      "action": "restore_preimage"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/runtime/composition/CMakeLists.txt",
+      "sha256": "cd4cd1d4dc8e3e70e42be01ee43782b9d0daab34013b8844b0b7eb027534d7cd",
+      "mode": 420,
+      "action": "restore_preimage"
+    },
+    {
+      "path": "runtime/composition/tests/eraser_readmission_test.cpp",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/runtime/composition/tests/eraser_readmission_test.cpp",
+      "sha256": "017560042381b4bdc46793051a1e7abce58418d1604ccc27eccd1d9e996c6c0b",
+      "mode": 420,
+      "action": "quarantine_from_active_source"
+    },
+    {
+      "path": "verification/runners/g5/eraser_readmission.mjs",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/verification/runners/g5/eraser_readmission.mjs",
+      "sha256": "47e115194e8cc0775a9fe82951345fb233615696f3a69ec69aa03aec19245ed3",
+      "mode": 420,
+      "action": "quarantine_from_active_source"
+    },
+    {
+      "path": "verification/runners/g5/eraser_readmission_runner.py",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/verification/runners/g5/eraser_readmission_runner.py",
+      "sha256": "0fa2c5ac72f4ba8fd98e2a7c2fbccc7ac016c096f809caeb212b1d993f5c9435",
+      "mode": 420,
+      "action": "quarantine_from_active_source"
+    },
+    {
+      "path": "verification/tests/g5_eraser_readmission.test.mjs",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/verification/tests/g5_eraser_readmission.test.mjs",
+      "sha256": "2f23a8a0d2b5a75b9cbbe1edb8ea264152def97566bf19b90a2d80c8666ad667",
+      "mode": 420,
+      "action": "quarantine_from_active_source"
+    },
+    {
+      "path": "verification/tests/test_g5_eraser_readmission.py",
+      "archived_path": ".aegis/results/G5-UR1b-render-execution/quarantine/verification/tests/test_g5_eraser_readmission.py",
+      "sha256": "2ff4513a1fa2d83bd9c648c878e76a5657a728f85d4da820775ef6fc8e026221",
+      "mode": 420,
+      "action": "quarantine_from_active_source"
+    }
+  ],
+  "preimages": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "before": "verification/evidence/performance/g5-ur1a-transient-reference/d7e613f1e4e7b7e2fd0fff41f03e5c98f6dc045b4501639745cb04a5e6a7fa10/execution-r1/source/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "before_sha256": "520d967c917da7b578c7e34c05b85b756537d4a5b4276b438b30a05150550071",
+      "after_sha256": "6ab5e8d9bcc0ee20c589157c0713ebd48941153797f0b119ef5120483246448b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "before": "HEAD:runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "before_sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd",
+      "after_sha256": "fb9e165645c140908267259986517d5027332f26cce97fae1e5ae0f1222687f7"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "before": "HEAD:runtime/composition/src/runtime_composition.cpp",
+      "before_sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485",
+      "after_sha256": "8a4759b82cb9a0fe95b190c2a3a73d4cdea3c45580dc3c83575c332b2468423d"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "before": "HEAD:runtime/composition/CMakeLists.txt",
+      "before_sha256": "e7e9af290483e0d3cd0b8d86666056950b08c4989c6d8f7d255c14d413db345e",
+      "after_sha256": "cd4cd1d4dc8e3e70e42be01ee43782b9d0daab34013b8844b0b7eb027534d7cd"
+    }
+  ],
+  "preflight_bindings": 17,
+  "base_revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+  "UR2_old_evidence_untouched": true
+}

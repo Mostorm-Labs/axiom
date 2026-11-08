@@ -1,0 +1,208 @@
+{
+  "schema": "g5-post-up-handoff-result-v1",
+  "status": "BLOCKED",
+  "not_ready_for_control_acceptance": true,
+  "terminal_classes": [
+    "PRODUCT_CORRECTNESS_REGRESSION",
+    "REQUIRED_EVIDENCE_UNAVAILABLE"
+  ],
+  "failure_classification_caveat": "Web predicates failed; without cold failing pixel bytes the cause is not yet proven as interior correctness, allowed AA-only variation, transient presentation or harness timing. No failure is waived or relabeled PASS.",
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-post-up-handoff/package.json",
+    "sha256": "2f4661b23a801077779b07b07a625dd722618c177eda9ffb7cc7d9a8453d51d7"
+  },
+  "source": {
+    "source_tree_sha256": "b61da8dd1375282509024c3c83f07d48268be04f105c466cadecc0b1ae31ead6",
+    "matches_both_executed_workers": true,
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "branch": "codex/geometry-navigation-integration",
+    "no_commit_or_push": true,
+    "no_new_browser_start_after_two_closed_workers": true
+  },
+  "evidence_manifest": {
+    "path": ".aegis/results/G5-UR2a-post-up-handoff/evidence-manifest.json",
+    "sha256": "a7f25a07830126b223cc9fd88bbdcb0a925a7f30f2930e34ac13b58394946376"
+  },
+  "artifacts_manifest": {
+    "path": ".aegis/results/G5-UR2a-post-up-handoff/local-functional/artifacts.json",
+    "sha256": "ddb1d8b332f8402a8c66db05f47a717b1f9f8b27e3cae87145b30ec27bc085c7"
+  },
+  "source_materialization": {
+    "aggregate_binary_diff": "aggregate-dirty-source.patch",
+    "scoped_delta": "scoped-source-delta.patch",
+    "scoped_index": "scoped-source-index.json",
+    "full_file_identity": "final-source-identity.json",
+    "archives": "materialized-artifacts.json",
+    "prior_r2_work_preserved": "preserved-UR1a-source-check.json"
+  },
+  "implementation": [
+    "Deferred partial-erase Down admits trace without provider clear/acquire/present; source/permission/lifecycle denials remain.",
+    "Recover committed Scene independently of pixels before exact erase hit, history actions and frame work.",
+    "Prepare erasure History/publication before semantic apply; applied mutation remains accepted and finalized exactly once if derived work fails.",
+    "Runtime owns bounded active/sealed feedback identity; freeze exact replacement roster before submit, associate actual successful CanonicalWork, retire only frozen sealed records after strict completion.",
+    "Create current-Scene navigation query basis without changing old exact frame identity; retain busy demand and exact fairness through existing Render paths."
+  ],
+  "verification": {
+    "native_selected": {
+      "passed": 26,
+      "failed": 0,
+      "log": "affected-native-tests.log"
+    },
+    "new_handoff_safety_final_rerun": {
+      "passed": 8,
+      "failed": 0,
+      "log": "final-safety-tests.log",
+      "note": "These8 are included in the26; rerun adds throwing Scene-recovery coverage, not8 additional distinct CTests."
+    },
+    "additional_native": {
+      "passed": 2,
+      "failed": 1,
+      "log": "affected-live-erase-tests.log",
+      "failure_classification": "contract drift at fc02_text_geometry_test.cpp:2311; baseline synchronously clears pending Brush preview on deferred erase Down, new required Down does not clear or retire it without qualified completion; test source left unchanged outside frozen path list",
+      "facts": "affected-test-contract-drift.json"
+    },
+    "node_affected": {
+      "passed": 13,
+      "failed": 0,
+      "log": "affected-node-tests.log"
+    },
+    "python_runner": {
+      "passed": 2,
+      "failed": 0,
+      "log": "affected-python-tests.log"
+    },
+    "extra_old_demo_static": {
+      "failure": "DEMO_SHAPES.forEach regex, accepted HEAD now uses DEMO_SHAPES.slice(0,5).forEach; both files unchanged",
+      "facts": "inherited-static-test.json",
+      "log": "node-tests.log"
+    },
+    "runtime_boundaries": {
+      "contracts": 120,
+      "status": "PASS",
+      "log": "terminal-boundary-check.log"
+    },
+    "diff_check": {
+      "status": "PASS",
+      "log": "terminal-diff-check.log"
+    },
+    "native_RED": {
+      "logs": [
+        "isolated-acquire-red.log",
+        "isolated-present-red.log",
+        "isolated-navigation-red.log"
+      ],
+      "provenance": "isolated-red-provenance.json",
+      "scope": "Actual old accepted libraries, ABI-matching header, qualified initial v4 Brush handoff; failures occur at intended acquire/present/admission and navigation predicates."
+    },
+    "web": {
+      "workers": 2,
+      "public_cases": 8,
+      "input_completed": 8,
+      "unexpected_sdk_errors": 0,
+      "final_contacts_all_zero": true,
+      "next_down_contact_checks_passed": 6,
+      "next_down_planned_ms": 4,
+      "next_down_actual_ms_range": [
+        17.9,
+        18.9
+      ],
+      "native_cold_pixel_oracles_qualified": 5,
+      "cold_roundtrip_failed_cases": [
+        "UR2H-C1/preselected-drag",
+        "UR2H-C2/pinch",
+        "UR2H-C2/preselected-drag"
+      ],
+      "timed_navigation_phases_without_observed_color_writes": 6,
+      "raw": "local-functional/",
+      "analysis": "browser-analysis.json",
+      "performance_verdict": "NONE",
+      "physical_present_verdict": "NONE"
+    }
+  },
+  "obligations": {
+    "U2A-01": "NATIVE_PASS; valid public candidate readmission8cases/6 nextDown checks without errors.",
+    "U2A-02": "NATIVE_PASS; independent current Scene recovery incl unavailable/throwing compiler.",
+    "U2A-03": "NATIVE_PASS at DPR1/2/4; browser pixel completeness BLOCKED by3 cold roundtrip failures.",
+    "U2A-04": "NATIVE_PASS; History preparation/rejection/postapply failure and exactly-once publication.",
+    "U2A-05": "NATIVE_PASS; strict foreign/stale work and lifecycle/Undo/Redo cleanup.",
+    "U2A-06": "BLOCKED: all8 public input branches completed, only5 full cold oracles qualified;3 pixel roundtrip checks failed before raw cold transfer.",
+    "U2A-07": "PARTIAL:26 affected CTests,13 Node,2 Python,120 boundaries pass;1 affected old clear-on-Down assertion requires contract reconciliation; unrelated old Demo regex also fails.",
+    "U2A-08": "COMPLETE materialization and matching normal Demo; explicitly blocked result, not performance/G5/P34 PASS.",
+    "U2A-09": "NATIVE_PASS; browser camera admission passes but immediate dense-scene presentation is NOT_OBSERVED during6 navigation input phases (~320-341ms), so browser continuity remains BLOCKED.",
+    "U2A-10": "NATIVE_PASS; full browser current-pixel/retirement acceptance remains BLOCKED by failed cold verification."
+  },
+  "blockers": [
+    {
+      "id": "WEB_COLD_PIXEL_ROUNDTRIP",
+      "cases": [
+        "UR2H-C1/preselected-drag",
+        "UR2H-C2/pinch",
+        "UR2H-C2/preselected-drag"
+      ],
+      "obligations": [
+        "U2A-03",
+        "U2A-06",
+        "U2A-10"
+      ],
+      "detail": "Do not infer that AA tolerance explains this. Failure retains input/state/error logs but cold() throws before transferring failing pixel buffers/hash values and snapshots, so precise pixel classification still needs evidence."
+    },
+    {
+      "id": "WEB_NAVIGATION_FEEDBACK",
+      "obligations": [
+        "U2A-09",
+        "U2A-10"
+      ],
+      "detail": "All6 cancel/pan/pinch input phases update camera with0 unexpected errors but0 observed default-framebuffer content writes. Existing source preparation, feedback scheduling and separate ~500ms convergence work remain unresolved; no input-to-photon claim."
+    },
+    {
+      "id": "AFFECTED_TEST_CONTRACT_RECONCILIATION",
+      "obligations": [
+        "U2A-07"
+      ],
+      "detail": "Do not restore forced canonical clear in Down merely to satisfy the old expectation. Control must bind the old direct-seeded Brush test to qualified handoff or update the obsolete clear expectation with explicit retained-preview coverage."
+    }
+  ],
+  "sampling": {
+    "ledger": "local-functional/sampling-ledger.json",
+    "historical_starts": 42,
+    "historical_charged_seconds": 1374,
+    "new_starts": 2,
+    "new_charged_seconds": 59,
+    "total_starts": 44,
+    "total_charged_seconds": 1433,
+    "remaining_authorized_candidate_starts": 0,
+    "all_owned_browser_families_cleaned": true,
+    "no_extra_seed_smoke_retry": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4283/example.html",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-post-up-handoff/install/js",
+    "matching_assets": "demo-server.json",
+    "old_demos_preserved": [
+      4280,
+      4281,
+      4282
+    ],
+    "acceptance": "candidate only, blocked"
+  },
+  "remaining": [
+    "Preserve failed cold buffer/hash/snapshot before throwing, then classify allowed AA-only changes vs interior/mask/position errors with existing native oracle; do not loosen acceptance without proof.",
+    "Resolve missing dense-scene navigation writes separately from successful camera input, using current Scene feedback and existing frame demand owner; frozen slice did not change Render/GPU/budgets or SDK RAF scheduling.",
+    "Reconcile the old direct seed/clear-on-Down unit contract with strict retained Brush visibility ownership.",
+    "Any further browser start requires new control-authorized window; these2 attempts are closed, not retryable.",
+    "UR1 geometry/mask reuse, separate500ms/frame leaf, broader resource/GPU strategy, physical-device validation, full G5 and P34 are not completed by this slice."
+  ],
+  "publication": {
+    "commit": false,
+    "push": false,
+    "sdk_api_abi_version_changed": false,
+    "semantic_skia_lock_changed": false,
+    "budget_changed": false,
+    "official_gate_pass": false
+  },
+  "notification": {
+    "target_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "receipt_file": "notification-receipt.json",
+    "state": "see separate receipt, no delivery claim until successful tool response"
+  }
+}

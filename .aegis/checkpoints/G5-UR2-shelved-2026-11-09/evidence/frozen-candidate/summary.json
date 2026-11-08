@@ -1,0 +1,90 @@
+{
+  "schema": "g5-post-up-functional-summary-v1",
+  "source": "b61da8dd1375282509024c3c83f07d48268be04f105c466cadecc0b1ae31ead6",
+  "ledger": {
+    "schema": "g5-post-up-functional-accounting-v1",
+    "planned_ids": [
+      "UR2H-C1",
+      "UR2H-C2"
+    ],
+    "historical_starts": 42,
+    "historical_charged_seconds": 1374,
+    "new_nominal_seconds_max": 360,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2H-C1",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 32,
+        "rss_limit_mib": 3072,
+        "worker_status": "PRODUCT_FAILURE_OBSERVED",
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-post-up-handoff/install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-post-up-handoff/local-functional/UR2H-C1",
+            "S0",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-post-up-handoff/build-native/runtime/render/axiom_ur0_fixture_oracle"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 31.763505457958672,
+          "peak_process_family_rss_kib": 1616368,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-complete",
+            "status": "PRODUCT_FAILURE_OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        }
+      },
+      {
+        "id": "UR2H-C2",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 27,
+        "rss_limit_mib": 3072,
+        "worker_status": "PRODUCT_FAILURE_OBSERVED",
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/eraser_readmission.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-post-up-handoff/install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-post-up-handoff/local-functional/UR2H-C2",
+            "S2",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-post-up-handoff/build-native/runtime/render/axiom_ur0_fixture_oracle"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 26.99207729200134,
+          "peak_process_family_rss_kib": 1756576,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-complete",
+            "status": "PRODUCT_FAILURE_OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        }
+      }
+    ],
+    "remaining_status": "NONE"
+  },
+  "rows": [
+    {
+      "id": "UR2H-C1",
+      "status": "PRODUCT_FAILURE_OBSERVED"
+    },
+    {
+      "id": "UR2H-C2",
+      "status": "PRODUCT_FAILURE_OBSERVED"
+    }
+  ]
+}

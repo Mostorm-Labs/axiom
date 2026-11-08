@@ -1,0 +1,21 @@
+{
+  "schema": "g5-shared-worktree-artifacts-v1",
+  "archives": {
+    "candidate-normal-web-sdk.tar.gz": {
+      "path": "out/G5-UR2a-post-up-handoff/archives/candidate-normal-web-sdk.tar.gz",
+      "sha256": "85fc7bbdce18bea29e3695ef331d0a900dc94ccf3696654fde0341d03a4c0e20",
+      "bytes": 19376980
+    },
+    "native-tests-and-oracle.tar.gz": {
+      "path": "out/G5-UR2a-post-up-handoff/archives/native-tests-and-oracle.tar.gz",
+      "sha256": "e418b59d9e9b009900926cd618fd3da72e6c55b8864ae2a4906cf58422d68443",
+      "bytes": 25314720
+    },
+    "untracked-source-inputs.tar.gz": {
+      "path": "out/G5-UR2a-post-up-handoff/archives/untracked-source-inputs.tar.gz",
+      "sha256": "9841e63b1e0d3b8a09ab3afb9b913562d112175a85989a030218e9cf449d562c",
+      "bytes": 214640376
+    }
+  },
+  "reason": "Large exact-source/build archives are in authorized out/ outputs; reviewable source, raw outcomes, hashes and manifests are materialized in .aegis/results. No commit or publication is part of this package."
+}

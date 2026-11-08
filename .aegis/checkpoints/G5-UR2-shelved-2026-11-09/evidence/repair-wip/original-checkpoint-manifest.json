@@ -1,0 +1,33 @@
+{
+  "files": {
+    "checkpoint.json": "159c87d22ef3a79c89f33fa8fcdadd3a92d65cc733933a0b8f98cd0d02279bdb",
+    "checkpoint-source-delta.patch": "0c67947c7d94e31938ec5190fc7215813becf751bc9a355bc5f1f89a68623d46",
+    "cold-preservation-red.log": "30ac488310f80989a08e9d53ed66c46002dc73d721f5d6fd2bfec90466c93dc2",
+    "cold-preservation-green.log": "bec74a891b637379e44defaae65ed2b46ee6a64bc3cc9a31d0424364662e645e",
+    "preflight.json": "7b904a960377ffda37941899de9c4724962b1fa955b1cc9135a175bcb38eeef5",
+    "design.md": "cc560768d928e37c2440ee741e464ddc5c88bbe3cc18c45649adf81df7d12b00"
+  },
+  "source_files": [
+    {
+      "path": "verification/runners/g5/eraser_readmission.mjs",
+      "before_sha256": "7446d0438829195c7ad27af2099f8c772e4621122e263ba8ceb3d0a078b33be0",
+      "current_sha256": "47e115194e8cc0775a9fe82951345fb233615696f3a69ec69aa03aec19245ed3"
+    },
+    {
+      "path": "verification/runners/g5/eraser_readmission_runner.py",
+      "before_sha256": "1283a31ad779dabd8c33cc156001c2dbdb7e3bdfe649f4ffd31d46db841c2ee3",
+      "current_sha256": "0fa2c5ac72f4ba8fd98e2a7c2fbccc7ac016c096f809caeb212b1d993f5c9435"
+    },
+    {
+      "path": "verification/tests/g5_eraser_readmission.test.mjs",
+      "before_sha256": "30f1b3f6a9184ef09c95f8fc14997c767b2a51184bfa7ff44c28a8e4104bc458",
+      "current_sha256": "2f23a8a0d2b5a75b9cbbe1edb8ea264152def97566bf19b90a2d80c8666ad667"
+    },
+    {
+      "path": "verification/tests/test_g5_eraser_readmission.py",
+      "before_sha256": "210b40ff73bb215fe8789c7bd531d325137829027c880bf0105d721e7e438bdf",
+      "current_sha256": "2ff4513a1fa2d83bd9c648c878e76a5657a728f85d4da820775ef6fc8e026221"
+    }
+  ],
+  "status": "STOPPED_BY_USER_PRIORITY_CHANGE"
+}

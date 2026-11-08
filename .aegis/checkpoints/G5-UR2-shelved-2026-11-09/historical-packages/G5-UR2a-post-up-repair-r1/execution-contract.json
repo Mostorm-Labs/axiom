@@ -1,0 +1,184 @@
+{
+  "schema": "g5-execution-closure-v1",
+  "implementation": {
+    "required_changes": [
+      "Preserve all valid existing UR1a/UR2a readmission, History, current Scene, sealed roster and strict CanonicalWork logic. Start with the hash-bound blocked4283 candidate, not main or pre-UR1a.",
+      "Repair cold failure retention/export first: before, Undo and Redo actual readback bytes, semantic snapshots, state/selection/camera, hash predicates and successful/failed transfer identity remain accessible outside timing. Readback/oracle/profile remain outside live phases. Fix any proven stale-settle capture using existing public calls/completion facts; no private SDK bypass.",
+      "Freeze a short resolved private design for current composition proof in existing Runtime/FramePlan/SkiaRenderer. Use trusted current Scene-derived metadata; Render validates it, never caller force-compatible booleans. Keep canonical identities and cache pixel proof separate.",
+      "Remove the current-exact-image bootstrap dependency only by replacing it with valid current composition proof and existing source/body/order/resource/mask damage checks. Promote only safely unchanged regions; rebuild changed/missing areas via existing bounded navigation tile machinery before presenting complete valid feedback. No blank changed-area placeholders, old erased ink or false canonical receipt.",
+      "Keep actual navigation source preparation/progress across replaceable camera demands when basis remains valid. Preserve current budgets, finite resource recovery, exact fairness, current paths and all generation/lifecycle checks. No wholesale renderer/cache rewrite.",
+      "Reconcile only PartialEraseLive.DefaultSmoothedRoundStrokeSupportsEverySweepSample setup/expectation with actual qualified Brush handoff. Keep all24 samples/frame/Up checks, add or reuse explicit retained-preview identity coverage; do not blindly remove the assertion or modify unrelated tests.",
+      "Close the proven physical-visibility gap in deferred Brush-Up->partial Down: stop unconditional hiding before replacement, coordinate display ownership only after actually successful validated full-viewport current feedback. Logical Brush state remains until the existing qualified canonical path; prevent delayed preview work from re-showing obsolete pixels. Extend SpyProvider to forward visibility and check actual composed display, not only previewActive or canonical readback.",
+      "Restore equivalent existing no-allocation canonical commit diagnostic emission in the customized eraser finalization if touching that path; no new broad instrumentation.",
+      "After native/runner regressions pass, build matching normal candidate using accepted prebuilt dependencies. Run exactly the two frozen successor functional workers, retain any failure pixels and classify against the original oracle. Serve candidate at a new unused port;4283 and4280/4281/4282 remain immutable and running. Notify control at the explicit terminal state."
+    ],
+    "forbidden_changes": [
+      "Snapshot import/export feature, Demo controls additions, Data/Axis implementation, new public SDK token or API.",
+      "Brush/Semantic algorithms or schema; semantic/Skia locks or third-party rebuilding; GPU execution strategy/resource budget; broad cache/index/query/mask architecture redesign.",
+      "Loosened identity or pixel acceptance, navigation LOD as exact hit/receipt proof, queued asynchronous Up semantics, dropped confirmed input or terminal control, synchronous GPU waits/readback in hot path.",
+      "Full UR0 matrix or further UR1a A/B attribution, modification/relabeling of old results or frozen A/B artifacts, parallel source writers, commit/push/release.",
+      "Changing the existing failed UR2H observations, source/artifact roots, or treating new attempts as the same old window.",
+      "Replacing regional validity with an unconditional old-image transform, clearing newly erased holes, or certifying defaultFramebuffer calls as physical display.",
+      "Increasing budgets, enabling a new GPU coverage algorithm, reimplementing masks/Brush geometry, adding a renderer/document owner, exposing private internals through SDK."
+    ],
+    "authorized_source_paths": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "runtime/composition/tests/brush_batch_frame_retry_test.cpp",
+      "runtime/composition/tests/selection_input_integration_test.cpp",
+      "runtime/composition/tests/public_selection_input_test.cpp",
+      "runtime/composition/tests/ink_v2_runtime_test.cpp",
+      "runtime/composition/tests/eraser_readmission_test.cpp",
+      "runtime/composition/CMakeLists.txt",
+      "runtime/render/tests/runtime_frame_coordinator_test.cpp",
+      "verification/runners/g5/eraser_readmission*",
+      "verification/tests/g5_eraser_readmission*",
+      "verification/tests/test_g5_eraser_readmission*",
+      ".aegis/packages/G5-UR2a-eraser-readmission/**",
+      "runtime/render/tests/post_up_navigation_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      ".aegis/packages/G5-UR2a-post-up-handoff/**",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/navigation_pixel_validity.hpp",
+      "runtime/render/src/navigation_pixel_validity.cpp",
+      "runtime/render/src/skia_navigation_tiles.hpp",
+      "runtime/render/src/skia_navigation_tiles.cpp",
+      "runtime/render/tests/navigation_pixel_validity_test.cpp",
+      "runtime/composition/tests/fc02_text_geometry_test.cpp",
+      ".aegis/packages/G5-UR2a-post-up-repair-r1/**"
+    ],
+    "preserve": "All existing dirty UR1a transient builder, native tests, r1/r2 tooling/results and old Demo roots. Make no reset/checkout of controlled tree.",
+    "test_file_limit": "fc02_text_geometry_test.cpp change only the named live sweep test/its directly required setup. New broad UI/static contracts and unrelated baseline cleanup are out of scope."
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "reason": "Crosses input admission, derived Scene readiness and presentation handoff; no new semantic choice authorized."
+  },
+  "tests": {
+    "required": [
+      {
+        "obligation": "U2A-01",
+        "command_or_oracle": "Native BusyProvider regression through actual public composition submit path, with a real v4 masked stroke, for busy acquire and retrying present; old implementation must fail. Count provider calls during Down.",
+        "expected_result": "No canonical render/acquire/present or synchronous clear in valid deferred Down; contacts1 and trace accepted; semantic generation unchanged by Down/Move. Actual hard lifecycle/permission/stale input denials preserved.",
+        "blocking_reason": "Valid next partial-erase Down is independent of pending canonical acquire/present."
+      },
+      {
+        "obligation": "U2A-02",
+        "command_or_oracle": "A-Up then B-Down with Scene current; fault-injected Scene apply failure and existing recover success/failure before B exact queries.",
+        "expected_result": "Current Scene basis or successful independent recovery; failure does not query stale Scene or invent an accepted commit. Recovery does not require present.",
+        "blocking_reason": "New erasure reads latest committed Scene."
+      },
+      {
+        "obligation": "U2A-03",
+        "command_or_oracle": "Actual native Skia pixels plus exact handoff identity tests: transform-commit to erase; A-Up/B-Down/A-completion; A/B commits with cancelled A draw and only exact B completion; B completion followed by active C; no-op/cancel/source-lost/pointer reuse. Also test real retained Brush-Up without qualified canonical replacement, immediately partial Down/Move with acquire/present denied. Provider spies must delegate/record visibility, and pixel oracle observes canonical+overlay composition, not canonical alone. Then successful full replacement feedback and delayed old preview/canonical callbacks.",
+        "expected_result": "No old shape position/mask flash, no double opacity/mask application, no global clearing of B/C; eligible sealed records frozen during frame preparation and associated only with successful actual CanonicalWork. No fake A receipt. DPR1/2/4 mixed/translucent/backdrop checks. Pending logical preview alone does not prove visible continuity: Down must leave valid source visible until actual successful complete replacement takes display ownership; no blank/old-image flash, stale re-show, duplicate opacity or original un-erased ARC on top of erasure feedback. Keep logical retirement and qualified receipt unchanged.",
+        "blocking_reason": "Keep valid visual feedback until the correct replacement without deleting new input."
+      },
+      {
+        "obligation": "U2A-04",
+        "command_or_oracle": "Use existing EditorHistory prepareRecord/commitPrepared in eraser-only apply path, with preparation/publication failure before apply, rejected apply and derived Scene/present failure after apply.",
+        "expected_result": "Pre-commit failure leaves document and History unchanged; applied erase remains accepted once with one prepared History entry and publication finalization, even if derived work fails; no successful commit reported as uncommitted.",
+        "blocking_reason": "Erase transaction remains exactly once and undoable."
+      },
+      {
+        "obligation": "U2A-05",
+        "command_or_oracle": "Wrong frame/work/document/lifetime/surface/metrics completion; resize/lost/rebind/close; commit then Undo/Redo before completion; no exact full coverage or approximate-only completion.",
+        "expected_result": "Reject stale/foreign/unqualified completion; correct current full exact frame can replace eligible old feedback with current-state proof; context loss cancels display demand separately from qualifying visibility; no leaked retry/overlay/lease.",
+        "blocking_reason": "Completion and lifecycle proof stays strict."
+      },
+      {
+        "obligation": "U2A-06",
+        "command_or_oracle": "Two serial bounded browser functional workers restoring exact S0 and S2: three partial erases with next Down planned4ms after Up without waiting for receipt/settle; cancel plus immediately navigate; select then drag; Undo/Redo; cold final snapshot/native oracle and pixel checks outside timing. All cold before/Undo/Redo metadata, hashes, available pixel buffers and snapshots are exported even on a failed predicate; pending control/presentation and selection/camera state is explicit. No assertion may discard the failing stage.",
+        "expected_result": "All planned next Downs admitted, zero unexpected INPUT_REJECTED/DUPLICATE_CONTACT, final contacts0, each non-noop Up exactly one commit; final Scene/snapshot/History/pixels correct. Record actual arrival/dispatch/first feedback/canonical wait separately. Drag must first prove selected target and no selection-time mutation.",
+        "blocking_reason": "Continuous public Web input works on actual candidate."
+      },
+      {
+        "obligation": "U2A-07",
+        "command_or_oracle": "Affected native erase/selection/transform/brush-batch-busy/history/frame-coordinator tests; affected Web wrapper/static/runner tests;120 runtime boundary checks; git diff --check.",
+        "expected_result": "All affected checks pass; inherited unrelated full-suite failures disclosed separately. No public SDK/API/ABI/schema/export/version/lock changes.",
+        "blocking_reason": "No regression in affected existing owners or private boundary."
+      },
+      {
+        "obligation": "U2A-08",
+        "command_or_oracle": "Archive exact scoped diff/source/build facts, native RED/green logs, all browser outcomes/raw/cleanup and candidate matching JS/WASM/resource hashes; serve candidate normal SDK on a new unused port.",
+        "expected_result": "Hash-bound shared-worktree result and new Demo URL, preserved old4280/4281/4282, no automatic reload. No UR0/full-G5/P34/performance PASS;500ms RAF work remains separately unresolved unless actual narrow attribution proves otherwise.",
+        "blocking_reason": "Evidence and user Demo are usable without another broad tooling project."
+      },
+      {
+        "obligation": "U2A-09",
+        "command_or_oracle": "Native actual submit/control paths: erase A-Up->next erase B; A-Up->wheel pan; A-Up->ctrl-wheel pinch/zoom; completed transform-Up->navigation. Inject exact canonical BusyProvider and stale-vs-current Scene. Assert accepted input/camera change independently of render result, and observe actual navigation work against current committed mask.",
+        "expected_result": "With writable available document, current/recovered Scene and healthy target, valid next action is admitted without forcing a complete exact canonical. Navigation work can progress and present current-Scene feedback before new exact canonical completion. Busy physical target retains demand and resumes after release. Wrong/stale Scene cannot be consumed. No added document/History mutations from camera input. In the unchanged dense fixture and healthy target, at least one actual content feedback submission must occur while camera input is active, before the new exact replacement completion. Merely pending/nav eligibility/camera changes do not pass. No new numeric p95 target is introduced.",
+        "blocking_reason": "Both post-Up edit input and camera input follow a shared Runtime handoff contract, with distinct admission, Scene readiness and presentation outcomes."
+      },
+      {
+        "obligation": "U2A-10",
+        "command_or_oracle": "A-Up->pan/zoom while old canonical receipt arrives; A/B committed with only new exact completion; nav source missing, context restore, cancel, Undo/Redo before completion; native real Skia pixels DPR1/2/4 with masks and existing supported mixed content.",
+        "expected_result": "No old erased ink resurrection, position flash, blank fabricated-current frame, or false receipt. Navigation never retires sealed feedback or uses canonical completion slot as its own acknowledgement. Latest camera wins only for replaceable camera display demands; no accepted Operation or terminal input is dropped. Eventual exact replacement remains fair.",
+        "blocking_reason": "Current navigation feedback and qualified canonical completion remain distinct during immediate continuous post-Up actions."
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "browser_window": {
+    "ids": [
+      "UR2R1-C1",
+      "UR2R1-C2"
+    ],
+    "new_browser_starts_max": 2,
+    "concurrency": 1,
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 44,
+    "historical_charged_seconds": 1433,
+    "new_nominal_seconds_max": 360,
+    "original_cumulative_cap_seconds": 8370,
+    "fixtures": {
+      "S0": {
+        "path": ".aegis/results/G5-UR1a-attribution-r1/local-comparison/fixtures/S0.axsnap",
+        "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+        "identity_kind": "local-content-addressed"
+      },
+      "S2": {
+        "path": ".aegis/results/G5-UR1a-attribution-r1/local-comparison/fixtures/S2.axsnap",
+        "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+        "identity_kind": "local-content-addressed"
+      }
+    },
+    "restore": "Reuse explicit r2 caller-owned binding1 and independent source/live/checkpoint clocks. No new seed. Existing metadata read-only. Ordinary candidate generation differs from saved external revision.",
+    "safety": "Freeze source/driver/artifact before start; charge actual ceil duration and owned cleanup, unknown interruption full reservation. Record all failures with raw errors/contacts. One resource/identity/hard timeout stops further workers; no hidden retries. Product failure blocks candidate acceptance. Missing browser evidence is explicit, not a request to rebuild a broad harness.",
+    "functional_cases": "Same S0/S2 and four independent public cases per worker as UR2H; no new seed or A/B baseline. Keep planned immediate4ms input, raw actual delivery and GL feedback/canonical timing separate. Preserve all three cold stages and run existing native oracle even when a raw roundtrip hash fails. Real interior/geometry/mask/order errors block; allowed AA uses only already accepted independent edge policy. Any unclassified failed stage remains blocked. Within each existing worker add the short pending-Brush-to-erase visibility branch using public input on the already restored document; no extra worker/seed. Save cold screenshots/byte buffers outside input timing and real overlay visibility transitions. This is part of the same U2A-03 continuity check, not a new performance cohort.",
+    "old_window": "UR2H-C1/C2 CLOSED at44starts/1433seconds,remaining old authorization0. These two replace no old outcome and are separately charged."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "Original obligations U2A-01..10 satisfied; pending-only navigation is not a successful visual endpoint",
+      "All required failed browser cases and meaningful active-phase feedback reverified with complete raw buffers and original oracle",
+      "Matching new normal Demo/source/result and all ledger/cleanup facts preserved; explicit remaining unrelated500ms/fullG5 work and notification"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "AUTHORITY_CONFLICT",
+      "REPOSITORY_DIVERGENCE",
+      "PRODUCT_CORRECTNESS_REGRESSION",
+      "REQUIRED_NATIVE_ENVIRONMENT_FAILURE",
+      "BROWSER_GUARD_FAILURE",
+      "REQUIRED_EVIDENCE_UNAVAILABLE"
+    ],
+    "behavior": "Retain failed rows/buffers/scene/query progress and exact source; return explicit implementation, pixel, environment or unresolved authority blocker. Stop after the2 fixed attempts, no hidden retries or endless harness extension. Do not relax thresholds to turn a failure green."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "no_extra_approval": "Do not stop at design/unit/build checkpoints when remaining authorized checks can run."
+  },
+  "scope_boundary": "This current corrected scope expressly permits private current-composition proof and bounded existing navigation job reuse in shared Render. It does not authorize new coverage algorithms, cache architecture, queue thresholds, threads, public SDK changes or budget tuning."
+}

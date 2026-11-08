@@ -1,0 +1,57 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2a-post-up-handoff",
+  "status": "AUTHORIZED_SCOPED_PRODUCTION_FIX",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "local",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2a-post-up-handoff",
+    "content_identity": "package.json SHA256 supplied in control handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "completed_through": "Accepted UR1a dirty implementation and all old evidence preserved; r2 closed. Preserve valid narrow erase design/RED already performed; add post-Up navigation before candidate execution.",
+    "next_action": "Reconcile valid existing work, freeze common post-Up handoff design and run native erase+navigation RED, then implement and execute the combined bounded closure."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "dedbb0a9c2f9a6df9638c6661f948ef380ac9183964220343a0a19de61cb810d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "0b81d83d3897db0dc0953d17c0e87463407c120be664a2ef583bc7144991c372"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "4dfa64382e2c4080d23e32e541425af68f9e69f4889185a90750a9fd06452128"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3bf8ae14f32bf8d1ef133435219eb3f2fbcc6abae91935dcafa5ef9f3badfe72"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "204b24bef2f94a2c428f8c48aabeb84c9e98c22ab6aeafca2700961ea9e67e9f"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "supersedes_package": {
+    "path": ".aegis/packages/G5-UR2a-eraser-readmission/package.json",
+    "sha256": "499f115eed92cb19000d796646b4cfea5d513063acc22ea864f4e815f0d41089",
+    "reason": "User-requested coherent post-Up admission and current-Scene feedback, before browser execution. No old evidence or result is relabelled."
+  }
+}

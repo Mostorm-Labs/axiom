@@ -1,0 +1,113 @@
+{
+  "schema": "g5-scoped-verification-v1",
+  "obligations": [
+    {
+      "id": "U2A-01",
+      "requirement": "Valid next partial-erase Down is independent of pending canonical acquire/present.",
+      "oracle": "Native BusyProvider regression through actual public composition submit path, with a real v4 masked stroke, for busy acquire and retrying present; old implementation must fail. Count provider calls during Down.",
+      "acceptance": "No canonical render/acquire/present or synchronous clear in valid deferred Down; contacts1 and trace accepted; semantic generation unchanged by Down/Move. Actual hard lifecycle/permission/stale input denials preserved.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-02",
+      "requirement": "New erasure reads latest committed Scene.",
+      "oracle": "A-Up then B-Down with Scene current; fault-injected Scene apply failure and existing recover success/failure before B exact queries.",
+      "acceptance": "Current Scene basis or successful independent recovery; failure does not query stale Scene or invent an accepted commit. Recovery does not require present.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-03",
+      "requirement": "Keep valid visual feedback until the correct replacement without deleting new input.",
+      "oracle": "Actual native Skia pixels plus exact handoff identity tests: transform-commit to erase; A-Up/B-Down/A-completion; A/B commits with cancelled A draw and only exact B completion; B completion followed by active C; no-op/cancel/source-lost/pointer reuse.",
+      "acceptance": "No old shape position/mask flash, no double opacity/mask application, no global clearing of B/C; eligible sealed records frozen during frame preparation and associated only with successful actual CanonicalWork. No fake A receipt. DPR1/2/4 mixed/translucent/backdrop checks.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-04",
+      "requirement": "Erase transaction remains exactly once and undoable.",
+      "oracle": "Use existing EditorHistory prepareRecord/commitPrepared in eraser-only apply path, with preparation/publication failure before apply, rejected apply and derived Scene/present failure after apply.",
+      "acceptance": "Pre-commit failure leaves document and History unchanged; applied erase remains accepted once with one prepared History entry and publication finalization, even if derived work fails; no successful commit reported as uncommitted.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-05",
+      "requirement": "Completion and lifecycle proof stays strict.",
+      "oracle": "Wrong frame/work/document/lifetime/surface/metrics completion; resize/lost/rebind/close; commit then Undo/Redo before completion; no exact full coverage or approximate-only completion.",
+      "acceptance": "Reject stale/foreign/unqualified completion; correct current full exact frame can replace eligible old feedback with current-state proof; context loss cancels display demand separately from qualifying visibility; no leaked retry/overlay/lease.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-06",
+      "requirement": "Continuous public Web input works on actual candidate.",
+      "oracle": "Two serial bounded browser functional workers restoring exact S0 and S2: three partial erases with next Down planned4ms after Up without waiting for receipt/settle; cancel plus immediately navigate; select then drag; Undo/Redo; cold final snapshot/native oracle and pixel checks outside timing.",
+      "acceptance": "All planned next Downs admitted, zero unexpected INPUT_REJECTED/DUPLICATE_CONTACT, final contacts0, each non-noop Up exactly one commit; final Scene/snapshot/History/pixels correct. Record actual arrival/dispatch/first feedback/canonical wait separately. Drag must first prove selected target and no selection-time mutation.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-07",
+      "requirement": "No regression in affected existing owners or private boundary.",
+      "oracle": "Affected native erase/selection/transform/brush-batch-busy/history/frame-coordinator tests; affected Web wrapper/static/runner tests;120 runtime boundary checks; git diff --check.",
+      "acceptance": "All affected checks pass; inherited unrelated full-suite failures disclosed separately. No public SDK/API/ABI/schema/export/version/lock changes.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-08",
+      "requirement": "Evidence and user Demo are usable without another broad tooling project.",
+      "oracle": "Archive exact scoped diff/source/build facts, native RED/green logs, all browser outcomes/raw/cleanup and candidate matching JS/WASM/resource hashes; serve candidate normal SDK on a new unused port.",
+      "acceptance": "Hash-bound shared-worktree result and new Demo URL, preserved old4280/4281/4282, no automatic reload. No UR0/full-G5/P34/performance PASS;500ms RAF work remains separately unresolved unless actual narrow attribution proves otherwise.",
+      "evidence_required": [
+        "raw acceptance observations or test log",
+        "exact source/artifact binding"
+      ]
+    },
+    {
+      "id": "U2A-09",
+      "requirement": "Both post-Up edit input and camera input follow a shared Runtime handoff contract, with distinct admission, Scene readiness and presentation outcomes.",
+      "oracle": "Native actual submit/control paths: erase A-Up->next erase B; A-Up->wheel pan; A-Up->ctrl-wheel pinch/zoom; completed transform-Up->navigation. Inject exact canonical BusyProvider and stale-vs-current Scene. Assert accepted input/camera change independently of render result, and observe actual navigation work against current committed mask.",
+      "acceptance": "With writable available document, current/recovered Scene and healthy target, valid next action is admitted without forcing a complete exact canonical. Navigation work can progress and present current-Scene feedback before new exact canonical completion. Busy physical target retains demand and resumes after release. Wrong/stale Scene cannot be consumed. No added document/History mutations from camera input.",
+      "evidence_required": [
+        "actual input return/errors and camera before/after",
+        "source demand/Scene identity and actual feedback submit, not only RAF",
+        "old-behavior native RED and candidate safety pixels"
+      ]
+    },
+    {
+      "id": "U2A-10",
+      "requirement": "Current navigation feedback and qualified canonical completion remain distinct during immediate continuous post-Up actions.",
+      "oracle": "A-Up->pan/zoom while old canonical receipt arrives; A/B committed with only new exact completion; nav source missing, context restore, cancel, Undo/Redo before completion; native real Skia pixels DPR1/2/4 with masks and existing supported mixed content.",
+      "acceptance": "No old erased ink resurrection, position flash, blank fabricated-current frame, or false receipt. Navigation never retires sealed feedback or uses canonical completion slot as its own acknowledgement. Latest camera wins only for replaceable camera display demands; no accepted Operation or terminal input is dropped. Eventual exact replacement remains fair.",
+      "evidence_required": [
+        "matched frame/source/surface/metrics/camera identities",
+        "pixel and exactly-once History/receipt checks",
+        "old completion rejection and new-action preservation"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Old valid B Down after committed erase A with canonical acquire/present retry is rejected; test uses actual input path and nonempty v4 geometry, not a missing-method compile failure.",
+    "additional_expected_failure": "Old current-Scene navigation eligibility exits solely because previous exact frame has pre-erase Scene generation, then serviceFrameOpportunity schedules exact canonical instead of current-Scene navigation feedback. Demonstrate with real committed erase plus camera change; do not merely stub a desired return."
+  },
+  "qualification": "This package repairs an input/render dependency. It does not claim UR1 complete, GPU strategy complete, or overall tail latency solved. Old invalid drag observations stay FAILED. This user amendment adds the unified post-Up navigation endpoint, not all UR1 execution-strategy work."
+}

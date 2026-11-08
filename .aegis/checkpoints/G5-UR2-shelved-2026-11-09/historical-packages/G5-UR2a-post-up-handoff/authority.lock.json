@@ -1,0 +1,138 @@
+{
+  "status": "current_for_this_scoped_task",
+  "human_authorization": "User: skip snapshot import/export and proceed with subsequent product work without holding at UR1a. Existing control/sole-implementation split remains in force.",
+  "authority_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "design_inputs": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "design_status": "R3 is a design input concretized only by this bounded package; does not supersede current Semantic, SDK or manifest authority.",
+  "prior_result_refs": [
+    {
+      "path": ".aegis/results/G5-UR1a-transient-reference-control-review/result.json",
+      "sha256": "08793f9ff159b2cf2706a756a8df0e57b5d8aa98a2c01ae684ef382f3a10e05b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/result.json",
+      "sha256": "71963bc5ccf84edf45bcc6731f702b13e3570d1fe1d77d023cf995f67b576f64",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/attribution.json",
+      "sha256": "eeb792ca0093fbd155e7b8f36966c2f1f7e0f212d35384879b0558a8fbda6ec1",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "accepted_dirty_sources": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "520d967c917da7b578c7e34c05b85b756537d4a5b4276b438b30a05150550071",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "e320606ba03390cfda751a3003df12b8e8fce2292cfc130a489bac9295b9918b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "9bc7a5c6f2fcfd9e2e9532f35338dc18d3267cf8bb1b6e237dee16872b5d4c82",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/runtime_frame_coordinator.cpp",
+      "sha256": "f1798283adabb2fdcdf2ee6915862af1cf3634b10c99bf46c4032b9ed963b577",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "frozen_decisions": [
+    "Existing InputRouter/Coordinator/CanvasEditingRuntime remain input/session owners; existing OperationEngine remains sole mutation owner. No async Operation or queued-Up semantics.",
+    "Admission, semantic commit, Scene readiness, render submission and qualified completion remain distinct. Presentation backlog alone must not reject a valid next eraser Down.",
+    "New dependent queries use the current committed Scene or independently recover it using the existing derived recovery owner; never query old masks.",
+    "Retained partial erase feedback is not a Brush ARC contour. Runtime owns active/sealed/replaced identities; Provider remains a resource/presentation owner.",
+    "Only actual strictly accepted exact canonical completion can retire the frozen eligible sealed set. A newer exact frame may replace older cancelled draw work per R3-1, without synthesizing old receipts and without clearing a newer gesture.",
+    "Common post-commit contract lives in existing Interaction/Composition owners. New valid eraser input and camera input are independent of old exact pixels; document/Scene/visual basis are evaluated separately, not one universal ready flag.",
+    "Post-Up camera update may already be accepted while feedback is gated by previous exact Scene generation. Do not label delayed visual submission as input rejection without the public return/error fact.",
+    "Navigation may use a current synchronized Scene-derived disposable source/demand before any new exact canonical is submitted. Build a fresh current basis; never relabel lastSubmittedCanonicalFrameState, old pixels or canonical capture as the new Scene.",
+    "Old navigation pixels are reusable only with existing full validity or regional unchanged-content proof. Newly erased areas must not reappear. Navigation remains approximate and cannot qualify CanonicalVisible or retire sealed feedback.",
+    "Keep actual on-screen content valid while waiting for target capacity; no synchronous GPU waits and no busy spin. Hard surface loss remains distinct from a healthy provider waiting for a buffer."
+  ],
+  "human_scope_update": "User explicitly asks to unify Up->new erase and Up->two-finger pan/zoom instead of treating this as an isolated eraser bug. This package supersedes the narrower unexecuted/readiness scope while preserving completed valid work.",
+  "supersedes_package": {
+    "path": ".aegis/packages/G5-UR2a-eraser-readmission/package.json",
+    "sha256": "499f115eed92cb19000d796646b4cfea5d513063acc22ea864f4e815f0d41089",
+    "reason": "User-requested coherent post-Up admission and current-Scene feedback, before browser execution. No old evidence or result is relabelled."
+  },
+  "additional_source_basis": [
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "a2dc3997dd69df8330ad43363854744adc498d69ff3b64155e4b23b2fb039291",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "d5957d4d59ce5b51f73bf4e18eb8207eafee462888925a85cd1f0b5ca9e5ce66",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_partial_erase.cpp",
+      "sha256": "5ec2c05a48bcb1a8f9433ca7a8b0a85802b0577a179a39bb9f844db8cb60cc4b",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+      "identity_kind": "local-content-addressed"
+    }
+  ]
+}

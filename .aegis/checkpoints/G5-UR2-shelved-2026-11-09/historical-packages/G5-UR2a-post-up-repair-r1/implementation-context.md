@@ -1,0 +1,15 @@
+# UR2a successor repair: close the cross-layer post-Up display dependency
+
+The control review is .aegis/results/G5-UR0b/control-review-ur2a-post-up/result.json. It independently rehashed166evidence files,3large archives,28261source files and reran8native post-Up tests; identities match. UR2H is CLOSED,44starts/1433seconds. Six nextDowns work, but6camera phases have0observed content writes and3cold hashes fail without retained buffers. Preserve all valid product work and all failed outcomes.
+
+The prior scope was too narrow for the already frozen navigation criterion: Runtime can produce current Scene basis, but SkiaRenderer revalidate still derives current background/isolation policy from an already-current exact navigation image. This creates a bootstrap dependency after a mask-only commit. Current composition facts can instead come from the existing trusted FramePlan/Scene inputs; Render must still validate every reuse condition and conservative changed-mask damage. Do not simply delete the safety guard or claim it alone accounts for all500ms.
+
+First fix the existing cold helper to retain actual before/Undo/Redo buffers/snapshots/state before evaluating predicates. The3failed rows have final selection0, so HUD/AA explanations are unproven. Use existing native oracle and edge policy; preserve all disagreements. Keep cold work outside timing.
+
+Then implement the narrow current-composition proof and revalidation through the existing owner/query path, preserving unchanged regions and preparing changed areas with current sources. Public APIs, GPU algorithms, budgets and third-party locks stay fixed. New frame policy/basis is not an old exact image restamp or a canonical receipt.
+
+The one old live sweep test may establish a real qualified seed Brush handoff; keep its actual live sweep coverage. Inspect retained/unqualified preview hiding risk without inventing new Brush supersession semantics. The separate500ms leaf remains follow-up unless this repair produces actual attribution.
+
+Reuse existing native/runner tests and original fixtures. Exactly2newcandidate functional workers S0/S2 are authorized, not anotherUR1a comparison. NewcandidateDemo uses a new port; do not overwrite4283or oldA/B. Continue through actual verification/result and proactively notify control, no commit/push.
+
+Additional read-only review confirmed eraserBegin immediately hides the Web preview CSS even if Brush geometry is logically retained but absent from canonical. The old SpyProvider inherits a no-op visibility setter and its fixture first finishes all Brush handoffs. Add an actual composed-display RED regression. Fix display ownership in the existing Runtime/frame path: keep a valid old source until a valid full replacement really succeeds; then suppress duplicate old pixels while leaving the logical Brush receipt unchanged. Never fake CanonicalVisible or permit an old callback to re-show stale content. This uses the existing full transient replacement and strict canonical paths, not a new ARC semantic protocol.

@@ -1,0 +1,100 @@
+{
+  "schema": "axiom-isolated-source-checkpoint-verification-v1",
+  "scope": "Archival integrity and exact isolated patch replay only; no product acceptance",
+  "status": "VERIFIED",
+  "active_source_modified": false,
+  "candidate_and_wip_recovery": [
+    {
+      "patch": "ur2-candidate.patch",
+      "returncode": 0,
+      "files": [
+        {
+          "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+          "sha256": "6ab5e8d9bcc0ee20c589157c0713ebd48941153797f0b119ef5120483246448b",
+          "expected_sha256": "6ab5e8d9bcc0ee20c589157c0713ebd48941153797f0b119ef5120483246448b",
+          "matches": true
+        },
+        {
+          "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+          "sha256": "fb9e165645c140908267259986517d5027332f26cce97fae1e5ae0f1222687f7",
+          "expected_sha256": "fb9e165645c140908267259986517d5027332f26cce97fae1e5ae0f1222687f7",
+          "matches": true
+        },
+        {
+          "path": "runtime/composition/src/runtime_composition.cpp",
+          "sha256": "8a4759b82cb9a0fe95b190c2a3a73d4cdea3c45580dc3c83575c332b2468423d",
+          "expected_sha256": "8a4759b82cb9a0fe95b190c2a3a73d4cdea3c45580dc3c83575c332b2468423d",
+          "matches": true
+        },
+        {
+          "path": "runtime/composition/CMakeLists.txt",
+          "sha256": "cd4cd1d4dc8e3e70e42be01ee43782b9d0daab34013b8844b0b7eb027534d7cd",
+          "expected_sha256": "cd4cd1d4dc8e3e70e42be01ee43782b9d0daab34013b8844b0b7eb027534d7cd",
+          "matches": true
+        },
+        {
+          "path": "runtime/composition/tests/eraser_readmission_test.cpp",
+          "sha256": "017560042381b4bdc46793051a1e7abce58418d1604ccc27eccd1d9e996c6c0b",
+          "expected_sha256": "017560042381b4bdc46793051a1e7abce58418d1604ccc27eccd1d9e996c6c0b",
+          "matches": true
+        },
+        {
+          "path": "verification/runners/g5/eraser_readmission.mjs",
+          "sha256": "7446d0438829195c7ad27af2099f8c772e4621122e263ba8ceb3d0a078b33be0",
+          "expected_sha256": "7446d0438829195c7ad27af2099f8c772e4621122e263ba8ceb3d0a078b33be0",
+          "matches": true
+        },
+        {
+          "path": "verification/runners/g5/eraser_readmission_runner.py",
+          "sha256": "1283a31ad779dabd8c33cc156001c2dbdb7e3bdfe649f4ffd31d46db841c2ee3",
+          "expected_sha256": "1283a31ad779dabd8c33cc156001c2dbdb7e3bdfe649f4ffd31d46db841c2ee3",
+          "matches": true
+        },
+        {
+          "path": "verification/tests/g5_eraser_readmission.test.mjs",
+          "sha256": "30f1b3f6a9184ef09c95f8fc14997c767b2a51184bfa7ff44c28a8e4104bc458",
+          "expected_sha256": "30f1b3f6a9184ef09c95f8fc14997c767b2a51184bfa7ff44c28a8e4104bc458",
+          "matches": true
+        },
+        {
+          "path": "verification/tests/test_g5_eraser_readmission.py",
+          "sha256": "210b40ff73bb215fe8789c7bd531d325137829027c880bf0105d721e7e438bdf",
+          "expected_sha256": "210b40ff73bb215fe8789c7bd531d325137829027c880bf0105d721e7e438bdf",
+          "matches": true
+        }
+      ],
+      "all_match": true
+    },
+    {
+      "patch": "repair-wip.patch",
+      "returncode": 0,
+      "files": [
+        {
+          "path": "verification/runners/g5/eraser_readmission.mjs",
+          "sha256": "47e115194e8cc0775a9fe82951345fb233615696f3a69ec69aa03aec19245ed3",
+          "expected_sha256": "47e115194e8cc0775a9fe82951345fb233615696f3a69ec69aa03aec19245ed3",
+          "matches": true
+        },
+        {
+          "path": "verification/runners/g5/eraser_readmission_runner.py",
+          "sha256": "0fa2c5ac72f4ba8fd98e2a7c2fbccc7ac016c096f809caeb212b1d993f5c9435",
+          "expected_sha256": "0fa2c5ac72f4ba8fd98e2a7c2fbccc7ac016c096f809caeb212b1d993f5c9435",
+          "matches": true
+        },
+        {
+          "path": "verification/tests/g5_eraser_readmission.test.mjs",
+          "sha256": "2f23a8a0d2b5a75b9cbbe1edb8ea264152def97566bf19b90a2d80c8666ad667",
+          "expected_sha256": "2f23a8a0d2b5a75b9cbbe1edb8ea264152def97566bf19b90a2d80c8666ad667",
+          "matches": true
+        },
+        {
+          "path": "verification/tests/test_g5_eraser_readmission.py",
+          "sha256": "2ff4513a1fa2d83bd9c648c878e76a5657a728f85d4da820775ef6fc8e026221",
+          "expected_sha256": "2ff4513a1fa2d83bd9c648c878e76a5657a728f85d4da820775ef6fc8e026221",
+          "matches": true
+        }
+      ],
+      "all_match": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+TAP version 13
+# canvas control API tests PASS
+# Subtest: verification/sdk_web_external/control_api_test.mjs
+ok 1 - verification/sdk_web_external/control_api_test.mjs
+  ---
+  duration_ms: 46.493791
+  ...
+# pointer input tests PASS
+# Subtest: verification/sdk_web_external/pointer_input_test.mjs
+ok 2 - verification/sdk_web_external/pointer_input_test.mjs
+  ---
+  duration_ms: 45.315375
+  ...
+# Subtest: independent post-Up branches keep real wheel, preselected drag and cold oracle separate
+ok 3 - independent post-Up branches keep real wheel, preselected drag and cold oracle separate
+  ---
+  duration_ms: 1.01275
+  ...
+# Subtest: a nextDown product failure preserves actual predicate, prior phase and SDK error
+ok 4 - a nextDown product failure preserves actual predicate, prior phase and SDK error
+  ---
+  duration_ms: 0.974333
+  ...
+# Subtest: successful action retains output and read-only diagnostic export
+ok 5 - successful action retains output and read-only diagnostic export
+  ---
+  duration_ms: 0.3915
+  ...
+# Subtest: restored live semantic clock is independent of source and external checkpoint clocks
+ok 6 - restored live semantic clock is independent of source and external checkpoint clocks
+  ---
+  duration_ms: 0.9645
+  ...
+# Subtest: caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+ok 7 - caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+  ---
+  duration_ms: 0.535375
+  ...
+# Subtest: consumer module promise waits for deliberately delayed installation
+ok 8 - consumer module promise waits for deliberately delayed installation
+  ---
+  duration_ms: 0.222875
+  ...
+# Subtest: only exact same snapshot and complete metadata may enter measured cases
+ok 9 - only exact same snapshot and complete metadata may enter measured cases
+  ---
+  duration_ms: 0.130458
+  ...
+# Subtest: optional GPU wrappers only forward preexisting calls once and label polling interval
+ok 10 - optional GPU wrappers only forward preexisting calls once and label polling interval
+  ---
+  duration_ms: 0.263542
+  ...
+# Subtest: no per-Move process logging, no timed readback and cold work is separate
+ok 11 - no per-Move process logging, no timed readback and cold work is separate
+  ---
+  duration_ms: 3.385
+  ...
+# Subtest: local timings retain a long handler and actual content submission gaps
+ok 12 - local timings retain a long handler and actual content submission gaps
+  ---
+  duration_ms: 0.78225
+  ...
+# Subtest: missing real content writes cannot be reported as a zero submission gap
+ok 13 - missing real content writes cannot be reported as a zero submission gap
+  ---
+  duration_ms: 0.719458
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78.214

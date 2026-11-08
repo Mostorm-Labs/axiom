@@ -1,0 +1,52 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2a-eraser-readmission",
+  "status": "AUTHORIZED_SCOPED_PRODUCTION_FIX",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "local",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2a-eraser-readmission",
+    "content_identity": "package.json SHA256 supplied in control handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "14ce622161474e40d2f19ecfae66e9f31cf12933",
+    "completed_through": "Accepted dirty UR1a implementation preserved. r2 attribution source-frozen window is closed. No UR2 product mutation yet.",
+    "next_action": "Verify package/source identities, freeze short resolved design, run native RED then implement and continue through required candidate checks."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "4badb64ed3c7cdbc3de3cee7c33b7e1cfbbbcf5c87f2c57a66c541cacf22bf96"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f400ae960e59b76a24f956a7a8ce53febf47fed2d0de895392c286e338c90c39"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "89a7e27851e388827eccf4bf13e8a529b577033228d70ebb9302664f409f4091"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "aed719776a381dfcf5f2446a9683690bedcfede3f9d68c85b8aeae2b86cf7ed4"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "a73e9f7a8000dc4f217f871efdd719afefbbf8bd04576220672690b8c2a9502b"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03"
+}

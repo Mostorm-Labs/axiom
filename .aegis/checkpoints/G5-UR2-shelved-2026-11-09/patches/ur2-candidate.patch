@@ -1,0 +1,1354 @@
+--- before/runtime/interaction/src/canvas_editing_runtime.cpp
++++ after/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -521,7 +521,8 @@
+   if (surfaceTransitionActive_) {
+     surfaceAbortRequested_ = true;
+     surface_.available = false;
+-    closed_ = true;
++    closed_ = true;
++  invalidateEraseDisplay();
+     exactDemand_.reset();
+     frameCoordinator_.close();
+     return;
+@@ -533,7 +534,8 @@
+   exactDemand_.reset();
+   frameCoordinator_.close();
+   surface_.available = false;
+-  closed_ = true;
++  closed_ = true;
++  invalidateEraseDisplay();
+ }
+ 
+ bool CanvasEditingRuntime::unregisterInputSource(input::InputSourceId source,
+@@ -658,7 +660,11 @@
+                                std::uint64_t session) noexcept {
+   if (!sample.key.valid()) return false;
+   if (sample.phase == input::PointerPhase::kDown && !sample.predicted &&
+-      !eraserBegin(session)) return false;
++      !eraserBegin(session)) return false;
++  if(sample.phase==input::PointerPhase::kDown) {
++    const auto active=activeEraseFeedback_.find(session);
++    if(active!=activeEraseFeedback_.end())active->second.pointer=sample.key;
++  }
+   // Pointer-up is terminal control. The last rendered move already owns the
+   // retained eraser trace; sampling the up coordinate here would extend the
+   // committed mask after the preview has stopped and cause a visible jump.
+@@ -1451,7 +1457,8 @@
+   brushPreviews_.clear();
+   panPointers_.clear();
+   pendingCanonicalIdentities_.clear();
+-  eraserTraces_.clear();
++  eraserTraces_.clear();
++  activeEraseFeedback_.clear();
+   eraserPreviewRevisions_.clear();
+ }
+ 
+@@ -3006,10 +3013,110 @@
+                      static_cast<float>(paint.opacity)};
+ }
+ 
++bool CanvasEditingRuntime::freezeEraseReplacement(const render::FrameState& frame,
++                                                  EraseReplacement& proof) const {
++  if(!historySceneReady() || frame.sceneGeneration!=semanticGeneration_.current() ||
++     frame.sceneReadToken.value()!=sceneRevision() || frame.viewId!=viewId_ ||
++     frame.surfaceGeneration.value()!=surface_.generation ||
++     frame.metricsGeneration.value()!=surface_.metricsGeneration) return false;
++  const auto& clip=frame.viewportClip;
++  if(clip.left!=0 || clip.top!=0 || clip.right!=frame.metrics.logicalWidth ||
++     clip.bottom!=frame.metrics.logicalHeight)return false;
++  proof.document=documentId_;proof.lifetime=eraseDisplayLifetime_;
++  proof.frame={frame.viewId,frame.frameId,frame.sceneReadToken.value(),
++      frame.sceneGeneration.value(),frame.surfaceGeneration,frame.metricsGeneration};
++  proof.fence=canonicalCommitFence();
++  proof.eligible.reserve(sealedEraseFeedback_.size());
++  proof.superseded.reserve(sealedEraseFeedback_.size());
++  for(const auto& entry:sealedEraseFeedback_) {
++    if(entry.document!=documentId_ || entry.view!=viewId_ || entry.lifetime!=proof.lifetime ||
++       entry.surface!=surface_.generation || entry.metrics!=surface_.metricsGeneration ||
++       entry.semantic>frame.sceneGeneration.value() ||
++       entry.commit.runtime_epoch!=proof.fence.runtime_epoch ||
++       entry.commit.ordinal>proof.fence.ordinal)continue;
++    proof.eligible.push_back(entry.serial);
++    const bool currentEffect=std::all_of(entry.masks.begin(),entry.masks.end(),[&](const auto& token){
++      const auto* object=sceneCoordinator_->runtimeScene().find(token.first);
++      return object && std::any_of(object->eraseMasks.begin(),object->eraseMasks.end(),
++          [&](const auto& mask){return mask.id==token.second;});
++    });
++    if(!currentEffect)proof.superseded.push_back(entry.serial);
++  }
++  return true;
++}
++
++bool CanvasEditingRuntime::associateEraseReplacement(std::uint64_t runtime,std::uint64_t lifetime,
++    std::uint64_t attachment,std::uint64_t work,const render::RuntimeFrameIdentity& frame) noexcept {
++  if(!submittedEraseReplacement_ || submittedEraseReplacement_->frame!=frame)return true;
++  auto& proof=*submittedEraseReplacement_;
++  if(!runtime||!lifetime||!attachment||!work || proof.document!=documentId_ ||
++     proof.lifetime!=eraseDisplayLifetime_ || !surface_.available ||
++     frame.surfaceGeneration.value()!=surface_.generation ||
++     frame.metricsGeneration.value()!=surface_.metricsGeneration)return false;
++  const std::array<std::uint64_t,4> identity{runtime,lifetime,attachment,work};
++  if(proof.associated)return proof.work==identity;
++  // Only attach actual successful work. Never rebuild/expand the frozen list.
++  proof.work=identity;proof.associated=true;return true;
++}
++
++void CanvasEditingRuntime::completeEraseReplacement(std::uint64_t runtime,std::uint64_t lifetime,
++    std::uint64_t attachment,std::uint64_t work,const render::RuntimeFrameIdentity& frame) noexcept {
++  if(!submittedEraseReplacement_)return;
++  const auto& proof=*submittedEraseReplacement_;
++  if(!proof.associated || proof.work!=std::array<std::uint64_t,4>{runtime,lifetime,attachment,work} ||
++     proof.frame!=frame || proof.document!=documentId_ || proof.lifetime!=eraseDisplayLifetime_ ||
++     !surface_.available || frame.surfaceGeneration.value()!=surface_.generation ||
++     frame.metricsGeneration.value()!=surface_.metricsGeneration)return;
++  sealedEraseFeedback_.erase(std::remove_if(sealedEraseFeedback_.begin(),sealedEraseFeedback_.end(),
++      [&](const auto& entry){
++        if(std::find(proof.eligible.begin(),proof.eligible.end(),entry.serial)==proof.eligible.end())return false;
++        ++replacedEraseFeedback_;
++        if(std::find(proof.superseded.begin(),proof.superseded.end(),entry.serial)!=proof.superseded.end())++supersededEraseFeedback_;
++        return true;
++      }),sealedEraseFeedback_.end());
++  submittedEraseReplacement_.reset();
++  // Qualified B may retire only its sealed roster. Active or later sealed C
++  // owns the target now, and cannot be globally cleared by B's old callback.
++  if(activeEraseFeedback_.empty() && sealedEraseFeedback_.empty() && !previewActive() &&
++     !selectionTransformActive() && !creationActive() && !regionSelectionActive() &&
++     !objectEraseFeedbackActive() && pendingCanonicalIdentities_.empty()) {
++    transientOverlayHandoffPending_=false;
++    if(previewProvider_)previewProvider_->setOverlayVisible(false);
++  }
++}
++
++void CanvasEditingRuntime::invalidateEraseDisplay() noexcept {
++  cancelledEraseDisplay_+=sealedEraseFeedback_.size();
++  activeEraseFeedback_.clear();sealedEraseFeedback_.clear();submittedEraseReplacement_.reset();
++  if(eraseDisplayLifetime_!=std::numeric_limits<std::uint64_t>::max())++eraseDisplayLifetime_;
++}
++
+ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
+   G5_SCOPE(g5Scope,g5::Tag::eraser_begin,g5::Purpose::none);
+ 
+-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
++  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
++  if (platformPresentationDeferred_ && toolMode_ == ToolMode::kPartialEraser) {
++    // Input owns only a trace. Pixel backlog is serviced by frame opportunities.
++    if (!canonicalWriteAdmission() || !activeSurfaceProvider() || pointerId == 0 ||
++        eraserTraces_.contains(pointerId) || nextEraseFeedback_ == 0) return false;
++    try {
++      EraseFeedback active;
++      active.serial=nextEraseFeedback_++;active.session=pointerId;
++      active.document=documentId_;active.view=viewId_;active.lifetime=eraseDisplayLifetime_;
++      active.surface=surface_.generation;active.metrics=surface_.metricsGeneration;
++      active.semantic=semanticGeneration_.current().value();active.scene=sceneRevision();
++      eraserTraces_.emplace(pointerId,std::vector<foundation::WorldPoint>{});
++      eraserPreviewRevisions_.emplace(pointerId,0);
++      activeEraseFeedback_.emplace(pointerId,active);
++    } catch(const std::bad_alloc&) {
++      eraserTraces_.erase(pointerId);eraserPreviewRevisions_.erase(pointerId);
++      activeEraseFeedback_.erase(pointerId);return false;
++    }
++    // Never clear/present the shared target here. Old full-frame feedback stays
++    // useful until the current Scene plus the new trace replaces it.
++    if(previewProvider_)previewProvider_->setOverlayVisible(false);
++    return true;
++  }
+   // A selection/creation frame uses the same transient provider as the
+   // eraser. Hide and clear that frame before starting a new eraser session;
+   // otherwise a just-moved Shape can remain composited at its former
+@@ -3069,7 +3176,8 @@
+   std::lock_guard lock(previewStateMutex_);
+   const auto it = eraserTraces_.find(pointerId);
+   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
+-  it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
++  it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
++  ++eraserPreviewRevisions_[pointerId];
+   G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
+   if(toolMode_==ToolMode::kObjectEraser){
+     auto& candidates=objectEraseCandidates_[pointerId];const auto count=candidates.size();
+@@ -3098,22 +3206,44 @@
+   return true;
+ }
+ 
+-bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
++bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   G5_SCOPE(g5Scope,g5::Tag::eraser_up,g5::Purpose::none);
+ 
+-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
+-  std::lock_guard lock(previewStateMutex_);
++  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
++  std::lock_guard lock(previewStateMutex_);
++  bool committed=false;
++  try {
+   const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
+   if(objectEraser)finishObjectEraseFeedback(pointerId,false);
+-  const auto it = eraserTraces_.find(pointerId);
++  const auto it = eraserTraces_.find(pointerId);
+   if (it == eraserTraces_.end()) {AXIOM_ERASE_REJECT("missing_trace");return false;}
+   if (!canonicalWriteAdmission()) {AXIOM_ERASE_REJECT("write_admission");return false;}
+-  if (it->second.empty() || runtimeSceneHost_ == nullptr) {
+-    eraserTraces_.erase(it);
+-    eraserPreviewRevisions_.erase(pointerId);
+-    return false;
+-  }
+-  std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
++  if (it->second.empty() || runtimeSceneHost_ == nullptr) {
++    eraserTraces_.erase(it);
++    eraserPreviewRevisions_.erase(pointerId);
++    return false;
++  }
++  // Scene recovery is a derived dependency, never a pixel-present barrier.
++  if(!recoverHistoryScene()){(void)eraserCancel(pointerId);return false;}
++  const bool retain=platformPresentationDeferred_ && !objectEraser;
++  const auto active=activeEraseFeedback_.find(pointerId);
++  if(retain && (active==activeEraseFeedback_.end() ||
++      sealedEraseFeedback_.size()>=maxSealedEraseFeedback_)) {
++    (void)eraserCancel(pointerId);return false;
++  }
++  if(retain)sealedEraseFeedback_.reserve(sealedEraseFeedback_.size()+1);
++  EraseFeedback feedback;
++  if(retain)feedback=active->second;
++  const auto seal=[&](const semantic::CanonicalCommitRecord* record,std::uint64_t maskBasis) noexcept {
++    if(!retain)return;
++    feedback.semantic=semanticGeneration_.current().value();feedback.scene=sceneRevision();
++    feedback.commit=record?record->commit_stamp:canonicalCommitFence();
++    feedback.operation=record?record->operation_id:semantic::OperationId{};
++    feedback.noOp=record==nullptr;feedback.maskBasis=maskBasis;
++    sealedEraseFeedback_.push_back(std::move(feedback)); // no-throw move into reserved capacity
++    activeEraseFeedback_.erase(active);
++  };
++  std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> hit;
+   std::optional<std::vector<semantic::EraseMaskAddItem>> partial;
+   if(!objectEraser) {
+     G5_SCOPE(g5Exact,g5::Tag::exact_prepare,g5::Purpose::none);
+@@ -3122,112 +3252,140 @@
+     if(!partial){AXIOM_ERASE_REJECT("exact_targets");(void)eraserCancel(pointerId);return false;}
+     for(const auto& item:*partial)hit.insert(item.object_id);
+   } else {
+-  for (const auto& point : it->second) {
+-    const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
+-        point, eraserDiameterLogicalPx_ * 0.5F, canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
+-            static_cast<std::uint32_t>(canvas::HitTestKindMask::kVectorStroke) |
+-            static_cast<std::uint32_t>(canvas::HitTestKindMask::kDabStroke)), false}, 64U});
+-    if (!tested) {
+-      eraserTraces_.erase(it);
+-      eraserPreviewRevisions_.erase(pointerId);
+-      return false;
+-    }
+-    for (const auto id : tested.value().frontToBack) hit.insert(id);
+-  }
++  for (const auto& point : it->second) {
++    const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
++        point, eraserDiameterLogicalPx_ * 0.5F, canvas::HitTestFilter{static_cast<canvas::HitTestKindMask>(
++            static_cast<std::uint32_t>(canvas::HitTestKindMask::kVectorStroke) |
++            static_cast<std::uint32_t>(canvas::HitTestKindMask::kDabStroke)), false}, 64U});
++    if (!tested) {
++      eraserTraces_.erase(it);
++      eraserPreviewRevisions_.erase(pointerId);
++      return false;
++    }
++    for (const auto id : tested.value().frontToBack) hit.insert(id);
++  }
+   }
+   canonicalPresentationDirty_=true;
+-  if (hit.empty()) {
+-    eraserTraces_.erase(it);
+-    eraserPreviewRevisions_.erase(pointerId);
+-    return true;
+-  }
+-  semantic::Operation operation;
+-  const auto operationOrdinal = localOperationOrdinal();
+-  if (operationOrdinal == 0U) return false;
+-  operation.id = localOperationIdentity(operationOrdinal);
+-  operation.document_id = documentId_;
+-  operation.schema_version = 1U;
+-  operation.payload_version = 1U;
+-  if (toolMode_ == ToolMode::kObjectEraser) {
+-    semantic::DeleteObjectsOp payload;
+-    payload.object_ids.assign(hit.begin(), hit.end());
+-    std::sort(payload.object_ids.begin(), payload.object_ids.end());
+-    operation.payload = std::move(payload);
+-  } else {
+-    semantic::AddEraseMasksOp maskPayload;
++  if (hit.empty()) {
++    seal(nullptr,0);
++    eraserTraces_.erase(it);
++    eraserPreviewRevisions_.erase(pointerId);
++    return true;
++  }
++  semantic::Operation operation;
++  const auto operationOrdinal = localOperationOrdinal();
++  if (operationOrdinal == 0U) return false;
++  operation.id = localOperationIdentity(operationOrdinal);
++  operation.document_id = documentId_;
++  operation.schema_version = 1U;
++  operation.payload_version = 1U;
++  if (toolMode_ == ToolMode::kObjectEraser) {
++    semantic::DeleteObjectsOp payload;
++    payload.object_ids.assign(hit.begin(), hit.end());
++    std::sort(payload.object_ids.begin(), payload.object_ids.end());
++    operation.payload = std::move(payload);
++  } else {
++    semantic::AddEraseMasksOp maskPayload;
+     maskPayload.items=std::move(*partial);
+     for(auto& item:maskPayload.items)for(auto& mask:item.masks) {
+       mask.id=allocateTextIdentity();if(mask.id.isZero()){(void)eraserCancel(pointerId);return false;}
+-    }
+-    operation.payload = std::move(maskPayload);
+-  }
+-  semantic::Operation inverse;
+-  inverse.id = allocateOperationId();
+-  if (inverse.id.isZero()) return false;
+-  inverse.document_id = documentId_;
+-  inverse.schema_version = 1U;
+-  inverse.payload_version = 1U;
+-  if (toolMode_ == ToolMode::kObjectEraser) {
+-    semantic::RestoreObjectsOp restore;
+-    for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
+-      const auto* record = semanticObjects_.find(id);
+-      if (record != nullptr) restore.objects.push_back(*record);
+-    }
+-    inverse.payload = std::move(restore);
+-  } else {
+-    semantic::RemoveEraseMasksOp remove;
+-    for (const auto& item : std::get<semantic::AddEraseMasksOp>(operation.payload).items) {
+-      semantic::EraseMaskRemoveItem target;
+-      target.object_id = item.object_id;
+-      for (const auto& mask : item.masks) target.mask_ids.push_back(mask.id);
+-      remove.items.push_back(std::move(target));
+-    }
+-    inverse.payload = std::move(remove);
+-  }
++    }
++    operation.payload = std::move(maskPayload);
++  }
++  semantic::Operation inverse;
++  inverse.id = allocateOperationId();
++  if (inverse.id.isZero()) return false;
++  inverse.document_id = documentId_;
++  inverse.schema_version = 1U;
++  inverse.payload_version = 1U;
++  if (toolMode_ == ToolMode::kObjectEraser) {
++    semantic::RestoreObjectsOp restore;
++    for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
++      const auto* record = semanticObjects_.find(id);
++      if (record != nullptr) restore.objects.push_back(*record);
++    }
++    inverse.payload = std::move(restore);
++  } else {
++    semantic::RemoveEraseMasksOp remove;
++    for (const auto& item : std::get<semantic::AddEraseMasksOp>(operation.payload).items) {
++      semantic::EraseMaskRemoveItem target;
++      target.object_id = item.object_id;
++      for (const auto& mask : item.masks) target.mask_ids.push_back(mask.id);
++      remove.items.push_back(std::move(target));
++    }
++    inverse.payload = std::move(remove);
++  }
++  std::vector<semantic::Operation> inversePrepared;
++  inversePrepared.push_back(std::move(inverse));
++  std::uint64_t maskBasis=kFnvOffset;
++  if(const auto* masks=std::get_if<semantic::AddEraseMasksOp>(&operation.payload))
++    for(const auto& item:masks->items)for(const auto& mask:item.masks)
++      {maskBasis=hashBytes(maskBasis,mask.id.bytes.data(),mask.id.bytes.size());
++       if(retain)feedback.masks.emplace_back(item.object_id,mask.id);}
+   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+-  PublicationReservation publication(localOperationSink_, operation);
++  PublicationReservation publication(localOperationSink_, operation);
+   G5_SCOPE_END(g5Publication);
+-  if (!publication) {
++  if (!publication) {
+       AXIOM_ERASE_REJECT("publication_reservation");
+-      (void)eraserCancel(pointerId);
+-      return false;
+-  }
++      (void)eraserCancel(pointerId);
++      return false;
++  }
++  auto preparedHistory=history_.prepareRecord(operation,inversePrepared,{},{});
++  if(!preparedHistory){(void)eraserCancel(pointerId);return false;}
+   G5_SCOPE(g5Apply,g5::Tag::semantic_apply,g5::Purpose::none);
+-  const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
+-      semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
++  auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
++      semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+   G5_SCOPE_END(g5Apply);
+-  eraserTraces_.erase(it);
+-  eraserPreviewRevisions_.erase(pointerId);
+-  if (applied.disposition != semantic::ApplyDisposition::kApplied) {AXIOM_ERASE_REJECT("semantic_apply");return false;}
+-  observeApplied(operation, applied);
+-  G5_SCOPE(g5History,g5::Tag::history,g5::Purpose::none);
+-  if (!history_.record(operation, {std::move(inverse)})) {AXIOM_ERASE_REJECT("history_record");return false;}
+-  G5_SCOPE_END(g5History);
+-  ++submittedOperationCount_;
+-  if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+-    semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+-    canvas::SceneCommitInput input(applied.commit_record->before_generation,
+-                                   applied.commit_record->after_generation, view,
+-                                   &applied.commit_record->change_set);
+-    // Semantic acceptance is final. Scene is derived and can recover at the
+-    // next frame; a failed projection must not lose the accepted history.
+-    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+-  }
+-  canonicalPresentationDirty_ = true;
++  if(applied.disposition!=semantic::ApplyDisposition::kApplied || !applied.commit_record) {
++    (void)eraserCancel(pointerId);return false;
++  }
++  committed=true;
++  history_.commitPrepared(std::move(*preparedHistory));
++  seal(&*applied.commit_record,maskBasis);
++  eraserTraces_.erase(it);eraserPreviewRevisions_.erase(pointerId);
++  ++submittedOperationCount_;
++  // Move the complete engine record: no post-commit copy/allocation is required.
++  static_assert(std::is_nothrow_move_assignable_v<semantic::CanonicalCommitRecord>);
++  selection_.onChangeSet(applied.commit_record->change_set);
++  if(selection_.primary().isZero())selectionView_.reset();
++  lastAppliedCommit_=std::move(applied.commit_record);
++  if(localOperationSink_ && semantic::localBridgePublicationDisposition(*lastAppliedCommit_)==
++      semantic::LocalBridgePublicationDisposition::kEligible) {
++    publicationCallbackActive_=true;
++    localOperationSink_->applied(operation,*lastAppliedCommit_);
++    publicationCallbackActive_=false;
++  }
++  if (lastAppliedCommit_.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
++    semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
++    canvas::SceneCommitInput input(lastAppliedCommit_->before_generation,
++                                   lastAppliedCommit_->after_generation, view,
++                                   &lastAppliedCommit_->change_set);
++    // Semantic acceptance is final. Scene is derived and can recover at the
++    // next frame; a failed projection must not lose the accepted history.
++    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
++  }
++  canonicalPresentationDirty_ = true;
+   if (!platformPresentationDeferred_) {
+-    // Semantic acceptance is already complete. A failed derived present must
+-    // not skip preview cleanup; the next frame may recover the Scene while the
+-    // eraser overlay is retired immediately.
++    // Semantic acceptance is already complete. A failed derived present must
++    // not skip preview cleanup; the next frame may recover the Scene while the
++    // eraser overlay is retired immediately.
+     (void)G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
+-  }
+-  return true;
+-}
+-
++  }
++  return true;
++  } catch(...) {
++    // An already-applied erase stays accepted/undoable if derived work fails.
++    canonicalPresentationDirty_=true;
++    if(!committed)(void)eraserCancel(pointerId);
++    return committed;
++  }
++}
++
+ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
+   std::lock_guard lock(previewStateMutex_);
+   if(toolMode_==ToolMode::kObjectEraser)finishObjectEraseFeedback(pointerId,true);
+   canonicalPresentationDirty_=true;
+   transientOverlayDirty_=false;
++  activeEraseFeedback_.erase(pointerId);
+   const bool erased = eraserTraces_.erase(pointerId) != 0U;
+   eraserPreviewRevisions_.erase(pointerId);
+   // Hide the platform overlay before any clear/retire present. DirectComposition
+@@ -3878,12 +4036,14 @@
+          sceneCoordinator_->runtimeScene().generation() == semanticGeneration_.current();
+ }
+ 
+-bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
+-  if (historySceneReady()) return true;
+-  if (sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return false;
+-  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+-  const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
+-  return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
++bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
++  try {
++  if (historySceneReady()) return true;
++  if (sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return false;
++  const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
++  const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
++  return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
++  } catch(...) {return false;}
+ }
+ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+     const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
+@@ -3984,6 +4144,7 @@
+ void CanvasEditingRuntime::publishSurfaceBinding() noexcept {
+   const auto& snapshot = appBinding_->surfaces().lifecycle().current();
+   const auto& metrics = snapshot.metrics;
++  if(surface_.generation!=snapshot.surfaceGeneration.value() || surface_.metricsGeneration!=snapshot.metricsGeneration.value())invalidateEraseDisplay();
+   surface_ = SurfaceBinding{snapshot.surfaceGeneration.value(), snapshot.metricsGeneration.value(),
+       metrics.logicalWidth, metrics.logicalHeight, metrics.physicalWidth,
+       metrics.physicalHeight, appBinding_->surfaces().lifecycle().available(),
+@@ -4136,6 +4297,7 @@
+   frameCoordinator_.invalidate(render::FrameRole::kPreview);
+   lastSubmittedCanonicalFrame_.reset();
+   lastSubmittedCanonicalFrameState_.reset();
++  invalidateEraseDisplay();
+   ++surfaceLostEvents_;
+   return true;
+ }
+@@ -4250,42 +4412,35 @@
+   G5_SCOPE(g5Scope,g5::Tag::navigation,g5::Purpose::navigation);
+ 
+   presented=false;
+-  // A locally submitted canonical frame is already a valid visual source for
+-  // disposable navigation feedback before platform PresentedFeedback arrives.
+-  // It never qualifies CanonicalVisible or retires ARC preview state.
+-  const auto* exact=lastSubmittedCanonicalFrameState_ != nullptr
+-      ? lastSubmittedCanonicalFrameState_.get()
+-      : lastPresentedCanonicalFrameState_.get();
+-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+-  if(g5::enabled()){
+-    if(exact)g5::emit(g5::Kind::Stage,g5::Tag::navigation,{1,exact->sceneGeneration.value(),exact->sceneReadToken.value(),exact->surfaceGeneration.value(),exact->metricsGeneration.value(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,cameraGeneration(),pendingCanonicalIdentities_.size(),canonicalPresentationDirty_},true);
+-    else g5::emit(g5::Kind::Stage,g5::Tag::navigation,{0,semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,cameraGeneration()},true);
++  // The old accepted exact identity stays immutable. Its camera is useful
++  // for settle/fairness only; current feedback sources come from current Scene.
++  const auto* previous=lastSubmittedCanonicalFrameState_?lastSubmittedCanonicalFrameState_.get():lastPresentedCanonicalFrameState_.get();
++  navigationExactPreparation_=platformPresentationDeferred_ && surface_.available &&
++      (navigationActive_ || navigationCameraGeneration_!=cameraGeneration() ||
++       (previous && previous->camera.generation.value()!=cameraGeneration()));
++  if(!surface_.available || !activeSurfaceProvider() || !canonicalPresentationDirty_ ||
++     !pendingCanonicalIdentities_.empty() || creationActive() || selectionTransformActive() || regionSelectionActive() ||
++     (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed() && !navigationExactPreparation_) ||
++     semanticObjects_.documentBackground()!=foundation::DocumentBackground{}) {
++    skiaRenderer_.cancelNavigationWork();navigationActive_=false;return false;
+   }
+-#endif
+-
+-  // A live preview or its seal changes navigation eligibility, not the cost
+-  // of rebuilding this camera. Keep exact preparation cooperative until a
+-  // replacement is submitted, including when input interrupts the settle.
+-  navigationExactPreparation_=platformPresentationDeferred_ && exact &&
+-      surface_.available && exact->surfaceGeneration.value()==surface_.generation &&
+-      exact->metricsGeneration.value()==surface_.metricsGeneration &&
+-      exact->camera.generation.value()!=cameraGeneration();
+-  if(!exact || !surface_.available || !activeSurfaceProvider() ||
+-     !canonicalPresentationDirty_ ||
+-     exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
+-     exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
+-     !pendingCanonicalIdentities_.empty() ||
+-         // Touch pinch claims the viewport through the contact coordinator.
+-         // Trackpad wheel navigation has no contacts, so use the camera
+-         // generation stamp as the equivalent claim; otherwise a selected
+-         // image/shape forces every wheel tick through exact canonical render.
+-         (selectionOverlay() && !panTool_ && !coordinator_->viewportClaimed() &&
+-          !navigationExactPreparation_) ||
+-     creationActive() || selectionTransformActive() || regionSelectionActive() ||
+-      semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
+-      skiaRenderer_.cancelNavigationWork();
+-      navigationActive_=false;return false;
+-  }
++  if(!recoverHistoryScene())return false;
++  const auto& viewport=viewportController_->state();
++  if(!std::isfinite(viewport.scale)||viewport.scale<=0)return false;
++  const auto id=nextCanonicalFrameId();if(!id)return false;
++  const render::FrameState navigationBasis{
++      viewId_,render::CameraState{{(surface_.logicalWidth*.5F-viewport.translationX)/viewport.scale,
++                                  (surface_.logicalHeight*.5F-viewport.translationY)/viewport.scale},
++                                 viewport.scale,0.0F,render::CameraGeneration{cameraGeneration()}},
++      foundation::WorldRect{-viewport.translationX/viewport.scale,-viewport.translationY/viewport.scale,
++          (surface_.logicalWidth-viewport.translationX)/viewport.scale,(surface_.logicalHeight-viewport.translationY)/viewport.scale},
++      render::SurfaceMetrics{surface_.logicalWidth,surface_.logicalHeight,surface_.width,surface_.height,surface_.devicePixelRatio,surface_.displayScale},
++      semanticGeneration_.current(),runtimeSceneHost_->revision(),render::SurfaceGeneration{surface_.generation},
++      render::MetricsGeneration{surface_.metricsGeneration},render::FrameId{id},
++      foundation::WorldRect{0,0,surface_.logicalWidth,surface_.logicalHeight}};
++  // This is a new disposable query basis, not a restamped canonical capture.
++  // Render's retained-pixel proof still decides which old pixels may be reused.
++  const auto* source=&navigationBasis;
+   // Keep active ink and ARC handoff on their original presentation path.
+   // Submitted content is only a disposable source once semantic handoff is clear.
+   if(!brushSessions_.empty()){
+@@ -4321,10 +4476,10 @@
+   const render::NavigationSourceQuery query=[&](const foundation::WorldRect& region,
+       std::vector<render::ReferenceTraversalEntry>& entries,render::NavigationSourceDiagnostics& diagnostics){
+       const render::FrameState chunkFrame{
+-          exact->viewId, exact->camera, region, exact->metrics,
+-          exact->sceneGeneration, exact->sceneReadToken,
+-          exact->surfaceGeneration, exact->metricsGeneration,
+-          exact->frameId, exact->viewportClip};
++          source->viewId, source->camera, region, source->metrics,
++          source->sceneGeneration, source->sceneReadToken,
++          source->surfaceGeneration, source->metricsGeneration,
++          source->frameId, source->viewportClip};
+       const auto resolved = render::VisibilityResolver::resolve(
+           chunkFrame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
+       if (!resolved) return false;
+@@ -4332,7 +4487,7 @@
+       // The Scene query already owns ordering and candidate accounting. The
+       // resolver adds the renderer-owned GeometryChunk selections without
+       // mutating canonical Scene state.
+-      auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
++      auto sources=render::DirectReferenceSource::buildNavigation(*source,visibility,sceneCoordinator_->runtimeScene());
+       if(!sources)return false;
+       const auto& work=sources.value().diagnostics;
+       diagnostics={work.chunkCandidatesExamined,work.chunkIndexNodesVisited,work.chunkIndexFallbacks,
+@@ -4345,15 +4500,19 @@
+   // Prove exposed strips using the authoritative Scene object query, not
+   // optional geometry chunks or the set of commands a renderer can consume.
+   const render::NavigationBackgroundQuery backgroundOnly=[&](const foundation::WorldRect& region){
+-      const render::FrameState queryFrame{exact->viewId,exact->camera,region,exact->metrics,
+-          exact->sceneGeneration,exact->sceneReadToken,exact->surfaceGeneration,exact->metricsGeneration,
+-          exact->frameId,exact->viewportClip};
++      const render::FrameState queryFrame{source->viewId,source->camera,region,source->metrics,
++          source->sceneGeneration,source->sceneReadToken,source->surfaceGeneration,source->metricsGeneration,
++          source->frameId,source->viewportClip};
+       const auto visibility=render::VisibilityResolver::resolve(queryFrame,*runtimeSceneHost_);
+       return visibility&&visibility.value().backToFront.empty();
+   };
+   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
+-      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm,selectionOverlay(),backgroundOnly);
+-  if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
++      {camera.scale,camera.translationX,camera.translationY},*source,query,idlePrewarm,selectionOverlay(),backgroundOnly);
++  if(result.code!=render::BackendSubmissionCode::kAccepted) {
++    // Keep admitted camera demand and prepared work across a busy target. The
++    // existing quiet-time path still gives complete exact replacement its turn.
++    return result.code==render::BackendSubmissionCode::kRetry;
++  }
+   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
+   G5_OBSERVE(g5::Kind::Terminal,g5::Tag::navigation,true,generation,presented,skiaRenderer_.navigationWork().pending);
+   return true;
+@@ -4839,6 +4998,15 @@
+   // V4 contours can finish many cheap groups inside the same time/coverage
+   // allowance. Keep per-group checkpoints without a two-groups-per-RAF floor.
+   preparation.maxGroups=64;
++  std::unique_ptr<render::FrameState> preparedFrame;
++  std::optional<EraseReplacement> eraseReplacement;
++  try {
++    preparedFrame=std::make_unique<render::FrameState>(frame);
++    if(!sealedEraseFeedback_.empty()) {
++      eraseReplacement.emplace();
++      if(!freezeEraseReplacement(frame,*eraseReplacement))return false;
++    }
++  } catch(const std::bad_alloc&) {canonicalPresentationRetryable_=true;return false;}
+   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), *plan,
+       selectionOverlay(), platformPresentationDeferred_ ? &preparation : nullptr);
+   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
+@@ -4871,7 +5039,8 @@
+   // independent PresentedFeedback evidence.  Keep the submitted frame bound
+   // so stale or unrelated feedback cannot qualify it.
+   lastSubmittedCanonicalFrame_ = canonicalCapture.identity;
+-  lastSubmittedCanonicalFrameState_ = std::make_unique<render::FrameState>(frame);
++  lastSubmittedCanonicalFrameState_ = std::move(preparedFrame);
++  submittedEraseReplacement_=std::move(eraseReplacement);
+   recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
+   ++canonicalFrameCount_;
+   canonicalPresentationDirty_ = false;
+@@ -4881,7 +5050,8 @@
+   // immediately; brush previews remain gated by platform-qualified feedback
+   // through pendingCanonicalIdentities_.
+   if (pendingCanonicalIdentities_.empty() && transientOverlayHandoffPending_ &&
+-      !creationActive() && !selectionTransformActive() && !regionSelectionActive()) {
++      !creationActive() && !selectionTransformActive() && !regionSelectionActive() &&
++      !partialEraseFeedbackActive() && sealedEraseFeedback_.empty()) {
+     (void)clearTransientOverlay();
+   }
+   // The deterministic local raster host has no separate platform feedback
+@@ -4936,8 +5106,7 @@
+   if (capture == nullptr) return false;
+   const auto canonical = capture->identity;
+   lastPresentedCanonicalFrame_ = canonical;
+-  lastPresentedCanonicalFrameState_ =
+-      std::make_unique<render::FrameState>(*lastSubmittedCanonicalFrameState_);
++  lastPresentedCanonicalFrameState_ = std::move(lastSubmittedCanonicalFrameState_);
+   recordPresentation("canonical-presented-platform-qualified", pendingCanonicalIdentities_.size(), 0.0);
+   presentedSemanticGeneration_ = semantic::SemanticGeneration{canonical.sceneGeneration};
+   presentedSurfaceGeneration_ = canonical.surfaceGeneration;
+@@ -4963,7 +5132,7 @@
+       for (const auto& [pointer, handoffIdentity] : pendingCanonicalIdentities_) {
+         if (canonicalVisibilitySink_ != nullptr) {
+           const auto handoff = canonicalVisibilitySink_->canonicalVisible(
+-              handoffIdentity, *lastSubmittedCanonicalFrameState_);
++              handoffIdentity, *lastPresentedCanonicalFrameState_);
+           if (handoff == ink::HandoffResult::kRejected) return false;
+           if (handoff != ink::HandoffResult::kAccepted) continue;
+         }
+@@ -4982,10 +5151,12 @@
+   // create a brush/ARC handoff identity. Retire their last transient frame
+   // only after this canonical frame has been accepted, so the compositor
+   // never exposes the old canonical position between pointer-up and redraw.
+-  if (retire && !previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
++  if (retire && !previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive() &&
++      !partialEraseFeedbackActive() && sealedEraseFeedback_.empty()) {
+     (void)clearTransientOverlay();
+   }
+-  if (retire && !previewActive() && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
++  if (retire && !previewActive() && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty() &&
++      !partialEraseFeedbackActive() && sealedEraseFeedback_.empty()) {
+     (void)clearTransientOverlay();
+   }
+   lastSubmittedCanonicalFrame_.reset();
+--- before/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
++++ after/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+@@ -4,7 +4,7 @@
+ #include "canvas/runtime/table_input.hpp"
+ #include "canvas/runtime/appearance.hpp"
+ #include "canvas/runtime/image_export.hpp"
+-namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
++namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
+ #include "canvas/interaction/text_edit_session.hpp"
+ #include "canvas/semantic/snapshot_bootstrap.hpp"
+ 
+@@ -358,6 +358,12 @@
+   [[nodiscard]] float eraserDiameterLogicalPx() const noexcept {
+     return eraserDiameterLogicalPx_;
+   }
++  // Private Runtime integration capability; not a consumer SDK/ABI contract.
++  bool prepareCommittedScene() noexcept { return recoverHistoryScene(); }
++  bool associateEraseReplacement(std::uint64_t,std::uint64_t,std::uint64_t,std::uint64_t,
++                                 const render::RuntimeFrameIdentity&) noexcept;
++  void completeEraseReplacement(std::uint64_t,std::uint64_t,std::uint64_t,std::uint64_t,
++                                const render::RuntimeFrameIdentity&) noexcept;
+   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
+   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
+                                   bool renderPreview = true) noexcept;
+@@ -618,12 +624,12 @@
+            keyedStrokeIds_.empty() && history_.canRedo();
+   }
+   [[nodiscard]] bool undo() noexcept {
+-    if (!canUndo() || !history_.undo()) return false;
++    if (!canonicalWriteAdmission() || !recoverHistoryScene() || !canUndo() || !history_.undo()) return false;
+     canonicalPresentationDirty_ = true;
+     return true;
+   }
+   [[nodiscard]] bool redo() noexcept {
+-    if (!canRedo() || !history_.redo()) return false;
++    if (!canonicalWriteAdmission() || !recoverHistoryScene() || !canRedo() || !history_.redo()) return false;
+     canonicalPresentationDirty_ = true;
+     return true;
+   }
+@@ -631,6 +637,7 @@
+                           double frameMs);
+ 
+  protected:
++  friend class EraseReadmissionTestAccess;
+   [[nodiscard]] interaction::DispatchMode dispatchMode() const noexcept override;
+   [[nodiscard]] bool selection(const input::PointerSample&, std::uint64_t) noexcept override;
+   [[nodiscard]] bool creation(const input::PointerSample&, std::uint64_t) noexcept override;
+@@ -797,6 +804,35 @@
+   float eraserDiameterLogicalPx_ = 18.0F;
+   std::unordered_map<std::uint64_t, std::vector<foundation::WorldPoint>> eraserTraces_;
+   std::unordered_map<std::uint64_t, std::uint64_t> eraserPreviewRevisions_;
++  // Disposable handoff metadata; canonical masks stay only in Semantic/Scene.
++  struct EraseFeedback final {
++    std::uint64_t serial=0,session=0,lifetime=0,surface=0,metrics=0;
++    input::PointerKey pointer{};
++    semantic::DocumentId document{};
++    render::ViewId view{};
++    semantic::OperationId operation{};
++    semantic::CanonicalCommitStamp commit{};
++    std::uint64_t semantic=0,scene=0,maskBasis=0;
++    bool noOp=false;
++    std::vector<std::pair<foundation::ObjectId,foundation::ObjectId>> masks;
++  };
++  struct EraseReplacement final {
++    semantic::DocumentId document{};
++    render::RuntimeFrameIdentity frame{};
++    semantic::CanonicalCommitStamp fence{};
++    std::uint64_t lifetime=0;
++    std::vector<std::uint64_t> eligible,superseded;
++    std::array<std::uint64_t,4> work{};
++    bool associated=false;
++  };
++  static constexpr std::size_t maxSealedEraseFeedback_=128;
++  std::uint64_t nextEraseFeedback_=1,eraseDisplayLifetime_=1;
++  std::unordered_map<std::uint64_t,EraseFeedback> activeEraseFeedback_;
++  std::vector<EraseFeedback> sealedEraseFeedback_;
++  std::optional<EraseReplacement> submittedEraseReplacement_;
++  std::uint64_t replacedEraseFeedback_=0,supersededEraseFeedback_=0,cancelledEraseDisplay_=0;
++  bool freezeEraseReplacement(const render::FrameState&,EraseReplacement&) const;
++  void invalidateEraseDisplay() noexcept;
+   std::unordered_map<std::uint64_t, std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash>> objectEraseCandidates_;
+   std::vector<render::BrushRenderPoint> committedBrushPoints_;
+   std::uint64_t brushDigest_ = 0;
+--- before/runtime/composition/src/runtime_composition.cpp
++++ after/runtime/composition/src/runtime_composition.cpp
+@@ -499,6 +499,7 @@
+   // Consume controls and resource notifications first. Their application may
+   // create a new canonical demand during this same frame opportunity.
+   if (!ownerPump()) return false;
++  if(!runtime_->prepareCommittedScene())return false;
+   runtime_->serviceResourceRetirements();
+   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
+   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
+@@ -621,6 +622,8 @@
+       nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
+   pendingCanonicalWork_ = CanonicalWork{runtimeInstanceId_, resources_.lifetimeGeneration,
+       attachmentEpoch_, nextCanonicalWorkId_++, *frame};
++  if(!runtime_->associateEraseReplacement(runtimeInstanceId_,resources_.lifetimeGeneration,
++      attachmentEpoch_,pendingCanonicalWork_->workId,*frame)) {pendingCanonicalWork_.reset();return false;}
+   G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,pendingCanonicalWork_->workId,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),runtime_->canonicalCommitFence().ordinal.value(),resources_.manifest.manifest_revision,runtime_->sceneRevision(),runtime_->cameraGeneration());
+   G5_OBSERVE(g5::Kind::Submit,g5::Tag::canonical_receipt,true,pendingCanonicalWork_->workId,frame->viewId.value(),frame->frameId.value(),frame->documentRevision,frame->sceneGeneration,frame->surfaceGeneration.value(),frame->metricsGeneration.value());
+   return true;
+@@ -651,7 +654,11 @@
+       frame.surfaceGeneration, frame.metricsGeneration, completion.outcome,
+       completion.evidence, completion.presentedTimeNs});
+   G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,accepted?1ULL:2ULL,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,frame.viewId.value(),frame.frameId.value(),frame.documentRevision,frame.sceneGeneration,frame.surfaceGeneration.value(),frame.metricsGeneration.value());
+-  if (accepted) pendingCanonicalWork_.reset();
++  if (accepted) {
++    runtime_->completeEraseReplacement(current->runtimeInstanceId,current->lifetimeGeneration,
++        current->attachmentEpoch,current->workId,current->frame);
++    pendingCanonicalWork_.reset();
++  }
+   return accepted;
+ }
+ bool RuntimeCompositionCore::loseSurface() noexcept {
+--- before/runtime/composition/CMakeLists.txt
++++ after/runtime/composition/CMakeLists.txt
+@@ -116,6 +116,22 @@
+   add_test(NAME FC00XPreviewBusyCanonicalProgress COMMAND axiom_brush_batch_frame_retry_tests preview-busy)
+   add_test(NAME FC00XBusyCanonicalPendingFeedback COMMAND axiom_brush_batch_frame_retry_tests pending-feedback)
+   add_test(NAME FC00XFatalProviderFailure COMMAND axiom_brush_batch_frame_retry_tests fatal)
++  add_executable(axiom_eraser_readmission_tests tests/eraser_readmission_test.cpp)
++  target_link_libraries(axiom_eraser_readmission_tests PRIVATE canvas_runtime_composition)
++  target_compile_definitions(axiom_eraser_readmission_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
++  if(MSVC)
++    target_compile_options(axiom_eraser_readmission_tests PRIVATE /UNDEBUG)
++  else()
++    target_compile_options(axiom_eraser_readmission_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
++  endif()
++  add_test(NAME G5PostUpEraseAcquire COMMAND axiom_eraser_readmission_tests acquire)
++  add_test(NAME G5PostUpErasePresent COMMAND axiom_eraser_readmission_tests present)
++  add_test(NAME G5PostUpNavigation COMMAND axiom_eraser_readmission_tests navigation)
++  add_test(NAME G5PostUpHandoff COMMAND axiom_eraser_readmission_tests handoff)
++  add_test(NAME G5PostUpSceneRecovery COMMAND axiom_eraser_readmission_tests scene)
++  add_test(NAME G5PostUpHistory COMMAND axiom_eraser_readmission_tests history)
++  add_test(NAME G5PostUpLifecycle COMMAND axiom_eraser_readmission_tests lifecycle)
++  add_test(NAME G5PostUpNavigationSafety COMMAND axiom_eraser_readmission_tests navigation-safety)
+   add_executable(axiom_fc00x_runtime_composition_tests
+       tests/runtime_composition_test.cpp)
+   add_executable(axiom_sdk_public_resources_tests tests/public_resources_test.cpp)
+--- before/runtime/composition/tests/eraser_readmission_test.cpp
++++ after/runtime/composition/tests/eraser_readmission_test.cpp
+@@ -0,0 +1,281 @@
++#include "canvas/runtime/internal/runtime_composition_core.hpp"
++#include <cstdio>
++#include <stdexcept>
++#include <string_view>
++#include <cstdlib>
++#include <new>
++
++namespace { thread_local bool failNextTestAllocation=false; }
++void* operator new(std::size_t n){if(failNextTestAllocation){failNextTestAllocation=false;throw std::bad_alloc();}if(auto* p=std::malloc(n?n:1))return p;throw std::bad_alloc();}
++void operator delete(void* p) noexcept{std::free(p);}
++void operator delete(void* p,std::size_t) noexcept{std::free(p);}
++using namespace canvas;
++namespace {
++void require(bool ok,const char* label){if(!ok)throw std::runtime_error(label);}
++class SpyProvider final:public render::SkiaSurfaceProvider {
++ public:
++  render::RasterSkiaSurfaceProvider actual;
++  bool busyAcquire=false,busyPresent=false;
++  std::uint64_t acquires=0,presents=0;
++  render::RenderTargetInfo describe()const noexcept override{return actual.describe();}
++  render::SkiaSurfaceAcquireResult acquire()noexcept override{++acquires;return busyAcquire?render::SkiaSurfaceAcquireResult::rejected(render::SkiaSurfaceAcquireCode::kUnavailable,"busy fixture"):actual.acquire();}
++  void release()noexcept override{actual.release();}
++  render::BackendSubmissionResult present()noexcept override{++presents;return busyPresent?render::BackendSubmissionResult::retry("busy fixture"):actual.present();}
++  render::BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h)noexcept override{return actual.resize(w,h);}
++  render::BackendSubmissionResult readbackRgba(std::span<std::uint8_t> out)noexcept override{return actual.readbackRgba(out);}
++  std::uint64_t generation()const noexcept override{return actual.generation();}
++  render::BackendSubmissionResult advanceGeneration()noexcept override{return actual.advanceGeneration();}
++  std::uint64_t readbackCount()const noexcept override{return actual.readbackCount();}
++  std::uint64_t cpuCopyCount()const noexcept override{return actual.cpuCopyCount();}
++  std::uint64_t presentCount()const noexcept override{return actual.presentCount();}
++};
++void admission(bool acquire,bool navigation=false){
++  runtime::RuntimeCompositionCore c;require(c.open(),"open");
++  auto canonical=std::make_unique<SpyProvider>(),preview=std::make_unique<SpyProvider>();
++  auto* target=canonical.get();auto* overlay=preview.get();
++  require(canonical->resize(256,256).code==render::BackendSubmissionCode::kAccepted,"resize canonical");
++  require(preview->resize(256,256).code==render::BackendSubmissionCode::kAccepted,"resize preview");
++  require(c.registerSurfaceProvider("canonical",std::move(canonical)),"register canonical");
++  require(c.registerPreviewSurfaceProvider("preview",std::move(preview)),"register preview");
++  require(c.bindSurface(256,256)&&c.registerSource(71),"bind/source");
++  auto& q=c.qualificationRuntime();require(q.selectBrushProfile("round-handdrawn",4),"v4 profile");
++  input::PlatformPointerBatch seed;
++  for(unsigned i=0;i<=25;++i){input::PlatformPointerSample p{};p.source=71;p.pointer=1;p.sequence=i+1;p.timestampNs=(i+1)*1000000;p.x=20+i*8;p.y=128;p.pressure=.5F;p.phase=i==0?input::PointerPhase::kDown:i==25?input::PointerPhase::kUp:input::PointerPhase::kMove;seed.samples.push_back(p);}
++  require(c.submit(seed),"real v4 seed input");
++  require(std::holds_alternative<semantic::CompactStrokeContent>(q.snapshotObjects().front().content),"real v4 content");
++  for(unsigned i=0;i<3 && (q.pendingCanonicalHandoffCount()!=0 || q.previewActive());++i){
++    runtime::RuntimeFrameOpportunity ready;require(c.serviceFrameOpportunity(true,ready),"seed frame");
++    if(ready.previewWork)require(c.finishFrameOpportunity({ready.previewWork,true}),"seed preview complete");
++    if(ready.canonicalWork)require(c.receivePlatformPresented({*ready.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"seed canonical complete");
++  }
++  require(q.pendingCanonicalHandoffCount()==0&&!q.previewActive(),"seed brush handoff complete before erase test");
++  require(c.setPlatformPresentationDeferred(true)&&q.setEraserOptions(2,20),"deferred erase");
++  std::uint64_t seq=100;
++  const auto send=[&](input::PointerPhase phase,float x,float y){
++    input::PlatformPointerSample p{};p.source=71;p.pointer=1;p.sequence=++seq;p.timestampNs=seq*1000000;p.x=x;p.y=y;p.phase=phase;p.pressure=.5F;
++    return c.submit({{p}});
++  };
++  require(send(input::PointerPhase::kDown,80,100)&&send(input::PointerPhase::kMove,80,155)&&send(input::PointerPhase::kUp,80,155),"first erase real input");
++  require(q.snapshotObjects().front().erase_masks.size()==1,"first erase canonical mask");
++  if(navigation){
++    const auto before=q.semanticGeneration();
++    require(q.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,16,0,128,128,1}),"navigation admission");
++    require(q.semanticGeneration()==before,"camera changed document");
++    runtime::RuntimeFrameOpportunity frame;require(c.serviceFrameOpportunity(false,frame),"navigation frame");
++    std::printf("{\"navigation_pending\":%s,\"navigation_presented\":%s,\"exact_requested\":%s}\n",frame.navigationPending?"true":"false",frame.navigationPresented?"true":"false",frame.canonicalRequested?"true":"false");std::fflush(stdout);
++    require(frame.navigationPending||frame.navigationPresented,"post-Up current-Scene navigation must progress before exact canonical");
++    require(c.close(),"close");return;
++  }
++  const auto generation=q.semanticGeneration();const auto ac=target->acquires,pc=target->presents,oa=overlay->acquires,op=overlay->presents;
++  target->busyAcquire=acquire;target->busyPresent=!acquire;
++  const bool accepted=send(input::PointerPhase::kDown,150,100);
++  std::printf("{\"boundary\":\"%s\",\"accepted\":%s,\"active\":%s,\"canonical_acquires\":%llu,\"canonical_presents\":%llu,\"overlay_acquires\":%llu,\"overlay_presents\":%llu}\n",acquire?"acquire":"present",accepted?"true":"false",q.partialEraseFeedbackActive()?"true":"false",(unsigned long long)(target->acquires-ac),(unsigned long long)(target->presents-pc),(unsigned long long)(overlay->acquires-oa),(unsigned long long)(overlay->presents-op));std::fflush(stdout);
++  require(accepted&&q.partialEraseFeedbackActive(),"next deferred Down must be admitted independently of canonical busy");
++  require(target->acquires==ac&&target->presents==pc&&overlay->acquires==oa&&overlay->presents==op,"Down must not acquire/present/clear either surface");
++  require(q.semanticGeneration()==generation,"Down changed semantic state");
++  require(send(input::PointerPhase::kMove,150,155),"Move while busy");require(q.semanticGeneration()==generation,"Move changed semantics");
++  require(send(input::PointerPhase::kCancel,150,155),"Cancel while busy");
++  target->busyAcquire=target->busyPresent=false;require(c.close(),"close");
++}
++}
++
++namespace canvas::interaction {
++class EraseReadmissionTestAccess {
++ public:
++  static std::size_t sealed(const CanvasEditingRuntime& q){return q.sealedEraseFeedback_.size();}
++  static std::size_t active(const CanvasEditingRuntime& q){return q.activeEraseFeedback_.size();}
++  static std::size_t history(const CanvasEditingRuntime& q){return q.history_.size();}
++  static bool sceneReady(const CanvasEditingRuntime& q){return q.historySceneReady();}
++  static std::uint64_t retired(const CanvasEditingRuntime& q){return q.replacedEraseFeedback_;}
++  static std::uint64_t superseded(const CanvasEditingRuntime& q){return q.supersededEraseFeedback_;}
++  static std::unique_ptr<ISemanticSceneCompiler>& compiler(CanvasEditingRuntime& q){return q.sceneCompiler_;}
++};
++}
++namespace {
++using Access=interaction::EraseReadmissionTestAccess;
++class CompilerFault final:public ISemanticSceneCompiler {
++ public:
++  std::unique_ptr<ISemanticSceneCompiler> actual;
++  bool deltaFails=false,fullFails=false,fullThrows=false;
++  mutable unsigned fullCalls=0,deltaCalls=0;
++  explicit CompilerFault(std::unique_ptr<ISemanticSceneCompiler> value):actual(std::move(value)){}
++  foundation::Result<CompiledSceneSnapshot> compileFull(const semantic::SemanticReadView& v)const override{
++    ++fullCalls;if(fullThrows)throw std::bad_alloc{};if(fullFails)return foundation::Result<CompiledSceneSnapshot>::failure({foundation::ErrorCode::kRequiresFullRebuild,"fixture Scene unavailable"});return actual->compileFull(v);
++  }
++  foundation::Result<CompiledSceneDelta> compileDelta(const semantic::SemanticReadView& v,const semantic::ChangeSet& s)const override{
++    ++deltaCalls;if(deltaFails)return foundation::Result<CompiledSceneDelta>::failure({foundation::ErrorCode::kRequiresFullRebuild,"fixture Scene unavailable"});return actual->compileDelta(v,s);
++  }
++  foundation::Result<CompiledSceneDelta> compilePreparedDelta(const semantic::SemanticReadView& v,const semantic::ChangeSet& s,std::span<const RuntimeSceneRecord> records,const SceneReadView& view)const override{
++    ++deltaCalls;if(deltaFails)return foundation::Result<CompiledSceneDelta>::failure({foundation::ErrorCode::kRequiresFullRebuild,"fixture Scene unavailable"});return actual->compilePreparedDelta(v,s,records,view);
++  }
++};
++struct Fixture {
++  runtime::RuntimeCompositionCore c;
++  SpyProvider* target=nullptr;SpyProvider* overlay=nullptr;
++  std::uint64_t sequence=0;unsigned dpr=1;
++  interaction::CanvasEditingRuntime& q(){return c.qualificationRuntime();}
++  explicit Fixture(unsigned density=1):dpr(density){
++    require(c.open(),"fixture open");auto a=std::make_unique<SpyProvider>(),b=std::make_unique<SpyProvider>();target=a.get();overlay=b.get();
++    require(a->resize(256,256).code==render::BackendSubmissionCode::kAccepted&&b->resize(256,256).code==render::BackendSubmissionCode::kAccepted,"fixture provider resize");
++    require(c.registerSurfaceProvider("canonical",std::move(a))&&c.registerPreviewSurfaceProvider("preview",std::move(b)),"fixture register");
++    require(c.bindSurface(256,256)&&c.registerSource(71),"fixture bind/source");
++    if(dpr!=1)require(c.resizeSurface(render::SurfaceMetrics{256,256,256*dpr,256*dpr,float(dpr),1}),"fixture DPR");
++    semantic::ObjectRecord backdrop;backdrop.id=foundation::ObjectId::fromUint64(50001);backdrop.kind=semantic::ObjectKind::kShape;backdrop.kind_version=1;
++    backdrop.content=semantic::ShapeContent{1,256,256};backdrop.placement.order_key=semantic::OrderKey({1});
++    backdrop.properties.entries.push_back({0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}});
++    semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(51001)},q().documentId(),1,1,semantic::InsertObjectsOp{{backdrop}}};
++    require(c.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync).disposition==semantic::ApplyDisposition::kApplied,"fixture backdrop");
++    require(q().selectBrushProfile("round-handdrawn",4)&&q().setInkOptions(16,0,0,0,1,.65F),"fixture v4 paint");
++    require(send(input::PointerPhase::kDown,20,128),"fixture stroke Down");
++    for(unsigned i=1;i<25;++i)require(send(input::PointerPhase::kMove,20+i*8,128),"fixture stroke Move");
++    require(send(input::PointerPhase::kUp,220,128),"fixture stroke Up");
++    for(unsigned i=0;i<3 && (q().previewActive()||q().pendingCanonicalHandoffCount());++i){
++      runtime::RuntimeFrameOpportunity f;require(c.serviceFrameOpportunity(true,f),"fixture seed frame");
++      if(f.previewWork)require(c.finishFrameOpportunity({f.previewWork,true}),"fixture preview completion");
++      if(f.canonicalWork)require(complete(*f.canonicalWork),"fixture canonical completion");
++    }
++    require(!q().previewActive()&&!q().pendingCanonicalHandoffCount(),"fixture no ARC backlog");
++    require(c.setPlatformPresentationDeferred(true)&&q().setEraserOptions(2,20),"fixture erase mode");
++  }
++  ~Fixture(){(void)c.close();}
++  bool send(input::PointerPhase phase,float x,float y,std::uint64_t pointer=1,input::PointerTool tool=input::PointerTool::kUnknown){
++    input::PlatformPointerSample p{};p.source=71;p.pointer=pointer;p.sequence=++sequence;p.timestampNs=sequence*1000000;p.x=x;p.y=y;p.phase=phase;p.pressure=.5F;p.capabilities.tool=tool;return c.submit({{p}});
++  }
++  void erase(float x){require(send(input::PointerPhase::kDown,x,100)&&send(input::PointerPhase::kMove,x,155)&&send(input::PointerPhase::kUp,x,155),"fixture erase");}
++  std::size_t masks(){for(const auto& r:q().snapshotObjects())if(std::holds_alternative<semantic::CompactStrokeContent>(r.content))return r.erase_masks.size();throw std::runtime_error("missing v4");}
++  runtime::CanonicalWork exact(){for(unsigned i=0;i<256;++i){runtime::RuntimeFrameOpportunity f;require(c.serviceFrameOpportunity(true,f),"exact frame opportunity");if(f.canonicalWork&&f.canonicalWork->frame.sceneGeneration==q().semanticGeneration().value())return *f.canonicalWork;}throw std::runtime_error("exact work incomplete");}
++  bool complete(const runtime::CanonicalWork& work){return c.receivePlatformPresented({work,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}});}
++  std::vector<std::uint8_t> pixels(){std::vector<std::uint8_t> b(256*256*dpr*dpr*4);require(target->readbackRgba(b).code==render::BackendSubmissionCode::kAccepted,"pixels");return b;}
++  unsigned blue(const std::vector<std::uint8_t>& p,unsigned x){return p[(128*dpr*256*dpr+x*dpr)*4+2];}
++};
++void handoff(){
++  for(const unsigned dpr:{1U,2U,4U}){
++    Fixture f(dpr);f.erase(80);require(Access::sealed(f.q())==1,"seal A");const auto a=f.exact();
++    require(f.send(input::PointerPhase::kDown,150,100)&&f.send(input::PointerPhase::kMove,150,155),"B admitted while A in flight");
++    runtime::RuntimeFrameOpportunity preview;require(f.c.serviceFrameOpportunity(false,preview),"B feedback");
++    const auto before=f.pixels();require(f.blue(before,80)>245&&f.blue(before,150)>245&&f.blue(before,195)<200,"current Scene plus active mask/backdrop/opacity");
++    require(f.complete(a),"A qualified completion");require(Access::sealed(f.q())==0&&Access::active(f.q())==1,"A completion preserved active B");
++    require(before==f.pixels(),"A callback changed B pixels");const auto generation=f.q().semanticGeneration();
++    require(f.send(input::PointerPhase::kCancel,150,155),"B cancel");require(f.q().semanticGeneration()==generation&&f.masks()==1,"cancel changed commit");
++    const auto clean=f.exact();require(f.complete(clean),"cancel exact completion");require(f.blue(f.pixels(),150)<200,"cancel did not restore canonical ink");
++  }
++  {
++    Fixture f;f.erase(80);const auto a=f.exact();f.erase(150);const auto b=f.exact();
++    require(!f.complete(a)&&Access::sealed(f.q())==2,"superseded old completion retired feedback");
++    require(f.send(input::PointerPhase::kDown,200,100),"active C");require(f.complete(b),"B exact completes A/B");
++    require(Access::sealed(f.q())==0&&Access::active(f.q())==1&&Access::retired(f.q())==2,"B frozen roster cleared C or lost A");
++    require(f.send(input::PointerPhase::kCancel,200,100),"C cancel");
++  }
++  {
++    Fixture f;f.erase(80);
++    require(f.q().presentCanonicalFrame(f.q().nextCanonicalFrameId(),0,false),"prepare exact A without Core capture");
++    f.erase(150);require(f.send(input::PointerPhase::kDown,200,100),"C before capture");
++    runtime::RuntimeFrameOpportunity opportunity;require(f.c.serviceFrameOpportunity(false,opportunity)&&opportunity.canonicalWork.has_value(),"capture exact A");
++    require(f.complete(*opportunity.canonicalWork),"A completion after capture");
++    require(Access::sealed(f.q())==1&&Access::active(f.q())==1,"capture expanded frozen A roster to B/C");
++    require(f.send(input::PointerPhase::kCancel,200,100),"cancel C");const auto b=f.exact();require(f.complete(b)&&Access::sealed(f.q())==0,"B exact retire remaining seal");
++  }
++  {
++    Fixture f;f.erase(80);require(f.q().undo(),"Undo before replacement");const auto current=f.exact();require(f.complete(current),"current undone state replacement");
++    require(Access::superseded(f.q())==1&&Access::sealed(f.q())==0&&f.masks()==0,"Undo effect not superseded correctly");
++    require(f.q().redo(),"Redo");const auto redo=f.exact();require(f.complete(redo)&&f.masks()==1,"Redo exactly once");
++  }
++  std::puts("handoff pixels DPR1/2/4; frozen successful work; supersession; Undo/Redo PASS");
++}
++void sceneRecovery(){
++  Fixture f;auto wrapped=std::make_unique<CompilerFault>(std::move(Access::compiler(f.q())));auto* fault=wrapped.get();Access::compiler(f.q())=std::move(wrapped);
++  fault->deltaFails=fault->fullFails=true;const auto history=Access::history(f.q());f.erase(80);
++  require(!Access::sceneReady(f.q())&&f.masks()==1&&Access::history(f.q())==history+1,"derived failure lost accepted commit/History");
++  const auto generation=f.q().semanticGeneration();const auto acquires=f.target->acquires;
++  fault->fullThrows=true;runtime::RuntimeFrameOpportunity unavailable;
++  require(!f.c.serviceFrameOpportunity(false,unavailable)&&f.q().semanticGeneration()==generation&&f.target->acquires==acquires,"throwing derived recovery escaped or presented");
++  fault->fullThrows=false;
++  require(f.send(input::PointerPhase::kDown,150,100)&&f.send(input::PointerPhase::kMove,150,155),"B admission with lagging Scene");
++  require(!f.send(input::PointerPhase::kUp,150,155),"stale Scene query accepted");
++  require(f.q().semanticGeneration()==generation&&f.masks()==1&&!f.q().partialEraseFeedbackActive(),"failed recovery mutated or leaked session");
++  fault->deltaFails=fault->fullFails=false;f.erase(150);
++  require(Access::sceneReady(f.q())&&fault->fullCalls>0&&f.masks()==2&&Access::history(f.q())==history+2,"independent Scene recovery before next exact hit");
++  require(f.target->acquires==acquires,"Scene preparation required pixel present");
++  std::puts("Scene failure/recovery before exact query; no present dependency PASS");
++}
++void lifecycle(){
++  {
++    Fixture f;f.erase(80);const auto a=f.exact();
++    for(unsigned kind=0;kind<10;++kind){auto wrong=a;if(kind==0)++wrong.runtimeInstanceId;if(kind==1)++wrong.lifetimeGeneration;if(kind==2)++wrong.attachmentEpoch;if(kind==3)++wrong.workId;if(kind==4)wrong.frame.surfaceGeneration=render::SurfaceGeneration{999};if(kind==5)wrong.frame.metricsGeneration=render::MetricsGeneration{999};if(kind==6)++wrong.frame.documentRevision;if(kind==7)++wrong.frame.sceneGeneration;if(kind==8)wrong.frame.viewId=render::ViewId{999};if(kind==9)wrong.frame.frameId=render::FrameId{999};require(!f.complete(wrong)&&Access::sealed(f.q())==1,"foreign completion retired sealed feedback");}
++    require(!f.c.receivePlatformPresented({a,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kApproximate,{}}),"unqualified completion accepted");
++    require(f.c.resizeSurface(render::SurfaceMetrics{256,256,512,512,2,1}),"resize");require(Access::sealed(f.q())==0&&!f.complete(a),"resize retained/qualified old display demand");
++  }
++  {
++    Fixture f;f.erase(80);const auto a=f.exact();require(f.c.loseSurface(),"lost");require(Access::sealed(f.q())==0&&!f.complete(a),"lost qualified old work");
++    require(!f.send(input::PointerPhase::kDown,150,100),"lost surface admitted input");require(f.c.rebindSurface(),"rebind");
++  }
++  {
++    Fixture f;const auto g=f.q().semanticGeneration();const auto h=Access::history(f.q());f.erase(245);
++    require(f.q().semanticGeneration()==g&&Access::history(f.q())==h,"no-op mutated History");const auto noOp=f.exact();require(f.complete(noOp)&&Access::sealed(f.q())==0,"no-op handoff leaked");
++    f.erase(80);require(f.send(input::PointerPhase::kDown,150,100),"source lost session");++f.sequence;require(f.c.unregisterSource(71,f.sequence,f.sequence*1000000),"source lost");
++    require(!f.q().partialEraseFeedbackActive()&&Access::active(f.q())==0&&Access::sealed(f.q())==1,"source loss cleared committed seal or leaked active");
++    require(f.c.registerSource(71),"source reuse");require(f.send(input::PointerPhase::kDown,150,100),"pointer reuse");require(!f.send(input::PointerPhase::kDown,150,100),"duplicate contact accepted");(void)f.c.cancelAllPointers();
++  }
++  std::puts("identity, approximate/foreign completion, no-op, cancel, source/lost/resize/rebind PASS");
++}
++class PublicationFault final:public interaction::LocalOperationSink {
++ public:
++  enum class Mode{RejectPublication,FailHistory,RejectApply,FailDerived};
++  Mode mode;interaction::CanvasEditingRuntime& runtime;std::size_t expectedHistory;
++  unsigned prepares=0,aborts=0,publications=0;bool historyFinalized=false;
++  PublicationFault(Mode m,interaction::CanvasEditingRuntime& q,std::size_t h):mode(m),runtime(q),expectedHistory(h){}
++  bool preparePublication(std::span<const semantic::Operation> values)noexcept override{
++    ++prepares;if(mode==Mode::RejectPublication)return false;
++    if(mode==Mode::FailHistory)failNextTestAllocation=true;
++    if(mode==Mode::RejectApply)const_cast<semantic::Operation&>(values.front()).schema_version=999;
++    return true;
++  }
++  void abortPreparedPublication()noexcept override{++aborts;}
++  void applied(const semantic::Operation&,const semantic::CanonicalCommitRecord&)noexcept override{
++    ++publications;historyFinalized=Access::history(runtime)==expectedHistory;
++    if(mode==Mode::FailDerived)failNextTestAllocation=true;
++  }
++  interaction::AxisOperationStatus status(const semantic::OperationId&,const semantic::CanonicalCommitStamp&)const noexcept override{return {};}
++};
++void historySafety(){
++  for(auto mode:{PublicationFault::Mode::RejectPublication,PublicationFault::Mode::FailHistory,PublicationFault::Mode::RejectApply,PublicationFault::Mode::FailDerived}){
++    Fixture f;f.erase(80);require(f.q().undo()&&f.q().canRedo(),"History failure precondition");
++    const auto original=f.q().snapshotObjects();const auto generation=f.q().semanticGeneration();const auto h=Access::history(f.q());const auto count=f.q().submittedOperationCount();
++    PublicationFault sink(mode,f.q(),h); // reserve-before-apply must keep the redo tail until commit
++    if(mode==PublicationFault::Mode::FailDerived)sink.expectedHistory=h;
++    f.q().setLocalOperationSink(&sink);
++    require(f.send(input::PointerPhase::kDown,150,100)&&f.send(input::PointerPhase::kMove,150,155),"History test input");
++    const bool accepted=f.send(input::PointerPhase::kUp,150,155);const bool allocationConsumed=!failNextTestAllocation;failNextTestAllocation=false;
++    f.q().setLocalOperationSink(nullptr);
++    const bool applied=mode==PublicationFault::Mode::FailDerived;
++    require(accepted==applied,"wrong erase transaction acceptance");
++    if(!applied){require(f.q().semanticGeneration()==generation&&f.q().snapshotObjects()==original&&Access::history(f.q())==h&&f.q().canRedo(),"prepare/apply failure changed document/History");require(sink.publications==0,"publication without canonical commit");}
++    else{require(f.q().semanticGeneration().value()==generation.value()+1&&f.masks()==1&&sink.publications==1&&sink.historyFinalized,"accepted erase lost History/publication");require(f.q().submittedOperationCount()==count+1,"erase duplicated commit");require(f.q().undo()&&f.masks()==0,"derived failure made erase not undoable");}
++    if(mode==PublicationFault::Mode::FailHistory||mode==PublicationFault::Mode::FailDerived)require(allocationConsumed,"fault not reached");
++    require(sink.prepares==1&&sink.aborts==1&&!f.q().partialEraseFeedbackActive(),"reservation/session cleanup");
++  }
++  std::puts("History/publication preflight failure, apply rejection, post-commit derived failure, exactly-once Undo PASS");
++}
++void navigationSafety(){
++  for(unsigned dpr:{1U,2U,4U}){
++    Fixture f(dpr);f.erase(80);const auto g=f.q().semanticGeneration();const auto h=Access::history(f.q());
++    require(f.q().applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,8,0,128,128,1}),"pan admission");
++    bool feedback=false;
++    for(unsigned i=0;i<128&&!feedback;++i){runtime::RuntimeFrameOpportunity op;require(f.c.serviceFrameOpportunity(false,op),"post-Up navigation opportunity");feedback=op.navigationPresented;require(!op.canonicalRequested,"navigation forced full exact canonical");}
++    require(feedback&&Access::sealed(f.q())==1,"navigation failed to present or retired seal");
++    const auto feedbackPixels=f.pixels();require(f.blue(feedbackPixels,72)>245&&f.blue(feedbackPixels,187)<200,"post-Up navigation resurrected masked ink or lost backdrop");
++    require(f.q().semanticGeneration()==g&&Access::history(f.q())==h,"camera mutated canonical state");
++    const auto frame=f.exact();require(f.complete(frame)&&Access::sealed(f.q())==0,"eventual exact fairness");
++  }
++  {
++    Fixture f;f.erase(80);f.target->busyAcquire=true;const auto g=f.q().semanticGeneration();
++    require(f.q().setViewportZoomAt(1.1F,128,128),"busy zoom accepted camera");runtime::RuntimeFrameOpportunity busy;require(f.c.serviceFrameOpportunity(false,busy),"busy navigation must retain demand");
++    require(!busy.navigationPresented&&Access::sealed(f.q())==1,"busy target invented visible replacement");
++    f.target->busyAcquire=false;runtime::RuntimeFrameOpportunity retry;require(f.c.serviceFrameOpportunity(false,retry),"navigation retry");
++    require(retry.navigationPending||retry.navigationPresented,"camera demand dropped after busy");require(f.q().semanticGeneration()==g,"zoom changed document");
++  }
++  std::puts("post-Up pan/zoom admission, current-Scene feedback before exact, busy retry, fairness PASS");
++}
++}
++
++int main(int argc,char** argv){try{const std::string_view mode=argc>1?argv[1]:"acquire";if(mode=="handoff")handoff();else if(mode=="scene")sceneRecovery();else if(mode=="history")historySafety();else if(mode=="lifecycle")lifecycle();else if(mode=="navigation-safety")navigationSafety();else admission(mode!="present",mode=="navigation");return 0;}catch(const std::exception& e){std::fprintf(stderr,"%s\n",e.what());return 1;}}
+--- before/verification/runners/g5/eraser_readmission.mjs
++++ after/verification/runners/g5/eraser_readmission.mjs
+@@ -0,0 +1,142 @@
++// Fixed candidate-only public functional checks. Not another UR1a comparison.
++import fs from 'node:fs/promises';
++import path from 'node:path';
++import http from 'node:http';
++import {fileURLToPath} from 'node:url';
++import {createHash} from 'node:crypto';
++import {execFileSync} from 'node:child_process';
++import {runWithDiagnostics,summarizePhase} from './transient_reference.mjs';
++const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
++const HERE=path.dirname(fileURLToPath(import.meta.url));
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export const CASES=['reerase-cancel-navigation','pan','pinch','preselected-drag'];
++export async function consumer(){
++  const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++  let sdk,inputClock=31004000000n,base=null,initialLive=null,coldBytes={},activePhase=null;
++  const phases=[],frames=[],errors=[],observer=installNavigationObserver(()=>sdk?.canvas);
++  const dto=e=>({code:e.code??null,message:String(e.message??e),stack:String(e.stack??''),...e});
++  const state=()=>sdk?.readState()??null;
++  const dump=()=>({phases,frames,errors,state:state(),selection:sdk?.readSelection()??null,activity:observer.activity()});
++  const check=(ok,label,actual=null,expected=null)=>{if(!ok)throw Object.assign(Error('PRODUCT_CHECK: '+label),{predicate:{actual,expected}});};
++  const raf=()=>new Promise(resolve=>{resolve.g5SamplerRaf=true;requestAnimationFrame(resolve);});
++  const until=async t=>{while(performance.now()<t)await new Promise(r=>setTimeout(r,Math.max(0,t-performance.now())));};
++  const snapshotState=()=>({at:performance.now(),state:state(),selection:sdk.readSelection()});
++  const pointer=(phase,x,y)=>{
++    inputClock+=4000000n;const r=sdk.canvas.getBoundingClientRect();
++    const e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:r.left+x,clientY:r.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});
++    Object.defineProperty(e,'timeStamp',{value:Number(inputClock)/1e6});observer.dispatch(sdk.canvas,e);
++  };
++  const wheel=(pinch=false)=>{const r=sdk.canvas.getBoundingClientRect();observer.dispatch(sdk.canvas,new WheelEvent('wheel',{clientX:r.left+400,clientY:r.top+250,deltaX:pinch?0:8,deltaY:pinch?-1:2,ctrlKey:pinch,bubbles:true,cancelable:true}));};
++  const settled=async()=>{const end=performance.now()+30000;for(;;){await raf();const s=state();
++    if(s.activeContacts===0&&s.lastCommit.presentedGeneration===s.generation&&observer.activity().pending===0)return s;
++    if(performance.now()>end)throw Error('PRODUCT_CHECK: canonical completion timeout');}};
++  const phase=async(id,fn)=>{
++    const p={id,status:'STARTED',started:performance.now(),before:snapshotState(),schedule:[]};phases.push(p);activePhase=p;observer.begin(p);
++    console.info('UR2H_STAGE '+JSON.stringify({stage:'phase-begin',id,before:p.before}));
++    try{await fn(p);p.inputEnded=performance.now();p.status='INPUT_COMPLETED';}
++    catch(e){p.failure={...dto(e),predicate:e.predicate??null};p.status='FAILED';throw e;}
++    finally{p.inputEnded??=performance.now();p.after=snapshotState();p.ended=performance.now();observer.end(p);activePhase=null;
++      console.info('UR2H_STAGE '+JSON.stringify({stage:'phase-end',id,status:p.status,after:p.after,failure:p.failure??null,errors}));}
++    return p;
++  };
++  const moves=async(p,count,position)=>{const start=performance.now();const generation=state().generation;
++    for(let i=1;i<=count;++i){const planned=start+i*16.666667;await until(planned);const actual=performance.now();pointer('move',...position(i));p.schedule.push({event:'move',i,planned,actual});check(state().generation===generation,'Move mutated document',state().generation,generation);}};
++  const point=(n,i)=>[n===0?160:n===1?230:560,140+260*i/32];
++  const nextDown=async(p,n)=>{const planned=p.afterUp.at+4;await until(planned);const actual=performance.now();pointer('down',...point(n,0));p.nextDown={planned,actual,after:snapshotState()};
++    check(state().activeContacts===1,'next Down rejected',state().activeContacts,1);};
++  const erase=async(n,start=true,again=false)=>{
++    if(start){pointer('down',...point(n,0));check(state().activeContacts===1,'initial eraser Down',state().activeContacts,1);}
++    return phase('erase-'+n,async p=>{await moves(p,32,i=>point(n,i));const generation=state().generation;pointer('up',...point(n,32));p.afterUp=snapshotState();
++      check(BigInt(state().generation)===BigInt(generation)+1n,'non-noop erase Up must commit once',state().generation,(BigInt(generation)+1n).toString());
++      check(state().activeContacts===0,'Up leaked contact',state().activeContacts,0);if(again)await nextDown(p,n+1);});
++  };
++  const navigate=async(p,pinch,firstPlanned)=>{
++    const generation=state().generation,before=state().camera;
++    for(let i=0;i<20;++i){const planned=firstPlanned+i*16.666667;await until(planned);const actual=performance.now();wheel(pinch);p.schedule.push({event:pinch?'ctrl-wheel':'wheel',i,planned,actual});
++      if(i===0){p.firstCameraInput=snapshotState();check(JSON.stringify(state().camera)!==JSON.stringify(before),'camera input not applied',state().camera,before);}
++      check(state().generation===generation,'navigation changed document',state().generation,generation);}
++  };
++  const digest=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(x=>x.toString(16).padStart(2,'0')).join('');
++  const init=async fixture=>{
++    const {createRuntime}=await import('/axiom.mjs');const bytes=new Uint8Array(await(await fetch('/fixtures/'+fixture.name+'.axsnap')).arrayBuffer());
++    check(await digest(bytes)===fixture.sha256,'fixture byte identity');base=fixture;
++    sdk=await createRuntime({mount:document.getElementById('mount'),documentId:fixture.state.documentId,builtinFonts:false,permission:'localSingleUser',restore:{bytes,metadata:fixture.metadata},onError:e=>errors.push(dto(e)),onFrame:f=>frames.push({at:performance.now(),...f})});
++    sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settled();initialLive=state().generation;
++    check(sdk.resources.list().binding===fixture.metadata.resourceBinding,'restored caller binding',sdk.resources.list().binding,fixture.metadata.resourceBinding);
++    check(state().objects===16&&state().activeContacts===0,'restored fixture state',state());
++    await sdk.selectBrush('round-handdrawn',4);await sdk.setEraser({mode:2,diameter:32});await sdk.selectTool('partialEraser');
++    return {state:state(),config:sdk.readBrushConfig(),binding:sdk.resources.list().binding,fixture_sha256:fixture.sha256,
++      source_generation:fixture.state.generation,checkpoint_revision:fixture.metadata.documentRevision,live_initial_generation:initialLive,build:sdk.readBuildInfo(),dpr:devicePixelRatio};
++  };
++  const run=async({id,head})=>window.functionalRun(async()=>{
++    if(id==='reerase-cancel-navigation'){
++      await erase(0,true,true);await erase(1,false,true);const last=await erase(2,false,false);
++      await phase('cancel-then-pan',async p=>{const generation=state().generation;p.afterUp=last.afterUp;await nextDown(p,0);pointer('move',160,150);pointer('cancel',160,150);p.afterCancel=snapshotState();check(state().generation===generation,'cancel committed');await navigate(p,false,p.afterCancel.at+4);});
++    }else if(id==='pan'||id==='pinch'){
++      const p=await erase(0);await phase('post-Up-'+id,async next=>navigate(next,id==='pinch',p.afterUp.at+4));
++    }else{
++      await sdk.selectTool('select');const generation=state().generation;pointer('down',...head);pointer('up',...head);await settled();
++      check(sdk.readSelection().count===1,'cold point selection',sdk.readSelection().count,1);check(state().generation===generation,'point selection mutated document');
++      await phase('preselected-drag',async p=>{pointer('down',...head);check(state().activeContacts===1,'drag Down');await moves(p,48,i=>[head[0]+i,head[1]+20*i/48]);pointer('up',head[0]+48,head[1]+20);p.afterUp=snapshotState();check(BigInt(state().generation)===BigInt(generation)+1n,'drag Up commit',state().generation,(BigInt(generation)+1n).toString());});
++    }
++    const waiting=performance.now();await settled();const ended=performance.now();await Promise.resolve();
++    check(state().activeContacts===0,'contacts leaked',state().activeContacts,0);check(errors.length===0,'SDK errors',errors,[]);
++    return {after:state(),canonical_wait:{started:waiting,ended,ms:ended-waiting},scope:'public functional completion; no input-to-photon or GPU leaf timing'};
++  },dump);
++  const pixels=()=>{const gl=sdk.canvas.getContext('webgl2'),w=sdk.canvas.width,h=sdk.canvas.height,raw=new Uint8Array(w*h*4),top=new Uint8Array(raw.length);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,raw);for(let y=0;y<h;++y)top.set(raw.subarray((h-1-y)*w*4,(h-y)*w*4),y*w*4);return {bytes:top,width:w,height:h};};
++  const cold=async()=>{
++    check(activePhase===null,'cold work entered timed phase');await sdk.selectTool('select');pointer('down',8,8);pointer('up',8,8);await settled();check(sdk.readSelection().count===0,'cold HUD deselection');
++    const before=state(),original=pixels(),hash=await digest(original.bytes);await sdk.undo();await settled();const undo=state(),undoHash=await digest(pixels().bytes);
++    await sdk.redo();await settled();const redo=state(),image=pixels(),redoHash=await digest(image.bytes);
++    check(BigInt(undo.generation)===BigInt(before.generation)+1n&&BigInt(redo.generation)===BigInt(undo.generation)+1n,'Undo/Redo relative generation');
++    check(redoHash===hash,'Undo/Redo pixel roundtrip',redoHash,hash);check(undoHash!==hash,'Undo had no visible effect',undoHash,hash);
++    const documentRevision=(BigInt(base.metadata.documentRevision)+BigInt(redo.generation)-BigInt(initialLive)).toString();
++    const metadata={generation:redo.generation,documentRevision,recoveryFrontier:base.metadata.recoveryFrontier};const snapshot=await sdk.captureSnapshot(metadata);
++    coldBytes={snapshot:snapshot.bytes,rgba:image.bytes};return {before,undo,redo,undo_redo_pixels_equal:true,
++      checkpoint_request:metadata,checkpoint_mapping:{source:base.metadata.documentRevision,live_initial:initialLive,live_capture:redo.generation,external_revision:documentRevision},
++      checkpoint_digest:snapshot.checkpointDigest,snapshot_bytes:snapshot.bytes.length,snapshot_sha256:await digest(snapshot.bytes),
++      rgba_bytes:image.bytes.length,rgba_sha256:redoHash,width:image.width,height:image.height,camera:redo.camera};
++  };
++  window.ur2={init,run,cold,dump,pull(kind,off,count){const b=coldBytes[kind].subarray(off,off+count);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s);},
++    async close(){if(state()?.activeContacts)pointer('cancel',0,0);await sdk?.close();observer.restore();return {closed:!document.querySelector('#mount canvas'),errors};}};
++}
++
++async function artifactIdentity(root){const files={};for(const name of(await fs.readdir(root,{recursive:true})).sort()){const p=path.join(root,name);if((await fs.stat(p)).isFile())files[name]=sha(await fs.readFile(p));}return files;}
++async function main(){
++  const [sdkArg,outArg,fixtureName,oracle]=process.argv.slice(2),sdk=path.resolve(sdkArg),out=path.resolve(outArg);await fs.mkdir(out,{recursive:true});
++  const fixtures=path.join(ROOT,'.aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures'),manifest=JSON.parse(await fs.readFile(path.join(fixtures,'fixtures.json'))),fixture=manifest[fixtureName];
++  const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,'eraser_readmission_runner.py'),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
++  const result={schema:'g5-post-up-functional-worker-v1',status:'STARTED',fixture:fixtureName,source_before:source(),artifacts_before:await artifactIdentity(sdk),cases:[],page_errors:[]};
++  const write=(name,value)=>fs.writeFile(path.join(out,name),JSON.stringify(value,null,2)+'\n');let server,browser,page;
++  const {chromium}=await import('../../node_modules/playwright/index.mjs');const {compareSnapshotPixels}=await import('./ur0/pixel_oracle.mjs');
++  try{
++    if(sha(await fs.readFile(path.join(fixtures,fixtureName+'.axsnap')))!==fixture.sha256)throw Error('fixture identity mismatch');
++    server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname==='/probe.html'){res.setHeader('Content-Type','text/html');res.end('<body style="margin:0"><div id="mount" style="width:800px;height:500px"></div><script type="module">window.functionalRun='+runWithDiagnostics.toString()+';await ('+consumer.toString()+')();</script>');return;}
++      const [base,suffix]=u.pathname.startsWith('/g5/')?[HERE,u.pathname.slice(4)]:u.pathname.startsWith('/fixtures/')?[fixtures,u.pathname.slice(10)]:[sdk,u.pathname.slice(1)];const file=path.resolve(base,suffix);if(!file.startsWith(base+path.sep))throw Error('path');
++      res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});
++    await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});result.browser={version:browser.version(),headless:true};
++    for(const id of CASES){const row={id,status:'STARTED'};result.cases.push(row);
++      page=await browser.newPage({viewport:{width:900,height:650},deviceScaleFactor:2});page.on('pageerror',e=>result.page_errors.push(String(e)));page.on('crash',()=>{result.crash=true;});
++      page.on('console',m=>{if(m.text().startsWith('UR2H_STAGE '))console.log(m.text().slice(11));});
++      await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');await page.waitForFunction(()=>!!window.ur2);
++      row.init=await page.evaluate(f=>ur2.init(f),fixture);await write(id+'-init.json',row.init);
++      row.observed=await page.evaluate(value=>ur2.run(value),{id,head:manifest.head});await write(id+'-observed.json',row.observed);row.status=row.observed.status;
++      if(row.status==='COMPLETED')try{
++        row.cold=await page.evaluate(()=>ur2.cold());await write(id+'-cold.json',row.cold);
++        for(const [kind,length,ext] of [['snapshot',row.cold.snapshot_bytes,'axsnap'],['rgba',row.cold.rgba_bytes,'rgba']]){const f=await fs.open(path.join(out,id+'.'+ext),'w');try{for(let off=0;off<length;off+=65536)await f.writeFile(Buffer.from(await page.evaluate(({kind,off})=>ur2.pull(kind,off,65536),{kind,off}),'base64'));}finally{await f.close();}}
++        if(sha(await fs.readFile(path.join(out,id+'.axsnap')))!==row.cold.snapshot_sha256||sha(await fs.readFile(path.join(out,id+'.rgba')))!==row.cold.rgba_sha256)throw Error('cold transfer identity');
++        row.pixels=await compareSnapshotPixels({oracle,snapshot:path.join(out,id+'.axsnap'),actual:await fs.readFile(path.join(out,id+'.rgba')),request:{width:row.cold.width,height:row.cold.height,logical_width:800,logical_height:500,camera:row.cold.camera,hud_bounds:[]},prefix:path.join(out,id+'-reference')});
++        if(row.pixels.status!=='QUALIFIED'){row.status='FAILED';row.cold_error='PRODUCT_CHECK: native pixel oracle mismatch';}
++      }catch(e){row.status='FAILED';row.cold_error=String(e.stack??e);}
++      row.final=await page.evaluate(()=>ur2.dump());await write(id+'-final.json',row.final);row.close=await page.evaluate(()=>ur2.close());if(!row.close.closed)throw Error('cleanup failure');await page.close();page=null;
++      row.metrics=row.observed.diagnostics.phases.map(p=>({id:p.id,status:p.status,...summarizePhase(p),canonical_wait_ms:null,scope:'input phase only; actual canonical wait is separately recorded'}));
++      await write(id+'-result.json',row);console.log(JSON.stringify({stage:'case-closed',id,status:row.status,errors:row.final.errors}));
++    }
++    result.status=result.cases.every(c=>c.status==='COMPLETED')?'OBSERVED':'PRODUCT_FAILURE_OBSERVED';
++  }catch(e){result.status='HARD_FAILURE';result.error=String(e.stack??e);if(page&&!page.isClosed())try{result.partial=await page.evaluate(()=>ur2.dump());await write('partial.json',result.partial);}catch(x){result.partial_error=String(x);}}
++  finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));result.source_after=source();result.artifacts_after=await artifactIdentity(sdk);
++    result.source_stable=result.source_before.source_tree_sha256===result.source_after.source_tree_sha256;result.artifacts_stable=JSON.stringify(result.artifacts_before)===JSON.stringify(result.artifacts_after);
++    if(!result.source_stable||!result.artifacts_stable||result.crash){result.status='HARD_FAILURE';result.identity_or_crash=true;}await write('worker-result.json',result);}
++  console.log(JSON.stringify({stage:'worker-complete',status:result.status,error:result.error??null}));if(result.status==='HARD_FAILURE')process.exitCode=2;
++}
++if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();
+--- before/verification/runners/g5/eraser_readmission_runner.py
++++ after/verification/runners/g5/eraser_readmission_runner.py
+@@ -0,0 +1,56 @@
++"""Exactly two candidate functional families; preserves all closed UR1a windows."""
++import argparse
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++_spec=importlib.util.spec_from_file_location('post_up_shared_runner',Path(__file__).with_name('transient_attribution_runner.py'))
++_shared=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(_shared)
++prior_ledger, reserve, complete, load_module, write=(_shared.new_ledger,_shared.reserve,_shared.complete,_shared.load_module,_shared.write)
++
++ROOT=Path(__file__).resolve().parents[3]
++HERE=Path(__file__).resolve().parent
++IDS=('UR2H-C1','UR2H-C2')
++
++def new_ledger():
++    value=prior_ledger(IDS,42,1374);value['schema']='g5-post-up-functional-accounting-v1';return value
++
++def source_identity(full=False):
++    source=load_module('post_up_source',HERE/'ur0/source_identity.py')
++    source.EXCLUDED=source.EXCLUDED+('.aegis/results/G5-UR2a-post-up-handoff/','verification/evidence/performance/g5-ur2a-post-up-handoff/')
++    value=source.identity(ROOT)
++    if not full:value.pop('files')
++    return value
++
++def artifact_identity(sdk):
++    return {str(p.relative_to(sdk)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(sdk.rglob('*')) if p.is_file()}
++
++def execute(sdk,oracle,output):
++    output.mkdir(parents=True,exist_ok=True);ledger_file=output/'sampling-ledger.json'
++    if ledger_file.exists():raise RuntimeError('candidate window already reserved; no retry')
++    source=source_identity(True);write(output/'source.json',source)
++    artifacts=artifact_identity(sdk);write(output/'artifacts.json',artifacts)
++    guard=load_module('post_up_guard',HERE/'bounded_worker.py');ledger=new_ledger();write(ledger_file,ledger)
++    for identity,fixture in zip(IDS,('S0','S2')):
++        if source_identity()['source_tree_sha256']!=source['source_tree_sha256'] or artifact_identity(sdk)!=artifacts:
++            ledger['remaining_status']='MISSING';ledger['preflight_error']='source/artifact mismatch';write(ledger_file,ledger);break
++        reserve(ledger,identity);write(ledger_file,ledger)
++        command=['node',str(HERE/'eraser_readmission.mjs'),str(sdk.resolve()),str((output/identity).resolve()),fixture,str(oracle.resolve())]
++        try:observed=guard.run(command,output/identity,180,3072*1024)
++        except BaseException:complete(ledger,None,None);write(ledger_file,ledger);raise
++        p=output/identity/'worker-result.json';worker=json.loads(p.read_text()) if p.exists() else None
++        complete(ledger,observed,worker);write(ledger_file,ledger)
++        print(json.dumps({'id':identity,'fixture':fixture,'status':ledger['attempts'][-1]['status'],'worker':worker['status'] if worker else 'MISSING','seconds':ledger['attempts'][-1]['charged_seconds']}),flush=True)
++        if ledger['remaining_status']=='MISSING':break
++    write(output/'summary.json',{'schema':'g5-post-up-functional-summary-v1','source':source['source_tree_sha256'],'ledger':ledger,
++       'rows':[{'id':identity,'status':json.loads((output/identity/'worker-result.json').read_text())['status']} if (output/identity/'worker-result.json').exists() else {'id':identity,'status':'MISSING'} for identity in IDS]})
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--source-identity',action='store_true');p.add_argument('--execute',action='store_true')
++    for name in ('sdk','oracle','output'):p.add_argument('--'+name,type=Path)
++    a=p.parse_args()
++    if a.source_identity:print(json.dumps(source_identity()))
++    elif a.execute and all((a.sdk,a.oracle,a.output)):execute(a.sdk,a.oracle,a.output)
++    else:p.error('explicit --execute and artifact/output paths required')
++
++if __name__=='__main__':main()
+--- before/verification/tests/g5_eraser_readmission.test.mjs
++++ after/verification/tests/g5_eraser_readmission.test.mjs
+@@ -0,0 +1,13 @@
++import test from 'node:test';import assert from 'node:assert/strict';
++import {CASES,consumer} from '../runners/g5/eraser_readmission.mjs';
++test('independent post-Up branches keep real wheel, preselected drag and cold oracle separate',()=>{
++  assert.deepEqual(CASES,['reerase-cancel-navigation','pan','pinch','preselected-drag']);
++  const src=consumer.toString();
++  assert.match(src,/new WheelEvent\('wheel'/);assert.match(src,/ctrlKey:pinch/);
++  assert.match(src,/p\.afterUp\.at\+4/);assert.match(src,/cold point selection/);
++  assert.match(src,/point selection mutated document/);assert.match(src,/next Down rejected/);
++  const hot=src.slice(src.indexOf('const run='),src.indexOf('const pixels='));
++  assert.doesNotMatch(hot,/readPixels|captureSnapshot|settled\(\).*nextDown/);
++  assert.match(src,/check\(activePhase===null/);assert.match(src,/checkpoint_mapping/);
++  assert.doesNotMatch(src,/HEAP|_sdk_|performance\.memory/);
++});
+--- before/verification/tests/test_g5_eraser_readmission.py
++++ after/verification/tests/test_g5_eraser_readmission.py
+@@ -0,0 +1,28 @@
++import importlib.util
++from pathlib import Path
++import unittest
++
++P=Path(__file__).resolve().parents[1]/'runners/g5/eraser_readmission_runner.py'
++spec=importlib.util.spec_from_file_location('post_up_runner',P)
++runner=importlib.util.module_from_spec(spec);spec.loader.exec_module(runner)
++
++class CandidateWindow(unittest.TestCase):
++    def test_only_two_candidates_no_old_window_or_retry(self):
++        ledger=runner.new_ledger()
++        self.assertEqual(ledger['planned_ids'],['UR2H-C1','UR2H-C2'])
++        self.assertEqual((ledger['historical_starts'],ledger['historical_charged_seconds']),(42,1374))
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR1ATTR2-A1')
++        runner.reserve(ledger,'UR2H-C1')
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++        runner.complete(ledger,{'reason':'completed','elapsed_s':1.2,'cleanup_complete':True},{'status':'OBSERVED'})
++        self.assertEqual(ledger['attempts'][0]['charged_seconds'],2)
++        runner.reserve(ledger,'UR2H-C2');runner.complete(ledger,{'reason':'completed','elapsed_s':1,'cleanup_complete':True},{'status':'OBSERVED'})
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++
++    def test_guard_failure_stops_and_unknown_is_fully_charged(self):
++        ledger=runner.new_ledger();runner.reserve(ledger,'UR2H-C1');runner.complete(ledger,None,None)
++        self.assertEqual(ledger['attempts'][0]['charged_seconds'],180)
++        self.assertEqual(ledger['remaining_status'],'MISSING')
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++
++if __name__=='__main__':unittest.main()

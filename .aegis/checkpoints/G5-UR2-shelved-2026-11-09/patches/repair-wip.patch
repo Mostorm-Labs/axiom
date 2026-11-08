@@ -1,0 +1,204 @@
+--- b61da8dd/verification/runners/g5/eraser_readmission.mjs
++++ checkpoint/verification/runners/g5/eraser_readmission.mjs
+@@ -10,6 +10,25 @@
+ const HERE=path.dirname(fileURLToPath(import.meta.url));
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ export const CASES=['reerase-cancel-navigation','pan','pinch','preselected-drag'];
++// Correctness-only transaction: each stage is durable before predicates run.
++export async function retainColdStages({capture,undo,redo,save,check}){
++  const stages=[],predicates=[];let failure=null;
++  try{
++    for(const stage of ['before','undo','redo']){
++      if(stage==='undo')await undo();if(stage==='redo')await redo();
++      const value=await capture(stage);await save(value);stages.push(value);
++    }
++    const [before,undone,redone]=stages;
++    const test=(value,label,actual,expected)=>{
++      predicates.push({label,passed:value,actual,expected});
++      try{check(value,label,actual,expected);}catch(e){failure??={message:String(e.message??e),predicate:e.predicate??{actual,expected}};}
++    };
++    test(BigInt(undone.generation)===BigInt(before.generation)+1n&&BigInt(redone.generation)===BigInt(undone.generation)+1n,'Undo/Redo relative generation',[undone.generation,redone.generation],[(BigInt(before.generation)+1n).toString(),(BigInt(before.generation)+2n).toString()]);
++    test(redone.rgba_sha256===before.rgba_sha256,'Undo/Redo pixel roundtrip',redone.rgba_sha256,before.rgba_sha256);
++    test(undone.rgba_sha256!==before.rgba_sha256,'Undo had no visible effect',undone.rgba_sha256,before.rgba_sha256);
++  }catch(e){failure={message:String(e.stack??e),predicate:e.predicate??null};}
++  return {status:failure?'FAILED':'COMPLETED',stages,predicates,failure};
++}
+ export async function consumer(){
+   const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
+   let sdk,inputClock=31004000000n,base=null,initialLive=null,coldBytes={},activePhase=null;
+@@ -86,18 +105,37 @@
+   const pixels=()=>{const gl=sdk.canvas.getContext('webgl2'),w=sdk.canvas.width,h=sdk.canvas.height,raw=new Uint8Array(w*h*4),top=new Uint8Array(raw.length);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,raw);for(let y=0;y<h;++y)top.set(raw.subarray((h-1-y)*w*4,(h-y)*w*4),y*w*4);return {bytes:top,width:w,height:h};};
+   const cold=async()=>{
+     check(activePhase===null,'cold work entered timed phase');await sdk.selectTool('select');pointer('down',8,8);pointer('up',8,8);await settled();check(sdk.readSelection().count===0,'cold HUD deselection');
+-    const before=state(),original=pixels(),hash=await digest(original.bytes);await sdk.undo();await settled();const undo=state(),undoHash=await digest(pixels().bytes);
+-    await sdk.redo();await settled();const redo=state(),image=pixels(),redoHash=await digest(image.bytes);
+-    check(BigInt(undo.generation)===BigInt(before.generation)+1n&&BigInt(redo.generation)===BigInt(undo.generation)+1n,'Undo/Redo relative generation');
+-    check(redoHash===hash,'Undo/Redo pixel roundtrip',redoHash,hash);check(undoHash!==hash,'Undo had no visible effect',undoHash,hash);
+-    const documentRevision=(BigInt(base.metadata.documentRevision)+BigInt(redo.generation)-BigInt(initialLive)).toString();
+-    const metadata={generation:redo.generation,documentRevision,recoveryFrontier:base.metadata.recoveryFrontier};const snapshot=await sdk.captureSnapshot(metadata);
+-    coldBytes={snapshot:snapshot.bytes,rgba:image.bytes};return {before,undo,redo,undo_redo_pixels_equal:true,
+-      checkpoint_request:metadata,checkpoint_mapping:{source:base.metadata.documentRevision,live_initial:initialLive,live_capture:redo.generation,external_revision:documentRevision},
+-      checkpoint_digest:snapshot.checkpointDigest,snapshot_bytes:snapshot.bytes.length,snapshot_sha256:await digest(snapshot.bytes),
+-      rgba_bytes:image.bytes.length,rgba_sha256:redoHash,width:image.width,height:image.height,camera:redo.camera};
+-  };
+-  window.ur2={init,run,cold,dump,pull(kind,off,count){const b=coldBytes[kind].subarray(off,off+count);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s);},
++    coldBytes={};const captured=[];
++    const capture=async stage=>{
++      const current=state(),image=pixels(),key=stage+'_rgba';coldBytes[key]=image.bytes;
++      const documentRevision=(BigInt(base.metadata.documentRevision)+BigInt(current.generation)-BigInt(initialLive)).toString();
++      const metadata={generation:current.generation,documentRevision,recoveryFrontier:base.metadata.recoveryFrontier};
++      const row={stage,generation:current.generation,state:current,selection:sdk.readSelection(),camera:current.camera,activity:observer.activity(),
++        rgba_key:key,rgba_bytes:image.bytes.length,rgba_sha256:await digest(image.bytes),width:image.width,height:image.height,
++        checkpoint_request:metadata,checkpoint_mapping:{source:base.metadata.documentRevision,live_initial:initialLive,live_capture:current.generation,external_revision:documentRevision}};
++      captured.push(row);
++      try{const snapshot=await sdk.captureSnapshot(metadata);coldBytes[stage+'_snapshot']=snapshot.bytes;
++        Object.assign(row,{snapshot_key:stage+'_snapshot',snapshot_bytes:snapshot.bytes.length,snapshot_sha256:await digest(snapshot.bytes),checkpoint_digest:snapshot.checkpointDigest});
++      }catch(e){row.snapshot_error=dto(e);}
++      return row;
++    };
++    const result=await window.retainColdStages({capture,undo:async()=>{await sdk.undo();await settled();},redo:async()=>{await sdk.redo();await settled();},save:async()=>{},check});
++    return {...result,available_stages:captured,scope:'cold correctness only; all available buffers are transferred before qualification'};
++  };
++  const pendingBrush=async()=>window.functionalRun(async()=>{
++    await sdk.selectTool('ink');pointer('down',650,450);
++    await phase('short-brush-before-handoff',p=>moves(p,8,i=>[650+i*8,450]));
++    const before=state().generation;pointer('up',714,450);const up=snapshotState();
++    await sdk.selectTool('partialEraser');
++    const preview=Array.from(document.querySelectorAll('#mount canvas')).find(c=>c!==sdk.canvas);
++    const visibilityBefore=preview.style.visibility;pointer('down',680,450);const after=snapshotState();
++    check(state().activeContacts===1,'pending Brush partial Down rejected');
++    check(up.state.lastCommit.presentedGeneration!==up.state.generation,'short handoff did not exercise pending canonical');
++    check(visibilityBefore==='visible'&&preview.style.visibility==='visible','pending Brush display hidden before replacement',{visibilityBefore,after:preview.style.visibility},'visible');
++    pointer('cancel',680,450);await settled();check(BigInt(state().generation)===BigInt(before)+1n,'pending Brush cancel mutated document');
++    return {up,after,visibilityBefore,visibilityAfterDown:preview.style.visibility,final:state(),errors};
++  },dump);
++  window.ur2={init,run,cold,pendingBrush,dump,pull(kind,off,count){const b=coldBytes[kind].subarray(off,off+count);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s);},
+     async close(){if(state()?.activeContacts)pointer('cancel',0,0);await sdk?.close();observer.restore();return {closed:!document.querySelector('#mount canvas'),errors};}};
+ }
+ 
+@@ -108,10 +146,10 @@
+   const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,'eraser_readmission_runner.py'),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
+   const result={schema:'g5-post-up-functional-worker-v1',status:'STARTED',fixture:fixtureName,source_before:source(),artifacts_before:await artifactIdentity(sdk),cases:[],page_errors:[]};
+   const write=(name,value)=>fs.writeFile(path.join(out,name),JSON.stringify(value,null,2)+'\n');let server,browser,page;
+-  const {chromium}=await import('../../node_modules/playwright/index.mjs');const {compareSnapshotPixels}=await import('./ur0/pixel_oracle.mjs');
++  const {chromium}=await import('../../node_modules/playwright/index.mjs');const {compareSnapshotPixels,comparePixels}=await import('./ur0/pixel_oracle.mjs');
+   try{
+     if(sha(await fs.readFile(path.join(fixtures,fixtureName+'.axsnap')))!==fixture.sha256)throw Error('fixture identity mismatch');
+-    server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname==='/probe.html'){res.setHeader('Content-Type','text/html');res.end('<body style="margin:0"><div id="mount" style="width:800px;height:500px"></div><script type="module">window.functionalRun='+runWithDiagnostics.toString()+';await ('+consumer.toString()+')();</script>');return;}
++    server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname==='/probe.html'){res.setHeader('Content-Type','text/html');res.end('<body style="margin:0"><div id="mount" style="width:800px;height:500px"></div><script type="module">window.functionalRun='+runWithDiagnostics.toString()+';window.retainColdStages='+retainColdStages.toString()+';await ('+consumer.toString()+')();</script>');return;}
+       const [base,suffix]=u.pathname.startsWith('/g5/')?[HERE,u.pathname.slice(4)]:u.pathname.startsWith('/fixtures/')?[fixtures,u.pathname.slice(10)]:[sdk,u.pathname.slice(1)];const file=path.resolve(base,suffix);if(!file.startsWith(base+path.sep))throw Error('path');
+       res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});
+     await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});result.browser={version:browser.version(),headless:true};
+@@ -123,11 +161,31 @@
+       row.observed=await page.evaluate(value=>ur2.run(value),{id,head:manifest.head});await write(id+'-observed.json',row.observed);row.status=row.observed.status;
+       if(row.status==='COMPLETED')try{
+         row.cold=await page.evaluate(()=>ur2.cold());await write(id+'-cold.json',row.cold);
+-        for(const [kind,length,ext] of [['snapshot',row.cold.snapshot_bytes,'axsnap'],['rgba',row.cold.rgba_bytes,'rgba']]){const f=await fs.open(path.join(out,id+'.'+ext),'w');try{for(let off=0;off<length;off+=65536)await f.writeFile(Buffer.from(await page.evaluate(({kind,off})=>ur2.pull(kind,off,65536),{kind,off}),'base64'));}finally{await f.close();}}
+-        if(sha(await fs.readFile(path.join(out,id+'.axsnap')))!==row.cold.snapshot_sha256||sha(await fs.readFile(path.join(out,id+'.rgba')))!==row.cold.rgba_sha256)throw Error('cold transfer identity');
+-        row.pixels=await compareSnapshotPixels({oracle,snapshot:path.join(out,id+'.axsnap'),actual:await fs.readFile(path.join(out,id+'.rgba')),request:{width:row.cold.width,height:row.cold.height,logical_width:800,logical_height:500,camera:row.cold.camera,hud_bounds:[]},prefix:path.join(out,id+'-reference')});
+-        if(row.pixels.status!=='QUALIFIED'){row.status='FAILED';row.cold_error='PRODUCT_CHECK: native pixel oracle mismatch';}
++        row.cold_oracles=[];
++        for(const stage of row.cold.available_stages){
++          for(const [kind,length,ext] of [[stage.rgba_key,stage.rgba_bytes,'rgba'],[stage.snapshot_key,stage.snapshot_bytes,'axsnap']]){
++            if(!kind)continue;const filename=path.join(out,id+'-'+stage.stage+'.'+ext),f=await fs.open(filename,'w');
++            try{for(let off=0;off<length;off+=65536)await f.writeFile(Buffer.from(await page.evaluate(({kind,off})=>ur2.pull(kind,off,65536),{kind,off}),'base64'));}finally{await f.close();}
++            if(sha(await fs.readFile(filename))!==(ext==='rgba'?stage.rgba_sha256:stage.snapshot_sha256))throw Error('cold transfer identity');
++          }
++        }
++        // Transfer every stage first, including all data preceding a failed predicate.
++        for(const stage of row.cold.available_stages){
++          if(!stage.snapshot_key){row.status='FAILED';continue;}
++          const prefix=path.join(out,id+'-'+stage.stage+'-reference');
++          const oracleResult=await compareSnapshotPixels({oracle,snapshot:path.join(out,id+'-'+stage.stage+'.axsnap'),actual:await fs.readFile(path.join(out,id+'-'+stage.stage+'.rgba')),
++            request:{width:stage.width,height:stage.height,logical_width:800,logical_height:500,camera:stage.camera,hud_bounds:[]},prefix});
++          row.cold_oracles.push({stage:stage.stage,...oracleResult});if(oracleResult.status!=='QUALIFIED')row.status='FAILED';
++        }
++        if(row.cold.available_stages.length!==3||row.cold.predicates.some(p=>!p.passed&&p.label!=='Undo/Redo pixel roundtrip'))row.status='FAILED';
++        const beforeRef=path.join(out,id+'-before-reference.rgba'),redoRef=path.join(out,id+'-redo-reference.rgba');
++        if(row.cold.available_stages.length===3&&await fs.readFile(beforeRef).then(b=>sha(b))===await fs.readFile(redoRef).then(b=>sha(b))){
++          row.roundtrip=comparePixels(await fs.readFile(path.join(out,id+'-redo.rgba')),await fs.readFile(path.join(out,id+'-before.rgba')),await fs.readFile(path.join(out,id+'-before-reference.edge')));
++          if(row.roundtrip.status!=='QUALIFIED')row.status='FAILED';
++        }else{row.status='FAILED';row.roundtrip_error='before/redo independent canonical pixel references differ or are missing';}
++        row.pixel_qualification='original independent CPU geometry AA boundary, <=2 interior channel levels; raw hash predicates retained unchanged';
+       }catch(e){row.status='FAILED';row.cold_error=String(e.stack??e);}
++      if(id==='reerase-cancel-navigation'){row.pending_brush=await page.evaluate(()=>ur2.pendingBrush());if(row.pending_brush.status!=='COMPLETED')row.status='FAILED';await write(id+'-pending-brush.json',row.pending_brush);}
+       row.final=await page.evaluate(()=>ur2.dump());await write(id+'-final.json',row.final);row.close=await page.evaluate(()=>ur2.close());if(!row.close.closed)throw Error('cleanup failure');await page.close();page=null;
+       row.metrics=row.observed.diagnostics.phases.map(p=>({id:p.id,status:p.status,...summarizePhase(p),canonical_wait_ms:null,scope:'input phase only; actual canonical wait is separately recorded'}));
+       await write(id+'-result.json',row);console.log(JSON.stringify({stage:'case-closed',id,status:row.status,errors:row.final.errors}));
+--- b61da8dd/verification/runners/g5/eraser_readmission_runner.py
++++ checkpoint/verification/runners/g5/eraser_readmission_runner.py
+@@ -10,14 +10,14 @@
+ 
+ ROOT=Path(__file__).resolve().parents[3]
+ HERE=Path(__file__).resolve().parent
+-IDS=('UR2H-C1','UR2H-C2')
++IDS=('UR2R1-C1','UR2R1-C2')
+ 
+ def new_ledger():
+-    value=prior_ledger(IDS,42,1374);value['schema']='g5-post-up-functional-accounting-v1';return value
++    value=prior_ledger(IDS,44,1433);value['schema']='g5-post-up-functional-accounting-v1';return value
+ 
+ def source_identity(full=False):
+     source=load_module('post_up_source',HERE/'ur0/source_identity.py')
+-    source.EXCLUDED=source.EXCLUDED+('.aegis/results/G5-UR2a-post-up-handoff/','verification/evidence/performance/g5-ur2a-post-up-handoff/')
++    source.EXCLUDED=source.EXCLUDED+('.aegis/results/G5-UR2a-post-up-repair-r1/','verification/evidence/performance/g5-ur2a-post-up-repair-r1/','.aegis/results/G5-UR2a-post-up-handoff/','verification/evidence/performance/g5-ur2a-post-up-handoff/')
+     value=source.identity(ROOT)
+     if not full:value.pop('files')
+     return value
+--- b61da8dd/verification/tests/g5_eraser_readmission.test.mjs
++++ checkpoint/verification/tests/g5_eraser_readmission.test.mjs
+@@ -1,5 +1,5 @@
+ import test from 'node:test';import assert from 'node:assert/strict';
+-import {CASES,consumer} from '../runners/g5/eraser_readmission.mjs';
++import {CASES,consumer,retainColdStages} from '../runners/g5/eraser_readmission.mjs';
+ test('independent post-Up branches keep real wheel, preselected drag and cold oracle separate',()=>{
+   assert.deepEqual(CASES,['reerase-cancel-navigation','pan','pinch','preselected-drag']);
+   const src=consumer.toString();
+@@ -11,3 +11,16 @@
+   assert.match(src,/check\(activePhase===null/);assert.match(src,/checkpoint_mapping/);
+   assert.doesNotMatch(src,/HEAP|_sdk_|performance\.memory/);
+ });
++
++test('cold transaction preserves all available stages before a failed pixel predicate',async()=>{
++  const saved=[];let result,error;
++  try{result=await retainColdStages({
++    capture:async stage=>({stage,rgba_sha256:stage==='before'?'a':'b',generation:stage==='before'?'1':stage==='undo'?'2':'3',pixels:Uint8Array.of(1,stage==='redo'?2:1),snapshot:Uint8Array.of(4,5)}),
++    undo:async()=>{},redo:async()=>{},save:async s=>saved.push(s),
++    check:(value,label,actual,expected)=>{if(!value)throw Object.assign(Error(label),{predicate:{actual,expected}});},
++  });}catch(e){error=e;}
++  assert.equal(saved.length,3,'failed predicate discarded the three cold stages');
++  assert.deepEqual(saved.map(s=>s.stage),['before','undo','redo']);
++  assert.deepEqual(Array.from(saved[2].pixels),[1,2]);
++  assert.ok(error||result.status==='FAILED','mismatch must stay a failed observation');
++});
+--- b61da8dd/verification/tests/test_g5_eraser_readmission.py
++++ checkpoint/verification/tests/test_g5_eraser_readmission.py
+@@ -9,20 +9,20 @@
+ class CandidateWindow(unittest.TestCase):
+     def test_only_two_candidates_no_old_window_or_retry(self):
+         ledger=runner.new_ledger()
+-        self.assertEqual(ledger['planned_ids'],['UR2H-C1','UR2H-C2'])
+-        self.assertEqual((ledger['historical_starts'],ledger['historical_charged_seconds']),(42,1374))
++        self.assertEqual(ledger['planned_ids'],['UR2R1-C1','UR2R1-C2'])
++        self.assertEqual((ledger['historical_starts'],ledger['historical_charged_seconds']),(44,1433))
+         with self.assertRaises(ValueError):runner.reserve(ledger,'UR1ATTR2-A1')
+-        runner.reserve(ledger,'UR2H-C1')
+-        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++        runner.reserve(ledger,'UR2R1-C1')
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2R1-C2')
+         runner.complete(ledger,{'reason':'completed','elapsed_s':1.2,'cleanup_complete':True},{'status':'OBSERVED'})
+         self.assertEqual(ledger['attempts'][0]['charged_seconds'],2)
+-        runner.reserve(ledger,'UR2H-C2');runner.complete(ledger,{'reason':'completed','elapsed_s':1,'cleanup_complete':True},{'status':'OBSERVED'})
+-        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++        runner.reserve(ledger,'UR2R1-C2');runner.complete(ledger,{'reason':'completed','elapsed_s':1,'cleanup_complete':True},{'status':'OBSERVED'})
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2R1-C2')
+ 
+     def test_guard_failure_stops_and_unknown_is_fully_charged(self):
+-        ledger=runner.new_ledger();runner.reserve(ledger,'UR2H-C1');runner.complete(ledger,None,None)
++        ledger=runner.new_ledger();runner.reserve(ledger,'UR2R1-C1');runner.complete(ledger,None,None)
+         self.assertEqual(ledger['attempts'][0]['charged_seconds'],180)
+         self.assertEqual(ledger['remaining_status'],'MISSING')
+-        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2H-C2')
++        with self.assertRaises(ValueError):runner.reserve(ledger,'UR2R1-C2')
+ 
+ if __name__=='__main__':unittest.main()

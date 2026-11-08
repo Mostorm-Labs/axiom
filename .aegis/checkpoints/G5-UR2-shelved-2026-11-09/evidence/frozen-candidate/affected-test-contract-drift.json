@@ -1,0 +1,15 @@
+{
+  "test": "PartialEraseLive.DefaultSmoothedRoundStrokeSupportsEverySweepSample",
+  "failure": "expects q.previewActive()==false immediately after deferred eraserBegin on a direct seeded BrushSession with no qualified Brush canonical receipt",
+  "baseline": "legacy-seed-probe-baseline.log",
+  "baseline_clears_pending_brush": true,
+  "candidate_retains_pending_brush": true,
+  "classification": "TEST_CONTRACT_DRIFT_REQUIRES_CONTROL_RECONCILIATION",
+  "reason": "New U2A-01 forbids rendering/clearing in deferred Down and existing strict CanonicalVisible policy forbids early retirement of the previous unpresented Brush preview. Exact affected unit test is outside frozen authorized_source_paths; preserved rather than weakening this assertion silently.",
+  "file": "runtime/composition/tests/fc02_text_geometry_test.cpp",
+  "line": 2311,
+  "file_unchanged_from_HEAD": true,
+  "other_assertions_in_test": "all24 sweep samples, frame opportunities and erase Up passed; single EXPECT_FALSE failure",
+  "qualification_evidence": "affected-live-erase-tests.log",
+  "replacement_safety_evidence": "final-safety-tests.log; actual composition paths and qualified receipt handoff"
+}
