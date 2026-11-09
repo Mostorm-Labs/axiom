@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import{qualifyMaskConsumers}from '../runners/g5/ur2c_mask_history_contract.mjs';
+const tags={eraser_up:3,mask_history:51,mask_scene:52,scene_apply:9,input:1,canonical_commit:27,exact_body:48};
+const up={tag:3,kind:2,job:'9007199254740994',attempt:'9007199254740994',basis:'9007199254740994'};
+const exact={tag:51,kind:10,job:up.job,attempt:up.attempt,basis:up.basis,values:['2','0','1','9007199254740995','8','1']};
+const canonical={...exact,values:['3','0','1','9007199254740995','8','0']};
+const scene={tag:52,kind:10,job:up.job,attempt:up.attempt,basis:up.basis,values:['1','2','3','0','1','100','200','9007199254740995']};
+const owner={kind:5,tag:1,...up,kind:5,tag:1,values:['1','1','2','3','4','1','2','2']};
+const commit={...up,kind:6,tag:27,values:['3','4','6','7','2','3','1','9']};
+const body={...up,kind:10,tag:48,values:['1','0','1','100','200','8','1','0']};
+const prefix=[owner,commit,body];
+const published={tag:9,kind:7,job:up.job,attempt:up.attempt,basis:up.basis,values:['3','3','4']};
+test('actual Up and published Scene join required for history reuse',()=>{assert.equal(qualifyMaskConsumers([exact,canonical,scene,published],tags).status,'MISSING');assert.equal(qualifyMaskConsumers([...prefix,up,exact,canonical,scene,published],tags).status,'OBSERVED');});
+test('unpublished preparation, foreign Up and zero history cannot qualify',()=>{assert.equal(qualifyMaskConsumers([up,exact,canonical,scene],tags).status,'MISSING');assert.equal(qualifyMaskConsumers([...prefix,up,{...exact,job:'5'},canonical,scene,published],tags).status,'MISSING');assert.equal(qualifyMaskConsumers([up,{...exact,values:['2','0','1','2','0','1']},canonical,scene,published],tags).status,'MISSING');});
+test('decimal source/job identities stay lossless',()=>{const r=qualifyMaskConsumers([...prefix,up,exact,canonical,scene,published],tags);assert.deepEqual(r.actual_Up_jobs,['9007199254740994']);});

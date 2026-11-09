@@ -1,0 +1,116 @@
+{
+  "schema": "g5-ur2c-independent-control-review-v1",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "decision": "UR2c r1 not accepted; one narrow P36 needed. Preserve all green source/evidence and repair only U2C-HISTORY-PROGRESS-01.",
+  "implementation_result": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/result.json",
+    "sha256": "66a758a0e614b682317d2c6198d72b1e73efc577e803a078855ca3528fe2e40c"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-mask-history-scene-r1/package.json",
+    "sha256": "3b2ebacaec5303dfe9da726628a596d539a502992cf1d86757297eea09c2f9f8"
+  },
+  "source_tree_sha256": "e32eeedb70b838ecfeab8e2be8b46e8b9dedd049594ac5df287ee40af94ccc9b",
+  "HEAD": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "independent_reviews": {
+    "integrity-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/integrity-review.json",
+      "sha256": "0a05bda5347b7dd268aae10ce2105cdd224b0c26844bab08dce52b7c2759aa73"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/regressions.json",
+      "sha256": "5c986aa6d17029382231cf24de49ac60491813389d9c88ba519d60487e70ce10"
+    },
+    "offline-pixels.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/offline-pixels.json",
+      "sha256": "f325ede713557257cbb00de5f799cf756f02764d028cddde3cc35f320ab645fc"
+    },
+    "functional-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/functional-review.json",
+      "sha256": "03785bc4dfcce7bbfb32107fd22f4a5db7726cbeaa382c3d714d937763b32caa"
+    },
+    "mask-consumer-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/mask-consumer-review.json",
+      "sha256": "0d3894d87872ea7a52150494b3e8fa19dc9d2e6ed78e53ee3c4e41891619b479"
+    },
+    "timing-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/timing-review.json",
+      "sha256": "a74e7d271eaff6bf5c4b2ca026e7ca995cfeab4566ae337c8d92c72e9953f042"
+    },
+    "demo-check.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/demo-check.json",
+      "sha256": "20362ef6cc7fdd041aa614ff71d09cdd1430453661a5c912615a3050253bbb7b"
+    },
+    "cleanup-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/cleanup-review.json",
+      "sha256": "1ba12f7b01cc67cfa132520cfd7cd5868dc2acbc278cfc856b536f51a81b03ea"
+    },
+    "source-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/source-review.json",
+      "sha256": "f6b08c3aa627f301c3559a65e8c7c0ed2cb9e5498590fb7b7ae0d9a21133ed17"
+    },
+    "history-progress-probe.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/history-progress-probe.json",
+      "sha256": "31a4ae7c579c532b34be051509ae796f6a958c9d43a6d3d1db5c19c33f87d9da"
+    }
+  },
+  "blocking_findings": [
+    {
+      "id": "U2C-HISTORY-PROGRESS-01",
+      "priority": "P1",
+      "classification": "FROZEN_REQUIREMENT_FAILURE",
+      "owning_layer": "IMPLEMENTATION / shared Render historical mask cache admission and live-layer recovery",
+      "requirements": [
+        "U2C-07 supported stable demand must progress under existing quotas",
+        "U2C-08 continuous interaction consumes bounded history without restart starvation"
+      ],
+      "location": {
+        "path": "runtime/render/src/skia_ink_layers.cpp",
+        "line": 71
+      },
+      "propagation": {
+        "path": "runtime/render/src/skia_render_cache.cpp",
+        "lines": [
+          700,
+          704,
+          706
+        ]
+      },
+      "failure_mode": "Optional historical plan refusal is unconditionally treated as transient resourcePending. The caller returns Retry before its existing GPU direct path. A valid history larger than local plan capacity repeats the same partial preparation forever, even after GPU flush and with ~93MiB shared quota free.",
+      "evidence": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur2c-r1/history-progress-probe.json",
+        "sha256": "31a4ae7c579c532b34be051509ae796f6a958c9d43a6d3d1db5c19c33f87d9da"
+      },
+      "impact": "Accumulating or importing a valid long eraser history can permanently prevent live partial-erase drawing and consume CPU on each retry. Pending cannot be resolved by waiting for GPU completion in the reproduced stable state.",
+      "existing_coverage": "All113 required native,4 targeted,72Node,47Python,120boundaries,634+6 exact,80pixel stages and20roundtrips passed apart from bound old RF01. Those pressure tests exercise many small evictable plans or an impossibly tiny global budget; they do not exercise one valid oversized history with a feasible GPU target and ample global budget.",
+      "unique_detection": "Same immutable valid AddEraseMasks payload, ready body, target, default32/96MiB and8MiB cache; three attempts each rebuild16848 primitives, draw0tiles and return Pending at3.06MiB global use. One-segment control draws then reuses. No browser starts or oracle changes.",
+      "why_frozen_evidence_missed": "Oversized optional plan is not the same condition as transient global resource pressure or LRU eviction of many admissible histories.",
+      "why_blocking": "Direct violation of frozen stable-demand progress with an infinite retry failure, consistent with user repeated-erasure hang concern. Not a new performance threshold or enlarged feature scope."
+    }
+  ],
+  "regressions": {
+    "native_green": 113,
+    "preexisting_RF01_failure": 1,
+    "targeted_GTest": 4,
+    "Node": 72,
+    "Python": 47,
+    "boundaries": 120,
+    "original_exact_decisions": 634,
+    "finite_witnesses": 6,
+    "pixel_stages": 80,
+    "roundtrips": 20,
+    "functional_cases": 20
+  },
+  "performance": "Only actual e32 vs f62 paired JS handler/FBO proxy results; three Up p95 pairs154.2->149.0,153.5->149.2,152.2->145.9ms. Moderate improvement does not waive a stable-demand retry deadlock.",
+  "new_review_native_diagnostic_builds": 1,
+  "new_review_browser_starts": 0,
+  "new_review_pixel_oracle_invocations": 0,
+  "ledger": {
+    "cumulative_starts": 82,
+    "cumulative_seconds": 4774,
+    "remaining_seconds": 3596,
+    "old_ids": "CLOSED"
+  },
+  "commit_push": false,
+  "official_G5_P34_performance_PASS": false
+}

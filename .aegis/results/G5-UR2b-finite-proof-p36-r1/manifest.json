@@ -1,0 +1,158 @@
+{
+  "schema": "g5-ur2b-finite-proof-review-manifest-v1",
+  "package": {
+    "path": ".aegis/results/G5-UR0b/ur2b-finite-proof-p36-r1/package.json",
+    "sha256": "a0e603cce4008dbe407e30c69e1d2bd713283d182a0f0a57f6152dd7e161f28d",
+    "bytes": 1871
+  },
+  "parent_failed_r1": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/result.json",
+    "sha256": "e63399c924df12feb34ba8cbd9d17f1eae77f5040f8e784702ba92754b0842d6",
+    "bytes": 16112
+  },
+  "control_finding": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/finite-validation-finding.json",
+    "sha256": "f7ec859f4cb815d243bff2ff058e6a96c710f99ab231aa34aa003009415abbc8",
+    "bytes": 3574
+  },
+  "source": {
+    "inventory": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/source-final.json",
+      "sha256": "3e92822f5e0b5f919bdb12af35c9bae81133db493b8743e9da102fe3163c45a9",
+      "bytes": 6995293
+    },
+    "source_tree_sha256": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8"
+  },
+  "repair_delta": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/repair-delta.json",
+    "sha256": "7783fc04b0fc3246864e921bf2418d42698f3e8c7113004b981c706843b3e92a",
+    "bytes": 1886
+  },
+  "cumulative_delta": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative-delta.json",
+    "sha256": "fef8dc05ae64811b39f2bd2b9c9088449db4fb77e011438b0c1997f0bf20820a",
+    "bytes": 3485
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/candidate-builds.json",
+    "sha256": "d2677d647672c5fb571b5a7800fb26679b51808a3eb6ae7dc532d154b0bff186",
+    "bytes": 10808
+  },
+  "native": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/native-artifacts.json",
+    "sha256": "43907592185cc11c6ecb80ffc8a7aba1153c40e7db17a0e0c5f8aef3e9d10c38",
+    "bytes": 12129
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/web-findings.json",
+    "sha256": "73b32c07f33b35d92835b3695064bad98c51eff0107899e359cb5a7badc7a547",
+    "bytes": 25993
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/local-web/sampling-ledger.json",
+    "sha256": "4b4bb2698f40e95a1551fff2e883d72ad4f94ec2c7ff1f083a5dbbcd37558a89",
+    "bytes": 3127
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cleanup-audit.json",
+    "sha256": "63b7777bc309ed75f2c6fa794774ac1c19037a745ca3885cf60116defc9b3520",
+    "bytes": 3459
+  },
+  "causal_RED": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/causal-RED.json",
+    "sha256": "70979a32f3aa79c61b657b541b830ba65795ddd7b17efc1ed4a06ad20ec24f99",
+    "bytes": 412
+  },
+  "native_RED": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/native-causal-RED.json",
+    "sha256": "c9bc4ff227b353f56121df595ec01304ea6e46391d9e8813e9caf1c3835ab497",
+    "bytes": 414
+  },
+  "finite_GREEN": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/finite-GREEN.json",
+    "sha256": "7212b54c6843ea530ae5032bdae3ab1ec66404406969e39e2b98c540f0f6dba3",
+    "bytes": 1867
+  },
+  "original634_GREEN": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/original634-GREEN.json",
+    "sha256": "91055d2e6873ee25d908b5567f8c4e16e0054107f87a4bcebdfeeac9490dce8c",
+    "bytes": 94875
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/source.tar.gz",
+        "sha256": "bd1211de3838c43528026da4aba9a27780898a6b13c2132f62b6b0eb8a7c3b9f",
+        "bytes": 2721650
+      },
+      "members": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/source-members.json",
+        "sha256": "6e4a3d635c89342cf1539623c902c396974770625f5e560ab95291e70feabd1c",
+        "bytes": 15989
+      },
+      "files": 46
+    },
+    "native": {
+      "archive": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/native.tar.gz",
+        "sha256": "f8212197443c5712d7a4ec09a4faf01a3cd69fc2d17e6d5b0981e9d8626b7799",
+        "bytes": 395102196
+      },
+      "members": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/native-members.json",
+        "sha256": "9b5676b3713a66227dac4eaa0053a3a5267e1df0d47414da9d64b9faaca41a8e",
+        "bytes": 43090
+      },
+      "files": 135
+    },
+    "SDK": {
+      "archive": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/matched-SDK.tar.gz",
+        "sha256": "49b55105c5fba4388a08ecb68063d30437065dc4bf5286df50839aa3b6ed9b23",
+        "bytes": 37963761
+      },
+      "members": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/matched-SDK-members.json",
+        "sha256": "779bcd687b606f1e064f260c4357b2fad6814fe52cebf00d62d63393f362b5e1",
+        "bytes": 22243
+      },
+      "files": 72
+    },
+    "web_raw": {
+      "archive": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/web-raw.tar.gz",
+        "sha256": "ae6020f465bd48444a3ab6d44b057e657a6a092a436d9735207a222252ef148a",
+        "bytes": 176563519
+      },
+      "members": {
+        "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/web-raw-members.json",
+        "sha256": "9a1ea345bd128d384bc09ce8549639dceba7f84ab49081cce33ebedd709fdc1d",
+        "bytes": 219059
+      },
+      "files": 594
+    }
+  },
+  "drivers": {
+    ".aegis/results/G5-UR2b-finite-proof-p36-r1/run.py": "a763d5a5c9c3f186a6d0d779992898bfbb9eca79c88d551b3bfb899c97989bb6",
+    ".aegis/results/G5-UR2b-finite-proof-p36-r1/build-web.py": "bf4fff37a2168869e8be82d19887d9142d8774b7c8c2075b3f7ecd328b5f78f8",
+    ".aegis/results/G5-UR2b-finite-proof-p36-r1/analyze-web.mjs": "2c0e26d4a112e44456a9983c90ebbbb217e1df9b113b7bb9318c1a43146e01b5",
+    "out/G5-UR2b-finite-proof-p36-r1/identity-adapter.mjs": "51cc437f7564eddf586fa787b9e93cdd2825bf35d67a4f28787bc9e7c9d6a0cf",
+    "verification/runners/g5/ur2a_handoff.mjs": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1"
+  },
+  "timing_retained_r1_only": {
+    "source": "17ffbd0ae6742890f84e986e69ce43c5c4d86081c7fde80607a1d3db3f657f37",
+    "data": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/web-findings.json",
+      "sha256": "2e3736655816919b30c86b931b61db98f75c2b1a7c403f3d5ec16a3093fd9b1a",
+      "bytes": 160406
+    },
+    "SDK": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/candidate-builds.json",
+      "sha256": "ccbc2768238d210f721fdcc2a3ab7ac4010c53356ac4c94b9773a660c2a6a9ea",
+      "bytes": 11111
+    },
+    "new_performance_windows": 0
+  },
+  "reviewability": "Same-host shared worktree and read-only content-addressed archives. Native/SDK/raw LOCAL_ONLY as authorized; original r1 sources/artifacts/80pixels/timings immutable."
+}

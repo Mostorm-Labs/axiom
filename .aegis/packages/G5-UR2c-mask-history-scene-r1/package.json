@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2c-mask-history-scene-r1",
+  "status": "AUTHORIZED_UR2C_PREPARATION_COMPLETE",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2c-mask-history-scene-r1",
+    "content_identity": "exact package.json SHA256 in handoff"
+  },
+  "task_anchor": {
+    "revision": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "accepted_control_review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/result.json",
+      "sha256": "b50aa710a446be50d176c09574a3559d4494dc6d996e592496b2578d4199c88c"
+    },
+    "accepted_dirty_source": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+    "accepted_cumulative_delta": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative-delta.json",
+      "sha256": "fef8dc05ae64811b39f2bd2b9c9088449db4fb77e011438b0c1997f0bf20820a"
+    },
+    "completed_through": "UR2a published; UR2b+finiteproof independently accepted, exact18-file dirty delta preserved. No UR2c product edits yet.",
+    "next_action": "Verify repository/anchor/current accepted source plus exactly this new6-file package, then design/probe costRED and complete frozenUR2c."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "97caa7374330b9b135f8a37c5012c9f4774746a464fe9f80676c22b15d7d2d38"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "70b8123ca473cbb3574f88678c078adebacd81b6a1736977dd3dc9f4a26c6dc5"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "b733163e4af45467ed97fe9a970f167caf8b9381059f5ca895f54703891aec49"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "21b16083a0a5bfa48dacde582e404e37f1b3feb1668a8ff26c7e4ebab07c9967"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "6e84682158386d42b36c378357a7108421f7cb65287bceee53cc47f1e672ce2e"
+  }
+}

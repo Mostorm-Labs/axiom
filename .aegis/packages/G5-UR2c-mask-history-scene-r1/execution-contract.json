@@ -1,0 +1,186 @@
+{
+  "schema": "g5-ur2c-execution-closure-v1",
+  "implementation": {
+    "required_changes": [
+      "Run repository/anchor/accepted-dirty-source/package/evidence/design preflight; preserve UR2b accepted18 files and original artifacts.",
+      "Freeze diagnostic-only old-cost RED and original independent exact/fullScene/pixel references before behavior changes.",
+      "Retain proven immutable ordered mask history using existing Scene shared values and existing renderer mask preparation. Stable-history warm frames/queries use O(1) provenance hit; unknown allocation full compared once, not trusted by raw IDs.",
+      "Incrementally prepare historical suffix metadata/paths/bounds and preserve existing per-tile body/result prefix behavior; active transient tail replacement remains separate. Keep all mask values and sequential rendering.",
+      "Add a qualified mask-only RuntimeScene preparation path before flat-independent fallback, reuse proven body/content/chunks/index/digests/bounds/dependencies, preserve all revisions and exactly-once canonical mutation. Mixed documents with unrelated table/image must exercise it.",
+      "Extend renderer-neutral immutable mask storage and the existing Render-owned history service consistently across canonical, transient and exact consumers; GPU pixel invalidation must not unnecessarily discard a still-valid CPU history proof. No new public geometry/cache accessor.",
+      "Avoid repeated Scene mask/stamp serialization where qualified. Use existing metadata owner; exact derived content stamp output and invalidation behavior preserved. Keep general flags/unknown cases conservative.",
+      "Expose truthful aggregate history/source/projection/PathOps/copy/lease/work counts and real owner/Up/Scene joins in qualification only; normal off.",
+      "Complete native/regressions/matched SDKs, all8 frozen workers, final materialization and fresh normal Demo>=4294, then proactive terminal callback."
+    ],
+    "allowed_product_paths": [
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp",
+      "runtime/render/src/source_retention.hpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/src/render_group_manager.cpp",
+      "runtime/scene/src/scene.cpp",
+      "runtime/scene/include/canvas/scene/scene_types.hpp",
+      "runtime/scene/include/canvas/scene/shared_scene_value.hpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/render/src/skia_mask_history.hpp",
+      "runtime/render/src/skia_mask_history.cpp"
+    ],
+    "allowed_test_paths": [
+      "runtime/render/CMakeLists.txt",
+      "runtime/scene/tests/CMakeLists.txt",
+      "runtime/composition/CMakeLists.txt",
+      "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "runtime/scene/tests/ur2c_mask_only_scene_test.cpp",
+      "runtime/composition/tests/ur2c_mask_pipeline_test.cpp"
+    ],
+    "allowed_verification_paths": [
+      "verification/runners/g5/ur2c_mask_history_runner.py",
+      "verification/runners/g5/ur2c_mask_history_contract.mjs",
+      "verification/tests/g5_ur2c_mask_history.test.mjs",
+      "verification/tests/test_g5_ur2c_mask_history.py"
+    ],
+    "path_limits": {
+      "skia_renderer.hpp": "Private cache sharing/lifetime/statistics only; no public methods/consumer API.",
+      "render_cache.hpp": "Counters only; no default/options/budget changes.",
+      "canvas_editing_runtime.cpp": "Only existing sceneContentStamp/sceneContentGeneration/EditingSceneCompiler metadata preparation, private qualification and mask-container adaptation; no Up/admission/History/apply/receipt/control flow edits. Preserve mixed CRLF bytes outside exact edited ranges.",
+      "scene_types/shared_scene_value": "Renderer-neutral immutable mask/value metadata only. No canonical schema/Skia dependency; published views remain immutable. Keep generic COW semantics for other consumers.",
+      "incremental_runtime_coordinator": "Consume qualified RuntimeScene mask-only proof/reused bounds; preserve all checkpoints/publication/abort/recovery generation rules.",
+      "selection_region_geometry": "History/path lookup/plan reuse and aggregate stats only; exact kernel/geometry/PathOps return semantics and component oracle stay unchanged.",
+      "skia_mask_history helper": "Optional private implementation owned by existing renderer mask cache, not another cache/document owner; bounded and charged.",
+      "render_group_manager": "Immutable mask-history read/equality/metadata adaptation only; no layer order/content/coverage validity weakening.",
+      "source_retention.hpp": "Retained Render representation/source/pin accounting only. Do not charge canonical document or ordinary Scene ownership to GPU/cache quotas; no reverse Scene->Render dependency."
+    },
+    "readonly_prefixes": [
+      "runtime/semantic/",
+      "runtime/ink/",
+      "runtime/input/",
+      "runtime/control/",
+      "runtime/composition/src/",
+      "sdk/",
+      "apps/",
+      "schema/"
+    ],
+    "readonly_files": [
+      "runtime/scene/src/runtime_scene_projection.cpp",
+      "runtime/scene/src/full_scene_compiler.cpp",
+      "runtime/scene/src/bounds_system.cpp",
+      "runtime/scene/src/geometry_chunk.cpp",
+      "runtime/scene/src/scene_impact.cpp",
+      "runtime/scene/src/scene_record_store.cpp",
+      "runtime/scene/src/hierarchy_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/prepared_body_job.cpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/src/runtime_frame_coordinator.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "verification/runners/g5/ur2a_handoff.mjs",
+      "verification/runners/g5/ur2a_handoff_contract.mjs",
+      "verification/runners/g5/ur2a_cold_capture.mjs",
+      "verification/runners/g5/ur2b_exact_query.mjs",
+      "verification/runners/g5/ur2b_exact_query_contract.mjs",
+      "verification/runners/g5/bounded_worker.py",
+      "verification/runners/g5/ur0/fixture_oracle.cpp"
+    ],
+    "diagnostic_exceptions": {
+      "runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp": "Optional aggregate full-materialization call/input statistics only. No semantic projection or oracle algorithm change.",
+      "runtime/scene/src/bounds_system.cpp": "Optional qualification-only invocation/input counters to measure actual bounds cost; do not modify bounds computation or full oracle results. Freeze exact probe before source behavior change."
+    },
+    "forbidden_changes": [
+      "Semantic/schema/Operation/History/Undo/redo/admission/asynchronous commit/nextDown/receipt/frozen roster changes; no SDK API/ABI/version/export/install changes.",
+      "Drop/merge/reorder canonical masks, assume revision/count/hash proves prefix, approximate exact hit withGPU/LOD/AABB, change AA/blend/alpha/isolation semantics or fix existing unrelated full-rebuild pointer test.",
+      "Change Brush algorithms, Skia/Semantic locks, rebuild third-party SDKs, cache32/96MiB/8MiB512 limits or scheduler/frame/GPU-completion strategy.",
+      "LargeScene/100K/1M/worker rollout, general active-eraser exact-path algorithm rewrite, canonical codec/copy overhaul or all-algorithm GPU migration.",
+      "Overwrite any previous source/result/native/SDK/browser raw archive, Demo4292/4293 or user document; restore shelved UR2 candidate.",
+      "Commit/push/merge/rebase/reset/stash/clean or browser starts not in new explicit window."
+    ]
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "not_human_approval_gate": true,
+    "resolve": [
+      "Existing mask-history storage identity/types and shared owner; CPU history plan vs device tile validity and active transient phase.",
+      "Mask-only source proof including flags/generation/content/transform/properties/resources/closure; exact old/full projection digest equivalence.",
+      "Prepare/commit/no-fail publish/abort and old snapshot COW lifetime; how mixed unrelated table avoids old flat guard and unsafe graph falls back.",
+      "Quota/leases/query pins/owner/context reset, qualification counters, causal RED and final test matrix."
+    ],
+    "unresolved_semantic_decisions": "Must be empty; engineering choice among equivalent private representations is executor discretion."
+  },
+  "tests": {
+    "required_obligations": [
+      "U2C-01",
+      "U2C-02",
+      "U2C-03",
+      "U2C-04",
+      "U2C-05",
+      "U2C-06",
+      "U2C-07",
+      "U2C-08",
+      "U2C-09",
+      "U2C-10"
+    ],
+    "reference": "verification.lock.json"
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "evidence": {
+    "blocking": [
+      "Frozen correctness/structural reuse/fullScene parity, actual Runtime consumption and no new keeper regressions.",
+      "Matched source/SDK/normal and qualification identities,80pixels20roundtrip/strict raw joins, all8closed runs/guard/cleanup and exact review materialization.",
+      "All paired data reported with honest classification; raw timing magnitude is not a new success threshold."
+    ],
+    "corroborative": [
+      "Timing improvement magnitude/toward33ms orVibe; physical GPU timing/OS RSS return are unproved.",
+      "Remaining new-query PathOps/canonical serialization/semantic copy costs and future optimizations."
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "All U2C01..10 frozen structural and correctness obligations satisfied.",
+      "All required native/Node/Python/boundary/regression and paired worker functional checks complete with unchanged or explicit known historical pointer failure only.",
+      "All8workers closed once, exactsource/artifacts frozen, original evidence preserved, complete reviewer-resolvable return and callback."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_DESIGN_OR_PACKAGE_DEFECT",
+      "BASELINE_COST_RED_NOT_OBSERVED",
+      "MASK_ORDER_OR_EXACT_OR_PIXEL_OR_PROJECTION_FAILURE",
+      "STRUCTURAL_REUSE_OR_ACTUAL_CONSUMPTION_FAILURE",
+      "RESOURCE_OR_PUBLICATION_OR_RECOVERY_FAILURE",
+      "NEW_REGRESSION_OR_WORKER_GUARD_OR_IDENTITY_FAILURE",
+      "MISSING_MATCHING_REVIEW_MATERIALIZATION"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "do_not_stop_at": "Only plan/probe/build/one green unit test/firstworker while remaining frozen items executable.",
+    "callback": {
+      "thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "host": "local",
+      "required_when": "READY_FOR_CONTROL_REVIEW or any frozen BLOCKED/terminal",
+      "include": [
+        "Exact package/result/source/repair+cumulative delta/manifest/native/SDK/driver/oracles/archive SHA and materializedref",
+        "Machine evidence refs for RED/structural work/parity/tests/allfunctional+paired findings",
+        "All8IDs actual ceil ledger+74/4214 history/remaining+ownedprocess cleanup",
+        "FreshnormalDemo, unpublished state and remaining costs; no officialGatePASS"
+      ]
+    }
+  }
+}

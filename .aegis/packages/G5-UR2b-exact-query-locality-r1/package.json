@@ -1,0 +1,61 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2b-exact-query-locality-r1",
+  "status": "AUTHORIZED_UR2B_AFTER_PUBLISHED_UR2A",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2b-exact-query-locality-r1",
+    "content_identity": "exactpackage.json SHA256 inhandoff"
+  },
+  "task_anchor": {
+    "revision": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "accepted_control_review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/result.json",
+      "sha256": "02553275c0353e9f80389f7a25f0c9fc762ca512e5fa7cd5011c72aeb13bfd72"
+    },
+    "publication_receipt": {
+      "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/control-publication-receipt.json",
+      "sha256": "b6fbc7a717e9448863adc8f3ca165e9b5446d391e0e6b3a6bd452c94730a4d4b"
+    },
+    "completed_through": "UR2a scopedreview accepted andexactsource published; noUR2bproductchanges",
+    "next_action": "Identity/binding/design/oracle/costRED preflight,then completefrozenUR2b implementation/verification/all8workers/materialization/callback"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b21df95bdcccecb41bc2ae83cb7a1f01d8ca6bea83ae7b5f64b1837b20f78911"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "10dde7685e3338bb7561b0294ab1e7a3ec34440a7d4c91f685eefff4d0219ff0"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "af10b3ab93a5412998caee72650b9b177edfc88aa1f23fe1ca1f2c4075f821f9"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "dd8551da541d8d59101817981c77ae6505e002251b9e74b034e464fd184ec9fc"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "220ff3ea7fa9e576d7534ad9e9d45f6968a24fa5d4e43953f034e0b79dbc0931"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "g5-ur2c-history-progress-p36-contract-v1",
+  "failure_id": "U2C-HISTORY-PROGRESS-01",
+  "classification": "FROZEN_REQUIREMENT_FAILURE / IMPLEMENTATION_DEFECT / shared Render",
+  "requirements": [
+    "U2C-07 bounded retention and stable-demand forward progress",
+    "U2C-08 real live partial erase/canonical continuity"
+  ],
+  "scope": "Distinguish optional historical plan admission/refusal from transient drawable resource unavailability. Reuse existing Render owners and valid GPU path so a permanently nonresident history cannot restart identical partial preparation on every frame or suppress presentation forever. Preserve all accepted mask-only Scene and warm-history work.",
+  "allowed_product_paths": [
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/src/skia_ink_layers.hpp",
+    "runtime/render/src/selection_region_geometry.cpp",
+    "runtime/render/src/selection_region_geometry_internal.hpp",
+    "runtime/render/src/skia_mask_history.hpp",
+    "runtime/render/src/skia_mask_history.cpp",
+    "runtime/render/src/skia_render_cache.cpp"
+  ],
+  "allowed_test_paths": [
+    "runtime/render/tests/ur2c_mask_history_test.cpp",
+    "runtime/render/tests/canonical_prepared_body_test.cpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/composition/tests/ur2c_mask_pipeline_test.cpp"
+  ],
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-history-progress-p36-r1/",
+    "out/G5-UR2c-history-progress-p36-r1/",
+    "verification/evidence/performance/g5-ur2c-history-progress-p36-r1/"
+  ],
+  "root_cause_before_mutation": [
+    "Independently replay one-segment positive and40000-segment valid-payload stable failures against frozen e32 binaries. Freeze a native regression that executes the production failing path before changing behavior; preserve genuine nonzero assertion output.",
+    "Trace history admission result through SkiaInkLayers and SkiaRenderCache::drawDamagedInk. One cache plan exceeds its8MiB local capacity even though drawable target and96MiB global pool are feasible. Waiting/flush alone cannot make the same plan fit.",
+    "Check temporary global pressure and permanent local non-admission separately; do not equate all denials."
+  ],
+  "implementation_rules": [
+    "Existing frame disposal safety remains: never replay Direct on a canvas already composited by this attempt, never present partial/missing erasure or double-blended ink.",
+    "For permanently nonresident history use existing supported GPU draw/recovery with correct sequential masks, or bounded preparation whose stable demand truly advances. Do not silently switch to CPU raster, delete masks, widenAA, flatten Boolean union or claim success while nothing was drawn.",
+    "A stable negative demand must not reconstruct the same unusable prefix every frame; bounded negative/admission metadata must have correct owner+full source proof/invalidation and quota if retained. Unknown/mutated geometry, append/truncate/reorder, owner/target/context changes remain safe. Temporary pressure must still recover when resources release.",
+    "Keep all32/96MiB,8MiB/512,maxEntry/default budgets. No semantic shape/geometry limits changes or new input/document rejection to avoid this valid case. Do not impose a new cap on canonical mask data.",
+    "No Scene/Interaction/Semantic/Operation/History/receipt/SDK/API/ABI/version/lock changes. The good UR2c Scene and history paths remain. U2C-METRIC-01 is nonblocking supporting metric precision, not additional required scope.",
+    "Original e32 result/source/native/SDK/archives and all8workers remain immutable. New outputs and builds only in P36 namespace, no retargeting old outputs.",
+    "No commit/push/nextUR task. Do not pause for another routine approval; sole implementation writer proceeds in this scoped P36."
+  ],
+  "handoff_rules": [
+    "At READY_FOR_CONTROL_REVIEW or any BLOCKED/frozen terminal, proactively notify control thread01a1b6f3-e69a-7fe2-8d9b-0222e8741f03 hostlocal with exact result/package/source/repair/cumulative/manifest/SDK/native/archive SHA, test counts, progress reproduction, ledger and remaining findings.",
+    "Do not self-approve an official G5/P34/performance/Vibe/other-platform Gate. Preserve normal user Demo4294; a new final normal build may be served at4295 after HTTP member checks without a smoke browser."
+  ]
+}

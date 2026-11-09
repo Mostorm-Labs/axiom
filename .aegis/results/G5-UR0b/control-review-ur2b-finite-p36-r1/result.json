@@ -1,0 +1,174 @@
+{
+  "schema": "g5-ur2b-finite-proof-independent-control-review-v1",
+  "status": "SCOPED_CONTROL_ACCEPTED",
+  "review_surface": "CONTROL_REVIEW",
+  "scope": "UR2b U2B01..10 plus P36 U2B-DERIVED-FINITE-01 correctness repair; not whole G5/release/performance Gate",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "subject": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/result.json",
+    "sha256": "d54253510fcf638efa0e5ccd888804605238625144d5e11bde67c2f86261e94d"
+  },
+  "package": {
+    "path": ".aegis/results/G5-UR0b/ur2b-finite-proof-p36-r1/package.json",
+    "sha256": "a0e603cce4008dbe407e30c69e1d2bd713283d182a0f0a57f6152dd7e161f28d"
+  },
+  "original_r1": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/result.json",
+    "sha256": "e63399c924df12feb34ba8cbd9d17f1eae77f5040f8e784702ba92754b0842d6"
+  },
+  "prior_control_blocker": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/result.json",
+    "sha256": "b62ed2beea6b49cd942d9b9ac10f05fed413529ab13ef646165dace8cc16c861"
+  },
+  "source_tree_sha256": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+  "manifest": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/manifest.json",
+    "sha256": "b370145a28a10c51c5e3c61593044be6c479905d376c7362c2056fb87d0b8073"
+  },
+  "repair_delta": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/repair-delta.json",
+    "sha256": "7783fc04b0fc3246864e921bf2418d42698f3e8c7113004b981c706843b3e92a"
+  },
+  "cumulative_delta": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative-delta.json",
+    "sha256": "fef8dc05ae64811b39f2bd2b9c9088449db4fb77e011438b0c1997f0bf20820a"
+  },
+  "independent_evidence": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/integrity-review.json",
+      "sha256": "6caeb31605fb5617c1101f4113399cab62ac5bd6a70fa5a19cf657b5e46f62d2"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/regressions.json",
+      "sha256": "597453a0aad1fc360e1981144b42e2d84895e2e192d50cf052fcdd627d879cd1"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/offline-pixels.json",
+      "sha256": "4f124d3031798e35dcb7d9f585a2a262f874e7fa42c40d2b0d56119382a3ea29"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/functional-review.json",
+      "sha256": "88ab231bb343ec951457a7f710a6f22a586961dd00535deed6317a97a70f49d4"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/source-review.json",
+      "sha256": "02e8c6c35b48775c4538d0fbd4a4ce9365d0afd562716d03f36891c3af28a7e0"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/demo-check.json",
+      "sha256": "a3d3c63b98494b08fc9c50027b834df45d77421602aa1f3ce40da97741c0d98b"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/cleanup-review.json",
+      "sha256": "0f6279cf83bf937a6047daed42d4e93cdedf397b98c092da637723e4dfbe42f1"
+    }
+  ],
+  "frozen_requirement_audit": {
+    "passed": {
+      "U2B-01": "Actual real-draw warm1/8/16/32-copy queries share one prepared body with zero repeated full validation/compilation; baseline real structural cost RED independently preserved/replayed in parent review.",
+      "U2B-02": "634 original exact decisions plus6 finite-range cases match original separate frozen CPU binary. Indexed/local components retain full exact shape and checkpoint costs; complete derived-finite proof is now verified before pruning.",
+      "U2B-03": "Draw/exact cross-consumer body sharing, immutable alias/full-content collision checks and transform/mask-only validity preserved by all native sharing/invalidation tests and source review.",
+      "U2B-04": "Prior Invalid3->Miss1 defect closed. New native cold/full/checkpoint/deferred and hit/disjoint/empty/mask-noop early-out controls pass; fallback uses unchanged old exact kernel without canonical coordinate limits. Original lazy invalid history/no-op/unsupported tests also pass.",
+      "U2B-05": "91native includes quota/lease/eviction/readiness/lifecycle and query-owner tests.32/96MiB,8MiB/512,32unit cadence unchanged; ready gates complete source and derived validity; no new cache/worker.",
+      "U2B-06": "Actual Runtime Up tests and independent raw chronology in10 qualification cases link exact-body counters to owner input/Up/exact spans. Canonical commit/generation/currentScene/frozen work/accepted completion/display outcomes preserved.",
+      "U2B-07": "Fresh matched normal+qualification20cases/80saved cold pixels and20afterRedo independently pass against original ab7CPU/nullcache reference and AA.8navigation cases show real content before exact and4Brush cases actual CSS visibility.",
+      "U2B-08": "All6 original normal A/B workers independently recomputed in parent review with exact source17ff/SDK binding; no timing remeasurement or relabel to finalf62e source. Structural gain persists, no SLO threshold or Vibe parity claim.",
+      "U2B-09": "91 registered native+4targetedGTest,69Node,42Python,120boundaries independently rerun. Exact source/repair+cumulative patches/847archive members/36member SDK profiles/old artifacts and compiler/dependency bindings verified.",
+      "U2B-10": "Old8windows immutable; exactly2fresh correctness IDs under serial3GiB guard,ceil214+216 seconds,allcomplete/PIDs clean and callback received. No new performance/smoke/retry window."
+    },
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "native": 91,
+    "targeted_GTest": 4,
+    "Node": 69,
+    "Python": 42,
+    "boundary_files": 120,
+    "original_exact_CPU_cases": 634,
+    "finite_witnesses": 6,
+    "original_finite_decisions": [
+      0,
+      0,
+      0,
+      3,
+      3,
+      3
+    ],
+    "candidate_finite_decisions": [
+      0,
+      0,
+      0,
+      3,
+      3,
+      3
+    ],
+    "causal_old_native_RED_independently_replayed": true,
+    "original_failure_closed": true,
+    "cold_pixel_stages": 80,
+    "after_redo": 20,
+    "functional_cases": 20,
+    "actual_Up_exact_and_qualified_receipt_cases": 10,
+    "archive_members": 847,
+    "new_browser_starts_by_control": 0,
+    "new_pixel_oracle_invocations_by_control": 0
+  },
+  "repository_reality_audit": {
+    "repair_files": 4,
+    "repair_product_files": 3,
+    "repair_test_files": 1,
+    "cumulative_UR2b_files": 18,
+    "other_tracked_unchanged": 31756,
+    "repair_and_cumulative_patch_roundtrips": true,
+    "source_files_rechecked_after_regressions": 32538,
+    "public_API_ABI_versions_locks_budgets_unchanged": true,
+    "normal_diagnostics": "OFF",
+    "developer_components": "OFF",
+    "SDK_members_each": 36,
+    "git_diff_check": 0,
+    "index_empty": true,
+    "commit_push": false,
+    "materialization": "LOCAL_ONLY shared controlled worktree; exact byte/mode/read-only member-hashed archives resolved independently"
+  },
+  "blocking_findings_closed": [
+    "U2B-DERIVED-FINITE-01"
+  ],
+  "new_blocking_findings": [],
+  "non_blocking_findings": [
+    {
+      "id": "PERFORMANCE_SCOPE",
+      "meaning": "Original r1 paired Up p95 improved304.5->241.3,230.2->218.9,227.8->197.2ms. These are source17ff observations, not new finalP36 timings; ordinary ~200ms Up and mask/PathOps/Scene/source-copy costs remain successor work."
+    },
+    {
+      "id": "PUBLICATION_FIXTURE_DEPENDENCY",
+      "meaning": "New finite native regression reads6 small snapshots at its bound control-result paths. Native archive includes all6; later publication should retain those fixtures at matching paths or make the test self-contained so a fresh checkout can run. No evidence/materialization gap for current shared-worktree package."
+    },
+    {
+      "id": "PLATFORM_SCOPE",
+      "meaning": "Actual WebDPR2 and nativeDPR1/2/4 only; no physical GPU/display or other-platform/overall G5/P34 performance PASS."
+    }
+  ],
+  "accounting": {
+    "historical_starts": 72,
+    "historical_seconds": 3784,
+    "new_starts": 2,
+    "new_ceiled_seconds": 430,
+    "cumulative_starts": 74,
+    "cumulative_seconds": 4214,
+    "original_cap_seconds": 8370,
+    "remaining_seconds": 4156,
+    "remaining_authorized_ids": [],
+    "owned_processes_cleaned": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4293/example.html",
+    "HTTP_matching_SDK_members": 36,
+    "normal_profile": true,
+    "old4292_preserved": true
+  },
+  "next_action": "Return scoped control acceptance to implementation; retain source/evidence freeze and Demo. No automatic commit/push or UR2c/new sampling without separate task scope. Successor should address mask/PathOps and mask-only Scene/source-copy costs.",
+  "official_whole_G5_P34_performance_or_release_PASS": false,
+  "control_product_or_index_mutation": false
+}

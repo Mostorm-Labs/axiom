@@ -1,0 +1,69 @@
+{
+  "reviewed_parent_source": "e32eeedb70b838ecfeab8e2be8b46e8b9dedd049594ac5df287ee40af94ccc9b",
+  "entry_source": "e32eeedb70b838ecfeab8e2be8b46e8b9dedd049594ac5df287ee40af94ccc9b",
+  "final_source_tree_sha256": "9cc818e78047fa45211cdbf793dfcd83a3871f3ef0e4f453b42afbbb68a3201a",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before": {
+        "sha256": "461feec80dfc2dac8f3a3ee20298861e6ece1c7d9ac61b607f0baf98b0cbb143",
+        "executable": false
+      },
+      "after": {
+        "sha256": "e1d36a41342f1b49be1fdc7e37698ab97e20a43130b1ca36c29ff0bd253a7231",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "before": {
+        "sha256": "59ea9b3f39820a3cffe6aa3f4ffd53050852c95783d8af67526c9b00ead9650c",
+        "executable": false
+      },
+      "after": {
+        "sha256": "44ea582c5294e6f0f8d39a24cfcc17afeb6076b47a188a891fd9efffb167e2da",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "before": {
+        "sha256": "d5778bcd4779add1d0f813f49db3c1cdd2cfb64f01d95851ecc16d094130f3ef",
+        "executable": false
+      },
+      "after": {
+        "sha256": "d44e8830556ced27d2089d0ddea919b4467340de5ea32309283f2553f057750a",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "before": {
+        "sha256": "cea91035a29e6169be44fb3ac892a16c5b43d10a3650786db6d1c04f9b0bb6d1",
+        "executable": false
+      },
+      "after": {
+        "sha256": "13d64179f78412fa7e39ba9c4cf584f1b215b516eb09571ea549f0150db00e29",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "before": {
+        "sha256": "3646c82453e94b0873ccd827e580e8254f1e08836365acea7bf6cbee61caf905",
+        "executable": false
+      },
+      "after": {
+        "sha256": "da96e6769094e76c614bfeb8d2fd29e739f133ca89dd510ed92bf857b66af4bc",
+        "executable": false
+      }
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/repair.patch",
+    "sha256": "5bc4ff8f09f77d3e680e904ab630705375b72b07ccab65164482dffa343535a5",
+    "bytes": 29487
+  },
+  "roundtrip": "EXACT_BYTES",
+  "outside_scope": []
+}

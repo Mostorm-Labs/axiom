@@ -1,0 +1,170 @@
+{
+  "schema": "g5-ur2c-review-manifest-v1",
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-mask-history-scene-r1/package.json",
+    "sha256": "3b2ebacaec5303dfe9da726628a596d539a502992cf1d86757297eea09c2f9f8",
+    "bytes": 2816
+  },
+  "accepted_parent": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/result.json",
+    "sha256": "d54253510fcf638efa0e5ccd888804605238625144d5e11bde67c2f86261e94d",
+    "bytes": 9777
+  },
+  "accepted_control": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/result.json",
+    "sha256": "b50aa710a446be50d176c09574a3559d4494dc6d996e592496b2578d4199c88c",
+    "bytes": 8921
+  },
+  "source": {
+    "inventory": {
+      "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/source-final.json",
+      "sha256": "2a936e13802db2efb985e129fb7310c518b84946fb8bbe65181cc16c2f907660",
+      "bytes": 6998151
+    },
+    "source_tree_sha256": "e32eeedb70b838ecfeab8e2be8b46e8b9dedd049594ac5df287ee40af94ccc9b",
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8"
+  },
+  "repair_delta": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/repair-delta.json",
+    "sha256": "7833670f9daa7eca69d4b6127fedc62dbf9818588ffa4fd5db563695945f5b6a",
+    "bytes": 9125
+  },
+  "cumulative_delta": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/cumulative-delta.json",
+    "sha256": "08a3dad09488dd76023fb4c1ee05822a9e1201a997af176fd41c0492fa7eb833",
+    "bytes": 6835
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/candidate-builds.json",
+    "sha256": "de4f6e11fb3c9841ef3d28ac0ad5a8b0fa2ea3947b468c1800ba5d7c01b1912e",
+    "bytes": 8209
+  },
+  "native": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-artifacts.json",
+    "sha256": "2c31c377346c67b9424539edd0411993f6c097ec3dfb72830c3c644714de0e5f",
+    "bytes": 17419
+  },
+  "native_summary": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-summary.json",
+    "sha256": "017aec331c6c0036a70d485b6d94cf19126268650993e7dd3dfad944483028d0",
+    "bytes": 3378
+  },
+  "obligation_closure": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/obligation-closure.json",
+    "sha256": "6d53855e80992d56da7cd6a6a88faec8389ebb3b2e7ab4b6a8c2062bba4a8123",
+    "bytes": 27659
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/web-findings.json",
+    "sha256": "873af639633cb915bb28260aa84af3b3a94aacba13048573b8c9f679b8b5c512",
+    "bytes": 165716
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/local-web/sampling-ledger.json",
+    "sha256": "dd64fee1b53a0b73a5eefda8db8a028d18ca9f2a7ed3e16b0c8e65841e52cfef",
+    "bytes": 9975
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/cleanup-audit.json",
+    "sha256": "f7727e899329004caa317235a5d7f67b967489a8943ac4fa1c39e5d61a7774a8",
+    "bytes": 241407
+  },
+  "causal_RED": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/baseline-red.json",
+    "sha256": "46a6c443c68e05163bac11d897fd93d9e7767ecaf97560cd400a547aa3392255",
+    "bytes": 1333
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/source-41163179685a432af6d0220033d1cf834699459133f8d284e5eb58982252456a.tar.gz",
+        "sha256": "41163179685a432af6d0220033d1cf834699459133f8d284e5eb58982252456a",
+        "bytes": 4733601
+      },
+      "members": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/source-members.json",
+        "sha256": "9e1803eb3f975491f1c657a775252b4a90c82af0157eb4cf244109cc68836c39",
+        "bytes": 52774
+      },
+      "files": 156
+    },
+    "native": {
+      "archive": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/native-7323247c0e5cc8efbb57fe230faac05ea39504c5c8359782fe80ced24f1013ad.tar.gz",
+        "sha256": "7323247c0e5cc8efbb57fe230faac05ea39504c5c8359782fe80ced24f1013ad",
+        "bytes": 526137509
+      },
+      "members": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/native-members.json",
+        "sha256": "367949fcd1227a326d8267a9cd9d5e54b46dae7ca9547cfd7a259e60cc3e8fc6",
+        "bytes": 73509
+      },
+      "files": 230
+    },
+    "SDK": {
+      "archive": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/matched-SDK-c9ce81b6d65ff524963b07542f67cad92264ee86fab5b82b9fff5c3860afe209.tar.gz",
+        "sha256": "c9ce81b6d65ff524963b07542f67cad92264ee86fab5b82b9fff5c3860afe209",
+        "bytes": 37968892
+      },
+      "members": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/matched-SDK-members.json",
+        "sha256": "afdfbb42c2321bc66fd496756a26da651967f2c74ea691832b50170433aaca0c",
+        "bytes": 22598
+      },
+      "files": 72
+    },
+    "web_raw": {
+      "archive": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/web-raw-032fa3ffe2b3555c3505bbb166818b2c251701d8e80caa6a5374e4ce21d2b2de.tar.gz",
+        "sha256": "032fa3ffe2b3555c3505bbb166818b2c251701d8e80caa6a5374e4ce21d2b2de",
+        "bytes": 181253022
+      },
+      "members": {
+        "path": "out/G5-UR2c-mask-history-scene-r1/review-artifacts/web-raw-members.json",
+        "sha256": "fc03897fe2bfce36c596fed264ecaaebe75df7589e7f4bd0993aa94ae506509b",
+        "bytes": 259863
+      },
+      "files": 728
+    }
+  },
+  "drivers": {
+    "verification/runners/g5/ur2c_mask_history_runner.py": "0d2f938c2be7581e188c09840335654240e44ca762f731c737ae153b39f0519c",
+    "verification/runners/g5/ur2c_mask_history_contract.mjs": "ffd0c701602a876fbd70c90cc4bcf2327c0d960c8e26e1b3e4547c260cd5bbd2",
+    ".aegis/results/G5-UR2c-mask-history-scene-r1/check-qualification.mjs": "273e10b15a46716cc5768bfb9e3ab6f6c735f65f681b325b30a3cfa90a78ab21",
+    ".aegis/results/G5-UR2c-mask-history-scene-r1/analyze-web.mjs": "3920f039d73b3cb35ab4eb5ce8e6ebcdfcee8da83a5ae2e003a6c44bf65af610",
+    ".aegis/results/G5-UR2c-mask-history-scene-r1/build-web.py": "bf4fff37a2168869e8be82d19887d9142d8774b7c8c2075b3f7ecd328b5f78f8",
+    "out/G5-UR2c-mask-history-scene-r1/identity-adapter.mjs": "82db50237ea6d7191e0272dfbe9e12f6e9d244cfdd787fe8a2b63c508981f275",
+    "verification/runners/g5/ur2a_handoff.mjs": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1",
+    "verification/runners/g5/ur2b_exact_query.mjs": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4"
+  },
+  "oracles": {
+    "original_exact_binary": {
+      "path": "out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+      "sha256": "551b7f9230a853b59d44b0a2c35a25c4feb811a8872b8c715593d1845bd7440e"
+    },
+    "original_exact_corpus": {
+      "path": "out/G5-UR2b-exact-query-locality-r1/corpus/requests.json",
+      "sha256": "0b72acbdce433c1b149cdf856f9ec02aaae9343887251173e584e93e4d4027c8"
+    },
+    "finite_witnesses": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/finite-range-r1/requests.json",
+      "sha256": "639c74e76c9b7ad9043fd5dd78a049bce3de573eec5427b28d76857abab58429"
+    },
+    "original_pixel_oracle": {
+      "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+    },
+    "reference_catalog": {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+      "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c"
+    },
+    "full_Scene_oracle": "Unchanged FullSceneCompiler/projectSemanticScene source, independent mechanism from candidate RuntimeScene mask-only branch. No cache/candidate-derived bounds/chunks as expected; freeze baseline input/output before new branch. Full source refs in authority lock."
+  },
+  "historical_archives": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/archives.json",
+    "sha256": "5d44827bbc0d43daa20617bf65a8f146fb840cd133f6059426a42172866a78e9",
+    "bytes": 1865
+  },
+  "reviewability": "Same-host shared reviewer surface and exact read-only content-addressed archives. Native/SDK/raw LOCAL_ONLY; old sources/SDKs/windows retained by immutable hash refs."
+}

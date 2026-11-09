@@ -321,9 +321,12 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         }
         if (const auto* object = input.post_state.find(change.object_id)) {
             const auto* derived=runtimePrepared.value().projection.find(object->id);
-            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr,
-                derived ? std::get_if<scene::ConnectorGeometry>(&derived->derivedGeometry) : nullptr);
-            if (!bounds.finite) {
+            const bool finite = runtimePrepared.value().maskOnlyVerified
+                ? derived && derived->geometryBounds.isFiniteAndOrdered() &&
+                    derived->visualBounds.isFiniteAndOrdered() && derived->worldBounds.isFiniteAndOrdered()
+                : computeBounds(*object,derived ? derived->textLayout.get() : nullptr,
+                    derived ? std::get_if<scene::ConnectorGeometry>(&derived->derivedGeometry) : nullptr).finite;
+            if (!finite) {
                 abortPublication();
                 return foundation::Result<SceneSyncReceipt>::failure(
                     {foundation::ErrorCode::kInvalidRecord, "Bounds participant rejected non-finite state"});
@@ -377,6 +380,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kInvalidRevision,
              "Full runtime recovery must not carry a ChangeSet"});
     }
+    ++runtimeScene_._work.materializationCalls;runtimeScene_._work.materializationRecords+=input.post_state.size();
     auto materialized = internal::materializeFullScene(input.post_state,textLayoutService_,deferConnectorRoutes_);
     if (!materialized) {
         return foundation::Result<SceneSyncReceipt>::failure(materialized.error());

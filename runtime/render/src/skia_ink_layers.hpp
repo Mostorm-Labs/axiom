@@ -1,5 +1,7 @@
 #pragma once
 #include "skia_prepared_geometry.hpp"
+#include "selection_region_geometry_internal.hpp"
+#include "skia_mask_history.hpp"
 #include "compact_raster_internal.hpp"
 #include "include/core/SkImage.h"
 #include <map>
@@ -14,7 +16,7 @@ class SkiaInkLayers final {
     bool draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry&,
         const SkMatrix&,const SkIRect& viewport,const CompactDeviceGrid*,
         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
-        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={});
+        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={});
     void clear()noexcept;
     void prune(std::span<const ReferenceTraversalEntry>);
  private:
@@ -23,7 +25,8 @@ class SkiaInkLayers final {
         ReferenceCommand command;
         std::shared_ptr<const PreparedNavigationGeometry> geometry;
         SkMatrix matrix;SkIRect viewport;
-        std::vector<MaskPrimitive> masks;
+        std::vector<MaskPrimitive> masks; // Active transient tail only.
+        std::shared_ptr<MaskHistoryPlan> history;
         resources::ResourceLease metadata;
         std::uint64_t epoch=1;
     };
@@ -33,6 +36,7 @@ class SkiaInkLayers final {
     std::map<foundation::ObjectId,Source> sources_;
     std::map<Key,Tile> tiles_;
     std::shared_ptr<PreparedGeometryCache> geometry_;
+    std::shared_ptr<EraseMaskPathCache> histories_;
     std::size_t bytes_=0;
     std::uint64_t tick_=0;
     bool reserve(std::size_t,const Key&,const RenderCacheOptions&,

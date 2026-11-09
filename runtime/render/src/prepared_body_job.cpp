@@ -52,12 +52,14 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
     const auto& knots=stroke.knots;
     ++work.advances;
     if(phase_==Phase::kMetrics){
+        if(cursor_==0)body.exactValidationValid_=foundation::validInkBrushConfig(stroke.config,true)&&!knots.empty()&&knots.size()<=262144;
         const auto end=std::min(cursor_+32,knots.size());
         for(auto i=cursor_;i<end;++i){const auto& k=knots[i];const auto radius=ink::compactRadius(stroke.config,k.pressure);
+            body.exactValidationValid_=body.exactValidationValid_&&std::isfinite(k.x)&&std::isfinite(k.y);++work.validationKnots;
             body.support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));++work.supportKnots;
             if(i){body.replayDistance_+=std::hypot(k.x-knots[i-1].x,k.y-knots[i-1].y);++work.distanceInputs;}}
         work.maxAdvanceKnots=std::max<std::uint64_t>(work.maxAdvanceKnots,end-cursor_);cursor_=end;
-        if(cursor_==knots.size()){cursor_=0;phase_=Phase::kCompile;}return false;
+        if(cursor_==knots.size()){body.exactValidationComplete_=true;cursor_=0;phase_=Phase::kCompile;}return false;
     }
     if(phase_==Phase::kCompile){
         emitted_.patches.clear();emitted_.caps.clear();blockKnot_=cursor_;blockCount_=std::min(std::size_t(32),knots.size()-cursor_);
@@ -75,11 +77,13 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
             auto& current=groups.back();join(current.bounds,b);current.end=index+1;};
         std::size_t units=0;
         for(;ribbon_+1<emitted_.patches.size()&&units<32;++ribbon_,++units){
-            auto path=compactContourRibbon(std::span(emitted_.patches).subspan(ribbon_,2));join(blockBounds_,path.getBounds());
+            auto path=compactContourRibbon(std::span(emitted_.patches).subspan(ribbon_,2));
+            body.exactDerivedFinite_=body.exactDerivedFinite_&&path.isFinite();join(blockBounds_,path.getBounds());
             if(!replay_){group(body.ribbonGroups_,body.ribbons_.size(),path.getBounds());pathBytes_+=path.approximateBytesUsed();body.ribbons_.push_back(std::move(path));}++work.pathPrimitives;
         }
         if(ribbon_+1<emitted_.patches.size())return false;
-        for(;cap_<emitted_.caps.size()&&units<32;++cap_,++units){const auto& cap=emitted_.caps[cap_];const auto bounds=compactContourCapBounds(cap);join(blockBounds_,bounds);
+        for(;cap_<emitted_.caps.size()&&units<32;++cap_,++units){const auto& cap=emitted_.caps[cap_];const auto bounds=compactContourCapBounds(cap);
+            body.exactDerivedFinite_=body.exactDerivedFinite_&&PreparedNavigationGeometry::exactCapPath(stroke.config,cap).isFinite();join(blockBounds_,bounds);
             if(!replay_){group(body.capGroups_,body.caps_.size(),bounds);body.caps_.push_back(cap);}++work.pathPrimitives;}
         if(cap_<emitted_.caps.size())return false;
         const auto emitted=(emitted_.patches.empty()?0:emitted_.patches.size()-1)+emitted_.caps.size();

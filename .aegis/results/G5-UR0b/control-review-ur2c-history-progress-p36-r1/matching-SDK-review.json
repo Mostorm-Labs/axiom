@@ -1,0 +1,30 @@
+{
+  "status": "VERIFIED",
+  "SDK_profiles": [
+    {
+      "profile": "normal",
+      "changed_engine_members": [
+        "axiom.wasm",
+        "internal/axiom.mjs"
+      ],
+      "unchanged_nonengine_members": 33,
+      "other_unchanged_members": 34,
+      "diagnostics": "OFF",
+      "developer_components": "OFF"
+    },
+    {
+      "profile": "qualification",
+      "changed_engine_members": [
+        "axiom.wasm",
+        "internal/axiom.mjs"
+      ],
+      "unchanged_nonengine_members": 33,
+      "other_unchanged_members": 34,
+      "diagnostics": "ON",
+      "developer_components": "OFF"
+    }
+  ],
+  "SDK_consumer_API_bytes_unchanged": true,
+  "source_after_workers_equal": true,
+  "new_browser_starts": 0
+}

@@ -85,7 +85,7 @@ struct RuntimeSceneRecord final {
     semantic::Transform2D transform{};
     semantic::PropertyBag properties{};
     scene::ImmutableValue<semantic::ObjectContent> content{};
-    std::vector<semantic::EraseMaskRecord> eraseMasks;
+    scene::SharedVector<semantic::EraseMaskRecord> eraseMasks;
     scene::DerivedGeometry derivedGeometry{};
     foundation::WorldRect geometryBounds{};
     foundation::WorldRect visualBounds{};
@@ -123,6 +123,7 @@ struct RuntimeSceneProjection final {
 // with the logical scene types, so consumers of this projection do not need to
 // include the RF-01 render-participant interface.
 struct RuntimeScenePublicationWork final {
+    std::uint64_t materializationCalls=0,materializationRecords=0,bodyCloneBytes=0,maskOnlyHits=0,maskOnlyDeclines=0,bodyComparisonKnots=0,maskRecordsCopied=0;
     std::uint64_t preparationNanoseconds=0,publicationNanoseconds=0,publications=0,metadataRowsCopied=0,payloadReuses=0,indexBuilds=0;
 };
 class RuntimeScene final {
@@ -167,6 +168,7 @@ class RuntimeScene final {
         LookupIndex lookup;
         bool flatIndependent = true;
         bool localized = false;
+        bool maskOnlyVerified = false;
         bool fullProjectionAuthority = false;
         scene::SharedVector<RuntimeSceneRecord> changedRecords;
         explicit PreparedPublication(RuntimeSceneProjection value) : projection(std::move(value)) {

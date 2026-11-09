@@ -1,0 +1,245 @@
+{
+  "schema": "g5-ur2b-finite-proof-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "blocking_class": null,
+  "package": {
+    "path": ".aegis/results/G5-UR0b/ur2b-finite-proof-p36-r1/package.json",
+    "sha256": "a0e603cce4008dbe407e30c69e1d2bd713283d182a0f0a57f6152dd7e161f28d",
+    "bytes": 1871
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/manifest.json",
+    "sha256": "b370145a28a10c51c5e3c61593044be6c479905d376c7362c2056fb87d0b8073",
+    "bytes": 6680
+  },
+  "source_tree_sha256": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+  "source_revision": {
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "repair_delta": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/repair-delta.json",
+      "sha256": "7783fc04b0fc3246864e921bf2418d42698f3e8c7113004b981c706843b3e92a",
+      "bytes": 1886
+    },
+    "cumulative_delta": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative-delta.json",
+      "sha256": "fef8dc05ae64811b39f2bd2b9c9088449db4fb77e011438b0c1997f0bf20820a",
+      "bytes": 3485
+    }
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1",
+    "archives": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/source.tar.gz",
+          "sha256": "bd1211de3838c43528026da4aba9a27780898a6b13c2132f62b6b0eb8a7c3b9f",
+          "bytes": 2721650
+        },
+        "members": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/source-members.json",
+          "sha256": "6e4a3d635c89342cf1539623c902c396974770625f5e560ab95291e70feabd1c",
+          "bytes": 15989
+        },
+        "files": 46
+      },
+      "native": {
+        "archive": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/native.tar.gz",
+          "sha256": "f8212197443c5712d7a4ec09a4faf01a3cd69fc2d17e6d5b0981e9d8626b7799",
+          "bytes": 395102196
+        },
+        "members": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/native-members.json",
+          "sha256": "9b5676b3713a66227dac4eaa0053a3a5267e1df0d47414da9d64b9faaca41a8e",
+          "bytes": 43090
+        },
+        "files": 135
+      },
+      "SDK": {
+        "archive": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/matched-SDK.tar.gz",
+          "sha256": "49b55105c5fba4388a08ecb68063d30437065dc4bf5286df50839aa3b6ed9b23",
+          "bytes": 37963761
+        },
+        "members": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/matched-SDK-members.json",
+          "sha256": "779bcd687b606f1e064f260c4357b2fad6814fe52cebf00d62d63393f362b5e1",
+          "bytes": 22243
+        },
+        "files": 72
+      },
+      "web_raw": {
+        "archive": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/web-raw.tar.gz",
+          "sha256": "ae6020f465bd48444a3ab6d44b057e657a6a092a436d9735207a222252ef148a",
+          "bytes": 176563519
+        },
+        "members": {
+          "path": "out/G5-UR2b-finite-proof-p36-r1/review-artifacts/web-raw-members.json",
+          "sha256": "9a1ea345bd128d384bc09ce8549639dceba7f84ab49081cce33ebedd709fdc1d",
+          "bytes": 219059
+        },
+        "files": 594
+      }
+    }
+  },
+  "tests": {
+    "native91": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/native-final-tests.log",
+      "sha256": "194a20a16bf3d992b2e8b927fef8751965505eb36d470610f942cf0e520c2d55",
+      "bytes": 10717
+    },
+    "targeted4": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/native-targeted-GTest.log",
+      "sha256": "d0756d838deb07338732ee0e35db4b50737351f21b38a80f2e07cff7ec5d28e2",
+      "bytes": 47806
+    },
+    "Node69": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/node-tests.log",
+      "sha256": "899a7900965a09a6b88b593bc809a35efce547ed74ec304d5881e0798314a9f1",
+      "bytes": 13903
+    },
+    "Python42": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/python-tests.log",
+      "sha256": "0e4dc648a1b4c16b5cca40552d9f5a6ddebbda7d23a5bbbff0d08e0022dc26a4",
+      "bytes": 6598
+    },
+    "boundaries120": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/boundary-tests.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/web-findings.json",
+    "sha256": "73b32c07f33b35d92835b3695064bad98c51eff0107899e359cb5a7badc7a547",
+    "bytes": 25993
+  },
+  "ledger": {
+    "planned_ids": [
+      "UR2BFINITE1-Q1",
+      "UR2BFINITE1-N1"
+    ],
+    "historical_starts": 72,
+    "historical_charged_seconds": 3784,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2BFINITE1-Q1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 214,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/qualification-sdk",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-finite-proof-p36-r1/local-web/UR2BFINITE1-Q1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 213.9989056660561,
+          "peak_process_family_rss_kib": 2551760,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2BFINITE1-N1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 216,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-finite-proof-p36-r1/local-web/UR2BFINITE1-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 215.7973267089692,
+          "peak_process_family_rss_kib": 1861696,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      }
+    ],
+    "remaining_status": "NONE",
+    "cumulative_starts": 74,
+    "cumulative_charged_seconds": 4214
+  },
+  "new_normal_Demo": {
+    "url": "http://127.0.0.1:4293/example.html",
+    "pid": 22381,
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/normal-install/js",
+    "profile": "NORMAL_CONSUMER_DIAGNOSTICS_OFF",
+    "matching_SDK_manifest_sha256": "d2677d647672c5fb571b5a7800fb26679b51808a3eb6ae7dc532d154b0bff186",
+    "HTTP_byte_verification": [
+      {
+        "path": "example.html",
+        "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+        "bytes": 50814
+      },
+      {
+        "path": "axiom.mjs",
+        "sha256": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+        "bytes": 34367
+      },
+      {
+        "path": "internal/axiom.mjs",
+        "sha256": "e2d1294462b42353a3e4b95e22a393fb17dd358a24b8f907e54d839a90633f61",
+        "bytes": 129840
+      },
+      {
+        "path": "axiom.wasm",
+        "sha256": "508469be6fcec13ab650ad54eb6e0ad700a52b40bae166d25322f97b9771e094",
+        "bytes": 13418397
+      },
+      {
+        "path": "axiom.data",
+        "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+        "bytes": 16634361
+      }
+    ],
+    "HTTP_not_extra_browser_window": true,
+    "4292_and_old_products_preserved": true
+  },
+  "performance": "No fresh P36 timing; old6 A/B windows remain bound to17ff r1 source/SDK. Only correctness and retained warm structural behavior reverified.",
+  "remaining": [
+    "UR2c mask/PathOps/Scene/source copy costs unchanged; ordinary Up around200ms in prior r1 sampling.",
+    "Other platform/overall G5/P34/performanceSLO/Vibe parity not established."
+  ],
+  "commit_push_performed": false,
+  "index_empty": true,
+  "official_whole_G5_P34_performance_PASS": false
+}

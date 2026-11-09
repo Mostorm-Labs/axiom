@@ -1,0 +1,13 @@
+# UR2c: immutable mask history and mask-only Scene
+
+Start from accepted but unpublished UR2b f62ee66f at Git2a1ab6a. Preserve its18-file delta and source/SDK/oracle/results. This control thread prepares/reviews; the adjacent implementation thread is the sole product/index writer. User authorized this next package; no additional design approval pause is needed for resolved private engineering choices.
+
+Observed Render repetition is metadata preparation: SkiaInkLayers already retains body/result tiles and applies only a proven mask suffix, but flattens/copies/compares the entire history on each draw. Exact queries retain mask paths, yet lookup still deep-compares geometry. Reuse immutable ordered history in those existing owners; distinguish mask path preparation from query PathOps. Do not invent a union-mask renderer or change sequential clear/AA.
+
+Observed Scene repetition is RuntimeScene.prepareIncremental copying changed canonical records, rematerializing bounds/digest/chunks, then comparing/reattaching old payloads; Coordinator scans bounds again. Unrelated table currently defeats flatIndependent. Add a proof-gated mask-only branch before that broad guard, preserve full authority and all checkpoints, old read snapshots, revisions and currentScene publication. Pure mask changes do not change current conservative bounds. Unknown body/closure/basis stays on the existing path. Count legitimate one-time deep comparisons.
+
+Extend Scene immutable/shared values to avoid carrying deep mask copies through every read-table clone and FramePlan. Private renderer history plans can share the exact immutable CPU sequence; device-space result tiles still require complete matrix/DPR/surface/resource proofs. Scope includes stamp serialization memoization only when its exact existing output and complete prefix proof are preserved. Semantic canonical storage/wire is untouched.
+
+Execute in checkpoints without returning early: design+costRED -> historical plan/storage -> mask-only Scene -> native/actual owner verification -> freeze matching SDK/source/driver -> original functional and3paired performance windows -> archives+Demo+callback. Existing baseline Scene keepers14pass; one RF01 full-rebuild test has a separate bound old pointer-address assertion. Report its same failure, do not repair arena or tests to hide it. New mask correctness still needs independent full compiler and pixels.
+
+No budget increase, GPU strategy/worker/admission/History/receipt rewrite, public SDK change, active eraser geometry algorithm overhaul, commit or push. Old4292/4293 stay untouched. New normal Demo>=4294. Eight serial guarded browser starts only, all terminal outcomes callback control thread01a1b6f3-e69a-7fe2-8d9b-0222e8741f03.

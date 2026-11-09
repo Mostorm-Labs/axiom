@@ -8,11 +8,12 @@
 #include <map>
 #include <array>
 #include <chrono>
+#include <functional>
 
 class SkCanvas;
 namespace canvas::render::internal {
 struct PreparedGeometryUsage final {std::size_t bytes=0,indexBytes=0;};
-enum class PreparedConsumer {kOther,kNavigation,kRetainedInk,kCanonical,kDirect};
+enum class PreparedConsumer {kOther,kNavigation,kRetainedInk,kCanonical,kDirect,kExact};
 class PreparedBodyJob;
 ImmutableSourceIdentity preparedBodyIdentity(const ReferenceCommand&);
 // One owner invocation allowance, shared with canonical raster preparation.
@@ -30,8 +31,13 @@ struct PreparedGeometryStatistics final {
     std::uint64_t aliasAdmissions=0,aliasEvictions=0,navigationQueries=0,retainedInkQueries=0;
     std::size_t residentBytes=0,indexReservationBytes=0,aliases=0,bodies=0;
     std::uint64_t sourceFootprintEvaluations=0,sourceKnownFootprintHits=0;
+    std::uint64_t exactQueries=0,contentComparisonKnots=0,validationKnots=0;
+    std::uint64_t syncCompileCalls=0,syncCompileInputs=0,syncPathPrimitives=0,syncLengthInputs=0;
     std::uint64_t canonicalQueries=0,directQueries=0,jobAdmissions=0,advances=0;
     std::uint64_t supportKnots=0,distanceInputs=0,compileInputs=0,pathPrimitives=0,maxAdvanceKnots=0;
+};
+struct ExactComponentWork final {
+    std::uint64_t groups=0,boundsTests=0,components=0,replayKnots=0,materializedPaths=0;
 };
 struct PreparedGeometryDraw final {std::uint64_t chunksVisited=0,primitivesTested=0,primitivesDrawn=0,compiledKnots=0;};
 // Render-private immutable world geometry. Source equality is checked in full:
@@ -44,6 +50,11 @@ class PreparedNavigationGeometry final {
     const SkRect& support()const noexcept{return support_;}
     const SkPath* vectorPath()const noexcept{return vector_?&*vector_:nullptr;}
     bool isContour()const noexcept{return contour_;}
+    bool exactValidated()const noexcept{return ready_&&exactValidationComplete_&&exactValidationValid_&&exactDerivedFinite_;}
+    std::uint64_t identity()const noexcept{return cacheId_;}
+    // Exact CPU components only: bounds are negative filters, never a hit.
+    // Visitor false stops at a decided component; source/checkpoints stay pinned.
+    bool visitExact(const SkRect&,const std::function<bool(const SkPath&)>&,ExactComponentWork&)const;
     std::span<const double> distances()const noexcept{return distances_;}
     std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replay_.back().last;}
     double totalDistance()const noexcept{return distances_.empty()?replayDistance_:distances_.back();}
@@ -53,6 +64,10 @@ class PreparedNavigationGeometry final {
     friend class PreparedGeometryCache;
     friend class PreparedBodyJob;
     bool ready_=true,failed_=false;
+    bool exactValidationComplete_=false,exactValidationValid_=false;
+    // Complete actual SkPath finiteness, not a semantic coordinate restriction.
+    bool exactDerivedFinite_=true;
+    static SkPath exactCapPath(const foundation::InkBrushConfig&,const ink::ContourCap&);
     std::uint64_t cacheId_=0;
     SkRect support_=SkRect::MakeEmpty();
     std::unique_ptr<PreparedBodyJob> job_;
@@ -78,14 +93,14 @@ class PreparedNavigationGeometry final {
     resources::ResourceLease lease_;
     std::shared_ptr<PreparedGeometryUsage> usage_;
     std::size_t bytes_=0;
-    void build(ink::CompactContour* staged=nullptr);
-    void buildReplay();
+    void build(ink::CompactContour* staged=nullptr,PreparedGeometryStatistics* work=nullptr);
+    void buildReplay(PreparedGeometryStatistics* work=nullptr);
     std::size_t footprint()const;
 };
 class PreparedGeometryCache final {
  public:
     std::shared_ptr<const PreparedNavigationGeometry> get(const ReferenceTraversalEntry&,
-        const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,bool criticalReplay=false,PreparedConsumer consumer=PreparedConsumer::kOther,bool deferred=false);
+        const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,bool criticalReplay=false,PreparedConsumer consumer=PreparedConsumer::kOther,bool deferred=false,bool existingOnly=false);
     // Lookup never starts/drains preparation. Request can publish an incomplete
     // private body; only advance may make that body ready.
     std::shared_ptr<const PreparedNavigationGeometry> lookup(const ReferenceTraversalEntry&,PreparedConsumer);

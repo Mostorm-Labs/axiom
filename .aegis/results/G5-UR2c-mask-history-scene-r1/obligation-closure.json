@@ -1,0 +1,1037 @@
+{
+  "status": "EVIDENCE_ASSEMBLED_FOR_CONTROL_REVIEW",
+  "obligations": [
+    {
+      "id": "U2C-01",
+      "requirement": "Historical masks have one reusable immutable ordered representation in existing Render owners.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/baseline-red.json",
+          "sha256": "46a6c443c68e05163bac11d897fd93d9e7767ecaf97560cd400a547aa3392255"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/baseline-history-probe.log",
+          "sha256": "9d570ef6d5267d1e3a9dc9537055e0ec63dfd16276c381fc0739c778ac38b7f0"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        }
+      ]
+    },
+    {
+      "id": "U2C-02",
+      "requirement": "Preserve ordered mask rendering and invalidation.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/web-findings.json",
+          "sha256": "873af639633cb915bb28260aa84af3b3a94aacba13048573b8c9f679b8b5c512"
+        }
+      ]
+    },
+    {
+      "id": "U2C-03",
+      "requirement": "CPU exact hit/failure semantics remain unchanged while reusing historical mask paths/metadata.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/old-corpus.json",
+          "sha256": "02a4d82e8564e1f8076a83cf9cd01bc1940461d2cacf3edd497af96bfa820360"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/candidate-corpus.json",
+          "sha256": "ff1ea50d42219ab10e04a0a684b642514072074d1c2a9182764cb70e8ff0dd54"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/old-finite.json",
+          "sha256": "d7f33b05a98b2d6b096dc62e4f2f9a6819d50c682688fa387dc73d635f25e474"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/candidate-finite.json",
+          "sha256": "d2338a6a4e2b8196b80e3cf69fa078ad75673bafa4dc196d352849301e82a709"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        }
+      ]
+    },
+    {
+      "id": "U2C-04",
+      "requirement": "Proven mask-only Scene edits retain immutable body/bounds/chunks/index/digests/dependencies.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/baseline-scene-probe.log",
+          "sha256": "0e5f93c093745627b755674fa2f423d6fca49d3050246660720bb6f9553949c6"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        }
+      ]
+    },
+    {
+      "id": "U2C-05",
+      "requirement": "Mask-only fast path works in the real mixed document domain without expanding uncertain dependency semantics.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/local-web/UR2C1-FQ1-mask-proof.json",
+          "sha256": "2a8fbe782eebf0ff367df3e7fbbe7c176d1a0b7a742460605ccb995b2d4f863d"
+        }
+      ]
+    },
+    {
+      "id": "U2C-06",
+      "requirement": "Atomic publication, old snapshots and failure recovery remain correct.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/web-findings.json",
+          "sha256": "873af639633cb915bb28260aa84af3b3a94aacba13048573b8c9f679b8b5c512"
+        }
+      ]
+    },
+    {
+      "id": "U2C-07",
+      "requirement": "Bounded history retention and existing GPU lifetime rules.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-final-full-raw.log",
+          "sha256": "dd9f4288d0308832be643f36a29f7c353a0ab205513ad191f8b5430397ff3e1f"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/scope-preflight.json",
+          "sha256": "3d6643a37526fee1527a28c6e7e33e7a41c228f152d362e9cc52147bfced3d55"
+        }
+      ]
+    },
+    {
+      "id": "U2C-08",
+      "requirement": "The production continuous input path consumes new history and mask-only Scene capabilities.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/local-web/UR2C1-FQ1-mask-proof.json",
+          "sha256": "2a8fbe782eebf0ff367df3e7fbbe7c176d1a0b7a742460605ccb995b2d4f863d"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/web-findings.json",
+          "sha256": "873af639633cb915bb28260aa84af3b3a94aacba13048573b8c9f679b8b5c512"
+        }
+      ]
+    },
+    {
+      "id": "U2C-09",
+      "requirement": "Comparable final picture and normal A/B behavior.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/web-findings.json",
+          "sha256": "873af639633cb915bb28260aa84af3b3a94aacba13048573b8c9f679b8b5c512"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/normal-artifact-manifest.json",
+          "sha256": "92769ebbd7783b7f482fb37edddf581605de28f3baccec17dfffac550391e0b7"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/qualification-artifact-manifest.json",
+          "sha256": "c25733aa26594087bf0c6c228acd53510ce85725b502866b2b8477bbfc568ad7"
+        }
+      ]
+    },
+    {
+      "id": "U2C-10",
+      "requirement": "Scope, regressions, materialization and closed allowance.",
+      "evidence": [
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/scope-preflight.json",
+          "sha256": "3d6643a37526fee1527a28c6e7e33e7a41c228f152d362e9cc52147bfced3d55"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/native-summary.json",
+          "sha256": "017aec331c6c0036a70d485b6d94cf19126268650993e7dd3dfad944483028d0"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/other-checks.json",
+          "sha256": "4ce3bc331082719f26e05bbc16e71817b00a827c9313fa0e6db94fb0debd8abf"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/cleanup-audit.json",
+          "sha256": "f7727e899329004caa317235a5d7f67b967489a8943ac4fa1c39e5d61a7774a8"
+        },
+        {
+          "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/local-web/sampling-ledger.json",
+          "sha256": "dd64fee1b53a0b73a5eefda8db8a028d18ca9f2a7ed3e16b0c8e65841e52cfef"
+        }
+      ]
+    }
+  ],
+  "mechanism_matrix": [
+    {
+      "copies": 1,
+      "history": 0,
+      "before_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "after_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "before_exact": {
+        "copies": 1,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      },
+      "after_exact": {
+        "copies": 1,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      }
+    },
+    {
+      "copies": 1,
+      "history": 1,
+      "before_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 64,
+        "copied_bytes": 5632,
+        "copies": 1,
+        "flattened": 64,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 2
+      },
+      "after_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "before_exact": {
+        "copies": 1,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 138,
+        "path_value_checks": 6
+      },
+      "after_exact": {
+        "copies": 1,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      }
+    },
+    {
+      "copies": 1,
+      "history": 2,
+      "before_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 128,
+        "copied_bytes": 11264,
+        "copies": 1,
+        "flattened": 128,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 2
+      },
+      "after_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "before_exact": {
+        "copies": 1,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 330,
+        "path_value_checks": 12
+      },
+      "after_exact": {
+        "copies": 1,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      }
+    },
+    {
+      "copies": 1,
+      "history": 5,
+      "before_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 320,
+        "copied_bytes": 28160,
+        "copies": 1,
+        "flattened": 320,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 2
+      },
+      "after_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "before_exact": {
+        "copies": 1,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 1290,
+        "path_value_checks": 42
+      },
+      "after_exact": {
+        "copies": 1,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      }
+    },
+    {
+      "copies": 1,
+      "history": 10,
+      "before_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 640,
+        "copied_bytes": 56320,
+        "copies": 1,
+        "flattened": 640,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 2
+      },
+      "after_draw": {
+        "body_builds": 2,
+        "body_hits": 4,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 1,
+        "flattened": 0,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 2
+      },
+      "before_exact": {
+        "copies": 1,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 4170,
+        "path_value_checks": 132
+      },
+      "after_exact": {
+        "copies": 1,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 10,
+        "path_value_checks": 2
+      }
+    },
+    {
+      "copies": 8,
+      "history": 0,
+      "before_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "after_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "before_exact": {
+        "copies": 8,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      },
+      "after_exact": {
+        "copies": 8,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      }
+    },
+    {
+      "copies": 8,
+      "history": 1,
+      "before_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 512,
+        "copied_bytes": 45056,
+        "copies": 8,
+        "flattened": 512,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 16
+      },
+      "after_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "before_exact": {
+        "copies": 8,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 1104,
+        "path_value_checks": 48
+      },
+      "after_exact": {
+        "copies": 8,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      }
+    },
+    {
+      "copies": 8,
+      "history": 2,
+      "before_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 1024,
+        "copied_bytes": 90112,
+        "copies": 8,
+        "flattened": 1024,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 16
+      },
+      "after_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "before_exact": {
+        "copies": 8,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 2640,
+        "path_value_checks": 96
+      },
+      "after_exact": {
+        "copies": 8,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      }
+    },
+    {
+      "copies": 8,
+      "history": 5,
+      "before_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 2560,
+        "copied_bytes": 225280,
+        "copies": 8,
+        "flattened": 2560,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 16
+      },
+      "after_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "before_exact": {
+        "copies": 8,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 10320,
+        "path_value_checks": 336
+      },
+      "after_exact": {
+        "copies": 8,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      }
+    },
+    {
+      "copies": 8,
+      "history": 10,
+      "before_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 5120,
+        "copied_bytes": 450560,
+        "copies": 8,
+        "flattened": 5120,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 16
+      },
+      "after_draw": {
+        "body_builds": 16,
+        "body_hits": 32,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 8,
+        "flattened": 0,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 16
+      },
+      "before_exact": {
+        "copies": 8,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 33360,
+        "path_value_checks": 1056
+      },
+      "after_exact": {
+        "copies": 8,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 80,
+        "path_value_checks": 16
+      }
+    },
+    {
+      "copies": 16,
+      "history": 0,
+      "before_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "after_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "before_exact": {
+        "copies": 16,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      },
+      "after_exact": {
+        "copies": 16,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      }
+    },
+    {
+      "copies": 16,
+      "history": 1,
+      "before_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 1024,
+        "copied_bytes": 90112,
+        "copies": 16,
+        "flattened": 1024,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 32
+      },
+      "after_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "before_exact": {
+        "copies": 16,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 2208,
+        "path_value_checks": 96
+      },
+      "after_exact": {
+        "copies": 16,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      }
+    },
+    {
+      "copies": 16,
+      "history": 2,
+      "before_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 2048,
+        "copied_bytes": 180224,
+        "copies": 16,
+        "flattened": 2048,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 32
+      },
+      "after_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "before_exact": {
+        "copies": 16,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 5280,
+        "path_value_checks": 192
+      },
+      "after_exact": {
+        "copies": 16,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      }
+    },
+    {
+      "copies": 16,
+      "history": 5,
+      "before_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 5120,
+        "copied_bytes": 450560,
+        "copies": 16,
+        "flattened": 5120,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 32
+      },
+      "after_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "before_exact": {
+        "copies": 16,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 20640,
+        "path_value_checks": 672
+      },
+      "after_exact": {
+        "copies": 16,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      }
+    },
+    {
+      "copies": 16,
+      "history": 10,
+      "before_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 10240,
+        "copied_bytes": 901120,
+        "copies": 16,
+        "flattened": 10240,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 32
+      },
+      "after_draw": {
+        "body_builds": 32,
+        "body_hits": 64,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 16,
+        "flattened": 0,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 32
+      },
+      "before_exact": {
+        "copies": 16,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 66720,
+        "path_value_checks": 2112
+      },
+      "after_exact": {
+        "copies": 16,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 160,
+        "path_value_checks": 32
+      }
+    },
+    {
+      "copies": 32,
+      "history": 0,
+      "before_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "after_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 0,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "before_exact": {
+        "copies": 32,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      },
+      "after_exact": {
+        "copies": 32,
+        "exact_history": 0,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      }
+    },
+    {
+      "copies": 32,
+      "history": 1,
+      "before_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 2048,
+        "copied_bytes": 180224,
+        "copies": 32,
+        "flattened": 2048,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 64
+      },
+      "after_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 1,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "before_exact": {
+        "copies": 32,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 4416,
+        "path_value_checks": 192
+      },
+      "after_exact": {
+        "copies": 32,
+        "exact_history": 1,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      }
+    },
+    {
+      "copies": 32,
+      "history": 2,
+      "before_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 4096,
+        "copied_bytes": 360448,
+        "copies": 32,
+        "flattened": 4096,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 64
+      },
+      "after_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 2,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "before_exact": {
+        "copies": 32,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 10560,
+        "path_value_checks": 384
+      },
+      "after_exact": {
+        "copies": 32,
+        "exact_history": 2,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      }
+    },
+    {
+      "copies": 32,
+      "history": 5,
+      "before_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 10240,
+        "copied_bytes": 901120,
+        "copies": 32,
+        "flattened": 10240,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 64
+      },
+      "after_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 5,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "before_exact": {
+        "copies": 32,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 41280,
+        "path_value_checks": 1344
+      },
+      "after_exact": {
+        "copies": 32,
+        "exact_history": 5,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      }
+    },
+    {
+      "copies": 32,
+      "history": 10,
+      "before_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 20480,
+        "copied_bytes": 1802240,
+        "copies": 32,
+        "flattened": 20480,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": true,
+        "warm_draws": 64
+      },
+      "after_draw": {
+        "body_builds": 64,
+        "body_hits": 128,
+        "compared": 0,
+        "copied_bytes": 0,
+        "copies": 32,
+        "flattened": 0,
+        "history": 10,
+        "knots": 7199,
+        "structural_red": false,
+        "warm_draws": 64
+      },
+      "before_exact": {
+        "copies": 32,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 133440,
+        "path_value_checks": 4224
+      },
+      "after_exact": {
+        "copies": 32,
+        "exact_history": 10,
+        "path_builds": 0,
+        "path_primitive_checks": 320,
+        "path_value_checks": 64
+      }
+    }
+  ],
+  "actual_runtime_Scene": {
+    "baseline": {
+      "scene_materializations": 1,
+      "scene_records": 1,
+      "body_clone_bytes": 576,
+      "mask_only_hits": 0
+    },
+    "candidate": {
+      "scene_materializations": 0,
+      "scene_records": 0,
+      "body_clone_bytes": 0,
+      "mask_only_hits": 1
+    }
+  },
+  "native_known_failure": "line 88: expectation failed: store.find(second.objectId) == &store.records()[0]\n1 RF01-1 full rebuild expectations failed\n",
+  "web_classification": "STRUCTURAL_GAIN_TIMING_IMPROVEMENT_OBSERVED",
+  "remaining_cost": "New-query PathOps, genuine first-use complete comparisons, semantic/wire copies remain separately measured. No zero-total-work, physical GPU time, SLO, Vibe parity, whole G5 or P34 claim.",
+  "official_gate_PASS": false
+}

@@ -41,14 +41,22 @@ template<class T>std::size_t sourceContentBytes(const T& v){
     return bytes;
 }
 inline std::size_t sourceContentBytes(const semantic::ObjectContent& content){return std::visit([](const auto& v){return sourceContentBytes(v);},content);}
+inline std::size_t sourceMaskBytes(const std::vector<semantic::EraseMaskRecord>& masks){
+    std::size_t bytes=sizeof(masks)+masks.capacity()*sizeof(semantic::EraseMaskRecord);
+    for(const auto& mask:masks)std::visit([&](const auto& g){
+        if constexpr(requires{g.segments;})bytes+=g.segments.capacity()*sizeof(semantic::EraseCubicSegment);
+        else bytes+=g.path.commands.capacity()*sizeof(semantic::PathCommand);
+    },mask.geometry);
+    return bytes;
+}
 // Per-tile unshared metadata is charged separately from shared payloads.
 inline std::size_t sourceMetadataBytes(const ReferenceTraversalEntry& entry){
     const auto& r=entry.record;std::size_t bytes=r.referenceGeometryDigest.capacity()+1+
         r.properties.entries.capacity()*sizeof(semantic::PropertyEntry)+r.directDependencies.capacity()*sizeof(ObjectId)+
-        (r.eraseMasks.capacity()+entry.presentationEraseMasks.capacity())*sizeof(semantic::EraseMaskRecord);
+        entry.presentationEraseMasks.capacity()*sizeof(semantic::EraseMaskRecord);
     for(const auto& p:r.properties.entries)if(const auto* style=std::get_if<semantic::StrokeStyleValue>(&p.value))
         if(const auto* stroke=std::get_if<semantic::SolidStroke>(style))if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke->dash))bytes+=dash->segments.capacity()*sizeof(double);
-    for(const auto masks:{std::span(r.eraseMasks),std::span(entry.presentationEraseMasks)})
+    for(const auto masks:{std::span(entry.presentationEraseMasks)})
     for(const auto& mask:masks)std::visit([&](const auto& g){
         if constexpr(requires{g.segments;})bytes+=g.segments.capacity()*sizeof(semantic::EraseCubicSegment);
         if constexpr(requires{g.path.commands;})bytes+=g.path.commands.capacity()*sizeof(typename std::remove_cvref_t<decltype(g.path.commands)>::value_type);
@@ -142,6 +150,12 @@ class SourceRetentionPool final {
     }
   public:
     const SourceRetentionUsage& statistics()const noexcept{return *usage_;}
+    std::shared_ptr<const SourceRetention> getMasks(const scene::SharedVector<semantic::EraseMaskRecord>& masks,
+        const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){
+        if(!budget||masks.empty())return {};bind(budget);
+        return retain(masks.storage(),sourceTypeTag<std::vector<semantic::EraseMaskRecord>>(),
+            [&]{return sourceMaskBytes(masks);},budget,critical);
+    }
     void bind(const std::shared_ptr<resources::ResourceBudgetManager>& budget){
         if(owner_.lock()!=budget){
             index_=std::make_shared<Index>();owner_=budget;auto next=std::make_shared<SourceRetentionUsage>(*usage_);
@@ -162,6 +176,10 @@ class SourceRetentionPool final {
         bool ok=true;std::visit([&](const auto& command){if constexpr(requires{command.content;})
             ok=add(command.content.shared(),[&]{return sourceContentBytes(command.content.get());});},entry.command);
         if(!ok)return {};
+        if(!entry.record.eraseMasks.empty()){
+            auto masks=getMasks(entry.record.eraseMasks,budget,critical);if(!masks)return {};
+            holds.push_back(std::move(masks));
+        }
         const auto& chunks=entry.record.geometryChunks;
         if(!chunks.empty()&&!add(chunks.storage(),[&]{
             std::size_t bytes=sizeof(std::vector<GeometryChunk>)+chunks.capacity()*sizeof(GeometryChunk);

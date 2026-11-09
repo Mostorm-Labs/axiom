@@ -1,0 +1,111 @@
+{
+  "schema": "g5-ur2b-independent-control-review-v1",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "blocking_class": "EXACT_DECISION_OR_PIXEL_OR_RECEIPT_FAILURE",
+  "scope": "UR2b U2B01..10, not overall G5/P34",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "subject": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/result.json",
+    "sha256": "e63399c924df12feb34ba8cbd9d17f1eae77f5040f8e784702ba92754b0842d6"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2b-exact-query-locality-r1/package.json",
+    "sha256": "ee8672721bd2e16ec9395c3255d8b31a309682d7a2351f9fb6deff0cabb954fd"
+  },
+  "source_tree_sha256": "17ffbd0ae6742890f84e986e69ce43c5c4d86081c7fde80607a1d3db3f657f37",
+  "frozen_requirement_audit": {
+    "passed": [
+      "U2B-01",
+      "U2B-03",
+      "U2B-05",
+      "U2B-06",
+      "U2B-07",
+      "U2B-08",
+      "U2B-09",
+      "U2B-10"
+    ],
+    "failed": [
+      "U2B-02",
+      "U2B-04"
+    ]
+  },
+  "independently_verified": {
+    "native": 91,
+    "targeted_GTest": 4,
+    "Node": 69,
+    "Python": 42,
+    "boundaries": 120,
+    "original_CPU_oracle_cases": 634,
+    "original_mismatches": 0,
+    "cold_pixels": 80,
+    "after_redo": 20,
+    "actual_Up_exact_consumer_cases": 10,
+    "qualified_receipt_cases": 10,
+    "navigation_cases_before_exact": 8,
+    "archive_members": 1013,
+    "HTTP_matching_SDK_members": 36,
+    "source_and_index_scope": true
+  },
+  "timing_classification": "STRUCTURAL_GAIN_TIMING_IMPROVEMENT_OBSERVED",
+  "paired_Up_p95_ms": [
+    {
+      "baseline": 304.5,
+      "candidate": 241.3
+    },
+    {
+      "baseline": 230.2,
+      "candidate": 218.9
+    },
+    {
+      "baseline": 227.8,
+      "candidate": 197.2
+    }
+  ],
+  "blocking_findings": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/finite-validation-finding.json",
+      "sha256": "f7ec859f4cb815d243bff2ff058e6a96c710f99ab231aa34aa003009415abbc8"
+    }
+  ],
+  "independent_evidence": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/integrity-review.json",
+      "sha256": "d091fe8e75166e6bd462b519491c1bef0ea7fe533ab88236fbe21ba8e9f53524"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/regressions.json",
+      "sha256": "2f36ebacf375be0aaedf1be6ac3d8de6c8fce2f03d3545a3ea1b981262b8bbae"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/offline-pixels.json",
+      "sha256": "ba2107eeec3483327168eb9a83e92cc38efa3144fe7c0f06b39138755df2290f"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/functional-review.json",
+      "sha256": "e50ee581bba3c60d6614157ee40c72fa11cdbe4617ec12c1dd915f253dc426f2"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/timing-review.json",
+      "sha256": "cdb59063b518333929ceacaf2e4b6ae73aec108b74176b68d2dcb4ba65ec5bc0"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/demo-check.json",
+      "sha256": "9aa931b46509cbcbd3a922a2e000bbb0360deb1c1316b6fc973837f811d0066d"
+    }
+  ],
+  "accounting": {
+    "cumulative_starts": 72,
+    "cumulative_seconds": 3784,
+    "cap_seconds": 8370,
+    "remaining_seconds": 4586,
+    "remaining_ids": [],
+    "new_browser_starts_by_control": 0,
+    "new_pixel_oracle_invocations_by_control": 0
+  },
+  "next_action": "P36 minimal Render derived-validation repair, preserve original8 closed windows/source/artifacts; no UR2c/commit/push or unfrozen sampling.",
+  "official_whole_G5_P34_performance_or_release_PASS": false,
+  "control_product_or_index_mutation": false
+}

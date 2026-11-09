@@ -1,0 +1,88 @@
+{
+  "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "source_tree_sha256": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+  "files": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "7519a489fa857b3ef6b7e720c8fb5a709ec6e443ebfa654288a4de507a67f106"
+    },
+    {
+      "path": "runtime/composition/tests/ur2b_exact_query_runtime_test.cpp",
+      "sha256": "c87018cc525a2722e29269cb97c19fd209f817111f90be33c9929ab7ddbff724"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "74ccac3a16bcd4b539d661a00294b48e4f45a7383fbefb0878ef9d50902c4a13"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "41e09ea2e8aca0d024b447f39b0180bd44658a7cdffabe9b24b6dc279e88a713"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "sha256": "146c6f1a5f1137afb408a248965fd94b6eb366463540ca937c770a404ae770af"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "sha256": "c5e40a65018c45c9bd247e31bc1bb1715ea4794182622bcbc0dd21c0c537a701"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "7b5ce07d9d858a17981e6cfb6146a8b89379519cb51392b036be207250bbcb10"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "sha256": "2e425b105fae63c3eae3552d0f4f10201af644ce5e1556d27cf19f28889de0e9"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "54247c4aa11bbef0d87b67469869c1aefb0ce354884bf7faf1aa90b10eee4faa"
+    },
+    {
+      "path": "runtime/render/tests/ur2b_exact_query_test.cpp",
+      "sha256": "427bab6065ecea3e842c362535749fb2d48b65f48784d26ec0251ea3e9c8c4cb"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_oracle.cpp",
+      "sha256": "c5c9e1ab3294d778cd39bc85f48c6e04ae629795b9a8c0aa2d06967f59b50b66"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query.mjs",
+      "sha256": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query_contract.mjs",
+      "sha256": "d16444f656a222588d607c94278c9e771840e7454d87a9e1b8dd0f1315773367"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query_runner.py",
+      "sha256": "59556d83fe0c0678ace3bc4bd57a743665a219696dbd7978289cf0bbcb5e3601"
+    },
+    {
+      "path": "verification/tests/g5_ur2b_exact_query.test.mjs",
+      "sha256": "0f1caee12fd1f0de0bf6e1b98f7366010ba83491bbf152d8c6a32a23775c9a1d"
+    },
+    {
+      "path": "verification/tests/test_g5_ur2b_exact_query.py",
+      "sha256": "a23160ff588024a5a2b6fda20fdde6d0c37e14736e5fb97f3c22bdd1fbff0164"
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative.patch",
+    "sha256": "4302b3643bfaaa004f573df4c2ecbe583a4a3a1cc46ff2a20664fc583369fee0",
+    "bytes": 104837
+  },
+  "parent_cumulative_delta": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/source-delta.json",
+    "sha256": "fab3e245644df149252ed6a0252f13f16ff5fb33e06c0fbb0f71c336f9398e9e",
+    "bytes": 5684
+  }
+}

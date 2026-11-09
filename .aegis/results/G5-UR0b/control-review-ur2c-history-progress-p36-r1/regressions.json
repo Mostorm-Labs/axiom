@@ -1,0 +1,1404 @@
+{
+  "status": "VERIFIED",
+  "results": [
+    {
+      "name": "native",
+      "finite_witnesses": 6,
+      "independent_finite": [
+        {
+          "name": "old-CPU-finite",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2b-r1/finite-range-r1/requests.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/old-finite-results.json"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+          "returncode": 0,
+          "elapsed_s": 0.010611792036797851,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/old-CPU-finite.log"
+        },
+        {
+          "name": "candidate-finite",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_candidate",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2b-r1/finite-range-r1/requests.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/candidate-finite-results.json"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+          "returncode": 0,
+          "elapsed_s": 0.010271792009007186,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/candidate-finite.log"
+        }
+      ],
+      "cases": [
+        {
+          "name": "native-G5ScaleFixtureContract",
+          "command": [
+            "/opt/homebrew/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_scale_fixture.py",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/axiom_g5_scale_fixture"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native",
+          "returncode": 0,
+          "elapsed_s": 0.4498002910404466,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5ScaleFixtureContract.log"
+        },
+        {
+          "name": "native-G5Ur0Observation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/foundation/axiom_g5_observation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/foundation",
+          "returncode": 0,
+          "elapsed_s": 0.5977267919806764,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5Ur0Observation.log"
+        },
+        {
+          "name": "native-FC01AxisPublicationTruth",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/semantic/tests/canvas_semantic_operation_engine_axis_publication_truth_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/semantic/tests",
+          "returncode": 0,
+          "elapsed_s": 0.01940529199782759,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC01AxisPublicationTruth.log"
+        },
+        {
+          "name": "native-canvas_rf01_scene_atomicity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_rf01_scene_atomicity_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.009954457986168563,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_rf01_scene_atomicity.log"
+        },
+        {
+          "name": "native-canvas_rf01_full_rebuild",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_rf01_full_rebuild_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 1,
+          "elapsed_s": 0.01167520898161456,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_rf01_full_rebuild.log"
+        },
+        {
+          "name": "native-canvas_rf01_scene_binding",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_rf01_scene_binding_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.011063375044614077,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_rf01_scene_binding.log"
+        },
+        {
+          "name": "native-canvas_g2_a0_semantic_generation_binding",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a0_semantic_generation_binding"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.011082458950113505,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a0_semantic_generation_binding.log"
+        },
+        {
+          "name": "native-canvas_g2_a1_runtime_record_projection",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a1_runtime_record_projection"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.010954374971333891,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a1_runtime_record_projection.log"
+        },
+        {
+          "name": "native-G5GeometryChunkLocality",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g5_geometry_chunk_locality"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.005428707983810455,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5GeometryChunkLocality.log"
+        },
+        {
+          "name": "native-canvas_g2_a2_bounds_system",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a2_bounds_system_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.005175917001906782,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a2_bounds_system.log"
+        },
+        {
+          "name": "native-canvas_g2_a2_reference_geometry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a2_reference_geometry_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.009429665980860591,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a2_reference_geometry.log"
+        },
+        {
+          "name": "native-canvas_g2_a2_scene_impact",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a2_scene_impact_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.010979750019032508,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a2_scene_impact.log"
+        },
+        {
+          "name": "native-canvas_g2_a2_dependency_closure",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a2_dependency_closure_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.010915041028056294,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a2_dependency_closure.log"
+        },
+        {
+          "name": "native-canvas_g2_a3_full_incremental_equivalence",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a3_full_incremental_equivalence"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.01090320898219943,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a3_full_incremental_equivalence.log"
+        },
+        {
+          "name": "native-canvas_g2_a4_scene_delta",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a4_scene_delta_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.18182212504325435,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a4_scene_delta.log"
+        },
+        {
+          "name": "native-canvas_g2_a6_incremental_equivalence",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a6_incremental_equivalence"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.07798499998170882,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a6_incremental_equivalence.log"
+        },
+        {
+          "name": "native-canvas_g2_a6_atomic_publication",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a6_atomic_publication"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.010615582985337824,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a6_atomic_publication.log"
+        },
+        {
+          "name": "native-canvas_g2_a6_recovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a6_recovery"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.010508124949410558,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a6_recovery.log"
+        },
+        {
+          "name": "native-canvas_g2_a5_spatial_index_differential",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/canvas_g2_a5_spatial_index_differential_test"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.13225300004705787,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-canvas_g2_a5_spatial_index_differential.log"
+        },
+        {
+          "name": "native-G5UR2CMaskOnlyScene",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.020659292000345886,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CMaskOnlyScene.log"
+        },
+        {
+          "name": "native-G5UR2CMixedMaskScene",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests",
+            "--mixed"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.020822124963160604,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CMixedMaskScene.log"
+        },
+        {
+          "name": "native-G5UR2CAtomicRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests",
+            "--atomic"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.02054991602199152,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CAtomicRecovery.log"
+        },
+        {
+          "name": "native-G4EraserSession",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction/axiom_eraser_session_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.0054651249665766954,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G4EraserSession.log"
+        },
+        {
+          "name": "native-G4EditorHistory",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction/axiom_editor_history_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.010350209020543844,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G4EditorHistory.log"
+        },
+        {
+          "name": "native-FC01EditorHistoryInverseFamilies",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction/axiom_editor_history_tests",
+            "fc01"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.010057375009637326,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC01EditorHistoryInverseFamilies.log"
+        },
+        {
+          "name": "native-G45BrushPreviewHandoff",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/ink/axiom_brush_preview_handoff_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/ink",
+          "returncode": 0,
+          "elapsed_s": 0.00504350004484877,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G45BrushPreviewHandoff.log"
+        },
+        {
+          "name": "native-G45PerfectFreehandReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/ink/axiom_g45_perfect_freehand_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/ink",
+          "returncode": 0,
+          "elapsed_s": 0.005160290980711579,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G45PerfectFreehandReference.log"
+        },
+        {
+          "name": "native-G5GpuRetirementContract",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.02024545898893848,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5GpuRetirementContract.log"
+        },
+        {
+          "name": "native-G5GpuResourceRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_gpu_resource_recovery_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.12616754102054983,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5GpuResourceRecovery.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBody",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.12235658301506191,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5CanonicalPreparedBody.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBodyBounded",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--bounded"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.03831512498436496,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5CanonicalPreparedBodyBounded.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBodyPixels",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--pixels"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.28902416699565947,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5CanonicalPreparedBodyPixels.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedWorkingSet",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--working-set"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 4.372084875009023,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5CanonicalPreparedWorkingSet.log"
+        },
+        {
+          "name": "native-G5PreparedBodyIndex",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_prepared_body_index_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.12958670896477997,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5PreparedBodyIndex.log"
+        },
+        {
+          "name": "native-G5RenderExecution",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_execution_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.040825874952133745,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5RenderExecution.log"
+        },
+        {
+          "name": "native-G5EraseExactHit",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_erase_hit_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04046879103407264,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5EraseExactHit.log"
+        },
+        {
+          "name": "native-G5RenderCache",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 156.4764352500206,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5RenderCache.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedCompatibility",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--exact-pressure-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020671291975304484,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5CanonicalPreparedCompatibility.log"
+        },
+        {
+          "name": "native-G5LiveEraseGpuMiss",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--live-erase-gpu-miss-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010420167003758252,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5LiveEraseGpuMiss.log"
+        },
+        {
+          "name": "native-G5LiveEraseDpr",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--live-dpr-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020129332959186286,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5LiveEraseDpr.log"
+        },
+        {
+          "name": "native-G5TranslatedV4Drag",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--translated-v4-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.18158458400284871,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5TranslatedV4Drag.log"
+        },
+        {
+          "name": "native-G5InkBodyMaskReuse",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--body-mask-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.03978433401789516,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5InkBodyMaskReuse.log"
+        },
+        {
+          "name": "native-G5RegionalMaskValidity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--regional-mask-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.07760441699065268,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5RegionalMaskValidity.log"
+        },
+        {
+          "name": "native-G5MaskedNavigationProgress",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-progress-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020450707990676165,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5MaskedNavigationProgress.log"
+        },
+        {
+          "name": "native-G5V4CoverageFallback",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--v4-fallback-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.019384042010642588,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5V4CoverageFallback.log"
+        },
+        {
+          "name": "native-G5MaskedCanonicalRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-canonical-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.347971957991831,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5MaskedCanonicalRecovery.log"
+        },
+        {
+          "name": "native-G5ErasedMixedNavigation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-mixed-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.18375920900143683,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5ErasedMixedNavigation.log"
+        },
+        {
+          "name": "native-G5RetainedZoomReentry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--reentry-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.07875725004123524,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5RetainedZoomReentry.log"
+        },
+        {
+          "name": "native-G5MixedNavigationReentry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--mixed-reentry-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.040609874995425344,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5MixedNavigationReentry.log"
+        },
+        {
+          "name": "native-G5TileWork",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_tile_work_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010085499961860478,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5TileWork.log"
+        },
+        {
+          "name": "native-G5RenderDamage",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_damage_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.01012845803052187,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5RenderDamage.log"
+        },
+        {
+          "name": "native-G47ImageResource",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_image_resource_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.01966333296149969,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G47ImageResource.log"
+        },
+        {
+          "name": "native-G5SkiaChunkRangeEntry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_skia_chunk_range_entry_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.07314737502019852,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SkiaChunkRangeEntry.log"
+        },
+        {
+          "name": "native-G5PreparedGeometry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_prepared_geometry_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.34829920798074454,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5PreparedGeometry.log"
+        },
+        {
+          "name": "native-FC00XFrameCoordinator",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_runtime_frame_coordinator_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.005584666971117258,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XFrameCoordinator.log"
+        },
+        {
+          "name": "native-G3SkiaSurfaceProvider",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_skia_surface_provider_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010143292020075023,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G3SkiaSurfaceProvider.log"
+        },
+        {
+          "name": "native-G3PreviewSurface",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_preview_surface_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010116124991327524,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G3PreviewSurface.log"
+        },
+        {
+          "name": "native-G3SurfacePresentation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_surface_presentation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.00515508302487433,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G3SurfacePresentation.log"
+        },
+        {
+          "name": "native-G3DirectReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_direct_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.23670833301730454,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G3DirectReference.log"
+        },
+        {
+          "name": "native-G5TransientReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_transient_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.1331087079597637,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5TransientReference.log"
+        },
+        {
+          "name": "native-G3FrameOrchestration",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_render_frame_orchestration_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010787207982502878,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G3FrameOrchestration.log"
+        },
+        {
+          "name": "native-G5SharedScenePayload",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--payload"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020472875039558858,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedScenePayload.log"
+        },
+        {
+          "name": "native-G5SharedSceneSnapshot",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--snapshot"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010530957952141762,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedSceneSnapshot.log"
+        },
+        {
+          "name": "native-G5SharedSceneIndex",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--index"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04029029101366177,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedSceneIndex.log"
+        },
+        {
+          "name": "native-G5SharedSceneReaders",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--readers"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020674083032645285,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedSceneReaders.log"
+        },
+        {
+          "name": "native-G5SharedSceneRetention",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--retention"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.02040808304445818,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedSceneRetention.log"
+        },
+        {
+          "name": "native-G5SharedSceneParity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--parity"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020314000023063272,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5SharedSceneParity.log"
+        },
+        {
+          "name": "native-G5Ur0ObservationIdentity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_g5_observation_identity_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010327666997909546,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5Ur0ObservationIdentity.log"
+        },
+        {
+          "name": "native-G5UR2ACompositionProof",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2a_current_composition_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.0773615000071004,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ACompositionProof.log"
+        },
+        {
+          "name": "native-G5UR2AMaskIsolationDirect",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+            "direct"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.13024366600438952,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AMaskIsolationDirect.log"
+        },
+        {
+          "name": "native-G5UR2AMaskIsolationPrepared",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+            "prepared"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.13081195804988965,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AMaskIsolationPrepared.log"
+        },
+        {
+          "name": "native-G5UR2AMaskIsolationBackdrop",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+            "backdrop"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.2384467499796301,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AMaskIsolationBackdrop.log"
+        },
+        {
+          "name": "native-G5UR2AMaskIsolationLegacy",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+            "legacy"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.1294537920039147,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AMaskIsolationLegacy.log"
+        },
+        {
+          "name": "native-G5UR2BExactParity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+            "Parity"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.12605087499832734,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactParity.log"
+        },
+        {
+          "name": "native-G5UR2BExactBodySharing",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+            "BodySharing"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.1330591250443831,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactBodySharing.log"
+        },
+        {
+          "name": "native-G5UR2BExactLocality",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+            "Locality"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.13273445900995284,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactLocality.log"
+        },
+        {
+          "name": "native-G5UR2BExactInvalidation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+            "Invalidation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020777124969754368,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactInvalidation.log"
+        },
+        {
+          "name": "native-G5UR2BExactPressure",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+            "Pressure"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020332333049736917,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactPressure.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryPlanReuse",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--reuse"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.5659804589813575,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryPlanReuse.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryInvalidation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--invalidation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.726150874979794,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryInvalidation.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryExactParity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--exact"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.5662756250239909,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryExactParity.log"
+        },
+        {
+          "name": "native-G5UR2CLeaseAccounting",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--lease"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.020586959028150886,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CLeaseAccounting.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryProgress",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--progress"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 1.8075877919909544,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryProgress.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryAdmission",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--admission"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04131674999371171,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryAdmission.log"
+        },
+        {
+          "name": "native-G5UR2CHistoryProgressSafety",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+            "--progress-safety"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.07496725005330518,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CHistoryProgressSafety.log"
+        },
+        {
+          "name": "native-FC00XBrushBatchEvaluation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "batch"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010985500004608184,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XBrushBatchEvaluation.log"
+        },
+        {
+          "name": "native-FC00XBrushBatchSemantics",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "semantics"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.02017579198582098,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XBrushBatchSemantics.log"
+        },
+        {
+          "name": "native-FC00XCanonicalBusyPreviewProgress",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "canonical-busy"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010396874975413084,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XCanonicalBusyPreviewProgress.log"
+        },
+        {
+          "name": "native-FC00XPreviewBusyCanonicalProgress",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "preview-busy"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010126916982699186,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XPreviewBusyCanonicalProgress.log"
+        },
+        {
+          "name": "native-FC00XBusyCanonicalPendingFeedback",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "pending-feedback"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010245875047985464,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XBusyCanonicalPendingFeedback.log"
+        },
+        {
+          "name": "native-FC00XFatalProviderFailure",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "fatal"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010282790986821055,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XFatalProviderFailure.log"
+        },
+        {
+          "name": "native-SDKPublicResources",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_resources_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010190124972723424,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicResources.log"
+        },
+        {
+          "name": "native-SDKPublicDocumentIdentity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_document_identity_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010716166987549514,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicDocumentIdentity.log"
+        },
+        {
+          "name": "native-SDKPublicDocumentOperations",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_document_operations_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.0203720839926973,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicDocumentOperations.log"
+        },
+        {
+          "name": "native-SDKPublicDocumentSnapshot",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_document_snapshot_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020506625005509704,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicDocumentSnapshot.log"
+        },
+        {
+          "name": "native-SDKPublicOperationIdentity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_operation_identity_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020752500044181943,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicOperationIdentity.log"
+        },
+        {
+          "name": "native-SDKPublicDocumentBackground",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_document_background_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010404083004686981,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicDocumentBackground.log"
+        },
+        {
+          "name": "native-SDKPublicSelectionInput",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_sdk_public_selection_input_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.01016937498934567,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKPublicSelectionInput.log"
+        },
+        {
+          "name": "native-FC00XLiveBrushPreview",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_fc00x_runtime_composition_tests",
+            "live-brush-preview"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010366083006374538,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC00XLiveBrushPreview.log"
+        },
+        {
+          "name": "native-SDKNativeNavigationPreview",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_fc00x_runtime_composition_tests",
+            "native-navigation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.010276582965161651,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-SDKNativeNavigationPreview.log"
+        },
+        {
+          "name": "native-G5Navigation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_navigation_presentation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.7826869169948623,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5Navigation.log"
+        },
+        {
+          "name": "native-G5UR2AReadmissionAcquire",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "acquire"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.019249958044383675,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AReadmissionAcquire.log"
+        },
+        {
+          "name": "native-G5UR2AReadmissionPresent",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "present"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020183290995191783,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AReadmissionPresent.log"
+        },
+        {
+          "name": "native-G5UR2ANavigation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "navigation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020792583003640175,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ANavigation.log"
+        },
+        {
+          "name": "native-G5UR2AHandoff",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "handoff"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.02022729197051376,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AHandoff.log"
+        },
+        {
+          "name": "native-G5UR2ASceneRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "scene"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020298957999330014,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ASceneRecovery.log"
+        },
+        {
+          "name": "native-G5UR2AHistory",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "history"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.019156583992298692,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2AHistory.log"
+        },
+        {
+          "name": "native-G5UR2ALifecycle",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "lifecycle"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.02013441699091345,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ALifecycle.log"
+        },
+        {
+          "name": "native-G5UR2ANavigationSafety",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "navigation-safety"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.13233641599072143,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ANavigationSafety.log"
+        },
+        {
+          "name": "native-G5UR2ABrushVisibility",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+            "brush"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.022033957997336984,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2ABrushVisibility.log"
+        },
+        {
+          "name": "native-G5UR2BExactInputRuntime",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2b_exact_runtime_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.018905083008576185,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2BExactInputRuntime.log"
+        },
+        {
+          "name": "native-G5UR2CContinuousInput",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_ur2c_mask_pipeline_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.020779707992915064,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-G5UR2CContinuousInput.log"
+        },
+        {
+          "name": "native-FC04MSEHistoryFaultUndo",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/fc04_mse/axiom_fc04_mse_fault_probe",
+            "undo"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/../../verification/fc04_mse",
+          "returncode": 0,
+          "elapsed_s": 0.020111749996431172,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC04MSEHistoryFaultUndo.log"
+        },
+        {
+          "name": "native-FC04MSEHistoryFaultRedo",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/fc04_mse/axiom_fc04_mse_fault_probe",
+            "redo"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/../../verification/fc04_mse",
+          "returncode": 0,
+          "elapsed_s": 0.020578249997925013,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC04MSEHistoryFaultRedo.log"
+        },
+        {
+          "name": "native-FC01HostPublicationTruth",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification/axiom_fc01_host_publication_truth_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification",
+          "returncode": 0,
+          "elapsed_s": 0.04048654198413715,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC01HostPublicationTruth.log"
+        },
+        {
+          "name": "native-FC01InsertHistory",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification/axiom_fc01_selected_actions_tests",
+            "creation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification",
+          "returncode": 0,
+          "elapsed_s": 0.021001291985157877,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-FC01InsertHistory.log"
+        },
+        {
+          "name": "native-F08FrameQualification",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification/axiom_f08_frame_qualification_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/verification/runtime_qualification",
+          "returncode": 0,
+          "elapsed_s": 0.010412209026981145,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/native-F08FrameQualification.log"
+        }
+      ],
+      "passed": 116,
+      "failed": 1,
+      "registered": 117,
+      "RED_probe": {
+        "name": "production-caller-causal-RED",
+        "replays": [
+          {
+            "name": "progress-RED---progress-probe",
+            "command": [
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/progress-red",
+              "--progress-probe"
+            ],
+            "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+            "returncode": 0,
+            "elapsed_s": 0.17868458398152143,
+            "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/progress-RED---progress-probe.log"
+          },
+          {
+            "name": "progress-RED---progress",
+            "command": [
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/progress-red",
+              "--progress"
+            ],
+            "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+            "returncode": -6,
+            "elapsed_s": 0.24085283401655033,
+            "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/progress-RED---progress.log"
+          }
+        ]
+      },
+      "targeted_GTest": {
+        "name": "targeted-GTest",
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/composition/axiom_fc02_text_tests",
+          "--gtest_filter=PartialEraseLive.*:ObjectClipboard.PublicationBackpressureRejectsDuplicateAndCutAtomically:ObjectClipboard.MaskedInkKeepsAppearanceButAllocatesFreshMaskIdentity"
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+        "returncode": 0,
+        "elapsed_s": 0.040811499988194555,
+        "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/targeted-GTest.log"
+      },
+      "independent_CPU_batch": [
+        {
+          "name": "old-CPU-corpus",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/corpus/requests.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/old-corpus-results.json"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+          "returncode": 0,
+          "elapsed_s": 0.4525406659813598,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/old-CPU-corpus.log"
+        },
+        {
+          "name": "candidate-corpus",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2b_exact_candidate",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/corpus/requests.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/candidate-corpus-results.json"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+          "returncode": 0,
+          "elapsed_s": 0.240715708991047,
+          "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/candidate-corpus.log"
+        }
+      ],
+      "batch_decisions": 634
+    },
+    {
+      "name": "node-tests",
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_render_execution.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+        "verification/tests/g5_prepared_body_index.test.mjs",
+        "verification/tests/g5_transient_reference.test.mjs",
+        "verification/tests/g5_transient_attribution.test.mjs",
+        "verification/tests/g5_canonical_prepared_body.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+        "verification/tests/g5_resource_recovery.test.mjs",
+        "verification/sdk_controller/controller_test.mjs",
+        "verification/sdk_controller/transport_test.mjs",
+        "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+        "verification/tests/g5_ur2a_handoff.test.mjs",
+        "verification/tests/g5_ur2b_exact_query.test.mjs",
+        "verification/tests/g5_ur2c_mask_history.test.mjs"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.2937514170189388,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/node-tests.log"
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+        "verification/tests/test_g5_transient_reference.py",
+        "verification/tests/test_g5_prepared_body_index_reverify.py",
+        "verification/tests/test_g5_render_execution.py",
+        "verification/tests/test_g5_transient_attribution.py",
+        "verification/tests/test_g5_canonical_prepared_body.py",
+        "verification/tests/test_g5_prepared_body_index.py",
+        "verification/tests/test_g5_resource_recovery.py",
+        "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+        "verification/tests/test_g5_ur2a_handoff.py",
+        "verification/tests/test_g5_ur2b_exact_query.py",
+        "verification/tests/test_g5_ur2c_mask_history.py"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.40366658399580047,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/python-tests.log"
+    },
+    {
+      "name": "boundary-tests",
+      "command": [
+        "python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.1326157500152476,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/boundary-tests.log"
+    }
+  ],
+  "binary_hashes_unchanged": true,
+  "new_builds": 0,
+  "new_browser_starts": 0,
+  "pixel_oracle_invocations": 0,
+  "exact_oracle_batch_replays": 2
+}

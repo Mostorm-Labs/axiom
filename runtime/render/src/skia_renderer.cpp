@@ -370,6 +370,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+        eraseQueries_->setRetentionPool(sourceRetention_);renderCache_->maskHistory=eraseQueries_;
         renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
@@ -752,12 +754,12 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
     if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
     if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
     const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
-    return eraseQueries_->query(record,geometry,resourceBudget_,capacity);
+    return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
 }
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);
     if(preparedGeometry_){const auto s=preparedGeometry_->statistics();result.preparedBodyBuilds=s.builds;result.preparedBodyHits=s.hits;
@@ -767,6 +769,7 @@ RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=render
         result.preparedJobAdmissions=s.jobAdmissions;result.preparedAdvances=s.advances;result.preparedSupportKnots=s.supportKnots;
         result.preparedDistanceInputs=s.distanceInputs;result.preparedCompileInputs=s.compileInputs;result.preparedPathPrimitives=s.pathPrimitives;result.preparedMaxAdvanceKnots=s.maxAdvanceKnots;
         result.preparedAliases=s.aliases;result.preparedIndexReservationBytes=s.indexReservationBytes;result.preparedSourceFootprintEvaluations=s.sourceFootprintEvaluations;}
+    if(eraseQueries_){result.maskHistory=eraseQueries_->work().history;const auto s=eraseQueries_->work().exact;result.exactFullValidations=s.fullValidations;result.exactValidationKnots=s.validationKnots;result.exactCompileCalls=s.compileCalls;result.exactCompileInputs=s.compileInputs;result.exactConstructedComponents=s.constructedComponents;result.exactBodyUses=s.bodyUses;}
     return result;}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
@@ -837,6 +840,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+        eraseQueries_->setRetentionPool(sourceRetention_);renderCache_->maskHistory=eraseQueries_;
         renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,

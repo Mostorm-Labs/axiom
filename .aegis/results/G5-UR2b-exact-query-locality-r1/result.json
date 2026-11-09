@@ -1,0 +1,408 @@
+{
+  "schema": "g5-ur2b-execution-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "blocking_class": null,
+  "package": {
+    "path": ".aegis/packages/G5-UR2b-exact-query-locality-r1/package.json",
+    "sha256": "ee8672721bd2e16ec9395c3255d8b31a309682d7a2351f9fb6deff0cabb954fd",
+    "bytes": 2687
+  },
+  "result_revision": {
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "source_tree_sha256": "17ffbd0ae6742890f84e986e69ce43c5c4d86081c7fde80607a1d3db3f657f37",
+    "dirty_delta": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/source-delta.json",
+      "sha256": "fab3e245644df149252ed6a0252f13f16ff5fb33e06c0fbb0f71c336f9398e9e",
+      "bytes": 5684
+    }
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/manifest.json",
+    "sha256": "c62a4827e5195991a408022b15639171d7e244368364b385e805b988e33aa155",
+    "bytes": 5338
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1",
+    "archives": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/source.tar.gz",
+          "sha256": "be4659bf1960c441eb9daf78e7866b8cfb25f80420f22697580b9ba8edbbbcde",
+          "bytes": 2746287
+        },
+        "members": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/source-members.json",
+          "sha256": "e7bf858b59706989758749d6ee9aadae0a582c6b331d62b6bb6c9e5853f39327",
+          "bytes": 19507
+        },
+        "files": 51
+      },
+      "native": {
+        "archive": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/native-oracle.tar.gz",
+          "sha256": "eca9b8e2c16e66b3d79a631f9902b30480809b3139fcb41c27b11d9736f1b4f1",
+          "bytes": 408215391
+        },
+        "members": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/native-oracle-members.json",
+          "sha256": "603e9f2a070f6f665acd1f43d596794ccdb95d7993b4f9b8aa9343ca75ded1fc",
+          "bytes": 57569
+        },
+        "files": 164
+      },
+      "SDK": {
+        "archive": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/matched-SDK.tar.gz",
+          "sha256": "ad68736e4c0a75cea5cece14598d5462824152f3e4255418be548165e6cbec54",
+          "bytes": 37962206
+        },
+        "members": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/matched-SDK-members.json",
+          "sha256": "58cf5bec4749c7e9081bf89603a08a7bc82d4a1d818cc2d336ae4183da49950c",
+          "bytes": 25078
+        },
+        "files": 72
+      },
+      "web_raw": {
+        "archive": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/web-raw.tar.gz",
+          "sha256": "e933ae4175ae9870aeb295ee80c07869fdeedf201ca1fee31efdaf6985fd7271",
+          "bytes": 178150272
+        },
+        "members": {
+          "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/web-raw-members.json",
+          "sha256": "3d987dc615cb3833a58b1f5d9033adc54d3afa82e917199c33d84ccf203dab50",
+          "bytes": 284585
+        },
+        "files": 726
+      }
+    }
+  },
+  "findings": [],
+  "classification": "STRUCTURAL_GAIN_TIMING_IMPROVEMENT_OBSERVED",
+  "verification_refs": {
+    "structural": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/structural-gain.json",
+      "sha256": "82c9b6d3c9c6248b6d9b4d28e57445e7becf146bf2f66ad138c21cbaa621382c",
+      "bytes": 2569
+    },
+    "web": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/web-findings.json",
+      "sha256": "2e3736655816919b30c86b931b61db98f75c2b1a7c403f3d5ec16a3093fd9b1a",
+      "bytes": 160406
+    },
+    "native91": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/native-final-tests.log",
+      "sha256": "2569a95302ca99e9a3b431d8d9b3402c21fdd8ce584f90c87021b2ea7fe8a08d",
+      "bytes": 10721
+    },
+    "targeted4": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/native-targeted-GTest.log",
+      "sha256": "84f829e9beb82af71035b484570470b0d5974da1046b662be13770a778ff72bc",
+      "bytes": 47797
+    },
+    "Node": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/node-tests.log",
+      "sha256": "ec7db7a5d8ad701ab12a928530deb5208d1908f6fea6c73b82ca7b7945447944",
+      "bytes": 13896
+    },
+    "Python": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/python-tests.log",
+      "sha256": "aec0217d87c5f8d3c782b99720f5072fd2e6341aeda52836c21280c47b4ba69d",
+      "bytes": 6598
+    },
+    "boundaries": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/boundary-tests.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "ledger": {
+    "schema": "g5-ur2b-eight-closed-windows-v1",
+    "planned_ids": [
+      "UR2B1-FQ1",
+      "UR2B1-FN1",
+      "UR2B1-A1",
+      "UR2B1-B1",
+      "UR2B1-B2",
+      "UR2B1-A2",
+      "UR2B1-A3",
+      "UR2B1-B3"
+    ],
+    "historical_starts": 64,
+    "historical_charged_seconds": 3118,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2B1-FQ1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 219,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/qualification-sdk",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-FQ1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 218.4110732920235,
+          "peak_process_family_rss_kib": 2565840,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-FN1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 208,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-FN1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 207.92837412498193,
+          "peak_process_family_rss_kib": 1875328,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-A1",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 40,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-mask-isolation-p36-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-A1"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 39.58145629201317,
+          "peak_process_family_rss_kib": 1587584,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-B1",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 40,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-B1"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 39.159672749985475,
+          "peak_process_family_rss_kib": 1593056,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-B2",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 39,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-B2"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 38.2091468340368,
+          "peak_process_family_rss_kib": 1591856,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-A2",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 40,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-mask-isolation-p36-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-A2"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 39.3608741670032,
+          "peak_process_family_rss_kib": 1594656,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-A3",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 40,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-mask-isolation-p36-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-A3"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 39.52329554100288,
+          "peak_process_family_rss_kib": 1584736,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      },
+      {
+        "id": "UR2B1-B3",
+        "status": "COMPLETED",
+        "reserved_seconds": 180,
+        "charged_seconds": 40,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2b_exact_query.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2b-exact-query-locality-r1/local-web/UR2B1-B3"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 39.62217108398909,
+          "peak_process_family_rss_kib": 1603136,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 180,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      }
+    ],
+    "remaining_status": "NONE",
+    "cumulative_starts": 72,
+    "cumulative_charged_seconds": 3784
+  },
+  "new_normal_Demo": {
+    "url": "http://127.0.0.1:4292/example.html",
+    "port": 4292,
+    "pid": 9739,
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js",
+    "profile": "NORMAL_CONSUMER_DIAGNOSTICS_OFF",
+    "matching_SDK_manifest_sha256": "ccbc2768238d210f721fdcc2a3ab7ac4010c53356ac4c94b9773a660c2a6a9ea",
+    "old_Demos_untouched": true,
+    "intentionally_running_for_user": true
+  },
+  "remaining_scope": [
+    "UR2c mask/history PathOps and mask-only Scene/source publication/copy costs are unchanged.",
+    "Cold/not-ready/denied queries retain controlled original exact CPU fallback. Checkpoint replay costs are explicit.",
+    "Timing findings do not establish a 33ms SLO, Vibe parity, pure GPU execution or an overall G5/P34 PASS."
+  ],
+  "commit_push_performed": false,
+  "index_empty": true,
+  "official_G5_P34_performance_PASS": false
+}

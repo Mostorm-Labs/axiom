@@ -1,0 +1,203 @@
+{
+  "schema": "g5-ur2b-scoped-authority-v1",
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_authorization": "接下来是ur2b吗，先提交推送后再开始ur2b吧",
+  "repository": "Mostorm-Labs/axiom",
+  "published_baseline": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "publication": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/control-publication-receipt.json",
+    "sha256": "b6fbc7a717e9448863adc8f3ca165e9b5446d391e0e6b3a6bd452c94730a4d4b"
+  },
+  "accepted_control": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/result.json",
+    "sha256": "02553275c0353e9f80389f7a25f0c9fc762ca512e5fa7cd5011c72aeb13bfd72"
+  },
+  "authority_sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "scoped_design_inputs": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b"
+    }
+  ],
+  "frozen_statements": [
+    "Architecture/Semantic/SDK remain currentauthority; R3 is design input, not replacement semantic authority. User authorizes this narrow exact-locality implementation after publishedUR2a.",
+    "Older UR1-resume document descriptions of shelvedUR2 are historical, not a claim new acceptedUR2a is unfinished; accepted02553275 control and publication establish this baseline.",
+    "Keep exactly-once OperationEngine/History/Scene/currentScene navigation/frozen-roster/receipt owners accepted inUR2a. Exactquery stays synchronous onownerthread; no newadmission semantics orworkers.",
+    "UR2b reuses existing immutable preparedbody, charges index/query leases, queries exact localribbons/caps/checkpoints and preserves independent CPU reference. No pixel/LOD/AABB-only positive hit.",
+    "Incremental active/historical mask algebra,mask-only Scene/source publication/semantic copying andpreviewGPU rollout are successor slices, explicitlynot this package."
+  ],
+  "source_baseline": [
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "2945d975d44ebc5f0ccd223cef72e45e4d93c5c2b71d343e07069ae3905d6416"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "sha256": "88a73920ec2e761dbf8ec168689afbd9060623006e5d07cb7ee6d0a078659d4e"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "593fe4920ecbf0ade95e6efabd1bcb6555d1eb836c992e9b66b2048227fea7fb"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "27bd94fa57321d3c5fecb22411e1517d370034f08ab2c1347ab2ee6b68893f57"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.hpp",
+      "sha256": "11f7ee7e88708cd7d2e33c21f76d1150c959bb69d34c6c654e052f1b8d2f94ca"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "sha256": "f1c89dedd3d9c800e383a5e56243383c18d82e1019377968b7c8199188530e00"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "sha256": "61b1226040b0e79f2daffb9d35672dd9845eaaf16635766bdbf19421802dbc55"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "233094bff2041453f58f8da02b38cd5e914cadc4c9b03c2fe129b573381db327"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "5f80684daefe58a142456372130b978904e00ea75255578808e6794057483b7c"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "sha256": "7577e29bf1a5f3ba889396028acc9f36c429e2e615affda6566cc988b5b0e624"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "65074c07f786b2434b07d293df221c0b388c7aaf44a8c014cd6eb7b64938815c"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_partial_erase.cpp",
+      "sha256": "5ec2c05a48bcb1a8f9433ca7a8b0a85802b0577a179a39bb9f844db8cb60cc4b"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "e8024b2183b6caaa33a3640f87b305233e96f6d5b80800c84c878a453fecfdca"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "2abb87f77eeb20cd14ba11e7600da63700e8be13356053c1475f540be761d78c"
+    },
+    {
+      "path": "runtime/render/tests/erase_hit_test.cpp",
+      "sha256": "73b10ced0b0fdeb7e21ae56fbd44bdd48e5fa9746a794ee2bcb8a5b1d43c27a1"
+    },
+    {
+      "path": "runtime/render/tests/prepared_geometry_test.cpp",
+      "sha256": "936ca249d6729001af7abacbb4cbdaa546a88965bce04f6e636acca915706f3d"
+    }
+  ],
+  "readonly_owner_baseline": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "d457e64bd9e68b5051e20664f901fa07b10a28fbf13c24febf2825408a6b45f0"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "ad3d74905171f4a9e6d17a0511d9f1e72d4c2006a9879072c35ccee79c5cc8cd"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "5043208f5659c70cb5da2007e535e57b6f2b49f43d1da4c4d313888aeee6853d"
+    },
+    {
+      "path": "runtime/render/src/render_execution.cpp",
+      "sha256": "db9ad78813397347f1031daafef71bebc86e5320aeb3f8314b31275a36ef69fe"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "367ef141f6e7069ba9b3e4c705124c5e8f79636d8c2923d2fad6696c5612a8c1"
+    },
+    {
+      "path": "runtime/render/src/runtime_frame_coordinator.cpp",
+      "sha256": "f1798283adabb2fdcdf2ee6915862af1cf3634b10c99bf46c4032b9ed963b577"
+    },
+    {
+      "path": "verification/runners/g5/ur0/fixture_oracle.cpp",
+      "sha256": "076e69f47006082abad806c4838e874b3b26ad805ab250e1fad7db616d654722"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff.mjs",
+      "sha256": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff_contract.mjs",
+      "sha256": "9a3e653ef6480bc9c722349fc6e25d9dae86783e65a292ad9b4a69255bf060b6"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_cold_capture.mjs",
+      "sha256": "6d250ec51cb77fde9f8f41edcab69219ff811139572141ec2d63c38a3d778887"
+    },
+    {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "precedence": "Semantic/SDK contracts > scoped userauthorization+this package > draft/history; real conflict is blocker, no silent redesign."
+}

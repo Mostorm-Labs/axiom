@@ -8,7 +8,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <algorithm>
 
 namespace canvas::render::internal {
-void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();bytes_=0;}
+void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
 void SkiaInkLayers::eraseSource(foundation::ObjectId id){
     for(auto it=tiles_.begin();it!=tiles_.end();)if(it->first.id==id){bytes_-=it->second.bytes;it=tiles_.erase(it);}else ++it;
     sources_.erase(id);
@@ -37,7 +37,7 @@ void SkiaInkLayers::drawMask(SkCanvas& c,const MaskPrimitive& primitive){
 bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry& entry,
     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready){
+    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories){
     if(prepared)geometry_=std::move(prepared);
     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
@@ -63,22 +63,45 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         found=sources_.emplace(id,std::move(source)).first;
     }
     auto& source=found->second;
-    std::size_t count=0;for(const auto list:{std::span(entry.record.eraseMasks),std::span(entry.presentationEraseMasks)})
-        for(const auto& m:list)count+=std::holds_alternative<semantic::SweptCircleMask>(m.geometry)?std::get<semantic::SweptCircleMask>(m.geometry).segments.size():1;
-    // Admit the replacement metadata before copying any history; old source
-    // metadata remains charged until the exact prefix proof commits.
-    std::size_t metadataBytes=sizeof(Source)+256+count*sizeof(MaskPrimitive)+sourceMetadataBytes(entry);
+    if(histories)histories_=std::move(histories);
+    if(!histories_)histories_=std::make_shared<EraseMaskPathCache>();
+    histories_->setRetentionPool(pool);const auto beforeHistory=histories_->work().history;
+    MaskHistoryAdmission admission=MaskHistoryAdmission::kReady;
+    const auto history=histories_->history(entry.record.eraseMasks,budget,
+        std::min(limits.maxEntryBytes,limits.maxBytes/4),source.history,&admission);
+    const auto afterHistory=histories_->work().history;
+    work.historyFlattenedPrimitives+=afterHistory.flattenedPrimitives-beforeHistory.flattenedPrimitives;
+    work.historyCopiedBytes+=afterHistory.copiedBytes-beforeHistory.copiedBytes;
+    work.historyComparedPrimitives+=afterHistory.valuePrimitives-beforeHistory.valuePrimitives;
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_history,false,1,g5::word(id,0),g5::word(id,1),
+        reinterpret_cast<std::uintptr_t>(entry.record.eraseMasks.storage().get()),history?history->identity:0,
+        afterHistory.identityHits-beforeHistory.identityHits,afterHistory.valueRecords-beforeHistory.valueRecords,
+        afterHistory.valuePrimitives-beforeHistory.valuePrimitives,afterHistory.flattenedPrimitives-beforeHistory.flattenedPrimitives,
+        afterHistory.copiedBytes-beforeHistory.copiedBytes,afterHistory.primitiveBuilds-beforeHistory.primitiveBuilds,
+        afterHistory.prefixReuses-beforeHistory.prefixReuses,afterHistory.denied-beforeHistory.denied);
+    if(!entry.record.eraseMasks.empty()&&!history)
+        return admission==MaskHistoryAdmission::kResourcePending?pending():false;
+    // Only the replaceable live tail is unshared per-frame metadata. Historical
+    // source/path leases are held once by the renderer-owned history plan.
+    std::size_t count=0;for(const auto& m:entry.presentationEraseMasks)
+        count+=std::holds_alternative<semantic::SweptCircleMask>(m.geometry)?std::get<semantic::SweptCircleMask>(m.geometry).segments.size():1;
+    const auto metadataBytes=sizeof(Source)+256+count*sizeof(MaskPrimitive)+sourceMetadataBytes(entry);
     if(metadataBytes>limits.maxEntryBytes)return false;
     auto metadata=budget->reserve(resources::ResourceClass::kRecorded,metadataBytes,true);if(!metadata)return pending();
     resources::ResourceLease metadataLease(budget,*metadata);
     std::vector<MaskPrimitive> masks;masks.reserve(count);
-    for(const auto list:{std::span(entry.record.eraseMasks),std::span(entry.presentationEraseMasks)})for(const auto& m:list){
+    for(const auto& m:entry.presentationEraseMasks){
         if(const auto* s=std::get_if<semantic::SweptCircleMask>(&m.geometry))for(const auto& segment:s->segments)masks.emplace_back(segment);
         else masks.emplace_back(std::get<semantic::FilledPathMask>(m.geometry));
     }
-    if(source.masks.size()>masks.size()||!std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
-    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask,false,1,source.masks.size(),masks.size(),source.epoch);
-    source.masks=std::move(masks);source.metadata=std::move(metadataLease);
+    const bool sameHistory=source.history==history;
+    const bool historyPrefix=!source.history||(history&&history->prefixIdentity==source.history->identity&&
+        history->prefixPrimitives>=source.history->primitives.size());
+    if((!sameHistory&&(!historyPrefix||!source.masks.empty()))||source.masks.size()>masks.size()||
+        !std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
+    source.history=history;source.masks=std::move(masks);source.metadata=std::move(metadataLease);
+    const auto historical=history?history->primitives.size():0;
+    const auto maskCount=historical+source.masks.size();
     auto demand=destination.getDeviceClipBounds();if(!demand.intersect(viewport))return true;
     const CompactDeviceGrid grid=originalGrid?*originalGrid:CompactDeviceGrid{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
     const auto& stroke=compact->content.get().stroke;
@@ -105,7 +128,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;++work.bodyTileBuilds;
         }else ++work.bodyTileHits;
         auto& t=tile->second;t.used=++tick_;
-        if(!t.result.pixels||t.epoch!=source.epoch||t.applied!=source.masks.size()){
+        if(!t.result.pixels||t.epoch!=source.epoch||t.applied!=maskCount){
             const bool prefix=t.result.pixels&&t.epoch==source.epoch;
             const auto first=prefix?t.applied:0;auto base=prefix?t.result.pixels:t.body.pixels;
             // Clear-stroke AA gets a guard around the interior tile. Only the
@@ -119,20 +142,27 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
             SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);canvas->drawImage(base,prefix?0:guard,prefix?0:guard,SkSamplingOptions{},&copy);
             canvas->translate(float(guard-x),float(guard-y));canvas->clipIRect(viewport);canvas->concat(matrix);
-            for(auto i=first;i<source.masks.size();++i){
-                // Convex-hull plus maximum radius is conservative for the
-                // shared cubic clear evaluator, including caps/AA/affines.
-                if(const auto* s=std::get_if<semantic::EraseCubicSegment>(&source.masks[i])){
+            for(auto i=first;i<maskCount;++i){
+                if(i<historical){
+                    const auto& primitive=*history->primitives[i];
+                    if(primitive.swept){auto bounds=matrix.mapRect(primitive.bounds);bounds.outset(3,3);
+                        if(bounds.isFinite()&&!SkRect::Intersects(bounds,SkRect::Make(crop)))continue;}
+                    primitive.draw(*canvas);++work.maskPrimitiveDraws;continue;
+                }
+                const auto& active=source.masks[i-historical];
+                // Keep the same conservative hull and sequential clear for
+                // the replaceable active tail, without touching history.
+                if(const auto* s=std::get_if<semantic::EraseCubicSegment>(&active)){
                     auto bounds=SkRect::MakeLTRB(float(std::min({s->p0.position.x,s->p1.position.x,s->control1.x,s->control2.x})),float(std::min({s->p0.position.y,s->p1.position.y,s->control1.y,s->control2.y})),float(std::max({s->p0.position.x,s->p1.position.x,s->control1.x,s->control2.x})),float(std::max({s->p0.position.y,s->p1.position.y,s->control1.y,s->control2.y})));
                     bounds.outset(float(std::max(s->p0.radius,s->p1.radius)),float(std::max(s->p0.radius,s->p1.radius)));
                     bounds=matrix.mapRect(bounds);bounds.outset(3,3);
                     if(bounds.isFinite()&&!SkRect::Intersects(bounds,SkRect::Make(crop)))continue;
                 }
-                drawMask(*canvas,source.masks[i]);++work.maskPrimitiveDraws;
+                drawMask(*canvas,active);++work.maskPrimitiveDraws;
             }
             Image result{target->makeImageSnapshot(),std::move(lease)};if(!result.pixels)return pending();
             if(!t.result.pixels){t.bytes+=resultBytes;bytes_+=resultBytes;}
-            t.result=std::move(result);t.epoch=source.epoch;t.applied=source.masks.size();++work.maskTileUpdates;if(!prefix)++work.maskTileResets;
+            t.result=std::move(result);t.epoch=source.epoch;t.applied=maskCount;++work.maskTileUpdates;if(!prefix)++work.maskTileResets;
         }
         (void)t.result.lease.markGpuUse();SkPaint opacity;opacity.setAlphaf(std::clamp(entry.presentationOpacity,0.F,1.F));
         painted=true;destination.save();destination.resetMatrix();destination.clipIRect(crop);destination.drawImage(t.result.pixels,float(x-maskGuard),float(y-maskGuard),SkSamplingOptions{},&opacity);destination.restore();

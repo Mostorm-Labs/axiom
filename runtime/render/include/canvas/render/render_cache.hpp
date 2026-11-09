@@ -43,7 +43,19 @@ struct RenderPreparationBudget final {
     // Retain a finite safety ceiling; callers may still request one-step work.
     std::size_t maxCoverageSteps=4096;
 };
+struct MaskHistoryWork final {
+    std::uint64_t identityHits=0,admissions=0,valueRecords=0,valuePrimitives=0,flattenedPrimitives=0,copiedBytes=0;
+    std::uint64_t primitiveBuilds=0,prefixReuses=0,resets=0,denied=0,exactPathHits=0,exactPathLookups=0;
+    std::uint64_t historicalDifferences=0,componentIntersections=0,newQueryBuilds=0;
+    std::uint64_t queryUnionOps=0,historyUnionOps=0,queryPathBuilds=0,historyPathBuilds=0;
+    std::uint64_t queryPathNanoseconds=0,historyPathNanoseconds=0,differenceNanoseconds=0,intersectionNanoseconds=0;
+    std::size_t retainedBytes=0;
+};
 struct RenderCacheWork final {
+    MaskHistoryWork maskHistory;
+    std::uint64_t historyFlattenedPrimitives=0,historyCopiedBytes=0,historyComparedPrimitives=0;
+    // Private exact-query cost counters; no new options or consumer surface.
+    std::uint64_t exactFullValidations=0,exactValidationKnots=0,exactCompileCalls=0,exactCompileInputs=0,exactConstructedComponents=0,exactBodyUses=0;
     std::uint64_t preparedCanonicalDraws=0,preparedDirectDraws=0,preparedCanonicalQueries=0,preparedDirectQueries=0;
     std::uint64_t preparedJobAdmissions=0,preparedAdvances=0,preparedSupportKnots=0,preparedDistanceInputs=0,preparedCompileInputs=0,preparedPathPrimitives=0,preparedMaxAdvanceKnots=0;
     std::uint64_t bodySupportKnots=0,bodyLengthInputs=0,bodyCompileInputs=0,bodyReplayInputs=0;

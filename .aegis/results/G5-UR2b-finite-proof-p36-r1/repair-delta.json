@@ -1,0 +1,57 @@
+{
+  "parent_source_tree_sha256": "17ffbd0ae6742890f84e986e69ce43c5c4d86081c7fde80607a1d3db3f657f37",
+  "final_source_tree_sha256": "f62ee66fc786a9eb4fd5201132effab0b30c41d41e39e691deaddac46488403c",
+  "files": [
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "before": {
+        "sha256": "6c9dc6ff0f5c26e3d1e15783ef3ac9a0ef294750b34b8d5a7b1ec4e930aa3197",
+        "executable": false
+      },
+      "after": {
+        "sha256": "c5e40a65018c45c9bd247e31bc1bb1715ea4794182622bcbc0dd21c0c537a701",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "before": {
+        "sha256": "91df90b895f77c82224873bb517e56f70b822f668c7f47b2ca4b30b1670bf684",
+        "executable": false
+      },
+      "after": {
+        "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "before": {
+        "sha256": "685b93abf37b1ca49a14d990527ba40b5d32b1944dfa7c1f4ac4e85e3fae9a2f",
+        "executable": false
+      },
+      "after": {
+        "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/tests/ur2b_exact_query_test.cpp",
+      "before": {
+        "sha256": "b8e0980b5b71e28f22717f1e6b9cb14591312d6c615fa6a8847e77c8b5de93c3",
+        "executable": false
+      },
+      "after": {
+        "sha256": "427bab6065ecea3e842c362535749fb2d48b65f48784d26ec0251ea3e9c8c4cb",
+        "executable": false
+      }
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/repair.patch",
+    "sha256": "52a05e1309059db4aa5efdaf758bfcca0b1700a1418877e285bbf6b6da3aaa7e",
+    "bytes": 11696
+  },
+  "patch_roundtrip": "EXACT_BYTES",
+  "outside_scope": []
+}

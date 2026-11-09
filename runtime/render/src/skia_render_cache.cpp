@@ -16,6 +16,22 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <chrono>
 
 namespace canvas::render::internal {
+void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+    if(maskHistory&&!entry.record.eraseMasks.empty()){
+        [[maybe_unused]]const auto before=maskHistory->work().history;
+        auto plan=maskHistory->history(entry.record.eraseMasks,budget,std::min(options.maxEntryBytes,options.maxBytes/4));
+        [[maybe_unused]]const auto after=maskHistory->work().history;
+        G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_history,false,3,g5::word(entry.record.objectId,0),g5::word(entry.record.objectId,1),
+            reinterpret_cast<std::uintptr_t>(entry.record.eraseMasks.storage().get()),plan?plan->identity:0,
+            after.identityHits-before.identityHits,after.valueRecords-before.valueRecords,after.valuePrimitives-before.valuePrimitives,
+            after.flattenedPrimitives-before.flattenedPrimitives,after.copiedBytes-before.copiedBytes,
+            after.primitiveBuilds-before.primitiveBuilds,after.prefixReuses-before.prefixReuses,after.denied-before.denied);
+        if(plan){for(const auto& primitive:plan->primitives)primitive->draw(canvas);return;}
+    }
+    // Optional preparation denial preserves the original sequential Skia mask
+    // evaluator and target. This is not a CPU coverage or whole-frame fallback.
+    drawEraseMasksToSkCanvas(canvas,entry);
+}
 bool SkiaRenderCache::canRetainCompact(const SkCanvas& canvas,const ReferenceTraversalEntry& entry) const noexcept {
     // GPU v4 SrcOver material can be retained after an object affine. Keep
     // CPU Direct's exact quantization and permanent destination-clear masks.
@@ -28,7 +44,7 @@ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
 }
-void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -407,7 +423,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas
             if(!complete&&allowance.exhausted())return yield();
         }while(!complete);
         configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
-        drawEraseMasksToSkCanvas(*target,entry);drawPresentationEraseMasksToSkCanvas(*target,entry);target->restore();
+        drawHistoricalMasks(*target,entry);drawPresentationEraseMasksToSkCanvas(*target,entry);target->restore();
         if(isolated){
             SkPaint paint;paint.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
             composite_->getCanvas()->drawImage(scratch_->makeImageSnapshot(),0,0,SkSamplingOptions{},&paint);
@@ -606,7 +622,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         // entries clear the ordered composite, preserving existing semantics.
         if(!entry.record.eraseMasks.empty()){
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
-            drawEraseMasksToSkCanvas(*target,entry);target->restore();
+            drawHistoricalMasks(*target,entry);target->restore();
         }
         const auto crop=pending_->crop;pending_.reset();
         if(directComposite){++work.rasterizedGroups;++built;continue;}
@@ -681,7 +697,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         else {SkMatrix scale=SkMatrix::Scale(float(m.physicalWidth)/m.logicalWidth,float(m.physicalHeight)/m.logicalHeight);
             scale.mapRect(SkRect::MakeLTRB(v.left,v.top,v.right,v.bottom)).roundOut(&viewport);viewport.intersect(SkIRect::MakeWH(surface_->width(),surface_->height()));}
         bool painted=false,resourcePending=false;
-        if(inkLayers_.draw(canvas,*scratch_,source,transform,viewport,grid,options,budget,sourcePool,coverageTargets_,work,painted,resourcePending,preparedGeometry,readyBody(source,PreparedConsumer::kRetainedInk)))return InkDraw::kDrawn;
+        if(inkLayers_.draw(canvas,*scratch_,source,transform,viewport,grid,options,budget,sourcePool,coverageTargets_,work,painted,resourcePending,preparedGeometry,readyBody(source,PreparedConsumer::kRetainedInk),maskHistory))return InkDraw::kDrawn;
         // An allocation miss after any composite must reject this entire
         // disposable frame; replaying Direct would blend already drawn ink.
         // Reuse denial is otherwise safe because the provider is not presented.
@@ -719,7 +735,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         }
         // Narrowing this clip changes Skia stroke-mask AA at existing edges.
         // Keep both mask evaluators on their full original device surface.
-        drawEraseMasksToSkCanvas(*isolated,source);noteDirect();
+        drawHistoricalMasks(*isolated,source);noteDirect();
     }
     drawPresentationEraseMasksToSkCanvas(*isolated,source);isolated->restore();
     SkPaint feedback;feedback.setAlphaf(std::clamp(source.presentationOpacity,0.0F,1.0F));
@@ -963,7 +979,12 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     configureScratch(*target,plan,matrix);
     {AXIOM_FRAME_TIMING_SCOPE(scratchTiming,scratch_draw);
     CompactRasterWork rasterWork;
-    drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get(),nullptr,&rasterWork,options.gpuCoverageCandidate,&coverageTargets_,nullptr,nullptr,nullptr,body.get());
+    if(compact->content.get().stroke.config.algorithmVersion==4&&!source.record.eraseMasks.empty()){
+        // The existing v4 command mapping has no range/picture override here:
+        // keep its same prepared body/material/target, then consume history.
+        drawInkBodyToSkCanvas(*target,source,nullptr,nullptr,nullptr,&rasterWork,options.gpuCoverageCandidate,&coverageTargets_,false,body.get());
+        drawHistoricalMasks(*target,source);
+    }else drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get(),nullptr,&rasterWork,options.gpuCoverageCandidate,&coverageTargets_,nullptr,nullptr,nullptr,body.get());
     noteCoverage(rasterWork);}
     target->restore();
     return store(canvas,source,validity,crop,composite);

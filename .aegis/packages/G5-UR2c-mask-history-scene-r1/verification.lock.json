@@ -1,0 +1,349 @@
+{
+  "schema": "g5-ur2c-verification-lock-v1",
+  "inherited_verification": {
+    "path": ".aegis/packages/G5-UR2b-exact-query-locality-r1/verification.lock.json",
+    "sha256": "10dde7685e3338bb7561b0294ab1e7a3ec34440a7d4c91f685eefff4d0219ff0"
+  },
+  "obligations": [
+    {
+      "id": "U2C-01",
+      "requirement": "Historical masks have one reusable immutable ordered representation in existing Render owners.",
+      "oracle": "Real warm draw/exact loops, full value/identity negative controls and diagnostic-only pre-change cost RED on sourcef62e.",
+      "acceptance": "Resident unchanged history avoids full flatten/copy/deep primitive comparison/path rebuild on repeated frames/queries. New allocation needs one complete proof; append reuses proven prefix and prepares only suffix, disclosing any vector relocation or comparison work. No maskCount/revision/hash-only proof.",
+      "evidence_required": "Actual history hits, value checks, copied bytes, primitive/path builds, prefix/suffix resets, allocations/leases; source/object/consumer joins."
+    },
+    {
+      "id": "U2C-02",
+      "requirement": "Preserve ordered mask rendering and invalidation.",
+      "oracle": "Original null-cache/pixel oracle plus native swept/filled/transformed/translucent overlap, repeated/reordered/removed/sameID-changed geometry, UndoRedo and copyA/B forks.",
+      "acceptance": "Historical and active identities remain separate; active replacement cannot leave old tail. Mask-only changes preserve body geometry; append/truncate/replace/reorder each establish correct complete sequence before publishing. Unknown provenance resets/rebuilds safely. No AA/blend/material/order/viewport policy change, no collapsed Boolean union replacing sequential clear.",
+      "evidence_required": "Body/result tile counts, mask drawing order and byte/pixel parity; copy branch/document/lifetime negatives."
+    },
+    {
+      "id": "U2C-03",
+      "requirement": "CPU exact hit/failure semantics remain unchanged while reusing historical mask paths/metadata.",
+      "oracle": "Same551b frozen old component oracle on original634 plus6 finite witnesses; extra histories0/1/2/5/10 and nonfinite/reordered/filled/tangent/tiny-positive controls.",
+      "acceptance": "Exact kernels keep sequential/lazy failure semantics; irrelevant bad history can Miss, relevant invalid remains Invalid, finite-derived Invalid stays Invalid before early-out. Optional history proof failure uses original exact fallback. No GPU/AABB positive, approximation or unchecked aggregate. Structural reuse does not require reducing mathematically necessary PathOps; every remaining union/difference/intersection and new-query path cost is separately reported.",
+      "evidence_required": "Independent old output + final decisions, per-query path lookup/equality/build and PathOps counters. No formula-only cost RED."
+    },
+    {
+      "id": "U2C-04",
+      "requirement": "Proven mask-only Scene edits retain immutable body/bounds/chunks/index/digests/dependencies.",
+      "oracle": "Actual OperationEngine Add/RemoveEraseMasks -> CanonicalCommitRecord -> coordinator; compare every output with unchanged independent FullSceneCompiler.",
+      "acceptance": "Pure kEraseMasks at matching generation and valid provenance updates mask payload plus required generations/revisions. No repeated body allocation/chunk build/full bounds/digest construction for a proven unchanged source. Unknown/changed body/config/transform/order/properties/resources cannot take mask-only path. One complete comparison for unknown canonical storage is allowed/countable; flags/ObjectId alone never prove foreign/malformed before state.",
+      "evidence_required": "Source/chunk/index identity, actual full materialization/bounds/chunk/digest calls and input/copy counts, canonical masks/Scene values."
+    },
+    {
+      "id": "U2C-05",
+      "requirement": "Mask-only fast path works in the real mixed document domain without expanding uncertain dependency semantics.",
+      "oracle": "Leaf v4 edits in scenes containing unrelated images/shapes/sticky/table, plus parent/clip/connector/resource/created/deleted/mixed flags negatives.",
+      "acceptance": "An unrelated table/image must not alone force full re-materialization for a qualified ink leaf; mask-only branch precedes broad flat-document guard. Known local body/masks stay correct. Any unproven parent/relation/resource closure keeps existing explicit full recovery; no bypass of stale generation or independent full authority.",
+      "evidence_required": "Native mixed actual-owner results and full projection equality; fallback reason/counters."
+    },
+    {
+      "id": "U2C-06",
+      "requirement": "Atomic publication, old snapshots and failure recovery remain correct.",
+      "oracle": "Existing14-green Scene keepers plus new checkpoint fault sweep, before/after held read views, interleaved real commit/UndoRedo/recovery, clone fork.",
+      "acceptance": "Prepare never mutates published views; all existing checkpoints/transaction gate and no-fail publication remain. Post-commit Scene failure never reapplies or undoes mutation; latest state recovery and readmission stay intact. Mask storage/lazy plan must not mutate old published snapshots.",
+      "evidence_required": "Operation/History/semantic/Scene revisions and snapshot equality before/after injected failures; genuine no partial publication."
+    },
+    {
+      "id": "U2C-07",
+      "requirement": "Bounded history retention and existing GPU lifetime rules.",
+      "oracle": "Default32/96MiB,8MiB/512 mask cache, pressure/denied cache/eviction while pinned, context/metrics/owner change and close/reopen.",
+      "acceptance": "Shared CPU history storage charged once per actual owner; local plans/scratch/index charged and bounded. Device pixels require exact target/matrix/DPR/resource proof. No budget increase, blanket clear/rebuild, unbounded strong history retention or synchronous CPU frame fallback; supported stable demand progresses using existing recovery.",
+      "evidence_required": "Actual quota/lease totals, rejection/reset/fallback reasons; no RSS-return-to-baseline claim."
+    },
+    {
+      "id": "U2C-08",
+      "requirement": "The production continuous input path consumes new history and mask-only Scene capabilities.",
+      "oracle": "Actual RuntimeComposition E-Up -> immediate next E/trackpad navigation, commit-pending Undo/Redo, stale completion/C-active safety; original20 Web cases and10 qualification raw traces.",
+      "acceptance": "Exactly-once non-noop operations, latest Scene, next gesture controls, overlay and strict successful submit/frozen roster/accepted completion joins remain. S0/S2 must show actual qualified historical reuse and mask-only Scene on nonnoop Up, not just private helper probes.",
+      "evidence_required": "Full owner/job/source/ordered-history provenance and strict receipts; no plain accepted counters as proof."
+    },
+    {
+      "id": "U2C-09",
+      "requirement": "Comparable final picture and normal A/B behavior.",
+      "oracle": "Unchanged20cases80coldstages20afterRedo, original ab7CPU/nullcache/AA plus3 paired oldf62e normal versus finalnormal timing workers.",
+      "acceptance": "All frozen functional pixels/roundtrips pass. Report every normal run/Up/Down/Move/delivery/content gap/exact wait. Reuse/Scene work reduction is blocking; timing magnitude corroborative. Inconclusive remains admissible, no new33ms threshold or Vibe/performance/G5 PASS.",
+      "evidence_required": "Matching SDK source and actual BuildInfo, unperturbed event data; no profile/readback/snapshot in primary timing."
+    },
+    {
+      "id": "U2C-10",
+      "requirement": "Scope, regressions, materialization and closed allowance.",
+      "oracle": "Original91 native+14 baseline-green Scene+8 new named native,4 targeted GTest,69Node42Python plus meaningful new contract tests,120boundaries, exactsource/artifact manifests and8 closed guarded workers.",
+      "acceptance": "All required new/keeper tests pass. Preserve exactly the separately bound pre-existing RF01 pointer-address assertion failure without new failures or rewriting the test/arena semantics. No unrelated tests, platform/SDK/schema/locks or official Gate status expansion. Exact reviewer-accessible result and callback at terminal.",
+      "evidence_required": "Commands/oracle/compiler/source/repair+cumulative/native/SDK/archives/raw/ledger/cleanup refs."
+    }
+  ],
+  "native_existing_names": [
+    "G5ScaleFixtureContract",
+    "G5Ur0Observation",
+    "G5GeometryChunkLocality",
+    "G4EraserSession",
+    "G4EditorHistory",
+    "FC01EditorHistoryInverseFamilies",
+    "G45PerfectFreehandReference",
+    "G5GpuRetirementContract",
+    "G5GpuResourceRecovery",
+    "G5CanonicalPreparedBody",
+    "G5CanonicalPreparedBodyBounded",
+    "G5CanonicalPreparedBodyPixels",
+    "G5CanonicalPreparedWorkingSet",
+    "G5PreparedBodyIndex",
+    "G5RenderExecution",
+    "G5EraseExactHit",
+    "G5RenderCache",
+    "G5CanonicalPreparedCompatibility",
+    "G5LiveEraseGpuMiss",
+    "G5LiveEraseDpr",
+    "G5TranslatedV4Drag",
+    "G5InkBodyMaskReuse",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5V4CoverageFallback",
+    "G5MaskedCanonicalRecovery",
+    "G5ErasedMixedNavigation",
+    "G5RetainedZoomReentry",
+    "G5MixedNavigationReentry",
+    "G5TileWork",
+    "G5RenderDamage",
+    "G47ImageResource",
+    "G5SkiaChunkRangeEntry",
+    "G5PreparedGeometry",
+    "FC00XFrameCoordinator",
+    "G3SkiaSurfaceProvider",
+    "G3PreviewSurface",
+    "G3SurfacePresentation",
+    "G3DirectReference",
+    "G5TransientReference",
+    "G3FrameOrchestration",
+    "G5SharedScenePayload",
+    "G5SharedSceneSnapshot",
+    "G5SharedSceneIndex",
+    "G5SharedSceneReaders",
+    "G5SharedSceneRetention",
+    "G5SharedSceneParity",
+    "G5Ur0ObservationIdentity",
+    "FC00XBrushBatchEvaluation",
+    "FC00XBrushBatchSemantics",
+    "FC00XFatalProviderFailure",
+    "SDKPublicResources",
+    "G5Navigation",
+    "FC04MSEHistoryFaultUndo",
+    "FC04MSEHistoryFaultRedo",
+    "FC01InsertHistory",
+    "FC00XCanonicalBusyPreviewProgress",
+    "FC00XPreviewBusyCanonicalProgress",
+    "FC00XBusyCanonicalPendingFeedback",
+    "FC00XLiveBrushPreview",
+    "SDKPublicDocumentIdentity",
+    "SDKPublicDocumentOperations",
+    "SDKPublicDocumentSnapshot",
+    "SDKPublicOperationIdentity",
+    "SDKPublicDocumentBackground",
+    "SDKPublicSelectionInput",
+    "FC01AxisPublicationTruth",
+    "FC01HostPublicationTruth",
+    "G45BrushPreviewHandoff",
+    "F08FrameQualification",
+    "SDKNativeNavigationPreview",
+    "G5UR2AReadmissionAcquire",
+    "G5UR2AReadmissionPresent",
+    "G5UR2ANavigation",
+    "G5UR2AHandoff",
+    "G5UR2ASceneRecovery",
+    "G5UR2AHistory",
+    "G5UR2ALifecycle",
+    "G5UR2ANavigationSafety",
+    "G5UR2ACompositionProof",
+    "G5UR2ABrushVisibility",
+    "G5UR2AMaskIsolationDirect",
+    "G5UR2AMaskIsolationPrepared",
+    "G5UR2AMaskIsolationBackdrop",
+    "G5UR2AMaskIsolationLegacy",
+    "G5UR2BExactParity",
+    "G5UR2BExactBodySharing",
+    "G5UR2BExactLocality",
+    "G5UR2BExactInvalidation",
+    "G5UR2BExactPressure",
+    "G5UR2BExactInputRuntime"
+  ],
+  "native_scene_keeper_names": [
+    "canvas_rf01_scene_atomicity",
+    "canvas_rf01_scene_binding",
+    "canvas_g2_a0_semantic_generation_binding",
+    "canvas_g2_a1_runtime_record_projection",
+    "canvas_g2_a2_bounds_system",
+    "canvas_g2_a2_reference_geometry",
+    "canvas_g2_a2_scene_impact",
+    "canvas_g2_a2_dependency_closure",
+    "canvas_g2_a3_full_incremental_equivalence",
+    "canvas_g2_a4_scene_delta",
+    "canvas_g2_a6_incremental_equivalence",
+    "canvas_g2_a6_atomic_publication",
+    "canvas_g2_a6_recovery",
+    "canvas_g2_a5_spatial_index_differential"
+  ],
+  "native_new_names": [
+    "G5UR2CHistoryPlanReuse",
+    "G5UR2CHistoryInvalidation",
+    "G5UR2CHistoryExactParity",
+    "G5UR2CMaskOnlyScene",
+    "G5UR2CMixedMaskScene",
+    "G5UR2CAtomicRecovery",
+    "G5UR2CContinuousInput",
+    "G5UR2CLeaseAccounting"
+  ],
+  "preexisting_failure": {
+    "name": "canvas_rf01_full_rebuild",
+    "run_required": true,
+    "acceptance": "Same exact existing single line88 pointer equality failure; no additional/different failure. It is not a mask/projection/full compiler correctness waiver.",
+    "baseline": {
+      "path": ".aegis/results/G5-UR0b/ur2c-planning-r1/baseline-scene-tests.json",
+      "sha256": "e963738faeafcc463fb1978b99ff79cff868199fe343d72c99638c51eb4a618b"
+    },
+    "log": {
+      "path": ".aegis/results/G5-UR0b/ur2c-planning-r1/baseline-canvas_rf01_full_rebuild.log",
+      "sha256": "36ab29c77dbe9e464dde31231ad7050261abe64fddef8898f21da8c140a21bae"
+    },
+    "source": {
+      "path": "runtime/scene/tests/scene_full_rebuild_test.cpp",
+      "sha256": "b25b206777226c196eb948cf801b9277b7df0283b7ed0de56f15197d261572c0"
+    }
+  },
+  "native_pixel_matrix": "Native DPR1/2/4, round+marker, swept+filled, opaque/transparent/custom backdrop and overlapping alpha/order. This is native proof, not real WebDPR4.",
+  "additional_GTest_filter": "--gtest_filter=PartialEraseLive.*:ObjectClipboard.PublicationBackpressureRejectsDuplicateAndCutAtomically:ObjectClipboard.MaskedInkKeepsAppearanceButAllocatesFreshMaskIdentity",
+  "Node_command": [
+    "node",
+    "--test",
+    "verification/tests/g5_render_execution.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+    "verification/tests/g5_prepared_body_index.test.mjs",
+    "verification/tests/g5_transient_reference.test.mjs",
+    "verification/tests/g5_transient_attribution.test.mjs",
+    "verification/tests/g5_canonical_prepared_body.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+    "verification/tests/g5_resource_recovery.test.mjs",
+    "verification/sdk_controller/controller_test.mjs",
+    "verification/sdk_controller/transport_test.mjs",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+    "verification/tests/g5_ur2a_handoff.test.mjs",
+    "verification/tests/g5_ur2b_exact_query.test.mjs",
+    "verification/tests/g5_ur2c_mask_history.test.mjs"
+  ],
+  "Python_files": [
+    "test_g5_canonical_prepared_body_working_set.py",
+    "test_g5_transient_reference.py",
+    "test_g5_prepared_body_index_reverify.py",
+    "test_g5_render_execution.py",
+    "test_g5_transient_attribution.py",
+    "test_g5_canonical_prepared_body.py",
+    "test_g5_prepared_body_index.py",
+    "test_g5_resource_recovery.py",
+    "test_g5_resource_recovery_loss_reverify.py",
+    "test_g5_ur2a_handoff.py",
+    "verification/tests/test_g5_ur2b_exact_query.py",
+    "verification/tests/test_g5_ur2c_mask_history.py"
+  ],
+  "boundary_command": [
+    "python3.12",
+    "tools/check_runtime_boundaries.py",
+    "--root",
+    "."
+  ],
+  "oracle_refs": {
+    "original_exact_binary": {
+      "path": "out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+      "sha256": "551b7f9230a853b59d44b0a2c35a25c4feb811a8872b8c715593d1845bd7440e"
+    },
+    "original_exact_corpus": {
+      "path": "out/G5-UR2b-exact-query-locality-r1/corpus/requests.json",
+      "sha256": "0b72acbdce433c1b149cdf856f9ec02aaae9343887251173e584e93e4d4027c8"
+    },
+    "finite_witnesses": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-r1/finite-range-r1/requests.json",
+      "sha256": "639c74e76c9b7ad9043fd5dd78a049bce3de573eec5427b28d76857abab58429"
+    },
+    "original_pixel_oracle": {
+      "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+    },
+    "reference_catalog": {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+      "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c"
+    },
+    "full_Scene_oracle": "Unchanged FullSceneCompiler/projectSemanticScene source, independent mechanism from candidate RuntimeScene mask-only branch. No cache/candidate-derived bounds/chunks as expected; freeze baseline input/output before new branch. Full source refs in authority lock."
+  },
+  "red_precondition": {
+    "required_before_behavior_mutation": true,
+    "diagnostic_only_probe_allowed": true,
+    "history": "Warm current actual draw/query on shared longline1/8/16/32 histories0/1/2/5/10 shows repeated history flatten/copy/comparison/path lookup work. Count actual operations at call sites; not compilation-red or predicted formula.",
+    "Scene": "Actual Add/Remove masks at matching committed state shows affected full materialization/bounds/chunk/digest/body clone work despite unchanged body; unrelated mixed table recovery also captured.",
+    "baseline_diagnostics_rule": "Freeze probe-only delta and preimages; count unchanged compiler routines via real call+input counters if needed, without modifying full oracle algorithms. If purported redundancy is already absent, return precise attribution/package finding instead of manufacturing RED."
+  },
+  "browser_window": {
+    "historical_starts": 74,
+    "historical_charged_seconds": 4214,
+    "original_cap_seconds": 8370,
+    "remaining_before": 4156,
+    "ids_in_order": [
+      "UR2C1-FQ1",
+      "UR2C1-FN1",
+      "UR2C1-A1",
+      "UR2C1-B1",
+      "UR2C1-B2",
+      "UR2C1-A2",
+      "UR2C1-A3",
+      "UR2C1-B3"
+    ],
+    "functional_each_seconds": 360,
+    "performance_each_seconds": 180,
+    "new_starts_max": 8,
+    "nominal_new_seconds_max": 1800,
+    "remaining_after_nominal_reserve": 2356,
+    "concurrency": 1,
+    "process_family_RSS_mib": 3072,
+    "charge": "ceil(actual); any started failed attempt charged; old IDs CLOSED; no retry/smoke/extra start from spare seconds",
+    "functional_driver": {
+      "path": "verification/runners/g5/ur2a_handoff.mjs",
+      "sha256": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1"
+    },
+    "performance_driver": {
+      "path": "verification/runners/g5/ur2b_exact_query.mjs",
+      "sha256": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4"
+    },
+    "consumer_and_pacing": "Use frozen handoffConsumer.init/run unchanged. Functional20 cases80stages20roundtrips; normal performance4 cases S0E,S2E,S0P,S2P each3paired repeats. Fixtures unchanged. Native extends10-mask/32copy/mixed coverage; no invented realWebDPR4 or large scale claim.",
+    "identity_adapter": "New runner/output source-identity redirection only, exact subprocess match. No driver/guard/input/oracle/AA mutation. Bind new source/compiler/native/SDK/adapter before first start; immutable through all8 workers.",
+    "baseline_normal": {
+      "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/candidate-builds.json",
+      "sha256": "d2677d647672c5fb571b5a7800fb26679b51808a3eb6ae7dc532d154b0bff186"
+    },
+    "baseline_identity": "Actual existing f62e normal SDK built at2a with scoped dirty accepted UR2b; preserve original BuildInfo/bytes, no restamp or substituted17ff r1 timing.",
+    "primary_phase": "No snapshot/readback/capture/profile or qualification trace; normaldiagnosticsOFF. All input/raw/delivery/FBO proxy metrics included; not physical GPU/display timing.",
+    "failure_policy": "On first worker hard failure freeze prefix/cleanup/return BLOCKED, do not patch and retry old or unused windows."
+  },
+  "classification": [
+    "STRUCTURAL_GAIN_TIMING_IMPROVEMENT_OBSERVED",
+    "STRUCTURAL_GAIN_TIMING_INCONCLUSIVE"
+  ],
+  "pixel_policy": "Original2devicepixel perprimitive/mask/alpha band,<=2channellevelsinterior;no candidate-derived exclusion/newtolerance. Exactsnapshot+fullrequest/resources/hash reuseonly,originalonce forunmatchedinput10000ms,no retries.",
+  "prohibited_claims": "No official G5/P34/performanceSLO/release/Vibe parity/other-platform PASS.",
+  "observability_contract": {
+    "freeze_before_behavior_change": true,
+    "aggregates": [
+      "known-history identity hits",
+      "new-storage full comparison records/primitives",
+      "flattened historical suffix primitives and relocated/copied bytes",
+      "per-mask path lookup/build/hit/denied",
+      "query-mask union vs historical difference vs body intersection counts/durations",
+      "Scene mask-only eligible/hit/decline reason",
+      "body comparisons/clone bytes",
+      "full projection/bounds/chunk/digest calls and input counts",
+      "derived stamp prefix/suffix/full work",
+      "Render retained history/path/index/scratch leases and fallbacks"
+    ],
+    "join": "Qualification uint64 identity and counters retain decimal strings. Bind actual owner/document-view/source/ordered-history snapshot/body/job-attempt-purpose and real Up->query->commit/Scene events. Root/leaf counter scope and inclusive timing declared; no perprimitive trace volume or new public API.",
+    "normal": "OFF; primary A/B has no readback/profile/snapshot/trace."
+  }
+}

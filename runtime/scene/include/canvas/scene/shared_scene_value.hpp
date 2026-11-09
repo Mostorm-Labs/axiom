@@ -109,6 +109,12 @@ template<class T> class SharedVector final {
     template<class It>void assign(It a,It b){auto next=std::make_shared<std::vector<T>>(a,b);copied_=next->size();data_=std::move(next);}
     operator const std::vector<T>&()const noexcept{return values();}
     void push_back(T v){write().push_back(std::move(v));}
+    void pop_back(){write().pop_back();}
+    template<class It>auto insert(const_iterator at,It a,It b){
+        const auto offset=at-values().begin();auto& v=write();return v.insert(v.begin()+offset,a,b);
+    }
+    bool operator==(const std::vector<T>& b)const{return values()==b;}
+    friend bool operator==(const std::vector<T>& a,const SharedVector& b){return b==a;}
     template<class... Args>T& emplace_back(Args&&... a){return write().emplace_back(std::forward<Args>(a)...);}
     auto erase(const_iterator a,const_iterator b){const auto first=a-values().begin(),last=b-values().begin();auto& v=write();return v.erase(v.begin()+first,v.begin()+last);}
     auto erase(const_iterator a){return erase(a,a+1);}

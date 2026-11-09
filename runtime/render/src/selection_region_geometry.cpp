@@ -1,8 +1,11 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "selection_region_geometry_internal.hpp"
+#include "canvas/foundation/internal/g5_observation.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #if CANVAS_RENDER_HAS_SKIA
+#include "skia_prepared_geometry.hpp"
+#include "skia_mask_history.hpp"
 #include "skia_geometry_internal.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -14,13 +17,14 @@
 #include "include/pathops/SkPathOps.h"
 #include <algorithm>
 #include <cmath>
+#include <chrono>
 #include <new>
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
 #include <cstdio>
 #endif
 namespace canvas::render {
 namespace internal {
-struct ErasePathUsage {std::size_t bytes=0;};
+using ErasePathUsage=MaskHistoryUsage;
 struct EraseMaskPathCache::Entry {
     semantic::EraseMaskGeometry geometry;SkPath path;resources::ResourceLease lease;
     std::shared_ptr<ErasePathUsage> usage;std::size_t bytes=0;std::uint64_t used=0;
@@ -30,6 +34,15 @@ struct EraseMaskPathCache::Entry {
 namespace {
 using Hit=SelectionGeometryHit;
 float f(double v){return static_cast<float>(v);}
+std::optional<SkPath> timedQueryOp(const SkPath& a,const SkPath& b,SkPathOp op,std::uint64_t* nanoseconds){
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    const auto started=std::chrono::steady_clock::now();const auto result=Op(a,b,op);
+    if(nanoseconds)*nanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();return result;
+#else
+    (void)nanoseconds;return Op(a,b,op);
+#endif
+}
+
 SkRect rect(double x,double y,double w,double h){return SkRect::MakeXYWH(f(x),f(y),f(w),f(h));}
 SkPath rectangle(double x,double y,double w,double h){SkPathBuilder b;b.addRect(rect(x,y,w,h));return b.detach();}
 SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Cap) {
@@ -37,11 +50,12 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
     return skpathutils::FillPathWithPaint(path,p);
 }
 bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
-std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask) {
+std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask,std::uint64_t* unions=nullptr) {
         SkPath eraser;
         if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
         else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
             SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
+            if(unions)++*unions;
             if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return std::nullopt;
         }
     return eraser;
@@ -52,7 +66,7 @@ bool fillVisible(const RuntimeSceneRecord& r) {
     }
     return r.kind!=semantic::ObjectKind::kVectorPath || std::none_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;});
 }
-Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations,bool applyMasks=true) {
+Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations,bool applyMasks=true,internal::ExactQueryWork* exact=nullptr) {
     switch(r.kind) {
     case semantic::ObjectKind::kVectorPath: {
         const auto* c=std::get_if<semantic::VectorPathContent>(&r.content.get());if(!c)return Hit::kInvalid;
@@ -67,20 +81,23 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
                 path=buildVectorBrushOutlineSkPath(c->stroke.vector_output.outline,c->stroke.vector_output.fill_rule,c->stroke.vector_output.closed);
         } else if(const auto* compact=std::get_if<semantic::CompactStrokeContent>(&r.content.get())) {
             const auto& s=compact->stroke;const auto& config=s.config;
-            if(!semantic::validCompactStroke(s))return Hit::kInvalid;
+            const auto valid=semantic::validCompactStroke(s);
+            if(exact){++exact->fullValidations;if(valid)exact->validationKnots+=s.knots.size();else ++exact->invalidValidationScans;}
+            if(!valid)return Hit::kInvalid;
             if(config.family!=foundation::InkFamily::kRound&&config.family!=foundation::InkFamily::kMarker)return Hit::kUnsupported;
             if(config.opacity*config.color[3]<=0)break;
             if(config.algorithmVersion!=4)return Hit::kUnsupported;
             // Reuse the renderer's compiler and ribbon path, including pressure,
             // smoothing, caps and tapers. No second brush geometry algorithm.
+            if(exact){++exact->compileCalls;exact->compileInputs+=s.knots.size();}
             const auto contour=ink::compileCompactContour(config,s.knots);
             for(std::size_t i=0;i+1<contour.patches.size();++i)
-                decorations.push_back(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));
+                {decorations.push_back(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));if(exact)++exact->constructedComponents;}
             for(const auto& cap:contour.caps){
                 SkPathBuilder b;b.addCircle(0,0,f(cap.radius));auto p=b.detach();
                 SkMatrix matrix;matrix.setTranslate(f(cap.x),f(cap.y));
                 if(config.family==foundation::InkFamily::kMarker){matrix.preRotate(f(config.markerAngle*57.29577951308232));matrix.preScale(1,f(config.markerFlatness));}
-                decorations.push_back(p.makeTransform(matrix));
+                decorations.push_back(p.makeTransform(matrix));if(exact)++exact->constructedComponents;
             }
         } else if(const auto* legacy=std::get_if<semantic::VectorStrokeContent>(&r.content.get())) {
             const auto* data=std::get_if<semantic::VectorStrokeData>(&legacy->stroke.data);if(!data)return Hit::kInvalid;
@@ -232,12 +249,18 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
 }
 }
 namespace {
-SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr) noexcept {
+SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::MaskHistoryPlan>& history={},MaskHistoryWork* historyWork=nullptr) noexcept {
     try {
         std::vector<std::shared_ptr<const internal::EraseMaskPathCache::Entry>> pins;
-        const auto pathFor=[&](const semantic::EraseMaskGeometry& geometry){
-            if(pathCache)if(auto entry=pathCache->get(geometry)){pins.push_back(entry);return std::optional<SkPath>{entry->path};}
+        const auto pathFor=[&](const semantic::EraseMaskGeometry& geometry,bool historical=false){
+            if(pathCache)if(auto entry=pathCache->get(geometry,historical)){pins.push_back(entry);return std::optional<SkPath>{entry->path};}
             return erasePath(geometry);
+        };
+        const auto historicalPath=[&](std::size_t i){
+            if(pathCache&&history)if(auto entry=pathCache->historicalPath(history,i)){
+                pins.push_back(entry);return std::optional<SkPath>{entry->path};
+            }
+            return pathFor(record.eraseMasks[i].geometry,true);
         };
         const auto invalidGeometry=[]([[maybe_unused]]const char* stage){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
@@ -246,8 +269,17 @@ SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const s
             return Hit::kInvalid;
         };
         SkPath visible;std::vector<SkPath> decorations;
-        const auto status=geometry(record,visible,decorations,false);if(status!=Hit::kHit)return status;
+        const auto status=prepared?Hit::kHit:geometry(record,visible,decorations,false,exact);if(status!=Hit::kHit)return status;
         const auto eraser=pathFor(mask);if(!eraser||!eraser->isFinite())return invalidGeometry("new_mask_path");
+        const auto visitComponents=[&](const SkPath& demand,const auto& visitor){
+            if(prepared){internal::ExactComponentWork local;
+                const auto completed=prepared->visitExact(demand.getBounds(),visitor,local);
+                if(exact){exact->indexNodes+=local.groups;exact->boundsTests+=local.boundsTests;exact->componentChecks+=local.components;exact->replayKnots+=local.replayKnots;exact->materializedPaths+=local.materializedPaths;}
+                return completed;
+            }
+            if(!visitor(visible))return false;
+            for(const auto& part:decorations)if(!visitor(part))return false;return true;
+        };
         // Query only the new intersection. Subtraction distributes over the
         // component union, so a visible hit need not prepare unrelated parts.
         // Paths are query-local and built lazily once, never retained in Scene.
@@ -263,25 +295,27 @@ SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const s
         // a failed optional PathOps proof cannot reject an otherwise valid hit.
         if(shareQuery&&!record.eraseMasks.empty()){
             const auto sharedQuery=[&]()->std::optional<Hit>{
-                if((visible.isEmpty()||disjoint(visible,*eraser))&&std::all_of(decorations.begin(),decorations.end(),[&](const auto& part){return part.isEmpty()||disjoint(part,*eraser);}))return Hit::kMiss;
+                bool outside=true;visitComponents(*eraser,[&](const SkPath& part){if(!part.isEmpty()&&!disjoint(part,*eraser)){outside=false;return false;}return true;});
+                if(outside)return Hit::kMiss;
                 auto remaining=*eraser;
-                for(const auto& maskRecord:record.eraseMasks){
+                for(std::size_t i=0;i<record.eraseMasks.size();++i){
+                    const auto& maskRecord=record.eraseMasks[i];
                     if(maskRecord.geometry==mask)return Hit::kMiss;
-                    const auto old=pathFor(maskRecord.geometry);if(!old||!old->isFinite())return {};
+                    const auto old=historicalPath(i);if(!old||!old->isFinite())return {};
                     if(disjoint(remaining,*old))continue;
                     if(work)++work->historicalDifferences;
-                    auto next=Op(remaining,*old,kDifference_SkPathOp);if(!next)return {};
+                    auto next=timedQueryOp(remaining,*old,kDifference_SkPathOp,historyWork?&historyWork->differenceNanoseconds:nullptr);if(!next)return {};
                     remaining=*next;if(remaining.isEmpty())return Hit::kMiss;
                 }
                 const auto hit=[&](const SkPath& part)->std::optional<Hit>{
                     if(part.isEmpty()||disjoint(part,remaining))return Hit::kMiss;
                     if(work)++work->componentIntersections;
-                    const auto result=Op(part,remaining,kIntersect_SkPathOp);if(!result)return {};
+                    const auto result=timedQueryOp(part,remaining,kIntersect_SkPathOp,historyWork?&historyWork->intersectionNanoseconds:nullptr);if(!result)return {};
                     return result->isEmpty()?Hit::kMiss:Hit::kHit;
                 };
-                const auto body=hit(visible);if(!body||*body==Hit::kHit)return body;
-                for(const auto& part:decorations){const auto result=hit(part);if(!result||*result==Hit::kHit)return result;}
-                return Hit::kMiss;
+                std::optional<Hit> result=Hit::kMiss;
+                visitComponents(remaining,[&](const SkPath& part){result=hit(part);return result&&*result!=Hit::kHit;});
+                return result;
             };
             if(const auto result=sharedQuery())return *result;
         }
@@ -295,14 +329,14 @@ SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const s
             constexpr std::size_t proofMasks=8;
             for(std::size_t i=0;i<std::min(record.eraseMasks.size(),proofMasks);++i){
                 if(record.eraseMasks[i].geometry==mask)return Hit::kMiss;
-                const auto built=pathFor(record.eraseMasks[i].geometry);
+                const auto built=historicalPath(i);
                 // Failure of this optional proof is not itself rejection:
                 // the original component query below still owns the result.
                 if(!built||!built->isFinite())break;
                 previousMasks.push_back(*built);
                 if(disjoint(remaining,*built))continue;
                 if(work)++work->historicalDifferences;
-                auto next=Op(remaining,*built,kDifference_SkPathOp);
+                auto next=timedQueryOp(remaining,*built,kDifference_SkPathOp,historyWork?&historyWork->differenceNanoseconds:nullptr);
                 if(!next)break;
                 remaining=*next;
                 if(remaining.isEmpty())return Hit::kMiss;
@@ -311,26 +345,25 @@ SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const s
         const auto intersects=[&](const SkPath& body){
             if(body.isEmpty()||disjoint(body,*eraser))return Hit::kMiss;
             if(work)++work->componentIntersections;
-            auto overlap=Op(body,*eraser,kIntersect_SkPathOp);if(!overlap)return invalidGeometry("component_intersection");
+            auto overlap=timedQueryOp(body,*eraser,kIntersect_SkPathOp,historyWork?&historyWork->intersectionNanoseconds:nullptr);if(!overlap)return invalidGeometry("component_intersection");
             if(overlap->isEmpty())return Hit::kMiss;
             for(std::size_t i=0;i<record.eraseMasks.size();++i){
                 if(i==previousMasks.size()){
-                    const auto built=pathFor(record.eraseMasks[i].geometry);
+                    const auto built=historicalPath(i);
                     if(!built||!built->isFinite())return invalidGeometry("previous_mask_path");
                     previousMasks.push_back(*built);
                 }
                 if(disjoint(*overlap,previousMasks[i]))continue;
                 if(work)++work->historicalDifferences;
-                overlap=Op(*overlap,previousMasks[i],kDifference_SkPathOp);
+                overlap=timedQueryOp(*overlap,previousMasks[i],kDifference_SkPathOp,historyWork?&historyWork->differenceNanoseconds:nullptr);
                 if(!overlap)return invalidGeometry("previous_mask_difference");
                 if(overlap->isEmpty())return Hit::kMiss;
             }
             return Hit::kHit;
         };
-        const auto body=intersects(visible);if(body==Hit::kHit)return body;
-        bool invalid=body==Hit::kInvalid;
-        for(const auto& part:decorations){const auto hit=intersects(part);if(hit==Hit::kHit)return hit;invalid=invalid||hit==Hit::kInvalid;}
-        return invalid?Hit::kInvalid:Hit::kMiss;
+        bool invalid=false,found=false;
+        visitComponents(*eraser,[&](const SkPath& part){const auto hit=intersects(part);found=hit==Hit::kHit;invalid=invalid||hit==Hit::kInvalid;return !found;});
+        return found?Hit::kHit:invalid?Hit::kInvalid:Hit::kMiss;
     }catch(const std::bad_alloc&){return Hit::kInvalid;}
 }
 }
@@ -339,23 +372,45 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
 }
 namespace internal {
 struct EraseMaskPathCache::Impl {
+    struct Refusal {
+        std::weak_ptr<const std::vector<semantic::EraseMaskRecord>> owner;
+        const void* pointee=nullptr;
+        std::shared_ptr<const SourceRetention> source;
+        resources::ResourceLease metadata;
+        std::shared_ptr<ErasePathUsage> usage;
+        std::size_t bytes=0,pathBytes=0;
+        std::uint64_t used=0;
+        ~Refusal(){if(usage)usage->bytes-=bytes;}
+    };
     Work stats;std::shared_ptr<ErasePathUsage> usage=std::make_shared<ErasePathUsage>();
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::vector<std::shared_ptr<Entry>> entries;
-    std::size_t capacity=0;std::uint64_t tick=0;
+    std::vector<std::shared_ptr<MaskHistoryPlan>> histories;
+    std::vector<std::shared_ptr<Refusal>> refusals;
+    std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+    std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size();}
+    std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
     bool evict(){
         auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
             if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
+        auto plan=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
+            if(it->use_count()==1&&(plan==histories.end()||(*it)->used<(*plan)->used))plan=it;
+        auto refusal=std::min_element(refusals.begin(),refusals.end(),[](const auto& a,const auto& b){return a->used<b->used;});
+        if(refusal!=refusals.end()&&(victim==entries.end()||(*refusal)->used<(*victim)->used)&&
+           (plan==histories.end()||(*refusal)->used<(*plan)->used)){refusals.erase(refusal);return true;}
+        if(plan!=histories.end()&&(victim==entries.end()||(*plan)->used<(*victim)->used)){histories.erase(plan);return true;}
         if(victim==entries.end())return false;entries.erase(victim);return true;
     }
 };
 EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
 EraseMaskPathCache::~EraseMaskPathCache()=default;
-void EraseMaskPathCache::clear()noexcept{std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
-EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;return v;}
-std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry){
+void EraseMaskPathCache::clear()noexcept{std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
     auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
-    for(auto& entry:state.entries)if(entry->geometry==geometry){entry->used=++state.tick;++state.stats.hits;return entry;}
+    for(auto& entry:state.entries)if((++state.stats.pathValueComparisons,state.stats.pathPrimitiveComparisons+=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry),entry->geometry==geometry)){entry->used=++state.tick;++state.stats.hits;return entry;}
     const auto units=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry);
     const auto raw=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
     const auto base=sizeof(Entry)+raw+65536;
@@ -363,23 +418,252 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
     const auto estimate=base+units*4096;
     std::optional<std::uint64_t> token;
     for(;;){
-        if(state.entries.size()<512&&state.usage->bytes<=state.capacity-estimate)
+        if(state.size()<512&&state.usage->bytes<=state.capacity-estimate)
             token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);
         if(token)break;if(!state.evict())return denied();
     }
     resources::ResourceLease lease(state.budget,*token);
-    const auto path=erasePath(geometry);if(!path||!path->isFinite())return denied();
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    const auto started=std::chrono::steady_clock::now();
+#endif
+    auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;
+    const auto path=erasePath(geometry,&unions);
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
+        std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+#endif
+    ++(historical?state.stats.history.historyPathBuilds:state.stats.history.queryPathBuilds);
+    if(!path||!path->isFinite())return denied();
     auto candidate=std::make_shared<Entry>();candidate->geometry=geometry;candidate->path=*path;
     const auto bytes=sizeof(Entry)+raw+256+path->approximateBytesUsed();
     if(bytes>estimate||!lease.shrink(bytes))return denied();
     candidate->lease=std::move(lease);candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
     state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;return candidate;
 }
+namespace {
+bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
+    ++work.valueRecords;if(a.id!=b.id||a.geometry.index()!=b.geometry.index())return false;
+    return std::visit([&](const auto& x){
+        using T=std::decay_t<decltype(x)>;const auto& y=std::get<T>(b.geometry);
+        if constexpr(requires{x.segments;}) {
+            return x.segments.size()==y.segments.size()&&std::equal(x.segments.begin(),x.segments.end(),y.segments.begin(),
+                [&](const auto& p,const auto& q){++work.valuePrimitives;return p==q;});
+        }else return x.path.fill_rule==y.path.fill_rule&&x.path.commands.size()==y.path.commands.size()&&
+            std::equal(x.path.commands.begin(),x.path.commands.end(),y.path.commands.begin(),
+                [&](const auto& p,const auto& q){++work.valuePrimitives;return p==q;});
+    },a.geometry);
+}
+}
+std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
+    const scene::SharedVector<semantic::EraseMaskRecord>& records,
+    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,
+    const std::shared_ptr<MaskHistoryPlan>& previous,MaskHistoryAdmission* admission){
+    auto& state=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+    if(state.budget!=budget||state.capacity!=capacity){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}
+    auto status=MaskHistoryAdmission::kNotAdmitted;
+    bool refusalHit=false,structural=false;
+    const auto storage=records.storage();
+    const auto result=[&]()->std::shared_ptr<MaskHistoryPlan>{
+    if(records.empty())return {};
+    for(auto& plan:state.histories){const auto known=std::as_const(plan->records).storage();
+        if(known.get()==storage.get()&&!known.owner_before(storage)&&!storage.owner_before(known)){
+            ++state.stats.history.identityHits;plan->used=++state.tick;return plan;
+        }
+    }
+    const auto denied=[&]()->std::shared_ptr<MaskHistoryPlan>{++state.stats.history.denied;return {};};
+    if(!state.budget||!state.capacity)return denied();
+    const auto liveBytes=state.pathBytes();
+    std::erase_if(state.refusals,[&](const auto& r){return r->owner.expired()||r->pathBytes!=liveBytes;});
+    for(auto& r:state.refusals)if(r->pointee==storage.get()&&!r->owner.owner_before(storage)&&!storage.owner_before(r->owner)){
+        r->used=++state.tick;refusalHit=true;++state.stats.refusalHits;return denied();
+    }
+    // Optional residency has a structural lower bound, independent of GPU
+    // completion. Reject it before constructing a doomed primitive prefix.
+    // This is not a mask/document limit: the original GPU draw remains valid.
+    std::size_t count=0;for(const auto& mask:records){const auto n=std::visit([](const auto& g)->std::size_t{
+        if constexpr(requires{g.segments;})return g.segments.size();else return 1;},mask.geometry);
+        if(n>capacity/sizeof(std::shared_ptr<const PreparedMaskPrimitive>)-count){structural=true;return denied();}count+=n;
+    }
+    std::size_t minimum=0;
+    const auto charge=[&](std::size_t n,std::size_t bytes){if(bytes&&n>(capacity-minimum)/bytes)return false;minimum+=n*bytes;return true;};
+    if(!charge(1,sizeof(MaskHistoryPlan)+256)||!charge(count,sizeof(std::shared_ptr<const PreparedMaskPrimitive>))||
+       !charge(records.size(),sizeof(std::size_t)+sizeof(std::shared_ptr<const void>))||
+       !charge(1,sourceMaskBytes(*storage))||!charge(count,sizeof(PreparedMaskPrimitive)+128)){
+        structural=true;return denied();
+    }
+    std::shared_ptr<MaskHistoryPlan> prefix;std::size_t common=0;
+    const auto compare=[&](const std::shared_ptr<MaskHistoryPlan>& plan){
+        if(!plan||plan->usage!=state.usage)return;std::size_t n=0;const auto& old=std::as_const(plan->records);
+        while(n<std::min(old.size(),records.size())&&equalMask(old[n],records[n],state.stats.history))++n;
+        if(n>common){prefix=plan;common=n;}
+    };
+    if(previous)compare(previous);
+    else for(const auto& plan:state.histories)compare(plan);
+    const auto metadata=sizeof(MaskHistoryPlan)+256+count*sizeof(std::shared_ptr<const PreparedMaskPrimitive>)+
+        records.size()*(sizeof(std::size_t)+sizeof(std::shared_ptr<const void>));
+    const auto quotaDenials=state.sources->statistics().quotaDenials;
+    auto retention=state.sources->getMasks(records,state.budget,true);if(!retention){
+        if(state.sources->statistics().quotaDenials!=quotaDenials)status=MaskHistoryAdmission::kResourcePending;
+        return denied();
+    }
+    if(retention->bytes>state.capacity||metadata>state.capacity-retention->bytes)return denied();
+    const auto accounted=metadata+retention->bytes;
+    const auto reserve=[&](std::size_t bytes,std::size_t weight)->std::optional<std::uint64_t>{
+        if(weight>state.capacity)return {};
+        for(;;){
+            const bool room=state.size()<512&&state.usage->bytes<=state.capacity-weight;
+            if(room)
+                if(auto token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true))return token;
+            if(!state.evict()){status=room?MaskHistoryAdmission::kResourcePending:MaskHistoryAdmission::kNotAdmitted;return {};}
+        }
+    };
+    auto token=reserve(metadata,accounted);if(!token)return denied();resources::ResourceLease lease(state.budget,*token);
+    auto result=std::make_shared<MaskHistoryPlan>();result->records=records;result->metadata=std::move(lease);
+    result->source=std::move(retention);result->usage=state.usage;result->bytes=accounted;state.usage->bytes+=accounted;
+    result->identity=++state.nextHistory;result->used=++state.tick;
+    result->primitives.reserve(count);result->primitiveEnds.reserve(records.size());result->exactPaths.resize(records.size());
+    if(prefix){
+        const auto end=prefix->primitiveEnds[common-1];result->prefixIdentity=prefix->identity;result->prefixPrimitives=end;
+        result->primitives.insert(result->primitives.end(),prefix->primitives.begin(),prefix->primitives.begin()+end);
+        result->primitiveEnds.insert(result->primitiveEnds.end(),prefix->primitiveEnds.begin(),prefix->primitiveEnds.begin()+common);
+        std::copy_n(prefix->exactPaths.begin(),common,result->exactPaths.begin());
+        state.stats.history.prefixReuses+=common;state.stats.history.copiedBytes+=end*sizeof(result->primitives.front())+
+            common*(sizeof(std::size_t)+sizeof(std::shared_ptr<const void>));
+    }else ++state.stats.history.resets;
+    const auto prepare=[&](const auto& value)->bool{
+        const auto units=[&]()->std::size_t{if constexpr(requires{value.path;})return value.path.commands.size();else return 4;}();
+        if(units>(state.capacity-std::min(state.capacity,sizeof(PreparedMaskPrimitive)+65536U))/256U)return false;
+        const auto estimate=sizeof(PreparedMaskPrimitive)+65536U+units*256U;
+        auto t=reserve(estimate,estimate);if(!t)return false;resources::ResourceLease reservation(state.budget,*t);
+        auto primitive=makePreparedMaskPrimitive();
+        if constexpr(requires{value.p0;}){
+            primitive->swept=true;primitive->width=float(2*std::max(value.p0.radius,value.p1.radius));
+            SkPathBuilder path;path.moveTo(float(value.p0.position.x),float(value.p0.position.y));
+            path.cubicTo(float(value.control1.x),float(value.control1.y),float(value.control2.x),float(value.control2.y),float(value.p1.position.x),float(value.p1.position.y));
+            primitive->path=path.detach();
+            primitive->bounds=SkRect::MakeLTRB(float(std::min({value.p0.position.x,value.p1.position.x,value.control1.x,value.control2.x})),float(std::min({value.p0.position.y,value.p1.position.y,value.control1.y,value.control2.y})),float(std::max({value.p0.position.x,value.p1.position.x,value.control1.x,value.control2.x})),float(std::max({value.p0.position.y,value.p1.position.y,value.control1.y,value.control2.y})));
+            primitive->bounds.outset(float(std::max(value.p0.radius,value.p1.radius)),float(std::max(value.p0.radius,value.p1.radius)));
+        }else {primitive->path=semanticPath(value.path);primitive->bounds=primitive->path.getBounds();}
+        const auto bytes=sizeof(PreparedMaskPrimitive)+128+primitive->path.approximateBytesUsed();
+        if(bytes>estimate||!reservation.shrink(bytes))return false;
+        primitive->lease=std::move(reservation);primitive->usage=state.usage;primitive->bytes=bytes;state.usage->bytes+=bytes;
+        result->primitives.push_back(std::move(primitive));++state.stats.history.primitiveBuilds;++state.stats.history.flattenedPrimitives;return true;
+    };
+    for(std::size_t i=common;i<records.size();++i){
+        bool ok=true;std::visit([&](const auto& g){if constexpr(requires{g.segments;}){
+            for(const auto& segment:g.segments)if(!prepare(segment)){ok=false;break;}
+        }else ok=prepare(g);},records[i].geometry);
+        if(!ok)return denied();result->primitiveEnds.push_back(result->primitives.size());
+    }
+    state.histories.push_back(result);++state.stats.history.admissions;return result;
+    }();
+    if(result||records.empty())status=MaskHistoryAdmission::kReady;
+    else if(status==MaskHistoryAdmission::kResourcePending)++state.stats.resourceWaits;
+    else {
+        ++state.stats.localRefusals;
+        // Pin the immutable source: a weak identity alone would not force COW
+        // when a caller mutates its last SharedVector owner. The source and
+        // witness share the existing local/global quota and512 cardinality.
+        // Occupancy changes invalidate it so held-plan pressure can recover.
+        constexpr auto bytes=sizeof(Impl::Refusal)+sizeof(std::shared_ptr<Impl::Refusal>)+128;
+        if(!refusalHit&&!structural&&state.budget&&bytes<=capacity){
+            auto retained=state.sources->getMasks(records,state.budget,true);
+            if(!retained||retained->bytes>capacity-bytes){if(admission)*admission=status;return result;}
+            const auto weight=bytes+retained->bytes;
+            std::optional<std::uint64_t> token;
+            for(;;){
+                if(state.size()<512&&state.usage->bytes<=capacity-weight)
+                    token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
+                if(token||!state.evict())break;
+            }
+            if(token){
+                auto r=std::make_shared<Impl::Refusal>();r->owner=storage;r->pointee=storage.get();r->pathBytes=state.pathBytes();
+                r->source=std::move(retained);r->metadata=resources::ResourceLease(state.budget,*token);r->usage=state.usage;r->bytes=weight;r->used=++state.tick;
+                state.usage->bytes+=weight;state.refusals.push_back(std::move(r));
+            }
+        }
+    }
+    if(admission)*admission=status;
+    return result;
+}
+std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::historicalPath(const std::shared_ptr<MaskHistoryPlan>& plan,std::size_t index){
+    if(!plan||plan->usage!=impl_->usage||index>=plan->records.size())return {};
+    ++impl_->stats.history.exactPathLookups;
+    if(plan->exactPaths[index]){++impl_->stats.history.exactPathHits;return std::static_pointer_cast<const Entry>(plan->exactPaths[index]);}
+    auto built=get(std::as_const(plan->records)[index].geometry,true);if(built)plan->exactPaths[index]=built;return built;
+}
+
 SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,
-    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity)noexcept{
+    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options)noexcept{
     capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
-    if(impl_->budget!=budget||impl_->capacity!=capacity){clear();impl_->budget=std::move(budget);impl_->capacity=capacity;}
-    return eraseGeometryQuery(record,mask,nullptr,true,this);
+    [[maybe_unused]]const auto historyBefore=impl_->stats.history;
+    std::shared_ptr<MaskHistoryPlan> historyPlan;
+    try{historyPlan=history(record.eraseMasks,std::move(budget),capacity);}
+    catch(const std::bad_alloc&){++impl_->stats.history.denied;}
+    EraseGeometryWork pathOps;
+    auto& cost=impl_->stats.exact;[[maybe_unused]]const auto before=cost;++cost.queries;cost.bodyIdentity=0;cost.fallbackReason=0;
+    const auto run=[&]()->SelectionGeometryHit{
+        try{
+            std::shared_ptr<const PreparedNavigationGeometry> body;
+            resources::ResourceLease scratch;
+            const auto* compact=std::get_if<semantic::CompactStrokeContent>(&record.content.get());
+            if(prepared&&options&&options->enabled&&compact&&record.kind==semantic::ObjectKind::kVectorStroke&&
+                compact->stroke.config.algorithmVersion==4&&
+                (compact->stroke.config.family==foundation::InkFamily::kRound||compact->stroke.config.family==foundation::InkFamily::kMarker)&&
+                compact->stroke.config.opacity*compact->stroke.config.color[3]>0){
+                // The source lease is O(1), not a record/history/geometry clone.
+                ReferenceTraversalEntry entry;entry.record.content=record.content;
+                entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
+                const auto initial=prepared->statistics();
+                body=prepared->get(entry,*options,impl_->budget,true,PreparedConsumer::kExact,true,true);
+                if(!body){
+                    const auto valid=semantic::validCompactStroke(compact->stroke);++cost.fullValidations;
+                    if(valid)cost.validationKnots+=compact->stroke.knots.size();else ++cost.invalidValidationScans;
+                    if(valid)body=prepared->get(entry,*options,impl_->budget,true,PreparedConsumer::kExact);
+                    else cost.fallbackReason=6;
+                }
+                const auto after=prepared->statistics();
+                cost.preparedValidationKnots+=after.validationKnots-initial.validationKnots;
+                cost.preparedCompileCalls+=after.syncCompileCalls-initial.syncCompileCalls;
+                cost.preparedCompileInputs+=after.syncCompileInputs-initial.syncCompileInputs;
+                cost.preparedComponents+=after.syncPathPrimitives-initial.syncPathPrimitives;
+                cost.contentComparisonKnots+=after.contentComparisonKnots-initial.contentComparisonKnots;
+                if(body&&!body->ready()){cost.fallbackReason=3;body.reset();}
+                else if(body&&!body->exactValidated()){cost.fallbackReason=5;body.reset();}
+                else if(!body&&!cost.fallbackReason)cost.fallbackReason=4;
+                if(body){
+                    // Bounded per-query path/callback scratch; source/replay and
+                    // index capacity remain charged to the pinned prepared body.
+                    auto token=impl_->budget->reserve(resources::ResourceClass::kScratch,4096,true);
+                    if(token)scratch=resources::ResourceLease(impl_->budget,*token);
+                    else {cost.fallbackReason=8;body.reset();}
+                }
+            }else cost.fallbackReason=prepared&&options?(options->enabled?2:7):1;
+            if(body){++cost.bodyUses;cost.bodyIdentity=body->identity();}
+            else ++cost.fallbacks;
+            return eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
+        }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost);}
+    };
+    const auto result=run();
+    impl_->stats.history.historicalDifferences+=pathOps.historicalDifferences;
+    impl_->stats.history.componentIntersections+=pathOps.componentIntersections;
+    namespace g5=foundation::internal::g5;
+    [[maybe_unused]]const auto historyAfter=impl_->stats.history;
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_history,false,2,g5::word(record.objectId,0),g5::word(record.objectId,1),
+        reinterpret_cast<std::uintptr_t>(record.eraseMasks.storage().get()),historyPlan?historyPlan->identity:0,
+        historyAfter.identityHits-historyBefore.identityHits,historyAfter.valueRecords-historyBefore.valueRecords,
+        historyAfter.valuePrimitives-historyBefore.valuePrimitives,historyAfter.flattenedPrimitives-historyBefore.flattenedPrimitives,
+        historyAfter.exactPathHits-historyBefore.exactPathHits,historyAfter.exactPathLookups-historyBefore.exactPathLookups,
+        pathOps.historicalDifferences,pathOps.componentIntersections,static_cast<unsigned>(result));
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_history,false,4,g5::word(record.objectId,0),g5::word(record.objectId,1),
+        reinterpret_cast<std::uintptr_t>(this),historyPlan?historyPlan->identity:0,
+        historyAfter.queryUnionOps-historyBefore.queryUnionOps,historyAfter.historyUnionOps-historyBefore.historyUnionOps,
+        historyAfter.queryPathBuilds-historyBefore.queryPathBuilds,historyAfter.historyPathBuilds-historyBefore.historyPathBuilds,
+        historyAfter.differenceNanoseconds-historyBefore.differenceNanoseconds,historyAfter.intersectionNanoseconds-historyBefore.intersectionNanoseconds,
+        historyAfter.queryPathNanoseconds-historyBefore.queryPathNanoseconds,historyAfter.historyPathNanoseconds-historyBefore.historyPathNanoseconds);
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::exact_body,false,1,g5::word(record.objectId,0),g5::word(record.objectId,1),reinterpret_cast<std::uintptr_t>(prepared),reinterpret_cast<std::uintptr_t>(record.content.shared().get()),cost.bodyIdentity,cost.bodyUses-before.bodyUses,cost.fallbackReason,static_cast<unsigned>(result),record.eraseMasks.size(),cost.fullValidations-before.fullValidations,cost.validationKnots-before.validationKnots,cost.compileCalls-before.compileCalls,cost.compileInputs-before.compileInputs,cost.constructedComponents-before.constructedComponents);
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::exact_body,false,2,cost.bodyIdentity,cost.indexNodes-before.indexNodes,cost.boundsTests-before.boundsTests,cost.componentChecks-before.componentChecks,cost.replayKnots-before.replayKnots,cost.materializedPaths-before.materializedPaths,cost.preparedValidationKnots-before.preparedValidationKnots,cost.preparedCompileCalls-before.preparedCompileCalls,cost.preparedCompileInputs-before.preparedCompileInputs,cost.preparedComponents-before.preparedComponents,cost.contentComparisonKnots-before.contentComparisonKnots);
+    return result;
 }
 SelectionGeometryHit intersectEraseGeometryComponentOracle(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
     return eraseGeometryQuery(record,mask,nullptr,false);

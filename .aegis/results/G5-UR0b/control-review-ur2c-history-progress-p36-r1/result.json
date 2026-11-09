@@ -1,0 +1,111 @@
+{
+  "schema": "g5-ur2c-history-progress-p36-independent-control-review-v1",
+  "status": "SCOPED_CONTROL_ACCEPTED",
+  "closed_failure": "U2C-HISTORY-PROGRESS-01",
+  "decision": "Accept final UR2c source9cc for the frozen package and its narrow P36. Original e32 blocked review remains immutable history; this receipt closes its named progress blocker.",
+  "package": {
+    "path": ".aegis/results/G5-UR0b/ur2c-history-progress-p36-r1/package.json",
+    "sha256": "49eb7526b1d71e206a0c033ae6209fbeeb71d53182474a849f2839ea68701c5c"
+  },
+  "implementation_result": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/result.json",
+    "sha256": "1ef10d39b124799735db54afd1f59b4bade247d81f61563970a577eef84b27f4"
+  },
+  "implementation_manifest": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/manifest.json",
+    "sha256": "cc201e9db1eb8dc20288a753819a8d449acfceee55430f8ff23dfafbcfb1b9f3"
+  },
+  "source_inventory": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/source-final.json",
+    "sha256": "91d021171cc67b093067576c02d770db1a9faad90cdd2d2d7b5c73724a131adf"
+  },
+  "source_tree_sha256": "9cc818e78047fa45211cdbf793dfcd83a3871f3ef0e4f453b42afbbb68a3201a",
+  "source_base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "repair_delta": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/repair-delta.json",
+    "sha256": "d2327a9dac2e1e5ae05e7ff95553711276a2d1fd945588078ba332ed0a65038e"
+  },
+  "cumulative_delta": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/cumulative-delta.json",
+    "sha256": "aae18d9c1fb72c2f5760b7dd2fa84da1074127be2f0ee6448abc0b0995126e37"
+  },
+  "independent_reviews": {
+    "integrity-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/integrity-review.json",
+      "sha256": "de0fe777269f78b2c279c31a5354f3228b4244adc1f9e52bba70195cf07fda27"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/regressions.json",
+      "sha256": "be3ccc98c09f869e3571a8f3a7ff8cf64ab844cf786bfe056b41cee03db868fa"
+    },
+    "progress-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/progress-review.json",
+      "sha256": "cf20e5c65af210bb96de2988c3f41bf8fe446a6dd7be47473bb494df68f35c40"
+    },
+    "offline-pixels.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/offline-pixels.json",
+      "sha256": "62c0d9042636f6d245d6020514a0e0b38ed9cf7268c52f3db4de201efd33a6e1"
+    },
+    "functional-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/functional-review.json",
+      "sha256": "db8b4c985622e4688261a64d878ef2ec09a29efb22dee7a006d0175a1fceb1ab"
+    },
+    "mask-consumer-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/mask-consumer-review.json",
+      "sha256": "2d798b7c9e48062da88267f75e41b352a4b06099d1cb058b56618a841a8c3334"
+    },
+    "matching-SDK-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/matching-SDK-review.json",
+      "sha256": "7829524f31cdc34c0c67e80ea5421d7514967bd0438361ad58dc1116994e210e"
+    },
+    "source-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/source-review.json",
+      "sha256": "a7d9e608f5d6f20ec7b405ba731c9274a9b9c811f72e6349cfa1b885d08097b0"
+    },
+    "demo-check.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/demo-check.json",
+      "sha256": "342b554ccd15dc5df359b41f7d3bed3e6086b527c096e22f5918e82bf82a174f"
+    },
+    "cleanup-review.json": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/cleanup-review.json",
+      "sha256": "501d81cd71ef3371bab5a5bc44aaf50f018bb74d9c379b623f13dcb273a8724f"
+    }
+  },
+  "validation": {
+    "registered_native": 117,
+    "native_green": 116,
+    "bound_preexisting_RF01_failure": 1,
+    "targeted_GTest": 4,
+    "Node": 72,
+    "Python": 47,
+    "boundary_contracts": 120,
+    "original_exact_decisions": 634,
+    "finite_witnesses": 6,
+    "real_GPU_draw_present_cases": 18,
+    "DPR": [
+      1,
+      2,
+      4
+    ],
+    "functional_Web_cases": 20,
+    "pixel_stages": 80,
+    "after_redo_roundtrips": 20,
+    "archive_members": 984
+  },
+  "ledger": {
+    "cumulative_starts": 84,
+    "cumulative_seconds": 5139,
+    "remaining_seconds": 3231,
+    "all_old_and_new_ids": "CLOSED",
+    "new_review_browser_starts": 0,
+    "new_review_pixel_oracle_invocations": 0
+  },
+  "Demo": "http://127.0.0.1:4295/example.html",
+  "HEAD_and_index_at_review": {
+    "HEAD": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "index_empty": true
+  },
+  "publication": "Control performed no Git mutations. Implementation may follow the human latest commit/push instruction on exact accepted product bytes; preserve old source/build/results and record old source/postimages to new commit/tree mapping. This is not SDK release authorization or an extra approval requirement.",
+  "official_whole_G5_P34_performance_release_SLO_Vibe_PASS": false,
+  "automatic_next_UR_authorized": false
+}

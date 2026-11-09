@@ -1,0 +1,47 @@
+{
+  "schema": "g5-ur2b-finite-proof-p36-contract-v1",
+  "failure_id": "U2B-DERIVED-FINITE-01",
+  "classification": "FROZEN_REQUIREMENT_FAILURE / IMPLEMENTATION_DEFECT / Render",
+  "trusted_requirements": [
+    "U2B-02 preserve all exact decisions",
+    "U2B-04 failure must not become Miss/Hit/Unsupported"
+  ],
+  "scope": "Repair the complete derived-finiteness admission proof before prepared exact local pruning/early-out. Reuse existing immutable body and validity/lifetime owner; retain warm O(1) validation and locality. No new semantic coordinate authority.",
+  "allowed_product_paths": [
+    "runtime/render/src/skia_prepared_geometry.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp",
+    "runtime/render/src/prepared_body_job.hpp",
+    "runtime/render/src/prepared_body_job.cpp",
+    "runtime/render/src/selection_region_geometry.cpp"
+  ],
+  "allowed_test_paths": [
+    "runtime/render/tests/ur2b_exact_query_test.cpp",
+    "runtime/render/CMakeLists.txt"
+  ],
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2b-finite-proof-p36-r1/",
+    "verification/evidence/performance/g5-ur2b-finite-proof-p36-r1/",
+    "out/G5-UR2b-finite-proof-p36-r1/"
+  ],
+  "root_cause_phase": {
+    "required_before_mutation": true,
+    "method": [
+      "Resolve control6 snapshot witnesses against original immutable old CPU binary and frozen r1 candidate. Existing control old/candidate output proves causal RED; add a native regression that actually executes the failing path before production change and preserve nonzero assertion output.",
+      "Check exactInvalidation/cold/full/checkpoint/deferred body construction and source-alias proof lifetime. Source-level finite double checks alone do not prove all derived SkPaths finite.",
+      "If independent witness contradicts localization, return precise BLOCKED_CODE_PATH_NOT_CONFIRMED with evidence; do not change semantics speculatively."
+    ]
+  },
+  "implementation_rules": [
+    "Preserve old full geometry/PathOps result for problematic source: original Invalid remains Invalid, not early Miss/Hit or new Unsupported. Either establish adequate immutable derived-finite proof once or decline fast path and execute unchanged old exact fallback. Failed optional proof must use that original kernel.",
+    "Do not alter semantic validators/schema/codec/limits or impose a new canonical coordinate range; a conservative Render fast-path admission guard is acceptable only with original exact fallback preserving decisions.",
+    "Full-path, checkpoint/replay and deferred ready-body routes must not advertise insufficient proof. Derived invalid geometry must not hide behind empty/nonintersecting bounds, early hit/noop/mask shortcut.",
+    "No per-query/full-history validation for the resident valid body; no second cache/compiler, bounds-only positive or unaccounted scratch. Keep aliases/content equality, leases,8MiB/512 and32/96MiB unchanged.",
+    "No GPU strategy/material/Scene/Interaction/Operation/History/readmission/receipt/SDK/dependency changes. All existing18file UR2b source delta outside minimal repair is immutable.",
+    "All original8 browser IDs, source inventory, native/candidate/oracle/SDK/payload/archives and r1 results stay immutable. Build new native/normal/qualification outputs in P36 namespace, never overwrite r1 binaries/SDKs.",
+    "No commit/push/UR2c. No retry/smoke or any browser outside the two explicit fresh correctness windows. Source/driver/artifacts freeze before either window; no mutation between."
+  ],
+  "handoff_rules": [
+    "Implementation remains sole product/index writer; control has changed diagnostic/evidence files only. Continue within this narrow scope without another human approval pause.",
+    "Proactively send READY_FOR_CONTROL_REVIEW or any BLOCKED/frozen terminal to control thread01a1b6f3-e69a-7fe2-8d9b-0222e8741f03 hostlocal, including package/result/source/repairdelta/SDK/native/manifest/archive hashes, tests, exact old/candidate parity,pixels,ledger,cleanup and remaining findings."
+  ]
+}

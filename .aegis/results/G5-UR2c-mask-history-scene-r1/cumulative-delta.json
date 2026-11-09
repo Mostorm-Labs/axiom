@@ -1,0 +1,170 @@
+{
+  "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+  "source_tree_sha256": "e32eeedb70b838ecfeab8e2be8b46e8b9dedd049594ac5df287ee40af94ccc9b",
+  "files": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "bae636bfe6e9b132036fb3c8a8abeff282410db940144b32da524f78299973b8"
+    },
+    {
+      "path": "runtime/composition/tests/ur2b_exact_query_runtime_test.cpp",
+      "sha256": "c87018cc525a2722e29269cb97c19fd209f817111f90be33c9929ab7ddbff724"
+    },
+    {
+      "path": "runtime/composition/tests/ur2c_mask_pipeline_test.cpp",
+      "sha256": "42693737397f7a6b6f89791ea3f1c42bee731e2449d31bf943ea25cde4a17d30"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "b45c2f909f2cf3523123c4423f6673ad9d55b8162338f731b5977d39d20f1309"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "8baa6d413b463f6424f9b0a867ef1e1b5bbd8ba4d5508a757b017e7b110d97b3"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "461feec80dfc2dac8f3a3ee20298861e6ece1c7d9ac61b607f0baf98b0cbb143"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "sha256": "8b2bf98b5767ec0ca8f8ef7a08d8d5d4cb890859626fd23e6a0b84626dc226f2"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "sha256": "c5e40a65018c45c9bd247e31bc1bb1715ea4794182622bcbc0dd21c0c537a701"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "59ea9b3f39820a3cffe6aa3f4ffd53050852c95783d8af67526c9b00ead9650c"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "sha256": "d5778bcd4779add1d0f813f49db3c1cdd2cfb64f01d95851ecc16d094130f3ef"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "cea91035a29e6169be44fb3ac892a16c5b43d10a3650786db6d1c04f9b0bb6d1"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "sha256": "a313803ab79bc39ecaf1e0671f8d97dbeb3f517b1eaecbe4d4dd9c5939658faa"
+    },
+    {
+      "path": "runtime/render/src/skia_mask_history.cpp",
+      "sha256": "7972804662f1819073883f018ee59b0b85460b917cb1dbb7619fd7829c86a66f"
+    },
+    {
+      "path": "runtime/render/src/skia_mask_history.hpp",
+      "sha256": "9d4fd59ded08c1e73ac4daa76b7b49857947359334542ce12946e8d082b5ca73"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "cd1be31b88b77334a03ca08f56c6047c11aeb8ea94c8c9525ee678b757bbfb36"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "14c4edd394b73fd576c41260f7f8abf894c172d4e6ff078f33ebcdfd04c0c146"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "70021b834c20371f10e69a90b87de731e0fb174d392573e4820774542dc3d6fe"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "sha256": "34166388b14044654358980750d14d67dcf361353563a7175c5bd15c02a55a9c"
+    },
+    {
+      "path": "runtime/render/tests/ur2b_exact_query_test.cpp",
+      "sha256": "427bab6065ecea3e842c362535749fb2d48b65f48784d26ec0251ea3e9c8c4cb"
+    },
+    {
+      "path": "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "sha256": "3646c82453e94b0873ccd827e580e8254f1e08836365acea7bf6cbee61caf905"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/scene_types.hpp",
+      "sha256": "da3b746c454c4d9afbdadbb2ef04ce9147124b09b50e49c655627793f12d3d54"
+    },
+    {
+      "path": "runtime/scene/include/canvas/scene/shared_scene_value.hpp",
+      "sha256": "2883ad6ea3ef1cef6a945887da3f1fda9c2e3b4e135e43410b322169ae1ce755"
+    },
+    {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "eb021b0b294c91d9c04fc03f42d6c3bb0fa344f0bf41bbdbdb58e26f716b30ac"
+    },
+    {
+      "path": "runtime/scene/src/scene.cpp",
+      "sha256": "da1ced652d5b8bce04709b8b5885f01be8443b4775675a3556bd9d4e2cc0e4d5"
+    },
+    {
+      "path": "runtime/scene/tests/CMakeLists.txt",
+      "sha256": "1f34555e51818524f2cd96ce162a8d63b0c4eb21f99b0ec262e86029a23b2a46"
+    },
+    {
+      "path": "runtime/scene/tests/ur2c_mask_only_scene_test.cpp",
+      "sha256": "391c951414e17998e7b61d82dbb0b2dacec7e92e8a4cb6b760e045767d8f91df"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_oracle.cpp",
+      "sha256": "c5c9e1ab3294d778cd39bc85f48c6e04ae629795b9a8c0aa2d06967f59b50b66"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query.mjs",
+      "sha256": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query_contract.mjs",
+      "sha256": "d16444f656a222588d607c94278c9e771840e7454d87a9e1b8dd0f1315773367"
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query_runner.py",
+      "sha256": "59556d83fe0c0678ace3bc4bd57a743665a219696dbd7978289cf0bbcb5e3601"
+    },
+    {
+      "path": "verification/runners/g5/ur2c_mask_history_contract.mjs",
+      "sha256": "ffd0c701602a876fbd70c90cc4bcf2327c0d960c8e26e1b3e4547c260cd5bbd2"
+    },
+    {
+      "path": "verification/runners/g5/ur2c_mask_history_runner.py",
+      "sha256": "0d2f938c2be7581e188c09840335654240e44ca762f731c737ae153b39f0519c"
+    },
+    {
+      "path": "verification/tests/g5_ur2b_exact_query.test.mjs",
+      "sha256": "0f1caee12fd1f0de0bf6e1b98f7366010ba83491bbf152d8c6a32a23775c9a1d"
+    },
+    {
+      "path": "verification/tests/g5_ur2c_mask_history.test.mjs",
+      "sha256": "4b0f645a8e945a1993e1238e10d3f9a06a492eea30d5b621fbb4d0f62c2d9c7a"
+    },
+    {
+      "path": "verification/tests/test_g5_ur2b_exact_query.py",
+      "sha256": "a23160ff588024a5a2b6fda20fdde6d0c37e14736e5fb97f3c22bdd1fbff0164"
+    },
+    {
+      "path": "verification/tests/test_g5_ur2c_mask_history.py",
+      "sha256": "2553be43e29b63ab39a107655b757d4925526643aae36d9594e65d30fc8fdcbc"
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-mask-history-scene-r1/cumulative.patch",
+    "sha256": "ce4d274be1180dc09d29ed7ad347271d98755f5e1f88ac59972099cff1dba728",
+    "bytes": 231234
+  },
+  "roundtrip": "EXACT_BYTES",
+  "parent_cumulative_delta": {
+    "path": ".aegis/results/G5-UR2b-finite-proof-p36-r1/cumulative-delta.json",
+    "sha256": "fef8dc05ae64811b39f2bd2b9c9088449db4fb77e011438b0c1997f0bf20820a",
+    "bytes": 3485
+  },
+  "task_package6files": "Included separately in source archive; product delta does not relabel control metadata as product changes."
+}

@@ -1,0 +1,192 @@
+{
+  "status": "VERIFIED",
+  "method": "Independent chronological raw joins across owner/document, actual non-noop Up, exact prepared body, ordered historical storage, atomic Scene publication and canonical consumption. No producer qualification verdict called.",
+  "cases": [
+    {
+      "case": "S0-B-brush-erase",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 17,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 34,
+      "retained_warm_identity_hits_without_history_preparation": 0,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 0,
+        "new_query_path_builds": 16,
+        "history_path_builds": 0,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 6300000,
+        "query_path_ns": 46700000,
+        "history_path_ns": 0
+      }
+    },
+    {
+      "case": "S0-E-reerase",
+      "proved_real_Up_commits": 3,
+      "published_mask_only_records": 48,
+      "exact_reuse_from_prior_published_mask_storage": 32,
+      "canonical_history_joined_to_published_Scene": 81,
+      "retained_warm_identity_hits_without_history_preparation": 1024,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 1536,
+        "history_union_ops": 0,
+        "new_query_path_builds": 48,
+        "history_path_builds": 0,
+        "history_difference_ns": 7000000,
+        "component_intersection_ns": 23300000,
+        "query_path_ns": 116700000,
+        "history_path_ns": 0
+      }
+    },
+    {
+      "case": "S0-H-undo-before-present",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 32,
+      "retained_warm_identity_hits_without_history_preparation": 0,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 0,
+        "new_query_path_builds": 16,
+        "history_path_builds": 0,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 6100000,
+        "query_path_ns": 46800000,
+        "history_path_ns": 0
+      }
+    },
+    {
+      "case": "S0-P-pan",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 32,
+      "retained_warm_identity_hits_without_history_preparation": 0,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 0,
+        "new_query_path_builds": 16,
+        "history_path_builds": 0,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 6600000,
+        "query_path_ns": 48600000,
+        "history_path_ns": 0
+      }
+    },
+    {
+      "case": "S0-Z-zoom-reentry",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 48,
+      "retained_warm_identity_hits_without_history_preparation": 0,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 0,
+        "new_query_path_builds": 16,
+        "history_path_builds": 0,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 6300000,
+        "query_path_ns": 46600000,
+        "history_path_ns": 0
+      }
+    },
+    {
+      "case": "S2-B-brush-erase",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 17,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 50,
+      "retained_warm_identity_hits_without_history_preparation": 352,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 1024,
+        "new_query_path_builds": 16,
+        "history_path_builds": 32,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 6000000,
+        "query_path_ns": 41600000,
+        "history_path_ns": 76800000
+      }
+    },
+    {
+      "case": "S2-E-reerase",
+      "proved_real_Up_commits": 3,
+      "published_mask_only_records": 48,
+      "exact_reuse_from_prior_published_mask_storage": 32,
+      "canonical_history_joined_to_published_Scene": 81,
+      "retained_warm_identity_hits_without_history_preparation": 1536,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 1536,
+        "history_union_ops": 1024,
+        "new_query_path_builds": 48,
+        "history_path_builds": 32,
+        "history_difference_ns": 14500000,
+        "component_intersection_ns": 22000000,
+        "query_path_ns": 109100000,
+        "history_path_ns": 78200000
+      }
+    },
+    {
+      "case": "S2-H-undo-before-present",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 48,
+      "retained_warm_identity_hits_without_history_preparation": 512,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 1024,
+        "new_query_path_builds": 16,
+        "history_path_builds": 32,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 5400000,
+        "query_path_ns": 41800000,
+        "history_path_ns": 77400000
+      }
+    },
+    {
+      "case": "S2-P-pan",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 48,
+      "retained_warm_identity_hits_without_history_preparation": 512,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 1024,
+        "new_query_path_builds": 16,
+        "history_path_builds": 32,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 5700000,
+        "query_path_ns": 43200000,
+        "history_path_ns": 76700000
+      }
+    },
+    {
+      "case": "S2-Z-zoom-reentry",
+      "proved_real_Up_commits": 1,
+      "published_mask_only_records": 16,
+      "exact_reuse_from_prior_published_mask_storage": 0,
+      "canonical_history_joined_to_published_Scene": 64,
+      "retained_warm_identity_hits_without_history_preparation": 512,
+      "separate_necessary_exact_work": {
+        "new_query_union_ops": 512,
+        "history_union_ops": 1024,
+        "new_query_path_builds": 16,
+        "history_path_builds": 32,
+        "history_difference_ns": 0,
+        "component_intersection_ns": 5600000,
+        "query_path_ns": 41100000,
+        "history_path_ns": 76700000
+      }
+    }
+  ],
+  "required_repeat_cases": [
+    "S0-E-reerase",
+    "S2-E-reerase"
+  ],
+  "new_browser_starts": 0,
+  "oracle_invocations": 0
+}

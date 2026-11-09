@@ -313,6 +313,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     ScenePreparationTimer timing{_work.preparationNanoseconds};
     try {
         if (_fullProjectionAuthority) {
+            ++_work.materializationCalls;_work.materializationRecords+=post_state.size();
             auto compiled = internal::materializeFullScene(post_state, _textLayoutService, deferConnectorRoutes_);
             if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
             RuntimeSceneProjection projection{post_state.generation(), {}};
@@ -330,6 +331,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             result.fullProjectionAuthority = true;
             return foundation::Result<PreparedPublication>::success(std::move(result));
         }
+        ++_work.materializationCalls;_work.materializationRecords+=post_state.size();
         const std::vector<semantic::ObjectRecord> source = post_state.allObjects();
         for (const semantic::ObjectRecord& record : source) {
             if (record.id.isZero() || !isSupportedRuntimeKind(record.kind)) {
@@ -409,6 +411,62 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
             publication.fullProjectionAuthority = _fullProjectionAuthority;
             return foundation::Result<PreparedPublication>::success(std::move(publication));
         }
+        // This narrower proof precedes the flat-document guard: an unrelated
+        // table/image does not make an unchanged root ink leaf dependent on it.
+        // Flags are an admission hint; compare every canonical body value.
+        bool maskOnly = !changes.objects().empty() && changes.resourceChanges().empty() &&
+            !changes.documentBackgroundChanged() && post_state.size()==_projection.records.size();
+        std::unordered_set<semantic::ObjectId,foundation::ObjectIdHash> maskIds;
+        for(const auto& change:changes.objects()) {
+            if(change.flags!=semantic::SemanticChangeFlags::kEraseMasks || !change.changed_fields.empty() ||
+                !maskIds.insert(change.object_id).second) { maskOnly=false;break; }
+            const auto* before=find(change.object_id);const auto* after=post_state.find(change.object_id);
+            if(!before||!after||before->placement.parent_id||after->placement.parent_id||
+                before->objectId!=after->id||before->kind!=semantic::ObjectKind::kVectorStroke||
+                before->kind!=after->kind||before->kindVersion!=after->kind_version||
+                before->placement!=after->placement||before->transform!=after->transform||
+                before->properties!=after->properties||!before->directDependencies.empty()||
+                requiresFullProjectionForLocalUpdate(*after)) {maskOnly=false;break;}
+            const auto* a=std::get_if<semantic::CompactStrokeContent>(&before->content.get());
+            const auto* b=std::get_if<semantic::CompactStrokeContent>(&after->content);
+            if(!a||!b||a->stroke.config.algorithmVersion!=4||a->stroke.config!=b->stroke.config||
+                a->stroke.seed!=b->stroke.seed||a->stroke.knots.size()!=b->stroke.knots.size()||
+                !std::equal(a->stroke.knots.begin(),a->stroke.knots.end(),b->stroke.knots.begin(),
+                    [&](const auto& x,const auto& y){++_work.bodyComparisonKnots;return x==y;})) {maskOnly=false;break;}
+            if(!before->geometryBounds.isFiniteAndOrdered()||!before->visualBounds.isFiniteAndOrdered()||
+                !before->worldBounds.isFiniteAndOrdered()) {maskOnly=false;break;}
+        }
+        if(maskOnly) for(const auto& record:std::as_const(_projection.records)) {
+            // Unknown relations are conservative. A group/clip containing the
+            // target, or a connector in the old non-inspection projection, is
+            // not a closed local leaf domain.
+            if(record.kind==semantic::ObjectKind::kConnector||
+                (record.placement.parent_id&&maskIds.contains(*record.placement.parent_id))||
+                std::any_of(record.directDependencies.begin(),record.directDependencies.end(),
+                    [&](auto id){return maskIds.contains(id);})) {maskOnly=false;break;}
+        }
+        if(maskOnly) {
+            RuntimeSceneProjection next=_projection;next.generation=post_state.generation();
+            scene::SharedVector<RuntimeSceneRecord> changed;
+            for(const auto& change:changes.objects()) {
+                const auto* previous=find(change.object_id);const auto* object=post_state.find(change.object_id);
+                RuntimeSceneRecord record=*previous;
+                record.eraseMasks=object->erase_masks;_work.maskRecordsCopied+=object->erase_masks.size();
+                const auto found=std::lower_bound(_lookup.begin(),_lookup.end(),change.object_id,
+                    [](const auto& item,auto id){return item.first<id;});
+                next.records[found->second]=record;changed.push_back(std::move(record));++_work.maskOnlyHits;
+                namespace g5=foundation::internal::g5;
+                G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_scene,false,1,
+                    _projection.generation.value(),post_state.generation().value(),g5::word(change.object_id,0),g5::word(change.object_id,1),
+                    reinterpret_cast<std::uintptr_t>(previous->content.shared().get()),reinterpret_cast<std::uintptr_t>(&object->content),
+                    reinterpret_cast<std::uintptr_t>(changed.back().eraseMasks.storage().get()),object->erase_masks.size(),
+                    std::get<semantic::CompactStrokeContent>(object->content).stroke.knots.size(),_work.maskOnlyHits,_work.bodyComparisonKnots);
+            }
+            PreparedPublication publication{std::move(next)};publication.localized=true;publication.maskOnlyVerified=true;
+            publication.fullProjectionAuthority=_fullProjectionAuthority;publication.changedRecords=std::move(changed);
+            return foundation::Result<PreparedPublication>::success(std::move(publication));
+        }
+        ++_work.maskOnlyDeclines;
         // A flat independent-leaf document is a closed dependency domain. Any
         // structural/relation/resource uncertainty uses the existing full path.
         if (!_flatIndependent || !changes.resourceChanges().empty() ||
@@ -442,11 +500,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                         makeError(foundation::ErrorCode::kRequiresFullRebuild,
                                   "Object dependency closure requires full projection"));
                 }
+                ++_work.materializationRecords;
+                if(const auto* c=std::get_if<semantic::CompactStrokeContent>(&object->content))_work.bodyCloneBytes+=c->stroke.knots.size()*sizeof(foundation::InkKnot);
                 changed.push_back(*object);
             } else {
                 removed.insert(change.object_id);
             }
         }
+        ++_work.materializationCalls;
         RuntimeSceneProjection patch{post_state.generation(), {}};
         // Recovery publishes the FullSceneCompiler inspection payload. Preserve
         // that authority (including digests/resources) on subsequent local edits.

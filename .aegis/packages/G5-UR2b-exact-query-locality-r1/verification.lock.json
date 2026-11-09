@@ -1,0 +1,268 @@
+{
+  "schema": "g5-ur2b-verification-lock-v1",
+  "obligations": [
+    {
+      "id": "U2B-01",
+      "requirement": "Remove repeated full-body preparation/validation on proven immutable warm exactquery; shareexisting drawbody across aliases/masks/transforms.",
+      "oracle": "Actualbaseline source on publishedHEAD, warmed via realSkiaRenderer then realintersectEraseGeometry/partialeraseUp; private qualification counters count actual compileCompactContour knots/component constructions, not a predicted formula.",
+      "acceptance": "Before routing change, native costRED shows oldflow rebuilding fullbody despite residentpreparedsource. After change, proven resident exactqueries do not increment fullcontourbuild/wholebodyvalidation peralias×query; allcoldadmission andfallback work counted honestly.",
+      "evidence_required": "Exactbaseline/probe/preimages/binary/log, finalGREEN andsamebody/actualconsumer association onownerthread."
+    },
+    {
+      "id": "U2B-02",
+      "requirement": "Local exact components, complete caps/tapers/pressure andno false negative/approximate hit.",
+      "oracle": "Pinned preoptimization fullCPU component-order querybinary and unchangedgeometry semantics; deterministic64small queries plus longcases1/8/16/32 sharedcopies withhistory0/1/2/5/10, selfintersections/affines/marker/caps/tapers/thinpositive/tangent/disjoint/repeat.",
+      "acceptance": "AllHit/Miss/Unsupported/Invalid decisions match. Sparse longline fixedquery tests materialize/check only intersecting indexedcomponents or checkpointblocks, fewerthanwholebody; denseallintersecting cases mayvisitall and mustreportselectivity ratherthanclaim constanttime.",
+      "evidence_required": "Completebatchinputs/snapshot/query DTO andCPUoracleoutput, actualindex/replay/materialization/workcounts andtested sourceidentity."
+    },
+    {
+      "id": "U2B-03",
+      "requirement": "Single prepared owner and precise cache validity.",
+      "oracle": "Draw->exact andexact->draw samebodytest; copiesA/B,maskonlyA,body/pressure/config/resourcechanges,contenthashcollision,old/newstorage,transforms,UndoRedo,delete/reopen.",
+      "acceptance": "No secondbodycache/secondgeometry algorithm. Unknown source still fullvalidated; fullcontent equality isrequired before crossstoragealias sharing, no trust inObjectId/revision/hashalone. B canonicalrecord,pixels,exacthits/maskhistory unchanged whenA branches.",
+      "evidence_required": "Nativeparity and independentpixels/records; actualsharedcacheidentity/leases/cost counters including newaliasdeepcompare,not just buildcount."
+    },
+    {
+      "id": "U2B-04",
+      "requirement": "Preserve exact failure/no-op semantics and fallback.",
+      "oracle": "Oldcomponentqueryindependentbinary plus existingerase_hit_test corpus,invalidsource/history,zeroopacity,unsupportedtextured/dab/v3,PathOpsfailure,cachedenial.",
+      "acceptance": "AABB only conservative filter. Tangent-only remainsMiss,smallpositiveHit. Preserve lazyinvalidhistory behavior: disjointquery canMiss despite irrelevantbadmask; intersectinginvalidhistoryInvalid. Optionalfastproof failure falls back to originalexact path withreason; never converts failure toMiss/Hit orUnsupported.",
+      "evidence_required": "Originalkeepersunchanged andnegativecontrols; countersdisclose fallback compilations andPathOps."
+    },
+    {
+      "id": "U2B-05",
+      "requirement": "Bounded resources and owner-thread lifetime.",
+      "oracle": "Default32/96MiB,8MiB/512entrylimits; cachedenial/eviction whilequerypinslive; inflight preparedbody,ownerchange/close/reopen/contextloss andbudgetrelease tests.",
+      "acceptance": "CPU source/index/queryscratch/mask pins accounted once; evict discoverability only; noreadinesslabel forpartialbody; synchronousexactquery remainscorrectwithcontrolleduncachedfallback. No newworker/sharedmutable replay concurrency, nobudget/frameallowance increase orunboundedresidentcopy.",
+      "evidence_required": "Actualquota/lease/cancellation/basis results; fallback/pending reasons andstable progress,notRSS return claim."
+    },
+    {
+      "id": "U2B-06",
+      "requirement": "Actual Runtime Up path consumes new exact service without changing transaction or inputhandoff.",
+      "oracle": "RuntimeComposition/Core actualpartialerase input,OperationEngine/History/snapshotinspect andQ1raw trace exact_prepare/pathops/bodyconsumer correlation.",
+      "acceptance": "Samecanonicaltarget/noop set and exactly-oncecommit asCPUoracle; UR2areadmission/Scene/frozenroster/newC/canonicalvisible behavior intact;cancel/source-lost/UndoRedo terminalcontracts unchanged. For eachS0/S2 fixture qualificationmustshow actualpreparedbody reuse on at leastone nonnoopproductionUp whenreadybodyisresident; allsupporteddefaultqueriescannot silentlyfall back. Report legitimatecold/denied/notready fallbacks withreason. No newpublicSDK orqueryAPI.",
+      "evidence_required": "NativeRuntimecase,20publicSDKfunctional cases,10qualification traces andoriginalstrictwork/receipt joins."
+    },
+    {
+      "id": "U2B-07",
+      "requirement": "Finaldrawing same under originalpixelrules.",
+      "oracle": "Unchanged originalUR2afunctional20case80coldstage matrix on freshnormal+qualificationSDKs, originalab7CPU/nullcache/AA.",
+      "acceptance": "80/80stages and20/20afterRedo qualify; no opaque-backgroundholes,overlayresidue,wrongmask/order,seams orfakecompletion. NativeDPR1/2/4 andrealWebDPR2,notclaimotherplatforms.",
+      "evidence_required": "Saveddualsurfaces/visibility/state/snapshot/request BEFOREpredicates,originalrefsandallfailurespreserved."
+    },
+    {
+      "id": "U2B-08",
+      "requirement": "Comparable Up andcontinuousinput timing, without profiler/readback perturbingprimaryphase.",
+      "oracle": "SamefrozenpublicrootSDKperfdriver,acceptednormalbaselineversusfinalnormalcandidate,3pairedrepeats,eachS0/S2 x E-reerase/P-pan;normaldiagnosticsOFF;schema/workerdata validation negativecontrols.",
+      "acceptance": "Reportallruns andallUp/nextDown/Move/navcontent/exactwaitp50p95p99max+deliveryschedule andfailure counts. Structuralgain isblocking; no arbitrary33ms/relativeSLO introduced. Iftimingnotclearlyimproved labelSTRUCTURAL_GAIN_TIMING_INCONCLUSIVE andreportfindings,neverclaimVibeparity/performancePASS.",
+      "evidence_required": "Actualper-eventJSmonotonicnormaldata,plannedvsactualdelivery,callback/FBOgaps; qualificationattribution separate,readback/snapshot outsideprimaryphase."
+    },
+    {
+      "id": "U2B-09",
+      "requirement": "Scope, consumer boundary, regression andmaterialization.",
+      "oracle": "Original85native+6new,4targetedGTest,64Node/38Python+meaningfulnewchecks,120boundaries;normal/qualification36-memberSDKprofile/source/compiler/build/resourcehashpreflight.",
+      "acceptance": "Allrequiredtests andprivateinstallguardpass,matchingJS/WASM/resources,developerOFF,strictGPU/UR2a bodies/receipts/budgetsunchanged. Exactresult/source/driver/binaries/SDK/readonlyrawarchives reviewer-resolvable.",
+      "evidence_required": "Explicitcommands/profile/fullsource+delta/oldneworacleidentities/results;priorfailsnotrewritten,largeproofLOCAL_ONLY honestlydeclared."
+    },
+    {
+      "id": "U2B-10",
+      "requirement": "Closed serial browser allowance and terminal callback.",
+      "oracle": "8namedworkerIDs only,normalA/Bsameharness serial,guardRSS3GiB,ceilactualaccounting/ownedprocesscleanup.",
+      "acceptance": "No extra start/smoke/retry; rawfailure prefixes persisted; stablefreeze/no midworkerproductfix. READYorpreciseBLOCKEDproactivelynotifiescontrol.",
+      "evidence_required": "Ledger64historicalstarts/3118seconds plusnewactuals,8370cap,remainingIDs/cleanup andprecisehandoff."
+    }
+  ],
+  "native_existing_names": [
+    "G5ScaleFixtureContract",
+    "G5Ur0Observation",
+    "G5GeometryChunkLocality",
+    "G4EraserSession",
+    "G4EditorHistory",
+    "FC01EditorHistoryInverseFamilies",
+    "G45PerfectFreehandReference",
+    "G5GpuRetirementContract",
+    "G5GpuResourceRecovery",
+    "G5CanonicalPreparedBody",
+    "G5CanonicalPreparedBodyBounded",
+    "G5CanonicalPreparedBodyPixels",
+    "G5CanonicalPreparedWorkingSet",
+    "G5PreparedBodyIndex",
+    "G5RenderExecution",
+    "G5EraseExactHit",
+    "G5RenderCache",
+    "G5CanonicalPreparedCompatibility",
+    "G5LiveEraseGpuMiss",
+    "G5LiveEraseDpr",
+    "G5TranslatedV4Drag",
+    "G5InkBodyMaskReuse",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5V4CoverageFallback",
+    "G5MaskedCanonicalRecovery",
+    "G5ErasedMixedNavigation",
+    "G5RetainedZoomReentry",
+    "G5MixedNavigationReentry",
+    "G5TileWork",
+    "G5RenderDamage",
+    "G47ImageResource",
+    "G5SkiaChunkRangeEntry",
+    "G5PreparedGeometry",
+    "FC00XFrameCoordinator",
+    "G3SkiaSurfaceProvider",
+    "G3PreviewSurface",
+    "G3SurfacePresentation",
+    "G3DirectReference",
+    "G5TransientReference",
+    "G3FrameOrchestration",
+    "G5SharedScenePayload",
+    "G5SharedSceneSnapshot",
+    "G5SharedSceneIndex",
+    "G5SharedSceneReaders",
+    "G5SharedSceneRetention",
+    "G5SharedSceneParity",
+    "G5Ur0ObservationIdentity",
+    "FC00XBrushBatchEvaluation",
+    "FC00XBrushBatchSemantics",
+    "FC00XFatalProviderFailure",
+    "SDKPublicResources",
+    "G5Navigation",
+    "FC04MSEHistoryFaultUndo",
+    "FC04MSEHistoryFaultRedo",
+    "FC01InsertHistory",
+    "FC00XCanonicalBusyPreviewProgress",
+    "FC00XPreviewBusyCanonicalProgress",
+    "FC00XBusyCanonicalPendingFeedback",
+    "FC00XLiveBrushPreview",
+    "SDKPublicDocumentIdentity",
+    "SDKPublicDocumentOperations",
+    "SDKPublicDocumentSnapshot",
+    "SDKPublicOperationIdentity",
+    "SDKPublicDocumentBackground",
+    "SDKPublicSelectionInput",
+    "FC01AxisPublicationTruth",
+    "FC01HostPublicationTruth",
+    "G45BrushPreviewHandoff",
+    "F08FrameQualification",
+    "SDKNativeNavigationPreview",
+    "G5UR2AReadmissionAcquire",
+    "G5UR2AReadmissionPresent",
+    "G5UR2ANavigation",
+    "G5UR2AHandoff",
+    "G5UR2ASceneRecovery",
+    "G5UR2AHistory",
+    "G5UR2ALifecycle",
+    "G5UR2ANavigationSafety",
+    "G5UR2ACompositionProof",
+    "G5UR2ABrushVisibility",
+    "G5UR2AMaskIsolationDirect",
+    "G5UR2AMaskIsolationPrepared",
+    "G5UR2AMaskIsolationBackdrop",
+    "G5UR2AMaskIsolationLegacy"
+  ],
+  "native_new_names": [
+    "G5UR2BExactParity",
+    "G5UR2BExactBodySharing",
+    "G5UR2BExactLocality",
+    "G5UR2BExactInvalidation",
+    "G5UR2BExactPressure",
+    "G5UR2BExactInputRuntime"
+  ],
+  "expected_native_count": 91,
+  "additional_GTest_filter": "--gtest_filter=PartialEraseLive.*:ObjectClipboard.PublicationBackpressureRejectsDuplicateAndCutAtomically:ObjectClipboard.MaskedInkKeepsAppearanceButAllocatesFreshMaskIdentity",
+  "existing_Node_command": [
+    "node",
+    "--test",
+    "verification/tests/g5_render_execution.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+    "verification/tests/g5_prepared_body_index.test.mjs",
+    "verification/tests/g5_transient_reference.test.mjs",
+    "verification/tests/g5_transient_attribution.test.mjs",
+    "verification/tests/g5_canonical_prepared_body.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+    "verification/tests/g5_resource_recovery.test.mjs",
+    "verification/sdk_controller/controller_test.mjs",
+    "verification/sdk_controller/transport_test.mjs",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+    "verification/tests/g5_ur2a_handoff.test.mjs"
+  ],
+  "existing_Python_files": [
+    "test_g5_canonical_prepared_body_working_set.py",
+    "test_g5_transient_reference.py",
+    "test_g5_prepared_body_index_reverify.py",
+    "test_g5_render_execution.py",
+    "test_g5_transient_attribution.py",
+    "test_g5_canonical_prepared_body.py",
+    "test_g5_prepared_body_index.py",
+    "test_g5_resource_recovery.py",
+    "test_g5_resource_recovery_loss_reverify.py",
+    "test_g5_ur2a_handoff.py"
+  ],
+  "new_Node_tests": [
+    "verification/tests/g5_ur2b_exact_query.test.mjs"
+  ],
+  "new_Python_tests": [
+    "verification/tests/test_g5_ur2b_exact_query.py"
+  ],
+  "boundary_command": [
+    "python3.12",
+    "tools/check_runtime_boundaries.py",
+    "--root",
+    "."
+  ],
+  "oracle_precondition": {
+    "baseline_decision_oracle": "Before routing/product changes compile a private uninstalled batchCLI against the accepted full-CPU component kernel (current source old geometry/eraseGeometryQuery); freeze itsbinary/compiler/request DTO andsource beforechangingcandidate. Candidateprepared/cachepixels/geometry never enteroracle.",
+    "baseline_cost_RED": "Minimal qualification-only G5 aggregatecounting permitted beforebehavior change: count actual wholecontourcompile knots andcomponents at existingold call. This probe changes no routing/geometry/mask/validation/returnvalues. Bind exactprobe delta andoldpublishedpreimages; old costRED iscorrectnesspass but structuralcostfailure, nevercompile-red.",
+    "currentCPUreference": "Retain intersectEraseGeometryComponentOracle as exactoldcomponent path; newpreparedconsumer mustnot beused bythatpath. Nativecrosschecks also run separately frozenoldbinary,notonlycandidatefunction.",
+    "private_fixture_DTO": {
+      "schema": "g5-ur2b-exact-query-v1",
+      "encoding": "JSON withopaque snapshotpath/SHA plus arrayof objectId32hex andexistingFilledPath/SweptCircle semanticmaskDTO,finite exactdouble geometry;IDs/seeds/revisions strings,neverJSNumber64bit",
+      "scope": "Verification-only,notconsumerpublicAPI. DriverparsesexistingSnapshotCodec andreleasedmaskforms; operation/document state nevermutated. CompleteDTOandbatchcases frozenbeforeproduction routing change."
+    }
+  },
+  "original_pixel_oracle": {
+    "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "pixel_reference_catalog": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+    "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c"
+  },
+  "AA": "Original2devicepixel perprimitive/mask/alpha band,<=2channellevelsinterior;no candidate-derived exclusion/newtolerance. Exactsnapshot+fullrequest/resources/hash reuseonly,originalonce forunmatchedinput10000ms,no retries.",
+  "browser_window": {
+    "historical_starts": 64,
+    "historical_charged_seconds": 3118,
+    "original_cap_seconds": 8370,
+    "remaining_before": 5252,
+    "ids_in_order": [
+      "UR2B1-FQ1",
+      "UR2B1-FN1",
+      "UR2B1-A1",
+      "UR2B1-B1",
+      "UR2B1-B2",
+      "UR2B1-A2",
+      "UR2B1-A3",
+      "UR2B1-B3"
+    ],
+    "FQ_FN_outer_seconds": 360,
+    "each_performance_outer_seconds": 180,
+    "new_starts_max": 8,
+    "new_nominal_seconds_max": 1800,
+    "remaining_after_nominal_reserve": 3452,
+    "concurrency": 1,
+    "process_family_RSS_mib": 3072,
+    "charge": "ceil(actualelapsed);failedstartedwindowscount;oldIDsalwaysclosed,unusedquota no retryauthorization",
+    "functional": "Exact20cases80stages20roundtrips originalUR2a workers; unchangedpublicinput/pacing/capture/Oracle/guard. Taskoutput identity-onlyadapter mayredirect exactoldsource-inventory subprocess tocurrentmetadata only; separatelyhash/reviewadapter.",
+    "performance": "EachA/B workerexact4newpages:S0E,S2E,S0P,S2P usingoriginalhandoffConsumer.init/run andsamepacing. No capture/snapshot/oracle/trace insideprimaryphase. Noadaptivegeometrysearch orfixturewarmup beyondinit/settledsharedprecondition. BaselineandcandidateexactnormalSDKbyteidentities frozen,onlyonevariant perworker.",
+    "baseline_normal_SDK": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/candidate-builds.json",
+      "sha256": "1e84611f256680e3ce492b29eb1caf0dc1c05b3f9a271b79616bc95442917ac2"
+    },
+    "baseline_equivalence": "ExistingnormalSDK is buildrevisionbed9 plus exactaccepted09edsource; publishedHEAD is source-equivalent forproduct/dependencies. Preserve originalBuildInfo,record actualbuilt-revision/sourceSHA andpublicationequivalence;neverrestampoldSDKbuiltatnewHEAD.",
+    "warm_cold_labels": "Freshpage init andnormalsettle precondition recorded. Native covers cold/miss/pressure; donotcall warmdrawcase coldrestoration orphysicalGPUtime."
+  },
+  "performance_classification": [
+    "STRUCTURAL_GAIN_TIMING_IMPROVEMENT_OBSERVED",
+    "STRUCTURAL_GAIN_TIMING_INCONCLUSIVE"
+  ],
+  "claims": "No officialG5/P34/performanceSLO/release/otherplatformorrealWebDPR4PASS. No fullUR0 or100K/1M prerequisite."
+}

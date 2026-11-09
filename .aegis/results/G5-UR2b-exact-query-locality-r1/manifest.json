@@ -1,0 +1,124 @@
+{
+  "schema": "g5-ur2b-review-manifest-v1",
+  "package": {
+    "path": ".aegis/packages/G5-UR2b-exact-query-locality-r1/package.json",
+    "sha256": "ee8672721bd2e16ec9395c3255d8b31a309682d7a2351f9fb6deff0cabb954fd",
+    "bytes": 2687
+  },
+  "source": {
+    "inventory": {
+      "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/source-final.json",
+      "sha256": "e676a29f6a547723c84c2f802687bab41879f94976490a59280107a0ab2de427",
+      "bytes": 6995172
+    },
+    "source_tree_sha256": "17ffbd0ae6742890f84e986e69ce43c5c4d86081c7fde80607a1d3db3f657f37",
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8"
+  },
+  "delta": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/source-delta.json",
+    "sha256": "fab3e245644df149252ed6a0252f13f16ff5fb33e06c0fbb0f71c336f9398e9e",
+    "bytes": 5684
+  },
+  "patch": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/delta.patch",
+    "sha256": "7cd0ebd5547e1e1a4f3e5d1d7576971207a1497bd630d06547f94fae2f643d7b",
+    "bytes": 97864
+  },
+  "roundtrip": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/patch-roundtrip.json",
+    "sha256": "66992a096558fd675d628c92392559bf42eca55c6174e61fedae22854f595ffe",
+    "bytes": 1265
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/source.tar.gz",
+        "sha256": "be4659bf1960c441eb9daf78e7866b8cfb25f80420f22697580b9ba8edbbbcde",
+        "bytes": 2746287
+      },
+      "members": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/source-members.json",
+        "sha256": "e7bf858b59706989758749d6ee9aadae0a582c6b331d62b6bb6c9e5853f39327",
+        "bytes": 19507
+      },
+      "files": 51
+    },
+    "native": {
+      "archive": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/native-oracle.tar.gz",
+        "sha256": "eca9b8e2c16e66b3d79a631f9902b30480809b3139fcb41c27b11d9736f1b4f1",
+        "bytes": 408215391
+      },
+      "members": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/native-oracle-members.json",
+        "sha256": "603e9f2a070f6f665acd1f43d596794ccdb95d7993b4f9b8aa9343ca75ded1fc",
+        "bytes": 57569
+      },
+      "files": 164
+    },
+    "SDK": {
+      "archive": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/matched-SDK.tar.gz",
+        "sha256": "ad68736e4c0a75cea5cece14598d5462824152f3e4255418be548165e6cbec54",
+        "bytes": 37962206
+      },
+      "members": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/matched-SDK-members.json",
+        "sha256": "58cf5bec4749c7e9081bf89603a08a7bc82d4a1d818cc2d336ae4183da49950c",
+        "bytes": 25078
+      },
+      "files": 72
+    },
+    "web_raw": {
+      "archive": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/web-raw.tar.gz",
+        "sha256": "e933ae4175ae9870aeb295ee80c07869fdeedf201ca1fee31efdaf6985fd7271",
+        "bytes": 178150272
+      },
+      "members": {
+        "path": "out/G5-UR2b-exact-query-locality-r1/review-artifacts/web-raw-members.json",
+        "sha256": "3d987dc615cb3833a58b1f5d9033adc54d3afa82e917199c33d84ccf203dab50",
+        "bytes": 284585
+      },
+      "files": 726
+    }
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/candidate-builds.json",
+    "sha256": "ccbc2768238d210f721fdcc2a3ab7ac4010c53356ac4c94b9773a660c2a6a9ea",
+    "bytes": 11111
+  },
+  "drivers": {
+    "verification/runners/g5/ur2b_exact_query.mjs": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4",
+    "verification/runners/g5/ur2b_exact_query_runner.py": "59556d83fe0c0678ace3bc4bd57a743665a219696dbd7978289cf0bbcb5e3601",
+    "out/G5-UR2b-exact-query-locality-r1/identity-adapter.mjs": "a5e029b5bbf90f00d732eaf6278627f3c4458693336a255b980e894d72e3ceab",
+    "verification/runners/g5/ur2a_handoff.mjs": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1",
+    ".aegis/results/G5-UR2b-exact-query-locality-r1/analyze-web.mjs": "767bcae37e058457abad7fe66c61a5ebecd9758b61a39feea410221bdf99c56a"
+  },
+  "old_oracle": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/oracle-source-provenance.json",
+    "sha256": "c5de98a94889ccce3fb50f45fa73e7b862ace66999f0c5b829abfa926ea6d023",
+    "bytes": 734
+  },
+  "structural": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/structural-gain.json",
+    "sha256": "82c9b6d3c9c6248b6d9b4d28e57445e7becf146bf2f66ad138c21cbaa621382c",
+    "bytes": 2569
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/web-findings.json",
+    "sha256": "2e3736655816919b30c86b931b61db98f75c2b1a7c403f3d5ec16a3093fd9b1a",
+    "bytes": 160406
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/local-web/sampling-ledger.json",
+    "sha256": "dfc685bf8ca68a0b07b127a31cb50a7a4ce6ebb7f2238db43e708b0810218fa4",
+    "bytes": 9750
+  },
+  "native_artifacts": {
+    "path": ".aegis/results/G5-UR2b-exact-query-locality-r1/native-artifacts.json",
+    "sha256": "99d75563beb68272dea20ff4b3b9b38879995eca81b49e54d01b4bcfbc63beff",
+    "bytes": 13239
+  },
+  "reviewability": "Shared same-host worktree and new read-only content-addressed archives. Large native/SDK/raw proof LOCAL_ONLY as frozen by package; no evidence commit required."
+}

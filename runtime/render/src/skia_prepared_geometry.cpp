@@ -28,23 +28,38 @@ void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink
 
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
-void PreparedNavigationGeometry::build(ink::CompactContour* staged){
+SkPath PreparedNavigationGeometry::exactCapPath(const foundation::InkBrushConfig& config,const ink::ContourCap& cap){
+    // Match the original exact kernel, including SkScalar conversion and the
+    // final marker transform. Finite source doubles alone do not prove this.
+    SkPathBuilder builder;builder.addCircle(0,0,float(cap.radius));auto path=builder.detach();
+    SkMatrix matrix;matrix.setTranslate(float(cap.x),float(cap.y));
+    if(config.family==foundation::InkFamily::kMarker){matrix.preRotate(float(config.markerAngle*57.29577951308232));matrix.preScale(1,float(config.markerFlatness));}
+    return path.makeTransform(matrix);
+}
+void PreparedNavigationGeometry::build(ink::CompactContour* staged,PreparedGeometryStatistics* work){
     G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
 
     if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&std::as_const(source_))){
         const auto& s=compact->content.get().stroke;
+        exactValidationValid_=foundation::validInkBrushConfig(s.config,true)&&!s.knots.empty()&&s.knots.size()<=262144;
         distances_.resize(s.knots.size()+1,0);
         for(std::size_t i=0;i<s.knots.size();++i){
             const auto& k=s.knots[i];const auto radius=ink::compactRadius(s.config,k.pressure);
+            exactValidationValid_=exactValidationValid_&&std::isfinite(k.x)&&std::isfinite(k.y);if(work)++work->validationKnots;
             support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
             distances_[i+1]=distances_[i]+(i?std::hypot(k.x-s.knots[i-1].x,k.y-s.knots[i-1].y):0);
         }
+        exactValidationComplete_=true;
         if(s.config.algorithmVersion!=4)return;
         contour_=true;
+        if(work&&!staged){++work->syncCompileCalls;work->syncCompileInputs+=s.knots.size();}
         auto contour=staged?std::move(*staged):ink::compileCompactContour(s.config,s.knots);
+        if(work)work->syncPathPrimitives+=(contour.patches.empty()?0:contour.patches.size()-1)+contour.caps.size();
         ribbons_.reserve(contour.patches.empty()?0:contour.patches.size()-1);
-        for(std::size_t i=0;i+1<contour.patches.size();++i)
-            ribbons_.push_back(compactContourRibbon(std::span(contour.patches).subspan(i,2)));
+        for(std::size_t i=0;i+1<contour.patches.size();++i){
+            auto path=compactContourRibbon(std::span(contour.patches).subspan(i,2));
+            exactDerivedFinite_=exactDerivedFinite_&&path.isFinite();ribbons_.push_back(std::move(path));
+        }
         caps_=std::move(contour.caps);
         const auto groups=[](std::size_t count,auto bounds){
             std::vector<Group> result;result.reserve((count+31)/32);
@@ -61,34 +76,45 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged){
             }return result;
         };
         ribbonGroups_=groups(ribbons_.size(),[&](auto i){return ribbons_[i].getBounds();});
-        capGroups_=groups(caps_.size(),[&](auto i){return compactContourCapBounds(caps_[i]);});
+        capGroups_=groups(caps_.size(),[&](auto i){
+            exactDerivedFinite_=exactDerivedFinite_&&exactCapPath(s.config,caps_[i]).isFinite();
+            return compactContourCapBounds(caps_[i]);});
     }else if(const auto* vector=std::get_if<BrushStrokeReferenceCommand>(&std::as_const(source_))){
         const auto& output=vector->content.get().stroke.vector_output;
         vector_=buildVectorBrushOutlineSkPath(std::span(output.outline),output.fill_rule,output.closed);
     }
 }
-void PreparedNavigationGeometry::buildReplay(){
+void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
     G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
 
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
     contour_=true;replayDistance_=ink::compactLength(stroke.knots);
+    exactValidationValid_=foundation::validInkBrushConfig(stroke.config,true)&&!stroke.knots.empty()&&stroke.knots.size()<=262144;
+    if(work)work->syncLengthInputs+=stroke.knots.size();
     for(const auto& k:stroke.knots){const auto radius=ink::compactRadius(stroke.config,k.pressure);
+        exactValidationValid_=exactValidationValid_&&std::isfinite(k.x)&&std::isfinite(k.y);if(work)++work->validationKnots;
         support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));}
+    exactValidationComplete_=true;
     replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
     replayOutput_.patches.reserve(replayBlockKnots+replayBlockExtras);replayOutput_.caps.reserve(replayBlockKnots+replayBlockExtras);
     ink::CompactContourCompiler compiler(stroke.config);std::size_t primitive=0;
     for(std::size_t first=0;first<stroke.knots.size();first+=replayBlockKnots){
         const auto count=std::min(replayBlockKnots,stroke.knots.size()-first);
         auto checkpoint=compiler;replayOutput_.patches.clear();replayOutput_.caps.clear();
+        if(work){++work->syncCompileCalls;work->syncCompileInputs+=count;}
         compiler.append({stroke.knots.data()+first,count},replayDistance_,replayOutput_);
         if(first+count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
         auto bounds=SkRect::MakeEmpty();
         const auto join=[&](SkRect b){if(b.isEmpty()||!b.isFinite()){
             const auto m=std::numeric_limits<float>::max();bounds=SkRect::MakeLTRB(-m,-m,m,m);
         }else bounds.join(b);};
-        for(std::size_t i=0;i+1<replayOutput_.patches.size();++i)join(compactContourRibbon(std::span(replayOutput_.patches).subspan(i,2)).getBounds());
-        for(const auto& cap:replayOutput_.caps)join(compactContourCapBounds(cap));
+        for(std::size_t i=0;i+1<replayOutput_.patches.size();++i){
+            auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(i,2));
+            exactDerivedFinite_=exactDerivedFinite_&&path.isFinite();join(path.getBounds());
+        }
+        for(const auto& cap:replayOutput_.caps){exactDerivedFinite_=exactDerivedFinite_&&exactCapPath(stroke.config,cap).isFinite();join(compactContourCapBounds(cap));}
         const auto emitted=(replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1)+replayOutput_.caps.size();
+        if(work)work->syncPathPrimitives+=emitted;
         replay_.push_back({std::move(checkpoint),first,count,primitive,primitive+emitted,bounds});primitive+=emitted;
     }
     replayOutput_.patches.clear();replayOutput_.caps.clear();
@@ -169,12 +195,60 @@ ImmutableSourceIdentity preparedBodyIdentity(const ReferenceCommand& command){
     if(const auto* c=std::get_if<BrushStrokeReferenceCommand>(&command))return {c->content.shared(),sourceTypeTag<semantic::BrushStrokeContent>(),command.index()};
     return {};
 }
+bool PreparedNavigationGeometry::visitExact(const SkRect& demand,
+    const std::function<bool(const SkPath&)>& visitor,ExactComponentWork& work)const{
+    const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
+    // Unknown bounds are conservative. They cannot prove a hit or authorize
+    // dropping geometry. Coordinates stay in object-local CPU exact space.
+    const auto visible=[&](SkRect b){++work.boundsTests;return b.isEmpty()||!b.isFinite()||
+        demand.isEmpty()||!demand.isFinite()||SkRect::Intersects(b,demand);};
+    const auto capPath=[&](const ink::ContourCap& cap){
+        ++work.materializedPaths;return exactCapPath(stroke.config,cap);
+    };
+    const auto visit=[&](const SkPath& path){++work.components;return visitor(path);};
+    if(!replay_.empty()){
+        // Preserve the oracle's all-ribbons then all-caps component order.
+        // Selected checkpoints can therefore replay twice. Count every input;
+        // checkpoint mode is never reported as zero compilation.
+        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
+            ++work.groups;if(!visible(block.bounds))continue;
+            replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
+            compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
+            work.replayKnots+=block.count;
+            if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+            if(pass==0){
+                for(std::size_t i=0;i+1<replayOutput_.patches.size();++i){
+                    auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(i,2));++work.materializedPaths;
+                    if(visible(path.getBounds())&&!visit(path))return false;
+                }
+            }else for(const auto& cap:replayOutput_.caps)if(visible(compactContourCapBounds(cap))){
+                const auto path=capPath(cap);if(!visit(path))return false;
+            }
+        }
+        return true;
+    }
+    for(const auto& group:ribbonGroups_){
+        ++work.groups;if(!visible(group.bounds))continue;
+        for(auto i=group.begin;i<group.end;++i)if(visible(ribbons_[i].getBounds())&&!visit(ribbons_[i]))return false;
+    }
+    for(const auto& group:capGroups_){
+        ++work.groups;if(!visible(group.bounds))continue;
+        for(auto i=group.begin;i<group.end;++i)if(visible(compactContourCapBounds(caps_[i]))){
+            const auto path=capPath(caps_[i]);if(!visit(path))return false;
+        }
+    }
+    return true;
+}
 namespace {
-bool equalBody(const ReferenceCommand& a,const ReferenceCommand& b){
+bool equalBody(const ReferenceCommand& a,const ReferenceCommand& b,PreparedGeometryStatistics& work){
     // This is complete value equality, including config/seed/snapshot. Unknown
     // ownership must not use ImmutableValue's raw-pointee shortcut as proof.
     if(a.index()!=b.index())return false;
-    if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&a))return c->content.get()==std::get<CompactStrokeReferenceCommand>(b).content.get();
+    if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&a)){
+        const auto& x=c->content.get().stroke;const auto& y=std::get<CompactStrokeReferenceCommand>(b).content.get().stroke;
+        if(x.config!=y.config||x.seed!=y.seed||x.knots.size()!=y.knots.size())return false;
+        for(std::size_t i=0;i<x.knots.size();++i){++work.contentComparisonKnots;if(x.knots[i]!=y.knots[i])return false;}return true;
+    }
     if(const auto* c=std::get_if<BrushStrokeReferenceCommand>(&a))return c->content.get()==std::get<BrushStrokeReferenceCommand>(b).content.get();
     return false;
 }
@@ -271,9 +345,10 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::publish
 }
 std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     const ReferenceTraversalEntry& entry,const RenderCacheOptions& limits,
-    const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool criticalReplay,PreparedConsumer consumer,bool deferred){
+    const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool criticalReplay,PreparedConsumer consumer,bool deferred,bool existingOnly){
     G5_SCOPE(g5Work,g5::Tag::lookup,g5::Purpose::none);
     ++work_.lookups;
+    if(consumer==PreparedConsumer::kExact)++work_.exactQueries;
     if(consumer==PreparedConsumer::kNavigation)++work_.navigationQueries;
     if(consumer==PreparedConsumer::kRetainedInk)++work_.retainedInkQueries;
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -301,7 +376,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     for(auto it=first;it!=last;++it){
         ++work_.candidateChecks;++work_.indexLookups;auto body=entries_.find(it->second);if(body==entries_.end())continue;
         ++work_.contentComparisons;
-        if(equalBody(body->second.geometry->source_,entry.command)){
+        if(equalBody(body->second.geometry->source_,entry.command,work_)){
             auto geometry=body->second.geometry;const auto id=body->first;
             try{if(!remember(key,geometry,id,std::move(*retained),limits,budget,criticalContour))return denied();}
             catch(const std::bad_alloc&){return denied();}
@@ -309,6 +384,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
             ++work_.hits;return geometry->ready()||deferred?geometry:nullptr;
         }
     }
+    if(existingOnly)return {};
     while(entries_.size()>=limits.maxEntries)if(!evictUnused()){
         // maxEntries bounds cache discoverability, not in-flight consumers.
         // A replaced pinned body keeps its own geometry/source/index leases.
@@ -358,7 +434,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         if(!token)return denied();resources::ResourceLease admission(budget,*token);
         try{
             auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;
-            candidate->sourceLeases_=*retained;candidate->buildReplay();
+            candidate->sourceLeases_=*retained;candidate->buildReplay(&work_);
             const auto bytes=candidate->footprint();if(bytes>replayEstimate)return denied();
             admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
             candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
@@ -385,6 +461,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
             const auto& stroke=compact->content.get().stroke;
             ink::CompactContourCompiler compiler(stroke.config);
             const auto total=ink::compactLength(stroke.knots);
+            ++work_.syncCompileCalls;work_.syncCompileInputs+=stroke.knots.size();work_.syncLengthInputs+=stroke.knots.size();
             compiler.append(stroke.knots,total,staged);compiler.finish(total,staged);
         }catch(const std::bad_alloc&){return denied();}
         const auto ribbons=staged.patches.empty()?0:staged.patches.size()-1;
@@ -400,7 +477,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     if(!token)return criticalContour?replay():denied();
     resources::ResourceLease admission(budget,*token);
     try{
-        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->sourceLeases_=*retained;candidate->build(contour?&staged:nullptr);
+        auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->sourceLeases_=*retained;candidate->build(contour?&staged:nullptr,&work_);
         const auto bytes=candidate->footprint();if(bytes>estimate)return denied();
         // Owner-thread transaction: shrink the admitted peak to live storage.
         admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);if(!token)return denied();

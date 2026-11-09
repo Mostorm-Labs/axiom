@@ -1,0 +1,269 @@
+{
+  "schema": "g5-ur2c-p36-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "blocking_class": null,
+  "package": {
+    "path": ".aegis/results/G5-UR0b/ur2c-history-progress-p36-r1/package.json",
+    "sha256": "49eb7526b1d71e206a0c033ae6209fbeeb71d53182474a849f2839ea68701c5c",
+    "bytes": 1897
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/manifest.json",
+    "sha256": "cc201e9db1eb8dc20288a753819a8d449acfceee55430f8ff23dfafbcfb1b9f3",
+    "bytes": 8184
+  },
+  "source_tree_sha256": "9cc818e78047fa45211cdbf793dfcd83a3871f3ef0e4f453b42afbbb68a3201a",
+  "source_revision": {
+    "base_commit": "2a1ab6a164aa85dd7c969846ee9f94885aa232a8",
+    "repair_delta": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/repair-delta.json",
+      "sha256": "d2327a9dac2e1e5ae05e7ff95553711276a2d1fd945588078ba332ed0a65038e",
+      "bytes": 2321
+    },
+    "cumulative_delta": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/cumulative-delta.json",
+      "sha256": "aae18d9c1fb72c2f5760b7dd2fa84da1074127be2f0ee6448abc0b0995126e37",
+      "bytes": 6841
+    }
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1",
+    "archives": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/source-3949903ff459a38bc695c306cfa04709df9b8e3b7d494e19bf248152a4d338d7.tar.gz",
+          "sha256": "3949903ff459a38bc695c306cfa04709df9b8e3b7d494e19bf248152a4d338d7",
+          "bytes": 4414816
+        },
+        "members": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/source-members.json",
+          "sha256": "a2204ad3328b0a8851a3b8b25c21c53646573acb1676b0fc9bff1021e7eb493d",
+          "bytes": 38923
+        },
+        "files": 119
+      },
+      "native": {
+        "archive": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/native-598663bd56a1093afa237023425b6fd148902e1e99a08fc51553f36d8ebb94ee.tar.gz",
+          "sha256": "598663bd56a1093afa237023425b6fd148902e1e99a08fc51553f36d8ebb94ee",
+          "bytes": 497675166
+        },
+        "members": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/native-members.json",
+          "sha256": "ed3f688962990e50abd63735adef88e6a58af84b0e2b84b6ba7a53bab172381e",
+          "bytes": 64176
+        },
+        "files": 197
+      },
+      "SDK": {
+        "archive": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/matched-SDK-b023e7a58087d1b7d0215f87f3a537853eb8805d3cd23c3827bab9da346c3bbe.tar.gz",
+          "sha256": "b023e7a58087d1b7d0215f87f3a537853eb8805d3cd23c3827bab9da346c3bbe",
+          "bytes": 37971188
+        },
+        "members": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/matched-SDK-members.json",
+          "sha256": "3e50c5321f414b280af60e4e683a9c93e2e4a11dfeff23175608346f1b8456e5",
+          "bytes": 22888
+        },
+        "files": 72
+      },
+      "web_raw": {
+        "archive": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/web-raw-74fd37af5c3a4c3574d9f54f57710e74c54a406d8b7b948cd09d0ca9dbe5e8e2.tar.gz",
+          "sha256": "74fd37af5c3a4c3574d9f54f57710e74c54a406d8b7b948cd09d0ca9dbe5e8e2",
+          "bytes": 179479102
+        },
+        "members": {
+          "path": "out/G5-UR2c-history-progress-p36-r1/review-artifacts/web-raw-members.json",
+          "sha256": "7f70cfe22bec01bed521ab25d9217c4cc1a306306ce3ea8ed53b0c0cf208de2c",
+          "bytes": 223370
+        },
+        "files": 596
+      }
+    }
+  },
+  "obligation_closure": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/obligation-closure.json",
+    "sha256": "1be0d5244ddb23753616578180dd2d96d35916814e8da361b3be2dd35ebbec77",
+    "bytes": 9928
+  },
+  "tests": {
+    "native": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/native-summary.json",
+      "sha256": "fe28ccb05fc063becb5f66170868d0e355513502ba9374e3e9d89140758e54e3",
+      "bytes": 3477
+    },
+    "four_targeted_GTest": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/native-targeted-GTest.log",
+      "sha256": "9f2e084e13483c657d3f110bcc814c94c2d0eff0eb9de076197a50e4831c2741",
+      "bytes": 47786
+    },
+    "Node": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/node-tests.log",
+      "sha256": "fa53fe75ab1eb6a530a54d392b985023bf2db5f4109e733ef220cf2548dc1063",
+      "bytes": 14410
+    },
+    "Python": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/python-tests.log",
+      "sha256": "8905c98240b11c8666b0ff9488a194fa13c2a86d3c3da415fc6ee44226ea7153",
+      "bytes": 146
+    },
+    "boundaries": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/boundary-tests.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/web-findings.json",
+    "sha256": "9c603e44126d5b42946f7c5bb08977e0c46853318d2716ec00abef15cf98d986",
+    "bytes": 31241
+  },
+  "ledger": {
+    "schema": "g5-ur2c-p36-two-closed-windows-v1",
+    "planned_ids": [
+      "UR2CHP36-1-Q1",
+      "UR2CHP36-1-N1"
+    ],
+    "historical_starts": 82,
+    "historical_charged_seconds": 4774,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CHP36-1-Q1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 193,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/qualification-sdk",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-history-progress-p36-r1/local-web/UR2CHP36-1-Q1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 192.89500258298358,
+          "peak_process_family_rss_kib": 2723056,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true,
+        "actual_consumption_proof": "OBSERVED"
+      },
+      {
+        "id": "UR2CHP36-1-N1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 172,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-history-progress-p36-r1/local-web/UR2CHP36-1-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 171.62546375003876,
+          "peak_process_family_rss_kib": 1793536,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED",
+        "identity_stable": true
+      }
+    ],
+    "remaining_status": "NONE",
+    "cumulative_starts": 84,
+    "cumulative_charged_seconds": 5139
+  },
+  "new_normal_Demo": {
+    "url": "http://127.0.0.1:4295/example.html",
+    "pid": 59348,
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/normal-install/js",
+    "profile": "normal",
+    "diagnostics": false,
+    "developer_components": false,
+    "source_tree_sha256": "9cc818e78047fa45211cdbf793dfcd83a3871f3ef0e4f453b42afbbb68a3201a",
+    "HTTP_members": {
+      "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+      "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+      "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+      "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+      "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+      "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+      "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+      "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+      "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+      "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+      "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+      "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+      "axiom.wasm": "c6c6014c4a5cab642ee872a477c80fd39b9f8c999c4fea0211b65fe2480e9475",
+      "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+      "internal/axiom.mjs": "0d3d241c066d7930b908ed5706feefe6bd8da7d1892be2999715495a65467fe9",
+      "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+      "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+      "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+      "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+      "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+      "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+      "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+      "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+      "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+      "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+      "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+      "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+      "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+      "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+      "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+      "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+      "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+      "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+      "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    "normal_manifest": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/normal-artifact-manifest.json",
+      "sha256": "674d74a1a59d9c3b4f50eff13d99c8f6c7818baaa54938b3d6f22f43357b166d"
+    },
+    "browser_started": false,
+    "old_servers_untouched": true
+  },
+  "classification": "CORRECTNESS_AND_HISTORY_PROGRESS_REVERIFIED_NO_NEW_TIMING",
+  "remaining": [
+    "Original sequential GPU mask draws still consume large nonresident histories; optional cache progress is fixed, not a new geometry or scheduling algorithm. Exact PathOps and semantic/wire copies remain. Olde32 A/B timing stays bound only to e32; no new performance sampling.",
+    "Other platforms, physical GPU/display timing, G5/P34/release/SLO/Vibe parity are outside this package."
+  ],
+  "commit_push_performed": false,
+  "index_empty": true,
+  "official_whole_G5_P34_performance_PASS": false
+}

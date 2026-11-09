@@ -1,0 +1,117 @@
+{
+  "source38_matches_frozen_9cc_postimages": true,
+  "fixture_inputs_materialized": 6,
+  "fresh_checks": [
+    {
+      "name": "history-progress",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress"
+      ],
+      "returncode": 0,
+      "elapsed_s": 1.694018459005747,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/history-progress.log"
+    },
+    {
+      "name": "history-admission",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--admission"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.03272841597208753,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/history-admission.log"
+    },
+    {
+      "name": "painted-frame-safety",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress-safety"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.06569566699909046,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/painted-frame-safety.log"
+    },
+    {
+      "name": "node-tests",
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_render_execution.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+        "verification/tests/g5_prepared_body_index.test.mjs",
+        "verification/tests/g5_transient_reference.test.mjs",
+        "verification/tests/g5_transient_attribution.test.mjs",
+        "verification/tests/g5_canonical_prepared_body.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+        "verification/tests/g5_resource_recovery.test.mjs",
+        "verification/sdk_controller/controller_test.mjs",
+        "verification/sdk_controller/transport_test.mjs",
+        "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+        "verification/tests/g5_ur2a_handoff.test.mjs",
+        "verification/tests/g5_ur2b_exact_query.test.mjs",
+        "verification/tests/g5_ur2c_mask_history.test.mjs"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.20094154099933803,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/node-tests.log"
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+        "verification/tests/test_g5_transient_reference.py",
+        "verification/tests/test_g5_prepared_body_index_reverify.py",
+        "verification/tests/test_g5_render_execution.py",
+        "verification/tests/test_g5_transient_attribution.py",
+        "verification/tests/test_g5_canonical_prepared_body.py",
+        "verification/tests/test_g5_prepared_body_index.py",
+        "verification/tests/test_g5_resource_recovery.py",
+        "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+        "verification/tests/test_g5_ur2a_handoff.py",
+        "verification/tests/test_g5_ur2b_exact_query.py",
+        "verification/tests/test_g5_ur2c_mask_history.py"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.24877266702242196,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/python-tests.log"
+    },
+    {
+      "name": "boundary-tests",
+      "command": [
+        "python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.07174437498906627,
+      "log": "out/G5-UR2b-UR2c-publication-2026-11-10/boundary-tests.log"
+    }
+  ],
+  "native_matrix": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/native-summary.json",
+    "sha256": "fe28ccb05fc063becb5f66170868d0e355513502ba9374e3e9d89140758e54e3",
+    "bytes": 3477
+  },
+  "Web_qualification": {
+    "cases": 20,
+    "cold_pixel_stages": 80,
+    "roundtrips": 20,
+    "reference": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/web-findings.json",
+      "sha256": "9c603e44126d5b42946f7c5bb08977e0c46853318d2716ec00abef15cf98d986",
+      "bytes": 31241
+    },
+    "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+  },
+  "source_changes_for_publication": false,
+  "new_browser_starts": 0,
+  "third_party_rebuilds": 0,
+  "ordinary_push_only": true,
+  "known_failure": "Same frozen canvas_rf01_full_rebuild line88 pointer-address assertion; 116/117 native green.",
+  "whole_G5_P34_performance_PASS": false
+}

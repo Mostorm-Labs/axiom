@@ -94,8 +94,27 @@ semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bo
   return bag;
 }
 
+void appendSceneMaskStamp(std::ostream& out,const semantic::EraseMaskRecord& mask) {
+    out << ':';
+    for (const auto byte : mask.id.bytes) out << static_cast<unsigned>(byte) << ',';
+    out << ':' << mask.geometry.index();
+    std::visit([&](const auto& geometry) {
+      using G = std::decay_t<decltype(geometry)>;
+      if constexpr (std::is_same_v<G, semantic::SweptCircleMask>) {
+        for (const auto& segment : geometry.segments) {
+          for (const auto* knot : {&segment.p0, &segment.p1})
+            out << knot->position.x << ',' << knot->position.y << ',' << knot->radius << ';';
+          out << segment.control1.x << ',' << segment.control1.y << ','
+              << segment.control2.x << ',' << segment.control2.y << '|';
+        }
+      } else {
+        out << geometry.path.commands.size();
+      }
+    }, mask.geometry);
+}
+
 template<class Record>
-std::string sceneContentStamp(const Record& record) {
+std::string sceneContentStamp(const Record& record,bool includeMasks=true) {
   std::ostringstream out;
   out.precision(17);
   out << record.referenceGeometryDigest << '|';
@@ -150,24 +169,7 @@ std::string sceneContentStamp(const Record& record) {
     }, entry.value);
     out << '|';
   }
-  for (const auto& mask : record.eraseMasks) {
-    out << ':';
-    for (const auto byte : mask.id.bytes) out << static_cast<unsigned>(byte) << ',';
-    out << ':' << mask.geometry.index();
-    std::visit([&](const auto& geometry) {
-      using G = std::decay_t<decltype(geometry)>;
-      if constexpr (std::is_same_v<G, semantic::SweptCircleMask>) {
-        for (const auto& segment : geometry.segments) {
-          for (const auto* knot : {&segment.p0, &segment.p1})
-            out << knot->position.x << ',' << knot->position.y << ',' << knot->radius << ';';
-          out << segment.control1.x << ',' << segment.control1.y << ','
-              << segment.control2.x << ',' << segment.control2.y << '|';
-        }
-      } else {
-        out << geometry.path.commands.size();
-      }
-    }, mask.geometry);
-  }
+  if(includeMasks)for (const auto& mask : record.eraseMasks) appendSceneMaskStamp(out,mask);
   return out.str();
 }
 
@@ -246,6 +248,8 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> activeIds;
     activeIds.reserve(records.size());
     for (const auto& record : records) activeIds.insert(record.objectId);
+    if(prune)for(auto it=stampMetadata_.begin();it!=stampMetadata_.end();)
+      it=activeIds.contains(it->first)?std::next(it):stampMetadata_.erase(it);
     if (prune) for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
       it = activeIds.contains(it->first) ? std::next(it) : renderSlots_.erase(it);
     }
@@ -286,7 +290,10 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
           (propertyBool(record.properties, 2U, false) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kLocked) : 0U));
       std::uint64_t slot = 1469598103934665603ULL;
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
-      const auto contentGeneration = sceneContentGeneration(record);
+      const auto contentGeneration = [&]{
+        if constexpr(std::is_same_v<Record,canvas::RuntimeSceneRecord>)return memoizedContentGeneration(record,generation);
+        else return sceneContentGeneration(record); // Independent full compiler stays original.
+      }();
       auto order = canvas::SceneOrderKey(record.placement.order_key.bytes());
       if(hierarchical) {
         std::array<std::uint8_t,8> bytes{};
@@ -331,6 +338,36 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
   }
  private:
+  struct StampMetadata final {
+    std::string body;
+    canvas::scene::SharedVector<semantic::EraseMaskRecord> masks;
+    std::vector<std::uint32_t> hashAfterMask;
+  };
+  mutable std::unordered_map<foundation::ObjectId,StampMetadata,foundation::ObjectIdHash> stampMetadata_;
+  std::uint32_t memoizedContentGeneration(const canvas::RuntimeSceneRecord& record,semantic::SemanticGeneration generation)const {
+    auto& memo=stampMetadata_[record.objectId];const auto body=sceneContentStamp(record,false);
+    const auto hashBytes=[](std::uint32_t hash,std::string_view text){for(unsigned char byte:text){hash^=byte;hash*=16777619U;}return hash;};
+    [[maybe_unused]]std::uint64_t compared=0,primitives=0,serialized=0,bytes=0;
+    std::size_t prefix=0;
+    const auto storage=record.eraseMasks.storage(),known=memo.masks.storage();
+    if(memo.body==body){
+      if(storage.get()==known.get()&&!storage.owner_before(known)&&!known.owner_before(storage))prefix=record.eraseMasks.size();
+      else while(prefix<std::min(memo.masks.size(),record.eraseMasks.size())){
+        ++compared;const auto& old=std::as_const(memo.masks)[prefix];const auto& next=record.eraseMasks[prefix];
+        if(old.id!=next.id||old.geometry.index()!=next.geometry.index())break;
+        const bool equal=std::visit([&](const auto& a){using T=std::decay_t<decltype(a)>;const auto& b=std::get<T>(next.geometry);
+          if constexpr(requires{a.segments;})return a.segments.size()==b.segments.size()&&std::equal(a.segments.begin(),a.segments.end(),b.segments.begin(),[&](const auto& x,const auto& y){++primitives;return x==y;});
+          else return a.path.fill_rule==b.path.fill_rule&&a.path.commands.size()==b.path.commands.size()&&std::equal(a.path.commands.begin(),a.path.commands.end(),b.path.commands.begin(),[&](const auto& x,const auto& y){++primitives;return x==y;});
+        },old.geometry);if(!equal)break;++prefix;
+      }
+    }
+    memo.hashAfterMask.resize(prefix);auto hash=prefix?memo.hashAfterMask.back():hashBytes(2166136261U,body);
+    for(std::size_t i=prefix;i<record.eraseMasks.size();++i){std::ostringstream out;out.precision(17);appendSceneMaskStamp(out,record.eraseMasks[i]);const auto text=out.str();bytes+=text.size();++serialized;hash=hashBytes(hash,text);memo.hashAfterMask.push_back(hash);}
+    memo.body=body;memo.masks=record.eraseMasks;
+    G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_scene,false,3,g5::word(record.objectId,0),g5::word(record.objectId,1),generation.value(),
+      reinterpret_cast<std::uintptr_t>(storage.get()),prefix,compared,primitives,serialized,bytes,hash);
+    (void)generation;return hash?hash:1U;
+  }
   mutable std::unordered_map<foundation::ObjectId, std::uint32_t,
                              foundation::ObjectIdHash> renderSlots_;
   mutable std::unordered_map<foundation::ObjectId, std::uint32_t,

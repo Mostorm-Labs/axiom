@@ -27,6 +27,7 @@ class SkiaRenderCache final {
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
     std::shared_ptr<PreparedGeometryCache> preparedGeometry;
+    std::shared_ptr<EraseMaskPathCache> maskHistory;
     std::function<void(std::size_t)> reclaimRecorded;
     std::function<void(std::size_t)> reclaimPreparation;
     RenderCacheOptions options{};
@@ -64,6 +65,7 @@ class SkiaRenderCache final {
     enum class InkDraw {kSkipped,kDrawn,kRetry};
     InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
+    void drawHistoricalMasks(SkCanvas&,const ReferenceTraversalEntry&);
     void clear() noexcept;
     // Entering live erasure changes the useful representation. Retire old
     // complete masked sources before the next GPU epoch pins their leases.
