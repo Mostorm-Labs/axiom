@@ -1,0 +1,126 @@
+{
+  "schema": "g5-verifier-only-execution-contract-v1",
+  "authorized_source_paths": [
+    "verification/runners/g5/prepared_body_index.mjs",
+    "verification/runners/g5/prepared_body_index_runner.py",
+    "verification/tests/g5_prepared_body_index.test.mjs",
+    "verification/tests/test_g5_prepared_body_index.py",
+    "verification/runners/g5/prepared_body_index_reverify*",
+    "verification/tests/g5_prepared_body_index_reverify*",
+    "verification/tests/test_g5_prepared_body_index_reverify*"
+  ],
+  "required_changes": [
+    "Record a short resolved driver design and old-overrun deterministic RED before editing the helper.",
+    "Repair the partial-erase functional pacing seam using a bounded real event-loop/display yield, even when every absolute deadline has expired. Localize to this functional exercise; preserve old performance samplers and original drag defaults. A sampler RAF alone is not proof of actual Render consumer use.",
+    "Keep exact input geometry/order/logical stamps and existing root public SDK calls. Capture raw original intended deadlines, actual dispatch, SDK RAFs, content writes and original cold frame timings; label this functional pacing, not comparative performance.",
+    "Add a separate continuation ledger/entry mode for the two new IDs and target-case subset. Legacy IDs/functions remain historical; never write into an old output directory.",
+    "Run relevant deterministic Node/Python checks and runtime boundaries, then freeze verifier/product/driver/SDK/oracle identities before either worker. Resolve implementation details locally and continue without another routine approval question.",
+    "Reuse the existing normal/qualification SDKs exactly; no CMake/Runtime/Render/native rebuild or new Demo port is needed for verifier-only edits.",
+    "Run the two serial workers exactly once. Preserve all cold3stage buffers before assertions and use the frozen independent reference contract. Return actual consumer/correctness evidence and notify the control thread at ready or blocker."
+  ],
+  "forbidden_changes": [
+    "Any Runtime/Render/native-test/SDK/public API/schema/descriptor/version/source lock change",
+    "Any production budget,per-entry limit,GPU/AA/receipt/input or semantic commit policy change",
+    "Changing the SDK scheduler to make the test pass",
+    "Changing bounded_worker.py,pixel_oracle.mjs,shared navigation observer or other performance drivers",
+    "Old result/reference/fixture/ledger/normal4284or4285asset mutation",
+    "Direct private Runtime/cache calls, synthetic prepared counters or manually enabling a previously unqualified capability",
+    "Extra browser seed/smoke/retry, increased oracle timeout, source edits during a worker, commit or push",
+    "UR1c2/UR1d/UR2 implementation or declaring overallUR1/G5/P34/performancePASS"
+  ],
+  "tests": {
+    "deterministic_red_required": true,
+    "node_command": [
+      "node",
+      "--test",
+      "verification/tests/g5_prepared_body_index.test.mjs",
+      "verification/tests/g5_render_execution.test.mjs",
+      "verification/tests/g5_transient_reference.test.mjs",
+      "verification/tests/g5_transient_attribution.test.mjs"
+    ],
+    "python_command": [
+      "python3.12",
+      "-m",
+      "unittest",
+      "verification.tests.test_g5_prepared_body_index",
+      "verification.tests.test_g5_render_execution",
+      "verification.tests.test_g5_transient_reference",
+      "verification.tests.test_g5_transient_attribution"
+    ],
+    "boundary_command": [
+      "python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "native": "Reuse unchanged product/native tests and hash-bound43/43independent review; do not rerun unrelated native suite merely because the verifier changed. Additional new helper tests must be run if added."
+  },
+  "browser_window": {
+    "ids": [
+      "UR1C1-R1-Q1",
+      "UR1C1-R1-N1"
+    ],
+    "new_browser_starts_max": 2,
+    "concurrency": 1,
+    "order": [
+      "qualification",
+      "normal"
+    ],
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 48,
+    "historical_charged_seconds": 1770,
+    "new_nominal_seconds_max": 360,
+    "original_cumulative_cap_seconds": 8370,
+    "cases": [
+      "S0-erase-navigation",
+      "S2-erase-navigation"
+    ],
+    "device_pixel_ratio": 2,
+    "logical_target": [
+      800,
+      500
+    ],
+    "new_seed_or_smoke_allowed": false,
+    "retries_allowed": false,
+    "hard_failure_policy": "Guard,crash,environment,identity or cleanup failure stops remaining starts; preserve missing rows. A completed functional failure stays recorded and may consume the remaining originally planned normal worker once, not retry qualification.",
+    "accounting": "Reserve each new identity exactly once; actual ceil seconds and owned cleanup; keep old48/1770unchanged. The old NONE window is not reopened.",
+    "phase_progress": "The fixed32Move gesture yields after Down and after dispatched samples as needed so subsequent active display opportunities can occur. Use bounded waits/abort under existing180second worker guard; no unbounded RAF wait or CPU busy-loop."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "U1C1R1-01..04 satisfied",
+      "Both qualification target cases show actual shared-service retained-ink reuse",
+      "All4new cases preserve semantic/receipt correctness and12pixel stages/4roundtrips qualify",
+      "Protected subject/artifact identity,source scope and cleanup intact"
+    ]
+  },
+  "terminal_blockers": [
+    "PROTECTED_SOURCE_OR_ARTIFACT_MISMATCH",
+    "DETERMINISTIC_OLD_MECHANISM_NOT_REPRODUCED",
+    "ACTUAL_WEB_CONSUMER_NOT_OBSERVED",
+    "REQUIRED_CORRECTNESS_OR_EVIDENCE_FAILURE",
+    "RESOURCE_GUARD_OR_CLEANUP_FAILURE"
+  ],
+  "return_policy": {
+    "continue_until_terminal": true,
+    "return_surface": "CONTROL_REVIEW",
+    "producer_cannot_issue_gate_PASS": true,
+    "on_real_new_product_need": "Stop with exact earliest untrusted layer and evidence; do not expand product edits to satisfy this verifier task."
+  },
+  "source_identity_policy": {
+    "current_result_is_new_identity": true,
+    "exclude_only_new_self_outputs": [
+      ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/",
+      "verification/evidence/performance/g5-ur1c1-web-consumer-reverify-r1/"
+    ],
+    "retain_existing_declared_exclusions": true,
+    "must_include": [
+      "All product source, authorized verifier delta and tests",
+      "New frozen task package",
+      "Old evidence outside preexisting source-identity exclusions"
+    ],
+    "rule": "Extend the new continuation source-identity seam for its own result outputs before worker launch. Do not let writing worker results invalidate its own source freeze, do not broadly exclude authority/product/verification files, and do not relabel historical0a5d8113as the new full source tree."
+  }
+}

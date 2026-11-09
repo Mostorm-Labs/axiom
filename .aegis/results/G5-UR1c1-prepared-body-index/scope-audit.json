@@ -1,0 +1,35 @@
+{
+  "status": "SCOPED",
+  "branch": "codex/geometry-navigation-integration",
+  "revision": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+  "source_entries": 18,
+  "tracked_changes": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/render_cache.hpp",
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/src/skia_ink_layers.hpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_navigation_tiles.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp",
+    "runtime/render/src/skia_prepared_geometry.hpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/source_retention.hpp"
+  ],
+  "new_sources": [
+    "runtime/render/tests/prepared_body_index_test.cpp",
+    "verification/runners/g5/prepared_body_index.mjs",
+    "verification/runners/g5/prepared_body_index_runner.py",
+    "verification/tests/g5_prepared_body_index.test.mjs",
+    "verification/tests/test_g5_prepared_body_index.py"
+  ],
+  "forbidden_production_changes": [],
+  "ordinary_canonical_and_Direct_prepared_integration": "DEFERRED_UR1c2",
+  "budgets_mib": {
+    "navigation": 32,
+    "shared": 96
+  },
+  "no_commit_or_push_in_UR1c1": true
+}

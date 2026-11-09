@@ -1,0 +1,77 @@
+{
+  "schema": "ur1c2-scoped-verification-summary-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "obligations": [
+    {
+      "id": "U1C2-01",
+      "status": "VERIFIED_SCOPED",
+      "claim": "Actual canonical raster / Direct / damage-miss consume qualified ready body; public qualification observes same service.",
+      "evidence": [
+        "native-work-facts.json",
+        "local-functional/UR1C2-Q1/worker-result.json"
+      ]
+    },
+    {
+      "id": "U1C2-02",
+      "status": "VERIFIED_SCOPED",
+      "claim": "One shared in-flight body, <=32 source knots and <=32 path units per advance, aggregate frame allowance.",
+      "evidence": [
+        "design.md",
+        "native-work-facts.json",
+        "mechanism-red-final.log",
+        "compatibility-and-new-tests.log"
+      ]
+    },
+    {
+      "id": "U1C2-03",
+      "status": "VERIFIED_SCOPED",
+      "claim": "Independent Raster geometry, actual Metal DPR1/2/4, inherited scene/mask/history regressions,28 public cold pixels and8 roundtrips.",
+      "evidence": [
+        "final-native-tests-after-compatibility.log",
+        "verification-facts.json"
+      ]
+    },
+    {
+      "id": "U1C2-04",
+      "status": "VERIFIED_SCOPED",
+      "claim": "Pending before provider writes; camera progress, stale/removed jobs,quota recovery,source forks,held leases and compatibility.",
+      "evidence": [
+        "native-work-facts.json",
+        "final-native-tests-after-compatibility.log"
+      ]
+    },
+    {
+      "id": "U1C2-05",
+      "status": "VERIFIED_SCOPED",
+      "claim": "Real loop/input counters and actual leaf draws, separately reported unknown validation and visible replay; no relative performance PASS.",
+      "evidence": [
+        "counter-map.json",
+        "native-work-facts.json",
+        "functional-metrics.json"
+      ]
+    },
+    {
+      "id": "U1C2-06",
+      "status": "VERIFIED_SCOPED",
+      "claim": "Locked matching SDKs,exact source+driver+resource freeze,two guarded workers,complete cleanup,normal trace-free,new Demo.",
+      "evidence": [
+        "candidate-builds.json",
+        "worker-freeze.json",
+        "local-functional/sampling-ledger.json",
+        "demo-identities.json"
+      ]
+    }
+  ],
+  "counts": {
+    "native": 47,
+    "node": 36,
+    "python": 17,
+    "boundaries": 120,
+    "cold_pixel_stages": 28,
+    "undo_redo_roundtrips": 8,
+    "new_workers": 2,
+    "new_charged_seconds": 123
+  },
+  "performance_verdict": "NOT_ISSUED",
+  "official_gate_verdict": "NOT_ISSUED"
+}

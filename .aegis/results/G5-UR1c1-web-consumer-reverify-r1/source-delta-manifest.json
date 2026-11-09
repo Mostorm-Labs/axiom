@@ -1,0 +1,57 @@
+{
+  "base_revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "before_basis": "Four SHA-bound verifier preimages from the accepted dirty UR1c1 boundary, not HEAD file presence",
+  "entries": [
+    {
+      "path": "verification/runners/g5/prepared_body_index.mjs",
+      "before_sha256": "0e76179dfabf623b5c18ba26411fc1758b01e3f3b42c57052bd525fecc04ac0b",
+      "after_sha256": "d521593f28712748ad3012512eddb2f5092abbf49dc90c38f656a33840a9e94f",
+      "bytes": 24929
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify.mjs",
+      "before_sha256": null,
+      "after_sha256": "9a14796c94a58a66ceddad139ba32a696bf28d48a1f6830da043ab0296bcc750",
+      "bytes": 617
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify_pacing.mjs",
+      "before_sha256": null,
+      "after_sha256": "f01232c888e466015d404702d8dd33e632c8ce2d5827d4737b215089468c6825",
+      "bytes": 2070
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify_reference.mjs",
+      "before_sha256": null,
+      "after_sha256": "232e3ae8025adae98ac1c007711ea0b7125324262cad7a87860434150a0c5672",
+      "bytes": 1971
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify_runner.py",
+      "before_sha256": null,
+      "after_sha256": "182e0576bdfad2dddf434487a467b952398d24162725b7bc8d9cf691dcd6f96a",
+      "bytes": 8787
+    },
+    {
+      "path": "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+      "before_sha256": null,
+      "after_sha256": "301c03acc5d51c1d519d6fca0dace8a4a8f36613bf5038df8960adfbbe078b51",
+      "bytes": 4219
+    },
+    {
+      "path": "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+      "before_sha256": null,
+      "after_sha256": "892f5963c7e7fda73bbf6098c88a0f8ec9ecbaa5ae8795c1851ac42550dbd71e",
+      "bytes": 3564
+    },
+    {
+      "path": "verification/tests/test_g5_prepared_body_index_reverify.py",
+      "before_sha256": null,
+      "after_sha256": "9193d0587e560784c846ee6e6ff19d39b86c4e446995eb64ab7448a044340e2e",
+      "bytes": 2502
+    }
+  ],
+  "patch_sha256": "1e409058039cc50f550e42791f2687bcd10a034c6913fde852697eaa18e24f21",
+  "roundtrip": "EXACT",
+  "protected_product_changes": 0
+}

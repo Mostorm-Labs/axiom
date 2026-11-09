@@ -1,0 +1,98 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "task_id": "G5-UR1c2-canonical-prepared-body",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "verdict": "BLOCKED",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "head": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "subject_result_ref": {
+    "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/result.json",
+    "sha256": "91bf6a38d8c411f6f565787f16a2a893b76406bfd30b3b49e6b860137dbc5aab"
+  },
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR1c2-canonical-prepared-body/package.json",
+    "sha256": "cbd43b9f8a67ef888567ea35f623eddfa17531903517ae6cd6efe95630c54e25"
+  },
+  "subject_source_tree_sha256": "36966af89384daa4046555791ab27a1b4d25e9d508821c129d04d4f312975eec",
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur1c2-r1",
+    "manifest_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/manifest.json",
+      "sha256": "6296e7be3321e4be00a7cda35036e0d9732e69e80b4154cf4bf84d8c1e2fbc41"
+    }
+  },
+  "frozen_requirement_audit": {
+    "accepted_positive_scope": [
+      "U1C2-01 actual resident canonical/Direct consumers",
+      "U1C2-02 per admitted/pinned body quantum and same-source job sharing",
+      "U1C2-03 independent geometry/pixels/semantic receipts",
+      "U1C2-05 truthful counters and limitations",
+      "U1C2-06 exact source and real consumer evidence"
+    ],
+    "failed": [
+      "U1C2-02 frame-helper no monolithic history work when readiness lost",
+      "U1C2-04 stable valid multi-body demand progress"
+    ],
+    "finding_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/findings.json",
+      "sha256": "e27cea41122d97231051755abd8fb1ee110faf581b35693fefd9ee931b3ac857"
+    }
+  },
+  "frozen_evidence_audit": {
+    "native_passed": 47,
+    "node_passed": 36,
+    "python_passed": 17,
+    "boundaries_passed": 120,
+    "pixels_qualified": 28,
+    "roundtrips_qualified": 8,
+    "actual_consumers_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/actual-consumers-and-reference-review.json",
+      "sha256": "b84c6f1937cbfefe0a18b719d10acd6b267e436f49858cb769f2cfd74d2005a8"
+    },
+    "offline_pixels_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/offline-pixel-review.json",
+      "sha256": "007c1693cb9e6fffb05f11a5e37af0fc87450e6fec7baf523d1d03dd38f9e4af"
+    },
+    "integrity_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/input-integrity.json",
+      "sha256": "5bf05fc1b65a308c80d70b0aa374d6fb361151816a27d3a3610fdae8cb4ad28f"
+    },
+    "independent_working_set_probe_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/working-set-probe-summary.json",
+      "sha256": "521140d60c5c0fbc3222248af84816ab1a6ef73d0155cb034ded1a4e683ba26d"
+    }
+  },
+  "repository_reality_audit": {
+    "product_edits_by_reviewer": false,
+    "index_edits_by_reviewer": false,
+    "candidate21postimages_unchanged": true,
+    "old_results_unchanged": true,
+    "review_browser_starts": 0,
+    "review_oracle_invocations": 0,
+    "commit_push_performed": false
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Existing functional input content gaps remain; no paired performanceSLO claim.",
+      "Exact matching-generation completion timestamp remains null in public callback.",
+      "Broader Semantic test kSection/kTable build omissions remain out of scope."
+    ]
+  },
+  "route": "P35 IMPLEMENTATION_DEFECT -> scoped P36 repair/reverification; UR1d and UR2 remain closed",
+  "ur1c1_acceptance_unchanged": true,
+  "official_P34_or_full_UR1_or_performance_PASS": false,
+  "report_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/report.md",
+    "sha256": "9382a22ee194203f0e66a4bd25a9dfe39076b0fcae2bd11e180c98dd8d4ceffa"
+  },
+  "timestamp_utc": "2026-11-08T19:54:14.823537+00:00"
+}

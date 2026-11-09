@@ -1,0 +1,48 @@
+{
+  "schema": "g5-p36-verification-facts-v1",
+  "native": {
+    "passed": 48,
+    "total": 48,
+    "log": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/native-release-tests.log",
+      "sha256": "feb3dc5f3d839bdac16abf175c3767b255d06c5ef7b8f64a56ceb1fca545a938",
+      "bytes": 5663
+    }
+  },
+  "node": {
+    "passed": 36,
+    "log": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/node-tests.log",
+      "sha256": "f1ab7812529278f793a9e4133019c3dc9d6b99f43f0a09d4e52ded77b67de2b3",
+      "bytes": 7340
+    }
+  },
+  "python": {
+    "passed": 21,
+    "log": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/python-final-tests.log",
+      "sha256": "b3263f77e9a33126988df78091f6b671ea1500b424a01658cbe77cec9df8d836",
+      "bytes": 120
+    }
+  },
+  "boundaries": {
+    "contracts": 120,
+    "log": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/boundaries.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "pixel_stages_qualified": 28,
+  "roundtrips_qualified": 8,
+  "new_browser_starts": 2,
+  "new_charged_seconds": 103,
+  "cumulative_browser_starts": 54,
+  "cumulative_charged_seconds": 2107,
+  "original_cap_seconds": 8370,
+  "remaining_original_cap_seconds": 6263,
+  "remaining_workers": "NONE",
+  "all_owned_cleanup_complete": true,
+  "normal_trace_free": true,
+  "scope": "Scoped correctness/progress evidence, not paired relative performance, whole UR1/G5/P34 or performance acceptance."
+}

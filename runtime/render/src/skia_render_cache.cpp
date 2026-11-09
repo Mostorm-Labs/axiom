@@ -28,7 +28,7 @@ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
 }
-void SkiaRenderCache::clear() noexcept {inkLayers_.clear();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -61,7 +61,8 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     };
     sourceAdmission_=retain();
     if(!sourceAdmission_){
-        clear();sourceAdmission_=retain();
+        clear();if(preparedGeometry)while(preparedGeometry->reclaimUnused()){}
+        sourceAdmission_=retain();
         if(!sourceAdmission_){
             // No unbudgeted source snapshots survive a failed admission. The
             // caller still owns this plan and executes permanent complete Direct.
@@ -83,10 +84,17 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     if(changed){tileEntries_.clear();if(tiles_)tiles_->invalidate();entries_.clear();work.retainedBytes=0;++targetEpoch_;}
     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
+    if(stagedBodies_&&(!updates.erase.continuous||updates.erase.bounds))resetPreparation();
     eraseDamage_=updates.erase;
     AXIOM_FRAME_TIMING_END(groupTiming);
     // Keep prior source leases until every retained group has rebound. Both
     // generations remain charged throughout this owner-thread transaction.
+    for(const auto& entry:plan.referenceDrawList.entries){
+        const auto found=bodyDependencies_.find(entry.record.objectId);if(found==bodyDependencies_.end())continue;
+        if(!sameBodyIdentity(found->second.identity,preparedBodyIdentity(entry.command)))bodyDependencies_.erase(found);
+        else found->second.seen=tick_+1;
+    }
+    std::erase_if(bodyDependencies_,[&](const auto& item){return item.second.seen!=tick_+1;});
     groupSourceLeases_=std::move(candidateSources);groupMetadataLease_=std::move(candidateMetadata);
     if(changed||preparationBackground_!=plan.background||preparationTransparent_!=plan.transparentBackground||
        preparationIsolate_!=plan.isolateEraseMasks){runs_.clear();work.retainedRunBytes=0;}
@@ -248,14 +256,184 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
     canvas.save();canvas.resetMatrix();for(const auto& key:keys){const auto& e=tileEntries_.at(key);canvas.drawImage(e.image,static_cast<SkScalar>(e.device.left()),static_cast<SkScalar>(e.device.top()));}canvas.restore();
     return true;
 }
+bool SkiaRenderCache::hasPixels(const ReferenceTraversalEntry& entry)const{
+    const auto* group=groups_.find(entry.record.objectId);if(!group)return false;
+    const auto found=entries_.find(entry.record.objectId);
+    return found!=entries_.end()&&RenderSourceResolver::resolve(found->second.validity,{group->revisions,targetEpoch_,false})==RenderSourceKind::kRasterCache;
+}
+bool SkiaRenderCache::needsPreparedBody(const ReferenceTraversalEntry& entry)const noexcept{
+    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+    return options.enabled&&options.gpuCoverageCandidate&&surface_&&surface_->recordingContext()&&preparedGeometry&&
+        compact&&compact->content.get().stroke.config.algorithmVersion==4&&entry.contributesPixels;
+}
+SkiaRenderCache::Preparation SkiaRenderCache::prepareBody(const ReferenceTraversalEntry& entry,PreparationAllowance& allowance){
+    if(!needsPreparedBody(entry))return Preparation::kReady;
+    auto found=bodyDependencies_.find(entry.record.objectId);
+    const auto identity=preparedBodyIdentity(entry.command);
+    if(found!=bodyDependencies_.end()&&!sameBodyIdentity(found->second.identity,identity)){
+        bodyDependencies_.erase(found);found=bodyDependencies_.end();
+    }
+    if(found==bodyDependencies_.end()){
+        if(bodyDependencies_.size()>=options.maxEntries)return Preparation::kResourcePending;
+        constexpr auto charge=sizeof(BodyDependency)+sizeof(foundation::ObjectId)+128;
+        auto token=budget?budget->reserve(resources::ResourceClass::kRecorded,charge,true):std::optional<std::uint64_t>{};
+        while(budget&&!token&&preparedGeometry->reclaimUnused())token=budget->reserve(resources::ResourceClass::kRecorded,charge,true);
+        if(!token)return Preparation::kResourcePending;
+        resources::ResourceLease metadata(budget,*token);
+        auto body=preparedGeometry->request(entry,options,budget);
+        if(!body)return preparedGeometry->requestRejected()?Preparation::kRejected:Preparation::kResourcePending;
+        found=bodyDependencies_.emplace(entry.record.objectId,BodyDependency{identity,std::move(body),std::move(metadata)}).first;
+    }
+    const auto& body=found->second.body;
+    while(!body->ready()){
+        if(body->failed()||!allowance.limits.maxCoverageSteps||!allowance.limits.maxMicroseconds)return Preparation::kRejected;
+        if(allowance.exhausted()){++work.preparationYields;return Preparation::kPending;}
+        const auto before=allowance.steps;preparedGeometry->advance(body,allowance);
+        // A removed/cancelled owner cannot advance this job. Re-admit through
+        // the same bounded path on the next dirty retry, never a legacy leaf.
+        if(allowance.steps==before){bodyDependencies_.erase(found);return Preparation::kPending;}
+    }
+    return Preparation::kReady;
+}
+SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,const FramePlan& plan,PreparationAllowance& allowance){
+    if(!options.enabled||!options.gpuCoverageCandidate||!canvas.recordingContext()||!preparedGeometry)return Preparation::kReady;
+    if(!sourceAdmission_)return Preparation::kResourcePending;
+    const auto demands=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),
+        [&](const auto& e){return needsPreparedBody(e)&&(!hasPixels(e)||e.presentationEraseActive);});
+    if(std::size_t(demands)>options.maxEntries&&!stagedBodies_){
+        stagedBodies_=true;bodyDependencies_.clear();resetPreparation();
+    }
+    if(stagedBodies_)return Preparation::kReady;
+    for(const auto& entry:plan.referenceDrawList.entries){
+        if(!needsPreparedBody(entry)||(hasPixels(entry)&&!entry.presentationEraseActive))continue;
+        const auto result=prepareBody(entry,allowance);
+        if(result==Preparation::kResourcePending){
+            // Optional whole-demand residency is not a document limit. The
+            // existing ordered staging consumes/reclaims one body at a time.
+            stagedBodies_=true;bodyDependencies_.clear();resetPreparation();return Preparation::kReady;
+        }
+        if(result!=Preparation::kReady)return result;
+    }
+    return Preparation::kReady;
+}
+SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas,const FramePlan& plan,
+    PreparationAllowance& allowance,ImageResourceResolver* images,SkiaTextResources* text,bool direct,const EditingOverlay* overlay){
+    if(!stagedBodies_)return Preparation::kReady;
+    if(!allowance.limits.maxGroups||!allowance.limits.maxCoverageSteps||!allowance.limits.maxMicroseconds)return Preparation::kRejected;
+    const auto* creation=overlay&&overlay->creationPreview()?&*overlay->creationPreview():nullptr;
+    const auto* route=creation?overlay->creationRoute():nullptr;
+    const bool creationChanged=bool(creation)!=bool(stagedCreation_)||
+        (creation&&*creation!=*stagedCreation_)||bool(route)!=bool(stagedCreationRoute_)||
+        (route&&*route!=*stagedCreationRoute_);
+    if(creationChanged){
+        resetPreparation();stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();
+        if(creation){
+            // One derived creation object, charged before copying it. Reuse
+            // the existing UI-owned value and drawing helper; no projection
+            // or alternate semantic/brush owner is introduced here.
+            std::size_t bytes=sizeof(semantic::ObjectRecord)+4096+sourceContentBytes(creation->content)+
+                creation->properties.entries.capacity()*sizeof(semantic::PropertyEntry)+
+                creation->erase_masks.capacity()*sizeof(semantic::EraseMaskRecord);
+            for(const auto& mask:creation->erase_masks)std::visit([&](const auto& g){
+                if constexpr(requires{g.segments;})bytes+=g.segments.capacity()*sizeof(semantic::EraseCubicSegment);
+                if constexpr(requires{g.path.commands;})bytes+=g.path.commands.capacity()*sizeof(typename std::remove_cvref_t<decltype(g.path.commands)>::value_type);
+            },mask.geometry);
+            for(const auto& p:creation->properties.entries)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&p.value))
+                if(const auto* stroke=std::get_if<semantic::SolidStroke>(v))if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke->dash))bytes+=dash->segments.capacity()*sizeof(double);
+            if(route)bytes+=sizeof(*route)+route->route.capacity()*sizeof(foundation::WorldPoint)+route->sketchObstacles.capacity()*sizeof(foundation::WorldRect);
+            const auto token=budget?budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
+            if(!token)return Preparation::kResourcePending;
+            stagedCreationLease_=resources::ResourceLease(budget,*token);stagedCreation_=*creation;if(route)stagedCreationRoute_=*route;
+        }
+    }
+    if(compositeReady_)return Preparation::kReady;
+    SkAutoCanvasRestore restore(&canvas,true);
+    canvas.scale(plan.frame.metrics.physicalWidth/plan.frame.metrics.logicalWidth,
+        plan.frame.metrics.physicalHeight/plan.frame.metrics.logicalHeight);
+    const auto& clip=plan.referenceDrawList.viewportClip;
+    canvas.clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
+    const auto frameBytes=std::size_t(surface_->width())*surface_->height()*4;
+    const auto tileBytes=std::size_t(std::min(256,surface_->width()))*std::min(256,surface_->height())*4;
+    if(tileBytes>options.sharedMaxBytes||frameBytes>(options.sharedMaxBytes-tileBytes)/2)return Preparation::kRejected;
+    if(!ensureComposite(canvas,plan))return allocationFailure_;
+    const auto yield=[&]{flushPreparation();++work.preparationYields;return Preparation::kPending;};
+    std::size_t built=0;
+    const bool nonInk=requiresInkIsolation(plan);
+    const auto entries=plan.referenceDrawList.entries.size(),total=creation?entries*2+1:entries;
+    for(;preparationCursor_<total;++preparationCursor_){
+        if(built>=allowance.limits.maxGroups||allowance.exhausted())return yield();
+        if(creation&&preparationCursor_==entries){
+            drawTransientObjectToSkCanvas(*composite_->getCanvas(),plan,*creation,route);++built;++allowance.steps;continue;
+        }
+        const auto index=creation&&preparationCursor_>entries?preparationCursor_-entries-1:preparationCursor_;
+        const auto& entry=plan.referenceDrawList.entries[index];
+        if(!entry.contributesPixels||(creation&&(isInkReference(entry)!=(preparationCursor_>entries))))continue;
+        if(!needsPreparedBody(entry)){
+            drawValidatedReferenceRangeToSkCanvas(*composite_->getCanvas(),plan,index,index+1,images,text);
+            ++built;++allowance.steps;continue;
+        }
+        const auto prepared=prepareBody(entry,allowance);
+        if(prepared!=Preparation::kReady){if(prepared==Preparation::kResourcePending&&reclaimPreparation)reclaimPreparation(tileBytes);return prepared;}
+        if(allowance.exhausted())return yield();
+        const bool isolated=requiresInkEntryIsolation(entry,nonInk)||canRetainCompact(canvas,entry)||entry.presentationEraseActive||
+            !entry.presentationEraseMasks.empty()||entry.presentationOpacity!=1.0F||
+            (plan.isolateEraseMasks&&!entry.record.eraseMasks.empty());
+        if(isolated&&!ensureScratch(canvas,true))return allocationFailure_;
+        auto* target=(isolated?scratch_:composite_)->getCanvas();
+        const auto* group=groups_.find(entry.record.objectId);if(!group)return Preparation::kRejected;
+        const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
+        const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+        if(!pending_){
+            if(isolated){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
+            configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+            auto job=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,
+                options.gpuCoverageCandidate,budget,std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,
+                readyBody(entry,direct?PreparedConsumer::kDirect:PreparedConsumer::kCanonical),direct);
+            target->restore();pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,{},std::move(job)});
+        }
+        bool complete=false;
+        do{
+            configureScratch(*target,plan,entryMatrix(canvas,plan,entry));CompactRasterWork rasterWork;
+            try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
+            catch(...){target->restore();throw;}
+            target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
+            if(pending_->raster->resourcePending()){
+                // Prefix and current body/job survive quota retry. Reclaim only
+                // unreferenced prepared cache entries and existing optional work.
+                while(preparedGeometry->reclaimUnused()){}
+                if(reclaimPreparation)reclaimPreparation(tileBytes);
+                flushPreparation();return Preparation::kResourcePending;
+            }
+            if(!complete&&allowance.exhausted())return yield();
+        }while(!complete);
+        configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+        drawEraseMasksToSkCanvas(*target,entry);drawPresentationEraseMasksToSkCanvas(*target,entry);target->restore();
+        if(isolated){
+            SkPaint paint;paint.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
+            composite_->getCanvas()->drawImage(scratch_->makeImageSnapshot(),0,0,SkSamplingOptions{},&paint);
+        }
+        pending_.reset();bodyDependencies_.erase(entry.record.objectId);++built;++work.rasterizedGroups;
+    }
+    if(!finishComposite())return Preparation::kResourcePending;
+    flushPreparation();return Preparation::kReady;
+}
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
-    SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text){
+    SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text,PreparationAllowance* shared){
     G5_SCOPE(g5Prepare,g5::Tag::prepare,g5::Purpose::none);
     G5_ROUTE(g5PreparedRoute,g5::Route::canonical_prepared);
 
     if(!sourceAdmission_)return Preparation::kResourcePending;
     if(!options.enabled||options.tileCandidate||!slice.maxGroups||!slice.maxMicroseconds||!slice.maxCoverageSteps||
        !options.maxEntries)return Preparation::kFallback;
+    PreparationAllowance local(slice);auto& allowance=shared?*shared:local;
+    // Standalone private cache consumers use this same admission entry point.
+    // A ready miss resumes the existing job; it cannot just yield forever.
+    const auto bodies=prepareBodies(canvas,plan,allowance);
+    if(bodies!=Preparation::kReady)return bodies;
+    if(stagedBodies_){
+        SkAutoCanvasRestore restore(&canvas,true);canvas.resetMatrix();
+        return prepareWorkingSet(canvas,plan,allowance,images,text,false);
+    }
     // Admission is reused only while begin() has verified all group revisions,
     // target/metrics/resource stamps and camera. Never retain a plan pointer.
     if(!admissionReady_){
@@ -276,13 +454,19 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 AXIOM_FRAME_TIMING_ADD(prepare_direct,1);
                 ++work.preparationDirectEntries;continue;
             }
-            SkRect support=SkRect::MakeEmpty();
-            AXIOM_FRAME_TIMING_ADD(prepare_knots,compact->content.get().stroke.knots.size());
-            for(const auto& k:compact->content.get().stroke.knots){
-                const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
-                support.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
+            auto body=readyBody(entry,PreparedConsumer::kCanonical);
+            SkRect support=body?body->support():SkRect::MakeEmpty();
+            if(!body&&!hasPixels(entry)&&needsPreparedBody(entry))return Preparation::kPending;
+            if(!body&&!hasPixels(entry)){
+                AXIOM_FRAME_TIMING_ADD(prepare_knots,compact->content.get().stroke.knots.size());
+                for(const auto& k:compact->content.get().stroke.knots){
+                    if(auto* execution=RenderExecutionScope::current())execution->sourceWork(1,0);
+                    const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
+                    support.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
+                }
             }
-            auto device=entryMatrix(canvas,plan,entry).mapRect(support);device.outset(2,2);
+            auto device=hasPixels(entry)?SkRect::Make(entries_.at(entry.record.objectId).bounds):entryMatrix(canvas,plan,entry).mapRect(support);
+            if(!hasPixels(entry))device.outset(2,2);
             if(!device.isFinite()){
                 admissions_.insert_or_assign(entry.record.objectId,Admission{{},AdmissionKind::kDirect});
                 AXIOM_FRAME_TIMING_ADD(prepare_budget,1);
@@ -346,9 +530,8 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     if(compositeReady_)return Preparation::kReady;
     if(streamFrame_&&!ensureComposite(canvas,plan))return allocationFailure_;
     ++work.preparationSlices;
-    const auto start=std::chrono::steady_clock::now();std::size_t built=0,steps=0;
-    const auto exhausted=[&]{return built>=slice.maxGroups||steps>=slice.maxCoverageSteps||
-        (steps&&std::chrono::steady_clock::now()-start>=std::chrono::microseconds(slice.maxMicroseconds));};
+    std::size_t built=0;
+    const auto exhausted=[&]{return built>=slice.maxGroups||allowance.exhausted();};
     const auto yield=[&]{flushPreparation();++work.preparationYields;return Preparation::kPending;};
     for(;preparationCursor_<plan.referenceDrawList.entries.size();++preparationCursor_){
         const auto& entry=plan.referenceDrawList.entries[preparationCursor_];
@@ -363,7 +546,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 if(exhausted())return yield();
                 drawValidatedReferenceRangeToSkCanvas(*composite_->getCanvas(),plan,
                     preparationCursor_,preparationCursor_+1,images,text);
-                noteDirect();++built;++steps;
+                noteDirect();++built;++allowance.steps;
             }
             continue;
         }
@@ -375,7 +558,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             if(streamFrame_){
                 if(exhausted())return yield();
                 composite_->getCanvas()->drawImage(found->second.image,float(found->second.bounds.left()),float(found->second.bounds.top()));
-                found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();++steps;
+                found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();++allowance.steps;
             }
             continue;
         }
@@ -388,7 +571,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
             auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
-                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true);
+                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,readyBody(entry,PreparedConsumer::kCanonical));
             target->restore();
             pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
             ++work.misses;
@@ -404,7 +587,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,
                     coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
             catch(...){target->restore();pending_.reset();throw;}
-            target->restore();noteCoverage(rasterWork);++steps;++work.preparationCoverageSteps;
+            target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
             if(pending_->raster->resourcePending()){
                 // Admission failure is an expected resumable state. Never
                 // throw across a no-exception WASM Runtime boundary, discard
@@ -467,6 +650,10 @@ bool SkiaRenderCache::validRun(const RetainedRun& run,const FramePlan& plan)cons
 SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const FramePlan& plan,
     const ReferenceTraversalEntry& source,ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid) {
     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
+    if(needsPreparedBody(source)&&!hasPixels(source)&&!readyBody(source,PreparedConsumer::kDirect)){
+        if(auto* execution=RenderExecutionScope::current())execution->unavailable({},ExecutionReason::kAllocationDenied);
+        damageFailed_=true;return InkDraw::kRetry;
+    }
     const bool gpuLive=options.enabled&&options.gpuCoverageCandidate&&canvas.recordingContext()&&
         (damageOnly_||source.presentationEraseActive)&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
     if(gpuLive&&!ensureScratch(canvas,true)){damageFailed_=true;return InkDraw::kRetry;}
@@ -494,7 +681,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         else {SkMatrix scale=SkMatrix::Scale(float(m.physicalWidth)/m.logicalWidth,float(m.physicalHeight)/m.logicalHeight);
             scale.mapRect(SkRect::MakeLTRB(v.left,v.top,v.right,v.bottom)).roundOut(&viewport);viewport.intersect(SkIRect::MakeWH(surface_->width(),surface_->height()));}
         bool painted=false,resourcePending=false;
-        if(inkLayers_.draw(canvas,*scratch_,source,transform,viewport,grid,options,budget,sourcePool,coverageTargets_,work,painted,resourcePending))return InkDraw::kDrawn;
+        if(inkLayers_.draw(canvas,*scratch_,source,transform,viewport,grid,options,budget,sourcePool,coverageTargets_,work,painted,resourcePending,preparedGeometry,readyBody(source,PreparedConsumer::kRetainedInk)))return InkDraw::kDrawn;
         // An allocation miss after any composite must reject this entire
         // disposable frame; replaying Direct would blend already drawn ink.
         // Reuse denial is otherwise safe because the provider is not presented.
@@ -524,7 +711,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
         const bool gpuV4=options.gpuCoverageCandidate&&compact&&compact->content.get().stroke.config.algorithmVersion==4&&isolated->recordingContext();
         CompactRasterWork rasterWork;
-        drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr,true);
+        drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr,true,readyBody(source,PreparedConsumer::kDirect).get());
         noteCoverage(rasterWork);isolated->restore();
         if(rasterWork.resourcePending){
             isolated->restore();if(reclaimPreparation)reclaimPreparation(256U*256U*4U);
@@ -655,10 +842,14 @@ bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& targ
         // sources can be rebuilt. Never drop the active raster job or its grid.
         entries_.clear();coverage_.clear();runs_.clear();
         work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+        if(preparedGeometry)while(preparedGeometry->reclaimUnused()){}
         if(reclaimPreparation)reclaimPreparation(bytes);
         token=budget->reserve(kind,bytes,true);
     }
-    if(budget&&!token)return false;
+    if(budget&&!token){
+        if(!stagedBodies_&&bodyDependencies_.size()>1){stagedBodies_=true;bodyDependencies_.clear();resetPreparation();}
+        return false;
+    }
     resources::ResourceLease lease(budget,token.value_or(0));
     auto candidate=canvas.makeSurface(info);
     if(!candidate){allocationFailure_=Preparation::kRejected;return false;}
@@ -751,10 +942,14 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     SkMatrix world;world.setAll(static_cast<float>(v.a),static_cast<float>(v.c),static_cast<float>(v.tx),static_cast<float>(v.b),static_cast<float>(v.d),static_cast<float>(v.ty),0,0,1);
     SkMatrix object;object.setAll(static_cast<float>(r.a),static_cast<float>(r.c),static_cast<float>(r.tx),static_cast<float>(r.b),static_cast<float>(r.d),static_cast<float>(r.ty),0,0,1);
     const auto matrix=SkMatrix::Concat(canvas.getTotalMatrix(),SkMatrix::Concat(world,object));
-    SkRect support=SkRect::MakeEmpty();
-    for(const auto& k:compact->content.get().stroke.knots){const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
+    const auto body=readyBody(source,PreparedConsumer::kDirect);
+    if(!body&&needsPreparedBody(source))return false;
+    SkRect support=body?body->support():SkRect::MakeEmpty();
+    if(!body)for(const auto& k:compact->content.get().stroke.knots){
+        if(auto* execution=RenderExecutionScope::current())execution->sourceWork(1,0);
+        const auto radius=ink::compactRadius(compact->content.get().stroke.config,k.pressure);
         support.join(SkRect::MakeLTRB(static_cast<float>(k.x-radius),static_cast<float>(k.y-radius),static_cast<float>(k.x+radius),static_cast<float>(k.y+radius)));}
-    const auto commands=coverage(source,*group,support);
+    const auto commands=body?sk_sp<SkPicture>{}:coverage(source,*group,support);
     support=matrix.mapRect(support);support.outset(2,2);
     if(!support.isFinite())return false;
     SkIRect crop;support.roundOut(&crop);if(!crop.intersect(canvas.getDeviceClipBounds()))return false;
@@ -768,7 +963,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     configureScratch(*target,plan,matrix);
     {AXIOM_FRAME_TIMING_SCOPE(scratchTiming,scratch_draw);
     CompactRasterWork rasterWork;
-    drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get(),nullptr,&rasterWork,options.gpuCoverageCandidate,&coverageTargets_);
+    drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get(),nullptr,&rasterWork,options.gpuCoverageCandidate,&coverageTargets_,nullptr,nullptr,nullptr,body.get());
     noteCoverage(rasterWork);}
     target->restore();
     return store(canvas,source,validity,crop,composite);

@@ -1,0 +1,136 @@
+{
+  "schema": "axiom-verifier-only-implementation-result-v1",
+  "task_id": "G5-UR1c1-web-consumer-reverify-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR1c1-web-consumer-reverify-r1/package.json",
+    "sha256": "b6a105986195cba95458428a73bd5f68778f4121cbbe5f4285f209439700f7a5"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "base_revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "result_revision": {
+    "kind": "content-addressed-dirty-verifier-tree",
+    "source_tree_sha256": "b836c121b70218d14ed425a7253623401bbb240333a06284375282007ad58018",
+    "delta_ref": {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-delta-manifest.json",
+      "sha256": "a7597c7b57180b8c08025d070f56b596b3915001362c8ad4f0e6561ec69b7e81"
+    }
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1",
+    "payload_manifest": {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+      "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d"
+    },
+    "archives": {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/archive-manifest.json",
+      "sha256": "1fe86efcc18db98f2b6230dd099dadaead0b4626ce5c0e03a45cf19be5495ee5"
+    }
+  },
+  "verification_ref": {
+    "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/verification-summary.json",
+    "sha256": "6d8b5f4a2568bc90ea648364eaabb95ddb399c38ebe732d3a75d009d2ab62085"
+  },
+  "proof_facts_ref": {
+    "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/verification-facts.json",
+    "sha256": "0c81dd201264e65a44b2b48d24b81d041e79bf087a4747107b00969b1e24ce1a"
+  },
+  "evidence_input_refs": [
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/preflight.json",
+      "sha256": "1c0e6cd817d240a97360c87ac54058bf3ed86cca9ad784b370bbfbb70b76720a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/design.md",
+      "sha256": "75739da7f67d9fbf7f69ae846e6ba5c5b0f960bdd41e7d8f9c9a5c1b22baf0ea"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/red-classification.json",
+      "sha256": "e12ce34321a0c0c4a1832d535fe74161e1cfbb6ada01cbd33c0df8fb06b90f13"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/pacing-old-red.log",
+      "sha256": "7cba8eec796ff8febe63dd48dde1a7a1fd13be649d5a07fc43ff972d2aeea02a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/pacing-green.log",
+      "sha256": "fa759ae6eb2668773a69e16f5b58cd13936925a032b2cc975bd584325a2aae6a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/node-tests.log",
+      "sha256": "bbb225310cc8119160d3ee3f2d81aa462bed90d5bf57d295827a86f7f5f0fa97"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/python-tests.log",
+      "sha256": "7967ddfa91d3135be2334e10eae8c24c4ebf5306e92e4d7f2d35316afaa4d32e"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/boundary-check.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-identity.json",
+      "sha256": "730942bfb4068039e341f0c66f7c1e3e9b3004d0d05af8a0f6843f7e621d22c2"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-delta-manifest.json",
+      "sha256": "a7597c7b57180b8c08025d070f56b596b3915001362c8ad4f0e6561ec69b7e81"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/scope-audit.json",
+      "sha256": "2e860eae1bbd56a6d8dc03fe5eb617266bf418474be89fbe9037027a52c5b332"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/candidate-identities.json",
+      "sha256": "c187437024b26e91c8244d15c4fc120af30350d21ac37d2a1e3ffebdb36ed7eb"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/reference-catalog.json",
+      "sha256": "ae8804499d66ceb7f3de7d29cf78775cee2905c1d005199cbea96b8e4f9b5512"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/verification-facts.json",
+      "sha256": "0c81dd201264e65a44b2b48d24b81d041e79bf087a4747107b00969b1e24ce1a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/verification-summary.json",
+      "sha256": "6d8b5f4a2568bc90ea648364eaabb95ddb399c38ebe732d3a75d009d2ab62085"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/integrity-check.json",
+      "sha256": "07f62b6db813cb05ed31b87a1f0b33afe38405e3f752f14be7734e1cdaa92833"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/materialization-check.json",
+      "sha256": "33cc42847e9c90bd6b22962dfe8b3869f8ee57420ef6d8fad3152c419e66c8a2"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/archive-manifest.json",
+      "sha256": "1fe86efcc18db98f2b6230dd099dadaead0b4626ce5c0e03a45cf19be5495ee5"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/sampling-ledger.json",
+      "sha256": "3bfd74ddf1d3aa06d20f57a2fe9c0b04a318bf8887a991b80a261396378a1a29"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/report.md",
+      "sha256": "8c961ceecec88c6f650292914f18d05bbabc3d36a6c65a4b25c4dc20f4acaf38"
+    }
+  ],
+  "protected_subject": "14Runtime/native files and all historical Runtime/SDK/schema/lock files unchanged; existing compiled SDKs retain their exact original identity",
+  "blockers": [],
+  "remaining_product_scope": [
+    "UR1c2 ordinary canonical/Direct prepared integration",
+    "UR1d resource/recovery",
+    "UR2 post-Up/readmission/navigation handoff",
+    "cold-frame latency optimization"
+  ],
+  "official_gate_verdict_issued": false,
+  "commit_push_performed": false,
+  "created_at_utc": "2026-11-08T18:20:23.235716+00:00"
+}

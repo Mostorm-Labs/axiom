@@ -1,0 +1,83 @@
+{
+  "status": "current_scoped_UR1_continuation",
+  "human": "User requires continuingUR1foundations before reenteringUR2, retaining the design/review vs sole-implementation split.",
+  "authority_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "design_refs": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "accepted_baseline_refs": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1b/result.json",
+      "sha256": "1b9c2d41aaf6f4fdcabe4a5eda0cb8c1e606638c2c7ae2d5a21d661d123cf722",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1b-render-execution/result.json",
+      "sha256": "0984dbb0c1f8374f1c90392bb0cbb6838068d9525839cd289e95cfdf593b4ad1",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1b-render-execution/source-identity.json",
+      "sha256": "6d8dd43e4a4d19b45413177ceb134ee55be85dd03ebfa26976dc974733305b83",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1b-render-execution/source-delta-manifest.json",
+      "sha256": "0b617f1f1d770ec44297de62ecece7ef12f683cbc5e1cdce5adec5f7b0192b7a",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "frozen_scope": [
+    "This isUR1c1only: one existing-renderer-owned prepared-body service for currently prepared consumers (navigation and retained ink layers), plus bounded identity/content lookup and source-retention hot-hit work. It is not fullUR1c completion.",
+    "Evolve existing PreparedGeometryCache/SourceRetentionPool; no parallel cache/document owner, global cross-document store, SDK/API/schema or Brush algorithm. Existing canonical/transient callers that already use retained ink preparation must consume the shared service. Ordinary cooperative canonical/Direct first-use integration is explicitUR1c2, not silently called complete.",
+    "Prepared bodies are world immutable geometry; transform, permanent/active masks, viewport, device pixels and object ownership remain separate. Equivalent bodies can share CPU geometry only; independent object pixels/masks/source identities remain valid.",
+    "Fast identity requires immutable ownership/incarnation, command discriminator and aliased pointee identity or an equally strong verified proof. Naked addresses/ObjectId/length/incomplete legacy digest are insufficient. Same owner with different aliased payloads must not be conflated.",
+    "Different allocation equal content may share only after complete equality verification; fingerprints are lookup indexes, not authority. Hash/collision/content validation occurs on admission or changed identity, not every warm request. No hidden semantic canonical encoding on each frame.",
+    "Source bytes can use a proven immutable known footprint on repeated identity; arbitrary alias/type/size changes retain full admission validation. Source retention charges each actual retained allocation once and index/alias metadata is bounded/charged under existing quotas.",
+    "No new monolithic full-history preparation in input callbacks/frame work. Existing prepared compilation/replay behavior is preserved in this slice; do not call synchronous get/build from additional ordinary canonical leaves. Mutable replay scratch stays owner-thread only.",
+    "Only the existing Renderer clears the shared service on its declared reset/budget-lifetime boundary. A consumer releases its own references/discoverability without invalidating another active consumer; leases pin in-use data. No unbounded aliases or cache-only references that make LRU permanently unevictable.",
+    "UR1b execution/actual-target/Direct rules and32/96MiB/default per-entry limits remain. UR2staysquarantined; immediate nextDown/navigation/History/Scene/overlay work is forbidden."
+  ],
+  "publication_reconciliation": {
+    "path": ".aegis/results/G5-UR1b-render-execution/publication/source-and-evidence.json",
+    "sha256": "a150c76a0b08f90db94d36ed945c0cf47076d8363b675f5488da3b0efcb29b62",
+    "observed_revision": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+    "relationship": "DESCENDANT_CURSOR of14ce; acceptedUR1b product bytes unchanged, publication explicitly authorized by human user in implementation thread",
+    "validation": "All15scopedUR1bsource-delta entries independently matched accepted afterhash; old result/evidence retained. No rerunUR1a/b needed merely because metadata was committed."
+  }
+}

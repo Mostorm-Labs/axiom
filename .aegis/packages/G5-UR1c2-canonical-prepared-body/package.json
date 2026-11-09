@@ -1,0 +1,57 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1c2-canonical-prepared-body",
+  "status": "AUTHORIZED_SCOPED_UR1C2",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "local",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1c2-canonical-prepared-body",
+    "content_identity": "package.json SHA256 in handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+    "accepted_review_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/result.json",
+      "sha256": "25d28035dc637bf5dfb1ed2d1356307eed18fd62869a5032bf2c3ad20b8a7f31",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "UR1a/b/c1accepted within scope; UR1c1Websupplement accepted;50starts/1881secondsclosed; UR2shelved.",
+    "next_action": "Resolvedowner/job/coldbudgetdesign,oldmechanismRED,realcanonical/Directintegration,independentregressions+newmatchingSDK/twoWebworkers."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "269b231b488647fb5376e506a5fd1f713185358517becee1c9d9c0463f89d06d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "c17aaf89d4698c32fc0eef36ef03d9d4aa00dcc2c7f3a9ef0d3a793098a33720"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "33fc26f35f99520c87a6fa7faabf38a27f10915d1d992a7c975b721ed4a38861"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "cb013412959c0e09bc08555947e2d23e15bd648e9d241a8dcf1ede1d33fa4791"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4844e65cd320fdaf4db516f8d37fa9670b9d2ae2caffe6d3508596f860307f3e"
+  }
+}

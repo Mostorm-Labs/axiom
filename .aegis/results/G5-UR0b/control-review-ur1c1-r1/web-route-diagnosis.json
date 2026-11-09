@@ -1,0 +1,84 @@
+{
+  "schema": "ur1c1-web-functional-route-diagnosis-v1",
+  "scope": "Read-only frozen source + saved raw phase analysis",
+  "browser_starts": 0,
+  "observations": [
+    {
+      "case": "S0-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "input_events": 34,
+      "raf_callbacks": 1,
+      "cold_raf": {
+        "id": 49,
+        "timestamp": 2852.3,
+        "started": 2853.5,
+        "source": "sdk",
+        "ended": 3454.100000023842
+      },
+      "scheduled_last_move_ms": 3373.333344,
+      "all_deadlines_elapsed_at_first_raf_end": true,
+      "move_events_after_cold_raf": 32,
+      "pointer_up": {
+        "id": 58,
+        "type": "pointerup",
+        "started": 3464.600000023842,
+        "ended": 3582.899999976158
+      },
+      "consequence": "After the cold full frame, until(planned) takes its already-expired path for remaining moves; resolved-promise microtasks can dispatch remaining Move and Up without a later RAF. Raw record confirms no second display opportunity.",
+      "classification": "VERIFICATION_DESIGN_DEFECT in functional route exercise; not a candidate pixel or service-wiring defect."
+    },
+    {
+      "case": "S2-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "input_events": 34,
+      "raf_callbacks": 1,
+      "cold_raf": {
+        "id": 49,
+        "timestamp": 2894.9,
+        "started": 2895.100000023842,
+        "source": "sdk",
+        "ended": 3448.199999988079
+      },
+      "scheduled_last_move_ms": 3415.433344023842,
+      "all_deadlines_elapsed_at_first_raf_end": true,
+      "move_events_after_cold_raf": 32,
+      "pointer_up": {
+        "id": 58,
+        "type": "pointerup",
+        "started": 3457.5,
+        "ended": 3747.400000035763
+      },
+      "consequence": "After the cold full frame, until(planned) takes its already-expired path for remaining moves; resolved-promise microtasks can dispatch remaining Move and Up without a later RAF. Raw record confirms no second display opportunity.",
+      "classification": "VERIFICATION_DESIGN_DEFECT in functional route exercise; not a candidate pixel or service-wiring defect."
+    }
+  ],
+  "source_refs": [
+    {
+      "path": "verification/runners/g5/prepared_body_index.mjs",
+      "lines": [
+        44,
+        63,
+        64,
+        99,
+        111,
+        114
+      ]
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "lines": [
+        473,
+        486,
+        487
+      ]
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "lines": [
+        505,
+        510
+      ]
+    }
+  ],
+  "limit": "This diagnoses the recorded fixed functional gestures; it does not claim every user gesture or every sourceAdmission/fits runtime value was instrumented."
+}

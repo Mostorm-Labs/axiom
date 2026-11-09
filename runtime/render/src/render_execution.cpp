@@ -16,6 +16,7 @@ RenderExecutionScope::RenderExecutionScope(ExecutionPurpose purpose,const FrameP
     fidelity_=purpose==ExecutionPurpose::kCanonical?ExecutionFidelity::kExact:ExecutionFidelity::kFeedback;
     composition_=unsigned(plan.background.mode)*4U+(plan.transparentBackground?1U:0U)+(plan.isolateEraseMasks?2U:0U);
     beforeGpuAllocations_=totals.executionGpuAllocations;beforeCpuAllocations_=totals.executionCpuAllocations;beforeTargetReuses_=totals.executionTargetReuses;
+    beforeCanonicalDraws_=totals.preparedCanonicalDraws;beforeDirectDraws_=totals.preparedDirectDraws;
     active=this;
     const bool claimedGpu=declaredKind_==RenderTargetKind::kGpuWindow||declaredKind_==RenderTargetKind::kGpuOffscreen;
     if((claimedGpu&&!rootContext_)||(declaredKind_==RenderTargetKind::kCpuRaster&&rootContext_)){
@@ -25,12 +26,12 @@ RenderExecutionScope::RenderExecutionScope(ExecutionPurpose purpose,const FrameP
 RenderExecutionScope::~RenderExecutionScope(){
     active=previous_;
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
-    std::fprintf(stderr,"AXIOM_RENDER_EXECUTION {\"version\":1,\"purpose\":%u,\"fidelity\":%u,\"composition\":%u,\"reason\":%u,\"view\":\"%llu\",\"frame\":\"%llu\",\"semantic\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"metrics\":\"%llu\",\"resource\":\"%llu\",\"declared_kind\":%u,\"actual_root_gpu\":%s,\"gpu_intent\":%s,\"gpu_allocations\":%llu,\"cpu_allocations\":%llu,\"target_reuses\":%llu,\"actual_gpu_tiles\":%llu,\"actual_cpu_tiles\":%llu,\"direct_gpu_tiles\":%llu,\"direct_cpu_tiles\":%llu,\"reuse\":%llu,\"pending\":%s,\"rejected\":%s}\n",
+    std::fprintf(stderr,"AXIOM_RENDER_EXECUTION {\"version\":1,\"purpose\":%u,\"fidelity\":%u,\"composition\":%u,\"reason\":%u,\"view\":\"%llu\",\"frame\":\"%llu\",\"semantic\":\"%llu\",\"scene\":\"%llu\",\"surface\":\"%llu\",\"metrics\":\"%llu\",\"resource\":\"%llu\",\"declared_kind\":%u,\"actual_root_gpu\":%s,\"gpu_intent\":%s,\"gpu_allocations\":%llu,\"cpu_allocations\":%llu,\"target_reuses\":%llu,\"actual_gpu_tiles\":%llu,\"actual_cpu_tiles\":%llu,\"direct_gpu_tiles\":%llu,\"direct_cpu_tiles\":%llu,\"reuse\":%llu,\"pending\":%s,\"rejected\":%s,\"canonical_prepared_draws\":%llu,\"direct_prepared_draws\":%llu}\n",
         unsigned(purpose_),unsigned(fidelity_),composition_,unsigned(reason_),static_cast<unsigned long long>(basis_.view),static_cast<unsigned long long>(basis_.frame),
         static_cast<unsigned long long>(basis_.semantic),static_cast<unsigned long long>(basis_.scene),static_cast<unsigned long long>(basis_.surface),static_cast<unsigned long long>(basis_.metrics),static_cast<unsigned long long>(basis_.resource),
         unsigned(declaredKind_),rootContext_?"true":"false",
         (rootContext_||declaredKind_==RenderTargetKind::kGpuWindow||declaredKind_==RenderTargetKind::kGpuOffscreen)&&gpuEnabled_?"true":"false",static_cast<unsigned long long>(totals_.executionGpuAllocations-beforeGpuAllocations_),static_cast<unsigned long long>(totals_.executionCpuAllocations-beforeCpuAllocations_),static_cast<unsigned long long>(totals_.executionTargetReuses-beforeTargetReuses_),
-        static_cast<unsigned long long>(gpu_),static_cast<unsigned long long>(cpu_),static_cast<unsigned long long>(directGpu_),static_cast<unsigned long long>(directCpu_),static_cast<unsigned long long>(reuse_),pending_?"true":"false",rejected_?"true":"false");
+        static_cast<unsigned long long>(gpu_),static_cast<unsigned long long>(cpu_),static_cast<unsigned long long>(directGpu_),static_cast<unsigned long long>(directCpu_),static_cast<unsigned long long>(reuse_),pending_?"true":"false",rejected_?"true":"false",static_cast<unsigned long long>(totals_.preparedCanonicalDraws-beforeCanonicalDraws_),static_cast<unsigned long long>(totals_.preparedDirectDraws-beforeDirectDraws_));
 #endif
 }
 ExecutionDecision RenderExecutionScope::select(SkCanvas& canvas,std::uint32_t algorithm,bool range) noexcept {
@@ -82,6 +83,8 @@ void RenderExecutionScope::unavailable(const ExecutionDecision&,ExecutionReason 
 void RenderExecutionScope::reusePixels() noexcept{reason_=ExecutionReason::kPixelReuse;++reuse_;++totals_.executionPixelReuses;}
 void copyExecutionCounters(RenderCacheWork& out,const RenderCacheWork& in) noexcept {
 #define COPY(name) out.name=in.name
+    COPY(preparedCanonicalDraws);COPY(preparedDirectDraws);
+    COPY(bodySupportKnots);COPY(bodyLengthInputs);COPY(bodyCompileInputs);COPY(bodyReplayInputs);
     COPY(executionRasterRoot);COPY(executionPolicyCpu);COPY(executionRangeCpu);COPY(executionLegacyCpu);
     COPY(executionGpuDecisions);COPY(executionCpuDecisions);COPY(executionCompatibility);
     COPY(executionGpuAllocations);COPY(executionCpuAllocations);COPY(executionTargetReuses);

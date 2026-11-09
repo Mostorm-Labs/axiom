@@ -1,0 +1,137 @@
+{
+  "schema": "g5-execution-closure-v1",
+  "implementation": {
+    "required_changes": [
+      "Reconcile acceptedUR1b d04e31source and review. Preserve UR1a/UR1b and allUR2quarantine; current production baseline has noUR2changes.",
+      "Record short resolved owner/design: strong immutable identity keys, complete-content collision checks, bounded alias/index storage and quota, shared service injection, consumer release vs owner reset, owner-thread replay scratch. Do not invent new semantic IDs.",
+      "Run old/native mechanismRED, then evolve the existing prepared-body cache and source pool. Move existing navigation/ink-layer prepared ownership to the one existing renderer-owned service and bind it to the same budget/source-retention owner. Do not add another compiled-body cache.",
+      "Add safe indexed fast lookup/admission aliases, complete collision-safe content sharing and bounded lifetime/metadata cleanup. Get known source footprints after proven identity lookup; unknown alias/type/content still validates before reuse. Preserve actual retained allocation accounting.",
+      "Wire actual existing prepared consumers to this service; ensure a consumer cancellation/clear does not flush shared body state still used elsewhere. Keep all prepared draw/replay results pinned and owner-thread scratch safe.",
+      "Do not wire new synchronous whole-history get/build into ordinary canonical/Direct cooperative paths; they remainUR1c2. No input,Scene,History,mask semantics,post-Up orGPUalgorithm/resource-budget change.",
+      "Run all focused equality/pixel/resource/lifetime/UR1broute regressions, build matching normal+qualification SDKs from locked dependencies, run2frozen functional workers without extra seed/smoke, archive all cold failure buffers and serve new normal Demo. Notify control at terminal."
+    ],
+    "authorized_source_paths": [
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/source_retention.hpp",
+      "runtime/render/src/skia_navigation_tiles.hpp",
+      "runtime/render/src/skia_navigation_tiles.cpp",
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/tests/prepared_body_index_test.cpp",
+      "runtime/render/tests/render_cache_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "verification/runners/g5/prepared_body_index*",
+      "verification/tests/g5_prepared_body_index*",
+      "verification/tests/test_g5_prepared_body_index*",
+      ".aegis/packages/G5-UR1c1-prepared-body-index/**"
+    ],
+    "forbidden_changes": [
+      "Resuming UR2, active/shared-worktree rollback, new Semantic/bodyID/schema, public SDK API/ABI/version/debug commands, new cache or document owner.",
+      "Changing Brush/contour algorithms, masks/Scene projection, target/GPUstrategy/AAacceptance,32/96MiB orper-entrylimits, GPUqueuewatermarks, concurrency/workerthreads.",
+      "Unqualified rawpointer/id/digest/content-length sharing, fingerprint-as-proof, unbudgeted alias maps, fullsourceencoding/hashing every warmframe, new monolithic preparation in input/frame callbacks.",
+      "Existing results/normal4284/oldDemoasset mutation, wholeUR0 prerequisites, hidden browser retries, writing source during a worker, commit/push."
+    ]
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true
+  },
+  "tests": {
+    "required": [
+      {
+        "obligation": "U1C1-01",
+        "command_or_oracle": "Native real renderer navigation and full transient retained-ink consumer sequence on same v4body; inspect actual service statistics/leases and output, not just directly callingcache.get. Consumer clear/cancel/reset order also tested.",
+        "expected_result": "Same immutable body prepares once while retained across consumers; dropping one consumer does not force another rebuild or invalidate live geometry. No fullUR1c claim for ordinary unconnected canonical paths.",
+        "blocking_reason": "One existing owner shares qualified prepared bodies across actual prepared consumers."
+      },
+      {
+        "obligation": "U1C1-02",
+        "command_or_oracle": "Old-behavior mechanism RED with7199-knot source and1/8/16/32nearly-overlapping aliases over48warm queries; cold vs warm lookup/hash/equality/source-footprint work counters. Include stable aliases and separately allocated equal content; preserve baseline component timings/raw.",
+        "expected_result": "After admission, a retained proven immutable identity has zero new complete hash/deep-content scan/footprint traversal and bounded indexed lookup, no all-entry scan. First unknown identity still fully validated. Work counters must measure existing work without adding another content walk.",
+        "blocking_reason": "Warm lookup avoids content-proportional work and linear candidate scans for retained proven identities."
+      },
+      {
+        "obligation": "U1C1-03",
+        "command_or_oracle": "Same ObjectId changed config/seed/knot, false same digest/length, forced fingerprint collision, different storage same content, same owner different aliased pointee; transform/mask-only changes; onlyA gets mask/transform and Undo/Redo, B independent; separate renderer/document lifetimes.",
+        "expected_result": "Changed body forks, equal content can share only after complete check; transform/mask leave qualified body reusable; independent native pixels and source records for B unchanged. No ObjectId/digest-only reuse.",
+        "blocking_reason": "Content, alias and object forks remain correct."
+      },
+      {
+        "obligation": "U1C1-04",
+        "command_or_oracle": "Actual quota denial then recovery, alias/index pressure, LRU eviction while another consumer pins body, last-release accounting, cache clear/budget-owner switch and consumer reset. Include original maxEntry/criticalReplay budget boundary.",
+        "expected_result": "One geometry allocation counted once; actual separate retained source allocations still charged. Index/alias metadata bounded and charged, expired identities cannot cause ABA or leaks. Existing budget/per-entry/primitive limits unchanged; in-use data survives eviction and old owner keeps in-flight charges.",
+        "blocking_reason": "Shared body and source/index memory remain bounded and correctly owned."
+      },
+      {
+        "obligation": "U1C1-05",
+        "command_or_oracle": "Existing prepared/contour/source/navigation/ink-layer/UR1bexecution native tests plus independent renderer-reference pixels for masked/unmasked/transformed/transparent/mixedDPR1/2/4. Shared replay owner-thread scratch and held result under eviction.",
+        "expected_result": "No shape/material/opacity/order/mask/cap/taper change, no extra semantic operation, strict canonical receipt and actual GPU/CPU policy preserved. Existing accepted GPU-AA oracle only.",
+        "blocking_reason": "Pixels, execution decisions and canonical semantics are unchanged."
+      },
+      {
+        "obligation": "U1C1-06",
+        "command_or_oracle": "Two fixed serial functional workers: qualification then normal, eachS0/S2canonical/preselecteddrag and one settled single partial-erase after initialcanonical completion; include navigation->retained-ink service use with current baseline behavior. Preserve all before/Undo/Redo/cancel bytes and original independent oracle.",
+        "expected_result": "Every affected real case passes and actual shared prepared consumers are observed. No immediate post-Up feature claim. Warm/cold counts separated; normal no diagnostic output; no relative performance claim from qualification timings.",
+        "blocking_reason": "Real public Web correctness and actual prepared consumer use are evidenced."
+      },
+      {
+        "obligation": "U1C1-07",
+        "command_or_oracle": "Focused native and Node/Python/check_runtime_boundaries120/diff checks; source/manifests/driver/build/SDK normal+qualification hashes and all2worker outcomes with cleanup; new candidate Demo port.",
+        "expected_result": "READY_FOR_CONTROL_REVIEW forUR1c1only.4284and oldassets unchanged, UR2stillquarantined. Explicit pendingUR1c2ordinarycanonical shared preparation andUR1d. No commit/push, fullUR1/G5/P34/performance claim.",
+        "blocking_reason": "Accepted baseline, source scope and review materialization preserved."
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "browser_window": {
+    "ids": [
+      "UR1C1-Q1",
+      "UR1C1-N1"
+    ],
+    "new_browser_starts_max": 2,
+    "concurrency": 1,
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 46,
+    "historical_charged_seconds": 1527,
+    "new_nominal_seconds_max": 360,
+    "original_cumulative_cap_seconds": 8370,
+    "fixture": "Existing exactS0/S2 axsnap and explicit binding1/independent generation restore envelopes, no newseed. Public normal SDK calls only.",
+    "functional_scope": "Existing canonical and preselecteddrag/cancel roundtrip; one settledsinglepartialerase/navigation branch after initial receipt to exercise current prepared consumers. This does not implement/require immediate-nextDown orUR2continuous handoff. Qualification trace vs normal correctness kept separate; no timingPASS.",
+    "safety": "Freeze source/build/driver/SDK perrun, retain every failure/raw coldstage before assertions, actual ceil charge and owned cleanup. One guard/environment/identity hardfailure stops remaining attempt. No extra starts aftertwo; allmissing rows explicit."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "U1C1-01..07 satisfied for declared existing consumers",
+      "Actual old/new component mechanism measured without invented performance threshold",
+      "Matching new normal Demo, raw/hash-bound results/ledger and proactive notification"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "REPOSITORY_OR_ACCEPTED_SOURCE_MISMATCH",
+      "AUTHORITY_SCOPE_CONFLICT",
+      "UNSAFE_IDENTITY_OR_PIXEL_REGRESSION",
+      "REQUIRED_BUILD_OR_EVIDENCE_FAILURE",
+      "RESOURCE_GUARD"
+    ],
+    "behavior": "Keep all validpartial work/results and exact blocked requirement; do not relax equality/AA/quota or turn this intoUR2/wholeUR0."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "no_extra_approval": "Continue the frozen vertical slice; resolved implementation details/native checkpoints are not return conditions."
+  }
+}

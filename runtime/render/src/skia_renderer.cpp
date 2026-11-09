@@ -362,7 +362,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
-        renderCache_->sourcePool=sourceRetention_;
+        if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
+        preparedGeometry_->setRetentionPool(sourceRetention_);
+        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
         AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
@@ -370,7 +372,25 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});
         cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
     } catch(const std::bad_alloc&) {clearRenderCache();}
-    if(preparation && cache){
+    if(!cache&&renderCacheOptions_.enabled&&renderCacheOptions_.gpuCoverageCandidate&&gpuContext&&
+       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&c->content.get().stroke.config.algorithmVersion==4;})){
+        provider.release();return BackendSubmissionResult::retry("canonical prepared owner unavailable");
+    }
+    AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"canonical");
+    internal::PreparationAllowance allowance(preparation?*preparation:RenderPreparationBudget{});
+    if(cache){
+        const auto bodies=cache->prepareBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
+        if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+            provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("canonical body cannot fit preparation capacity"):BackendSubmissionResult::retry("canonical body preparation pending");
+        }
+    }
+    if(cache&&cache->stagedBodies()){
+        const auto staged=cache->prepareWorkingSet(*acquired.frame.surface->getCanvas(),plan,allowance,images_,&textResources_,false);
+        if(staged!=internal::SkiaRenderCache::Preparation::kReady){
+            provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("canonical working set cannot fit staging capacity"):BackendSubmissionResult::retry("canonical working set pending");
+        }
+    }
+    if(preparation && cache&&!cache->stagedBodies()){
         auto* target=acquired.frame.surface->getCanvas();target->save();
         target->scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
         const auto& clip=plan.referenceDrawList.viewportClip;
@@ -397,7 +417,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                 if(const auto tiles=navigation.lock())tiles->reclaimForExact(resourceBudget_,
                     renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
             };
-            AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);
+            AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_,&allowance);
         }
         catch(const std::bad_alloc&){cache->clear();prepared=internal::SkiaRenderCache::Preparation::kResourcePending;}
         target->restore();
@@ -413,7 +433,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
-    const auto result = (preparation && cache && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
+    const auto result = (cache && (preparation||cache->stagedBodies()) && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
     AXIOM_FRAME_TIMING_END(sceneTiming);
@@ -469,7 +489,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
             internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
-            internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+            internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache);
         }
         if (const auto& hover=selectionOverlay->creationHover()) {
             SkPaint ghostPaint;ghostPaint.setAlphaf(0.25F);
@@ -564,6 +584,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
     if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+        if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
+        preparedGeometry_->setRetentionPool(sourceRetention_);
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     // Keep same-demand exact work;discard only obsolete offscreen preparation.
     // Its leases still wait for actual GPU completion before becoming reusable.
@@ -688,7 +710,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     };
     try{
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_);
+        AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_);
         if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
@@ -698,16 +721,24 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
     return navigationTiles_?navigationTiles_->work:NavigationWork{};
 }
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
-    clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();renderCacheOptions_=options;
+    clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_)preparedGeometry_->clear();}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
     if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
     if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
     const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
     return eraseQueries_->query(record,geometry,resourceBudget_,capacity);
 }
-RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);return result;}
+RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);
+    if(preparedGeometry_){const auto s=preparedGeometry_->statistics();result.preparedBodyBuilds=s.builds;result.preparedBodyHits=s.hits;
+        result.preparedIdentityHits=s.identityHits;result.preparedHashBytes=s.fingerprintBytes;result.preparedContentComparisons=s.contentComparisons;
+        result.preparedIndexQueries=s.indexLookups;result.preparedNavigationQueries=s.navigationQueries;result.preparedInkQueries=s.retainedInkQueries;
+        result.preparedCanonicalQueries=s.canonicalQueries;result.preparedDirectQueries=s.directQueries;
+        result.preparedJobAdmissions=s.jobAdmissions;result.preparedAdvances=s.advances;result.preparedSupportKnots=s.supportKnots;
+        result.preparedDistanceInputs=s.distanceInputs;result.preparedCompileInputs=s.compileInputs;result.preparedPathPrimitives=s.pathPrimitives;result.preparedMaxAdvanceKnots=s.maxAdvanceKnots;
+        result.preparedAliases=s.aliases;result.preparedIndexReservationBytes=s.indexReservationBytes;result.preparedSourceFootprintEvaluations=s.sourceFootprintEvaluations;}
+    return result;}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
@@ -749,7 +780,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         // live feedback does not invalidate pixels outside the changed mask.
         // Mandatory preparation already reclaims navigation on actual denial;
         // optional body layers must yield rather than destroy that coverage.
-        if(renderCache_)renderCache_->releaseMaterialSources(!previousErase);
+        if(renderCache_&&!renderCache_->stagedBodies())renderCache_->releaseMaterialSources(!previousErase);
     }
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -774,7 +805,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
-        renderCache_->sourcePool=sourceRetention_;
+        if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
+        preparedGeometry_->setRetentionPool(sourceRetention_);
+        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
@@ -794,6 +827,24 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         }
     }catch(const std::bad_alloc&){clearRenderCache();}
     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
+    if(!cache&&renderCacheOptions_.enabled&&renderCacheOptions_.gpuCoverageCandidate&&gpuContext&&
+       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&c->content.get().stroke.config.algorithmVersion==4;})){
+        provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
+    }
+    AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
+    internal::PreparationAllowance allowance;
+    if(cache){
+        const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
+        if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+            provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient body cannot fit preparation capacity"):BackendSubmissionResult::retry("transient body preparation pending");
+        }
+    }
+    if(cache&&cache->stagedBodies()){
+        const auto staged=cache->prepareWorkingSet(*canvas,plan,allowance,images_,&textResources_,true,selectionOverlay);
+        if(staged!=internal::SkiaRenderCache::Preparation::kReady){
+            provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");
+        }
+    }
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -810,7 +861,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabStrokeReferenceCommand>(entry.command)||
             std::holds_alternative<BrushStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
     });
-    const bool persistentErase=compactInkOnly&&cache&&renderCacheOptions_.enabled&&bareOverlay&&cache->eraseDamage().active&&
+    const bool persistentErase=compactInkOnly&&cache&&!cache->stagedBodies()&&renderCacheOptions_.enabled&&bareOverlay&&cache->eraseDamage().active&&
         !renderCacheOptions_.tileCandidate&&canvas->getTotalMatrix().isIdentity()&&
         canvas->isClipRect()&&canvas->getDeviceClipBounds()==SkIRect::MakeWH(acquired.frame.surface->width(),acquired.frame.surface->height())&&
         provider.describe().capabilities.supportsPartialUpdate;
@@ -857,7 +908,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     const auto sceneSaveCount=canvas->getSaveCount();
     try {
         if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
-            if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
+            if(cache&&cache->stagedBodies()){if(!cache->compositePreparedFrame(*canvas))scene=BackendSubmissionResult::retry("transient staged frame unavailable");}
+            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
             else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
         }
@@ -871,7 +923,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         provider.release();
         return scene;
     }
-    if (selectionOverlay->creationPreview()) {
+    if (selectionOverlay->creationPreview()&&(!cache||!cache->stagedBodies())) {
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache,true);

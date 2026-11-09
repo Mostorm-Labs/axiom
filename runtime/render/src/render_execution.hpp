@@ -52,6 +52,10 @@ class RenderExecutionScope final {
     void coverage(SkSurface&,bool direct) noexcept;
     void unavailable(const ExecutionDecision&,ExecutionReason,bool terminal=false) noexcept;
     void reusePixels() noexcept;
+    void sourceWork(std::size_t support,std::size_t length,std::size_t compile=0,std::size_t replay=0) noexcept {
+        totals_.bodySupportKnots+=support;totals_.bodyLengthInputs+=length;totals_.bodyCompileInputs+=compile;totals_.bodyReplayInputs+=replay;
+    }
+    void preparedUse(bool direct) noexcept {if(direct)++totals_.preparedDirectDraws;else ++totals_.preparedCanonicalDraws;}
     bool pending()const noexcept{return pending_;}
     bool rejected()const noexcept{return rejected_;}
  private:
@@ -68,6 +72,7 @@ class RenderExecutionScope final {
     RenderCacheWork& totals_;
     ExecutionReason reason_=ExecutionReason::kLegacyCompatibility;
     std::uint64_t gpu_=0,cpu_=0,directGpu_=0,directCpu_=0,reuse_=0;
+    std::uint64_t beforeCanonicalDraws_=0,beforeDirectDraws_=0;
     std::uint64_t beforeGpuAllocations_=0,beforeCpuAllocations_=0,beforeTargetReuses_=0;
 };
 void copyExecutionCounters(RenderCacheWork&,const RenderCacheWork&) noexcept;

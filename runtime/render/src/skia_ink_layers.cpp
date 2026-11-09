@@ -8,7 +8,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <algorithm>
 
 namespace canvas::render::internal {
-void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.clear();bytes_=0;}
+void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();bytes_=0;}
 void SkiaInkLayers::eraseSource(foundation::ObjectId id){
     for(auto it=tiles_.begin();it!=tiles_.end();)if(it->first.id==id){bytes_-=it->second.bytes;it=tiles_.erase(it);}else ++it;
     sources_.erase(id);
@@ -37,7 +37,8 @@ void SkiaInkLayers::drawMask(SkCanvas& c,const MaskPrimitive& primitive){
 bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry& entry,
     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending){
+    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready){
+    if(prepared)geometry_=std::move(prepared);
     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
 
@@ -56,7 +57,8 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     }
     if(found==sources_.end()){
         if(sources_.size()>=limits.maxEntries)return false;
-        geometry_.setRetentionPool(pool);auto prepared=geometry_.get(entry,limits,budget,true);if(!prepared)return false;
+        if(!geometry_)return false;
+        geometry_->setRetentionPool(pool);auto prepared=ready?std::move(ready):geometry_->get(entry,limits,budget,true,PreparedConsumer::kRetainedInk);if(!prepared)return false;
         Source source;source.command=entry.command;source.geometry=std::move(prepared);source.matrix=matrix;source.viewport=viewport;
         found=sources_.emplace(id,std::move(source)).first;
     }

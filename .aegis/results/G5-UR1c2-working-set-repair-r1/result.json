@@ -1,0 +1,92 @@
+{
+  "schema": "g5-scoped-p36-result-v1",
+  "task_id": "G5-UR1c2-working-set-repair-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package": {
+    "path": ".aegis/packages/G5-UR1c2-working-set-repair-r1/package.json",
+    "sha256": "0cbb259d73bebda03d35db741766d57c707d6f22493cdd4fc2a610f8fb8d1384"
+  },
+  "original_package": {
+    "path": ".aegis/packages/G5-UR1c2-canonical-prepared-body/package.json",
+    "sha256": "cbd43b9f8a67ef888567ea35f623eddfa17531903517ae6cd6efe95630c54e25"
+  },
+  "head": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "branch": "codex/geometry-navigation-integration",
+  "source_tree_sha256": "9eb88bcc7c25d7647f90375430ba6d109f196084023d0111f4dc40180dbb757a",
+  "source": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/source-identity.json",
+    "sha256": "91b7745d65110fbabbb3392a2320fe450d3f5b93a8af6f760f473d1bc4209913"
+  },
+  "delta": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/source-delta-manifest.json",
+    "sha256": "db447ed9eb249d8c33c6c3f7fc3eaf3e25378c5be6a6cc621f17303d63f0e41e"
+  },
+  "payload_manifest": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/payload-manifest.json",
+    "sha256": "5153b5af282eb0ab32b572af90ac2cb1648723275e700d8940c2e8841c5fcf65"
+  },
+  "archive_manifest": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/archive-manifest.json",
+    "sha256": "e1a77eb05cb18b021e1d4597d96ad454a74075511abed56d05f881532bce21cb"
+  },
+  "driver": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/driver-identity.json",
+    "sha256": "eee312152219e10276ef9ac18c50433a50e82042a4dab31f5e395ee53666f9fb"
+  },
+  "verification": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/verification-facts.json",
+    "sha256": "c3f0a9972f295a17d794c2cb0d286462a15005bf2e2d92cbf8549cbc87cd2bf6"
+  },
+  "mechanism": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/mechanism-final.json",
+    "sha256": "f209ffd551656be5f4f201da171ed31449615d0fb8052e56495098f5d33cfb09"
+  },
+  "functional": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/functional-observations.json",
+    "sha256": "67593b9fd7c0cf2157f4f84873de95d1a86b236b946d61c2c56abdadc72e3dc2"
+  },
+  "normal_sdk": {
+    "files": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/normal-sdk-files.json",
+      "sha256": "bee3100599906670e52035a45da14a39de60693442b57f845910d1c7ab2db75b"
+    },
+    "wasm_sha256": "1f1170e88765cdf0e72d93700d63c7ec3017e0199c2f7563fbebce3345f10b1d"
+  },
+  "qualification_sdk": {
+    "files": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/qualification-sdk-files.json",
+      "sha256": "c29d7a76c5c28c8a83e29788e5c37356c71a88bb8368d6899348e320fdbae446"
+    },
+    "wasm_sha256": "7736a80b72ed919c14c3f6d1bb63dcc07246b9fa21aca3575575dd6b811d3a09"
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/local-functional/sampling-ledger.json",
+    "sha256": "08b7219925dc80b3b357808591caba3507271b5dee0697c9dfdfa4a7c54d1e1d"
+  },
+  "demo_url": "http://127.0.0.1:4287/example.html",
+  "browser": {
+    "new_starts": 2,
+    "new_charged_seconds": 103,
+    "cumulative_starts": 54,
+    "cumulative_seconds": 2107,
+    "original_cap_seconds": 8370,
+    "remaining_cap_seconds": 6263,
+    "remaining_workers": "NONE",
+    "cleanup_complete": true
+  },
+  "scope": {
+    "official_acceptance_issued": false,
+    "performance_pass_issued": false,
+    "UR1d_UR2_entered": false,
+    "commit_or_push": false
+  },
+  "remaining": [
+    "Independent control review",
+    "No successor UR1d/UR2 or full Gate/P34/performance acceptance",
+    "No further browser workers authorized"
+  ],
+  "report": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/report.md",
+    "sha256": "75ca36e317d9ec75f1f7b2d5a106518c6f1189dd178fd34d7001e91e0292faa1"
+  }
+}

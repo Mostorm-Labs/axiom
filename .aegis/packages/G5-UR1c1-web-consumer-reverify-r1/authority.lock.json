@@ -1,0 +1,172 @@
+{
+  "schema": "g5-verifier-only-authority-lock-v1",
+  "status": "CURRENT_SCOPED_VERIFICATION_AMENDMENT",
+  "human_authorization": "2026-11-09: 用户要求“通知隔壁会话进行下一步吧，先修验证驱动、补齐实际复用证据”；授权本次小范围验证修复和以下新窗口，不授权 UR1c2、生产修改、提交或推送。",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "head": "e69f2377cd93ddbe89d1fb1227ae8397c977b287"
+  },
+  "governing_refs": [
+    {
+      "path": ".aegis/packages/G5-UR1c1-prepared-body-index/package.json",
+      "sha256": "c25e4efee4dcfd5dfa67c3b40b65944299793b1ef426b89c1d8967fb1381d652",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/packages/G5-UR1c1-prepared-body-index/authority.lock.json",
+      "sha256": "7e88294781eb933fe38f5cbe2d4131da7e0ae5fe366853cee49bd10a44931c93",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/packages/G5-UR1c1-prepared-body-index/verification.lock.json",
+      "sha256": "c510616cc6431652c30628cc01d5ddee820923fb823af65224ac6a1095334e39",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/result.json",
+      "sha256": "5184da8e73a6791134bef70e08359bbe6ca690591d1c97d26d4ec502d51fae0c",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/offline-pixel-review.json",
+      "sha256": "ab8ee3e696518c0d00ea078349c9a99bec24c45e921d62b6e88d22a40cdacdc0",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/web-route-diagnosis.json",
+      "sha256": "1debd281981ee8fb6ff2446af0bde49cec3774b5f79de0658936f7ffdf2469a8",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "subject_refs": [
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/result.json",
+      "sha256": "bf6472cd2dc2b8da76ef03da8fa37ac5b8438b91f8334b74f1375c93849b9aa3",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/source-delta-manifest.json",
+      "sha256": "626a6d39e4bfd9a6331a1afd90dc3987fd09adb8bc6dd64f50e1b3d069ca8c14",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/candidate-builds.json",
+      "sha256": "7f4d53395739744d3779bd753e5db5e4bc3bb6b04c3423b34656dc9d87cdba0f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/build-flag-facts.json",
+      "sha256": "8980a26da93d667f6f82a93999417fbdb1b748cad7ada626f319b269ae59e00e",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/sampling-ledger.json",
+      "sha256": "5c62d7df1316e31487218b821142fb2078696976145902332cad250109fd9bfa",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+      "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/fixtures.json",
+      "sha256": "8c43a354609bf7ae778a477c1907af2187ab842819240cedc3c1ef64da4d16d5",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S0.axsnap",
+      "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S2.axsnap",
+      "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "protected_product_and_native_test_files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "10ba7fc9494dcca4e393f186a42ae94e6dadfb4c0121990b5409d8f89f338e50"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "sha256": "35b4683ef37810ae6d6b48f8113956c391453353497eaae5ca394338b96f0dbe"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "7f610332b0749da1c703d56aab55def9841fb4ace685efd5ffe746bbb165b979"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "705a330a423051e02cb93cbfc804a2788f038f920e9b10a2fe5ba6e06c03b9f7"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "sha256": "8c8526c410a6f66fe1a11c461cce9d9720af415bb2db2c72c28ace0f1a3e3521"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "05912e746de746a1ed48f51e4186898957760ca520d59b81bb5d87bb68931a38"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "2e4d8d7cfa5b8f73ca1fa314d0e4f62d6605e7f39e31e1076e6c1bc8559c7067"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "23e193c62f0605d264c78fd055f02a8e92b06c5a6ffa3d0fe9a2df2edc047f78"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "04b6e6154e7048994eb09300401f1f27fc78e9b8aca69a3edf19e80664a1577a"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "b21efa7d9967bf75e3388a37affafa49bc9fbafee62291092cd53b45adbfb595"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "4fa4f16757c9a7a5ecde435da2e47eaa295c73001bd5088efa28277ca89684e7"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "ed58eefb92f768483d10fb856066818c1dd12c86fd64fce4cf2f8796667c84f7"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "sha256": "61b1226040b0e79f2daffb9d35672dd9845eaaf16635766bdbf19421802dbc55"
+    },
+    {
+      "path": "runtime/render/tests/prepared_body_index_test.cpp",
+      "sha256": "7316c608e55827c62f75d98f6a419c4b187d975501288b9a24afdd7cd47108f5"
+    }
+  ],
+  "editable_verifier_preimages": [
+    {
+      "path": "verification/runners/g5/prepared_body_index.mjs",
+      "sha256": "0e76179dfabf623b5c18ba26411fc1758b01e3f3b42c57052bd525fecc04ac0b"
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_runner.py",
+      "sha256": "e23d2781daf3eea019e2c07ce26ea7e285b2a8e2d802d24d52058eb5c4ff15cc"
+    },
+    {
+      "path": "verification/tests/g5_prepared_body_index.test.mjs",
+      "sha256": "d1db2060586e05c98aea477d6cded234fc63c241e2a172a7b31fd961bb44e33b"
+    },
+    {
+      "path": "verification/tests/test_g5_prepared_body_index.py",
+      "sha256": "40b5b85d7a4e64b5ced8ec148fba8b1b386dc845b46ec2a494aa248799166d46"
+    }
+  ],
+  "unchanged_product_basis": "The 14 Runtime/native-test source bytes and the two existing SDK artifacts remain exact. Historical source-tree0a5d8113 identifies old sampling input; descendant archival/package/driver changes create a new verifier/result identity, not a new product build.",
+  "preserved_acceptance": "UR1c1 native43/Node18/Python11/boundaries120 and independently qualified28pixels/8roundtrips remain valid for unchanged product bytes. No rerun of unrelated canonical/drag families or full native suite required for verifier-only edits.",
+  "old_window_policy": "Original UR1C1-Q1/N1 and all older windows stay closed. Old48starts/1770seconds are immutable historical accounting.",
+  "scope": "Repair only functional event-loop/display-opportunity pacing and prove the existing U1C1-06 actual Web shared consumer. No new product performance or all-GPU claim."
+}

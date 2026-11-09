@@ -2185,6 +2185,10 @@ int main(int argc,char** argv) {
         if(argc==1){checkRetainedZoomReentry();checkMixedNavigationReentry();}
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
+        if(argc>1&&std::string_view(argv[1])=="--exact-pressure-only"){
+            TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"pressure reference");
+            checkExactCachePressure(provider,reference);return finishNative(0);
+        }
         if(argc==1||(argc>1&&std::string_view(argv[1])=="--critical-replay-only")){
             checkCriticalNavigationPressure(provider);if(argc>1)return finishNative(0);
         }

@@ -1,0 +1,44 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1c2-working-set-repair-r1",
+  "status": "AUTHORIZED_SCOPED_P36_REPAIR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+    "review_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/result.json",
+      "sha256": "fac087d0ff3e6011046b2cc8bb909dd150cf3d2cd5ae76d355045974f34d3195"
+    },
+    "source_tree_sha256": "36966af89384daa4046555791ab27a1b4d25e9d508821c129d04d4f312975eec",
+    "completed_through": "UR1c1 accepted;validUR1c2 source/evidence preserved;52starts2004secondsclosed;UR2shelved.",
+    "next_action": "Resolve existing-owner working-set progress design,repair scoped Render readiness/consumer gap,originalfailednative +allrelevantregressions andmatchingSDK/twoWebreverification;callbackcontrol."
+  },
+  "authority_lock_ref": {
+    "path": ".aegis/packages/G5-UR1c2-working-set-repair-r1/authority.lock.json",
+    "sha256": "70fb3e762543614d3c62be7117142f3316cdfbe3d351ec99344ed4ba5959f3bb"
+  },
+  "verification_lock_ref": {
+    "path": ".aegis/packages/G5-UR1c2-working-set-repair-r1/verification.lock.json",
+    "sha256": "0bfd63a3d05d037e256570538ba2d20fb5703d0c76d7b5e107dc0065ea4ae26b"
+  },
+  "execution_contract_ref": {
+    "path": ".aegis/packages/G5-UR1c2-working-set-repair-r1/repair-contract.json",
+    "sha256": "4b57bacd005f91514f444b53c1bd019eeaad71bcc64ce63f25c913b6d829cccc"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "single_product_and_index_writer": "implementation_thread",
+  "commit_or_push_authorized": false
+}

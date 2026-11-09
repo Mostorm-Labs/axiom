@@ -1,0 +1,125 @@
+{
+  "findings": [
+    {
+      "id": "CR-U1C2-WORKINGSET-01",
+      "classification": "FROZEN_REQUIREMENT_FAILURE",
+      "owning_defect_layer": "IMPLEMENTATION_DEFECT",
+      "severity": "BLOCKING_SCOPED_UR1C2",
+      "frozen_obligations": [
+        "U1C2-01",
+        "U1C2-02",
+        "U1C2-04"
+      ],
+      "failure_mode": "prepareBodies requires every visible committed v4 body Ready but holds each only locally. Later alias/body LRU or quota recovery can evict an already depended-on prefix. No final ready dependency binding protects actual consumers. lookup miss can restore unstepped full support/length scans or whole Direct contour compilation; narrow shared allowance can repeatedly rebuild prefix bodies before reaching consumption.",
+      "impact": "Small total source sets beyond cache discoverability can lose cooperative forward progress and restore long-history CPU geometry preparation on supported GPU targets. This is distinct from GPU-to-Raster fallback; actual GPU/AA policy and existing pixel correctness remain intact.",
+      "existing_independent_coverage": "All47 native,36Node,17Python,120boundaries;12 Web cases with28pixel stages/8roundtrips;32different7199-knot positive probe all pass. Existing copy matrix shares a single geometry; pressure tests primarily hold one body or release external quota before retry.",
+      "new_evidence_unique_detection_value": "Existing compiled Render+Metal, valid RuntimeScene projections, unchanged32/96MiB/8MiB/512entry limits: 513small distinct bodies and one7199knot+512x64knot valid demand. Final source/binary/dependency/log hashes and full commands in independent probe summary.",
+      "why_existing_frozen_evidence_did_not_cover_it": "One admitted or pinned body and many equal copies cannot evict one another; they do not exercise the gap between whole-demand readiness, per-body alias eviction, and later raster/Direct consumption.",
+      "blocking_justification": "Frozen02 explicitly excludes monolithic frame-helper history preparation; frozen04 explicitly requires stable valid demand forward progress under one-step slices. The declared v4 GPU subset has no512visible-object document admission limit. This fails existing obligations rather than adding scale or newGPUqueue requirements.",
+      "why_severe_enough_to_override_closure_stability": "No new finish line is introduced: trusted frozen requirements fail on a valid ~39967knot source set at unchanged budgets. Earlier positive evidence is preserved and credited; review does not invalidate it or require redundant proof of the verifier.",
+      "observed_results": [
+        {
+          "case": "default-32-distinct-7199",
+          "first": {
+            "attempt": 0,
+            "result": 2,
+            "builds": 6,
+            "admissions": 7,
+            "support_work": 44666,
+            "legacy_support": 0,
+            "legacy_compile": 0,
+            "canonical_draws": 0,
+            "presents": 0
+          },
+          "terminal": {
+            "terminal_attempts": 21,
+            "body_builds": 32,
+            "admissions": 32,
+            "legacy_support": 0,
+            "legacy_compile": 0,
+            "presents": 1
+          }
+        },
+        {
+          "case": "default-513-distinct-64",
+          "first": {
+            "attempt": 0,
+            "result": 2,
+            "builds": 505,
+            "admissions": 506,
+            "support_work": 32320,
+            "legacy_support": 0,
+            "legacy_compile": 0,
+            "canonical_draws": 0,
+            "presents": 0
+          },
+          "terminal": {
+            "terminal_attempts": 258,
+            "body_builds": 513,
+            "admissions": 513,
+            "legacy_support": 128,
+            "legacy_compile": 64,
+            "presents": 1
+          }
+        },
+        {
+          "case": "default-one-long-512-short",
+          "first": {
+            "attempt": 0,
+            "result": 2,
+            "builds": 513,
+            "admissions": 513,
+            "support_work": 39967,
+            "legacy_support": 14398,
+            "legacy_compile": 5376,
+            "canonical_draws": 0,
+            "presents": 0
+          },
+          "terminal": {
+            "terminal_attempts": 260,
+            "body_builds": 1026,
+            "admissions": 1026,
+            "legacy_support": 14398,
+            "legacy_compile": 7199,
+            "presents": 1
+          }
+        },
+        {
+          "case": "one-step-one-long-512-short",
+          "first": {
+            "attempt": 0,
+            "result": 2,
+            "builds": 0,
+            "admissions": 1,
+            "support_work": 32,
+            "legacy_support": 0,
+            "legacy_compile": 0,
+            "canonical_draws": 0,
+            "presents": 0
+          },
+          "terminal": {
+            "terminal_attempts": 8192,
+            "body_builds": 1030,
+            "admissions": 1033,
+            "legacy_support": 0,
+            "legacy_compile": 0,
+            "presents": 0
+          }
+        }
+      ],
+      "quantum_caveat": "legacy compile totals64/7199 are total old-path work, not a claim that a single append exceeded32knots. The unbounded call-site scans are identified in code and actual support counters; one-step phase restarts are independently observed.",
+      "scope_caveat": "513short bodies may need>=257calls at maxGroups2; no-present at256 alone is not a failure proof. The final report uses completed258/260call observations and8192one-step calls with repeated admissions/no canonical draw.",
+      "source_locations": [
+        "runtime/render/src/skia_render_cache.cpp:256",
+        "runtime/render/src/skia_render_cache.cpp:299",
+        "runtime/render/src/skia_render_cache.cpp:414",
+        "runtime/render/src/skia_prepared_geometry.cpp:232",
+        "runtime/render/src/skia_prepared_geometry.cpp:250",
+        "runtime/render/src/skia_prepared_geometry.cpp:312",
+        "runtime/render/src/skia_compact_material.cpp:440",
+        "runtime/render/src/skia_renderer.cpp:376"
+      ],
+      "repair_owner": "Existing renderer-owned prepared service and canonical/Direct work owners; no Brush/Scene/Interaction/SDK or second cache."
+    }
+  ]
+}

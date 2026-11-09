@@ -1,0 +1,235 @@
+{
+  "schema": "g5-scoped-UR1c2-authority-v1",
+  "status": "CURRENT_SCOPED_CONTINUATION",
+  "human_authorization": "用户已明确要求“审查ur1c1，通过的话，进入ur1c2”；独立控制审查25d28035已接受UR1c1，条件现已满足。执行仍由隔壁唯一产品源码写入者完成，终态主动通知控制线程。",
+  "authority_refs": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "accepted_baseline_refs": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/result.json",
+      "sha256": "25d28035dc637bf5dfb1ed2d1356307eed18fd62869a5032bf2c3ad20b8a7f31",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/actual-consumers-and-reference-review.json",
+      "sha256": "a3f2bf17bdbfa08a7f69a34dc41faf03d8a10af7e86c63bbc988d4c28aef78e7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/offline-pixel-review.json",
+      "sha256": "a187128315ce628a8efc48f7200d97f64314cbd82dbfdf83fb48544d0ba6ec5d",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/result.json",
+      "sha256": "bf6472cd2dc2b8da76ef03da8fa37ac5b8438b91f8334b74f1375c93849b9aa3",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/source-delta-manifest.json",
+      "sha256": "626a6d39e4bfd9a6331a1afd90dc3987fd09adb8bc6dd64f50e1b3d069ca8c14",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/result.json",
+      "sha256": "99d94d7556aad965b08b34b1ca5fbeb767368418eee9f4a16b9da30b7037bba6",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-delta-manifest.json",
+      "sha256": "a7597c7b57180b8c08025d070f56b596b3915001362c8ad4f0e6561ec69b7e81",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/sampling-ledger.json",
+      "sha256": "3bfd74ddf1d3aa06d20f57a2fe9c0b04a318bf8887a991b80a261396378a1a29",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "source_baseline": [
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "7f610332b0749da1c703d56aab55def9841fb4ace685efd5ffe746bbb165b979",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "sha256": "35b4683ef37810ae6d6b48f8113956c391453353497eaae5ca394338b96f0dbe",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "sha256": "af9b870e49d311be7c1b271c95889fe36be4149ab25658132ff2a216b4ad110e",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "ed58eefb92f768483d10fb856066818c1dd12c86fd64fce4cf2f8796667c84f7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "b21efa7d9967bf75e3388a37affafa49bc9fbafee62291092cd53b45adbfb595",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "4fa4f16757c9a7a5ecde435da2e47eaa295c73001bd5088efa28277ca89684e7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "04b6e6154e7048994eb09300401f1f27fc78e9b8aca69a3edf19e80664a1577a",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "23e193c62f0605d264c78fd055f02a8e92b06c5a6ffa3d0fe9a2df2edc047f78",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "sha256": "61b1226040b0e79f2daffb9d35672dd9845eaaf16635766bdbf19421802dbc55",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/compact_raster_internal.hpp",
+      "sha256": "21c0ba4171f93bb954f156041a8c67a31ee816f5f4f529f44df46d0635d21938",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "sha256": "390a3b94f1d832d3f74ab7d2b9d745164c1e5b6068c229a82aed70a6a7139a71",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "599f4b7d8c0237095ffde4c13c32bcd8d6936c5f53a57dd140d23b9b5970c7e0",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "e8b6c28741e34c4ef27482feda98112006e97ecb973e1837d214784820d499b8",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/render_execution.cpp",
+      "sha256": "021f9b4385710136d8686a766f97592e4a3d6c0399f30223af8eecaf2c62380a",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "2e4d8d7cfa5b8f73ca1fa314d0e4f62d6605e7f39e31e1076e6c1bc8559c7067",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "05912e746de746a1ed48f51e4186898957760ca520d59b81bb5d87bb68931a38",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "sha256": "8c8526c410a6f66fe1a11c461cce9d9720af415bb2db2c72c28ace0f1a3e3521",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "705a330a423051e02cb93cbfc804a2788f038f920e9b10a2fe5ba6e06c03b9f7",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "10ba7fc9494dcca4e393f186a42ae94e6dadfb4c0121990b5409d8f89f338e50",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/tests/prepared_body_index_test.cpp",
+      "sha256": "7316c608e55827c62f75d98f6a419c4b187d975501288b9a24afdd7cd47108f5",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/tests/render_cache_test.cpp",
+      "sha256": "2eb8fad3550d2a94ab446a330609205cd66d5f59e2f9cc7e4f2432832812e9ae",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "runtime/render/tests/prepared_geometry_test.cpp",
+      "sha256": "936ca249d6729001af7abacbb4cbdaa546a88965bce04f6e636acca915706f3d",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "existing_verification_helpers_read_only": [
+    {
+      "path": "verification/runners/g5/prepared_body_index.mjs",
+      "sha256": "d521593f28712748ad3012512eddb2f5092abbf49dc90c38f656a33840a9e94f",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify_pacing.mjs",
+      "sha256": "f01232c888e466015d404702d8dd33e632c8ce2d5827d4737b215089468c6825",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/prepared_body_index_reverify_reference.mjs",
+      "sha256": "232e3ae8025adae98ac1c007711ea0b7125324262cad7a87860434150a0c5672",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+      "identity_kind": "local-content-addressed"
+    },
+    {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "identity_kind": "local-content-addressed"
+    }
+  ],
+  "baseline_identity": "HEAD e69f2377 plus accepted dirty UR1c1 product and verifier deltas. Supplement b836c121 is historical pre-UR1c2 subject; do not demand new whole-tree equality. Capture new exact subject after C2 edits.",
+  "frozen_scope": [
+    "UR1c2 only: committed CompactStroke v4 GPU consumers in ordinary cooperative canonical and full transient/Direct paths. Reuse the existing renderer-owned PreparedGeometryCache and SourceRetentionPool; do not create another compiled-body/document owner.",
+    "Separate ready lookup from build-capable admission. A new ordinary leaf must not call synchronous full-history get/build on a miss. First-use body preparation is resumable within the existing Render owner work allowance; in-flight jobs share immutable source identity and remain byte-budgeted.",
+    "Ready bodies feed the actual canonical CompactStrokeRasterJob and real Direct/isolated material leaves, including the existing v4 damage-miss branch. Cache pixel hits skip geometry/coverage; geometry hits preserve exact original device grid, transform, masks, material and z-order.",
+    "CPU geometry, distances/support and checkpoints can share across equal copies, transforms and mask-only changes. Changed config/seed/knot/type forks under UR1c1 complete equality/strong ownership rules. Source first-admission validation stays truthful; no digest/ObjectId shortcuts.",
+    "New source-proportional compile/support/distance/path/group initialization is stepped. Charge every new body-build/replay operation to the existing allowance shared across the frame, not a fresh allowance per object/helper. Existing32knot compiler quanta remain the per-advance source bound; checkpoint blocks may remain256 but are assembled/replayed in bounded advances as needed.",
+    "Exact compiled paths and bounded source-bound checkpoint replay are valid existing representations. Count unique full-body builds, cold admission comparisons/scans and visible checkpoint replay separately. Do not claim zero warm compilation when bounded checkpoint replay is used.",
+    "Pending retains progress/source leases and does not publish partial current output or issue canonical receipts. Use existing preparation/dirty/retry seams; do readiness work before mutating the final provider target. Reject stale/unsupported/structurally impossible requests distinctly. Keep valid world body work across camera demand changes without reusing stale device pixels.",
+    "Owner-thread only, same32/96MiB/maxEntry/maxEntries/preparation settings, same UR1b actual target and strict supported-GPU policy. No threads, SDK public API/ABI/version, Brush/Scene/History/Operation/input or UR2 change. Existing ready navigation/retained-ink consumers and private standalone compatibility callers continue to work; an in-progress C2 job cannot be synchronously drained by a compatibility caller.",
+    "Explicit Raster/legacy/range/unsupported algorithms remain their existing declared compatibility paths. Do not feed the independent null-cache/null-prepared reference from the candidate prepared service. No wholeUR1,all-GPU,P34 or performanceSLO claim."
+  ]
+}

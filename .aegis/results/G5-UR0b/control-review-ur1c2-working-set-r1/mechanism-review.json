@@ -1,0 +1,39 @@
+{
+  "status": "VERIFIED",
+  "existing_owners": [
+    "SkiaRenderer",
+    "SkiaRenderCache",
+    "PreparedGeometryCache",
+    "SourceRetentionPool",
+    "ResourceBudgetManager"
+  ],
+  "dependency_binding": "bodyDependencies_ is capped by unchanged512entries and positively leases per-node metadata before insert. Keyed by ObjectId only for scope lookup, qualified by complete owner+pointee+type+command identity before reuse; body/source stay strongly held. begin prunes changed/removed bindings before replacing group leases.",
+  "residency_progress": "A demand above discovery capacity or quota-denied whole-demand retention switches to existing ordered composite/scratch and CompactStrokeRasterJob. preparationCursor/current job/body survive retries; each completed source is consumed before dropping its dependency, with optional prepared storage reclaimed on actual denial. No whole-document pin or second compiled cache.",
+  "missing_ready_guard": "Supported ordinary GPU v4 owners fail pending on absent preparation ownership/readiness. Canonical admission, actual Direct/damage and held retained-ink consumers no longer silently rebuild lost dependencies. Private standalone prepare calls the same bounded preparation entry.",
+  "allowance": "Source metrics/compiler/path stages still advance<=32knots/primitives and share original frame PreparationAllowance with raster work. One-step aggregate checked in native new working-set test. Metadata/equality validation work remains separately counted, not falsely called zeroCPU.",
+  "leases": "Unreferenced cache discovery is reclaimable. In-flight pending jobs are not retired for a ready victim; ready retired jobs keep positively charged referenced leases. CPU body lease shrinks in place, avoiding release/re-reserve soft-cap failure. Native held/current-job,75MiB reclaimable pressure and last release tests independently pass.",
+  "presentation": "Staging writes offscreen state until complete. Scene/camera/material/basis changes reset device staging while preserving qualified world body preparation. Pending/stale do not present/issue receipt. Existing isolation helper and nonink/creation/ink policy are reused, with independent native mask/opacity/order pixels.",
+  "compatibility": "Explicit Raster,legacy/range and independent null-prepared/null-cache references retain old declared behavior. Normal SDK declarations/wrapper files unchanged; source API/ABI/locks/defaultbudgets unchanged.",
+  "remaining_boundary": [
+    "Full GPU queue/device loss/recovery and overallUR1/G5 performance proof remain outside this C2 package.",
+    "Shared drawing helper still physically resides in skia_headless_backend.cpp; no wholesale helper migration claimed."
+  ],
+  "original_failure_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/findings.json",
+    "sha256": "e27cea41122d97231051755abd8fb1ee110faf581b35693fefd9ee931b3ac857"
+  },
+  "original_probe_reverification_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/original-probe-reverification.json",
+    "sha256": "212e4657a498f707e5465379184506fdc8299457ecac2454fc4a8d1bb91a1cdb"
+  },
+  "source_locations": [
+    "runtime/render/src/skia_render_cache.cpp:264",
+    "runtime/render/src/skia_render_cache.cpp:295",
+    "runtime/render/src/skia_render_cache.cpp:319",
+    "runtime/render/src/skia_render_cache.cpp:425",
+    "runtime/render/src/skia_prepared_geometry.cpp:312",
+    "runtime/render/src/prepared_body_job.cpp:94",
+    "runtime/render/src/skia_renderer.cpp:375",
+    "runtime/render/src/skia_renderer.cpp:830"
+  ]
+}

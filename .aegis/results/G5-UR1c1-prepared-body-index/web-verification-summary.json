@@ -1,0 +1,1244 @@
+{
+  "schema": "ur1c1-functional-evidence-summary-v1",
+  "totals": {
+    "input_cases_completed": 12,
+    "input_cases_planned": 12,
+    "case_checks_completed": 11,
+    "pixel_oracles_qualified": 25,
+    "pixel_oracles_planned": 28,
+    "roundtrips_qualified": 7,
+    "roundtrips_planned": 8,
+    "rgba_stages_retained": 28,
+    "snapshot_stages_retained": 28
+  },
+  "workers": [
+    {
+      "id": "UR1C1-Q1",
+      "status": "PRODUCT_FAILURE_OBSERVED",
+      "source_tree_sha256": "0a5d8113b2c0a768fac619c6c059909587827b276fdd0cb49285fc2605ab8cbf",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "page_errors": [],
+      "actual_execution": {
+        "canonical_gpu_scopes": 735,
+        "transient_gpu_scopes": 14,
+        "transient_reuse_scopes": 12,
+        "records": 765,
+        "scope": "actual Skia recordingContext coverage; Skia internal CPU preparation remains UNKNOWN"
+      },
+      "actual_prepared_consumers": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "MISSING",
+          "records": 290,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "MISSING",
+          "records": 277,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        }
+      ],
+      "cases": [
+        {
+          "case": "S0-canonical",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": null,
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-canonical-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-canonical-before.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 33,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S0-drag",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "500724d3f1c2f2f8924a7a182ab2852d7fa29ff0571fb22364d2623b6b6ecd37",
+              "expected": "8871ab51ffbccf087a011bee90caa8765878edb82bb732e99d3e6bfd396c3820"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610",
+              "expected": "8871ab51ffbccf087a011bee90caa8765878edb82bb732e99d3e6bfd396c3820"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 826599,
+            "aa_boundary_pixels": 773401,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "8871ab51ffbccf087a011bee90caa8765878edb82bb732e99d3e6bfd396c3820"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-before.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "bbde673bbf5adb9805c5ab61b7aa4633267652d4489f473d9550f7a375e2a7f7"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-undo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "500724d3f1c2f2f8924a7a182ab2852d7fa29ff0571fb22364d2623b6b6ecd37"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-drag-redo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "ecda17d4e4f11795a69900dad6e6aa296d07430ea507f96e5e00afa10bcd87a8"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 84,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S0-erase-navigation",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6",
+              "expected": "80ddf24ece1f524bf1888a7c466d1731a8f55f5f1dd6400ff8673060b690eff0"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "3a5f4a4b244385ba43e05bf021eba93b0c618b6849ae401db05d4da287f5425f",
+              "expected": "80ddf24ece1f524bf1888a7c466d1731a8f55f5f1dd6400ff8673060b690eff0"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "80ddf24ece1f524bf1888a7c466d1731a8f55f5f1dd6400ff8673060b690eff0"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-before.axsnap",
+                  "bytes": 2133847,
+                  "sha256": "defb7a27ac0a49160516996c35c248e74af4dfbcb84f540edbf4746e3c5090d9"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "3a5f4a4b244385ba43e05bf021eba93b0c618b6849ae401db05d4da287f5425f"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-redo.axsnap",
+                  "bytes": 2133847,
+                  "sha256": "de74fdf3ce8e1b5fc4328bea15f743fd505d27f7e1c450d7ae960f030d140eef"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 290,
+            "navigation_queries": 128,
+            "retained_ink_queries": 0,
+            "builds": 1,
+            "identity_hits": 64,
+            "fingerprint_bytes": 3968,
+            "complete_comparison_calls": 15
+          }
+        },
+        {
+          "case": "S2-canonical",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": null,
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-canonical-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-canonical-before.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 34,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S2-drag",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "19413ce24f215023586ab0062b2dfd95dd24d4e1b0788de84f1115e98807e771",
+              "expected": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a",
+              "expected": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 826599,
+            "aa_boundary_pixels": 773401,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-before.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "b28d969262f4f1fb618f5b21613e98a958a928f9189984363d7718020d1c5b4d"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-undo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "19413ce24f215023586ab0062b2dfd95dd24d4e1b0788de84f1115e98807e771"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-drag-redo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4b26ed86d0eab9d5755820eff7f637b828d708fcb6a2f39f1b53327aa9ef6878"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 140,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S2-erase-navigation",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "8d00e87c86c5b401bc44dda77907165e02fca001b3e09174fc4c80faa5594e23",
+              "expected": "06de0dc5d185b72329266475dfe21ae9173fe83b56922a011cef0583a123e6e6"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "70e0f0dc24be1bc254ef7bfbe5386040cf9afcb74f86f7ae5403c17e8c1e2d29",
+              "expected": "06de0dc5d185b72329266475dfe21ae9173fe83b56922a011cef0583a123e6e6"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "06de0dc5d185b72329266475dfe21ae9173fe83b56922a011cef0583a123e6e6"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-before.axsnap",
+                  "bytes": 2241271,
+                  "sha256": "f4b6e8a6a0e66870b440e242346cc16220c931ce64331d4c80f41621a7c47e0f"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "70e0f0dc24be1bc254ef7bfbe5386040cf9afcb74f86f7ae5403c17e8c1e2d29"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "8d00e87c86c5b401bc44dda77907165e02fca001b3e09174fc4c80faa5594e23"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-redo.axsnap",
+                  "bytes": 2241271,
+                  "sha256": "c44115e8eb3a9321c16df76a8a93b2f5465e19c01a64bdb4ef9e7382609bc983"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 277,
+            "navigation_queries": 160,
+            "retained_ink_queries": 0,
+            "builds": 1,
+            "identity_hits": 144,
+            "fingerprint_bytes": 992,
+            "complete_comparison_calls": 15
+          }
+        }
+      ],
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1",
+          "qualification",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 91.15710583300097,
+        "peak_process_family_rss_kib": 1749360,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "PRODUCT_FAILURE_OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "id": "UR1C1-N1",
+      "status": "PRODUCT_FAILURE_OBSERVED",
+      "source_tree_sha256": "0a5d8113b2c0a768fac619c6c059909587827b276fdd0cb49285fc2605ab8cbf",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "page_errors": [],
+      "actual_execution": {
+        "canonical_gpu_scopes": 0,
+        "transient_gpu_scopes": 0,
+        "transient_reuse_scopes": 0,
+        "records": 0,
+        "scope": "actual Skia recordingContext coverage; Skia internal CPU preparation remains UNKNOWN"
+      },
+      "actual_prepared_consumers": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "MISSING",
+          "records": 0,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "MISSING",
+          "records": 0,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        }
+      ],
+      "cases": [
+        {
+          "case": "S0-canonical",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": null,
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-canonical-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "89e8ffbf1dd6dcde6af56e47fa0a4b7c4e23376db550c2ad506d3522a76cbb93"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-canonical-before.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S0-drag",
+          "input_status": "COMPLETED",
+          "case_status": "FAILED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "32cc7d6452f778a29f7fb8cdf2780309b0ff1e423bcb980d4cde333a2bb19527",
+              "expected": "6b783fcbcec88bec79f6e324fa853ba13c6ba5c37a66d51551d122e883f5cbe2"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610",
+              "expected": "6b783fcbcec88bec79f6e324fa853ba13c6ba5c37a66d51551d122e883f5cbe2"
+            }
+          ],
+          "independent_oracles": [],
+          "roundtrip": null,
+          "cold_error": "Error: spawnSync /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle ETIMEDOUT\n    at Object.spawnSync (node:internal/child_process:1120:20)\n    at spawnSync (node:child_process:868:24)\n    at execFileSync (node:child_process:911:15)\n    at compareSnapshotPixels (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur0/pixel_oracle.mjs:28:29)\n    at async main (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index.mjs:187:30)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index.mjs:216:84",
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "6b783fcbcec88bec79f6e324fa853ba13c6ba5c37a66d51551d122e883f5cbe2"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-before.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "bbde673bbf5adb9805c5ab61b7aa4633267652d4489f473d9550f7a375e2a7f7"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-undo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "32cc7d6452f778a29f7fb8cdf2780309b0ff1e423bcb980d4cde333a2bb19527"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-drag-redo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "ecda17d4e4f11795a69900dad6e6aa296d07430ea507f96e5e00afa10bcd87a8"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S0-erase-navigation",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "7f983db9cc0f4df82189ca5841b7e620411a67ec09cd1a2123051966480fbd2c",
+              "expected": "3bcd2b5196670ae6eae4da29a0d9aafa54f909f66cd03560740c9f269eef4ff8"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "9e677935d558f06b10ce53e9935996acc60cfc1bdc5561b8b56d793e74d7a4f9",
+              "expected": "3bcd2b5196670ae6eae4da29a0d9aafa54f909f66cd03560740c9f269eef4ff8"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "3bcd2b5196670ae6eae4da29a0d9aafa54f909f66cd03560740c9f269eef4ff8"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-before.axsnap",
+                  "bytes": 2133847,
+                  "sha256": "66233f931418c7d911c40c83d0b54ba2badc66ac7e66601898882947988bcb20"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "9e677935d558f06b10ce53e9935996acc60cfc1bdc5561b8b56d793e74d7a4f9"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-undo.axsnap",
+                  "bytes": 2080135,
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "7f983db9cc0f4df82189ca5841b7e620411a67ec09cd1a2123051966480fbd2c"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S0-erase-navigation-redo.axsnap",
+                  "bytes": 2133847,
+                  "sha256": "2ea24774cba9767d74e080aa0e591f320f97b0c8bb349894c500bbda8a838e3a"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S2-canonical",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": null,
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-canonical-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-canonical-before.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S2-drag",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": true,
+              "actual": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f",
+              "expected": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc",
+              "expected": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 826599,
+            "aa_boundary_pixels": 773401,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-before.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "b28d969262f4f1fb618f5b21613e98a958a928f9189984363d7718020d1c5b4d"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-undo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "3ca2e655813e7e6c378d105a17c1f53fe4fe7445af7f1eb37c6a80ad5ab1c00f"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-drag-redo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4b26ed86d0eab9d5755820eff7f637b828d708fcb6a2f39f1b53327aa9ef6878"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        },
+        {
+          "case": "S2-erase-navigation",
+          "input_status": "COMPLETED",
+          "case_status": "COMPLETED",
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": true,
+              "actual": "b02488b83f3d56a020069d39313c021b2b5cfe6362c69fc4d1e46a2b76b04b34",
+              "expected": "b02488b83f3d56a020069d39313c021b2b5cfe6362c69fc4d1e46a2b76b04b34"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "70e0f0dc24be1bc254ef7bfbe5386040cf9afcb74f86f7ae5403c17e8c1e2d29",
+              "expected": "b02488b83f3d56a020069d39313c021b2b5cfe6362c69fc4d1e46a2b76b04b34"
+            }
+          ],
+          "independent_oracles": [
+            {
+              "stage": "before",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "undo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            },
+            {
+              "stage": "redo",
+              "status": "QUALIFIED",
+              "interior_mismatched_pixels": 0,
+              "max_interior_delta": 0
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          },
+          "cold_error": null,
+          "retained": [
+            {
+              "stage": "before",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-before.rgba",
+                  "bytes": 6400000,
+                  "sha256": "b02488b83f3d56a020069d39313c021b2b5cfe6362c69fc4d1e46a2b76b04b34"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-before.axsnap",
+                  "bytes": 2241271,
+                  "sha256": "00d4f3db44325ab9202590f3112fd2a42c8c9f66eb160b349346ecdc6b102822"
+                }
+              ]
+            },
+            {
+              "stage": "undo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-undo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "70e0f0dc24be1bc254ef7bfbe5386040cf9afcb74f86f7ae5403c17e8c1e2d29"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-undo.axsnap",
+                  "bytes": 2187559,
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                }
+              ]
+            },
+            {
+              "stage": "redo",
+              "files": [
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-redo.rgba",
+                  "bytes": 6400000,
+                  "sha256": "b02488b83f3d56a020069d39313c021b2b5cfe6362c69fc4d1e46a2b76b04b34"
+                },
+                {
+                  "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1/S2-erase-navigation-redo.axsnap",
+                  "bytes": 2241271,
+                  "sha256": "9a0e18721a5645cdbe9db8859f15b3550d017eb208622299be7af42ef4b6a886"
+                }
+              ]
+            }
+          ],
+          "prepared_work": {
+            "records": 0,
+            "navigation_queries": 0,
+            "retained_ink_queries": 0,
+            "builds": 0,
+            "identity_hits": 0,
+            "fingerprint_bytes": 0,
+            "complete_comparison_calls": 0
+          }
+        }
+      ],
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1",
+          "normal",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 150.67073070799233,
+        "peak_process_family_rss_kib": 1767536,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "PRODUCT_FAILURE_OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ],
+  "ledger": {
+    "historical_starts": 46,
+    "historical_charged_seconds": 1527,
+    "new_starts": 2,
+    "new_charged_seconds": 243,
+    "cumulative_starts": 48,
+    "cumulative_charged_seconds": 1770,
+    "remaining_status": "NONE"
+  },
+  "classification_notes": [
+    "Generic worker PRODUCT_FAILURE_OBSERVED does not classify all failures as product pixel defects.",
+    "Q1 case correctness is complete but required actual shared navigation-to-retained-ink use is MISSING.",
+    "N1 S0-drag input and all3captured stage buffers exist; first independent CPU oracle exceeded its unchanged10000ms bound, so3stage qualifications and its roundtrip remain incomplete.",
+    "Raw hash/cold predicate failures remain preserved; accepted independent AA oracle is unchanged.",
+    "No extra browser, oracle retries, seed or threshold changes."
+  ]
+}

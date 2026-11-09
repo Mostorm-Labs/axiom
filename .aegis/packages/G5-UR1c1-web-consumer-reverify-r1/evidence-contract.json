@@ -1,0 +1,30 @@
+{
+  "schema": "g5-verifier-only-evidence-contract-v1",
+  "authorized_outputs": [
+    "out/G5-UR1c1-web-consumer-reverify-r1/**",
+    ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/**",
+    "verification/evidence/performance/g5-ur1c1-web-consumer-reverify-r1/**"
+  ],
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "required": "SHA256bound source delta/preimages,design/RED/newdeterministiclogs,exactproduct+SDK+oracleidentities,complete raw4case captures/consumerrecords,reference reuse map,newledger and blocked-or-ready result."
+  },
+  "preservation": "Old package/result/source archives,review,rawcoldtimings and counters remain immutable. New references/result identities are additive. No evidence-only commit required.",
+  "notification": {
+    "required": true,
+    "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "explicit blocker or guard terminal"
+    ],
+    "include": [
+      "package/result/source/delta/manifest/SDK hashes",
+      "actual same-service navigation/ink query evidence and independent correctness",
+      "all two worker outcomes,ceil charges,cumulative starts/seconds,ownedcleanup,remaining rows",
+      "explicit unchanged production source and UR1c2/UR2remainpending"
+    ],
+    "delivery_failure": "Save exact tool error/message; do not claim notification delivered."
+  }
+}

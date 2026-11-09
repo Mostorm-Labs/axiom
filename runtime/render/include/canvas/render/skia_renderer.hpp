@@ -21,7 +21,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class GpuResourceRetirement;class EraseMaskPathCache;}
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -102,6 +102,7 @@ class SkiaRenderer final {
     std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
     std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
+    std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;

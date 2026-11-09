@@ -1,0 +1,58 @@
+{
+  "schema": "axiom-accepted-checkpoint-evidence-index-v1",
+  "reviews": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/result.json",
+      "sha256": "5184da8e73a6791134bef70e08359bbe6ca690591d1c97d26d4ec502d51fae0c",
+      "verdict": "BLOCKED_EVIDENCE"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/result.json",
+      "sha256": "25d28035dc637bf5dfb1ed2d1356307eed18fd62869a5032bf2c3ad20b8a7f31",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/result.json",
+      "sha256": "fac087d0ff3e6011046b2cc8bb909dd150cf3d2cd5ae76d355045974f34d3195",
+      "verdict": "BLOCKED"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/result.json",
+      "sha256": "d1fcfd065547d8eda407dd1be256c83b471803eaa140927373466246057ab455",
+      "verdict": "PASS_WITH_FINDINGS"
+    }
+  ],
+  "authoritative_acceptance": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/result.json",
+    "sha256": "d1fcfd065547d8eda407dd1be256c83b471803eaa140927373466246057ab455",
+    "verdict": "PASS_WITH_FINDINGS"
+  },
+  "historical_blocked_reviews_preserved": true,
+  "accepted_implementation_result": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/result.json",
+    "sha256": "38777e7eace9a86cebaeb02bba361963b18bd5f3176e146999e79a705e139955"
+  },
+  "subject_source_tree_sha256": "9eb88bcc7c25d7647f90375430ba6d109f196084023d0111f4dc40180dbb757a",
+  "accepted_verification": {
+    "native": 48,
+    "node": 36,
+    "python": 21,
+    "boundaries": 120,
+    "cold_pixel_stages": 28,
+    "roundtrips": 8,
+    "provenance": "Independently rerun/qualified by the accepted control review; not rerun for this publication."
+  },
+  "limitations": [
+    "PASS_WITH_FINDINGS only; no whole UR1/G5/P34/performance PASS",
+    "Normal S2 erase phase gap332.1ms / max handler331.2ms remains",
+    "Exact Up-to-matching-CanonicalVisible timestamp remains null",
+    "UR1d GPU queue/device-loss and UR2 not executed in this checkpoint"
+  ],
+  "new_browser_starts": 0,
+  "cumulative_browser_starts": 54,
+  "cumulative_charged_seconds": 2107,
+  "cap_seconds": 8370,
+  "remaining_workers": "NONE",
+  "demo_url": "http://127.0.0.1:4287/example.html",
+  "local_evidence_boundary": "local-only-boundary.json"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "obligations": {
+    "U1C1R1-01": "SATISFIED_DETERMINISTIC_RED_GREEN_AND_33_REAL_ACTIVE_SDK_FRAMES",
+    "U1C1R1-02": "SATISFIED_BOTH_QUALIFICATION_SCENES_ACTUAL_ORDERED_SHARED_CONSUMERS",
+    "U1C1R1-03": "SATISFIED_4_CASES_12_PIXEL_STAGES_4_ROUNDTRIPS",
+    "U1C1R1-04": "SATISFIED_FROZEN_PRODUCTS_ARTIFACTS_LEDGER_CLEANUP"
+  },
+  "node_tests": 29,
+  "python_tests": 14,
+  "boundary_contracts": 120,
+  "retained_native_review": "43/43 unchanged subject, not rerun",
+  "facts_ref": "verification-facts.json",
+  "uncompleted_product_work": [
+    "UR1c2 ordinary canonical/Direct preparation",
+    "UR1d resource/recovery",
+    "UR2 post-Up/readmission/navigation handoff",
+    "cold frame main-thread latency"
+  ],
+  "official_gate_verdict_issued": false
+}

@@ -127,7 +127,7 @@ void SkiaNavigationTiles::reclaimForExact(const std::shared_ptr<resources::Resou
     // counting aliases again overestimates reclaimability, so skipping is safe.
     const auto used=charged();std::size_t reclaimable=0;
     const auto add=[&](std::size_t bytes){reclaimable+=std::min(bytes,used-reclaimable);};
-    add(work.retainedBytes);add(geometry_.preparedBytes());add(geometry_.sourceStatistics().bytes);
+    add(work.retainedBytes);if(geometry_){add(geometry_->preparedBytes());add(geometry_->sourceStatistics().bytes);}
     for(const auto& [key,source]:sources_){(void)key;add(source->admittedBytes);}
     for(const auto& [key,tile]:tiles_){(void)key;add(tile.sources->admittedBytes);}
     for(const auto* job:{job_.get(),refinement_.get()})if(job){
@@ -230,13 +230,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const CanonicalViewportTransform& camera,const FrameState& frame,const NavigationSourceQuery& query,
     std::uint64_t resourceEpoch,const RenderCacheOptions& options,
     std::shared_ptr<resources::ResourceBudgetManager> budget,bool allowPrewarm,const RetainedNavigationSource* retainedSource, SkiaTextResources* textResources, ImageResourceResolver* images,
-    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements){
+    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements,std::shared_ptr<PreparedGeometryCache> prepared){
+    if(prepared)geometry_=std::move(prepared);
+    // Standalone private callers retain their existing local service. Production
+    // always receives the renderer-owned shared service.
+    if(!geometry_)geometry_=std::make_shared<PreparedGeometryCache>();
     if(retirements)gpuRetirements_=std::move(retirements);
     if(!gpuRetirements_)gpuRetirements_=std::make_shared<GpuResourceRetirement>();
     gpuRetirements_->service();
     struct Usage {NavigationWork& w;std::shared_ptr<resources::ResourceBudgetManager> b;~Usage(){if(b){
         const auto u=b->snapshot(resources::ResourceClass::kNavigationTile);w.retainedBytes=u.used;w.stagingBytes=u.staging;w.pendingReleaseBytes=u.pendingRelease;}}} usage{work,budget};
-    if(sourcePool)geometry_.setRetentionPool(std::move(sourcePool));
+    if(sourcePool)geometry_->setRetentionPool(std::move(sourcePool));
     const auto started=std::chrono::steady_clock::now();
     const auto workBefore=work;
     struct Timing {
@@ -300,7 +304,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 static_cast<unsigned long long>(work.regionalPlaneBodyRejects),static_cast<unsigned long long>(work.regionalPlaneAdmissionRejects));
 #endif
         }
-    } timing{work,workBefore,started,frame,camera,options,geometry_,budget};
+    } timing{work,workBefore,started,frame,camera,options,*geometry_,budget};
     work.presented=false;work.pending=false;work.coverageComplete=false;
     if(!query||!options.enabled||!budget||!std::isfinite(camera.scale)||camera.scale<=0||
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||
@@ -308,7 +312,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         return BackendSubmissionResult::retry("world navigation ineligible");
     if(budgetOwner_.lock()!=budget||provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
-        cancel();tiles_.clear();sources_.clear();geometry_.clear();work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
+        cancel();tiles_.clear();sources_.clear();work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
         budgetOwner_=budget;provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     const auto scene=frame.sceneReadToken.value();
@@ -458,11 +462,11 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         geometry.reserve(sources.size());
         SourceRetentions sourceLeases;
         for(const auto& entry:sources){
-            auto retained=geometry_.retainSource(entry,budget,true);if(!retained){deferred=true;return false;}
+            auto retained=geometry_->retainSource(entry,budget,true);if(!retained){deferred=true;return false;}
             sourceLeases.insert(sourceLeases.end(),retained->begin(),retained->end());
-            const auto before=geometry_.statistics();
-            geometry.push_back(geometry_.get(entry,options,budget,!work.coverageComplete&&key.scale<level));
-            const auto after=geometry_.statistics();
+            const auto before=geometry_->statistics();
+            geometry.push_back(geometry_->get(entry,options,budget,!work.coverageComplete&&key.scale<level,PreparedConsumer::kNavigation));
+            const auto after=geometry_->statistics();
             work.preparedGeometryBuilds+=after.builds-before.builds;
             work.preparedGeometryHits+=after.hits-before.hits;
             work.preparedGeometryDenied+=after.denied-before.denied;

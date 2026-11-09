@@ -1,0 +1,91 @@
+{
+  "schema": "g5-ur1c1-verification-amendment-v1",
+  "inherited_obligation": "U1C1-06; no new product capability requirement",
+  "obligations": [
+    {
+      "id": "U1C1R1-01",
+      "requirement": "Functional partial-erase inputs preserve real display opportunities after cold deadline overruns.",
+      "invariant": "Down and32unchanged Move samples keep their order; Up follows a bounded post-Move display opportunity. A slow first frame must not collapse the rest of the gesture into one resolved-Promise microtask burst.",
+      "oracle": "Deterministic fake-clock/event-loop RED at600ms and an overrun longer than the entire533ms nominal schedule; the original mechanism shows no later frame, repaired mechanism yields subsequent display opportunities before Up. Also cover no-overrun ordering, cancellation/abort and bounded failure. Missing-method compilation is not RED.",
+      "evidence": "Old/new deterministic logs and raw planned/actual input+SDK RAF records in both real target scenes.",
+      "blocking": true,
+      "failure_mode": "Functional driver ends erase before the consumer under test can run, creating false missing integration or a false closure."
+    },
+    {
+      "id": "U1C1R1-02",
+      "requirement": "Actual Web navigation followed by retained-ink uses one existing renderer-owned prepared service.",
+      "invariant": "In each qualification S0/S2 target case, an ordered actual navigation get is followed by an active-erase retained-ink get on the same service, with bodies>0, no new build on the reused call, and a real identity hit or full verified-content comparison. Service address or parent trace alone is insufficient.",
+      "oracle": "Existing AXIOM_PREPARED_BODY aggregates and actual execution records, correlated with bounded phase envelopes. Do not call cache.get directly or fabricate/inject a query. Normal SDK remains trace-free.",
+      "evidence": "Both qualification scene raw records and consumer summary; actual SDK RAF/content writes and input correctness in normal scenes.",
+      "blocking": true,
+      "failure_mode": "The public Web path never exercises the shared consumer or uses a disconnected service while claiming reuse."
+    },
+    {
+      "id": "U1C1R1-03",
+      "requirement": "The repaired functional exercise preserves real document, pixel and receipt semantics.",
+      "invariant": "Same saved S0/S2, DPR2,800x500logical target, navigation sequence and32Move positions/logical input stamps; erase Up commits exactly once, Move/navigation do not mutate, contacts close, before/Undo/Redo semantics and pixels pass the original AA rule. No immediate post-Up readmission requirement is introduced.",
+      "oracle": "Public root SDK state/receipts and independent CPU reference output. Persist all3RGBA+snapshot stages before qualification. Exact-input saved references may be reused only under the binding below.",
+      "evidence": "12new stage captures across4cases, independent qualification results,4roundtrips, actual SDK errors and state/receipt observations.",
+      "blocking": true,
+      "failure_mode": "Pacing repair changes the exercised operation or hides incorrect/stale final content."
+    },
+    {
+      "id": "U1C1R1-04",
+      "requirement": "Product bytes, original evidence, artifacts and bounded execution remain unchanged or honestly separated.",
+      "invariant": "14protected source files and both SDK artifacts exact; old reports/windows/4284/4285assets untouched; no diagnostic output in normal. Only authorized verifier changes, one new qualification worker then one normal worker, immutable source during workers, actual ceil accounting and owned cleanup.",
+      "oracle": "Hash comparisons, Node/Python relevant regressions,120runtime boundary checks, source/artifact manifests before/after and two guard outcomes.",
+      "evidence": "Scoped patch/preimages, matching source/driver/SDK/oracle identities, new ledger, complete or blocked result and proactive callback.",
+      "blocking": true,
+      "failure_mode": "A verifier-only fix silently changes the product or treats hidden retries/old evidence as new success."
+    }
+  ],
+  "evidence_necessity": {
+    "failure_mode": "The required Web second consumer is never scheduled by the fixed functional test; the test can neither prove real integration nor reliably reject it.",
+    "impact": "Actual Web prepared-body reuse remains unverified despite valid native sharing and correct Web final pixels.",
+    "existing_independent_coverage": [
+      "Native actual Metal consumer sharing, equality/quota/lifetime checks",
+      "Existing28Web pixel and8roundtrip qualifications",
+      "Actual Web navigation prepared use and GPU/Direct execution records"
+    ],
+    "residual_proof_gap": "Real public Web active erase must execute an eligible second prepared consumer on the same renderer service.",
+    "unique_detection_value": "Crosses public SDK/dirty/RAF/actual Render leaf scheduling; native direct invocation and final pixels do not exercise this route.",
+    "blocking_justification": "This is the sole remaining explicitly frozen U1C1-06 behavior, not added proof-of-proof or a new performance threshold."
+  },
+  "lowest_cost_execution": {
+    "new_workers": 2,
+    "cases_per_worker": [
+      "S0-erase-navigation",
+      "S2-erase-navigation"
+    ],
+    "reuse_old_correctness_for": [
+      "S0/S2 canonical",
+      "S0/S2 drag/cancel",
+      "All previously closed native/mechanism/lifetime obligations"
+    ],
+    "reason": "Unchanged product/SDKs permit preserving accepted checks; only changed driver exercise and residual actual-consumer proof need new real runs."
+  },
+  "reference_contract": {
+    "rule": "Original independent CPU geometry AA boundary and<=2interior channel delta; no new tolerance or candidate-derived masks.",
+    "oracle_path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "timeout_ms": 10000,
+    "saved_reference_roots": [
+      ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1",
+      ".aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-N1"
+    ],
+    "reuse_conditions": [
+      "Previously complete independent REFERENCE_RENDERED output with intact bound hashes",
+      "Full snapshot bytes SHA256 AND exact complete render request including logical/physical dimensions,camera,HUD equal",
+      "Same immutable oracle binary and resource/locked subject identity",
+      "Candidate RGBA is always freshly captured and compared; each reuse records source snapshot/request/reference RGBA/edge hashes"
+    ],
+    "on_cache_miss": "Run original oracle once for that new input under unchanged10000ms bound and own output prefix. No retry or timeout extension; preserve all buffers and report unresolved failure.",
+    "on_reference_identity_failure": "Do not reuse; report exact mismatch. Never overwrite the old reference or manufacture a match from a semantic/digest/length shortcut."
+  },
+  "not_required": [
+    "No relative performance PASS or33ms gate",
+    "No new GPU/OOM/loss simulation or SDK build",
+    "No full UR0/native/platform matrix",
+    "No UR1c2 canonical/Direct integration or UR2 handoff"
+  ]
+}

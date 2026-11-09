@@ -1,0 +1,3759 @@
+{
+  "schema": "ur1c1-web-reverify-facts-v1",
+  "status": "REQUIRED_OBSERVATIONS_SATISFIED",
+  "workers": [
+    {
+      "id": "UR1C1-R1-Q1",
+      "status": "OBSERVED",
+      "variant": "qualification",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "reference_catalog_stable": true,
+      "actual_prepared_facts": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "OBSERVED",
+          "records": 419,
+          "shared_sequences": [
+            {
+              "service": "0xa69630",
+              "navigation_record": 121,
+              "ink_record": 165,
+              "ink_identity_hits": 16,
+              "ink_verified_comparisons": 0
+            }
+          ],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "OBSERVED",
+          "records": 437,
+          "shared_sequences": [
+            {
+              "service": "0x276fe8",
+              "navigation_record": 121,
+              "ink_record": 171,
+              "ink_identity_hits": 16,
+              "ink_verified_comparisons": 0
+            }
+          ],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        }
+      ],
+      "cases": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "COMPLETED",
+          "active_sdk_frames": 33,
+          "color_writes": 1584,
+          "functional_opportunities": [
+            {
+              "after": "down",
+              "i": 0,
+              "started": 3610.7000000476837,
+              "ended": 4430.700000047684
+            },
+            {
+              "after": "move",
+              "i": 1,
+              "started": 4431.700000047684,
+              "ended": 4645.200000047684
+            },
+            {
+              "after": "move",
+              "i": 2,
+              "started": 4646.100000023842,
+              "ended": 4651.200000047684
+            },
+            {
+              "after": "move",
+              "i": 3,
+              "started": 4652,
+              "ended": 4659.300000011921
+            },
+            {
+              "after": "move",
+              "i": 4,
+              "started": 4660.100000023842,
+              "ended": 4675.200000047684
+            },
+            {
+              "after": "move",
+              "i": 5,
+              "started": 4676,
+              "ended": 4799
+            },
+            {
+              "after": "move",
+              "i": 6,
+              "started": 4800.800000011921,
+              "ended": 4805.300000011921
+            },
+            {
+              "after": "move",
+              "i": 7,
+              "started": 4805.900000035763,
+              "ended": 4810.200000047684
+            },
+            {
+              "after": "move",
+              "i": 8,
+              "started": 4810.800000011921,
+              "ended": 4825.600000023842
+            },
+            {
+              "after": "move",
+              "i": 9,
+              "started": 4826.400000035763,
+              "ended": 4842.700000047684
+            },
+            {
+              "after": "move",
+              "i": 10,
+              "started": 4843.400000035763,
+              "ended": 4956.700000047684
+            },
+            {
+              "after": "move",
+              "i": 11,
+              "started": 4957.400000035763,
+              "ended": 4961.5
+            },
+            {
+              "after": "move",
+              "i": 12,
+              "started": 4962.100000023842,
+              "ended": 4977.300000011921
+            },
+            {
+              "after": "move",
+              "i": 13,
+              "started": 4978,
+              "ended": 4993
+            },
+            {
+              "after": "move",
+              "i": 14,
+              "started": 4993.600000023842,
+              "ended": 5009.200000047684
+            },
+            {
+              "after": "move",
+              "i": 15,
+              "started": 5009.800000011921,
+              "ended": 5026.5
+            },
+            {
+              "after": "move",
+              "i": 16,
+              "started": 5027,
+              "ended": 5042.600000023842
+            },
+            {
+              "after": "move",
+              "i": 17,
+              "started": 5043.200000047684,
+              "ended": 5058.300000011921
+            },
+            {
+              "after": "move",
+              "i": 18,
+              "started": 5059,
+              "ended": 5075.800000011921
+            },
+            {
+              "after": "move",
+              "i": 19,
+              "started": 5076.400000035763,
+              "ended": 5092.200000047684
+            },
+            {
+              "after": "move",
+              "i": 20,
+              "started": 5093,
+              "ended": 5108.600000023842
+            },
+            {
+              "after": "move",
+              "i": 21,
+              "started": 5109.200000047684,
+              "ended": 5125.200000047684
+            },
+            {
+              "after": "move",
+              "i": 22,
+              "started": 5125.800000011921,
+              "ended": 5142
+            },
+            {
+              "after": "move",
+              "i": 23,
+              "started": 5142.700000047684,
+              "ended": 5205.100000023842
+            },
+            {
+              "after": "move",
+              "i": 24,
+              "started": 5205.700000047684,
+              "ended": 5209.100000023842
+            },
+            {
+              "after": "move",
+              "i": 25,
+              "started": 5209.700000047684,
+              "ended": 5225.900000035763
+            },
+            {
+              "after": "move",
+              "i": 26,
+              "started": 5226.400000035763,
+              "ended": 5243.200000047684
+            },
+            {
+              "after": "move",
+              "i": 27,
+              "started": 5243.800000011921,
+              "ended": 5260.100000023842
+            },
+            {
+              "after": "move",
+              "i": 28,
+              "started": 5260.600000023842,
+              "ended": 5275.700000047684
+            },
+            {
+              "after": "move",
+              "i": 29,
+              "started": 5276.300000011921,
+              "ended": 5291.400000035763
+            },
+            {
+              "after": "move",
+              "i": 30,
+              "started": 5291.900000035763,
+              "ended": 5308.400000035763
+            },
+            {
+              "after": "move",
+              "i": 31,
+              "started": 5309.200000047684,
+              "ended": 5411.600000023842
+            },
+            {
+              "after": "move",
+              "i": 32,
+              "started": 5412.100000023842,
+              "ended": 5415.700000047684
+            }
+          ],
+          "first_sdk_frame_ms": 807.3999999761581,
+          "input_events": [
+            {
+              "id": 25,
+              "type": "pointerdown",
+              "started": 3607.7000000476837,
+              "ended": 3610.5
+            },
+            {
+              "id": 26,
+              "type": "pointermove",
+              "started": 4430.800000011921,
+              "ended": 4431.300000011921
+            },
+            {
+              "id": 27,
+              "type": "pointermove",
+              "started": 4645.300000011921,
+              "ended": 4645.700000047684
+            },
+            {
+              "id": 28,
+              "type": "pointermove",
+              "started": 4651.200000047684,
+              "ended": 4651.700000047684
+            },
+            {
+              "id": 29,
+              "type": "pointermove",
+              "started": 4659.5,
+              "ended": 4659.800000011921
+            },
+            {
+              "id": 30,
+              "type": "pointermove",
+              "started": 4675.300000011921,
+              "ended": 4675.600000023842
+            },
+            {
+              "id": 31,
+              "type": "pointermove",
+              "started": 4799,
+              "ended": 4800.400000035763
+            },
+            {
+              "id": 32,
+              "type": "pointermove",
+              "started": 4805.400000035763,
+              "ended": 4805.700000047684
+            },
+            {
+              "id": 33,
+              "type": "pointermove",
+              "started": 4810.200000047684,
+              "ended": 4810.5
+            },
+            {
+              "id": 34,
+              "type": "pointermove",
+              "started": 4825.700000047684,
+              "ended": 4826.100000023842
+            },
+            {
+              "id": 35,
+              "type": "pointermove",
+              "started": 4842.800000011921,
+              "ended": 4843.200000047684
+            },
+            {
+              "id": 36,
+              "type": "pointermove",
+              "started": 4956.700000047684,
+              "ended": 4957.100000023842
+            },
+            {
+              "id": 37,
+              "type": "pointermove",
+              "started": 4961.600000023842,
+              "ended": 4961.800000011921
+            },
+            {
+              "id": 38,
+              "type": "pointermove",
+              "started": 4977.400000035763,
+              "ended": 4977.600000023842
+            },
+            {
+              "id": 39,
+              "type": "pointermove",
+              "started": 4993,
+              "ended": 4993.300000011921
+            },
+            {
+              "id": 40,
+              "type": "pointermove",
+              "started": 5009.300000011921,
+              "ended": 5009.600000023842
+            },
+            {
+              "id": 41,
+              "type": "pointermove",
+              "started": 5026.5,
+              "ended": 5026.800000011921
+            },
+            {
+              "id": 42,
+              "type": "pointermove",
+              "started": 5042.600000023842,
+              "ended": 5042.900000035763
+            },
+            {
+              "id": 43,
+              "type": "pointermove",
+              "started": 5058.400000035763,
+              "ended": 5058.800000011921
+            },
+            {
+              "id": 44,
+              "type": "pointermove",
+              "started": 5075.900000035763,
+              "ended": 5076.100000023842
+            },
+            {
+              "id": 45,
+              "type": "pointermove",
+              "started": 5092.400000035763,
+              "ended": 5092.600000023842
+            },
+            {
+              "id": 46,
+              "type": "pointermove",
+              "started": 5108.700000047684,
+              "ended": 5108.900000035763
+            },
+            {
+              "id": 47,
+              "type": "pointermove",
+              "started": 5125.200000047684,
+              "ended": 5125.5
+            },
+            {
+              "id": 48,
+              "type": "pointermove",
+              "started": 5142.100000023842,
+              "ended": 5142.300000011921
+            },
+            {
+              "id": 49,
+              "type": "pointermove",
+              "started": 5205.100000023842,
+              "ended": 5205.400000035763
+            },
+            {
+              "id": 50,
+              "type": "pointermove",
+              "started": 5209.200000047684,
+              "ended": 5209.400000035763
+            },
+            {
+              "id": 51,
+              "type": "pointermove",
+              "started": 5225.900000035763,
+              "ended": 5226.200000047684
+            },
+            {
+              "id": 52,
+              "type": "pointermove",
+              "started": 5243.300000011921,
+              "ended": 5243.400000035763
+            },
+            {
+              "id": 53,
+              "type": "pointermove",
+              "started": 5260.100000023842,
+              "ended": 5260.400000035763
+            },
+            {
+              "id": 54,
+              "type": "pointermove",
+              "started": 5275.700000047684,
+              "ended": 5276
+            },
+            {
+              "id": 55,
+              "type": "pointermove",
+              "started": 5291.400000035763,
+              "ended": 5291.600000023842
+            },
+            {
+              "id": 56,
+              "type": "pointermove",
+              "started": 5308.600000023842,
+              "ended": 5308.800000011921
+            },
+            {
+              "id": 57,
+              "type": "pointermove",
+              "started": 5411.600000023842,
+              "ended": 5411.800000011921
+            },
+            {
+              "id": 58,
+              "type": "pointerup",
+              "started": 5415.800000011921,
+              "ended": 5578
+            }
+          ],
+          "schedule": [
+            {
+              "event": "move",
+              "i": 1,
+              "planned": 3627.3666670476837,
+              "actual": 4430.800000011921
+            },
+            {
+              "event": "move",
+              "i": 2,
+              "planned": 3644.0333340476836,
+              "actual": 4645.200000047684
+            },
+            {
+              "event": "move",
+              "i": 3,
+              "planned": 3660.7000010476836,
+              "actual": 4651.200000047684
+            },
+            {
+              "event": "move",
+              "i": 4,
+              "planned": 3677.3666680476836,
+              "actual": 4659.300000011921
+            },
+            {
+              "event": "move",
+              "i": 5,
+              "planned": 3694.0333350476835,
+              "actual": 4675.200000047684
+            },
+            {
+              "event": "move",
+              "i": 6,
+              "planned": 3710.7000020476835,
+              "actual": 4799
+            },
+            {
+              "event": "move",
+              "i": 7,
+              "planned": 3727.366669047684,
+              "actual": 4805.400000035763
+            },
+            {
+              "event": "move",
+              "i": 8,
+              "planned": 3744.033336047684,
+              "actual": 4810.200000047684
+            },
+            {
+              "event": "move",
+              "i": 9,
+              "planned": 3760.700003047684,
+              "actual": 4825.600000023842
+            },
+            {
+              "event": "move",
+              "i": 10,
+              "planned": 3777.366670047684,
+              "actual": 4842.800000011921
+            },
+            {
+              "event": "move",
+              "i": 11,
+              "planned": 3794.0333370476837,
+              "actual": 4956.700000047684
+            },
+            {
+              "event": "move",
+              "i": 12,
+              "planned": 3810.7000040476837,
+              "actual": 4961.5
+            },
+            {
+              "event": "move",
+              "i": 13,
+              "planned": 3827.3666710476837,
+              "actual": 4977.300000011921
+            },
+            {
+              "event": "move",
+              "i": 14,
+              "planned": 3844.0333380476836,
+              "actual": 4993
+            },
+            {
+              "event": "move",
+              "i": 15,
+              "planned": 3860.7000050476836,
+              "actual": 5009.200000047684
+            },
+            {
+              "event": "move",
+              "i": 16,
+              "planned": 3877.3666720476836,
+              "actual": 5026.5
+            },
+            {
+              "event": "move",
+              "i": 17,
+              "planned": 3894.0333390476835,
+              "actual": 5042.600000023842
+            },
+            {
+              "event": "move",
+              "i": 18,
+              "planned": 3910.700006047684,
+              "actual": 5058.300000011921
+            },
+            {
+              "event": "move",
+              "i": 19,
+              "planned": 3927.366673047684,
+              "actual": 5075.800000011921
+            },
+            {
+              "event": "move",
+              "i": 20,
+              "planned": 3944.033340047684,
+              "actual": 5092.300000011921
+            },
+            {
+              "event": "move",
+              "i": 21,
+              "planned": 3960.700007047684,
+              "actual": 5108.600000023842
+            },
+            {
+              "event": "move",
+              "i": 22,
+              "planned": 3977.366674047684,
+              "actual": 5125.200000047684
+            },
+            {
+              "event": "move",
+              "i": 23,
+              "planned": 3994.0333410476837,
+              "actual": 5142
+            },
+            {
+              "event": "move",
+              "i": 24,
+              "planned": 4010.7000080476837,
+              "actual": 5205.100000023842
+            },
+            {
+              "event": "move",
+              "i": 25,
+              "planned": 4027.3666750476837,
+              "actual": 5209.100000023842
+            },
+            {
+              "event": "move",
+              "i": 26,
+              "planned": 4044.0333420476836,
+              "actual": 5225.900000035763
+            },
+            {
+              "event": "move",
+              "i": 27,
+              "planned": 4060.7000090476836,
+              "actual": 5243.200000047684
+            },
+            {
+              "event": "move",
+              "i": 28,
+              "planned": 4077.3666760476835,
+              "actual": 5260.100000023842
+            },
+            {
+              "event": "move",
+              "i": 29,
+              "planned": 4094.033343047684,
+              "actual": 5275.700000047684
+            },
+            {
+              "event": "move",
+              "i": 30,
+              "planned": 4110.7000100476835,
+              "actual": 5291.400000035763
+            },
+            {
+              "event": "move",
+              "i": 31,
+              "planned": 4127.366677047684,
+              "actual": 5308.5
+            },
+            {
+              "event": "move",
+              "i": 32,
+              "planned": 4144.033344047683,
+              "actual": 5411.600000023842
+            }
+          ],
+          "actual_ink_records": [
+            {
+              "index": 165,
+              "version": 1,
+              "purpose": "edit",
+              "service": "0xa69630",
+              "lookups": 16,
+              "index_queries": 32,
+              "builds": 0,
+              "identity_hits": 16,
+              "fingerprint_bytes": 0,
+              "content_comparisons": 0,
+              "candidate_checks": 0,
+              "navigation_queries": 0,
+              "ink_queries": 16,
+              "source_footprint_evaluations": 0,
+              "source_known_footprint_hits": 64,
+              "aliases": 16,
+              "bodies": 1,
+              "index_reservation_bytes": 31056,
+              "resident_accounted_bytes": 2918024
+            }
+          ],
+          "raw_cold_status": "FAILED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": false,
+              "actual": "9deb5244ad30782a5a82dcf72893d63c22d286b4b35317cddcea674a2df075e3",
+              "expected": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+              "expected": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6"
+            }
+          ],
+          "captures": [
+            {
+              "stage": "before",
+              "generation": "1",
+              "checkpoint_request": {
+                "generation": "1",
+                "documentRevision": "17",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-before.rgba",
+                  "sha256": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-before.axsnap",
+                  "sha256": "150daf8d0c9b4461f3bfaa65d7ebf34f6ccbe284dee089747fb176792faef04a",
+                  "bytes": 2133847
+                }
+              },
+              "oracle": {
+                "stage": "before",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-before.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            },
+            {
+              "stage": "undo",
+              "generation": "2",
+              "checkpoint_request": {
+                "generation": "2",
+                "documentRevision": "18",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-undo.rgba",
+                  "sha256": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-undo.axsnap",
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2",
+                  "bytes": 2080135
+                }
+              },
+              "oracle": {
+                "stage": "undo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-undo.axsnap",
+                "reference_origin": "SAVED_EXACT_INPUT",
+                "reference_inputs": {
+                  "snapshot": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo.axsnap",
+                    "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                  },
+                  "rgba": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo-reference.rgba",
+                    "sha256": "a375512db1985d8640edda82669c5329e7bf5c1016c435db1f287f5dda29a778"
+                  },
+                  "edge": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo-reference.edge",
+                    "sha256": "a44a6af5749ccf94d053cb5073b2f1b0da0bc358e3781b59cfe6123e521d8ffb"
+                  },
+                  "request": {
+                    "width": 1600,
+                    "height": 1000,
+                    "logical_width": 800,
+                    "logical_height": 500,
+                    "camera": {
+                      "scale": 1,
+                      "x": -0.000244140625,
+                      "y": -6.103515625e-05
+                    },
+                    "hud_bounds": []
+                  },
+                  "oracle": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+                    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+                  },
+                  "resources": [
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/Excalifont-Regular.ttf",
+                      "sha256": "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/OFL.txt",
+                      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/README.md",
+                      "sha256": "da6c0df3b349f94a6a08539ab6ad7eb76644e34e35570d12f259ce34c564f2b8"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/catalog.json",
+                      "sha256": "1aaf9da45451f75efcc55adb52ab87715a6bd4ff6cdc3d073309619007e6e465"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/LICENSE.txt",
+                      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NOTICE.txt",
+                      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf",
+                      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/README.md",
+                      "sha256": "9f0dd20575f637d9a0a81616a56425f8cb956fd9f81c2ea57f658907a53afc3f"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/resource.json",
+                      "sha256": "9dcc6fdf2f9dde27b4d7dc3cd4e13feccff592df9835a9652dad35610832811b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/r1-full-skia-sdk.lock.json",
+                      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/semantic-sdk.lock.json",
+                      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    }
+                  ]
+                },
+                "candidate_geometry_source": "fresh public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold capture; original independent CPU AA oracle"
+              }
+            },
+            {
+              "stage": "redo",
+              "generation": "3",
+              "checkpoint_request": {
+                "generation": "3",
+                "documentRevision": "19",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-redo.rgba",
+                  "sha256": "9deb5244ad30782a5a82dcf72893d63c22d286b4b35317cddcea674a2df075e3",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-redo.axsnap",
+                  "sha256": "c4ee7b21d2b4510288e87b4bca2490008a7faaccf19092dc818c65fdfd85a215",
+                  "bytes": 2133847
+                }
+              },
+              "oracle": {
+                "stage": "redo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S0-erase-navigation-redo.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          }
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "COMPLETED",
+          "active_sdk_frames": 33,
+          "color_writes": 1584,
+          "functional_opportunities": [
+            {
+              "after": "down",
+              "i": 0,
+              "started": 4004.2000000476837,
+              "ended": 4866.400000035763
+            },
+            {
+              "after": "move",
+              "i": 1,
+              "started": 4867.600000023842,
+              "ended": 4939.100000023842
+            },
+            {
+              "after": "move",
+              "i": 2,
+              "started": 4940,
+              "ended": 4944.5
+            },
+            {
+              "after": "move",
+              "i": 3,
+              "started": 4945.100000023842,
+              "ended": 4953.200000047684
+            },
+            {
+              "after": "move",
+              "i": 4,
+              "started": 4953.800000011921,
+              "ended": 5014.300000011921
+            },
+            {
+              "after": "move",
+              "i": 5,
+              "started": 5015,
+              "ended": 5122
+            },
+            {
+              "after": "move",
+              "i": 6,
+              "started": 5122.800000011921,
+              "ended": 5126.5
+            },
+            {
+              "after": "move",
+              "i": 7,
+              "started": 5127,
+              "ended": 5137.200000047684
+            },
+            {
+              "after": "move",
+              "i": 8,
+              "started": 5137.800000011921,
+              "ended": 5152.800000011921
+            },
+            {
+              "after": "move",
+              "i": 9,
+              "started": 5153.400000035763,
+              "ended": 5169.200000047684
+            },
+            {
+              "after": "move",
+              "i": 10,
+              "started": 5169.800000011921,
+              "ended": 5219.400000035763
+            },
+            {
+              "after": "move",
+              "i": 11,
+              "started": 5220.200000047684,
+              "ended": 5223.700000047684
+            },
+            {
+              "after": "move",
+              "i": 12,
+              "started": 5224.100000023842,
+              "ended": 5237.300000011921
+            },
+            {
+              "after": "move",
+              "i": 13,
+              "started": 5237.800000011921,
+              "ended": 5253.300000011921
+            },
+            {
+              "after": "move",
+              "i": 14,
+              "started": 5253.900000035763,
+              "ended": 5270.300000011921
+            },
+            {
+              "after": "move",
+              "i": 15,
+              "started": 5270.800000011921,
+              "ended": 5286.800000011921
+            },
+            {
+              "after": "move",
+              "i": 16,
+              "started": 5287.400000035763,
+              "ended": 5302.800000011921
+            },
+            {
+              "after": "move",
+              "i": 17,
+              "started": 5303.400000035763,
+              "ended": 5319.200000047684
+            },
+            {
+              "after": "move",
+              "i": 18,
+              "started": 5319.700000047684,
+              "ended": 5335.600000023842
+            },
+            {
+              "after": "move",
+              "i": 19,
+              "started": 5336.100000023842,
+              "ended": 5352.800000011921
+            },
+            {
+              "after": "move",
+              "i": 20,
+              "started": 5353.400000035763,
+              "ended": 5369.400000035763
+            },
+            {
+              "after": "move",
+              "i": 21,
+              "started": 5369.800000011921,
+              "ended": 5386.100000023842
+            },
+            {
+              "after": "move",
+              "i": 22,
+              "started": 5386.700000047684,
+              "ended": 5401.5
+            },
+            {
+              "after": "move",
+              "i": 23,
+              "started": 5402,
+              "ended": 5435.200000047684
+            },
+            {
+              "after": "move",
+              "i": 24,
+              "started": 5435.800000011921,
+              "ended": 5439.200000047684
+            },
+            {
+              "after": "move",
+              "i": 25,
+              "started": 5439.700000047684,
+              "ended": 5453.400000035763
+            },
+            {
+              "after": "move",
+              "i": 26,
+              "started": 5454.300000011921,
+              "ended": 5470.400000035763
+            },
+            {
+              "after": "move",
+              "i": 27,
+              "started": 5470.900000035763,
+              "ended": 5485.800000011921
+            },
+            {
+              "after": "move",
+              "i": 28,
+              "started": 5486.400000035763,
+              "ended": 5502.700000047684
+            },
+            {
+              "after": "move",
+              "i": 29,
+              "started": 5503.200000047684,
+              "ended": 5519.300000011921
+            },
+            {
+              "after": "move",
+              "i": 30,
+              "started": 5519.800000011921,
+              "ended": 5535.5
+            },
+            {
+              "after": "move",
+              "i": 31,
+              "started": 5536,
+              "ended": 5577.900000035763
+            },
+            {
+              "after": "move",
+              "i": 32,
+              "started": 5578.5,
+              "ended": 5582.200000047684
+            }
+          ],
+          "first_sdk_frame_ms": 849.3999999761581,
+          "input_events": [
+            {
+              "id": 25,
+              "type": "pointerdown",
+              "started": 4001.400000035763,
+              "ended": 4004.100000023842
+            },
+            {
+              "id": 26,
+              "type": "pointermove",
+              "started": 4866.600000023842,
+              "ended": 4867.200000047684
+            },
+            {
+              "id": 27,
+              "type": "pointermove",
+              "started": 4939.200000047684,
+              "ended": 4939.600000023842
+            },
+            {
+              "id": 28,
+              "type": "pointermove",
+              "started": 4944.5,
+              "ended": 4944.800000011921
+            },
+            {
+              "id": 29,
+              "type": "pointermove",
+              "started": 4953.300000011921,
+              "ended": 4953.5
+            },
+            {
+              "id": 30,
+              "type": "pointermove",
+              "started": 5014.300000011921,
+              "ended": 5014.800000011921
+            },
+            {
+              "id": 31,
+              "type": "pointermove",
+              "started": 5122.100000023842,
+              "ended": 5122.5
+            },
+            {
+              "id": 32,
+              "type": "pointermove",
+              "started": 5126.5,
+              "ended": 5126.800000011921
+            },
+            {
+              "id": 33,
+              "type": "pointermove",
+              "started": 5137.200000047684,
+              "ended": 5137.5
+            },
+            {
+              "id": 34,
+              "type": "pointermove",
+              "started": 5152.800000011921,
+              "ended": 5153.200000047684
+            },
+            {
+              "id": 35,
+              "type": "pointermove",
+              "started": 5169.200000047684,
+              "ended": 5169.5
+            },
+            {
+              "id": 36,
+              "type": "pointermove",
+              "started": 5219.5,
+              "ended": 5219.800000011921
+            },
+            {
+              "id": 37,
+              "type": "pointermove",
+              "started": 5223.700000047684,
+              "ended": 5223.900000035763
+            },
+            {
+              "id": 38,
+              "type": "pointermove",
+              "started": 5237.300000011921,
+              "ended": 5237.600000023842
+            },
+            {
+              "id": 39,
+              "type": "pointermove",
+              "started": 5253.400000035763,
+              "ended": 5253.700000047684
+            },
+            {
+              "id": 40,
+              "type": "pointermove",
+              "started": 5270.400000035763,
+              "ended": 5270.600000023842
+            },
+            {
+              "id": 41,
+              "type": "pointermove",
+              "started": 5286.800000011921,
+              "ended": 5287.100000023842
+            },
+            {
+              "id": 42,
+              "type": "pointermove",
+              "started": 5302.800000011921,
+              "ended": 5303.100000023842
+            },
+            {
+              "id": 43,
+              "type": "pointermove",
+              "started": 5319.200000047684,
+              "ended": 5319.400000035763
+            },
+            {
+              "id": 44,
+              "type": "pointermove",
+              "started": 5335.600000023842,
+              "ended": 5335.800000011921
+            },
+            {
+              "id": 45,
+              "type": "pointermove",
+              "started": 5352.900000035763,
+              "ended": 5353.200000047684
+            },
+            {
+              "id": 46,
+              "type": "pointermove",
+              "started": 5369.400000035763,
+              "ended": 5369.600000023842
+            },
+            {
+              "id": 47,
+              "type": "pointermove",
+              "started": 5386.100000023842,
+              "ended": 5386.400000035763
+            },
+            {
+              "id": 48,
+              "type": "pointermove",
+              "started": 5401.5,
+              "ended": 5401.700000047684
+            },
+            {
+              "id": 49,
+              "type": "pointermove",
+              "started": 5435.200000047684,
+              "ended": 5435.5
+            },
+            {
+              "id": 50,
+              "type": "pointermove",
+              "started": 5439.200000047684,
+              "ended": 5439.5
+            },
+            {
+              "id": 51,
+              "type": "pointermove",
+              "started": 5453.400000035763,
+              "ended": 5454
+            },
+            {
+              "id": 52,
+              "type": "pointermove",
+              "started": 5470.400000035763,
+              "ended": 5470.600000023842
+            },
+            {
+              "id": 53,
+              "type": "pointermove",
+              "started": 5485.800000011921,
+              "ended": 5486.100000023842
+            },
+            {
+              "id": 54,
+              "type": "pointermove",
+              "started": 5502.700000047684,
+              "ended": 5503
+            },
+            {
+              "id": 55,
+              "type": "pointermove",
+              "started": 5519.400000035763,
+              "ended": 5519.600000023842
+            },
+            {
+              "id": 56,
+              "type": "pointermove",
+              "started": 5535.600000023842,
+              "ended": 5535.700000047684
+            },
+            {
+              "id": 57,
+              "type": "pointermove",
+              "started": 5577.900000035763,
+              "ended": 5578.200000047684
+            },
+            {
+              "id": 58,
+              "type": "pointerup",
+              "started": 5582.200000047684,
+              "ended": 6055.900000035763
+            }
+          ],
+          "schedule": [
+            {
+              "event": "move",
+              "i": 1,
+              "planned": 4020.8666670476837,
+              "actual": 4866.5
+            },
+            {
+              "event": "move",
+              "i": 2,
+              "planned": 4037.5333340476836,
+              "actual": 4939.200000047684
+            },
+            {
+              "event": "move",
+              "i": 3,
+              "planned": 4054.2000010476836,
+              "actual": 4944.5
+            },
+            {
+              "event": "move",
+              "i": 4,
+              "planned": 4070.8666680476836,
+              "actual": 4953.200000047684
+            },
+            {
+              "event": "move",
+              "i": 5,
+              "planned": 4087.5333350476835,
+              "actual": 5014.300000011921
+            },
+            {
+              "event": "move",
+              "i": 6,
+              "planned": 4104.2000020476835,
+              "actual": 5122
+            },
+            {
+              "event": "move",
+              "i": 7,
+              "planned": 4120.866669047684,
+              "actual": 5126.5
+            },
+            {
+              "event": "move",
+              "i": 8,
+              "planned": 4137.533336047683,
+              "actual": 5137.200000047684
+            },
+            {
+              "event": "move",
+              "i": 9,
+              "planned": 4154.200003047684,
+              "actual": 5152.800000011921
+            },
+            {
+              "event": "move",
+              "i": 10,
+              "planned": 4170.866670047683,
+              "actual": 5169.200000047684
+            },
+            {
+              "event": "move",
+              "i": 11,
+              "planned": 4187.533337047684,
+              "actual": 5219.400000035763
+            },
+            {
+              "event": "move",
+              "i": 12,
+              "planned": 4204.200004047683,
+              "actual": 5223.700000047684
+            },
+            {
+              "event": "move",
+              "i": 13,
+              "planned": 4220.866671047684,
+              "actual": 5237.300000011921
+            },
+            {
+              "event": "move",
+              "i": 14,
+              "planned": 4237.533338047684,
+              "actual": 5253.300000011921
+            },
+            {
+              "event": "move",
+              "i": 15,
+              "planned": 4254.200005047684,
+              "actual": 5270.300000011921
+            },
+            {
+              "event": "move",
+              "i": 16,
+              "planned": 4270.866672047684,
+              "actual": 5286.800000011921
+            },
+            {
+              "event": "move",
+              "i": 17,
+              "planned": 4287.5333390476835,
+              "actual": 5302.800000011921
+            },
+            {
+              "event": "move",
+              "i": 18,
+              "planned": 4304.200006047684,
+              "actual": 5319.200000047684
+            },
+            {
+              "event": "move",
+              "i": 19,
+              "planned": 4320.866673047683,
+              "actual": 5335.600000023842
+            },
+            {
+              "event": "move",
+              "i": 20,
+              "planned": 4337.533340047684,
+              "actual": 5352.800000011921
+            },
+            {
+              "event": "move",
+              "i": 21,
+              "planned": 4354.200007047683,
+              "actual": 5369.400000035763
+            },
+            {
+              "event": "move",
+              "i": 22,
+              "planned": 4370.866674047684,
+              "actual": 5386.100000023842
+            },
+            {
+              "event": "move",
+              "i": 23,
+              "planned": 4387.533341047683,
+              "actual": 5401.5
+            },
+            {
+              "event": "move",
+              "i": 24,
+              "planned": 4404.200008047684,
+              "actual": 5435.200000047684
+            },
+            {
+              "event": "move",
+              "i": 25,
+              "planned": 4420.866675047684,
+              "actual": 5439.200000047684
+            },
+            {
+              "event": "move",
+              "i": 26,
+              "planned": 4437.533342047684,
+              "actual": 5453.400000035763
+            },
+            {
+              "event": "move",
+              "i": 27,
+              "planned": 4454.200009047684,
+              "actual": 5470.400000035763
+            },
+            {
+              "event": "move",
+              "i": 28,
+              "planned": 4470.8666760476835,
+              "actual": 5485.800000011921
+            },
+            {
+              "event": "move",
+              "i": 29,
+              "planned": 4487.533343047684,
+              "actual": 5502.700000047684
+            },
+            {
+              "event": "move",
+              "i": 30,
+              "planned": 4504.2000100476835,
+              "actual": 5519.300000011921
+            },
+            {
+              "event": "move",
+              "i": 31,
+              "planned": 4520.866677047684,
+              "actual": 5535.5
+            },
+            {
+              "event": "move",
+              "i": 32,
+              "planned": 4537.533344047683,
+              "actual": 5577.900000035763
+            }
+          ],
+          "actual_ink_records": [
+            {
+              "index": 171,
+              "version": 1,
+              "purpose": "edit",
+              "service": "0x276fe8",
+              "lookups": 16,
+              "index_queries": 32,
+              "builds": 0,
+              "identity_hits": 16,
+              "fingerprint_bytes": 0,
+              "content_comparisons": 0,
+              "candidate_checks": 0,
+              "navigation_queries": 0,
+              "ink_queries": 16,
+              "source_footprint_evaluations": 0,
+              "source_known_footprint_hits": 64,
+              "aliases": 16,
+              "bodies": 1,
+              "index_reservation_bytes": 31056,
+              "resident_accounted_bytes": 3582005
+            }
+          ],
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": true,
+              "actual": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+              "expected": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+              "expected": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89"
+            }
+          ],
+          "captures": [
+            {
+              "stage": "before",
+              "generation": "1",
+              "checkpoint_request": {
+                "generation": "1",
+                "documentRevision": "19",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-before.rgba",
+                  "sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-before.axsnap",
+                  "sha256": "f52da4f5b6963a66d41488c3ddcb8381d62a09203e7f04ad8866c1140a48e02d",
+                  "bytes": 2241271
+                }
+              },
+              "oracle": {
+                "stage": "before",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-before.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            },
+            {
+              "stage": "undo",
+              "generation": "2",
+              "checkpoint_request": {
+                "generation": "2",
+                "documentRevision": "20",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-undo.rgba",
+                  "sha256": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-undo.axsnap",
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+                  "bytes": 2187559
+                }
+              },
+              "oracle": {
+                "stage": "undo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-undo.axsnap",
+                "reference_origin": "SAVED_EXACT_INPUT",
+                "reference_inputs": {
+                  "snapshot": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo.axsnap",
+                    "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                  },
+                  "rgba": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo-reference.rgba",
+                    "sha256": "8ca57fa3929f9349c7d505ce99aa2fa3d782b22542415c456a3fda44e6202dba"
+                  },
+                  "edge": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo-reference.edge",
+                    "sha256": "a44a6af5749ccf94d053cb5073b2f1b0da0bc358e3781b59cfe6123e521d8ffb"
+                  },
+                  "request": {
+                    "width": 1600,
+                    "height": 1000,
+                    "logical_width": 800,
+                    "logical_height": 500,
+                    "camera": {
+                      "scale": 1,
+                      "x": -0.000244140625,
+                      "y": -6.103515625e-05
+                    },
+                    "hud_bounds": []
+                  },
+                  "oracle": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+                    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+                  },
+                  "resources": [
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/Excalifont-Regular.ttf",
+                      "sha256": "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/OFL.txt",
+                      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/README.md",
+                      "sha256": "da6c0df3b349f94a6a08539ab6ad7eb76644e34e35570d12f259ce34c564f2b8"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/catalog.json",
+                      "sha256": "1aaf9da45451f75efcc55adb52ab87715a6bd4ff6cdc3d073309619007e6e465"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/LICENSE.txt",
+                      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NOTICE.txt",
+                      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf",
+                      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/README.md",
+                      "sha256": "9f0dd20575f637d9a0a81616a56425f8cb956fd9f81c2ea57f658907a53afc3f"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/resource.json",
+                      "sha256": "9dcc6fdf2f9dde27b4d7dc3cd4e13feccff592df9835a9652dad35610832811b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/r1-full-skia-sdk.lock.json",
+                      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/semantic-sdk.lock.json",
+                      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    }
+                  ]
+                },
+                "candidate_geometry_source": "fresh public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold capture; original independent CPU AA oracle"
+              }
+            },
+            {
+              "stage": "redo",
+              "generation": "3",
+              "checkpoint_request": {
+                "generation": "3",
+                "documentRevision": "21",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-redo.rgba",
+                  "sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-redo.axsnap",
+                  "sha256": "1ef786bea5e20bb62fdb3ea62c8947b5a76d9c2a31e58cc5641c724e5115fabc",
+                  "bytes": 2241271
+                }
+              },
+              "oracle": {
+                "stage": "redo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1/S2-erase-navigation-redo.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          }
+        }
+      ],
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index_reverify.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-Q1",
+          "qualification",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 55.92746008402901,
+        "peak_process_family_rss_kib": 1863600,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "id": "UR1C1-R1-N1",
+      "status": "OBSERVED",
+      "variant": "normal",
+      "source_stable": true,
+      "artifacts_stable": true,
+      "reference_catalog_stable": true,
+      "actual_prepared_facts": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "MISSING",
+          "records": 0,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "MISSING",
+          "records": 0,
+          "shared_sequences": [],
+          "invalid_records": [],
+          "scope": "ordered actual navigation/retained-ink calls sharing the existing renderer service; not a performance or all-canonical preparation verdict"
+        }
+      ],
+      "cases": [
+        {
+          "id": "S0-erase-navigation",
+          "status": "COMPLETED",
+          "active_sdk_frames": 33,
+          "color_writes": 1584,
+          "functional_opportunities": [
+            {
+              "after": "down",
+              "i": 0,
+              "started": 3354.899999976158,
+              "ended": 4210.5
+            },
+            {
+              "after": "move",
+              "i": 1,
+              "started": 4211.800000011921,
+              "ended": 4421.399999976158
+            },
+            {
+              "after": "move",
+              "i": 2,
+              "started": 4422.199999988079,
+              "ended": 4426.199999988079
+            },
+            {
+              "after": "move",
+              "i": 3,
+              "started": 4426.800000011921,
+              "ended": 4436.099999964237
+            },
+            {
+              "after": "move",
+              "i": 4,
+              "started": 4436.800000011921,
+              "ended": 4452.800000011921
+            },
+            {
+              "after": "move",
+              "i": 5,
+              "started": 4453.5,
+              "ended": 4573.300000011921
+            },
+            {
+              "after": "move",
+              "i": 6,
+              "started": 4574.099999964237,
+              "ended": 4577.399999976158
+            },
+            {
+              "after": "move",
+              "i": 7,
+              "started": 4578.099999964237,
+              "ended": 4586.699999988079
+            },
+            {
+              "after": "move",
+              "i": 8,
+              "started": 4587.199999988079,
+              "ended": 4603
+            },
+            {
+              "after": "move",
+              "i": 9,
+              "started": 4603.599999964237,
+              "ended": 4620
+            },
+            {
+              "after": "move",
+              "i": 10,
+              "started": 4620.699999988079,
+              "ended": 4742.5
+            },
+            {
+              "after": "move",
+              "i": 11,
+              "started": 4743.199999988079,
+              "ended": 4747
+            },
+            {
+              "after": "move",
+              "i": 12,
+              "started": 4747.599999964237,
+              "ended": 4753.399999976158
+            },
+            {
+              "after": "move",
+              "i": 13,
+              "started": 4754,
+              "ended": 4770.699999988079
+            },
+            {
+              "after": "move",
+              "i": 14,
+              "started": 4771.5,
+              "ended": 4787.5
+            },
+            {
+              "after": "move",
+              "i": 15,
+              "started": 4788.099999964237,
+              "ended": 4803.899999976158
+            },
+            {
+              "after": "move",
+              "i": 16,
+              "started": 4804.5,
+              "ended": 4819.099999964237
+            },
+            {
+              "after": "move",
+              "i": 17,
+              "started": 4819.800000011921,
+              "ended": 4835.899999976158
+            },
+            {
+              "after": "move",
+              "i": 18,
+              "started": 4836.599999964237,
+              "ended": 4852.599999964237
+            },
+            {
+              "after": "move",
+              "i": 19,
+              "started": 4853.399999976158,
+              "ended": 4869.699999988079
+            },
+            {
+              "after": "move",
+              "i": 20,
+              "started": 4870.5,
+              "ended": 4886.5
+            },
+            {
+              "after": "move",
+              "i": 21,
+              "started": 4887.300000011921,
+              "ended": 4902.399999976158
+            },
+            {
+              "after": "move",
+              "i": 22,
+              "started": 4903.099999964237,
+              "ended": 4918.699999988079
+            },
+            {
+              "after": "move",
+              "i": 23,
+              "started": 4919.300000011921,
+              "ended": 4989.699999988079
+            },
+            {
+              "after": "move",
+              "i": 24,
+              "started": 4990.5,
+              "ended": 4993.699999988079
+            },
+            {
+              "after": "move",
+              "i": 25,
+              "started": 4994.199999988079,
+              "ended": 5002.800000011921
+            },
+            {
+              "after": "move",
+              "i": 26,
+              "started": 5003.399999976158,
+              "ended": 5020.699999988079
+            },
+            {
+              "after": "move",
+              "i": 27,
+              "started": 5021.800000011921,
+              "ended": 5037.099999964237
+            },
+            {
+              "after": "move",
+              "i": 28,
+              "started": 5037.699999988079,
+              "ended": 5051.899999976158
+            },
+            {
+              "after": "move",
+              "i": 29,
+              "started": 5052.5,
+              "ended": 5068.5
+            },
+            {
+              "after": "move",
+              "i": 30,
+              "started": 5069,
+              "ended": 5085.399999976158
+            },
+            {
+              "after": "move",
+              "i": 31,
+              "started": 5085.899999976158,
+              "ended": 5187.899999976158
+            },
+            {
+              "after": "move",
+              "i": 32,
+              "started": 5188.699999988079,
+              "ended": 5191.800000011921
+            }
+          ],
+          "first_sdk_frame_ms": 843.0,
+          "input_events": [
+            {
+              "id": 25,
+              "type": "pointerdown",
+              "started": 3351.800000011921,
+              "ended": 3354.800000011921
+            },
+            {
+              "id": 26,
+              "type": "pointermove",
+              "started": 4210.599999964237,
+              "ended": 4211.300000011921
+            },
+            {
+              "id": 27,
+              "type": "pointermove",
+              "started": 4421.399999976158,
+              "ended": 4421.800000011921
+            },
+            {
+              "id": 28,
+              "type": "pointermove",
+              "started": 4426.199999988079,
+              "ended": 4426.5
+            },
+            {
+              "id": 29,
+              "type": "pointermove",
+              "started": 4436.099999964237,
+              "ended": 4436.5
+            },
+            {
+              "id": 30,
+              "type": "pointermove",
+              "started": 4452.800000011921,
+              "ended": 4453.099999964237
+            },
+            {
+              "id": 31,
+              "type": "pointermove",
+              "started": 4573.399999976158,
+              "ended": 4573.800000011921
+            },
+            {
+              "id": 32,
+              "type": "pointermove",
+              "started": 4577.5,
+              "ended": 4577.800000011921
+            },
+            {
+              "id": 33,
+              "type": "pointermove",
+              "started": 4586.800000011921,
+              "ended": 4587
+            },
+            {
+              "id": 34,
+              "type": "pointermove",
+              "started": 4603,
+              "ended": 4603.300000011921
+            },
+            {
+              "id": 35,
+              "type": "pointermove",
+              "started": 4620,
+              "ended": 4620.300000011921
+            },
+            {
+              "id": 36,
+              "type": "pointermove",
+              "started": 4742.5,
+              "ended": 4742.899999976158
+            },
+            {
+              "id": 37,
+              "type": "pointermove",
+              "started": 4747,
+              "ended": 4747.300000011921
+            },
+            {
+              "id": 38,
+              "type": "pointermove",
+              "started": 4753.399999976158,
+              "ended": 4753.699999988079
+            },
+            {
+              "id": 39,
+              "type": "pointermove",
+              "started": 4770.800000011921,
+              "ended": 4771.199999988079
+            },
+            {
+              "id": 40,
+              "type": "pointermove",
+              "started": 4787.599999964237,
+              "ended": 4787.899999976158
+            },
+            {
+              "id": 41,
+              "type": "pointermove",
+              "started": 4803.899999976158,
+              "ended": 4804.199999988079
+            },
+            {
+              "id": 42,
+              "type": "pointermove",
+              "started": 4819.199999988079,
+              "ended": 4819.5
+            },
+            {
+              "id": 43,
+              "type": "pointermove",
+              "started": 4835.899999976158,
+              "ended": 4836.300000011921
+            },
+            {
+              "id": 44,
+              "type": "pointermove",
+              "started": 4852.699999988079,
+              "ended": 4853.099999964237
+            },
+            {
+              "id": 45,
+              "type": "pointermove",
+              "started": 4869.800000011921,
+              "ended": 4870.199999988079
+            },
+            {
+              "id": 46,
+              "type": "pointermove",
+              "started": 4886.5,
+              "ended": 4886.899999976158
+            },
+            {
+              "id": 47,
+              "type": "pointermove",
+              "started": 4902.5,
+              "ended": 4902.800000011921
+            },
+            {
+              "id": 48,
+              "type": "pointermove",
+              "started": 4918.699999988079,
+              "ended": 4919
+            },
+            {
+              "id": 49,
+              "type": "pointermove",
+              "started": 4989.800000011921,
+              "ended": 4990.099999964237
+            },
+            {
+              "id": 50,
+              "type": "pointermove",
+              "started": 4993.699999988079,
+              "ended": 4994
+            },
+            {
+              "id": 51,
+              "type": "pointermove",
+              "started": 5002.800000011921,
+              "ended": 5003.099999964237
+            },
+            {
+              "id": 52,
+              "type": "pointermove",
+              "started": 5020.800000011921,
+              "ended": 5021.5
+            },
+            {
+              "id": 53,
+              "type": "pointermove",
+              "started": 5037.099999964237,
+              "ended": 5037.5
+            },
+            {
+              "id": 54,
+              "type": "pointermove",
+              "started": 5051.899999976158,
+              "ended": 5052.199999988079
+            },
+            {
+              "id": 55,
+              "type": "pointermove",
+              "started": 5068.5,
+              "ended": 5068.699999988079
+            },
+            {
+              "id": 56,
+              "type": "pointermove",
+              "started": 5085.5,
+              "ended": 5085.599999964237
+            },
+            {
+              "id": 57,
+              "type": "pointermove",
+              "started": 5188,
+              "ended": 5188.300000011921
+            },
+            {
+              "id": 58,
+              "type": "pointerup",
+              "started": 5191.899999976158,
+              "ended": 5360.800000011921
+            }
+          ],
+          "schedule": [
+            {
+              "event": "move",
+              "i": 1,
+              "planned": 3371.466667011921,
+              "actual": 4210.5
+            },
+            {
+              "event": "move",
+              "i": 2,
+              "planned": 3388.133334011921,
+              "actual": 4421.399999976158
+            },
+            {
+              "event": "move",
+              "i": 3,
+              "planned": 3404.800001011921,
+              "actual": 4426.199999988079
+            },
+            {
+              "event": "move",
+              "i": 4,
+              "planned": 3421.466668011921,
+              "actual": 4436.099999964237
+            },
+            {
+              "event": "move",
+              "i": 5,
+              "planned": 3438.1333350119207,
+              "actual": 4452.800000011921
+            },
+            {
+              "event": "move",
+              "i": 6,
+              "planned": 3454.8000020119207,
+              "actual": 4573.300000011921
+            },
+            {
+              "event": "move",
+              "i": 7,
+              "planned": 3471.466669011921,
+              "actual": 4577.399999976158
+            },
+            {
+              "event": "move",
+              "i": 8,
+              "planned": 3488.133336011921,
+              "actual": 4586.699999988079
+            },
+            {
+              "event": "move",
+              "i": 9,
+              "planned": 3504.800003011921,
+              "actual": 4603
+            },
+            {
+              "event": "move",
+              "i": 10,
+              "planned": 3521.466670011921,
+              "actual": 4620
+            },
+            {
+              "event": "move",
+              "i": 11,
+              "planned": 3538.133337011921,
+              "actual": 4742.5
+            },
+            {
+              "event": "move",
+              "i": 12,
+              "planned": 3554.800004011921,
+              "actual": 4747
+            },
+            {
+              "event": "move",
+              "i": 13,
+              "planned": 3571.466671011921,
+              "actual": 4753.399999976158
+            },
+            {
+              "event": "move",
+              "i": 14,
+              "planned": 3588.133338011921,
+              "actual": 4770.699999988079
+            },
+            {
+              "event": "move",
+              "i": 15,
+              "planned": 3604.800005011921,
+              "actual": 4787.5
+            },
+            {
+              "event": "move",
+              "i": 16,
+              "planned": 3621.4666720119208,
+              "actual": 4803.899999976158
+            },
+            {
+              "event": "move",
+              "i": 17,
+              "planned": 3638.1333390119207,
+              "actual": 4819.199999988079
+            },
+            {
+              "event": "move",
+              "i": 18,
+              "planned": 3654.800006011921,
+              "actual": 4835.899999976158
+            },
+            {
+              "event": "move",
+              "i": 19,
+              "planned": 3671.466673011921,
+              "actual": 4852.599999964237
+            },
+            {
+              "event": "move",
+              "i": 20,
+              "planned": 3688.133340011921,
+              "actual": 4869.699999988079
+            },
+            {
+              "event": "move",
+              "i": 21,
+              "planned": 3704.800007011921,
+              "actual": 4886.5
+            },
+            {
+              "event": "move",
+              "i": 22,
+              "planned": 3721.466674011921,
+              "actual": 4902.5
+            },
+            {
+              "event": "move",
+              "i": 23,
+              "planned": 3738.133341011921,
+              "actual": 4918.699999988079
+            },
+            {
+              "event": "move",
+              "i": 24,
+              "planned": 3754.800008011921,
+              "actual": 4989.699999988079
+            },
+            {
+              "event": "move",
+              "i": 25,
+              "planned": 3771.466675011921,
+              "actual": 4993.699999988079
+            },
+            {
+              "event": "move",
+              "i": 26,
+              "planned": 3788.133342011921,
+              "actual": 5002.800000011921
+            },
+            {
+              "event": "move",
+              "i": 27,
+              "planned": 3804.800009011921,
+              "actual": 5020.699999988079
+            },
+            {
+              "event": "move",
+              "i": 28,
+              "planned": 3821.4666760119208,
+              "actual": 5037.099999964237
+            },
+            {
+              "event": "move",
+              "i": 29,
+              "planned": 3838.133343011921,
+              "actual": 5051.899999976158
+            },
+            {
+              "event": "move",
+              "i": 30,
+              "planned": 3854.800010011921,
+              "actual": 5068.5
+            },
+            {
+              "event": "move",
+              "i": 31,
+              "planned": 3871.466677011921,
+              "actual": 5085.399999976158
+            },
+            {
+              "event": "move",
+              "i": 32,
+              "planned": 3888.133344011921,
+              "actual": 5187.899999976158
+            }
+          ],
+          "actual_ink_records": [],
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": true,
+              "actual": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f",
+              "expected": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+              "expected": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f"
+            }
+          ],
+          "captures": [
+            {
+              "stage": "before",
+              "generation": "1",
+              "checkpoint_request": {
+                "generation": "1",
+                "documentRevision": "17",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-before.rgba",
+                  "sha256": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-before.axsnap",
+                  "sha256": "3dac6cc56cadec0b936b56296632d6bc1a184449b7d1f9a5e92b1ce839ca08a5",
+                  "bytes": 2133847
+                }
+              },
+              "oracle": {
+                "stage": "before",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-before.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            },
+            {
+              "stage": "undo",
+              "generation": "2",
+              "checkpoint_request": {
+                "generation": "2",
+                "documentRevision": "18",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-undo.rgba",
+                  "sha256": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-undo.axsnap",
+                  "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2",
+                  "bytes": 2080135
+                }
+              },
+              "oracle": {
+                "stage": "undo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-undo.axsnap",
+                "reference_origin": "SAVED_EXACT_INPUT",
+                "reference_inputs": {
+                  "snapshot": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo.axsnap",
+                    "sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2"
+                  },
+                  "rgba": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo-reference.rgba",
+                    "sha256": "a375512db1985d8640edda82669c5329e7bf5c1016c435db1f287f5dda29a778"
+                  },
+                  "edge": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S0-erase-navigation-undo-reference.edge",
+                    "sha256": "a44a6af5749ccf94d053cb5073b2f1b0da0bc358e3781b59cfe6123e521d8ffb"
+                  },
+                  "request": {
+                    "width": 1600,
+                    "height": 1000,
+                    "logical_width": 800,
+                    "logical_height": 500,
+                    "camera": {
+                      "scale": 1,
+                      "x": -0.000244140625,
+                      "y": -6.103515625e-05
+                    },
+                    "hud_bounds": []
+                  },
+                  "oracle": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+                    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+                  },
+                  "resources": [
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/Excalifont-Regular.ttf",
+                      "sha256": "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/OFL.txt",
+                      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/README.md",
+                      "sha256": "da6c0df3b349f94a6a08539ab6ad7eb76644e34e35570d12f259ce34c564f2b8"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/catalog.json",
+                      "sha256": "1aaf9da45451f75efcc55adb52ab87715a6bd4ff6cdc3d073309619007e6e465"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/LICENSE.txt",
+                      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NOTICE.txt",
+                      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf",
+                      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/README.md",
+                      "sha256": "9f0dd20575f637d9a0a81616a56425f8cb956fd9f81c2ea57f658907a53afc3f"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/resource.json",
+                      "sha256": "9dcc6fdf2f9dde27b4d7dc3cd4e13feccff592df9835a9652dad35610832811b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/r1-full-skia-sdk.lock.json",
+                      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/semantic-sdk.lock.json",
+                      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    }
+                  ]
+                },
+                "candidate_geometry_source": "fresh public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold capture; original independent CPU AA oracle"
+              }
+            },
+            {
+              "stage": "redo",
+              "generation": "3",
+              "checkpoint_request": {
+                "generation": "3",
+                "documentRevision": "19",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-redo.rgba",
+                  "sha256": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-redo.axsnap",
+                  "sha256": "f2640d9ae2a0ac8d31ea5414fa6538fe28b2e08558d4b69a1caa09083c6bd0e2",
+                  "bytes": 2133847
+                }
+              },
+              "oracle": {
+                "stage": "redo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S0-erase-navigation-redo.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          }
+        },
+        {
+          "id": "S2-erase-navigation",
+          "status": "COMPLETED",
+          "active_sdk_frames": 33,
+          "color_writes": 1584,
+          "functional_opportunities": [
+            {
+              "after": "down",
+              "i": 0,
+              "started": 3693.2000000476837,
+              "ended": 4633.5
+            },
+            {
+              "after": "move",
+              "i": 1,
+              "started": 4634.600000023842,
+              "ended": 4706.100000023842
+            },
+            {
+              "after": "move",
+              "i": 2,
+              "started": 4706.900000035763,
+              "ended": 4710.700000047684
+            },
+            {
+              "after": "move",
+              "i": 3,
+              "started": 4711.400000035763,
+              "ended": 4724.5
+            },
+            {
+              "after": "move",
+              "i": 4,
+              "started": 4725.300000011921,
+              "ended": 4790
+            },
+            {
+              "after": "move",
+              "i": 5,
+              "started": 4790.900000035763,
+              "ended": 4901.100000023842
+            },
+            {
+              "after": "move",
+              "i": 6,
+              "started": 4901.900000035763,
+              "ended": 4905.700000047684
+            },
+            {
+              "after": "move",
+              "i": 7,
+              "started": 4906.300000011921,
+              "ended": 4909.300000011921
+            },
+            {
+              "after": "move",
+              "i": 8,
+              "started": 4909.900000035763,
+              "ended": 4925.300000011921
+            },
+            {
+              "after": "move",
+              "i": 9,
+              "started": 4926.700000047684,
+              "ended": 4941.5
+            },
+            {
+              "after": "move",
+              "i": 10,
+              "started": 4942.100000023842,
+              "ended": 4994
+            },
+            {
+              "after": "move",
+              "i": 11,
+              "started": 4994.900000035763,
+              "ended": 4998.200000047684
+            },
+            {
+              "after": "move",
+              "i": 12,
+              "started": 4998.700000047684,
+              "ended": 5008.100000023842
+            },
+            {
+              "after": "move",
+              "i": 13,
+              "started": 5008.600000023842,
+              "ended": 5025.5
+            },
+            {
+              "after": "move",
+              "i": 14,
+              "started": 5026.200000047684,
+              "ended": 5042.400000035763
+            },
+            {
+              "after": "move",
+              "i": 15,
+              "started": 5042.900000035763,
+              "ended": 5058.800000011921
+            },
+            {
+              "after": "move",
+              "i": 16,
+              "started": 5059.400000035763,
+              "ended": 5074.700000047684
+            },
+            {
+              "after": "move",
+              "i": 17,
+              "started": 5075.400000035763,
+              "ended": 5090.400000035763
+            },
+            {
+              "after": "move",
+              "i": 18,
+              "started": 5091,
+              "ended": 5107.900000035763
+            },
+            {
+              "after": "move",
+              "i": 19,
+              "started": 5108.400000035763,
+              "ended": 5123.5
+            },
+            {
+              "after": "move",
+              "i": 20,
+              "started": 5124,
+              "ended": 5140.400000035763
+            },
+            {
+              "after": "move",
+              "i": 21,
+              "started": 5140.900000035763,
+              "ended": 5157.600000023842
+            },
+            {
+              "after": "move",
+              "i": 22,
+              "started": 5158.300000011921,
+              "ended": 5173.700000047684
+            },
+            {
+              "after": "move",
+              "i": 23,
+              "started": 5174.300000011921,
+              "ended": 5208.800000011921
+            },
+            {
+              "after": "move",
+              "i": 24,
+              "started": 5209.5,
+              "ended": 5212.700000047684
+            },
+            {
+              "after": "move",
+              "i": 25,
+              "started": 5213.300000011921,
+              "ended": 5225.5
+            },
+            {
+              "after": "move",
+              "i": 26,
+              "started": 5226.100000023842,
+              "ended": 5241.200000047684
+            },
+            {
+              "after": "move",
+              "i": 27,
+              "started": 5241.700000047684,
+              "ended": 5257.900000035763
+            },
+            {
+              "after": "move",
+              "i": 28,
+              "started": 5258.900000035763,
+              "ended": 5274.700000047684
+            },
+            {
+              "after": "move",
+              "i": 29,
+              "started": 5275.200000047684,
+              "ended": 5290.800000011921
+            },
+            {
+              "after": "move",
+              "i": 30,
+              "started": 5291.400000035763,
+              "ended": 5307.5
+            },
+            {
+              "after": "move",
+              "i": 31,
+              "started": 5308.100000023842,
+              "ended": 5353.100000023842
+            },
+            {
+              "after": "move",
+              "i": 32,
+              "started": 5353.700000047684,
+              "ended": 5357.200000047684
+            }
+          ],
+          "first_sdk_frame_ms": 927.9000000357628,
+          "input_events": [
+            {
+              "id": 25,
+              "type": "pointerdown",
+              "started": 3690.2000000476837,
+              "ended": 3693
+            },
+            {
+              "id": 26,
+              "type": "pointermove",
+              "started": 4633.700000047684,
+              "ended": 4634.300000011921
+            },
+            {
+              "id": 27,
+              "type": "pointermove",
+              "started": 4706.100000023842,
+              "ended": 4706.600000023842
+            },
+            {
+              "id": 28,
+              "type": "pointermove",
+              "started": 4710.700000047684,
+              "ended": 4711.100000023842
+            },
+            {
+              "id": 29,
+              "type": "pointermove",
+              "started": 4724.600000023842,
+              "ended": 4724.900000035763
+            },
+            {
+              "id": 30,
+              "type": "pointermove",
+              "started": 4790.100000023842,
+              "ended": 4790.5
+            },
+            {
+              "id": 31,
+              "type": "pointermove",
+              "started": 4901.200000047684,
+              "ended": 4901.600000023842
+            },
+            {
+              "id": 32,
+              "type": "pointermove",
+              "started": 4905.700000047684,
+              "ended": 4906
+            },
+            {
+              "id": 33,
+              "type": "pointermove",
+              "started": 4909.400000035763,
+              "ended": 4909.600000023842
+            },
+            {
+              "id": 34,
+              "type": "pointermove",
+              "started": 4925.400000035763,
+              "ended": 4925.700000047684
+            },
+            {
+              "id": 35,
+              "type": "pointermove",
+              "started": 4941.600000023842,
+              "ended": 4941.700000047684
+            },
+            {
+              "id": 36,
+              "type": "pointermove",
+              "started": 4994,
+              "ended": 4994.400000035763
+            },
+            {
+              "id": 37,
+              "type": "pointermove",
+              "started": 4998.200000047684,
+              "ended": 4998.5
+            },
+            {
+              "id": 38,
+              "type": "pointermove",
+              "started": 5008.100000023842,
+              "ended": 5008.400000035763
+            },
+            {
+              "id": 39,
+              "type": "pointermove",
+              "started": 5025.600000023842,
+              "ended": 5025.800000011921
+            },
+            {
+              "id": 40,
+              "type": "pointermove",
+              "started": 5042.400000035763,
+              "ended": 5042.700000047684
+            },
+            {
+              "id": 41,
+              "type": "pointermove",
+              "started": 5058.900000035763,
+              "ended": 5059.200000047684
+            },
+            {
+              "id": 42,
+              "type": "pointermove",
+              "started": 5074.700000047684,
+              "ended": 5075.100000023842
+            },
+            {
+              "id": 43,
+              "type": "pointermove",
+              "started": 5090.400000035763,
+              "ended": 5090.800000011921
+            },
+            {
+              "id": 44,
+              "type": "pointermove",
+              "started": 5107.900000035763,
+              "ended": 5108.100000023842
+            },
+            {
+              "id": 45,
+              "type": "pointermove",
+              "started": 5123.5,
+              "ended": 5123.800000011921
+            },
+            {
+              "id": 46,
+              "type": "pointermove",
+              "started": 5140.400000035763,
+              "ended": 5140.600000023842
+            },
+            {
+              "id": 47,
+              "type": "pointermove",
+              "started": 5157.600000023842,
+              "ended": 5158
+            },
+            {
+              "id": 48,
+              "type": "pointermove",
+              "started": 5173.800000011921,
+              "ended": 5174
+            },
+            {
+              "id": 49,
+              "type": "pointermove",
+              "started": 5208.900000035763,
+              "ended": 5209.200000047684
+            },
+            {
+              "id": 50,
+              "type": "pointermove",
+              "started": 5212.700000047684,
+              "ended": 5213
+            },
+            {
+              "id": 51,
+              "type": "pointermove",
+              "started": 5225.5,
+              "ended": 5225.800000011921
+            },
+            {
+              "id": 52,
+              "type": "pointermove",
+              "started": 5241.200000047684,
+              "ended": 5241.400000035763
+            },
+            {
+              "id": 53,
+              "type": "pointermove",
+              "started": 5258,
+              "ended": 5258.600000023842
+            },
+            {
+              "id": 54,
+              "type": "pointermove",
+              "started": 5274.700000047684,
+              "ended": 5274.900000035763
+            },
+            {
+              "id": 55,
+              "type": "pointermove",
+              "started": 5290.900000035763,
+              "ended": 5291.100000023842
+            },
+            {
+              "id": 56,
+              "type": "pointermove",
+              "started": 5307.5,
+              "ended": 5307.800000011921
+            },
+            {
+              "id": 57,
+              "type": "pointermove",
+              "started": 5353.100000023842,
+              "ended": 5353.400000035763
+            },
+            {
+              "id": 58,
+              "type": "pointerup",
+              "started": 5357.200000047684,
+              "ended": 5848.400000035763
+            }
+          ],
+          "schedule": [
+            {
+              "event": "move",
+              "i": 1,
+              "planned": 3709.8666670476837,
+              "actual": 4633.600000023842
+            },
+            {
+              "event": "move",
+              "i": 2,
+              "planned": 3726.5333340476836,
+              "actual": 4706.100000023842
+            },
+            {
+              "event": "move",
+              "i": 3,
+              "planned": 3743.2000010476836,
+              "actual": 4710.700000047684
+            },
+            {
+              "event": "move",
+              "i": 4,
+              "planned": 3759.8666680476836,
+              "actual": 4724.5
+            },
+            {
+              "event": "move",
+              "i": 5,
+              "planned": 3776.5333350476835,
+              "actual": 4790
+            },
+            {
+              "event": "move",
+              "i": 6,
+              "planned": 3793.2000020476835,
+              "actual": 4901.100000023842
+            },
+            {
+              "event": "move",
+              "i": 7,
+              "planned": 3809.866669047684,
+              "actual": 4905.700000047684
+            },
+            {
+              "event": "move",
+              "i": 8,
+              "planned": 3826.533336047684,
+              "actual": 4909.300000011921
+            },
+            {
+              "event": "move",
+              "i": 9,
+              "planned": 3843.200003047684,
+              "actual": 4925.300000011921
+            },
+            {
+              "event": "move",
+              "i": 10,
+              "planned": 3859.866670047684,
+              "actual": 4941.5
+            },
+            {
+              "event": "move",
+              "i": 11,
+              "planned": 3876.5333370476837,
+              "actual": 4994
+            },
+            {
+              "event": "move",
+              "i": 12,
+              "planned": 3893.2000040476837,
+              "actual": 4998.200000047684
+            },
+            {
+              "event": "move",
+              "i": 13,
+              "planned": 3909.8666710476837,
+              "actual": 5008.100000023842
+            },
+            {
+              "event": "move",
+              "i": 14,
+              "planned": 3926.5333380476836,
+              "actual": 5025.5
+            },
+            {
+              "event": "move",
+              "i": 15,
+              "planned": 3943.2000050476836,
+              "actual": 5042.400000035763
+            },
+            {
+              "event": "move",
+              "i": 16,
+              "planned": 3959.8666720476836,
+              "actual": 5058.800000011921
+            },
+            {
+              "event": "move",
+              "i": 17,
+              "planned": 3976.5333390476835,
+              "actual": 5074.700000047684
+            },
+            {
+              "event": "move",
+              "i": 18,
+              "planned": 3993.200006047684,
+              "actual": 5090.400000035763
+            },
+            {
+              "event": "move",
+              "i": 19,
+              "planned": 4009.866673047684,
+              "actual": 5107.900000035763
+            },
+            {
+              "event": "move",
+              "i": 20,
+              "planned": 4026.533340047684,
+              "actual": 5123.5
+            },
+            {
+              "event": "move",
+              "i": 21,
+              "planned": 4043.200007047684,
+              "actual": 5140.400000035763
+            },
+            {
+              "event": "move",
+              "i": 22,
+              "planned": 4059.866674047684,
+              "actual": 5157.600000023842
+            },
+            {
+              "event": "move",
+              "i": 23,
+              "planned": 4076.5333410476837,
+              "actual": 5173.700000047684
+            },
+            {
+              "event": "move",
+              "i": 24,
+              "planned": 4093.2000080476837,
+              "actual": 5208.800000011921
+            },
+            {
+              "event": "move",
+              "i": 25,
+              "planned": 4109.866675047684,
+              "actual": 5212.700000047684
+            },
+            {
+              "event": "move",
+              "i": 26,
+              "planned": 4126.533342047684,
+              "actual": 5225.5
+            },
+            {
+              "event": "move",
+              "i": 27,
+              "planned": 4143.200009047684,
+              "actual": 5241.200000047684
+            },
+            {
+              "event": "move",
+              "i": 28,
+              "planned": 4159.8666760476835,
+              "actual": 5257.900000035763
+            },
+            {
+              "event": "move",
+              "i": 29,
+              "planned": 4176.533343047684,
+              "actual": 5274.700000047684
+            },
+            {
+              "event": "move",
+              "i": 30,
+              "planned": 4193.2000100476835,
+              "actual": 5290.900000035763
+            },
+            {
+              "event": "move",
+              "i": 31,
+              "planned": 4209.866677047684,
+              "actual": 5307.5
+            },
+            {
+              "event": "move",
+              "i": 32,
+              "planned": 4226.533344047683,
+              "actual": 5353.100000023842
+            }
+          ],
+          "actual_ink_records": [],
+          "raw_cold_status": "COMPLETED",
+          "raw_predicates": [
+            {
+              "label": "Undo/Redo relative generation",
+              "passed": true,
+              "actual": [
+                "2",
+                "3"
+              ],
+              "expected": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "label": "Undo/Redo pixel roundtrip",
+              "passed": true,
+              "actual": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+              "expected": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89"
+            },
+            {
+              "label": "Undo had no visible effect",
+              "passed": true,
+              "actual": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+              "expected": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89"
+            }
+          ],
+          "captures": [
+            {
+              "stage": "before",
+              "generation": "1",
+              "checkpoint_request": {
+                "generation": "1",
+                "documentRevision": "19",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-before.rgba",
+                  "sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-before.axsnap",
+                  "sha256": "f33b2da72604a4dc6ba462c166e1413f3209cacf317f17cd2129e6aedcc18c0f",
+                  "bytes": 2241271
+                }
+              },
+              "oracle": {
+                "stage": "before",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-before.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            },
+            {
+              "stage": "undo",
+              "generation": "2",
+              "checkpoint_request": {
+                "generation": "2",
+                "documentRevision": "20",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-undo.rgba",
+                  "sha256": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-undo.axsnap",
+                  "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+                  "bytes": 2187559
+                }
+              },
+              "oracle": {
+                "stage": "undo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-undo.axsnap",
+                "reference_origin": "SAVED_EXACT_INPUT",
+                "reference_inputs": {
+                  "snapshot": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo.axsnap",
+                    "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd"
+                  },
+                  "rgba": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo-reference.rgba",
+                    "sha256": "8ca57fa3929f9349c7d505ce99aa2fa3d782b22542415c456a3fda44e6202dba"
+                  },
+                  "edge": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional/UR1C1-Q1/S2-erase-navigation-undo-reference.edge",
+                    "sha256": "a44a6af5749ccf94d053cb5073b2f1b0da0bc358e3781b59cfe6123e521d8ffb"
+                  },
+                  "request": {
+                    "width": 1600,
+                    "height": 1000,
+                    "logical_width": 800,
+                    "logical_height": 500,
+                    "camera": {
+                      "scale": 1,
+                      "x": -0.000244140625,
+                      "y": -6.103515625e-05
+                    },
+                    "hud_bounds": []
+                  },
+                  "oracle": {
+                    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+                    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+                  },
+                  "resources": [
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/Excalifont-Regular.ttf",
+                      "sha256": "574ab04d4598e048edf2c4f579664ff9865a8db729fd0db01a774cc9e9b38247"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/OFL.txt",
+                      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/Excalifont/README.md",
+                      "sha256": "da6c0df3b349f94a6a08539ab6ad7eb76644e34e35570d12f259ce34c564f2b8"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/imported/catalog.json",
+                      "sha256": "1aaf9da45451f75efcc55adb52ab87715a6bd4ff6cdc3d073309619007e6e465"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/LICENSE.txt",
+                      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NOTICE.txt",
+                      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf",
+                      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/README.md",
+                      "sha256": "9f0dd20575f637d9a0a81616a56425f8cb956fd9f81c2ea57f658907a53afc3f"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/assets/fonts/noto-sans-cjk-sc/resource.json",
+                      "sha256": "9dcc6fdf2f9dde27b4d7dc3cd4e13feccff592df9835a9652dad35610832811b"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/r1-full-skia-sdk.lock.json",
+                      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/semantic-sdk.lock.json",
+                      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    },
+                    {
+                      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js/axiom.data",
+                      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+                    }
+                  ]
+                },
+                "candidate_geometry_source": "fresh public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold capture; original independent CPU AA oracle"
+              }
+            },
+            {
+              "stage": "redo",
+              "generation": "3",
+              "checkpoint_request": {
+                "generation": "3",
+                "documentRevision": "21",
+                "recoveryFrontier": [
+                  8,
+                  1,
+                  16,
+                  1,
+                  24,
+                  1
+                ]
+              },
+              "files": {
+                "rgba": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-redo.rgba",
+                  "sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+                  "bytes": 6400000
+                },
+                "axsnap": {
+                  "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-redo.axsnap",
+                  "sha256": "4999b17cf02da5a13d586eb7f1c3f7246e50d6077726511b87a77c22d4b2c5c7",
+                  "bytes": 2241271
+                }
+              },
+              "oracle": {
+                "stage": "redo",
+                "status": "QUALIFIED",
+                "compared_pixels": 898253,
+                "aa_boundary_pixels": 701747,
+                "hud_excluded_pixels": 0,
+                "interior_mismatched_pixels": 0,
+                "max_interior_delta": 0,
+                "witnesses": [],
+                "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+                "reference": {
+                  "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+                  "edge_bytes": 1600000,
+                  "height": 1000,
+                  "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+                  "objects": 16,
+                  "private_frame_ids": "oracle-local only; not production receipts",
+                  "rgba_bytes": 6400000,
+                  "status": "REFERENCE_RENDERED",
+                  "width": 1600
+                },
+                "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1/S2-erase-navigation-redo.axsnap",
+                "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+                "readback": "correctness-only cold worker; not primary performance sampling",
+                "reference_origin": "NEW_ORACLE_ONCE"
+              }
+            }
+          ],
+          "roundtrip": {
+            "status": "QUALIFIED",
+            "compared_pixels": 898253,
+            "aa_boundary_pixels": 701747,
+            "hud_excluded_pixels": 0,
+            "interior_mismatched_pixels": 0,
+            "max_interior_delta": 0,
+            "witnesses": [],
+            "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+          }
+        }
+      ],
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/prepared_body_index_reverify.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional/UR1C1-R1-N1",
+          "normal",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 54.068851625022944,
+        "peak_process_family_rss_kib": 1745456,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ],
+  "counts": {
+    "cases_completed": 4,
+    "pixel_stages_qualified": 12,
+    "roundtrips_qualified": 4,
+    "saved_exact_input_references": 4,
+    "original_oracle_invocations": 8
+  },
+  "accounting": {
+    "historical_starts": 48,
+    "historical_charged_seconds": 1770,
+    "new_starts": 2,
+    "new_charged_seconds": 111,
+    "cumulative_starts": 50,
+    "cumulative_charged_seconds": 1881,
+    "remaining_status": "NONE"
+  },
+  "performance_scope": "Functional pacing only. Preserve original600.6/553.1ms observations. New first-frame807.4/849.4/843/927.9ms observations do not establish comparative performance or a cold-frame fix."
+}

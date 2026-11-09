@@ -1,0 +1,36 @@
+{
+  "modified": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+    "runtime/render/src/compact_raster_internal.hpp",
+    "runtime/render/src/prepared_body_job.cpp",
+    "runtime/render/src/skia_compact_material.cpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/src/skia_ink_layers.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp",
+    "runtime/render/src/skia_prepared_geometry.hpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/tests/canonical_prepared_body_test.cpp"
+  ],
+  "new_product_verification_files": [
+    "verification/runners/g5/canonical_prepared_body_working_set.mjs",
+    "verification/runners/g5/canonical_prepared_body_working_set_runner.py",
+    "verification/tests/test_g5_canonical_prepared_body_working_set.py"
+  ],
+  "new_frozen_package_files": [
+    ".aegis/packages/G5-UR1c2-working-set-repair-r1/authority.lock.json",
+    ".aegis/packages/G5-UR1c2-working-set-repair-r1/package.json",
+    ".aegis/packages/G5-UR1c2-working-set-repair-r1/repair-contract.json",
+    ".aegis/packages/G5-UR1c2-working-set-repair-r1/verification.lock.json"
+  ],
+  "removed": [],
+  "foreign_changes": [],
+  "sdk_input_scene_semantic_history_brush_arc_changes": false,
+  "locks_unchanged": true,
+  "index_empty": true,
+  "commit_push": false,
+  "UR1d_UR2_entered": false
+}

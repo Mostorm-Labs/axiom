@@ -1,0 +1,109 @@
+{
+  "schema": "ur1c1-verification-summary-v1",
+  "native": {
+    "passed": 43,
+    "failed": 0,
+    "log": ".aegis/results/G5-UR1c1-prepared-body-index/final-native-tests.log"
+  },
+  "node": {
+    "passed": 18,
+    "failed": 0,
+    "log": ".aegis/results/G5-UR1c1-prepared-body-index/final-node-tests.log"
+  },
+  "python": {
+    "passed": 11,
+    "failed": 0,
+    "log": ".aegis/results/G5-UR1c1-prepared-body-index/final-python-tests.log"
+  },
+  "runtime_boundaries": {
+    "files": 120,
+    "status": "PASSED"
+  },
+  "web": {
+    "input_cases_completed": 12,
+    "input_cases_planned": 12,
+    "case_checks_completed": 11,
+    "pixel_oracles_qualified": 25,
+    "pixel_oracles_planned": 28,
+    "roundtrips_qualified": 7,
+    "roundtrips_planned": 8,
+    "rgba_stages_retained": 28,
+    "snapshot_stages_retained": 28
+  },
+  "sampling": {
+    "historical_starts": 46,
+    "historical_charged_seconds": 1527,
+    "new_starts": 2,
+    "new_charged_seconds": 243,
+    "cumulative_starts": 48,
+    "cumulative_charged_seconds": 1770,
+    "remaining_status": "NONE"
+  },
+  "obligations": [
+    {
+      "id": "U1C1-01",
+      "status": "SATISFIED_SCOPED_NATIVE",
+      "evidence": [
+        "final-native-raw.log",
+        "runtime/render/tests/prepared_body_index_test.cpp"
+      ],
+      "limit": "Web actual second consumer remains U1C1-06 blocker."
+    },
+    {
+      "id": "U1C1-02",
+      "status": "SATISFIED",
+      "evidence": [
+        "mechanism-observation.json",
+        "mechanism-old-final-red.log",
+        "old-counter-source/",
+        "final-native-raw.log"
+      ]
+    },
+    {
+      "id": "U1C1-03",
+      "status": "SATISFIED_NATIVE",
+      "evidence": [
+        "final-native-tests.log",
+        "runtime/render/tests/prepared_body_index_test.cpp"
+      ]
+    },
+    {
+      "id": "U1C1-04",
+      "status": "SATISFIED_NATIVE",
+      "evidence": [
+        "alias-pressure-green-tests.log",
+        "source-index-scale-green.log",
+        "final-native-tests.log"
+      ]
+    },
+    {
+      "id": "U1C1-05",
+      "status": "SATISFIED_NATIVE_WITH_WEB_LIMIT",
+      "evidence": [
+        "final-native-raw.log",
+        "web-verification-summary.json"
+      ],
+      "limit": "25 available independent Web pixel qualifications passed;3 remain incomplete, not waived."
+    },
+    {
+      "id": "U1C1-06",
+      "status": "BLOCKED",
+      "evidence": [
+        "blocker-analysis.json",
+        "web-verification-summary.json",
+        "local-functional/"
+      ]
+    },
+    {
+      "id": "U1C1-07",
+      "status": "MATERIALIZED_WITH_BLOCKER",
+      "evidence": [
+        "source-delta-manifest.json",
+        "archive-manifest.json",
+        "demo-identities.json",
+        "scope-audit.json"
+      ],
+      "limit": "Frozen Web success is not established; no READY verdict."
+    }
+  ]
+}

@@ -42,7 +42,7 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={});
  private:
     using ValidRegions=NavigationRegions;
     struct Sources {
@@ -82,7 +82,7 @@ class SkiaNavigationTiles final {
     static constexpr std::size_t tileMetadataBytes=sizeof(Tile)+sizeof(Job);
     std::map<TileKey,Tile> tiles_;
     std::map<TileKey,std::shared_ptr<const Sources>> sources_;
-    PreparedGeometryCache geometry_;
+    std::shared_ptr<PreparedGeometryCache> geometry_;
     std::unique_ptr<Job> job_;
     std::unique_ptr<Job> refinement_;
     TileGrid grid_{256};

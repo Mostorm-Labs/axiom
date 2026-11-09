@@ -1,0 +1,25 @@
+{
+  "schema": "g5-local-evidence-contract-v1",
+  "authorized_outputs": [
+    "out/G5-UR1c1-prepared-body-index/**",
+    ".aegis/results/G5-UR1c1-prepared-body-index/**",
+    "verification/evidence/performance/g5-ur1c1-prepared-body-index/**"
+  ],
+  "materialization": "Exact source/delta+acceptedbaseline, request/key/counter meanings, old/new native component logs, native pixels/negatives, matching normal+qualification artifacts, all functional buffers/oracles and ledger in shared-worktree SHA256manifest. No evidence-onlycommit.",
+  "notification": {
+    "required": true,
+    "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "explicit blocker"
+    ],
+    "include": [
+      "package/result/source/artifacthashes",
+      "actual consumers/indexwork/counts/quota+pixel checks",
+      "DemoURL and closedwindowledger",
+      "explicitUR1c2/UR1d/UR2remaining"
+    ],
+    "delivery_failure": "Store exact message/toolerror; no pretenddelivery."
+  }
+}

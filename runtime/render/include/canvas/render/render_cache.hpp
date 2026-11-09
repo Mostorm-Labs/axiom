@@ -44,6 +44,13 @@ struct RenderPreparationBudget final {
     std::size_t maxCoverageSteps=4096;
 };
 struct RenderCacheWork final {
+    std::uint64_t preparedCanonicalDraws=0,preparedDirectDraws=0,preparedCanonicalQueries=0,preparedDirectQueries=0;
+    std::uint64_t preparedJobAdmissions=0,preparedAdvances=0,preparedSupportKnots=0,preparedDistanceInputs=0,preparedCompileInputs=0,preparedPathPrimitives=0,preparedMaxAdvanceKnots=0;
+    std::uint64_t bodySupportKnots=0,bodyLengthInputs=0,bodyCompileInputs=0,bodyReplayInputs=0;
+    // Current renderer-owned prepared service facts, not SDK/public diagnostics.
+    std::uint64_t preparedBodyBuilds=0,preparedBodyHits=0,preparedIdentityHits=0,preparedHashBytes=0,preparedContentComparisons=0;
+    std::uint64_t preparedIndexQueries=0,preparedNavigationQueries=0,preparedInkQueries=0,preparedSourceFootprintEvaluations=0;
+    std::size_t preparedAliases=0,preparedIndexReservationBytes=0;
     // Private Render execution facts: actual targets/Direct are not inferred
     // from a requested-compatible bool or the parent GPU context.
     std::uint64_t executionRasterRoot=0,executionPolicyCpu=0,executionRangeCpu=0,executionLegacyCpu=0;

@@ -1,0 +1,215 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "task": "G5-UR1c1-prepared-body-index",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "verdict": "BLOCKED_EVIDENCE",
+  "official_P34_G5_UR1_or_release_PASS": false,
+  "scope": "Independent UR1c1 review only. Preserve valid shared prepared-body/source implementation; no UR1c2 or shelved UR2 enablement.",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "review_head": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+    "candidate_base": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+    "candidate_source_tree_sha256": "0a5d8113b2c0a768fac619c6c059909587827b276fdd0cb49285fc2605ab8cbf"
+  },
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR1c1-prepared-body-index/package.json",
+    "sha256": "c25e4efee4dcfd5dfa67c3b40b65944299793b1ef426b89c1d8967fb1381d652"
+  },
+  "result_ref": {
+    "path": ".aegis/results/G5-UR1c1-prepared-body-index/result.json",
+    "sha256": "bf6472cd2dc2b8da76ef03da8fa37ac5b8438b91f8334b74f1375c93849b9aa3"
+  },
+  "frozen_requirement_audit": [
+    {
+      "id": "U1C1-01",
+      "status": "SATISFIED_NATIVE_SCOPE",
+      "reason": "One renderer service is injected into existing navigation and retained-ink consumers. Actual Metal consumers share one body at DPR1/2/4; consumer reset and owner lifetime checks pass. Web observation assessed separately under06."
+    },
+    {
+      "id": "U1C1-02",
+      "status": "SATISFIED",
+      "reason": "All8 exact7199-knot,1/8/16/32-copy,48-warm matrices retain one build and zero warm content/fingerprint/candidate/source-footprint work; old-mechanism RED retained."
+    },
+    {
+      "id": "U1C1-03",
+      "status": "SATISFIED_NATIVE",
+      "reason": "Complete content equality on unknown allocations; strong owner+pointee+type identity, config/seed/knot collisions/forks, mask/transform independence and alias negatives covered."
+    },
+    {
+      "id": "U1C1-04",
+      "status": "SATISFIED_NATIVE",
+      "reason": "Positively charged bounded indexes/aliases, pressure recovery, last-release cleanup, held-body LRU/reset/budget ownership covered without budget increases."
+    },
+    {
+      "id": "U1C1-05",
+      "status": "SATISFIED_WITH_ALTERNATE_INDEPENDENT_EVIDENCE",
+      "reason": "Native correctness and actual execution regressions pass. All28 saved Web stage pixels and8roundtrips independently qualified using the original oracle and AA rule;3missing N1 comparisons reuse exact-input Q1 independent references."
+    },
+    {
+      "id": "U1C1-06",
+      "status": "FROZEN_REQUIREMENT_FAILURE",
+      "reason": "Both fixed Web erase/navigation cases recorded navigation prepared use but zero retained-ink queries. Their first cold frame consumed the entire planned gesture, and all32moves followed in a catch-up microtask burst before Up; no second display opportunity exercised the required consumer."
+    },
+    {
+      "id": "U1C1-07",
+      "status": "SATISFIED_MATERIALIZATION_AND_SCOPE",
+      "reason": "512 hashes,18product/runner files,332payload files,5archives and matching normal/qualification artifacts resolved independently in declared shared-worktree boundary. AcceptedUR1b and isolated UR2 checkpoint preserved. Frozen blocked terminal and no-retry policy respected."
+    }
+  ],
+  "frozen_evidence_audit": {
+    "passed": [
+      "Declared repository/result/materialization identities",
+      "Exact accepted baseline plus18candidate source changes;70archival descendant paths isolated",
+      "Old/new mechanism counters and actual native GPU consumers",
+      "43native,18Node,11Python,120boundary checks freshly rerun",
+      "28Web pixels and8roundtrips by frozen independent oracle, full saved input identity",
+      "Both original workers closed/owned cleanup; normal build emits no diagnostic records"
+    ],
+    "failed": [
+      "Required actual qualified Web navigation-to-retained-ink shared-consumer observation"
+    ]
+  },
+  "closed_prior_blocker": {
+    "id": "NORMAL_S0_DRAG_INDEPENDENT_ORACLE_TIMEOUT",
+    "disposition": "RESOLVED_BY_ALTERNATE_INDEPENDENT_EVIDENCE",
+    "proof": "All3N1snapshot byte sequences equal corresponding Q1snapshot bytes; full render requests (dimensions, camera, logical viewport, empty HUD) also equal. Original CPU reference binary/resources are identical and all original artifacts are hash-bound. Compare N1actual pixels against those saved independent references, then its before/redo pixels under the same frozen boundary. All qualify. No CPU oracle rerun or browser start; original ETIMEDOUT remains unchanged.",
+    "not_claimed": "Original timed invocation success or relative performance."
+  },
+  "blocking_items": [
+    {
+      "id": "UR1C1-R1-E01",
+      "classification": "FROZEN_REQUIREMENT_FAILURE",
+      "defect_type": "EVIDENCE_GAP",
+      "owning_layer": "VERIFICATION_DESIGN_DEFECT",
+      "earliest_untrusted_layer": "P20",
+      "refresh_execution_package_at": "P31",
+      "obligation": "U1C1-06",
+      "failure_mode": "The functional driver can miss every subsequent display opportunity after one expensive cold frame; required real Web second-consumer integration remains unexercised.",
+      "impact": "UR1c1 cannot claim actual Web cross-consumer prepared-body reuse; wrong/missing eligibility or injection on that route remains undetected by this Web exercise.",
+      "existing_independent_coverage": "Native Metal actual consumer and lifetime/pixel tests; all Web independent pixels and actual GPU/Direct observations. These do not execute the missing Web consumer sequence.",
+      "residual_proof_gap": "Observe an eligible retained-ink get on the same Web renderer service after navigation with no additional body build and correct pixels.",
+      "root_cause_evidence": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/web-route-diagnosis.json",
+        "sha256": "1debd281981ee8fb6ff2446af0bde49cec3774b5f79de0658936f7ffdf2469a8"
+      },
+      "unique_detection_value": "Web public SDK/dirty/RAF/render admission routing and actual shared-service consumer use, distinct from native direct renderer invocation.",
+      "implementation_defect_established": false,
+      "closure_rule": "Do not waive the frozen behavioral obligation; preserve the valid implementation and fix the functional verification driver rather than enlarge Render budgets or alter GPU/AA/input/commit semantics."
+    }
+  ],
+  "non_blocking_findings": [
+    {
+      "id": "UR1C1-R1-F01",
+      "finding": "Ordinary cooperative canonical/Direct first-use integration remains explicit UR1c2; zero prepared calls there is not a new defect in this UR1c1 slice."
+    },
+    {
+      "id": "UR1C1-R1-F02",
+      "finding": "Cold full-frame and frame-gap durations remain recorded performance debt. Functional catch-up repair must not rewrite original performance traces or imply that cold latency was fixed."
+    },
+    {
+      "id": "UR1C1-R1-F03",
+      "finding": "Skia internal CPU preparation remains UNKNOWN; actual GPU coverage counters alone do not prove it absent."
+    }
+  ],
+  "fresh_verification": {
+    "native": {
+      "passed": 43,
+      "failed": 0,
+      "seconds": 213.46,
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/native-regression.log",
+        "sha256": "1b1368047c072e733e7248fe97cf50891e553f0ba90d6233740fa5f31ebb50f7"
+      }
+    },
+    "node": {
+      "passed": 18,
+      "failed": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/node-regression.log",
+        "sha256": "52559774482f78f795ff5b154c793e9f5556ac39cc2324153cf7be515242398b"
+      }
+    },
+    "python": {
+      "passed": 11,
+      "failed": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/python-regression.log",
+        "sha256": "ce895947b8ffcb2e77addf8382970fd1c07ecab9486fbbfca209319a47c37f4f"
+      }
+    },
+    "boundaries": {
+      "files": 120,
+      "status": "PASSED",
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/boundary-regression.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    "offline_pixels": {
+      "qualified": 28,
+      "roundtrips": 8,
+      "browser_starts": 0,
+      "oracle_invocations": 0,
+      "report": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/offline-pixel-review.json",
+        "sha256": "ab8ee3e696518c0d00ea078349c9a99bec24c45e921d62b6e88d22a40cdacdc0"
+      }
+    }
+  },
+  "review_evidence_refs": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/input-integrity.json",
+      "sha256": "86f734a17e22e941423e4dcc5092cf50a3c1378bbf7517b7e89f43c21bcb7c8d"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/mechanism-review.json",
+      "sha256": "d97586a02684c172e8f49584852b1981a3ab9b88b3b6a6db3d3ea1fe9b191c06"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/web-route-diagnosis.json",
+      "sha256": "1debd281981ee8fb6ff2446af0bde49cec3774b5f79de0658936f7ffdf2469a8"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/offline-pixel-review.mjs",
+      "sha256": "8e41d00c73f68c07ce73fec5685aed2013206d16abb2f6379b81d6f88064eb4b"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/offline-pixel-review.json",
+      "sha256": "ab8ee3e696518c0d00ea078349c9a99bec24c45e921d62b6e88d22a40cdacdc0"
+    }
+  ],
+  "ownership_handoff": {
+    "to": "aegis",
+    "owning_stage": "P20 Verification, then P31 refreshed bounded harness package",
+    "reason": "Frozen public functional gesture does not guarantee the render opportunities needed for its required consumer observation. Do not disguise this as unfinished product/cache implementation.",
+    "next_direction": "Prepare one small functional-driver correction: bounded actual display opportunities even when the first RAF exceeds the nominal gesture; deterministic deadline-overrun tests; retain original S0/S2 assets, correctness rules,32/96MiB and all old evidence. Freeze new exact attempt identities/accounting before any real worker continuation.",
+    "must_not_change": [
+      "Production Runtime/Render or SDK APIs merely to force counters",
+      "GPU/AA/budget/timeout thresholds",
+      "Old result/worker/raw evidence or claimed sampling success",
+      "UR2 isolation or conditional UR1c2 entry"
+    ]
+  },
+  "ur1c2_entry": {
+    "authorized": false,
+    "reason": "U1C1-06 actual Web consumer proof not yet closed; user required UR1c1 pass first."
+  },
+  "accounting": {
+    "new_browser_starts": 0,
+    "new_oracle_invocations": 0,
+    "original_cumulative_browser_starts": 48,
+    "original_cumulative_charged_seconds": 1770,
+    "original_window_remaining": "NONE",
+    "old_windows_reopened": false
+  },
+  "publication": {
+    "product_source_modified": false,
+    "git_index_modified": false,
+    "commit": null,
+    "push": null
+  },
+  "created_at_utc": "2026-11-08T17:53:47.549562+00:00"
+}

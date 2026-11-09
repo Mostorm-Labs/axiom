@@ -1,0 +1,180 @@
+{
+  "status": "VERIFIED",
+  "actual_consumers": [
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S0-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [
+        {
+          "service": "0xa69630",
+          "navigation_record": 121,
+          "ink_record": 165,
+          "queries": 16,
+          "identity_hits": 16,
+          "builds": 0
+        }
+      ],
+      "normal_trace_free": false
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S2-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [
+        {
+          "service": "0x276fe8",
+          "navigation_record": 121,
+          "ink_record": 171,
+          "queries": 16,
+          "identity_hits": 16,
+          "builds": 0
+        }
+      ],
+      "normal_trace_free": false
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S0-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [],
+      "normal_trace_free": true
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S2-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [],
+      "normal_trace_free": true
+    }
+  ],
+  "reference_origin_counts": {
+    "SAVED_EXACT_INPUT": 4,
+    "NEW_ORACLE_ONCE": 8
+  },
+  "pixel_stage_bindings": [
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S0-erase-navigation",
+      "stage": "before",
+      "snapshot_sha256": "150daf8d0c9b4461f3bfaa65d7ebf34f6ccbe284dee089747fb176792faef04a",
+      "candidate_rgba_sha256": "b9543956fbebad71d051cf60ac372b95f4d282d0108163b202c0f7c3c62c4ea6",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S0-erase-navigation",
+      "stage": "undo",
+      "snapshot_sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2",
+      "candidate_rgba_sha256": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+      "reference_origin": "SAVED_EXACT_INPUT"
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S0-erase-navigation",
+      "stage": "redo",
+      "snapshot_sha256": "c4ee7b21d2b4510288e87b4bca2490008a7faaccf19092dc818c65fdfd85a215",
+      "candidate_rgba_sha256": "9deb5244ad30782a5a82dcf72893d63c22d286b4b35317cddcea674a2df075e3",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S2-erase-navigation",
+      "stage": "before",
+      "snapshot_sha256": "f52da4f5b6963a66d41488c3ddcb8381d62a09203e7f04ad8866c1140a48e02d",
+      "candidate_rgba_sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S2-erase-navigation",
+      "stage": "undo",
+      "snapshot_sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+      "candidate_rgba_sha256": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+      "reference_origin": "SAVED_EXACT_INPUT"
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S2-erase-navigation",
+      "stage": "redo",
+      "snapshot_sha256": "1ef786bea5e20bb62fdb3ea62c8947b5a76d9c2a31e58cc5641c724e5115fabc",
+      "candidate_rgba_sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S0-erase-navigation",
+      "stage": "before",
+      "snapshot_sha256": "3dac6cc56cadec0b936b56296632d6bc1a184449b7d1f9a5e92b1ce839ca08a5",
+      "candidate_rgba_sha256": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S0-erase-navigation",
+      "stage": "undo",
+      "snapshot_sha256": "d8c68b26e74834c22fbd1d505349df85a04dd53d69b83403a1d6645c0c998cc2",
+      "candidate_rgba_sha256": "84525e25720c1b103415683024e67124ccf548339802b8df69923178bd6a6ef2",
+      "reference_origin": "SAVED_EXACT_INPUT"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S0-erase-navigation",
+      "stage": "redo",
+      "snapshot_sha256": "f2640d9ae2a0ac8d31ea5414fa6538fe28b2e08558d4b69a1caa09083c6bd0e2",
+      "candidate_rgba_sha256": "9ce73d84de54527dde1d640fa6bf97d2b79e3611e7f6cecf0620f5c7b06bc90f",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S2-erase-navigation",
+      "stage": "before",
+      "snapshot_sha256": "f33b2da72604a4dc6ba462c166e1413f3209cacf317f17cd2129e6aedcc18c0f",
+      "candidate_rgba_sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S2-erase-navigation",
+      "stage": "undo",
+      "snapshot_sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+      "candidate_rgba_sha256": "86279b92a2d8d57bcc038462e85420d48a184444a3ba3703ac104831535fda5d",
+      "reference_origin": "SAVED_EXACT_INPUT"
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S2-erase-navigation",
+      "stage": "redo",
+      "snapshot_sha256": "4999b17cf02da5a13d586eb7f1c3f7246e50d6077726511b87a77c22d4b2c5c7",
+      "candidate_rgba_sha256": "8f457babfad5bdb33cc4027018e52c52d61a20ccb93152ac6188aefc1213ed89",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    }
+  ],
+  "worker_states": [
+    {
+      "id": "UR1C1-R1-Q1",
+      "status": "OBSERVED",
+      "source_stable": true,
+      "artifacts_stable": true
+    },
+    {
+      "id": "UR1C1-R1-N1",
+      "status": "OBSERVED",
+      "source_stable": true,
+      "artifacts_stable": true
+    }
+  ],
+  "new_starts": 2,
+  "new_charged_seconds": 111,
+  "cumulative_starts": 50,
+  "cumulative_charged_seconds": 1881,
+  "old_windows_unchanged": true
+}

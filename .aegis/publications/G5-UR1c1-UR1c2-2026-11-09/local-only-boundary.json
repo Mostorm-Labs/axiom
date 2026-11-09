@@ -1,0 +1,394 @@
+{
+  "schema": "axiom-publication-local-evidence-boundary-v1",
+  "repository_source_recoverability": "Exact accepted source/test/driver files, selected frozen packages/review records and content hashes are in this checkpoint.",
+  "not_recoverable_from_git_alone": [
+    "Raw browser RGBA/edge/snapshot buffers and detailed diagnostic logs",
+    "Prebuilt normal/qualification SDKs and native test/probe binaries",
+    "Full historical tracked+dirty subject file inventories and original pre/postimage copies",
+    "Old and current out/ archives and compiled intermediates",
+    "Unselected old authority/results drafts and all unaccepted UR2 active paths"
+  ],
+  "how_to_recover": "Keep the listed content-addressed archives and local evidence roots. Cloning this branch alone recovers source and indexes, not historical raw proof or built artifacts. Rebuild through the locked Semantic/Skia SDK consumer setup; newly generated evidence is a new run, never the frozen old run.",
+  "archives": [
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/source-and-package.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/archives/source-and-package.tar.gz",
+      "sha256": "6def7ddaeecc7e51a1d2465027a7cdba0801bc238c16c04166c5598ebc5a6df7",
+      "bytes": 1556617,
+      "members": 46,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-prepared-body-index/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/native-test-binaries.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/archives/native-test-binaries.tar.gz",
+      "sha256": "a2bed2ee9608de26cb0f75d68e3d78cea94a41decabcc7620c34d40c9e74328a",
+      "bytes": 159870344,
+      "members": 25,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-prepared-body-index/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/normal-sdk.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/archives/normal-sdk.tar.gz",
+      "sha256": "faa1cfdf2c1e59d50ca60fff20c916329ae4362fea6759d97ee60627ffd4f3e1",
+      "bytes": 19684106,
+      "members": 36,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-prepared-body-index/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/qualification-sdk.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/archives/qualification-sdk.tar.gz",
+      "sha256": "efb493cfa81d6093b8407fe90eb0b27426d2ec60e5732a64f67b3e44531aaa44",
+      "bytes": 19688483,
+      "members": 36,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-prepared-body-index/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/browser-functional-evidence.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/archives/browser-functional-evidence.tar.gz",
+      "sha256": "97acdfb60aeec049e96403e24a9fcf4b121258c21d941efd8a66d3c725bd2809",
+      "bytes": 62452673,
+      "members": 204,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-prepared-body-index/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-web-consumer-reverify-r1/archives/verifier-source-and-package.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-web-consumer-reverify-r1/archives/verifier-source-and-package.tar.gz",
+      "sha256": "af6d2333718ba8084f8853d947e1d6a2568e4d4cf0bbfa8bb4064c681da4d210",
+      "bytes": 1460800,
+      "members": 36,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c1-web-consumer-reverify-r1/archives/web-functional-evidence.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-web-consumer-reverify-r1/archives/web-functional-evidence.tar.gz",
+      "sha256": "599659575bbb8e5afcfdd7f7eabc7fc61ad09c372652a50f51955dac87fa2575",
+      "bytes": 27920821,
+      "members": 95,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/archives/source-delta.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/archives/source-delta.tar.gz",
+      "sha256": "4471a7adf80163f227e852167be4736f15560d0c5c58d3374d22a121fea830fd",
+      "bytes": 428700,
+      "members": 59,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-canonical-prepared-body/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/archives/normal-sdk.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/archives/normal-sdk.tar.gz",
+      "sha256": "bcdb7e108caf620ea4d5aa48f1c4bdac92ac162f9d9704644a527af7ec8673c3",
+      "bytes": 18951558,
+      "members": 36,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-canonical-prepared-body/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/archives/qualification-sdk.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/archives/qualification-sdk.tar.gz",
+      "sha256": "7d0ca8de1d091b77101c386cdc54ce8f831216cbbaf50cfcd09ea881aef89d12",
+      "bytes": 18953524,
+      "members": 36,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-canonical-prepared-body/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/archives/native-artifacts.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/archives/native-artifacts.tar.gz",
+      "sha256": "181479b4fecedda1bdb4c682aa5566daf264042897e682b51a7a1677e86d5526",
+      "bytes": 47080188,
+      "members": 5,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-canonical-prepared-body/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/archives/raw-evidence.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/archives/raw-evidence.tar.gz",
+      "sha256": "e419eba0ef32fd0e9f2078065c0982f90d443a80471a6276b4678fe3af894658",
+      "bytes": 61090012,
+      "members": 232,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-canonical-prepared-body/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/archives/source-delta.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/archives/source-delta.tar.gz",
+      "sha256": "69c45a9eec8e260b3e282d3ef8ff450e1b7c351325f770bff44fd188f54541f5",
+      "bytes": 1699229,
+      "members": 49,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-working-set-repair-r1/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/archives/matching-sdk.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/archives/matching-sdk.tar.gz",
+      "sha256": "56b636a643ab218f8df277c2d7d773034668cdc62be1478ada1c92f229a940b0",
+      "bytes": 39397987,
+      "members": 72,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-working-set-repair-r1/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/archives/native-proof.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/archives/native-proof.tar.gz",
+      "sha256": "cf734540c556acf6eda5b129ca1ccc0170ca8daf261d00ff2a84b89bd378db31",
+      "bytes": 186597961,
+      "members": 40,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-working-set-repair-r1/archive-manifest.json"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/archives/web-raw.tar.gz",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/archives/web-raw.tar.gz",
+      "sha256": "aa519253db43b92a1bed314fdb337748fe0b9796ead8b5480b08b20f748212e6",
+      "bytes": 63246884,
+      "members": 217,
+      "git_included": false,
+      "bound_by": ".aegis/results/G5-UR1c2-working-set-repair-r1/archive-manifest.json"
+    }
+  ],
+  "roots": [
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/local-functional",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/local-functional",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+        "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/materialized-source",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/materialized-source",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+        "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/preimages",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/preimages",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+        "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/source-identity.json",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-prepared-body-index/source-identity.json",
+      "git_included": false,
+      "sha256": "b30db947bb9ed481b2a524986d88193b36e90dcc2c3fc8221c68e031f06b1c54",
+      "bytes": 6158675,
+      "reason": "Full historic tracked+dirty/evidence subject, not the Git publication tree."
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/local-functional",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+        "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/materialized-source",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/materialized-source",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+        "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/preimages",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/preimages",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+        "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-identity.json",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c1-web-consumer-reverify-r1/source-identity.json",
+      "git_included": false,
+      "sha256": "730942bfb4068039e341f0c66f7c1e3e9b3004d0d05af8a0f6843f7e621d22c2",
+      "bytes": 6251254,
+      "reason": "Full historic tracked+dirty/evidence subject, not the Git publication tree."
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/local-functional",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-canonical-prepared-body/local-functional",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/payload-manifest.json",
+        "sha256": "27f21a199b840ec9b40f6fba48da3eff728d3cfd1e7b7a7f2b4618386216d999"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/payload-manifest.json",
+        "sha256": "27f21a199b840ec9b40f6fba48da3eff728d3cfd1e7b7a7f2b4618386216d999"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-canonical-prepared-body/preimages",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/payload-manifest.json",
+        "sha256": "27f21a199b840ec9b40f6fba48da3eff728d3cfd1e7b7a7f2b4618386216d999"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-canonical-prepared-body/source-identity.json",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-canonical-prepared-body/source-identity.json",
+      "git_included": false,
+      "sha256": "fadb37d2b9ab1cc4ccc082414043870f1c35dbec190ce0c15029ff6b9c7e4662",
+      "bytes": 6288211,
+      "reason": "Full historic tracked+dirty/evidence subject, not the Git publication tree."
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/local-functional",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-working-set-repair-r1/local-functional",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/payload-manifest.json",
+        "sha256": "5153b5af282eb0ab32b572af90ac2cb1648723275e700d8940c2e8841c5fcf65"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/payload-manifest.json",
+        "sha256": "5153b5af282eb0ab32b572af90ac2cb1648723275e700d8940c2e8841c5fcf65"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-working-set-repair-r1/preimages",
+      "git_included": false,
+      "content_authority": {
+        "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/payload-manifest.json",
+        "sha256": "5153b5af282eb0ab32b572af90ac2cb1648723275e700d8940c2e8841c5fcf65"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/source-identity.json",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1c2-working-set-repair-r1/source-identity.json",
+      "git_included": false,
+      "sha256": "91b7745d65110fbabbb3392a2320fe450d3f5b93a8af6f760f473d1bc4209913",
+      "bytes": 6289685,
+      "reason": "Full historic tracked+dirty/evidence subject, not the Git publication tree."
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur1c1-r1",
+      "git_included": "Only selected small JSON/Markdown records; native binaries/logs/large integrity tables remain local.",
+      "content_authority": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/manifest.json",
+        "sha256": "968cd7232fbc0707ef2afb77a5078d3dd815f8ebe7f1e5207b3e8a57b2a8c2a3"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1",
+      "git_included": "Only selected small JSON/Markdown records; native binaries/logs/large integrity tables remain local.",
+      "content_authority": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/manifest.json",
+        "sha256": "f38ec9661ce952678348f1e81a2a0f731951b2ad1487410690c7f6473e481395"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur1c2-r1",
+      "git_included": "Only selected small JSON/Markdown records; native binaries/logs/large integrity tables remain local.",
+      "content_authority": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/manifest.json",
+        "sha256": "6296e7be3321e4be00a7cda35036e0d9732e69e80b4154cf4bf84d8c1e2fbc41"
+      }
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1",
+      "git_included": "Only selected small JSON/Markdown records; native binaries/logs/large integrity tables remain local.",
+      "content_authority": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/manifest.json",
+        "sha256": "5b0952fd5d6ad986338c271b6867cd031016bca45958b435714159965018e1af"
+      }
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/normal-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/normal-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "38c30f004c9af4161ddfba8d1c15378618a163030122d4e0554a0ceb336400c6",
+      "wasm_sha256": "4fa9241f34af34044a8b29ffe4dc3f09f9fcac2fde931f6a37251ba4af717bfc",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/qualification-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/qualification-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "f9055ba658467c95f492e982090b1e181dd257fbbf21e8c4ac3141d6280ce210",
+      "wasm_sha256": "7c0231f0c6bd76b3c9396842a5a37a24e407a2a0ea82c6e9cb73cd51f601860c",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/normal-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/normal-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "3cb321793556384968a40bed4e25d33e9aa2ba196130df91c64d49f8ae3c6988",
+      "wasm_sha256": "3fd7d810085d8a1374d923bf4075ebb41526a08c327a4eb830b14c5934b53dd9",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-UR1c2-canonical-prepared-body/qualification-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-canonical-prepared-body/qualification-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "fbd6cd6683aaa13875db5e6824fe73af29d9eec325cb4b5fc77fcc63440b0e26",
+      "wasm_sha256": "08b791fa57e40d495f4fa135205ad56575bd66d5c139796c017854cd473f589e",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/normal-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/normal-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "8bb31cdaee5e5958d52fc7fe766aa1e21fdd01c8dfa269c52954626fe4f6acec",
+      "wasm_sha256": "1f1170e88765cdf0e72d93700d63c7ec3017e0199c2f7563fbebce3345f10b1d",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-UR1c2-working-set-repair-r1/qualification-install/js",
+      "local_absolute_path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c2-working-set-repair-r1/qualification-install/js",
+      "git_included": false,
+      "files": 36,
+      "canonical_file_map_sha256": "8f8cbeaa8c86f48bfa8937f119602e676594725162b8cfd87d8bfacd52f1025e",
+      "wasm_sha256": "7736a80b72ed919c14c3f6d1bb63dcc07246b9fa21aca3575575dd6b811d3a09",
+      "data_sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    }
+  ],
+  "no_artifact_upload_or_release": true,
+  "old_candidate_frozen_files_rewritten": false,
+  "unaccepted_UR2_not_selected": true,
+  "already_tracked_UR2_archive": "e69f2377 is a previously authorized shelved-only ancestor, retained unchanged; it is not active UR2 implementation."
+}

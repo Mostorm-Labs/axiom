@@ -1,0 +1,136 @@
+{
+  "schema": "g5-scoped-execution-closure-v1",
+  "implementation": {
+    "authorized_source_paths": [
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/source_retention.hpp",
+      "runtime/render/src/compact_raster_internal.hpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/render/src/skia_headless_backend.cpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/src/skia_navigation_tiles.hpp",
+      "runtime/render/src/skia_navigation_tiles.cpp",
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/render/src/prepared_body_job.*",
+      "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "runtime/render/tests/prepared_body_index_test.cpp",
+      "runtime/render/tests/render_cache_test.cpp",
+      "runtime/render/tests/prepared_geometry_test.cpp",
+      "verification/runners/g5/canonical_prepared_body*",
+      "verification/tests/g5_canonical_prepared_body*",
+      "verification/tests/test_g5_canonical_prepared_body*"
+    ],
+    "required_changes": [
+      "Record resolved existing-owner design before edits: lookup-only vs request/advance,job basis/leases,how ready body reaches canonical raster and actual Direct leaves,shared work allowance and independent reference bypass. Resolve routine details and continue without another approval round.",
+      "Preserve mechanismRED on the accepted subject, then evolve the current prepared service/job and current raster/material helpers. No second renderer/cache/geometry algorithm.",
+      "Wire metadata/support/distance and prepared geometry into real canonical and Direct consumers, with bounded cold build and pending preflight before final-target writes. Existing APIs stay private/internal.",
+      "Record actual new work counters and clear compatibility/fallback reasons at the leaf. Preserve pixel hits and existing idle/navigation gains; never force coverage merely to proveGPU.",
+      "Add meaningful bounded-resume,sharing,forks,pixel/resource/lifetime tests and run affected regressions. Use locked accepted Semantic/Skia SDKs, matching native/WASM facts; no third-party rebuild.",
+      "Build new normal/qualification root SDK packages with developercomponentsOFF,normaltimingOFF/qualificationtimingON. Serve a newunusedport>=4286 from the matching normal install and preserve4284/4285.",
+      "Run only the frozen two-worker Web matrix after source/driver/artifact freeze. All cold buffers before predicates; return materialized result and proactive callback at ready or blocker."
+    ],
+    "forbidden_changes": [
+      "Any sdk/web, sdk/common, sdk/windows,RuntimeComposition/Interaction/Input/Scene/Semantic/History or Brushalgorithm/source edit; publicAPI/ABI/version/debugcommand changes",
+      "Changing source semanticIDs,canonical mutation,postUp/nextDown/cancel/ARCretirementorfeedbackprotocol",
+      "Changing32/96MiB,perEntry/maxEntries,preparationbudgetdefaults,actualGPU/AAdecision or CPU/reference policy",
+      "New workers/threads,a globalcrossdocumentservice,another compiled geometrycache,unbudgeted pendingjob/alias/index storage",
+      "Unqualifieddigest/id/pointer sharing,wholehistory hash/compile on everywarmrequest,newfullhistoryblockingget inordinaryleaf,unboundedretry,busyloop",
+      "Old results/SDKs/ports/reference orUR2archive mutations,physicalwholesale scenehelper migration,descriptor/SDKlock orG3authorityrepair",
+      "Hidden browser seed/retry,source changesduringworkers,commit,push,self-issuedfullUR1/G5/P34/performancePASS"
+    ]
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "real_blocker": "If the private ownership/allowed scope or frozen correctness/work budget is genuinely contradictory, return exact layer and proof rather than silently adding an SDK/Interaction change."
+  },
+  "tests": {
+    "native_baseline_command_ref": {
+      "path": ".aegis/results/G5-UR1c1-prepared-body-index/final-native-command.json",
+      "sha256": "5ddea134e1ac73308a1188a317dbd9d3de60421416952bf2b06bf2d65758741d",
+      "identity_kind": "local-content-addressed"
+    },
+    "native_new": "Actual canonical/Direct prepared-body test(s) added to CMake, plus existing prepared/index/source/navigation/ink-layer/execution masks/receipt tests. Old43remain affected due product edits.",
+    "node_python": "Existing29Node/14Python verifier regressions plus new C2helpers/tests; no test-only SDKprivate APIs.",
+    "boundary_command": [
+      "python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "pixels": "Actual native GPU+explicitCPU independent parity; Web28coldstages/8roundtrips from the two six-case workers using the existing accepted oracle contract."
+  },
+  "browser_window": {
+    "ids": [
+      "UR1C2-Q1",
+      "UR1C2-N1"
+    ],
+    "new_browser_starts_max": 2,
+    "order": [
+      "qualification",
+      "normal"
+    ],
+    "concurrency": 1,
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 50,
+    "historical_charged_seconds": 1881,
+    "new_nominal_seconds_max": 360,
+    "original_cumulative_cap_seconds": 8370,
+    "cases": [
+      "S0-canonical",
+      "S0-drag",
+      "S0-erase-navigation",
+      "S2-canonical",
+      "S2-drag",
+      "S2-erase-navigation"
+    ],
+    "logical_target": [
+      800,
+      500
+    ],
+    "device_pixel_ratio": 2,
+    "fixture": "Existing SHA-bound S0/S2 and envelopes, no newseed. Public rootSDK only; reuse correctedfunctionalerasepacing,originaldrag/cancel rules.",
+    "actual_required": "Qualification sees actual ordinary canonical prepared consumer and actual Direct/transient prepared consumer on supported cases,not just oldnav/retainedink; pixels/receipts normal. Use existing derived typedstats and realleafcounters.",
+    "policy": "Reserve each ID once,ceilactualseconds,ownedcleanup. Hardguard/identity/environment/crash stops remaining; completedfunctionalfailure may consume only plannednormal once. No extrasmoke/retries; freeze sources/SDK/reference/driver for workers."
+  },
+  "source_identity_policy": {
+    "history": "Current C1 product+8verifierdelta and new C2package are the trusted start,not historicalwhole-tree hash equality.",
+    "exclude_only_new_self_outputs": [
+      ".aegis/results/G5-UR1c2-canonical-prepared-body/",
+      "verification/evidence/performance/g5-ur1c2-canonical-prepared-body/"
+    ],
+    "keep_existing_self_exclusions": true,
+    "no_broad_exclusion": "Retain all product/newdriver/newpackage and previousevidence identities outside already declared exclusions."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "U1C2-01..06 satisfied in declared subset",
+      "New ordinary actual consumer use and bounded cold work measured against oldmechanism",
+      "Independent pixels and strictreceipt correct,hash-bound normalDemo+allrawrows+closedledger+callback"
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_SCOPE_OR_OWNER_CONFLICT",
+    "UNBOUNDED_PREPARATION_OR_FALSE_WORK_PROOF",
+    "PIXEL_OR_RECEIPT_OR_IDENTITY_REGRESSION",
+    "REQUIRED_BUILD_OR_CONSUMER_EVIDENCE_FAILURE",
+    "RESOURCE_GUARD_OR_CLEANUP_FAILURE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "no_extra_approval": "User conditional continuation is now satisfied; continue trusted slice through actual integration and verification. Do not stop at facade/preflight/native-onlysuccess."
+  }
+}

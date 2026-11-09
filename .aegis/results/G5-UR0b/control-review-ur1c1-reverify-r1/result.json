@@ -1,0 +1,185 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "task": "G5-UR1c1-web-consumer-reverify-r1",
+  "verdict": "PASS_WITH_FINDINGS",
+  "scope_acceptance": "ACCEPTED_SCOPED_UR1C1_WITH_FINDINGS",
+  "official_P34_G5_UR1_or_release_PASS": false,
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/geometry-navigation-integration",
+    "head": "e69f2377cd93ddbe89d1fb1227ae8397c977b287"
+  },
+  "package_ref": {
+    "path": ".aegis/packages/G5-UR1c1-web-consumer-reverify-r1/package.json",
+    "sha256": "b6a105986195cba95458428a73bd5f68778f4121cbbe5f4285f209439700f7a5"
+  },
+  "supplement_result_ref": {
+    "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/result.json",
+    "sha256": "99d94d7556aad965b08b34b1ca5fbeb767368418eee9f4a16b9da30b7037bba6"
+  },
+  "original_subject_result_ref": {
+    "path": ".aegis/results/G5-UR1c1-prepared-body-index/result.json",
+    "sha256": "bf6472cd2dc2b8da76ef03da8fa37ac5b8438b91f8334b74f1375c93849b9aa3"
+  },
+  "prior_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c1-r1/result.json",
+    "sha256": "5184da8e73a6791134bef70e08359bbe6ca690591d1c97d26d4ec502d51fae0c"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "U1C1R1-01 deterministic original600/1200ms RED; repaired bounded33opportunities with terminal cancel/timeout failures and unchanged geometry/order",
+      "U1C1R1-02 real Web S0/S2 navigation->same-service retained-ink16gets/16identityhits/zero newbuild/hash/deep comparison",
+      "U1C1R1-03 all4newcases exactly one erase commit, closed contacts,12independent pixel stages and4roundtrips",
+      "U1C1R1-04 unchanged14productfiles,903historicalRuntime/SDK/schema/lockfiles,matchingimmutableSDKs,8verifier-onlydelta,source/resultseparation and two guarded runs"
+    ],
+    "failed": []
+  },
+  "closure_of_UR1c1": {
+    "original_obligations_01_05_07": "Retained as independently reviewed on the same14product/native subject, including native43/43 and previous28pixels/8roundtrips.",
+    "original_obligation_06": "The sole residual actual Web consumer proof is now satisfied by the two new qualified scenes, alongside normal public SDK correctness.",
+    "original_blocked_results": "Immutable historical results remain BLOCKED; this additive review closes their residual obligation without rewriting old runs."
+  },
+  "independent_verification": {
+    "identity": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/input-integrity.json",
+      "sha256": "608833120a9808db981ce0e8fd969ff4266f10828c81650f22e1d7f464db3eaa"
+    },
+    "source_scope": {
+      "historical_product_files_unchanged": 903,
+      "protected_product_native_files": 14,
+      "verifier_delta_files": 8,
+      "hash_checks": 1197,
+      "archive_members": 131
+    },
+    "node": {
+      "passed": 29,
+      "failed": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/node-regression.log",
+        "sha256": "0838eea837a3ee3632bb23816f6e05e8362dc7412fc31fd67edfbdb3f76440d3"
+      }
+    },
+    "python": {
+      "passed": 14,
+      "failed": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/python-regression.log",
+        "sha256": "12e108b03f27a9035bc3e47ffecf785e360d41ff1798f5cb82e785c56e893216"
+      }
+    },
+    "boundaries": {
+      "files": 120,
+      "status": "PASSED",
+      "log": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/boundary-regression.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    "actual_consumer_and_reference_audit": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/actual-consumers-and-reference-review.json",
+      "sha256": "a3f2bf17bdbfa08a7f69a34dc41faf03d8a10af7e86c63bbc988d4c28aef78e7"
+    },
+    "offline_pixel_review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c1-reverify-r1/offline-pixel-review.json",
+      "sha256": "a187128315ce628a8efc48f7200d97f64314cbd82dbfdf83fb48544d0ba6ec5d"
+    },
+    "pixel_stages": 12,
+    "roundtrips": 4,
+    "review_browser_starts": 0,
+    "review_oracle_invocations": 0,
+    "reference_origins": {
+      "new_original_oracle_once": 8,
+      "saved_exact_input": 4
+    }
+  },
+  "actual_consumers": [
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S0-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [
+        {
+          "service": "0xa69630",
+          "navigation_record": 121,
+          "ink_record": 165,
+          "queries": 16,
+          "identity_hits": 16,
+          "builds": 0
+        }
+      ],
+      "normal_trace_free": false
+    },
+    {
+      "worker": "UR1C1-R1-Q1",
+      "case": "S2-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [
+        {
+          "service": "0x276fe8",
+          "navigation_record": 121,
+          "ink_record": 171,
+          "queries": 16,
+          "identity_hits": 16,
+          "builds": 0
+        }
+      ],
+      "normal_trace_free": false
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S0-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [],
+      "normal_trace_free": true
+    },
+    {
+      "worker": "UR1C1-R1-N1",
+      "case": "S2-erase-navigation",
+      "SDK_active_frames": 33,
+      "sampler_frames": 33,
+      "input_events": 34,
+      "sequences": [],
+      "normal_trace_free": true
+    }
+  ],
+  "blocking_findings": [],
+  "non_blocking_findings": [
+    {
+      "id": "UR1C1-R1-F01",
+      "finding": "First functional SDK frames remain807.4/849.4ms in qualification and843/927.9ms in normal; old600.6/553.1ms raw observations remain unchanged.",
+      "disposition": "Not a controlled A/B comparison or a fixed-latency claim. Preserve as performance debt for subsequent Render optimization."
+    },
+    {
+      "id": "UR1C1-R1-F02",
+      "finding": "Ordinary canonical/Direct prepared consumption, UR1d recovery and UR2 post-Up remain outside accepted UR1c1 scope.",
+      "disposition": "UR1c2 entry is now eligible under the user conditional authorization; freeze its private Render scope before execution. No wholeUR1/G5/P34PASS."
+    }
+  ],
+  "accounting": {
+    "historical_starts": 48,
+    "historical_charged_seconds": 1770,
+    "continuation_starts": 2,
+    "continuation_charged_seconds": 111,
+    "cumulative_starts": 50,
+    "cumulative_charged_seconds": 1881,
+    "remaining_status": "NONE",
+    "all_owned_cleanup": true
+  },
+  "next_authorized_direction": "Freeze and dispatch UR1c2 canonical/Direct prepared-body consumption as user requested after UR1c1 pass; no UR2,SDK/API or budget expansion.",
+  "publication": {
+    "commit": null,
+    "push": null,
+    "producer_product_edits_during_reverify": false,
+    "review_product_edits": false
+  },
+  "created_at_utc": "2026-11-08T18:30:25.408977+00:00"
+}

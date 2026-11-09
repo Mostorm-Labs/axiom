@@ -41,11 +41,14 @@ class CompactStrokeRasterJob final {
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
         std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
         std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
-        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false);
+        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false,std::shared_ptr<const PreparedNavigationGeometry> prepared=nullptr,bool directConsumer=false);
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
  private:
+    std::shared_ptr<const PreparedNavigationGeometry> prepared_;
+    std::size_t preparedPrimitive_=0;
+    bool directConsumer_=false;
     SkMatrix matrix_{};
     SkIRect clip_{},deviceClip_{};
     SkRect support_{};

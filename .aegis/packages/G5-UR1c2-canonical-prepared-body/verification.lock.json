@@ -1,0 +1,84 @@
+{
+  "schema": "g5-scoped-verification-v1",
+  "obligations": [
+    {
+      "id": "U1C2-01",
+      "requirement": "Actual canonical and Direct GPU consumers reuse the same qualified prepared body service.",
+      "oracle": "Native real SkiaRenderer cooperative canonical then full transient/Direct and navigation/retained-ink sequence, plus real public Web S0/S2 canonical/drag/erase cases. Record leaf-specific canonical/direct queries, exact existing service and body build/hit work; not a facade or cache.get-only unit.",
+      "acceptance": "Already prepared identical bodies do not full-recompile per copy/frame/tile. The real canonical raster job and actual Direct/damage-miss draw consume ready shared geometry; a pixel hit may skip all of them. Existing nav/ink consumer sharing remains valid."
+    },
+    {
+      "id": "U1C2-02",
+      "requirement": "First-use geometry preparation is genuinely resumable, bounded and shared.",
+      "oracle": "Old-behavior native RED measuring current constructor/admission/support/length and compiler work on7199knots with1/8/16/32copies. New native cold request advanced under one-step budget, resumed to completion; inspect actual loop input/work counters at every advance. Test a held in-progress equal-body request from another consumer.",
+      "acceptance": "No new monolithic full-history preparation in input callbacks/frame helpers. A one-advance compile quantum processes<=32source knots and respects the existing aggregate frame step/time limits; new support/distance/path grouping scans are accounted and incremental. A unique admitted/pinned body builds once; immutable equal aliases share job/result after full validation. Cold unknown-allocation validation work is separately reported, not mislabeled as zero or hidden in a constructor."
+    },
+    {
+      "id": "U1C2-03",
+      "requirement": "Geometry reuse preserves pixels and semantic/presentation correctness.",
+      "oracle": "Independent pinned null-prepared/null-cache Direct reference for native Raster and actual Metal GPU; unchanged old CPU oracle for Web under the accepted AA boundary. Cover masked/unmasked/transformed/rotated/translucent v4, lower/upperz mixed shape,image,sticky,table, self intersection/caps/taper, DPR1/2/4, Undo/Redo/forks.",
+      "acceptance": "Preserve geometry,width,pressure,opacity,material,mask and composition order; GPU only gets the existing AA edge allowance. Explicit CPU/reference behavior remains unchanged. No extra semantic mutation, document owner, fake present or weakened CanonicalVisible/receipt."
+    },
+    {
+      "id": "U1C2-04",
+      "requirement": "New job/source leases, cancellation, target transitions and resource recovery remain bounded.",
+      "oracle": "Native deterministic Pending/resume, source/config replacement, camera change, cancelled display demand, surface generation mismatch, actual quota denial/recovery, held geometry eviction, budget owner/reset/last release. Compare pixel/present count and body progress under one-step slices.",
+      "acceptance": "No partial output/receipt on Pending/stale; stable valid demand makes forward progress, does not restart full compilation every RAF, and does not fall silently to synchronous full-frame CPU. Old in-flight leases stay charged/pinned; all staged/job/index bytes are reserved and released. Full GPU queue/forced device-loss closure remainsUR1d."
+    },
+    {
+      "id": "U1C2-05",
+      "requirement": "Work reduction and remaining latency are observable without invented claims.",
+      "oracle": "Same native7199knot1/8/16/32copy cold/warm matrix, actual canonical constructor/support/length/compile/checkpoint counts and bounded lookup work. Qualification root/leaf aggregates plus ordinary framebuffer/receipt in normal Web.",
+      "acceptance": "Demonstrate fewer repeated full-body/support/history preparations than old behavior while admitted and not deliberately evicted. Separate bounded visible replay, first unknown equality, GPU coverage, pixel reuse and actual target. Record first feedback, maximum content gap and exact completion wait where available; no unpaired speedPASS or larger budget to hide work."
+    },
+    {
+      "id": "U1C2-06",
+      "requirement": "The exact source, SDK, reference and real consumer matrix are reviewable.",
+      "oracle": "Focused existing43native command plus new canonical/Direct prepared tests; relevant Node/Python120boundaries; locked prebuilt dependencies; matching new normal+qualification SDKs and fresh Demo; exactly two serial guarded public Web workers S0/S2 canonical,preselecteddrag/cancel,settled singleerase/navigation with corrected functional pacing.",
+      "acceptance": "All native/real cases meet defined correctness and consumer criteria,normal trace-free,exact source/artifact/driver/SDK/oracle hashes+raw buffers+accounting+cleanup returned. Preserve old SDKs/ports,evidence and isolatedUR2. READY_FOR_CONTROL_REVIEW only; no commit/push or self-issued Gate."
+    }
+  ],
+  "evidence_necessity": {
+    "failure_mode": "Canonical or Direct bypasses prepared-body service, repeats full source compilation, or introduces unbounded cold work/incorrect pixels on a new cached route.",
+    "impact": "Long-copy scenes retain expensive frame blocking or violate masks/order/stale receipt semantics despite good cache statistics.",
+    "existing_independent_coverage": [
+      "AcceptedUR1c1 identity/index/source lifetime and actualnavigation->retainedink",
+      "AcceptedUR1b actualtarget/strictGPU/Direct accounting",
+      "Independent pinned Brush/CPU reference and prior Web frame captures"
+    ],
+    "residual_proof_gap": "Actual ordinary canonical/Direct consumption and cold resumable body work under their real frame budgets.",
+    "unique_detection_value": "New leaf execution and per-step actual source/geometry work plus independent pixels, not another proof of old get/hit metadata."
+  },
+  "red_precondition": {
+    "required": true,
+    "mechanism": "Measure real old canonical/Direct repeated constructor/support/length/compile work using the accepted C1 subject. Missing-new-method compilation or invented counters are notRED. Preserve exact old source/log; instrument only actual existing loops without adding another content walk."
+  },
+  "correctness_reference": {
+    "cpu_oracle_path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "cpu_oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "timeout_ms": 10000,
+    "rule": "Original independent CPU geometry AA boundary and<=2interior channel levels for qualified GPU; preserve explicit CPU/reference semantics. Candidate prepared service must not generate its ownreference.",
+    "saved_reference_catalogs": [
+      {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/reference-catalog.json",
+        "sha256": "ae8804499d66ceb7f3de7d29cf78775cee2905c1d005199cbea96b8e4f9b5512",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "additional_saved_outputs": [
+      {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+        "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+        "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "exact_input_reuse": "May reuse only intact complete old independent references under identical fullsnapshotbytes,complete request,oldoraclebinary+resource/lockidentity. Newly captured candidateRGBA always compared. Otherwise run original oracle once with10000ms bound. No retries,tolerance changes or edits to old outputs."
+  },
+  "work_budget_policy": "Preserve RenderPreparationBudget defaults/maxGroups/maxCoverageSteps/maxMicroseconds and existing body/replay limits; private per-advance body work is charged to that same allowance. No new frame SLO or queue-watermark gate.",
+  "review_scope": "All obligations apply to the declared whole committed v4 GPU subset; document unchanged explicit Raster/legacy/range/otherbrush compatibility routes, not silent broad claims."
+}

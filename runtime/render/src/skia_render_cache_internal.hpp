@@ -3,6 +3,7 @@
 #include "compact_raster_internal.hpp"
 #include "canvas/render/render_group_manager.hpp"
 #include "canvas/render/frame_plan.hpp"
+#include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
 #include "include/core/SkImage.h"
 #include "include/core/SkSurface.h"
@@ -25,6 +26,7 @@ class SkiaRenderCache final {
   public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
+    std::shared_ptr<PreparedGeometryCache> preparedGeometry;
     std::function<void(std::size_t)> reclaimRecorded;
     std::function<void(std::size_t)> reclaimPreparation;
     RenderCacheOptions options{};
@@ -36,7 +38,21 @@ class SkiaRenderCache final {
     // Called only after full plan validation. False executes permanent Direct.
     bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true,bool allowBuild=true);
     enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
-    Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*);
+    Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*,PreparationAllowance* shared=nullptr);
+    Preparation prepareBodies(SkCanvas&,const FramePlan&,PreparationAllowance&);
+    Preparation prepareWorkingSet(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*,bool direct,const EditingOverlay* overlay=nullptr);
+    bool stagedBodies()const noexcept{return stagedBodies_;}
+    bool needsPreparedBody(const ReferenceTraversalEntry&)const noexcept;
+    Preparation prepareBody(const ReferenceTraversalEntry&,PreparationAllowance&);
+    std::shared_ptr<const PreparedNavigationGeometry> readyBody(const ReferenceTraversalEntry& e,PreparedConsumer c){
+        if(!needsPreparedBody(e))return nullptr;
+        auto discovered=preparedGeometry->lookup(e,c);
+        const auto found=bodyDependencies_.find(e.record.objectId);
+        if(found!=bodyDependencies_.end()&&sameBodyIdentity(found->second.identity,preparedBodyIdentity(e.command))&&
+           found->second.body&&found->second.body->ready())return found->second.body;
+        return discovered;
+    }
+    bool hasPixels(const ReferenceTraversalEntry&)const;
     bool compositePreparedFrame(SkCanvas&);
     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
@@ -58,6 +74,20 @@ class SkiaRenderCache final {
         const void* target,std::uint64_t resourceEpoch)noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
+    struct BodyDependency {
+        ImmutableSourceIdentity identity;
+        std::shared_ptr<const PreparedNavigationGeometry> body;
+        resources::ResourceLease metadata;
+        std::uint64_t seen=0;
+    };
+    std::map<foundation::ObjectId,BodyDependency> bodyDependencies_;
+    bool stagedBodies_=false;
+    std::optional<semantic::ObjectRecord> stagedCreation_;
+    std::optional<scene::ConnectorGeometry> stagedCreationRoute_;
+    resources::ResourceLease stagedCreationLease_;
+    static bool sameBodyIdentity(const ImmutableSourceIdentity& a,const ImmutableSourceIdentity& b){
+        const ImmutableSourceIdentityLess less;return !less(a,b)&&!less(b,a);
+    }
     SourceRetentions groupSourceLeases_;
     resources::ResourceLease groupMetadataLease_;
     bool sourceAdmission_=true;

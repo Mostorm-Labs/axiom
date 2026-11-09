@@ -387,7 +387,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
-                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr, const SkPath* preparedVectorPath = nullptr,bool yieldOnAllocation = false) {
+                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr, internal::CompactRasterWork* rasterWork = nullptr, bool compatibleCoverage = false, internal::CompactCoverageTargets* targets = nullptr, const internal::CompactStrokeRange* range = nullptr, const SkPath* preparedVectorPath = nullptr,bool yieldOnAllocation = false,const internal::PreparedNavigationGeometry* preparedBody = nullptr) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -610,7 +610,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
         } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
-            internal::drawCompactStrokeToSkCanvas(canvas,command.content.get().stroke.config,command.content.get().stroke.knots,command.content.get().stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets,range,nullptr,yieldOnAllocation);
+            internal::drawCompactStrokeToSkCanvas(canvas,command.content.get().stroke.config,command.content.get().stroke.knots,command.content.get().stroke.seed,rasterWork,coverage,grid,compatibleCoverage,targets,range,preparedBody,yieldOnAllocation);
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.get().stroke;
             if (stroke.vector_output.outline.empty()) return;
@@ -898,13 +898,17 @@ bool requiresInkIsolation(const FramePlan& plan) {
         std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),isDrawableNonInkReferenceEntry);
 }
 
+bool isInkReference(const ReferenceTraversalEntry& entry){return isInkReferenceEntry(entry);}
+bool requiresInkEntryIsolation(const ReferenceTraversalEntry& entry,bool hasNonInk) {
+    return shouldIsolateInkEntry(entry,hasNonInk);
+}
 void drawEraseMasksToSkCanvas(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas, entry.record.eraseMasks);
 }
 void drawInkBodyToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,
     ImageResourceResolver* images,SkiaTextResources* text,const CompactDeviceGrid* grid,
-    CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets,bool yieldOnAllocation) {
-    drawCommand(canvas,entry,images,text,true,false,nullptr,grid,work,compatibleCoverage,targets,nullptr,nullptr,yieldOnAllocation);
+    CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets,bool yieldOnAllocation,const PreparedNavigationGeometry* preparedBody) {
+    drawCommand(canvas,entry,images,text,true,false,nullptr,grid,work,compatibleCoverage,targets,nullptr,nullptr,yieldOnAllocation,preparedBody);
 }
 void drawPresentationEraseMasksToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
     eraseMasks(canvas,entry.presentationEraseMasks);
@@ -1054,7 +1058,8 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
             canvas.save();
             if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
             canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
-            drawCommand(canvas, entry, images, textResources, true,false,nullptr,grid);
+            const auto body=cache?cache->readyBody(entry,PreparedConsumer::kDirect):nullptr;
+            drawInkBodyToSkCanvas(canvas,entry,images,textResources,grid,nullptr,false,nullptr,false,body.get());
             drawEraseMasksToSkCanvas(canvas, entry);
             if (isolatedInk) canvas.restore();
             canvas.restore();
@@ -1069,7 +1074,7 @@ void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& pla
     canvas.restore();
 }
 
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets, ImageResourceResolver* images, SkiaTextResources* textResources, const SkPath* preparedVectorPath) {
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets, ImageResourceResolver* images, SkiaTextResources* textResources, const SkPath* preparedVectorPath,const PreparedNavigationGeometry* preparedBody) {
     std::optional<internal::CompactStrokeRange> range;
     if (entry.geometryChunked) {
         if (const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -1098,7 +1103,7 @@ void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraver
         }
     }
     drawCommand(canvas,entry,images,textResources,true,false,coverage,grid,work,compatibleCoverage,targets,
-                range ? &*range : nullptr,preparedVectorPath);
+                range ? &*range : nullptr,preparedVectorPath,false,preparedBody);
     drawEraseMasksToSkCanvas(canvas,entry);
 }
 
@@ -1125,7 +1130,8 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
-        drawCommand(canvas, entry, images, textResources, true);
+        const auto body=cache?cache->readyBody(entry,PreparedConsumer::kDirect):nullptr;
+        drawInkBodyToSkCanvas(canvas,entry,images,textResources,nullptr,nullptr,false,nullptr,false,body.get());
         drawEraseMasksToSkCanvas(canvas, entry);
         if (isolatedInk) canvas.restore();
         canvas.restore();

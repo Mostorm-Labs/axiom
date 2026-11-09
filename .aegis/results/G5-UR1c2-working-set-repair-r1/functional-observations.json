@@ -1,0 +1,1621 @@
+{
+  "phases": [
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-drag",
+      "phase": "selected-drag-commit",
+      "first_instrumented_content_write_ms": 46.19999998807907,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-commit",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.19999998807907104,
+        "p95": 1.199999988079071,
+        "max": 5.200000047683716
+      },
+      "content_writes": 379,
+      "worst_content_submission_gap_ms": 211.89999997615814,
+      "canonical_wait_ms": null,
+      "wall_ms": 845.6999999880791
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-drag",
+      "phase": "selected-drag-cancel",
+      "first_instrumented_content_write_ms": 42.0,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-cancel",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.10000002384185791,
+        "p95": 0.40000003576278687,
+        "max": 1.199999988079071
+      },
+      "content_writes": 438,
+      "worst_content_submission_gap_ms": 290,
+      "canonical_wait_ms": null,
+      "wall_ms": 819.6000000238419
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-erase-navigation",
+      "phase": "settled-navigation-prepare",
+      "first_instrumented_content_write_ms": 9.700000047683716,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-navigation-prepare",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 24,
+        "p50": 0.3999999761581421,
+        "p95": 0.699999988079071,
+        "max": 0.9000000357627869
+      },
+      "content_writes": 58,
+      "worst_content_submission_gap_ms": 17.600000023841858,
+      "canonical_wait_ms": null,
+      "wall_ms": 394.0999999642372
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "first_instrumented_content_write_ms": 106.89999997615814,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-single-partial-erase",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 34,
+        "p50": 0.19999998807907104,
+        "p95": 2.399999976158142,
+        "max": 95.5
+      },
+      "content_writes": 1584,
+      "worst_content_submission_gap_ms": 168.70000004768372,
+      "canonical_wait_ms": null,
+      "wall_ms": 899.2000000476837
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-drag",
+      "phase": "selected-drag-commit",
+      "first_instrumented_content_write_ms": 103.0,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-commit",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.10000002384185791,
+        "p95": 0.8999999761581421,
+        "max": 5.5
+      },
+      "content_writes": 1602,
+      "worst_content_submission_gap_ms": 266.10000002384186,
+      "canonical_wait_ms": null,
+      "wall_ms": 876.3999999761581
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-drag",
+      "phase": "selected-drag-cancel",
+      "first_instrumented_content_write_ms": 96.0,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-cancel",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.19999998807907104,
+        "p95": 0.40000003576278687,
+        "max": 0.8999999761581421
+      },
+      "content_writes": 1899,
+      "worst_content_submission_gap_ms": 171.69999998807907,
+      "canonical_wait_ms": null,
+      "wall_ms": 933.3999999761581
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-erase-navigation",
+      "phase": "settled-navigation-prepare",
+      "first_instrumented_content_write_ms": 7.5,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-navigation-prepare",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 24,
+        "p50": 0.3999999761581421,
+        "p95": 0.5,
+        "max": 0.699999988079071
+      },
+      "content_writes": 58,
+      "worst_content_submission_gap_ms": 16.80000001192093,
+      "canonical_wait_ms": null,
+      "wall_ms": 392
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "first_instrumented_content_write_ms": 112.5,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-single-partial-erase",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 34,
+        "p50": 0.19999998807907104,
+        "p95": 2.100000023841858,
+        "max": 272.10000002384186
+      },
+      "content_writes": 1584,
+      "worst_content_submission_gap_ms": 273.69999998807907,
+      "canonical_wait_ms": null,
+      "wall_ms": 1093.300000011921
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-drag",
+      "phase": "selected-drag-commit",
+      "first_instrumented_content_write_ms": 49.80000001192093,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-commit",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.19999998807907104,
+        "p95": 0.8999999761581421,
+        "max": 4.800000011920929
+      },
+      "content_writes": 414,
+      "worst_content_submission_gap_ms": 262,
+      "canonical_wait_ms": null,
+      "wall_ms": 952.6000000238419
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-drag",
+      "phase": "selected-drag-cancel",
+      "first_instrumented_content_write_ms": 46.90000003576279,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-cancel",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.10000002384185791,
+        "p95": 0.40000003576278687,
+        "max": 1.199999988079071
+      },
+      "content_writes": 438,
+      "worst_content_submission_gap_ms": 293.39999997615814,
+      "canonical_wait_ms": null,
+      "wall_ms": 816.0999999642372
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-erase-navigation",
+      "phase": "settled-navigation-prepare",
+      "first_instrumented_content_write_ms": 5.699999988079071,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-navigation-prepare",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 24,
+        "p50": 0.3999999761581421,
+        "p95": 0.800000011920929,
+        "max": 1.100000023841858
+      },
+      "content_writes": 58,
+      "worst_content_submission_gap_ms": 18.30000001192093,
+      "canonical_wait_ms": null,
+      "wall_ms": 388.30000001192093
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "first_instrumented_content_write_ms": 106.80000001192093,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-single-partial-erase",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 34,
+        "p50": 0.19999998807907104,
+        "p95": 2,
+        "max": 98.10000002384186
+      },
+      "content_writes": 1584,
+      "worst_content_submission_gap_ms": 165.39999997615814,
+      "canonical_wait_ms": null,
+      "wall_ms": 900.5
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-drag",
+      "phase": "selected-drag-commit",
+      "first_instrumented_content_write_ms": 113.0,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-commit",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.19999998807907104,
+        "p95": 0.699999988079071,
+        "max": 6
+      },
+      "content_writes": 1602,
+      "worst_content_submission_gap_ms": 243.10000002384186,
+      "canonical_wait_ms": null,
+      "wall_ms": 879
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-drag",
+      "phase": "selected-drag-cancel",
+      "first_instrumented_content_write_ms": 100.0,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "selected-drag-cancel",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 50,
+        "p50": 0.19999998807907104,
+        "p95": 0.5,
+        "max": 0.9000000357627869
+      },
+      "content_writes": 1899,
+      "worst_content_submission_gap_ms": 178,
+      "canonical_wait_ms": null,
+      "wall_ms": 957.1000000238419
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-erase-navigation",
+      "phase": "settled-navigation-prepare",
+      "first_instrumented_content_write_ms": 5.899999976158142,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-navigation-prepare",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 24,
+        "p50": 0.40000003576278687,
+        "p95": 0.5999999642372131,
+        "max": 0.800000011920929
+      },
+      "content_writes": 58,
+      "worst_content_submission_gap_ms": 18.099999964237213,
+      "canonical_wait_ms": null,
+      "wall_ms": 390.2999999523163
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-erase-navigation",
+      "phase": "settled-single-partial-erase",
+      "first_instrumented_content_write_ms": 123.70000004768372,
+      "scope": "input phase only; actual canonical wait is separately recorded",
+      "id": "settled-single-partial-erase",
+      "status": "INPUT_COMPLETED",
+      "handler_ms": {
+        "count": 34,
+        "p50": 0.2999999523162842,
+        "p95": 2.300000011920929,
+        "max": 331.19999998807907
+      },
+      "content_writes": 1584,
+      "worst_content_submission_gap_ms": 332.10000002384186,
+      "canonical_wait_ms": null,
+      "wall_ms": 1172.3999999761581
+    }
+  ],
+  "receipt_observations": [
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-canonical",
+      "phase_end_settled_check": {
+        "started": 723.9000000357628,
+        "ended": 747.6000000238419,
+        "ms": 23.69999998807907
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "0",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "00000000000000000000000000000000",
+            "ordinal": "0",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "0"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-drag",
+      "phase_end_settled_check": {
+        "started": 2695.699999988079,
+        "ended": 3126.099999964237,
+        "ms": 430.39999997615814
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "863c36006c78593175b18e154462f0c2",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "3",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "853c36006c78593175b18e154462f0c2",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "873c36006c78593175b18e154462f0c2",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "863c36006c78593175b18e154462f0c2",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S0-erase-navigation",
+      "phase_end_settled_check": {
+        "started": 4156.5,
+        "ended": 4173.800000011921,
+        "ms": 17.30000001192093
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": -0.000244140625,
+          "y": -6.103515625e-05
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "190addea95a3f236b4dadb3a899dbdcf",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "1a0addea95a3f2b6b4dadb3a899dbdcf",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "1a0addea95a3f236b4dadb3a899dbdcf",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "190addea95a3f236b4dadb3a899dbdcf",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-canonical",
+      "phase_end_settled_check": {
+        "started": 677.8999999761581,
+        "ended": 705.5,
+        "ms": 27.600000023841858
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "0",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "00000000000000000000000000000000",
+            "ordinal": "0",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "0"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-drag",
+      "phase_end_settled_check": {
+        "started": 2855.400000035763,
+        "ended": 3255,
+        "ms": 399.5999999642372
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "ac7806ad637c1af04c202878a726b084",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "3",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "af7806ad637c1af04c202878a726b084",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "ad7806ad637c1af04c202878a726b084",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "ac7806ad637c1af04c202878a726b084",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-Q1",
+      "case": "S2-erase-navigation",
+      "phase_end_settled_check": {
+        "started": 4381,
+        "ended": 4397.299999952316,
+        "ms": 16.299999952316284
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": -0.000244140625,
+          "y": -6.103515625e-05
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "982da0e2ba44d32adcb1ef11af86da02",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "9b2da0e2ba44d3aadcb1ef11af86da02",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "9b2da0e2ba44d32adcb1ef11af86da02",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "982da0e2ba44d32adcb1ef11af86da02",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-canonical",
+      "phase_end_settled_check": {
+        "started": 716.8000000119209,
+        "ended": 740.4000000357628,
+        "ms": 23.600000023841858
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "0",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "00000000000000000000000000000000",
+            "ordinal": "0",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "0"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-drag",
+      "phase_end_settled_check": {
+        "started": 2759.100000023842,
+        "ended": 3191.300000011921,
+        "ms": 432.19999998807907
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "f392b660bae5e6643151ab39ff351ae2",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "3",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f092b660bae5e6643151ab39ff351ae2",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f292b660bae5e6643151ab39ff351ae2",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f392b660bae5e6643151ab39ff351ae2",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S0-erase-navigation",
+      "phase_end_settled_check": {
+        "started": 4169.400000035763,
+        "ended": 4186.199999988079,
+        "ms": 16.799999952316284
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": -0.000244140625,
+          "y": -6.103515625e-05
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "a7bf4e09572ff993017961632cf04304",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "a4bf4e09572ff913017961632cf04304",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "a4bf4e09572ff993017961632cf04304",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "a7bf4e09572ff993017961632cf04304",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-canonical",
+      "phase_end_settled_check": {
+        "started": 729.1999999880791,
+        "ended": 752.1999999880791,
+        "ms": 23
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "0",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "00000000000000000000000000000000",
+            "ordinal": "0",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "0"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-drag",
+      "phase_end_settled_check": {
+        "started": 3015.699999988079,
+        "ended": 3391.899999976158,
+        "ms": 376.19999998807907
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "117f552ada892e79651ff4f3de15c739",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "3",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "127f552ada892e79651ff4f3de15c739",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "107f552ada892e79651ff4f3de15c739",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "117f552ada892e79651ff4f3de15c739",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    },
+    {
+      "worker": "UR1C2R1-N1",
+      "case": "S2-erase-navigation",
+      "phase_end_settled_check": {
+        "started": 4800.199999988079,
+        "ended": 4816.399999976158,
+        "ms": 16.19999998807907
+      },
+      "scope": "extra settled check after diagnostic phase; not Up-to-visible latency",
+      "exact_generation_matched_visible_timestamp": null,
+      "final_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": -0.000244140625,
+          "y": -6.103515625e-05
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "89f000d3cd21d4f896e838caba9141a2",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 16,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 500,
+          "width": 800
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "cold_stage_receipts": [
+        {
+          "stage": "before",
+          "generation": "1",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "8af000d3cd21d47896e838caba9141a2",
+            "ordinal": "1",
+            "presentedGeneration": "1",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "undo",
+          "generation": "2",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "8af000d3cd21d4f896e838caba9141a2",
+            "ordinal": "2",
+            "presentedGeneration": "2",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "stage": "redo",
+          "generation": "3",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "89f000d3cd21d4f896e838caba9141a2",
+            "ordinal": "3",
+            "presentedGeneration": "3",
+            "runtimeEpoch": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "relative_performance_acceptance": false,
+  "exact_Up_to_matching_CanonicalVisible_ms": "NOT_OBSERVED; no invented receipt timestamp",
+  "raw_hash_predicates_preserved": true
+}

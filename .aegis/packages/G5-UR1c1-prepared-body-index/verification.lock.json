@@ -1,0 +1,80 @@
+{
+  "schema": "g5-scoped-verification-v1",
+  "obligations": [
+    {
+      "id": "U1C1-01",
+      "requirement": "One existing owner shares qualified prepared bodies across actual prepared consumers.",
+      "oracle": "Native real renderer navigation and full transient retained-ink consumer sequence on same v4body; inspect actual service statistics/leases and output, not just directly callingcache.get. Consumer clear/cancel/reset order also tested.",
+      "acceptance": "Same immutable body prepares once while retained across consumers; dropping one consumer does not force another rebuild or invalidate live geometry. No fullUR1c claim for ordinary unconnected canonical paths.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-02",
+      "requirement": "Warm lookup avoids content-proportional work and linear candidate scans for retained proven identities.",
+      "oracle": "Old-behavior mechanism RED with7199-knot source and1/8/16/32nearly-overlapping aliases over48warm queries; cold vs warm lookup/hash/equality/source-footprint work counters. Include stable aliases and separately allocated equal content; preserve baseline component timings/raw.",
+      "acceptance": "After admission, a retained proven immutable identity has zero new complete hash/deep-content scan/footprint traversal and bounded indexed lookup, no all-entry scan. First unknown identity still fully validated. Work counters must measure existing work without adding another content walk.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-03",
+      "requirement": "Content, alias and object forks remain correct.",
+      "oracle": "Same ObjectId changed config/seed/knot, false same digest/length, forced fingerprint collision, different storage same content, same owner different aliased pointee; transform/mask-only changes; onlyA gets mask/transform and Undo/Redo, B independent; separate renderer/document lifetimes.",
+      "acceptance": "Changed body forks, equal content can share only after complete check; transform/mask leave qualified body reusable; independent native pixels and source records for B unchanged. No ObjectId/digest-only reuse.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-04",
+      "requirement": "Shared body and source/index memory remain bounded and correctly owned.",
+      "oracle": "Actual quota denial then recovery, alias/index pressure, LRU eviction while another consumer pins body, last-release accounting, cache clear/budget-owner switch and consumer reset. Include original maxEntry/criticalReplay budget boundary.",
+      "acceptance": "One geometry allocation counted once; actual separate retained source allocations still charged. Index/alias metadata bounded and charged, expired identities cannot cause ABA or leaks. Existing budget/per-entry/primitive limits unchanged; in-use data survives eviction and old owner keeps in-flight charges.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-05",
+      "requirement": "Pixels, execution decisions and canonical semantics are unchanged.",
+      "oracle": "Existing prepared/contour/source/navigation/ink-layer/UR1bexecution native tests plus independent renderer-reference pixels for masked/unmasked/transformed/transparent/mixedDPR1/2/4. Shared replay owner-thread scratch and held result under eviction.",
+      "acceptance": "No shape/material/opacity/order/mask/cap/taper change, no extra semantic operation, strict canonical receipt and actual GPU/CPU policy preserved. Existing accepted GPU-AA oracle only.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-06",
+      "requirement": "Real public Web correctness and actual prepared consumer use are evidenced.",
+      "oracle": "Two fixed serial functional workers: qualification then normal, eachS0/S2canonical/preselecteddrag and one settled single partial-erase after initialcanonical completion; include navigation->retained-ink service use with current baseline behavior. Preserve all before/Undo/Redo/cancel bytes and original independent oracle.",
+      "acceptance": "Every affected real case passes and actual shared prepared consumers are observed. No immediate post-Up feature claim. Warm/cold counts separated; normal no diagnostic output; no relative performance claim from qualification timings.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    },
+    {
+      "id": "U1C1-07",
+      "requirement": "Accepted baseline, source scope and review materialization preserved.",
+      "oracle": "Focused native and Node/Python/check_runtime_boundaries120/diff checks; source/manifests/driver/build/SDK normal+qualification hashes and all2worker outcomes with cleanup; new candidate Demo port.",
+      "acceptance": "READY_FOR_CONTROL_REVIEW forUR1c1only.4284and oldassets unchanged, UR2stillquarantined. Explicit pendingUR1c2ordinarycanonical shared preparation andUR1d. No commit/push, fullUR1/G5/P34/performance claim.",
+      "evidence_required": [
+        "exact source/driver/artifact identity",
+        "actual work counters and independent correctness observation"
+      ]
+    }
+  ],
+  "red_precondition": {
+    "required": true,
+    "mechanism": "Demonstrate existing repeated cross-object cache candidate comparisons/source-footprint traversal or duplicate prepared compilation across existing consumers on current acceptedUR1b. Do not use missing-new-method compilation asRED. Preserve exact old/native component results."
+  },
+  "counter_policy": "Distinguish pointer/ownership hits, first fingerprint bytes, deep comparison calls/actual visited elements or clearly labeled upper bounds, source sizing visits, builds/replay and index metadata. Do not describe guessed bytes as measured copies."
+}

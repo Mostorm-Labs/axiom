@@ -1,0 +1,138 @@
+{
+  "schema": "g5-scoped-p36-repair-v1",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "failure_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/findings.json",
+    "sha256": "e27cea41122d97231051755abd8fb1ee110faf581b35693fefd9ee931b3ac857"
+  },
+  "control_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/result.json",
+    "sha256": "fac087d0ff3e6011046b2cc8bb909dd150cf3d2cd5ae76d355045974f34d3195"
+  },
+  "scope": "Repair only frozen UR1c2 ready-demand/alias/body consumption and multi-body progress; keep accepted C1 and valid C2 integration.",
+  "allowed_product_paths": [
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/include/canvas/render/render_cache.hpp",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_prepared_geometry.hpp",
+    "runtime/render/src/skia_prepared_geometry.cpp",
+    "runtime/render/src/source_retention.hpp",
+    "runtime/render/src/compact_raster_internal.hpp",
+    "runtime/render/src/skia_compact_material.cpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/render_execution.hpp",
+    "runtime/render/src/render_execution.cpp",
+    "runtime/render/src/skia_navigation_tiles.hpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_ink_layers.hpp",
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/prepared_body_job.*",
+    "runtime/render/tests/canonical_prepared_body_test.cpp",
+    "runtime/render/tests/prepared_body_index_test.cpp",
+    "runtime/render/tests/render_cache_test.cpp",
+    "runtime/render/tests/prepared_geometry_test.cpp",
+    "verification/runners/g5/canonical_prepared_body*",
+    "verification/tests/g5_canonical_prepared_body*",
+    "verification/tests/test_g5_canonical_prepared_body*"
+  ],
+  "required": [
+    "Record resolved design in existing owner before product edits. Preserve exact failing candidate/probe asRED.",
+    "Ready dependencies must remain usable at actual canonical/Direct consumption, or demand must advance through existing bounded staging. Do not require an arbitrarily large whole-visible-set to be simultaneously discoverable.",
+    "A supported v4 ready-body miss must not secretly take whole-history support/length/compile in ordinary frame helpers. Reenter bounded preparation before final-target write, with distinct structural rejection versus transient unavailable.",
+    "Guarantee stable valid demand progress across default cache entry/alias limits and byte pressure; consume/reclaim existing state as necessary. No uncharged per-frame pin-map or another compiled cache.",
+    "Per-body<=32source quantum and existing shared frame allowance still apply; preserve pixel-hit skip, equal-body in-flight sharing, unknown-allocation complete identity verification, fork/mask/transform/source lease behavior.",
+    "Add RED/GREEN tests from the final valid review probe: cache512 with513distinct bodies including one7199+512x64, equal bodies in>512different allocations, held aliases/current jobs and reclaimable byte pressure; small one-step tests must demonstrate durable progress through readiness and actual consumption.",
+    "Test actual canonical and actual Direct on real supported GPU targets with masks/transforms and original pixel oracle. Retain Pending/no-partial-target/no fake receipt and owner reset/last-release coverage.",
+    "Build matching new normal/qualification SDKs, preserve4284/4285/4286, serve newunusedport>=4287. Reverify exactly two new public Web workers under this repair package.",
+    "Return additive materialized result with source/delta/raw native+Web/SDK/driver/reference hashes and closed ledger; proactively notify control at READY or any terminal blocker."
+  ],
+  "forbidden": [
+    "Any sdk/web, sdk/common, sdk/windows,RuntimeComposition/Interaction/Input/Scene/Semantic/History or Brushalgorithm/source edit; publicAPI/ABI/version/debugcommand changes",
+    "Changing source semanticIDs,canonical mutation,postUp/nextDown/cancel/ARCretirementorfeedbackprotocol",
+    "Changing32/96MiB,perEntry/maxEntries,preparationbudgetdefaults,actualGPU/AAdecision or CPU/reference policy",
+    "New workers/threads,a globalcrossdocumentservice,another compiled geometrycache,unbudgeted pendingjob/alias/index storage",
+    "Unqualifieddigest/id/pointer sharing,wholehistory hash/compile on everywarmrequest,newfullhistoryblockingget inordinaryleaf,unboundedretry,busyloop",
+    "Old results/SDKs/ports/reference orUR2archive mutations,physicalwholesale scenehelper migration,descriptor/SDKlock orG3authorityrepair",
+    "Hidden browser seed/retry,source changesduringworkers,commit,push,self-issuedfullUR1/G5/P34/performancePASS",
+    "Do not edit existing review/source results or silently relabel oldWeb evidence as new repaired-source runs.",
+    "Do not enable UR1d/UR2, raise budgets/cache caps/default work allowance, expose consumer SDK internals or change input/semantic/Brush/Scene ownership."
+  ],
+  "retained_authority_ref": {
+    "path": ".aegis/packages/G5-UR1c2-canonical-prepared-body/authority.lock.json",
+    "sha256": "269b231b488647fb5376e506a5fd1f713185358517becee1c9d9c0463f89d06d"
+  },
+  "retained_frozen_obligations_ref": {
+    "path": ".aegis/packages/G5-UR1c2-canonical-prepared-body/verification.lock.json",
+    "sha256": "c17aaf89d4698c32fc0eef36ef03d9d4aa00dcc2c7f3a9ef0d3a793098a33720"
+  },
+  "verification": {
+    "native": "Original47plusmeaningfulnewworking-set/progress/lifetime tests, compiled against accepted prebuiltSDKs. No source rebuild of dependencies. Retain valid originalpositive32body/copy tests.",
+    "node_python": "Existing36Node/17Python and relevant new verifier helpers only as needed;120boundaries.",
+    "pixel": "Independent CPU/null-prepared reference and originalGPU AA allowance;28Web coldstages/8roundtrips on exact newSDK subject. No new tolerance.",
+    "work": "Distinguish per-source body builds, complete cold identity validation, bounded visible replay, actual canonical/Direct consumption, evictions/re-admission, and absence of legacy full support/length/compile in supported path. No unsupportedzero-work assertion."
+  },
+  "browser_window": {
+    "planned_ids": [
+      "UR1C2R1-Q1",
+      "UR1C2R1-N1"
+    ],
+    "order": [
+      "qualification",
+      "normal"
+    ],
+    "new_browser_starts_max": 2,
+    "concurrency": 1,
+    "outer_seconds_per_worker": 180,
+    "process_family_rss_mib": 3072,
+    "historical_starts": 52,
+    "historical_charged_seconds": 2004,
+    "new_nominal_seconds_max": 360,
+    "original_cumulative_cap_seconds": 8370,
+    "remaining_before_authorization": "NONE",
+    "cases": [
+      "S0-canonical",
+      "S0-drag",
+      "S0-erase-navigation",
+      "S2-canonical",
+      "S2-drag",
+      "S2-erase-navigation"
+    ],
+    "logical_target": [
+      800,
+      500
+    ],
+    "device_pixel_ratio": 2,
+    "fixture": "Same SHA-boundS0/S2 and public rootSDK, correctedfunctional pacing and unchangedoraclecatalog. No newseed, extra smoke, hidden retries or sourcechanges during workers.",
+    "policy": "These are explicitly additive P36 reverification IDs, not reuse of consumed C2 slots. Reserve once,ceilactualseconds,ownedcleanup. Hardguard/identity/crash/environment failure freezes remaining rows and requires control callback."
+  },
+  "source_identity_policy": {
+    "trusted_start": "36966af8 source plus exact C2postimages,existingacceptedC1/UR2archive and all locks. No Gitreset/stash/globalstage.",
+    "new_self_output_exclusions_only": [
+      ".aegis/results/G5-UR1c2-working-set-repair-r1/",
+      "verification/evidence/performance/g5-ur1c2-working-set-repair-r1/"
+    ],
+    "preserve_existing_exclusions": true,
+    "newpackage_in_identity": true
+  },
+  "terminal_success": "READY_FOR_CONTROL_REVIEW only after repaired originalfailed requirements and relevant frozen regressions/SDK/Web evidence are returned. No self-issued scopedacceptance/officialGate/performancePASS.",
+  "notification": {
+    "required": true,
+    "thread_id": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "hostId": "local",
+    "when": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit terminal blocker/guard failure"
+    ],
+    "include": [
+      "exactpackage/result/source/delta/manifest/artifacthashes",
+      "nativeRED/GREENprogress andactualconsumption findings",
+      "alltwoWebrows,actualceilaccounting,cleanup,remaining",
+      "newnormalDemoURL andremainingUR1d/UR2limits"
+    ],
+    "delivery_failure": "Store exacttoolerror; never claim delivery without success."
+  }
+}

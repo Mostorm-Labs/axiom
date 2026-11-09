@@ -1,0 +1,18 @@
+{
+  "schema": "axiom-publication-checks-v1",
+  "exact_accepted_postimages": 42,
+  "pre_post_transitions": 64,
+  "source_bytes_changed_for_publication": false,
+  "source_diff_check": true,
+  "all_other_whitespace_checks": true,
+  "preserved_frozen_markdown_eof_findings": [
+    ".aegis/packages/G5-UR1c1-web-consumer-reverify-r1/implementation-context.md:18: new blank line at EOF.",
+    ".aegis/packages/G5-UR1c2-canonical-prepared-body/implementation-context.md:20: new blank line at EOF."
+  ],
+  "reason": "Frozen authority bytes and SHA bindings are preserved; no whitespace normalization of historical packages. Only these two known EOF-blank warnings are allowed.",
+  "remote_before_verified_by_authenticated_https_ls_remote": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+  "canonical_remote_unchanged": "git@github.com:Mostorm-Labs/axiom.git",
+  "transport": "SSH22 and SSH443 timed out; normal fetch/push use per-command HTTPS and existing gh credential helper, without force or persistent remote/config changes.",
+  "new_browsers_builds_full_regressions": 0,
+  "accepted_tests": "Previously independently verified 48 native,36 Node,21 Python,120 boundaries,28 coldpixels,8 roundtrips; unchanged accepted product source."
+}

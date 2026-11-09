@@ -14,7 +14,7 @@ class SkiaInkLayers final {
     bool draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry&,
         const SkMatrix&,const SkIRect& viewport,const CompactDeviceGrid*,
         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
-        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending);
+        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={});
     void clear()noexcept;
     void prune(std::span<const ReferenceTraversalEntry>);
  private:
@@ -32,7 +32,7 @@ class SkiaInkLayers final {
     struct Tile {Image body,result;std::uint64_t epoch=0,used=0;std::size_t applied=0,bytes=0;};
     std::map<foundation::ObjectId,Source> sources_;
     std::map<Key,Tile> tiles_;
-    PreparedGeometryCache geometry_;
+    std::shared_ptr<PreparedGeometryCache> geometry_;
     std::size_t bytes_=0;
     std::uint64_t tick_=0;
     bool reserve(std::size_t,const Key&,const RenderCacheOptions&,

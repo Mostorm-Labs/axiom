@@ -1,0 +1,177 @@
+{
+  "schema": "ur1c2-exact-source-delta-v1",
+  "base_revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "basis": "accepted dirty UR1c1 plus bound UR1c2 package",
+  "patch_sha256": "4cb2170b27cfb0c6b0783e4263706c23a84b34b69939707130a1ba8c19431c54",
+  "reconstruction": "exact preimage/postimage bytes are authoritative, including mixed line endings",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before_sha256": "10ba7fc9494dcca4e393f186a42ae94e6dadfb4c0121990b5409d8f89f338e50",
+      "sha256": "89bad2a0e6446c88074fec691043f64d2360312334d2520bdd21b21d34e8310a",
+      "bytes": 40323,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/CMakeLists.txt",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/CMakeLists.txt"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_cache.hpp",
+      "before_sha256": "35b4683ef37810ae6d6b48f8113956c391453353497eaae5ca394338b96f0dbe",
+      "sha256": "7577e29bf1a5f3ba889396028acc9f36c429e2e615affda6566cc988b5b0e624",
+      "bytes": 5709,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/include/canvas/render/render_cache.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/include/canvas/render/render_cache.hpp"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "before_sha256": "af9b870e49d311be7c1b271c95889fe36be4149ab25658132ff2a216b4ad110e",
+      "sha256": "25eae517824b35ef1d7684492aef85902c96875963b806c050ba2f07ae9f0a0b",
+      "bytes": 7901,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/include/canvas/render/skia_scene_renderer.hpp"
+    },
+    {
+      "path": "runtime/render/src/compact_raster_internal.hpp",
+      "before_sha256": "21c0ba4171f93bb954f156041a8c67a31ee816f5f4f529f44df46d0635d21938",
+      "sha256": "98ac7ad7e1b72c7543edb61b65f28310ccc83d4492299b5e848dfb388be868a5",
+      "bytes": 4181,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/compact_raster_internal.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/compact_raster_internal.hpp"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "before_sha256": null,
+      "sha256": "d36de91ed574954cad5d167a9912e45f101214ab844f753faf8cf2c29b77386d",
+      "bytes": 7630,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/prepared_body_job.cpp"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.hpp",
+      "before_sha256": null,
+      "sha256": "11f7ee7e88708cd7d2e33c21f76d1150c959bb69d34c6c654e052f1b8d2f94ca",
+      "bytes": 1216,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/prepared_body_job.hpp"
+    },
+    {
+      "path": "runtime/render/src/render_execution.cpp",
+      "before_sha256": "021f9b4385710136d8686a766f97592e4a3d6c0399f30223af8eecaf2c62380a",
+      "sha256": "db9ad78813397347f1031daafef71bebc86e5320aeb3f8314b31275a36ef69fe",
+      "bytes": 8325,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/render_execution.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/render_execution.cpp"
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "before_sha256": "e8b6c28741e34c4ef27482feda98112006e97ecb973e1837d214784820d499b8",
+      "sha256": "24136f2d51765fbd22d135f82cd53ed395cb42a7f85005717b7cbb25efcef6b9",
+      "bytes": 4013,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/render_execution.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/render_execution.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "before_sha256": "390a3b94f1d832d3f74ab7d2b9d745164c1e5b6068c229a82aed70a6a7139a71",
+      "sha256": "6d1acbbc97c94911005ec0b0116b2a8cedf6eee6a4c7043696e73b51eaacc1b9",
+      "bytes": 50585,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_compact_material.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_compact_material.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "before_sha256": "599f4b7d8c0237095ffde4c13c32bcd8d6936c5f53a57dd140d23b9b5970c7e0",
+      "sha256": "8eb5e7d813cd18fb8879b92b178d704c1ec599bc04c3a84fb1113cf50a50000b",
+      "bytes": 76846,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_headless_backend.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_headless_backend.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "before_sha256": "23e193c62f0605d264c78fd055f02a8e92b06c5a6ffa3d0fe9a2df2edc047f78",
+      "sha256": "f62d5c34b22ccbe41b45914c39794f40c33567628fd4ce7871e521a6f6189c16",
+      "bytes": 31354,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_prepared_geometry.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_prepared_geometry.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "before_sha256": "04b6e6154e7048994eb09300401f1f27fc78e9b8aca69a3edf19e80664a1577a",
+      "sha256": "9620800bc9714248387cd7a173b09882acdb5dd9f79358969f8ea71985d652de",
+      "bytes": 8977,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_prepared_geometry.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_prepared_geometry.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "before_sha256": "b21efa7d9967bf75e3388a37affafa49bc9fbafee62291092cd53b45adbfb595",
+      "sha256": "28451f66198de2e5b31756248bf6463642f372fd748b96b1367552687890d9d2",
+      "bytes": 58671,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_render_cache.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_render_cache.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "before_sha256": "4fa4f16757c9a7a5ecde435da2e47eaa295c73001bd5088efa28277ca89684e7",
+      "sha256": "a606291a2d788b89de16a26272b7b81c932b5486c76923332a512be8589384da",
+      "bytes": 8373,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_render_cache_internal.hpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_render_cache_internal.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before_sha256": "ed58eefb92f768483d10fb856066818c1dd12c86fd64fce4cf2f8796667c84f7",
+      "sha256": "e7456b4028b7566231fa6a93f64f53ef0b5c87ab1d858b205e01431dba711423",
+      "bytes": 83448,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/src/skia_renderer.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/src/skia_renderer.cpp"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "before_sha256": null,
+      "sha256": "5ddbdae76128e253b2d557e523c89ce7118db539bc02777e10f5939be429aa73",
+      "bytes": 26035,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/tests/canonical_prepared_body_test.cpp"
+    },
+    {
+      "path": "runtime/render/tests/render_cache_test.cpp",
+      "before_sha256": "2eb8fad3550d2a94ab446a330609205cd66d5f59e2f9cc7e4f2432832812e9ae",
+      "sha256": "0dd7a4a0564d18bd2236edcc4ea0a9c5526770b10efd07e8ce6ef261729ee8ed",
+      "bytes": 288910,
+      "before": ".aegis/results/G5-UR1c2-canonical-prepared-body/preimages/runtime/render/tests/render_cache_test.cpp",
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/runtime/render/tests/render_cache_test.cpp"
+    },
+    {
+      "path": "verification/runners/g5/canonical_prepared_body.mjs",
+      "before_sha256": null,
+      "sha256": "b4973be861da5ed7aa186f8a09317c74af12e76961ab2269db2583676d801c5d",
+      "bytes": 14054,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/verification/runners/g5/canonical_prepared_body.mjs"
+    },
+    {
+      "path": "verification/runners/g5/canonical_prepared_body_runner.py",
+      "before_sha256": null,
+      "sha256": "e3b3e737d2693ecb0703915795ad8417384137993e4de039be5ef0ec8fae3a18",
+      "bytes": 8960,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/verification/runners/g5/canonical_prepared_body_runner.py"
+    },
+    {
+      "path": "verification/tests/g5_canonical_prepared_body.test.mjs",
+      "before_sha256": null,
+      "sha256": "5a940d4b71fc6bf2f2ad2049556a30d706f1f92c204d919316664bf23dce7229",
+      "bytes": 2818,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/verification/tests/g5_canonical_prepared_body.test.mjs"
+    },
+    {
+      "path": "verification/tests/test_g5_canonical_prepared_body.py",
+      "before_sha256": null,
+      "sha256": "cca863ed174a963769d839039eb15bf65cac805d09482cbdaa8baaafbd55d781",
+      "bytes": 2250,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-canonical-prepared-body/materialized-source/verification/tests/test_g5_canonical_prepared_body.py"
+    }
+  ]
+}

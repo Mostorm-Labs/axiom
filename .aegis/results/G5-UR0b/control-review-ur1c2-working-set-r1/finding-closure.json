@@ -1,0 +1,94 @@
+{
+  "finding_id": "CR-U1C2-WORKINGSET-01",
+  "status": "CLOSED_ON_REPAIRED_SUBJECT",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "original_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/result.json",
+    "sha256": "fac087d0ff3e6011046b2cc8bb909dd150cf3d2cd5ae76d355045974f34d3195"
+  },
+  "original_finding_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-r1/findings.json",
+    "sha256": "e27cea41122d97231051755abd8fb1ee110faf581b35693fefd9ee931b3ac857"
+  },
+  "repaired_result_ref": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/result.json",
+    "sha256": "38777e7eace9a86cebaeb02bba361963b18bd5f3176e146999e79a705e139955"
+  },
+  "repaired_source_tree_sha256": "9eb88bcc7c25d7647f90375430ba6d109f196084023d0111f4dc40180dbb757a",
+  "evidence": [
+    {
+      "case": "32-distinct",
+      "argv": [
+        "32",
+        "7199",
+        "renderer"
+      ],
+      "terminal": {
+        "terminal_attempts": 21,
+        "body_builds": 32,
+        "admissions": 32,
+        "legacy_support": 0,
+        "legacy_compile": 0,
+        "presents": 1
+      },
+      "log_sha256": "4c129502643f64ac8a254d7fc1d7e424a71fb2d84e27c4fc7d87d2b0e616bc45"
+    },
+    {
+      "case": "513-short",
+      "argv": [
+        "513",
+        "64",
+        "renderer"
+      ],
+      "terminal": {
+        "terminal_attempts": 257,
+        "body_builds": 513,
+        "admissions": 513,
+        "legacy_support": 0,
+        "legacy_compile": 0,
+        "presents": 1
+      },
+      "log_sha256": "8c85d6410e44a611bc4ff23df1f06207873f4ee7096a92acf61ab395d2e9ab5e"
+    },
+    {
+      "case": "one-long-512-short",
+      "argv": [
+        "513",
+        "7199",
+        "renderer",
+        "shorter-rest"
+      ],
+      "terminal": {
+        "terminal_attempts": 257,
+        "body_builds": 513,
+        "admissions": 513,
+        "legacy_support": 0,
+        "legacy_compile": 0,
+        "presents": 1
+      },
+      "log_sha256": "bb9df847a94f2fdcef916f7f4ecf123fc8bddf532f14a0cd0bd4799855d09307"
+    },
+    {
+      "case": "one-step",
+      "argv": [
+        "513",
+        "7199",
+        "renderer",
+        "shorter-rest",
+        "one-step"
+      ],
+      "terminal": {
+        "terminal_attempts": 4263,
+        "body_builds": 513,
+        "admissions": 513,
+        "legacy_support": 0,
+        "legacy_compile": 0,
+        "presents": 1
+      },
+      "log_sha256": "913324c333b6393664ce5d06dde3902c1acb74464b593b2427cc6216e976413d"
+    }
+  ],
+  "reason": "Unchanged final valid original probe now completes with exactly one body build per distinct body,zero legacy support/compile,and actual present. One-step8192 nonpresenting repeated-build RED becomes4263calls/513builds/present. Native48 includes actual canonical/Direct,alias pressure,byte pressure,independentpixels andlifetime; Web new subject retains original six-case criteria.",
+  "old_failure_history_unchanged": true,
+  "not_claimed": "No proof of all object scales or latencySLO; finite deterministic work progression and exact frozen failure closure only."
+}

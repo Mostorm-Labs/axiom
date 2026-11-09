@@ -1,0 +1,44 @@
+{
+  "status": "VERIFIED_WITH_EXPLICIT_WEB_BLOCKER",
+  "source_tree_sha256": "0a5d8113b2c0a768fac619c6c059909587827b276fdd0cb49285fc2605ab8cbf",
+  "source_unchanged_since_workers": true,
+  "candidate_installations_exact": true,
+  "driver_exact": true,
+  "package_and_bound_refs_exact": true,
+  "archives": [
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/source-and-package.tar.gz",
+      "sha256": "6def7ddaeecc7e51a1d2465027a7cdba0801bc238c16c04166c5598ebc5a6df7",
+      "members": 46
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/native-test-binaries.tar.gz",
+      "sha256": "a2bed2ee9608de26cb0f75d68e3d78cea94a41decabcc7620c34d40c9e74328a",
+      "members": 25
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/normal-sdk.tar.gz",
+      "sha256": "faa1cfdf2c1e59d50ca60fff20c916329ae4362fea6759d97ee60627ffd4f3e1",
+      "members": 36
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/qualification-sdk.tar.gz",
+      "sha256": "efb493cfa81d6093b8407fe90eb0b27426d2ec60e5732a64f67b3e44531aaa44",
+      "members": 36
+    },
+    {
+      "path": "out/G5-UR1c1-prepared-body-index/archives/browser-functional-evidence.tar.gz",
+      "sha256": "97acdfb60aeec049e96403e24a9fcf4b121258c21d941efd8a66d3c725bd2809",
+      "members": 204
+    }
+  ],
+  "head_unchanged": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+  "scoped_patch_roundtrip": "EXACT",
+  "two_frozen_workers_closed": true,
+  "no_extra_starts": true,
+  "diff_check": "PASSED",
+  "old_demo_and_quarantine_checks": [
+    "demo-identities.json",
+    "quarantine-preservation.json"
+  ]
+}

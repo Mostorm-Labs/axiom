@@ -1,0 +1,45 @@
+[
+  {
+    "scenario": "default",
+    "argv": [
+      "513",
+      "7199",
+      "renderer",
+      "shorter-rest"
+    ],
+    "probe_sha256": "646ab0fcc91090d08186dafc9f79e974498fe12f1c7ed6e5aea5c9f26f23b16c",
+    "exit": 0,
+    "observed": {
+      "terminal_attempts": 261,
+      "body_builds": 1026,
+      "admissions": 1026,
+      "legacy_support": 14398,
+      "legacy_compile": 7199,
+      "presents": 1
+    },
+    "frozen_requirement_red": true,
+    "log_sha256": "5fcba141b5fdcd2f0102a0ec050a6af49d785576d599bf9da065ed3323b80829"
+  },
+  {
+    "scenario": "one-step",
+    "argv": [
+      "513",
+      "7199",
+      "renderer",
+      "shorter-rest",
+      "one-step"
+    ],
+    "probe_sha256": "646ab0fcc91090d08186dafc9f79e974498fe12f1c7ed6e5aea5c9f26f23b16c",
+    "exit": 0,
+    "observed": {
+      "terminal_attempts": 8192,
+      "body_builds": 1030,
+      "admissions": 1033,
+      "legacy_support": 0,
+      "legacy_compile": 0,
+      "presents": 0
+    },
+    "frozen_requirement_red": true,
+    "log_sha256": "036ebe5b352aa570984d58614e40523a6f3f504be759c8c201a15b25f69b09ac"
+  }
+]

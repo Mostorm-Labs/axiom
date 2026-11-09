@@ -1,0 +1,28 @@
+{
+  "extra_broad_build": "unrelated pre-existing semantic test -Wswitch errors for kSection/kTable",
+  "failed_out_of_scope_tests": [
+    "canvas_semantic_object_store_differential_test",
+    "canvas_semantic_stateful_kind_applicability_test"
+  ],
+  "required_scope": "43 frozen regressions plus new canonical tests",
+  "build_scheduling": "Duplicate native build was interrupted; changed Render objects were cleanly recompiled, followed by final affected47/47verification.",
+  "unchanged_locks": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "preworker_driver_resolution": "Shared Playwright path corrected before any browser reservation/start; two frozen workers subsequently completed once each."
+}

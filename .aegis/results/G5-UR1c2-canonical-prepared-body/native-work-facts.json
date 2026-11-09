@@ -1,0 +1,165 @@
+{
+  "schema": "ur1c2-native-real-work-v1",
+  "rows": [
+    {
+      "copies": 1,
+      "knots": 7199,
+      "canonical_attempts": 1,
+      "canonical_support": 0,
+      "canonical_length_inputs": 0,
+      "canonical_compile_inputs": 0,
+      "edit_support": 0,
+      "edit_length_inputs": 0,
+      "edit_compile_inputs": 0,
+      "gpu_tiles": 2
+    },
+    {
+      "actual_consumers": true,
+      "copies": 1,
+      "body_builds": 1,
+      "unique_support": 7199,
+      "unique_compile": 7199,
+      "canonical_draws": 4,
+      "direct_draws": 1
+    },
+    {
+      "copies": 8,
+      "knots": 7199,
+      "canonical_attempts": 4,
+      "canonical_support": 0,
+      "canonical_length_inputs": 0,
+      "canonical_compile_inputs": 0,
+      "edit_support": 0,
+      "edit_length_inputs": 0,
+      "edit_compile_inputs": 0,
+      "gpu_tiles": 16
+    },
+    {
+      "actual_consumers": true,
+      "copies": 8,
+      "body_builds": 1,
+      "unique_support": 7199,
+      "unique_compile": 7199,
+      "canonical_draws": 32,
+      "direct_draws": 8
+    },
+    {
+      "copies": 16,
+      "knots": 7199,
+      "canonical_attempts": 8,
+      "canonical_support": 0,
+      "canonical_length_inputs": 0,
+      "canonical_compile_inputs": 0,
+      "edit_support": 0,
+      "edit_length_inputs": 0,
+      "edit_compile_inputs": 0,
+      "gpu_tiles": 32
+    },
+    {
+      "actual_consumers": true,
+      "copies": 16,
+      "body_builds": 1,
+      "unique_support": 7199,
+      "unique_compile": 7199,
+      "canonical_draws": 64,
+      "direct_draws": 16
+    },
+    {
+      "copies": 32,
+      "knots": 7199,
+      "canonical_attempts": 16,
+      "canonical_support": 0,
+      "canonical_length_inputs": 0,
+      "canonical_compile_inputs": 0,
+      "edit_support": 0,
+      "edit_length_inputs": 0,
+      "edit_compile_inputs": 0,
+      "gpu_tiles": 64
+    },
+    {
+      "actual_consumers": true,
+      "copies": 32,
+      "body_builds": 1,
+      "unique_support": 7199,
+      "unique_compile": 7199,
+      "canonical_draws": 128,
+      "direct_draws": 32
+    },
+    {
+      "visible_checkpoint_replay_inputs": 1376,
+      "maximum_build_quantum": 32
+    },
+    {
+      "bounded_service": true,
+      "advances": 675,
+      "unique_support": 7199,
+      "unique_length": 7198,
+      "unique_compile": 7199,
+      "maximum_advance_knots": 32
+    },
+    {
+      "independent_cpu_geometry_variants": [
+        "tapers",
+        "caps-disabled",
+        "self-intersection",
+        "marker-nib"
+      ],
+      "pixel_parity": true
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 1,
+      "variant": 0,
+      "one_step_attempts": 678
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 1,
+      "variant": 1,
+      "one_step_attempts": 678
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 1,
+      "variant": 2,
+      "one_step_attempts": 678
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 2,
+      "variant": 0,
+      "one_step_attempts": 680
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 2,
+      "variant": 1,
+      "one_step_attempts": 680
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 2,
+      "variant": 2,
+      "one_step_attempts": 680
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 4,
+      "variant": 0,
+      "one_step_attempts": 696
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 4,
+      "variant": 1,
+      "one_step_attempts": 696
+    },
+    {
+      "native_gpu_pixel_parity": true,
+      "dpr": 4,
+      "variant": 2,
+      "one_step_attempts": 696
+    }
+  ],
+  "source": "native-raw-output.log"
+}

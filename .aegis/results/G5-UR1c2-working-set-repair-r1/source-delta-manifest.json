@@ -1,0 +1,151 @@
+{
+  "schema": "g5-p36-exact-source-delta-v1",
+  "base_revision": "e69f2377cd93ddbe89d1fb1227ae8397c977b287",
+  "accepted_original_c2_tree": "36966af89384daa4046555791ab27a1b4d25e9d508821c129d04d4f312975eec",
+  "accepted_repair_start_tree_including_package": "9ffb6d109d3e721599780114648dbb6fdf3a51faad3910766d4fab9b4a7d4c80",
+  "source_tree_sha256": "9eb88bcc7c25d7647f90375430ba6d109f196084023d0111f4dc40180dbb757a",
+  "basis": "Original C2 exact postimages + unchanged accepted C1/UR2 archive + frozen repair package; exact byte preimages/postimages authoritative.",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before_sha256": "89bad2a0e6446c88074fec691043f64d2360312334d2520bdd21b21d34e8310a",
+      "sha256": "bcf6290e4319b7568e7e0e4652c667a407846a61a8d9869dbc9b01fb0afa3e48",
+      "bytes": 40434,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/CMakeLists.txt",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/CMakeLists.txt"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "before_sha256": "25eae517824b35ef1d7684492aef85902c96875963b806c050ba2f07ae9f0a0b",
+      "sha256": "57befee380676aa70bb247b5352f1e28c0754c608e877880354abe1e0ca0ffb1",
+      "bytes": 8033,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/include/canvas/render/skia_scene_renderer.hpp"
+    },
+    {
+      "path": "runtime/render/src/compact_raster_internal.hpp",
+      "before_sha256": "98ac7ad7e1b72c7543edb61b65f28310ccc83d4492299b5e848dfb388be868a5",
+      "sha256": "a68a7df4488309cced8dfc713e36b15d971b9e8eab2114b8821cdd82a80fb53c",
+      "bytes": 4239,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/compact_raster_internal.hpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/compact_raster_internal.hpp"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "before_sha256": "d36de91ed574954cad5d167a9912e45f101214ab844f753faf8cf2c29b77386d",
+      "sha256": "f1c89dedd3d9c800e383a5e56243383c18d82e1019377968b7c8199188530e00",
+      "bytes": 7679,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/prepared_body_job.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/prepared_body_job.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "before_sha256": "6d1acbbc97c94911005ec0b0116b2a8cedf6eee6a4c7043696e73b51eaacc1b9",
+      "sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8",
+      "bytes": 50647,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_compact_material.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_compact_material.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "before_sha256": "8eb5e7d813cd18fb8879b92b178d704c1ec599bc04c3a84fb1113cf50a50000b",
+      "sha256": "4df1f6de23ca75f70f64e47d8d9b6e6ccaf50dbce90ad1e9b4d725d1e05fc394",
+      "bytes": 77079,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_headless_backend.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_headless_backend.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "before_sha256": "705a330a423051e02cb93cbfc804a2788f038f920e9b10a2fe5ba6e06c03b9f7",
+      "sha256": "2a82d21f02e752d0a90ab3a3a86fd2101be751ab32eae23e66566e423ea49985",
+      "bytes": 11228,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_ink_layers.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_ink_layers.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "before_sha256": "8c8526c410a6f66fe1a11c461cce9d9720af415bb2db2c72c28ace0f1a3e3521",
+      "sha256": "3102679507ef824c9d527a1e11a2c71ffcd6d591f02d20a5d84d854ae543f986",
+      "bytes": 2211,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_ink_layers.hpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_ink_layers.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "before_sha256": "f62d5c34b22ccbe41b45914c39794f40c33567628fd4ce7871e521a6f6189c16",
+      "sha256": "27bd94fa57321d3c5fecb22411e1517d370034f08ab2c1347ab2ee6b68893f57",
+      "bytes": 31899,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_prepared_geometry.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_prepared_geometry.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "before_sha256": "9620800bc9714248387cd7a173b09882acdb5dd9f79358969f8ea71985d652de",
+      "sha256": "593fe4920ecbf0ade95e6efabd1bcb6555d1eb836c992e9b66b2048227fea7fb",
+      "bytes": 9096,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_prepared_geometry.hpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_prepared_geometry.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "before_sha256": "28451f66198de2e5b31756248bf6463642f372fd748b96b1367552687890d9d2",
+      "sha256": "bb9e8750c764d5f95d2ffae226856dabf834b987e12e69999c06d3ca184aed6e",
+      "bytes": 70974,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_render_cache.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_render_cache.cpp"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "before_sha256": "a606291a2d788b89de16a26272b7b81c932b5486c76923332a512be8589384da",
+      "sha256": "0420acbf55da90feae54faa5f589818c2382e74d34542280284136cf0ad878ea",
+      "bytes": 9555,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_render_cache_internal.hpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_render_cache_internal.hpp"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before_sha256": "e7456b4028b7566231fa6a93f64f53ef0b5c87ab1d858b205e01431dba711423",
+      "sha256": "433764e8230bb0071278edbe70fe72b221517ece6c8962a940793a93ddeaa601",
+      "bytes": 85670,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/src/skia_renderer.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/src/skia_renderer.cpp"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "before_sha256": "5ddbdae76128e253b2d557e523c89ce7118db539bc02777e10f5939be429aa73",
+      "sha256": "5e51ebd1c148b366f03a0a01062be9c50ddb3b84cdeeba5c027d016e8b4d3837",
+      "bytes": 43487,
+      "before": ".aegis/results/G5-UR1c2-working-set-repair-r1/preimages/runtime/render/tests/canonical_prepared_body_test.cpp",
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/runtime/render/tests/canonical_prepared_body_test.cpp"
+    },
+    {
+      "path": "verification/runners/g5/canonical_prepared_body_working_set.mjs",
+      "before_sha256": null,
+      "sha256": "1ed86e4892928f60492547b8afeb5f876c12739205f9883e60da74a89feabe92",
+      "bytes": 14066,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/verification/runners/g5/canonical_prepared_body_working_set.mjs"
+    },
+    {
+      "path": "verification/runners/g5/canonical_prepared_body_working_set_runner.py",
+      "before_sha256": null,
+      "sha256": "768c3c70efc104304f5e82423b49fc0f1aa3e37e30cf8ec7f7feda41c63485e9",
+      "bytes": 6132,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/verification/runners/g5/canonical_prepared_body_working_set_runner.py"
+    },
+    {
+      "path": "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+      "before_sha256": null,
+      "sha256": "67bfa834ffd00ece3a5fce0176b9e6a0d50ee4a190a314ef8bba468fdca90a9c",
+      "bytes": 2009,
+      "before": null,
+      "after": ".aegis/results/G5-UR1c2-working-set-repair-r1/materialized-source/verification/tests/test_g5_canonical_prepared_body_working_set.py"
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/source-delta.patch",
+    "sha256": "5c91a3808468f68afc1770a4bcd4d85add648d80967bac9ea884a14027335605",
+    "bytes": 30488
+  }
+}

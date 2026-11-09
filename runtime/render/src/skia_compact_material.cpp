@@ -310,8 +310,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     // Coverage has finite support within the centreline's maximum radius.
     // Keep the original clip-anchored grid and shader coordinates so culling
     // empty tiles cannot alter material noise, sampling, or seams.
-    SkRect support=SkRect::MakeEmpty();
-    for(const auto& knot:knots){
+    SkRect support=prepared?prepared->support():SkRect::MakeEmpty();
+    if(!prepared)for(const auto& knot:knots){
+        if(execution)execution->sourceWork(1,0);
         const auto radius=ink::compactRadius(config,knot.pressure);
         const auto bounds=SkRect::MakeLTRB(float(knot.x-radius),float(knot.y-radius),
                                           float(knot.x+radius),float(knot.y+radius));
@@ -351,12 +352,17 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         if(execution)execution->coverage(*tile,true);
         auto* target=tile->getCanvas();target->resetMatrix();target->clear(SK_ColorBLACK);
         target->translate(float(-x),float(-y));target->concat(matrix);
-        if(prepared&&config.algorithmVersion==4)prepared->drawContour(*target);
+        if(prepared&&config.algorithmVersion==4){prepared->drawContour(*target);
+            if(execution)execution->preparedUse(true);}
+
         else if(coverage)target->drawPicture(coverage);
-        else drawCompactCoverageToSkCanvas(*target,config,knots,
+        else {
+            if(execution&&config.algorithmVersion==4)execution->sourceWork(0,knots.size()>1?knots.size()-1:0,knots.size());
+            drawCompactCoverageToSkCanvas(*target,config,knots,
                                             range ? rangeStartDistance : 0.0,
                                             range ? rangeTotalDistance : -1.0,
                                             seed,rangeStartCap,rangeEndCap);
+        }
         AXIOM_FRAME_TIMING_END(cpuTiming);
         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
         canvas.save();canvas.resetMatrix();canvas.clipRect(SkRect::MakeXYWH(float(x),float(y),float(w),float(h)));
@@ -427,20 +433,23 @@ CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& can
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
-    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay)
-    :matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
+    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,std::shared_ptr<const PreparedNavigationGeometry> prepared,bool directConsumer)
+    :prepared_(prepared&&config.algorithmVersion==4&&prepared->isContour()&&prepared->ready()?std::move(prepared):nullptr),directConsumer_(directConsumer),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
-    support_=SkRect::MakeEmpty();
-    for(const auto& k:knots){const auto radius=ink::compactRadius(config,k.pressure);
+    support_=prepared_?prepared_->support():SkRect::MakeEmpty();
+    if(!prepared_)for(const auto& k:knots){
+        if(auto* execution=RenderExecutionScope::current())execution->sourceWork(1,0);
+        const auto radius=ink::compactRadius(config,k.pressure);
         support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));}
     support_=matrix_.mapRect(support_);support_.outset(2,2);
     canCull_=!matrix_.hasPerspective()&&support_.isFinite();
-    totalDistance_=ink::compactLength(knots);
+    totalDistance_=prepared_?prepared_->totalDistance():ink::compactLength(knots);
+    if(!prepared_)if(auto* execution=RenderExecutionScope::current())execution->sourceWork(0,knots.empty()?0:knots.size()-1);
     // Record only the pinned v4 helper, incrementally while its first device
     // tile is compiled. Later tiles replay identical commands on their original
     // CPU grids. No full-history preparation is added to a frame opportunity.
-    if(config.algorithmVersion==4&&budget&&!done_&&!matrix_.hasPerspective()){
+    if(!prepared_&&config.algorithmVersion==4&&budget&&!done_&&!matrix_.hasPerspective()){
         SkMatrix inverse;const auto count=knots.size()/32+(knots.size()%32!=0);
         const auto groups=count/recordsPerGroup+(count%recordsPerGroup!=0);
         const auto groupBytes=groups*sizeof(RecordGroup);
@@ -636,8 +645,18 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             AXIOM_FRAME_TIMING_ADD(gpu_interior_pixels,area);
             AXIOM_FRAME_TIMING_ADD(cpu_edge_pixels,remainder);
         }
-        knot_=0;distance_=0;
-        if(config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
+        knot_=0;distance_=0;preparedPrimitive_=0;
+        if(!prepared_&&config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
+    }
+    if(prepared_){
+        auto* target=tile_->getCanvas();
+        preparedPrimitive_=prepared_->nextVisiblePrimitive(*target,preparedPrimitive_);
+        const auto count=std::min(std::size_t(32),prepared_->primitiveCount()-preparedPrimitive_);
+        if(count){prepared_->drawContour(*target,preparedPrimitive_,count);
+            if(auto* execution=RenderExecutionScope::current())execution->preparedUse(directConsumer_);}
+        preparedPrimitive_+=count;
+        if(preparedPrimitive_<prepared_->primitiveCount())return false;
+        knot_=knots.size();
     }
     if(recordComplete_){
         AXIOM_FRAME_TIMING_SCOPE(selectionTiming,coverage_select);
@@ -695,6 +714,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
                 AXIOM_FRAME_TIMING_ADD(compiled_contour_knots,end-knot_);
             }
         }else if(contour_){
+            if(auto* execution=RenderExecutionScope::current())execution->sourceWork(0,0,end-knot_);
             if(work)work->compiledContourKnots+=end-knot_;
             AXIOM_FRAME_TIMING_ADD(compiled_contour_knots,end-knot_);
             auto checkpoint=recordBudget_?std::optional<ink::CompactContourCompiler>(*contour_):std::nullopt;

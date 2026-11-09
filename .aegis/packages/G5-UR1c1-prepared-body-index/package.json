@@ -1,0 +1,59 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1c1-prepared-body-index",
+  "status": "AUTHORIZED_SCOPED_UR1_FOUNDATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "local",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1c1-prepared-body-index",
+    "content_identity": "package.json SHA256 in handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "3437b5c09ebf6de938e596dcb2780e612e1c8c37",
+    "accepted_review_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1b/result.json",
+      "sha256": "1b9c2d41aaf6f4fdcabe4a5eda0cb8c1e606638c2c7ae2d5a21d661d123cf722",
+      "identity_kind": "local-content-addressed"
+    },
+    "completed_through": "AcceptedUR1a/b preserved, UR2shelved,46starts/1527seconds closed; UR1c1notimplemented.",
+    "next_action": "Reconcile exactacceptedUR1b diff, record resolved owner/key/lease design, execute oldmechanismRED and continue through native/realconsumerchecks.",
+    "historical_source_tree_sha256": "d04e31f808d76d0d2f7500c15e81cce2a7cda6a9a69ff8bd5480f1bfa240caa0",
+    "reconciliation_rule": "Historical d04e31 identifies accepted prepublication result, not required current whole-tree equality. Trusted start is3437b5 plus exact accepted product file bytes and this new control package. Reconcile descendants rather than requiring oldHEAD equality."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "7e88294781eb933fe38f5cbe2d4131da7e0ae5fe366853cee49bd10a44931c93"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "c510616cc6431652c30628cc01d5ddee820923fb823af65224ac6a1095334e39"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "559efab5469c0bd065ae40f8482b1989be907c4e8e0d749c2c2dbc347a3b5ce9"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "dc6340b23b40e7ef17a28a39add53eb928881ff1899754b7c4c5a2b708accffa"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "d13558998ac0e45eaea6ee8d90d660ba7756272b4ec00c656897159c5bdd293a"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03"
+}
