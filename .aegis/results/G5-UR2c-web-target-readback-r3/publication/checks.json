@@ -1,0 +1,81 @@
+[
+  {
+    "name": "node-tests",
+    "command": [
+      "node",
+      "--test",
+      "verification/tests/g5_render_execution.test.mjs",
+      "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+      "verification/tests/g5_prepared_body_index.test.mjs",
+      "verification/tests/g5_transient_reference.test.mjs",
+      "verification/tests/g5_transient_attribution.test.mjs",
+      "verification/tests/g5_canonical_prepared_body.test.mjs",
+      "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+      "verification/tests/g5_resource_recovery.test.mjs",
+      "verification/sdk_controller/controller_test.mjs",
+      "verification/sdk_controller/transport_test.mjs",
+      "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+      "verification/tests/g5_ur2a_handoff.test.mjs",
+      "verification/tests/g5_ur2b_exact_query.test.mjs",
+      "verification/tests/g5_ur2c_mask_history.test.mjs",
+      "verification/tests/g5_transient_display_retry.test.mjs",
+      "verification/tests/g5_webgl_target_readback.test.mjs"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.2947071670787409
+  },
+  {
+    "name": "python-tests",
+    "command": [
+      "python3.12",
+      "-m",
+      "unittest",
+      "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+      "verification/tests/test_g5_transient_reference.py",
+      "verification/tests/test_g5_prepared_body_index_reverify.py",
+      "verification/tests/test_g5_render_execution.py",
+      "verification/tests/test_g5_transient_attribution.py",
+      "verification/tests/test_g5_canonical_prepared_body.py",
+      "verification/tests/test_g5_prepared_body_index.py",
+      "verification/tests/test_g5_resource_recovery.py",
+      "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+      "verification/tests/test_g5_ur2a_handoff.py",
+      "verification/tests/test_g5_ur2b_exact_query.py",
+      "verification/tests/test_g5_ur2c_mask_history.py",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.31946687505114824
+  },
+  {
+    "name": "boundary-tests",
+    "command": [
+      "python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.08651941700372845
+  },
+  {
+    "name": "native-transient-display",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-UR2c-transient-display-handoff-r2/build-native",
+      "--output-on-failure",
+      "-R",
+      "^G5TransientDisplay"
+    ],
+    "returncode": 0,
+    "passed": 5,
+    "elapsed_s": 7.75,
+    "log": {
+      "path": ".aegis/results/G5-UR2c-web-target-readback-r3/publication/native-tests.log",
+      "sha256": "9a91047c2745c74164e4e5a138b7197898461e9bfb66f3ac70dba0170596005c",
+      "bytes": 1999451
+    },
+    "SDK_or_native_rebuilt": false
+  }
+]

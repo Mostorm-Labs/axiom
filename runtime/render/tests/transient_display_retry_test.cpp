@@ -138,7 +138,7 @@ bool handoffProgress(const std::filesystem::path& out){
    require(result.code==BackendSubmissionCode::kRetry,"handoff unexpectedly rejected");if(actual!=before)saveBuffer(out/(warm?"warm-failed.rgba":"fresh-failed.rgba"),actual);require(actual==before&&target.presentCount()==priorPresents,"handoff Retry changed actual last display");
   }
   std::cout<<nlohmann::json{{"handoff_summary",true},{"warm",warm},{"accepted",accepted},{"calls",calls+unsigned(accepted)},{"CPU_tiles",r.renderCacheWork().cpuCoverageTiles}}.dump()<<std::endl;
-  all&=accepted;require(r.renderCacheWork().cpuCoverageTiles==0,"handoff CPU fallback");r.clearRenderCache();c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();
+  all&=accepted;require(r.renderCacheWork().preparedBodyBuilds<=2,"handoff Retry rebuilt identical body");require(r.renderCacheWork().cpuCoverageTiles==0,"handoff CPU fallback");r.clearRenderCache();c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();
  }
  if(!all)std::cerr<<"G5_HO01_FEASIBLE_WARM_STAGED_DEMAND_DID_NOT_ACCEPT\n";return all;
 }

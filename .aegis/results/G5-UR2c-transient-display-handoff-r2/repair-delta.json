@@ -1,0 +1,76 @@
+{
+  "base": {
+    "kind": "r1 exact14postimages",
+    "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d"
+  },
+  "candidate_source": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/repair.patch",
+    "sha256": "55816b202e545820d2be89ca11e4aa7b11f0219707e92e2142a6bf33e8551196",
+    "bytes": 60259
+  },
+  "roundtrip": "EXACT_BYTES",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before": "e4ddfc51b7e2628ebd5a3033756d427dea174cc7f733f312373fb384bf517b91",
+      "after": "6e66322247b3cf28a2557633c8ce2228314bf98ecf705af05b86ea8b9020d6ca"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "before": "9542abeb398933662fad414cdd473699a44314a128e64a643f8356a2785dc4be",
+      "after": "c30be3678a9531f4dd34b688fc7cb86c3cb4971e2f25d7f3b635ba2a18e1a085"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "before": "163727f8e678f801b892f95f0bc6bf33734e6ef3c5ee96d2d6a45f2659a57c1a",
+      "after": "c29d058b94b817f4892d43089aaf1d0f99f323f8e0c28df38184600d74e3531f"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before": "b441e8b085a5675f077ba17b39bef7a9af1c165ac1ecc11176c95106ecf6066e",
+      "after": "804efe691eba2d6de91eb8619cc6e16bbfedb004093012e717d6aa8fd991653c"
+    },
+    {
+      "path": "runtime/render/src/transient_display_state.hpp",
+      "before": "dcb3edf8339d0dfec48508c05bf82d3db0f018976f58abba41d1312785036456",
+      "after": "f389b7fa8983e2fd7e529415cee04032a651c9f4bf1f31caf8faa395944e31b8"
+    },
+    {
+      "path": "runtime/render/tests/transient_display_retry_test.cpp",
+      "before": "7c5772802819c14b5b99b26c273614e4cdfc73f6ad1d280ff4ca2eb351e55798",
+      "after": "541921107474b80bd7ff0eb64fbcfde385ddbae71026c00498e853a75ef43337"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "before": "a7c293f479510e16969d2f43bbe8cb8908e22f6bbdb4e4bf7ca7fc27be901753",
+      "after": "1132e53563e60be683726c68e9809d56aac03bb5974487cca397fbdb34e0ba3e"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "before": "6673fd2c63cf25a85b24d1068c600f274a2300a8b1d5f461025f19b456961df6",
+      "after": "cebecdd930941a8772690b2bf69fbd316d70974093fb4b166bfc9ad83cf3f747"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "before": "9ebd38d3c14ab6e0395ab9b68e6e58da398c828ea6a90e2b57a937586f8922b9",
+      "after": "f41514f151df95ea4a0c89fbaa936e5920c2f96fd093088f8826dafd3a62e67e"
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "before": "3397963981e0dc3fd8e357da4af599d2e3a64957ddba7f3cfcd79db977b2bfd8",
+      "after": "cdbf3066de8e82921a65c5f14bfebb5e5c7a08fbc5e075f78942aec2004f3685"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "before": "17a55fe39a506ff62f9cdf6168d0265e71ea7eb21dda15d030b0c51b2fe35e88",
+      "after": "0a3576fb6fedf81674fd8e215947ed8e27cd59db70854066e2e05014a45e59e5"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_trajectory_oracle.cpp",
+      "before": null,
+      "after": "40e9b5df7e0ea3d104e7f40cb6bec807ef5c7cfff0a43e2f8b2e84b9e91efc04"
+    }
+  ],
+  "outside_scope": []
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "g5-web-target-readback-closed-window-plan-v1",
+  "historical_result": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/result.json",
+    "sha256": "173b413aeec018f92d3846c05e6377bf8486e6617f05d81e20370293a7025119",
+    "bytes": 17928
+  },
+  "historical_starts": 88,
+  "historical_charged_seconds": 5907,
+  "original_cap_seconds": 8370,
+  "remaining_before_seconds": 2463,
+  "workers": [
+    {
+      "id": "UR2CRB3-S1",
+      "variant": "real-WebGL-reader-selftest",
+      "timeout_seconds": 120,
+      "purpose": "ActualChrome/WebGL2smallseparatecontrolledcanvascontexts; beforeanySDKmatrix verifyoldreaderwrong/newreaderqualified andstate-restoration/failure-artifact controls; not asmockbenchmark."
+    },
+    {
+      "id": "UR2CRB3-N1",
+      "variant": "normal",
+      "timeout_seconds": 600,
+      "purpose": "ExactR2normalSDK: original10S0/S2casesplusall6continuousDPR1/2/4cases, fixedsameR2positiveplan, correctedfull+ROIreaders/instantfailurecapture. Allcoldandnewliveactualtargetsfullyqualified."
+    }
+  ],
+  "max_new_starts": 2,
+  "max_reserved_seconds": 720,
+  "remaining_after_worst_case_seconds": 1743,
+  "guard": {
+    "process_family_rss_limit_mib": 3072,
+    "one_worker_at_a_time": true,
+    "charge": "ceilactualseconds; fullreservationifguardtimeuntrusted",
+    "immutable_guard": {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    "all_oldIDs_closed": true,
+    "on_failure": "FreezeID/raw/ledger,cleanexactownedPIDandstop. IfS1fails do notstartN1. Noautomaticretry/windowreuseoradditional smoke."
+  },
+  "qualifying_selftest_cases": [
+    "ValiddefaultopaqueRGBAsentinel; provecanvas/contextidentityanddrawingbufferdimensions.",
+    "BindnondefaultREADFBOwithadifferentcolor anddifferentDRAWFBO; oldunboundreaderwrongwhilequalifieddefaultreaderreturnsoriginaldefaultcolor; originalread/drawbindingsandperFBOreadbufferstaterestored.",
+    "PBO bound andnontrivialPACK_ALIGNMENT/ROW_LENGTH/SKIP_ROWS/SKIP_PIXELS; newreaderproducescorrecttightlypackedRGBAandrestoresallstate.",
+    "READ_BUFFER NONE/nondefaultattachmentstate, invalidROIandreadexceptions; invalidsamplesnotacceptedaspixelloss.",
+    "AvalidtransparentdefaultRGBA0000isvaliddata, notautomaticallyINVALIDandnotautomaticallyPASSagainstopaqueexpectedcontent.",
+    "PreexistingGLerrorandcontextlossreturnexplicitinvalid/unavailableevidencewithstate/errorhistory; no fabricatedpixelPASS.",
+    "ForcedROIqualificationfailurecapturesknowncurrentfullcanonical+previewbuffersandmetadata synchronouslybeforeasyncpersistence/cleanup; unavailableoneexplicitlyMISSING; hostpersistencefailurecannotlooklikecompleteevidence."
+  ],
+  "normal_cases": {
+    "original10": "UnchangedUR2aCASESlayout/S0S2/DPR2/input/History/receipt/pixeloracles; routefullreadthroughnewqualifiedreader.",
+    "continuous6": "UnchangedR2trajectory-plan: bothfixturesDPR1/2/4,8nonemptycommits+UndoRedo10operations,27liveROIs, immediateUpDown/navigation/idle/cancel. No trace/expectation/AAchange.",
+    "target_roles": [
+      "canonical",
+      "preview"
+    ],
+    "failure": "AtfirstROI/read/qualifierfailurecapturebothfullcurrenttargets+metadata/stateinsameJStaskbeforeawait; stopremainingcases, persistthencloseownruntime/processfamily. Capturefirst; cancel/closeafterrecordinginputstate.",
+    "performance_claims": false
+  },
+  "prebrowser_requirements": [
+    "RecordfrozenoldreadhelperandobservedR2failureasREDbasis. OfflinesyntheticGLtests showoldwrongselection/missingstate restoration andfailcapturegapbeforechangingharnessbehavior.",
+    "Implementsharedreaderandfullfailurecapture; Node/Pythonexisting+newcontracttests andboundariespass, oldoracles/plan/runtime/72SDKhashesunchanged.",
+    "Freezeharnessdelta/input/manifests/ledger; S1mustrealisticallyvalidateoldandnewreaderbeforeN1. No uncountedbrowserexperiments."
+  ],
+  "qualified_evidence_reuse": {
+    "reuse_at_exact_identity": [
+      "R2nativeallregressions/CPU634+6/trajectoryproof",
+      "R2Q1strictsuccessful-submit/receipt/history/exactconsumptionraw atunchangedcompiledqualificationSDK"
+    ],
+    "not_reused_for_actualtargetpixelproof": "R2unqualified/ambiguousliveROIorunspecifiedFBOcolddata do notreplace newnormalall16casesactualtargetobservations. Normalreadbackcorrectnesscannotclaimproductiontiming."
+  },
+  "normal_demo": "Keep4297exactnormalR2subject; verifyHTTPmembersandidentitywithoutbrowser. Do notcreateafakefreshproductbuildforatest-onlyrepair; alloldservers/documentspreserved."
+}

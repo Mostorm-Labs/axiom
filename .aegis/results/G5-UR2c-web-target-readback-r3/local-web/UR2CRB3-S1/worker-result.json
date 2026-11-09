@@ -1,0 +1,2547 @@
+{
+  "schema": "g5-real-WebGL-readback-selftest-v1",
+  "status": "OBSERVED",
+  "cases": [
+    {
+      "name": "default-vs-different-READ-and-DRAW",
+      "status": "QUALIFIED",
+      "old_wrong_new_right": true,
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 1,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 163.39999997615814,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 36064,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 36064,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 177.30000001192093
+      },
+      "helper_events": [
+        {
+          "name": "bindFramebuffer",
+          "target": 36008
+        },
+        {
+          "name": "bindFramebuffer",
+          "target": 36008
+        },
+        {
+          "name": "bindFramebuffer",
+          "target": 36008
+        }
+      ],
+      "state_restored": true,
+      "renderer": "WebKit WebGL",
+      "vendor": "WebKit",
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+    },
+    {
+      "name": "PBO-PACK-and-two-NONE-readbuffers",
+      "status": "QUALIFIED",
+      "legacyErrors": [
+        1282
+      ],
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 2,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 178.5999999642372,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "buffer-5",
+          "pack": {
+            "PACK_ALIGNMENT": 8,
+            "PACK_ROW_LENGTH": 64,
+            "PACK_SKIP_ROWS": 2,
+            "PACK_SKIP_PIXELS": 3
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 0,
+        "defaultReadBufferAfter": 0,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "buffer-5",
+          "pack": {
+            "PACK_ALIGNMENT": 8,
+            "PACK_ROW_LENGTH": 64,
+            "PACK_SKIP_ROWS": 2,
+            "PACK_SKIP_PIXELS": 3
+          }
+        },
+        "finished": 179.0999999642372
+      },
+      "state_restored": true
+    },
+    {
+      "name": "valid-transparent-is-data-and-fails-opaque-oracle",
+      "status": "QUALIFIED",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 3,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 179.19999998807907,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 179.89999997615814
+      },
+      "opaque_qualifier": {
+        "status": "FAILED",
+        "interior": 512,
+        "lost": 512,
+        "compared_bytes": 2048,
+        "selection": "fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection"
+      }
+    },
+    {
+      "name": "invalid-ROI-and-real-context-read-exception",
+      "status": "QUALIFIED",
+      "invalid": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 4,
+        "role": "canonical",
+        "status": "INVALID",
+        "started": 180.30000001192093,
+        "selected": null,
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "NOT_CHANGED"
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "reason": "invalid readback ROI",
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 180.5999999642372
+      },
+      "exception": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 5,
+        "role": "canonical",
+        "status": "INVALID",
+        "started": 180.5999999642372,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "reason": "controlled read exception",
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 181.19999998807907
+      },
+      "state_restored": true
+    },
+    {
+      "name": "preexisting-GL-error-is-explicit-invalid",
+      "status": "QUALIFIED",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 6,
+        "role": "canonical",
+        "status": "INVALID",
+        "started": 181.39999997615814,
+        "selected": null,
+        "errors": {
+          "preexisting": {
+            "codes": [
+              1280
+            ],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "NOT_CHANGED"
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "reason": "unexpected preexisting GL error",
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 181.5999999642372
+      },
+      "error_queue_consumed_and_recorded": true,
+      "state_restored": true
+    },
+    {
+      "name": "synchronous-failure-before-first-yield",
+      "status": "QUALIFIED",
+      "capture": {
+        "schema": "g5-immediate-target-failure-v1",
+        "id": "failure-1",
+        "reason": "S1-fully-captured-before-yield",
+        "started": 183.19999998807907,
+        "synchronous": true,
+        "state": {
+          "generation": "6",
+          "activeContacts": 1,
+          "phase": "failure-before-yield"
+        },
+        "buffers": [
+          {
+            "role": "trigger-ROI",
+            "key": "failure-1-trigger-ROI",
+            "length": 256,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 7,
+              "role": "canonical",
+              "status": "VALID",
+              "started": 181.89999997615814,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-canonical",
+                "identity": "canvas-1",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-2",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "framebuffer-3",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 0,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 3,
+                "y": 2,
+                "width": 8,
+                "height": 8,
+                "origin": "top-left",
+                "readY": 6
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "framebuffer-3",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 0,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 183.19999998807907
+            },
+            "reason": null
+          },
+          {
+            "role": "canonical",
+            "key": "failure-1-canonical",
+            "length": 2048,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 8,
+              "role": "canonical",
+              "status": "VALID",
+              "started": 183.30000001192093,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-canonical",
+                "identity": "canvas-1",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-2",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "framebuffer-3",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 0,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16,
+                "origin": "top-left",
+                "readY": 0
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "framebuffer-3",
+                "drawFramebuffer": "framebuffer-4",
+                "readBuffer": 0,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 183.5999999642372
+            },
+            "reason": null
+          },
+          {
+            "role": "preview",
+            "key": "failure-1-preview",
+            "length": 2048,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 9,
+              "role": "preview",
+              "status": "VALID",
+              "started": 183.5999999642372,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-preview",
+                "identity": "canvas-6",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-7",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16,
+                "origin": "top-left",
+                "readY": 0
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 185.69999998807907
+            },
+            "reason": null
+          }
+        ],
+        "finished": 185.69999998807907
+      },
+      "firstYieldAt": 185.69999998807907,
+      "later_canvas_colors": [
+        [
+          0,
+          0,
+          255,
+          255
+        ],
+        [
+          0,
+          255,
+          0,
+          255
+        ]
+      ],
+      "expected_captured_colors": {
+        "trigger-ROI": [
+          13,
+          26,
+          51,
+          255
+        ],
+        "canonical": [
+          13,
+          26,
+          51,
+          255
+        ],
+        "preview": [
+          255,
+          0,
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "name": "unavailable-preview-explicit-MISSING",
+      "status": "QUALIFIED",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 10,
+        "role": "preview",
+        "status": "UNAVAILABLE",
+        "started": 188.5999999642372,
+        "selected": null,
+        "errors": {
+          "preexisting": {
+            "codes": [
+              37442
+            ],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "NOT_CHANGED"
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-lost-preview",
+          "identity": "canvas-8",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-9",
+          "attributes": null,
+          "drawingBufferWidth": 0,
+          "drawingBufferHeight": 0,
+          "lost": true
+        },
+        "reason": "context lost",
+        "finished": 188.80000001192093
+      },
+      "capture": {
+        "schema": "g5-immediate-target-failure-v1",
+        "id": "failure-2",
+        "reason": "S1-preview-unavailable",
+        "started": 188.80000001192093,
+        "synchronous": true,
+        "state": {
+          "generation": "6"
+        },
+        "buffers": [
+          {
+            "role": "canonical",
+            "key": "failure-2-canonical",
+            "length": 2048,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 11,
+              "role": "canonical",
+              "status": "VALID",
+              "started": 188.80000001192093,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-canonical",
+                "identity": "canvas-1",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-2",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16,
+                "origin": "top-left",
+                "readY": 0
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 190.5999999642372
+            },
+            "reason": null
+          },
+          {
+            "role": "preview",
+            "key": "failure-2-preview",
+            "length": 0,
+            "status": "MISSING",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 12,
+              "role": "preview",
+              "status": "UNAVAILABLE",
+              "started": 190.5999999642372,
+              "selected": null,
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "NOT_CHANGED"
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-lost-preview",
+                "identity": "canvas-8",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-9",
+                "attributes": null,
+                "drawingBufferWidth": 0,
+                "drawingBufferHeight": 0,
+                "lost": true
+              },
+              "reason": "context lost",
+              "finished": 190.5999999642372
+            },
+            "reason": "context lost"
+          }
+        ],
+        "finished": 190.5999999642372
+      }
+    },
+    {
+      "name": "host-persistence-negative-control",
+      "status": "QUALIFIED",
+      "capture": {
+        "schema": "g5-immediate-target-failure-v1",
+        "id": "failure-3",
+        "reason": "S1-persistence-failure",
+        "started": 190.69999998807907,
+        "synchronous": true,
+        "state": {
+          "generation": "6"
+        },
+        "buffers": [
+          {
+            "role": "canonical",
+            "key": "failure-3-canonical",
+            "length": 2048,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 13,
+              "role": "canonical",
+              "status": "VALID",
+              "started": 190.69999998807907,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-canonical",
+                "identity": "canvas-1",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-2",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16,
+                "origin": "top-left",
+                "readY": 0
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 191.0999999642372
+            },
+            "reason": null
+          },
+          {
+            "role": "preview",
+            "key": "failure-3-preview",
+            "length": 2048,
+            "status": "AVAILABLE_CAPTURED",
+            "readback": {
+              "schema": "g5-qualified-default-readback-v1",
+              "id": 14,
+              "role": "preview",
+              "status": "VALID",
+              "started": 191.19999998807907,
+              "selected": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 1,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "errors": {
+                "preexisting": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "setup": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "read": {
+                  "codes": [],
+                  "truncated": false
+                },
+                "restore": {
+                  "codes": [],
+                  "truncated": false
+                }
+              },
+              "restoration": {
+                "status": "RESTORED",
+                "failures": []
+              },
+              "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+              "canvas": {
+                "id": "s1-preview",
+                "identity": "canvas-6",
+                "width": 32,
+                "height": 16
+              },
+              "context": {
+                "identity": "context-7",
+                "attributes": {
+                  "alpha": true,
+                  "antialias": false,
+                  "depth": true,
+                  "desynchronized": false,
+                  "failIfMajorPerformanceCaveat": false,
+                  "powerPreference": "default",
+                  "premultipliedAlpha": false,
+                  "preserveDrawingBuffer": true,
+                  "stencil": false,
+                  "xrCompatible": false
+                },
+                "drawingBufferWidth": 32,
+                "drawingBufferHeight": 16,
+                "lost": false
+              },
+              "before": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "rectangle": {
+                "x": 0,
+                "y": 0,
+                "width": 32,
+                "height": 16,
+                "origin": "top-left",
+                "readY": 0
+              },
+              "defaultReadBufferBefore": 1029,
+              "defaultReadBufferAfter": 1029,
+              "after": {
+                "readFramebuffer": "DEFAULT",
+                "drawFramebuffer": "DEFAULT",
+                "readBuffer": 1029,
+                "pixelPackBuffer": "NONE",
+                "pack": {
+                  "PACK_ALIGNMENT": 4,
+                  "PACK_ROW_LENGTH": 0,
+                  "PACK_SKIP_ROWS": 0,
+                  "PACK_SKIP_PIXELS": 0
+                }
+              },
+              "finished": 191.5999999642372
+            },
+            "reason": null
+          }
+        ],
+        "finished": 191.5999999642372
+      },
+      "expected_canonical_status": "MISSING",
+      "expected_preview_status": "PERSISTED"
+    }
+  ],
+  "browser": {
+    "version": "156.0.8078.81",
+    "headless": true
+  },
+  "page_errors": [],
+  "images": [
+    {
+      "name": "old-offscreen-blue",
+      "key": "s1-image-1",
+      "width": 32,
+      "height": 16,
+      "length": 2048,
+      "readback": {
+        "status": "UNQUALIFIED_OLD"
+      },
+      "expected": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/old-offscreen-blue.rgba",
+      "sha256": "1d6f3e7946101e19e458a63004805269fa94526b51bb8da2facddf08f32a1579"
+    },
+    {
+      "name": "new-default-green",
+      "key": "s1-image-2",
+      "width": 32,
+      "height": 16,
+      "length": 2048,
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 1,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 163.39999997615814,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 36064,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 36064,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 177.30000001192093
+      },
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/new-default-green.rgba",
+      "sha256": "6e5ecfcb43acf3830de59e83892f84b4baa0d0f5544073b137e7cae04cbe29ef"
+    },
+    {
+      "name": "old-PBO-read-invalid",
+      "key": "s1-image-3",
+      "width": 32,
+      "height": 16,
+      "length": 2048,
+      "readback": {
+        "status": "UNQUALIFIED_OLD"
+      },
+      "expected": null,
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/old-PBO-read-invalid.rgba",
+      "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad"
+    },
+    {
+      "name": "new-packed-default-green",
+      "key": "s1-image-4",
+      "width": 32,
+      "height": 16,
+      "length": 2048,
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 2,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 178.5999999642372,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "buffer-5",
+          "pack": {
+            "PACK_ALIGNMENT": 8,
+            "PACK_ROW_LENGTH": 64,
+            "PACK_SKIP_ROWS": 2,
+            "PACK_SKIP_PIXELS": 3
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 0,
+        "defaultReadBufferAfter": 0,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "buffer-5",
+          "pack": {
+            "PACK_ALIGNMENT": 8,
+            "PACK_ROW_LENGTH": 64,
+            "PACK_SKIP_ROWS": 2,
+            "PACK_SKIP_PIXELS": 3
+          }
+        },
+        "finished": 179.0999999642372
+      },
+      "expected": [
+        0,
+        255,
+        0,
+        255
+      ],
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/new-packed-default-green.rgba",
+      "sha256": "6e5ecfcb43acf3830de59e83892f84b4baa0d0f5544073b137e7cae04cbe29ef"
+    },
+    {
+      "name": "valid-transparent-default",
+      "key": "s1-image-5",
+      "width": 32,
+      "height": 16,
+      "length": 2048,
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 3,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 179.19999998807907,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "s1-canonical",
+          "identity": "canvas-1",
+          "width": 32,
+          "height": 16
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": false,
+            "preserveDrawingBuffer": true,
+            "stencil": false,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 32,
+          "drawingBufferHeight": 16,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 16,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "framebuffer-3",
+          "drawFramebuffer": "framebuffer-4",
+          "readBuffer": 0,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 179.89999997615814
+      },
+      "expected": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/valid-transparent-default.rgba",
+      "sha256": "e5a00aa9991ac8a5ee3109844d84a55583bd20572ad3ffcd42792f3c36b183ad"
+    }
+  ],
+  "failure_captures": [
+    {
+      "schema": "g5-immediate-target-failure-v1",
+      "id": "failure-1",
+      "reason": "S1-fully-captured-before-yield",
+      "started": 183.19999998807907,
+      "synchronous": true,
+      "state": {
+        "generation": "6",
+        "activeContacts": 1,
+        "phase": "failure-before-yield"
+      },
+      "buffers": [
+        {
+          "role": "trigger-ROI",
+          "key": "failure-1-trigger-ROI",
+          "length": 256,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 7,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 181.89999997615814,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-canonical",
+              "identity": "canvas-1",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "framebuffer-3",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 0,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 3,
+              "y": 2,
+              "width": 8,
+              "height": 8,
+              "origin": "top-left",
+              "readY": 6
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "framebuffer-3",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 0,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 183.19999998807907
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/failure-1-trigger-ROI.rgba",
+          "sha256": "7df03bcd8451391eda727092abca088213ec8aeb918894d054a219b3c88ad5b7"
+        },
+        {
+          "role": "canonical",
+          "key": "failure-1-canonical",
+          "length": 2048,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 8,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 183.30000001192093,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-canonical",
+              "identity": "canvas-1",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "framebuffer-3",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 0,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 32,
+              "height": 16,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "framebuffer-3",
+              "drawFramebuffer": "framebuffer-4",
+              "readBuffer": 0,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 183.5999999642372
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/failure-1-canonical.rgba",
+          "sha256": "74d02adf3348d060bb47985cba2ddcc91b4f36505797f0b6d0e73fa7551d7163"
+        },
+        {
+          "role": "preview",
+          "key": "failure-1-preview",
+          "length": 2048,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 9,
+            "role": "preview",
+            "status": "VALID",
+            "started": 183.5999999642372,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-preview",
+              "identity": "canvas-6",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-7",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 32,
+              "height": 16,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 185.69999998807907
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/failure-1-preview.rgba",
+          "sha256": "243565b2512b60233ef3ec38459c55d387445f31a42d9d9fe98baf793a1eed00"
+        }
+      ],
+      "finished": 185.69999998807907,
+      "persistence_started": 1794253017445,
+      "status": "COMPLETE",
+      "persistence_finished": 1794253017452
+    },
+    {
+      "schema": "g5-immediate-target-failure-v1",
+      "id": "failure-2",
+      "reason": "S1-preview-unavailable",
+      "started": 188.80000001192093,
+      "synchronous": true,
+      "state": {
+        "generation": "6"
+      },
+      "buffers": [
+        {
+          "role": "canonical",
+          "key": "failure-2-canonical",
+          "length": 2048,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 11,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 188.80000001192093,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-canonical",
+              "identity": "canvas-1",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 32,
+              "height": 16,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 190.5999999642372
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/failure-2-canonical.rgba",
+          "sha256": "1d6f3e7946101e19e458a63004805269fa94526b51bb8da2facddf08f32a1579"
+        },
+        {
+          "role": "preview",
+          "key": "failure-2-preview",
+          "length": 0,
+          "status": "MISSING",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 12,
+            "role": "preview",
+            "status": "UNAVAILABLE",
+            "started": 190.5999999642372,
+            "selected": null,
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "NOT_CHANGED"
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-lost-preview",
+              "identity": "canvas-8",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-9",
+              "attributes": null,
+              "drawingBufferWidth": 0,
+              "drawingBufferHeight": 0,
+              "lost": true
+            },
+            "reason": "context lost",
+            "finished": 190.5999999642372
+          },
+          "reason": "context lost"
+        }
+      ],
+      "finished": 190.5999999642372,
+      "persistence_started": 1794253017453,
+      "status": "MISSING",
+      "persistence_finished": 1794253017454
+    },
+    {
+      "schema": "g5-immediate-target-failure-v1",
+      "id": "failure-3",
+      "reason": "S1-persistence-failure",
+      "started": 190.69999998807907,
+      "synchronous": true,
+      "state": {
+        "generation": "6"
+      },
+      "buffers": [
+        {
+          "role": "canonical",
+          "key": "failure-3-canonical",
+          "length": 2048,
+          "status": "MISSING",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 13,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 190.69999998807907,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-canonical",
+              "identity": "canvas-1",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 32,
+              "height": 16,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 191.0999999642372
+          },
+          "reason": "Persistence failed: Error: intentional S1 persistence failure\n    at write (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs:43:449)\n    at persistCapturedFailures (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_host.mjs:12:62)\n    at async selftestWorker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs:43:27)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs:55:135"
+        },
+        {
+          "role": "preview",
+          "key": "failure-3-preview",
+          "length": 2048,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 14,
+            "role": "preview",
+            "status": "VALID",
+            "started": 191.19999998807907,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "s1-preview",
+              "identity": "canvas-6",
+              "width": 32,
+              "height": 16
+            },
+            "context": {
+              "identity": "context-7",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": false,
+                "preserveDrawingBuffer": true,
+                "stencil": false,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 32,
+              "drawingBufferHeight": 16,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 32,
+              "height": 16,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 191.5999999642372
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1/failure-3-preview.rgba",
+          "sha256": "6e5ecfcb43acf3830de59e83892f84b4baa0d0f5544073b137e7cae04cbe29ef"
+        }
+      ],
+      "finished": 191.5999999642372,
+      "persistence_started": 1794253017454,
+      "status": "MISSING",
+      "persistence_finished": 1794253017455
+    }
+  ]
+}

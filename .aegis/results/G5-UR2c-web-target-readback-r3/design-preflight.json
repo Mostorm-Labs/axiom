@@ -1,0 +1,12 @@
+{
+  "status": "RESOLVED_FOR_IMPLEMENTATION",
+  "owner": "Private verification reader and capture buffer registry only; Runtime/SDK providers unchanged",
+  "selection": "Default READ_FRAMEBUFFER/null; BACK; null PIXEL_PACK_BUFFER; tightly packed RGBA. Preserve old/default per-FBO readBuffer and all PACK settings; never bind DRAW.",
+  "error_queue": "Consume and record preexisting/setup/read/restore errors explicitly; cannot restore consumed GL error queue. Preexisting unexpected error invalidates sample.",
+  "failure_order": "Synchronous read -> qualify -> capture both full targets, failed ROI and state before first await; buffer registry persists exact copied arrays for host streaming before cleanup. Never use later frames as substitutes.",
+  "identity": "Compiled R2 subject d9bd0a26+72 SDK members unchanged; separate new harness inventory and delta.",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

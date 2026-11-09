@@ -1,0 +1,86 @@
+{
+  "ledger": {
+    "schema": "g5-transient-display-two-windows-v1",
+    "planned_ids": [
+      "UR2CRB3-S1",
+      "UR2CRB3-N1"
+    ],
+    "historical_starts": 88,
+    "historical_charged_seconds": 5907,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CRB3-S1",
+        "status": "COMPLETED",
+        "reserved_seconds": 120,
+        "charged_seconds": 3,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/old-reader-lines.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 2.0154565420234576,
+          "peak_process_family_rss_kib": 1032320,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 120,
+          "last_stage": {
+            "stage": "reader-selftest-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "OBSERVED",
+        "elapsed_trusted": true
+      },
+      {
+        "id": "UR2CRB3-N1",
+        "status": "STOPPED",
+        "reserved_seconds": 600,
+        "charged_seconds": 341,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-web-target-readback-r3/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+          ],
+          "reason": "nonzero_exit",
+          "returncode": 2,
+          "elapsed_s": 340.4710372079862,
+          "peak_process_family_rss_kib": 2124976,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 600,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "HARD_FAILURE",
+            "error": "Error: PRODUCT_CHECK: continuous case failed S2-continuous-DPR1\n    at worker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/transient_display_retry.mjs:132:251)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-web-target-readback-r3/identity-adapter.mjs:15:100"
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "HARD_FAILURE",
+        "elapsed_trusted": true
+      }
+    ],
+    "remaining_status": "MISSING",
+    "cumulative_starts": 90,
+    "cumulative_charged_seconds": 6251,
+    "remaining_seconds": 2119
+  },
+  "unrun_ids": [],
+  "source_tree_sha256": "1bd0d06fb0a9abbac50eb234c40bce9070a8f95c2f76ece61c106922aa7e57ff"
+}

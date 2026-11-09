@@ -1,0 +1,64 @@
+{
+  "status": "BLOCKED_EVIDENCE_MECHANISM",
+  "official_Gate_PASS": false,
+  "source_tree_sha256": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "implementation_result": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/result.json",
+    "sha256": "173b413aeec018f92d3846c05e6377bf8486e6617f05d81e20370293a7025119",
+    "bytes": 17928
+  },
+  "failure_analysis": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/failure-analysis.json",
+    "sha256": "878353bd66324ada49efaabdb034e3324ba77e643dce394062715cf891a45c42",
+    "bytes": 10837
+  },
+  "independent_checks": {
+    "all15cumulative_postimages_match": true,
+    "native_handoff_and_inflight": {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-handoff-r2/native-handoff-review.json",
+      "sha256": "e9db42cb2110742623863bdfd470e2f165d1821a6ad9179ae5d5310480c21c43",
+      "bytes": 931
+    },
+    "failed_raw_bytes": 1747200,
+    "failed_RGBA_all_zero": true,
+    "last_good_equals_baseline": true
+  },
+  "findings": [
+    {
+      "id": "DR05-READ-TARGET-01",
+      "classification": "TEST_IMPLEMENTATION_DEFECT / actual target identity not established",
+      "owner": "verification/runners/g5 readback helpers",
+      "scope_of_block": "Web continuous actual-pixel evidence only; product rendering failure remains unresolved.",
+      "source": [
+        "verification/runners/g5/transient_display_retry.mjs:22",
+        "verification/runners/g5/ur2a_handoff.mjs:32"
+      ],
+      "failure_mode": "Probe callsreadPixels on current GL state without selecting/proving canonicalcanvas default readframebuffer, validating readbuffer/PBO/pack state and errors, or proving restoration. Offscreen GPU work can leave another readtarget.",
+      "independent_coverage": "Native actualSkSurface fail-pixel/progress tests independently green; priorcoldpixels andreceipt joins cannot establish the target of this failedliveGLread.",
+      "unique_detection_value": "Explicit readtarget/dimensions/GLvalidity separates realdefaultcanvaspixel loss from invalid/offscreen/PBO readback. Current0000ROI cannot do so.",
+      "why_previous_evidence_missed": "Probe assumed context identity implied framebuffer identity; no hostile read-state control or target metadata existed.",
+      "severity": "Blocking diagnostic correctness: the test can misclassify actual product behavior and stop real matrix."
+    },
+    {
+      "id": "DR05-FAILURE-CAPTURE-02",
+      "classification": "TEST_IMPLEMENTATION_DEFECT / frozen failure artifact omitted",
+      "owner": "verification/runners/g5 failure path",
+      "failure_mode": "LiveROI failure aborts without immediate fullcanonical+previewbuffers and authoritative target metadata; the olderbeforecoldcapture is insufficient. Existingawaitpersist before verdict can let laterframes replace originalfailure pixels beforecatch.",
+      "repair": "Qualify synchronously; if it fails, capture fullactualtargets+state synchronously beforefirstawait/nextRAF, thenpersist rawandmetadata beforecleanup/verdict. Explicitly recordMISSING ifunavailable; do not repurposeoldbeforebuffer."
+    }
+  ],
+  "web_spec_basis": {
+    "url": "https://registry.khronos.org/webgl/specs/2.0.0/",
+    "summary": "WebGL2 has distinct read/draw framebuffer binding; null selects contextdefault. Typed-arrayreadPixels is invalid withpixel-packbuffer bound and pack constraints apply. This establishes probeconditions, not the originalrecording rootcause."
+  },
+  "decision": "Preserve exactR2production/native/SDK work; authorize narrow verification-harness repair and bounded newevidence under sameusergoal. No authority/schema/API/AA/budget change is needed. Do not label genuineproduct failure or completeWebPASS from thisraw.",
+  "next_action": "Oneclosedtest-only package: sharedtarget-qualified reader/state restoration, independentfake+realWebGLcounterexample selftest, immediate failurefullcapture, thennormaloriginal10+all6continuous matrix against exactexistingR2SDK. Existingqualificationreceipt/native facts may be reused only at their exactunchangedruntimeidentities; oldpixelread uncertainty remainshistory.",
+  "ledger": {
+    "cumulative_starts": 88,
+    "charged_seconds": 5907,
+    "cap_seconds": 8370,
+    "remaining_seconds": 2463,
+    "control_new_browser_starts": 0
+  },
+  "control_product_changes": false
+}

@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: qualified default target preserves distinct READ/DRAW and both per-FBO read modes
+ok 1 - qualified default target preserves distinct READ/DRAW and both per-FBO read modes
+  ---
+  duration_ms: 4.401667
+  ...
+# Subtest: PBO and nontrivial PACK values are restored and produce tightly packed bytes
+ok 2 - PBO and nontrivial PACK values are restored and produce tightly packed bytes
+  ---
+  duration_ms: 0.276666
+  ...
+# Subtest: valid transparent default remains data and fails an opaque pixel oracle
+ok 3 - valid transparent default remains data and fails an opaque pixel oracle
+  ---
+  duration_ms: 0.20925
+  ...
+# Subtest: invalid ROI, lost context and preexisting errors cannot masquerade as valid zero pixels
+ok 4 - invalid ROI, lost context and preexisting errors cannot masquerade as valid zero pixels
+  ---
+  duration_ms: 0.395209
+  ...
+# Subtest: read exception and context loss during read restore state and remain invalid
+ok 5 - read exception and context loss during read restore state and remain invalid
+  ---
+  duration_ms: 0.511083
+  ...
+# Subtest: restoration failure is explicit rather than a valid sample
+ok 6 - restoration failure is explicit rather than a valid sample
+  ---
+  duration_ms: 0.593708
+  ...
+# Subtest: failure captures both full targets and state synchronously, with explicit unavailable role
+ok 7 - failure captures both full targets and state synchronously, with explicit unavailable role
+  ---
+  duration_ms: 0.602125
+  ...
+# Subtest: persistence failure is explicit MISSING, never substituted by a later read
+ok 8 - persistence failure is explicit MISSING, never substituted by a later read
+  ---
+  duration_ms: 3.286083
+  ...
+# Subtest: invalid read classification remains distinct from missing valid failure artifact
+ok 9 - invalid read classification remains distinct from missing valid failure artifact
+  ---
+  duration_ms: 0.346333
+  ...
+# Subtest: persisted failure buffers are not reread or relabelled on the outer catch path
+ok 10 - persisted failure buffers are not reread or relabelled on the outer catch path
+  ---
+  duration_ms: 0.399958
+  ...
+# Subtest: unsuccessful default target selection cannot qualify merely because GL error queue is empty
+ok 11 - unsuccessful default target selection cannot qualify merely because GL error queue is empty
+  ---
+  duration_ms: 0.481458
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 48.889375

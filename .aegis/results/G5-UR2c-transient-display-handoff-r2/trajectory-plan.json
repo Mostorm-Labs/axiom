@@ -1,0 +1,3263 @@
+{
+  "schema": "g5-transient-positive-trajectories-v2",
+  "viewport_css": [
+    800,
+    500
+  ],
+  "radius_world": 16,
+  "AA_guard_css": 16,
+  "sentinel": {
+    "left": 40,
+    "top": 40,
+    "right": 300,
+    "bottom": 460
+  },
+  "camera_source": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/local-web/UR2CDR-1-N1/S0-continuous-DPR1-result.json",
+    "sha256": "887836fcc49a2f21a3256b46623c15803f0e3f4729f33be5afcb0fb4855a0f9f"
+  },
+  "kernel": {
+    "path": "out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+    "sha256": "551b7f9230a853b59d44b0a2c35a25c4feb811a8872b8c715593d1845bd7440e"
+  },
+  "shared_input": {
+    "path": "verification/sdk_web_external/consumer/pointer_input.mjs",
+    "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+    "policy": "CSS->logical ratio1; DPR does not enter event facts"
+  },
+  "helper_sha256": "dffb2d416b681db5746c99524d9dbd0fcd46062dfd86ba139bc27fc7cd62124e",
+  "fixtures": {
+    "S0": {
+      "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+      "snapshot_length": 2080135,
+      "traces": [
+        {
+          "index": 0,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "view_points": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              469.7833251953125,
+              183.0
+            ],
+            [
+              473.77374267578125,
+              186.0
+            ],
+            [
+              476.30987548828125,
+              189.0
+            ],
+            [
+              476.9712829589844,
+              192.0
+            ],
+            [
+              475.6483459472656,
+              195.0
+            ],
+            [
+              472.56036376953125,
+              198.0
+            ],
+            [
+              468.2192077636719,
+              201.0
+            ],
+            [
+              463.34442138671875,
+              204.0
+            ]
+          ],
+          "world_points": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              469.7833251953125,
+              183.0
+            ],
+            [
+              473.77374267578125,
+              186.0
+            ],
+            [
+              476.30987548828125,
+              189.0
+            ],
+            [
+              476.9712829589844,
+              192.0
+            ],
+            [
+              475.6483459472656,
+              195.0
+            ],
+            [
+              472.56036376953125,
+              198.0
+            ],
+            [
+              468.2192077636719,
+              201.0
+            ],
+            [
+              463.34442138671875,
+              204.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 431.34442138671875,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/input.json",
+                "sha256": "97e12e12522a928dce8f8b19aa61c9e82e8a6d98e0bb910465d89273ff720d03"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/derived.json",
+                "sha256": "e6b61ec27d90458259bb3c80f5791aff31605bc6f5112fb6f8b1b1a2de4f0f07"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/request.json",
+                "sha256": "6b011aa029d5970d0c12daef7cb5fbae43b24f3696ac9efeb244e94e46d9680d"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/decisions.json",
+                "sha256": "1b553fa6900ffef8bfad5431503f18e3e7990dbe4e0f57cc627ffe20aa51b0ee"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR2/input.json",
+                "sha256": "ad357315f8f3927268576c5bfbd41514736d05afbb692157cfea9ef7b4b2ef81"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR2/derived.json",
+                "sha256": "e8604d361636ec846ed30bb75db97eb2678d00ffe65dace1342d6c5b5fb11568"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR2/request.json",
+                "sha256": "6b011aa029d5970d0c12daef7cb5fbae43b24f3696ac9efeb244e94e46d9680d"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/decisions.json",
+                "sha256": "1b553fa6900ffef8bfad5431503f18e3e7990dbe4e0f57cc627ffe20aa51b0ee"
+              },
+              "same_request_sha256": "6b011aa029d5970d0c12daef7cb5fbae43b24f3696ac9efeb244e94e46d9680d"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR4/input.json",
+                "sha256": "ea8c85fdd73559df878190b51d46d21beab8765f78bdcdb71e5b202e72e60fd5"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR4/derived.json",
+                "sha256": "6716e3b8a636b044ca45339ccf063341ca4a0f4df12d9e5e104ff5c34da0a7a5"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-DPR4/request.json",
+                "sha256": "6b011aa029d5970d0c12daef7cb5fbae43b24f3696ac9efeb244e94e46d9680d"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-trial-0/decisions.json",
+                "sha256": "1b553fa6900ffef8bfad5431503f18e3e7990dbe4e0f57cc627ffe20aa51b0ee"
+              },
+              "same_request_sha256": "6b011aa029d5970d0c12daef7cb5fbae43b24f3696ac9efeb244e94e46d9680d"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-already-erased-interior-negative/input.json",
+              "sha256": "f199f386787d3896f913f1dfe20a8ae8e88ba3994587fbdf4eb52b08a1baa89f"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-already-erased-interior-negative/derived.json",
+              "sha256": "5b429bcc7688c75c6e805006455215103afca4ca8160ffb92d0c1bbb1ab7ffff"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-already-erased-interior-negative/request.json",
+              "sha256": "d961458154321f23cfb444f0eee809724007ac77274a7a701dfe997133df5316"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-already-erased-interior-negative/decisions.json",
+              "sha256": "1ecd32041fae2693b1a4f81f5df076609149c840e6a9da56c4ce90a33bc72cfc"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-wrong-camera-negative/input.json",
+              "sha256": "deed5fd7c3819ab641d3819d4e7bafd7ae5dc6cd292a7a15b9095ee793bad53a"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-wrong-camera-negative/derived.json",
+              "sha256": "70fa8c711d4ac0379016415b2f498d2cdd050ea597e5dcb497b1d5a1aef6faec"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-wrong-camera-negative/request.json",
+              "sha256": "c45a2a1cc0641f9d44bdac48130c83fde66ff399caca2d1a8898e5c6815cda86"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/0-wrong-camera-negative/decisions.json",
+              "sha256": "cd168f1e00d83b63b7819befa6f643ccdc3ab8fbc2893ca78e39cc218433cc0a"
+            }
+          }
+        },
+        {
+          "index": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "view_points": [
+            [
+              520.0,
+              205.0
+            ],
+            [
+              524.7833251953125,
+              208.0
+            ],
+            [
+              528.7737426757812,
+              211.0
+            ],
+            [
+              531.3098754882812,
+              214.0
+            ],
+            [
+              531.9712524414062,
+              217.0
+            ],
+            [
+              530.6483764648438,
+              220.0
+            ],
+            [
+              527.5603637695312,
+              223.0
+            ],
+            [
+              523.2191772460938,
+              226.0
+            ],
+            [
+              518.3444213867188,
+              229.0
+            ]
+          ],
+          "world_points": [
+            [
+              520.0,
+              205.0
+            ],
+            [
+              524.7833251953125,
+              208.0
+            ],
+            [
+              528.7737426757812,
+              211.0
+            ],
+            [
+              531.3098754882812,
+              214.0
+            ],
+            [
+              531.9712524414062,
+              217.0
+            ],
+            [
+              530.6483764648438,
+              220.0
+            ],
+            [
+              527.5603637695312,
+              223.0
+            ],
+            [
+              523.2191772460938,
+              226.0
+            ],
+            [
+              518.3444213867188,
+              229.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 486.34442138671875,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/input.json",
+                "sha256": "24aadeaf2cd424ad039ff3e473b3630e90d0aa58328ab08aa0875b9e19085fa5"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/derived.json",
+                "sha256": "ef2d2d91a1b57bc9cc7464cb63debf99a6914d756a13e15ea2ee7c428bb2cc52"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/request.json",
+                "sha256": "9dfb0a18172651631ea44965deee29c97ac260453dfd9a51d606c2d6448db165"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/decisions.json",
+                "sha256": "ba3ae7663b18d4571558fbc192e5afa411c084430553551553108f57c762ecc8"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR2/input.json",
+                "sha256": "648904a078b1386b98ef610321a03aa6941e4b37cef1c929a7538fcea7c8a34f"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR2/derived.json",
+                "sha256": "f24ac952a1313834d79596428349629b2b9e5a1ef07756d3e9ab4fbc71bef760"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR2/request.json",
+                "sha256": "9dfb0a18172651631ea44965deee29c97ac260453dfd9a51d606c2d6448db165"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/decisions.json",
+                "sha256": "ba3ae7663b18d4571558fbc192e5afa411c084430553551553108f57c762ecc8"
+              },
+              "same_request_sha256": "9dfb0a18172651631ea44965deee29c97ac260453dfd9a51d606c2d6448db165"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR4/input.json",
+                "sha256": "be80691f632a65b7e8e38abd92acdc26d696d02aac1ef38545cabf5bfb641bca"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR4/derived.json",
+                "sha256": "f51daf0a968730c50eb7a8f397a844a552ed48cea9d49f4823f8c346110ed18e"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-DPR4/request.json",
+                "sha256": "9dfb0a18172651631ea44965deee29c97ac260453dfd9a51d606c2d6448db165"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-trial-0/decisions.json",
+                "sha256": "ba3ae7663b18d4571558fbc192e5afa411c084430553551553108f57c762ecc8"
+              },
+              "same_request_sha256": "9dfb0a18172651631ea44965deee29c97ac260453dfd9a51d606c2d6448db165"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-already-erased-interior-negative/input.json",
+              "sha256": "4957ed25ed79eb11275eccc9476793e7157265bd6775543bdbcab54036562051"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-already-erased-interior-negative/derived.json",
+              "sha256": "956441c4323a761983d3d72925546d5f060b59f6c3338edc272045d08efe0a58"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-already-erased-interior-negative/request.json",
+              "sha256": "ea5677ea5ce0a4eba733783a2093ca800cfe45c915f9e27ed0fc31b2389a7d5b"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-already-erased-interior-negative/decisions.json",
+              "sha256": "c662854d92f1c4626484ad57800a78dda77ab24f312398ceda4e6c3424012f45"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-wrong-camera-negative/input.json",
+              "sha256": "2c9dab441ba495ac326c94b1547d4e0ad61b48dca75ffe5bf5475a73534a3196"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-wrong-camera-negative/derived.json",
+              "sha256": "6982e5d45512c40956998d651c8bf638bdb1fcac0531c1a03df598b2170444fb"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-wrong-camera-negative/request.json",
+              "sha256": "0c4509c51ad819d0c02030fceab3817b9fedf262b5d26097bfc44e9310cd6868"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/1-wrong-camera-negative/decisions.json",
+              "sha256": "155b83a3370989c53e5c5ef8d8726e5b8c7a866067e76dd3070f49d1c782e093"
+            }
+          }
+        },
+        {
+          "index": 2,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              467.87506103515625,
+              195.0533905029297
+            ],
+            [
+              475.60528564453125,
+              199.901611328125
+            ],
+            [
+              482.0540771484375,
+              204.7498321533203
+            ],
+            [
+              486.1526794433594,
+              209.59805297851562
+            ],
+            [
+              487.2215576171875,
+              214.4462890625
+            ],
+            [
+              485.0835876464844,
+              219.2945098876953
+            ],
+            [
+              480.0931701660156,
+              224.14273071289062
+            ],
+            [
+              473.0775451660156,
+              228.99095153808594
+            ],
+            [
+              465.19952392578125,
+              233.8391876220703
+            ]
+          ],
+          "world_points": [
+            [
+              490.0,
+              240.00001525878906
+            ],
+            [
+              494.7833251953125,
+              243.0
+            ],
+            [
+              498.77374267578125,
+              245.99998474121094
+            ],
+            [
+              501.3099060058594,
+              249.0
+            ],
+            [
+              501.9712829589844,
+              252.0
+            ],
+            [
+              500.64837646484375,
+              254.99998474121094
+            ],
+            [
+              497.5603332519531,
+              258.0
+            ],
+            [
+              493.21917724609375,
+              261.0
+            ],
+            [
+              488.34442138671875,
+              264.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 423.3423271179199,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/input.json",
+                "sha256": "5799c4c5c4723b7289206ca6cc786a5ce056efab54805ae6eacd761b1f2e0d23"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/derived.json",
+                "sha256": "d5dd2c30f75082219c89e007457df7f1177024d44ebc0f37994a15c5672c3a56"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/request.json",
+                "sha256": "154b23ad2af54863b3557b3542ac9d6432e7095542b52fb9feaab0b7af279807"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/decisions.json",
+                "sha256": "18a49d0c8c54f72f3ecbe8a0546eecf4a78d0deb1752301139746f4e48bf0714"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR2/input.json",
+                "sha256": "a2eb28235aba98064360b9e137792c3e1212015682dc26e878bee0ca3bfcd157"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR2/derived.json",
+                "sha256": "25c3c47b802df35275a19eeed3bd514e60e2d3891a7a2b1d0ddceaee68e18b3c"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR2/request.json",
+                "sha256": "154b23ad2af54863b3557b3542ac9d6432e7095542b52fb9feaab0b7af279807"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/decisions.json",
+                "sha256": "18a49d0c8c54f72f3ecbe8a0546eecf4a78d0deb1752301139746f4e48bf0714"
+              },
+              "same_request_sha256": "154b23ad2af54863b3557b3542ac9d6432e7095542b52fb9feaab0b7af279807"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR4/input.json",
+                "sha256": "9a38dadc33a74ae08e1919bac824734a18b477dc9d143d287fa1722dd3191fba"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR4/derived.json",
+                "sha256": "b7aad6199f0cb5dbbe4b3842acd0b8723e976bc5b94c63613cee88f28943e200"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-DPR4/request.json",
+                "sha256": "154b23ad2af54863b3557b3542ac9d6432e7095542b52fb9feaab0b7af279807"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-trial-0/decisions.json",
+                "sha256": "18a49d0c8c54f72f3ecbe8a0546eecf4a78d0deb1752301139746f4e48bf0714"
+              },
+              "same_request_sha256": "154b23ad2af54863b3557b3542ac9d6432e7095542b52fb9feaab0b7af279807"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-already-erased-interior-negative/input.json",
+              "sha256": "43ef882dfd44b8fef48868b1353cae811c3a0a039cef035e043b234df3559867"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-already-erased-interior-negative/derived.json",
+              "sha256": "1bd7968fd2b922264a3ef2c1908065507250d6d6d1e911841f5dea7aca911c13"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-already-erased-interior-negative/request.json",
+              "sha256": "9a5644a622f857987124921566f7b0df744c9312cfbf671df59ec1a00a6219bc"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-already-erased-interior-negative/decisions.json",
+              "sha256": "41f752b25fd44f00aca743a59ace21765d5b9f392369d5b0d4c11af5424f1ffe"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-wrong-camera-negative/input.json",
+              "sha256": "a9863a034fb1f9724ee157a9e3093ae37d8445d2eeb9c026a38d3ec35af0882e"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-wrong-camera-negative/derived.json",
+              "sha256": "cc064130f289e74d7847bac183a7c222ebb784ef25fac57042459e82e2d893f8"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-wrong-camera-negative/request.json",
+              "sha256": "0ab37e4fff23eb1f811aa964fd5668b5d7094eb038e41d159160b42ad5d1f5aa"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/2-wrong-camera-negative/decisions.json",
+              "sha256": "5ba0f5e8c5ad2a75affd7e83b56589495c4f9325a184c744616fcd98e381d07b"
+            }
+          }
+        },
+        {
+          "index": 3,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              532.51806640625,
+              130.410400390625
+            ],
+            [
+              540.248291015625,
+              135.2586212158203
+            ],
+            [
+              546.6970825195312,
+              140.10684204101562
+            ],
+            [
+              550.795654296875,
+              144.95506286621094
+            ],
+            [
+              551.864501953125,
+              149.8032989501953
+            ],
+            [
+              549.7266235351562,
+              154.65151977539062
+            ],
+            [
+              544.7361450195312,
+              159.49974060058594
+            ],
+            [
+              537.720458984375,
+              164.34796142578125
+            ],
+            [
+              529.842529296875,
+              169.19619750976562
+            ]
+          ],
+          "world_points": [
+            [
+              530.0,
+              200.0
+            ],
+            [
+              534.7833251953125,
+              202.99998474121094
+            ],
+            [
+              538.7737426757812,
+              206.0
+            ],
+            [
+              541.3098754882812,
+              209.0
+            ],
+            [
+              541.9712524414062,
+              212.0
+            ],
+            [
+              540.6483764648438,
+              215.0
+            ],
+            [
+              537.5603637695312,
+              218.00001525878906
+            ],
+            [
+              533.2191772460938,
+              221.0
+            ],
+            [
+              528.3444213867188,
+              224.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 487.9853324890137,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/input.json",
+                "sha256": "000c48b55a270b215a954f725c7030b5335a3a13dad9d14314bfd8a2277c0388"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/derived.json",
+                "sha256": "58515e779e0cc2b8004a90c056d1473257607fc0b888ed124e3753c5b4e2cebb"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/request.json",
+                "sha256": "b6de58f9c694067699834560683691136b70a5e78f041e98cac2b87bc4c633d9"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/decisions.json",
+                "sha256": "3b410781faaa7853c798c5c8bb5bf413d306fbc2b5a1a2f23d1f0561a82a079d"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR2/input.json",
+                "sha256": "4c56815decf5b57a572314890b88338fddb1f2462dcee5c454094893459ac970"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR2/derived.json",
+                "sha256": "ca6c48f38db19fdad0939464a5bad3e6cf943fd42e105fef8e9a9cb72113a823"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR2/request.json",
+                "sha256": "b6de58f9c694067699834560683691136b70a5e78f041e98cac2b87bc4c633d9"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/decisions.json",
+                "sha256": "3b410781faaa7853c798c5c8bb5bf413d306fbc2b5a1a2f23d1f0561a82a079d"
+              },
+              "same_request_sha256": "b6de58f9c694067699834560683691136b70a5e78f041e98cac2b87bc4c633d9"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR4/input.json",
+                "sha256": "71fbacd6c86b1cbe1e8bbace13b21f27a3196fe4a41229feb70f2ce49f73174d"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR4/derived.json",
+                "sha256": "3f820d6fd184677a0550c919b7b354f50885d6eea309575a6f6195d6ab2c01bf"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-DPR4/request.json",
+                "sha256": "b6de58f9c694067699834560683691136b70a5e78f041e98cac2b87bc4c633d9"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-trial-1/decisions.json",
+                "sha256": "3b410781faaa7853c798c5c8bb5bf413d306fbc2b5a1a2f23d1f0561a82a079d"
+              },
+              "same_request_sha256": "b6de58f9c694067699834560683691136b70a5e78f041e98cac2b87bc4c633d9"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-already-erased-interior-negative/input.json",
+              "sha256": "6459da4b947cda8630241b87151a28bf533e736971ea9e32f68458086ad20947"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-already-erased-interior-negative/derived.json",
+              "sha256": "bca396b0d7b37296e9446acc804ee683cabf441688ea60409fdef2a1c2e2d6f2"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-already-erased-interior-negative/request.json",
+              "sha256": "24df39a77142e9aade112860082cc9a5ec3d704b3caf1afada537eb4a733ed8f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-already-erased-interior-negative/decisions.json",
+              "sha256": "7db8a481d2e99e22283a6885d1a656cc917ae89813baf4a3b5307d01d3a0c512"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-wrong-camera-negative/input.json",
+              "sha256": "b830e379c40cf3896110ab79a85279f63b7efeb7303eec90043b84dd8dc6568f"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-wrong-camera-negative/derived.json",
+              "sha256": "a8478defe320897092f30c6e31dda0c01b72a42b15fffd6b1862fe681ba66678"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-wrong-camera-negative/request.json",
+              "sha256": "36c814acfdd982264a26d317b76436b9ad27fb4acaa3a010104df07444a852b1"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/3-wrong-camera-negative/decisions.json",
+              "sha256": "70ccd019068bb5d64ffb085455ae71cd749c125e116dee81bd375335879512c7"
+            }
+          }
+        },
+        {
+          "index": 4,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              597.1610717773438,
+              162.7318878173828
+            ],
+            [
+              604.8912353515625,
+              167.58010864257812
+            ],
+            [
+              611.340087890625,
+              172.4283447265625
+            ],
+            [
+              615.4386596679688,
+              177.2765655517578
+            ],
+            [
+              616.5075073242188,
+              182.12478637695312
+            ],
+            [
+              614.36962890625,
+              186.97300720214844
+            ],
+            [
+              609.379150390625,
+              191.8212432861328
+            ],
+            [
+              602.3634643554688,
+              196.66946411132812
+            ],
+            [
+              594.4855346679688,
+              201.51768493652344
+            ]
+          ],
+          "world_points": [
+            [
+              570.0,
+              219.99998474121094
+            ],
+            [
+              574.7833251953125,
+              223.0
+            ],
+            [
+              578.7737426757812,
+              226.0
+            ],
+            [
+              581.3098754882812,
+              228.99998474121094
+            ],
+            [
+              581.9712524414062,
+              232.0
+            ],
+            [
+              580.6483764648438,
+              235.0
+            ],
+            [
+              577.5603637695312,
+              238.0
+            ],
+            [
+              573.2191772460938,
+              241.0
+            ],
+            [
+              568.3444213867188,
+              244.00001525878906
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 552.6283378601074,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/input.json",
+                "sha256": "3e46571c546642d79ddeea489669ad69ab32681b4085f0b031abc363cb3bec7b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/derived.json",
+                "sha256": "003aefc61afce7a1c45dff37e43dc064361f7b46ed374a5a676c9adcdb79c1fc"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/request.json",
+                "sha256": "cc0a24e5fac73504744176cac3b10de2429eca341431d146ecdc556d59cd5fe1"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/decisions.json",
+                "sha256": "026a48f980c0f5c865b9eb5661642314d3a90ab6e3cab31689dacd93a166ee30"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR2/input.json",
+                "sha256": "ea727d2cbb5ea2efddfa8996baa994875aef1ec83d1f3dffec860ebf561e1ffb"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR2/derived.json",
+                "sha256": "d6fb8c8c294ce2ef9fcbfa3078b89d6758171a1e4f12be80a625f357648ec75d"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR2/request.json",
+                "sha256": "cc0a24e5fac73504744176cac3b10de2429eca341431d146ecdc556d59cd5fe1"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/decisions.json",
+                "sha256": "026a48f980c0f5c865b9eb5661642314d3a90ab6e3cab31689dacd93a166ee30"
+              },
+              "same_request_sha256": "cc0a24e5fac73504744176cac3b10de2429eca341431d146ecdc556d59cd5fe1"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR4/input.json",
+                "sha256": "d1e390fc90006e0ed2e7be16605dad6bcf616cbaa4257f6454c860a2567827e1"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR4/derived.json",
+                "sha256": "8e439ad21b874a143ab60cb9321e2f21825c3917bd1fcbc38fe1b0342edc91fe"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-DPR4/request.json",
+                "sha256": "cc0a24e5fac73504744176cac3b10de2429eca341431d146ecdc556d59cd5fe1"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-trial-2/decisions.json",
+                "sha256": "026a48f980c0f5c865b9eb5661642314d3a90ab6e3cab31689dacd93a166ee30"
+              },
+              "same_request_sha256": "cc0a24e5fac73504744176cac3b10de2429eca341431d146ecdc556d59cd5fe1"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-already-erased-interior-negative/input.json",
+              "sha256": "b5333522914a88315bfc34a497edc5689cdd87a9383073d4d86a53d295cb37d0"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-already-erased-interior-negative/derived.json",
+              "sha256": "19b99664f66e90640b77e8253b0f72003374656cd52d1cdfa91cde7ef8fdcc38"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-already-erased-interior-negative/request.json",
+              "sha256": "2bf2ba8630b723a98344043f975c09e4e810acba923dfcf1d31118fb88de8f14"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-already-erased-interior-negative/decisions.json",
+              "sha256": "dc2bb85e9c79c743f75fb4198110c092d2f5b9f398bbddf48739d1eb021a37e3"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-wrong-camera-negative/input.json",
+              "sha256": "1fe9943df7c9ede35eb6b21d289dc4c7e04c0dd34ac87ebe9ca58f0aab0fcc45"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-wrong-camera-negative/derived.json",
+              "sha256": "e2364590d271fdc354cd0c2b63f829c26f87403878d8eacae29258a353e94ac2"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-wrong-camera-negative/request.json",
+              "sha256": "b9a7dec13ac9fa1d499c49279bb7d5d65e7cd1bb801b5042ca667ba78c7e9302"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/4-wrong-camera-negative/decisions.json",
+              "sha256": "113d13119b80c6335dc3696a21ab6aae1972fab274b493816f58b834b6269a61"
+            }
+          }
+        },
+        {
+          "index": 5,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              484.03582763671875,
+              275.85711669921875
+            ],
+            [
+              491.7660217285156,
+              280.7053527832031
+            ],
+            [
+              498.21484375,
+              285.5535888671875
+            ],
+            [
+              502.31341552734375,
+              290.40179443359375
+            ],
+            [
+              503.3822937011719,
+              295.2500305175781
+            ],
+            [
+              501.24432373046875,
+              300.0982360839844
+            ],
+            [
+              496.2539367675781,
+              304.94647216796875
+            ],
+            [
+              489.23828125,
+              309.7947082519531
+            ],
+            [
+              481.3602600097656,
+              314.6429138183594
+            ]
+          ],
+          "world_points": [
+            [
+              500.0,
+              290.0
+            ],
+            [
+              504.7832946777344,
+              293.0
+            ],
+            [
+              508.77374267578125,
+              296.0
+            ],
+            [
+              511.30987548828125,
+              299.0
+            ],
+            [
+              511.9712829589844,
+              302.0
+            ],
+            [
+              510.6483459472656,
+              305.0
+            ],
+            [
+              507.56036376953125,
+              308.0
+            ],
+            [
+              503.2192077636719,
+              311.0
+            ],
+            [
+              498.3443908691406,
+              314.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 439.5030632019043,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/input.json",
+                "sha256": "2551913f5414fb92cd3ea77a9cdbe47e1648de619483a7a54821295e9bf0169b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/derived.json",
+                "sha256": "c4e927a30758223c6af9d2d3196bba9ec47f8dcb249af5390c6a89f2e749f17f"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/request.json",
+                "sha256": "e53544d5995cd441fbbfa93bbc740983d41de3cb85e17f1884c920b790da5979"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/decisions.json",
+                "sha256": "d3b662ff49bdd36f109d634383d6b295c2b41c175af7a758d8103065e7c42d9a"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR2/input.json",
+                "sha256": "fe27649e0e72e781db34eb55f23ab13a3a04d90fc8f1484d68b272a9740719fc"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR2/derived.json",
+                "sha256": "4b1352f26346efd22f9a25dc63a0b6b393e9d303c12260d0577178b7bb02ae9b"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR2/request.json",
+                "sha256": "e53544d5995cd441fbbfa93bbc740983d41de3cb85e17f1884c920b790da5979"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/decisions.json",
+                "sha256": "d3b662ff49bdd36f109d634383d6b295c2b41c175af7a758d8103065e7c42d9a"
+              },
+              "same_request_sha256": "e53544d5995cd441fbbfa93bbc740983d41de3cb85e17f1884c920b790da5979"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR4/input.json",
+                "sha256": "c69d88e03b73ae605fed6cdcf4f8f3a47c94fa95d6b7e7235eef492971c47e23"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR4/derived.json",
+                "sha256": "5394433aaece02005622f4c2b82afa9b1290b69bd018b04a1b9f854f36788b44"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-DPR4/request.json",
+                "sha256": "e53544d5995cd441fbbfa93bbc740983d41de3cb85e17f1884c920b790da5979"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-trial-3/decisions.json",
+                "sha256": "d3b662ff49bdd36f109d634383d6b295c2b41c175af7a758d8103065e7c42d9a"
+              },
+              "same_request_sha256": "e53544d5995cd441fbbfa93bbc740983d41de3cb85e17f1884c920b790da5979"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-already-erased-interior-negative/input.json",
+              "sha256": "97256a95ac65e103cb339a16ab9901006d82e8f4306aec924eada73db124c602"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-already-erased-interior-negative/derived.json",
+              "sha256": "0934ba660875d9031073b1402a30d72cf3dd7d8fe1aed719ef0a03d519e37ae3"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-already-erased-interior-negative/request.json",
+              "sha256": "4859c5bb71837dca89a933607f60e81b444a030a037aa02cdd61b1f39b964bc5"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-already-erased-interior-negative/decisions.json",
+              "sha256": "09e4e491e0bee8fa268aef9122b3f5895a81eecf6057cf721b7e03942cb71bc7"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-wrong-camera-negative/input.json",
+              "sha256": "ccec12d924ded7f0102007a3e7c3b762a6f30cfd6d0fff6431252afa057e3834"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-wrong-camera-negative/derived.json",
+              "sha256": "396810bb56da4a369cab16bb2aae05ff6b8c8f5f16182a9ebf962364a84c6296"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-wrong-camera-negative/request.json",
+              "sha256": "8abb5c049f77ff891c4e690b6c940bb38015afec2409595ca557f9507cdec4f5"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/5-wrong-camera-negative/decisions.json",
+              "sha256": "a3c637d88ceb542265a92ba857b6718e3dc3a29cd04345241bb20aa0f0d8f8ca"
+            }
+          }
+        },
+        {
+          "index": 6,
+          "camera": {
+            "scale": 2.61169695854187,
+            "x": -847.61181640625,
+            "y": -504.390869140625
+          },
+          "view_points": [
+            [
+              588.821533203125,
+              226.88427734375
+            ],
+            [
+              601.3140869140625,
+              234.71937561035156
+            ],
+            [
+              611.73583984375,
+              242.55445861816406
+            ],
+            [
+              618.3594970703125,
+              250.38955688476562
+            ],
+            [
+              620.0867919921875,
+              258.2246398925781
+            ],
+            [
+              616.6318359375,
+              266.0597229003906
+            ],
+            [
+              608.56689453125,
+              273.89483642578125
+            ],
+            [
+              597.22900390625,
+              281.72991943359375
+            ],
+            [
+              584.4976196289062,
+              289.56500244140625
+            ]
+          ],
+          "world_points": [
+            [
+              550.0,
+              280.0
+            ],
+            [
+              554.7833251953125,
+              283.0
+            ],
+            [
+              558.7737426757812,
+              286.0
+            ],
+            [
+              561.3098754882812,
+              289.0
+            ],
+            [
+              561.9712524414062,
+              292.0
+            ],
+            [
+              560.6483764648438,
+              294.9999694824219
+            ],
+            [
+              557.5603637695312,
+              298.0
+            ],
+            [
+              553.2191772460938,
+              301.0
+            ],
+            [
+              548.3443603515625,
+              304.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 526.7104682922363,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/input.json",
+                "sha256": "94e667f7e67d1fa372e8e55fd472235c16ea31bd912d33df69d2ff6b9bd3c875"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/derived.json",
+                "sha256": "24d7f8dbbc051b86008fe406e61a591e8162b0e3d34fdb185542cccd336a6f86"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/request.json",
+                "sha256": "e76d695c59fcada3c6a7cdce8512a0c6d7a91ffecc810addd46c601a1e4b8480"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/decisions.json",
+                "sha256": "4a77fb010cf385a5f9e11e1e29fadfdfce35fac49284ccc587efc97accad2925"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR2/input.json",
+                "sha256": "b0b0e5d67777a25ce812b0cffceae02e309e0b3cd35910e96bad78ddc2252d7f"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR2/derived.json",
+                "sha256": "772ef2162324e3663216be7492a3e370eba43243826a022fe0d492d7a3c8ae36"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR2/request.json",
+                "sha256": "e76d695c59fcada3c6a7cdce8512a0c6d7a91ffecc810addd46c601a1e4b8480"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/decisions.json",
+                "sha256": "4a77fb010cf385a5f9e11e1e29fadfdfce35fac49284ccc587efc97accad2925"
+              },
+              "same_request_sha256": "e76d695c59fcada3c6a7cdce8512a0c6d7a91ffecc810addd46c601a1e4b8480"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR4/input.json",
+                "sha256": "734ffa128cb46ff4279b295a662e73d2a1ab6a456627822383411aeba48678e4"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR4/derived.json",
+                "sha256": "4e618b54b1b5eb9ec004af3e53c7249bed07c60cfdabcfa3ec8a83d7e442be13"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-DPR4/request.json",
+                "sha256": "e76d695c59fcada3c6a7cdce8512a0c6d7a91ffecc810addd46c601a1e4b8480"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-trial-4/decisions.json",
+                "sha256": "4a77fb010cf385a5f9e11e1e29fadfdfce35fac49284ccc587efc97accad2925"
+              },
+              "same_request_sha256": "e76d695c59fcada3c6a7cdce8512a0c6d7a91ffecc810addd46c601a1e4b8480"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-already-erased-interior-negative/input.json",
+              "sha256": "48d8a3ec598ff4fa033562074480d61f20b0a3c76f21c0a54e943f57457df4b8"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-already-erased-interior-negative/derived.json",
+              "sha256": "79331a49c02feb0f137c0e0ee2d113fea5ef54d299935673deeae510f58d06b8"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-already-erased-interior-negative/request.json",
+              "sha256": "a9081b42c7cb2955a1b331ce80d1aeac01e96ecb6b27a5274b1339c9498ad5dc"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-already-erased-interior-negative/decisions.json",
+              "sha256": "62057af2cf1f712b149e023f73a85ff5c2b09ebca3d52c8becf85472949bc336"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-wrong-camera-negative/input.json",
+              "sha256": "aa446919770baf4ce54caca63ad3be6f4068337b712c896ca28ef16f07e8401c"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-wrong-camera-negative/derived.json",
+              "sha256": "50beaad4e18b515b83ee1a5a23ecf40c1de236a3ab7237199906b539b8cc4a0d"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-wrong-camera-negative/request.json",
+              "sha256": "bd743cb93768fbad0c69057ae41b41083bbc934bae497fc11a231a271386cdf8"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/6-wrong-camera-negative/decisions.json",
+              "sha256": "f05cd1664d523b8f3477505d4464fd7b1796cca9fbdfacd58c48685f599134d7"
+            }
+          }
+        },
+        {
+          "index": 7,
+          "camera": {
+            "scale": 2.61169695854187,
+            "x": -847.61181640625,
+            "y": -504.390869140625
+          },
+          "view_points": [
+            [
+              667.1724243164062,
+              174.6503448486328
+            ],
+            [
+              679.6650390625,
+              182.4854278564453
+            ],
+            [
+              690.0867919921875,
+              190.32052612304688
+            ],
+            [
+              696.7103881835938,
+              198.15560913085938
+            ],
+            [
+              698.4376831054688,
+              205.99070739746094
+            ],
+            [
+              694.9827270507812,
+              213.82579040527344
+            ],
+            [
+              686.9177856445312,
+              221.660888671875
+            ],
+            [
+              675.5799560546875,
+              229.4959716796875
+            ],
+            [
+              662.8485717773438,
+              237.33106994628906
+            ]
+          ],
+          "world_points": [
+            [
+              580.0,
+              260.0
+            ],
+            [
+              584.7833251953125,
+              263.0
+            ],
+            [
+              588.7737426757812,
+              266.0
+            ],
+            [
+              591.3098754882812,
+              269.0
+            ],
+            [
+              591.9712524414062,
+              272.0
+            ],
+            [
+              590.6483154296875,
+              275.0
+            ],
+            [
+              587.5603637695312,
+              278.0
+            ],
+            [
+              583.2191772460938,
+              281.0
+            ],
+            [
+              578.344482421875,
+              284.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 605.0614204406738,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/input.json",
+                "sha256": "cd4d13db5f180f38a8019529c652708f38687a7e40e15df7919e13459548075b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/derived.json",
+                "sha256": "facc964f1794850f8379feddd234215ffd0579f8667e85307ee99c6a3e2ae725"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/request.json",
+                "sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/decisions.json",
+                "sha256": "0f1583cb747457e13c772e3c14639fd82e762efcfe13ce80a70f3f7e510c6de0"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR2/input.json",
+                "sha256": "c423de3bc3db5c5b927d8a03f137c582608d820fa213110bc30b404e4c7f65bc"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR2/derived.json",
+                "sha256": "9949052aaa24cdac19e9e8b0ddc3102eba0f646b1fa588051c2f1ad9b3650d8d"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR2/request.json",
+                "sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/decisions.json",
+                "sha256": "0f1583cb747457e13c772e3c14639fd82e762efcfe13ce80a70f3f7e510c6de0"
+              },
+              "same_request_sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR4/input.json",
+                "sha256": "2cc0cb72765c38e42f61ef9b561f641a8cee6c8a4fab5da20c20b124adc8ce42"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR4/derived.json",
+                "sha256": "2987859c947fa4a31eb003d4afc6cffa0a1a14eeebb6c9f3ba347357495bb4af"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-DPR4/request.json",
+                "sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-trial-5/decisions.json",
+                "sha256": "0f1583cb747457e13c772e3c14639fd82e762efcfe13ce80a70f3f7e510c6de0"
+              },
+              "same_request_sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+            }
+          },
+          "cancel_proof": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/cancel-positive-control/input.json",
+              "sha256": "cd4d13db5f180f38a8019529c652708f38687a7e40e15df7919e13459548075b"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/cancel-positive-control/derived.json",
+              "sha256": "facc964f1794850f8379feddd234215ffd0579f8667e85307ee99c6a3e2ae725"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/cancel-positive-control/request.json",
+              "sha256": "9c9f67f30325babdae16725e01ac1960fee925fd49e94b09d2b54a2a72d39371"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/cancel-positive-control/decisions.json",
+              "sha256": "16c17820ba771ad80585fb70b09c297ba8f05bc8c8c8135e071ffb03bfbf4f80"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-already-erased-interior-negative/input.json",
+              "sha256": "aede3563330b04e6f6d39640e02d1fcfcc2a71109b77fa31c640d01db8531280"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-already-erased-interior-negative/derived.json",
+              "sha256": "b4057a1aa941937db45f30b70d3af609683574f1051e394c8e7fa8e3ab7b73d8"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-already-erased-interior-negative/request.json",
+              "sha256": "95dff0f4af535444979c61255e085d97082419a133cdeb81918c9ff4bd20d121"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-already-erased-interior-negative/decisions.json",
+              "sha256": "d81566411700127bf21aef147fdb0175ab05d205f2cd9fb0dd77840ca3ad30fb"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-wrong-camera-negative/input.json",
+              "sha256": "61db7e0ec9949f31620b0ae2c733b9a794561d9d2f7ca619d7f1b13aa78fecac"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-wrong-camera-negative/derived.json",
+              "sha256": "29536a0ae92ded5553400df013c3e8c0ac70059ad6122b924ea91f23c3defd25"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-wrong-camera-negative/request.json",
+              "sha256": "7982dcde1efaeaad660f6922d75737410b49e19160b86696f26d4d9323b58c57"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S0/7-wrong-camera-negative/decisions.json",
+              "sha256": "43965480087a640b1deef65f4fdce78cd9d0a1f573af138b4304569e30725e1f"
+            }
+          }
+        }
+      ],
+      "expected_commits": 8,
+      "expected_operations_with_undo_redo": 10,
+      "DPR": [
+        1,
+        2,
+        4
+      ],
+      "cancel_does_not_append_history": true
+    },
+    "S2": {
+      "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+      "snapshot_length": 2187559,
+      "traces": [
+        {
+          "index": 0,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "view_points": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              469.7833251953125,
+              183.0
+            ],
+            [
+              473.77374267578125,
+              186.0
+            ],
+            [
+              476.30987548828125,
+              189.0
+            ],
+            [
+              476.9712829589844,
+              192.0
+            ],
+            [
+              475.6483459472656,
+              195.0
+            ],
+            [
+              472.56036376953125,
+              198.0
+            ],
+            [
+              468.2192077636719,
+              201.0
+            ],
+            [
+              463.34442138671875,
+              204.0
+            ]
+          ],
+          "world_points": [
+            [
+              465.0,
+              180.0
+            ],
+            [
+              469.7833251953125,
+              183.0
+            ],
+            [
+              473.77374267578125,
+              186.0
+            ],
+            [
+              476.30987548828125,
+              189.0
+            ],
+            [
+              476.9712829589844,
+              192.0
+            ],
+            [
+              475.6483459472656,
+              195.0
+            ],
+            [
+              472.56036376953125,
+              198.0
+            ],
+            [
+              468.2192077636719,
+              201.0
+            ],
+            [
+              463.34442138671875,
+              204.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 431.34442138671875,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/input.json",
+                "sha256": "7574924a047ce71d1821322688a168c752984a2adbeb79d1c7d506d0da41e7e3"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/derived.json",
+                "sha256": "266be1431758529c764653d60496fc3e69c566e41cddef0253f310ee6a847c45"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/request.json",
+                "sha256": "bd87ae38185cd1bc2d6060cba578bbfcf48cd3c98705843ed66b7f0ad08d3903"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/decisions.json",
+                "sha256": "fdd42b79a48843178cd341a28c813cffb9e4978af65bc7115f85bc08aa0554f9"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR2/input.json",
+                "sha256": "3545c710ea84fdf79ffda46399ceb7b145112cfe0512462edb90836a45929da2"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR2/derived.json",
+                "sha256": "9899474167c13fd1b9cb533e16cdbec619bc8a0b4f2a647a1384227a93796f0f"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR2/request.json",
+                "sha256": "bd87ae38185cd1bc2d6060cba578bbfcf48cd3c98705843ed66b7f0ad08d3903"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/decisions.json",
+                "sha256": "fdd42b79a48843178cd341a28c813cffb9e4978af65bc7115f85bc08aa0554f9"
+              },
+              "same_request_sha256": "bd87ae38185cd1bc2d6060cba578bbfcf48cd3c98705843ed66b7f0ad08d3903"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR4/input.json",
+                "sha256": "36a79bfd0a0e883abc42ce1a5bab5844fe0927f166bc75ef6978e7ff917ac883"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR4/derived.json",
+                "sha256": "a6fa4d83fd5ad69f21508f9e70507f34f7a2b6008754bc0782e3aaa9bce4825e"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-DPR4/request.json",
+                "sha256": "bd87ae38185cd1bc2d6060cba578bbfcf48cd3c98705843ed66b7f0ad08d3903"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-trial-0/decisions.json",
+                "sha256": "fdd42b79a48843178cd341a28c813cffb9e4978af65bc7115f85bc08aa0554f9"
+              },
+              "same_request_sha256": "bd87ae38185cd1bc2d6060cba578bbfcf48cd3c98705843ed66b7f0ad08d3903"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-already-erased-interior-negative/input.json",
+              "sha256": "fb46a7b8023b20713c02c08f505bce3c718385060b6ddffc6453763451558965"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-already-erased-interior-negative/derived.json",
+              "sha256": "2d94c2fff8efac05a1a9e33b40464e87ffb832d1ca66e64088983813195512be"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-already-erased-interior-negative/request.json",
+              "sha256": "09670867cee75d79f0fbb0584a855bdaf6d2e97126c910476f15bbacad4d27b1"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-already-erased-interior-negative/decisions.json",
+              "sha256": "2306c8175fc5cac9ca2aa5ba3efa226ae3e51348b4c1f67b1222780ca3d78071"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-wrong-camera-negative/input.json",
+              "sha256": "4bac6cdfdf7cc41ff8340456521040aa4059fade77b606320d5061be61ee7e1c"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-wrong-camera-negative/derived.json",
+              "sha256": "f3763ae82f7eda7eb4f1070bf2ee302f155e076ae37b121b50980f2564d455b6"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-wrong-camera-negative/request.json",
+              "sha256": "aa0bfd6cfdd3fd35022907c2921294ca419459889930ece98b4da219e78a9b8d"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/0-wrong-camera-negative/decisions.json",
+              "sha256": "d6f7361395109d35c6b0bc1c8000accc39ff97018f4b50818c90ca04a5e593ed"
+            }
+          }
+        },
+        {
+          "index": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "view_points": [
+            [
+              520.0,
+              205.0
+            ],
+            [
+              524.7833251953125,
+              208.0
+            ],
+            [
+              528.7737426757812,
+              211.0
+            ],
+            [
+              531.3098754882812,
+              214.0
+            ],
+            [
+              531.9712524414062,
+              217.0
+            ],
+            [
+              530.6483764648438,
+              220.0
+            ],
+            [
+              527.5603637695312,
+              223.0
+            ],
+            [
+              523.2191772460938,
+              226.0
+            ],
+            [
+              518.3444213867188,
+              229.0
+            ]
+          ],
+          "world_points": [
+            [
+              520.0,
+              205.0
+            ],
+            [
+              524.7833251953125,
+              208.0
+            ],
+            [
+              528.7737426757812,
+              211.0
+            ],
+            [
+              531.3098754882812,
+              214.0
+            ],
+            [
+              531.9712524414062,
+              217.0
+            ],
+            [
+              530.6483764648438,
+              220.0
+            ],
+            [
+              527.5603637695312,
+              223.0
+            ],
+            [
+              523.2191772460938,
+              226.0
+            ],
+            [
+              518.3444213867188,
+              229.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 486.34442138671875,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/input.json",
+                "sha256": "3afe72135a62c0acaabc5a2e3bf23ce5763501692aa0c61ac56239588f12497a"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/derived.json",
+                "sha256": "ad69af2c5e35bbaa639432997e01c06a6ffac765109cdc43fc051226e55c7978"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/request.json",
+                "sha256": "1e99445806c4b4c5601ca819ef124ea3d847a3873eb1a1ea61f7ffb13770da28"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/decisions.json",
+                "sha256": "99b816dc2224f6424f01e87e8e91209e20037a07ce119e507d53516baf6c429f"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR2/input.json",
+                "sha256": "44610ea8a6907e2ddc9b463c53d61f52e660365eb07a2644ea9c03c02010a1ab"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR2/derived.json",
+                "sha256": "3de520a63fba16c1a2a5a6ecfb2281dbb2a52530bbd36d258120a9f04e8bb21e"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR2/request.json",
+                "sha256": "1e99445806c4b4c5601ca819ef124ea3d847a3873eb1a1ea61f7ffb13770da28"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/decisions.json",
+                "sha256": "99b816dc2224f6424f01e87e8e91209e20037a07ce119e507d53516baf6c429f"
+              },
+              "same_request_sha256": "1e99445806c4b4c5601ca819ef124ea3d847a3873eb1a1ea61f7ffb13770da28"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR4/input.json",
+                "sha256": "0fdfe9a4971f2f010a2254c863e29e203cc8ce67f6422ba1d949699d90566ab6"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR4/derived.json",
+                "sha256": "693afb26d001912d2a8674ee9602be73858cda71890e13883868e8cc2258c0d3"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-DPR4/request.json",
+                "sha256": "1e99445806c4b4c5601ca819ef124ea3d847a3873eb1a1ea61f7ffb13770da28"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-trial-0/decisions.json",
+                "sha256": "99b816dc2224f6424f01e87e8e91209e20037a07ce119e507d53516baf6c429f"
+              },
+              "same_request_sha256": "1e99445806c4b4c5601ca819ef124ea3d847a3873eb1a1ea61f7ffb13770da28"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-already-erased-interior-negative/input.json",
+              "sha256": "12aef4a5d259b5f886ecd92e387183091fe0d9bc04abb0feb8c79e86ab9c7af2"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-already-erased-interior-negative/derived.json",
+              "sha256": "37f79b6b6a76034a94fed9563ac8539fdda4f88cc2c48885bee7266697965198"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-already-erased-interior-negative/request.json",
+              "sha256": "ee9817588d4cf378f51ea674d7415345feab43ea389e9ae3d183baa2f205c26d"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-already-erased-interior-negative/decisions.json",
+              "sha256": "9db4f0780a06c9d9fc2e486795a28a3dd20468611ed05caf4f02ed4c1804131c"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-wrong-camera-negative/input.json",
+              "sha256": "0bc68f69ae6585d3c7567f54910002ed671c64306eff06edfd13ba520a06c5ca"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-wrong-camera-negative/derived.json",
+              "sha256": "9a0b535bbc983ca992ce25ff0094b4862e80cfb733516abb1310905a11487505"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-wrong-camera-negative/request.json",
+              "sha256": "b4283a81c18a8d4d676f4d1c8d95098e4a2b7294ad9942cef18d06c05fa7b3ef"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/1-wrong-camera-negative/decisions.json",
+              "sha256": "4247f3ea75e17c27d1b3c75fff462859702e20488a98a6c50bdf7b3314de31ce"
+            }
+          }
+        },
+        {
+          "index": 2,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              467.87506103515625,
+              195.0533905029297
+            ],
+            [
+              475.60528564453125,
+              199.901611328125
+            ],
+            [
+              482.0540771484375,
+              204.7498321533203
+            ],
+            [
+              486.1526794433594,
+              209.59805297851562
+            ],
+            [
+              487.2215576171875,
+              214.4462890625
+            ],
+            [
+              485.0835876464844,
+              219.2945098876953
+            ],
+            [
+              480.0931701660156,
+              224.14273071289062
+            ],
+            [
+              473.0775451660156,
+              228.99095153808594
+            ],
+            [
+              465.19952392578125,
+              233.8391876220703
+            ]
+          ],
+          "world_points": [
+            [
+              490.0,
+              240.00001525878906
+            ],
+            [
+              494.7833251953125,
+              243.0
+            ],
+            [
+              498.77374267578125,
+              245.99998474121094
+            ],
+            [
+              501.3099060058594,
+              249.0
+            ],
+            [
+              501.9712829589844,
+              252.0
+            ],
+            [
+              500.64837646484375,
+              254.99998474121094
+            ],
+            [
+              497.5603332519531,
+              258.0
+            ],
+            [
+              493.21917724609375,
+              261.0
+            ],
+            [
+              488.34442138671875,
+              264.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 423.3423271179199,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/input.json",
+                "sha256": "36f7d228936d48e760ad72143e3a53afb578a3c5d237af629a6e53dc907a1a4b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/derived.json",
+                "sha256": "5ffaf3a655a16fa80ec1f43272f9120d8fc9b6f197709db1160e59b61624b9ea"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/request.json",
+                "sha256": "c6924ec5dca985288ca12dd7ee2c2ea843af75dd3b9d7ff11fbfc0006eb01c31"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/decisions.json",
+                "sha256": "7278193ffdbcbddf465f3ea97dd4426f5ff2ed0bbca953ddb3cd92fe0027e08f"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR2/input.json",
+                "sha256": "428a6a8f316d8742f3abe329f33d01f0bf03cb70ab94a34382af65a5825e3f49"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR2/derived.json",
+                "sha256": "14dad9f68326dd85ecf1e41622ca68c3a3a6455f1c6cada888a5204d09d79562"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR2/request.json",
+                "sha256": "c6924ec5dca985288ca12dd7ee2c2ea843af75dd3b9d7ff11fbfc0006eb01c31"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/decisions.json",
+                "sha256": "7278193ffdbcbddf465f3ea97dd4426f5ff2ed0bbca953ddb3cd92fe0027e08f"
+              },
+              "same_request_sha256": "c6924ec5dca985288ca12dd7ee2c2ea843af75dd3b9d7ff11fbfc0006eb01c31"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR4/input.json",
+                "sha256": "6adebe4db67e55109427b3821754988229be4f03ce1ce81e912f5a3afcf02c72"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR4/derived.json",
+                "sha256": "23989a66a781897f64df0e470bbf6de86f194d6a35f0a81eb536c3dd60608746"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-DPR4/request.json",
+                "sha256": "c6924ec5dca985288ca12dd7ee2c2ea843af75dd3b9d7ff11fbfc0006eb01c31"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-trial-0/decisions.json",
+                "sha256": "7278193ffdbcbddf465f3ea97dd4426f5ff2ed0bbca953ddb3cd92fe0027e08f"
+              },
+              "same_request_sha256": "c6924ec5dca985288ca12dd7ee2c2ea843af75dd3b9d7ff11fbfc0006eb01c31"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-already-erased-interior-negative/input.json",
+              "sha256": "21f590fe8d3566a8a2e809d3d3441a3e95e27d3de1cca5ff685ff5ef6a95d064"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-already-erased-interior-negative/derived.json",
+              "sha256": "9252529469b18d49c4cae3a8da61b592be72c4b7c7cd48fadf2a23607b835609"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-already-erased-interior-negative/request.json",
+              "sha256": "146666a3978436798538a3f887214ff03a513d57b1f4e823949e98a83b636469"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-already-erased-interior-negative/decisions.json",
+              "sha256": "206c4b82e2a23c738d8b67f07b01dc7cee4809773b857b687c91736312212d31"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-wrong-camera-negative/input.json",
+              "sha256": "a7ce013068e3e3facc02d6849946302c4eacdb6452c6423075d1872e79a127cc"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-wrong-camera-negative/derived.json",
+              "sha256": "6d1108d599d652a7d94d0dd5ff18fcfbc4c7c2c7d6471eeaab574d381331aa53"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-wrong-camera-negative/request.json",
+              "sha256": "fce3464f9f7e68e98a579421a1eb6097926ecdd628ec8640d32b1f3b0774063f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/2-wrong-camera-negative/decisions.json",
+              "sha256": "18c2cf99057ab5863f373bce2abfe248030d72103055b607164629b0cc178e27"
+            }
+          }
+        },
+        {
+          "index": 3,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              532.51806640625,
+              130.410400390625
+            ],
+            [
+              540.248291015625,
+              135.2586212158203
+            ],
+            [
+              546.6970825195312,
+              140.10684204101562
+            ],
+            [
+              550.795654296875,
+              144.95506286621094
+            ],
+            [
+              551.864501953125,
+              149.8032989501953
+            ],
+            [
+              549.7266235351562,
+              154.65151977539062
+            ],
+            [
+              544.7361450195312,
+              159.49974060058594
+            ],
+            [
+              537.720458984375,
+              164.34796142578125
+            ],
+            [
+              529.842529296875,
+              169.19619750976562
+            ]
+          ],
+          "world_points": [
+            [
+              530.0,
+              200.0
+            ],
+            [
+              534.7833251953125,
+              202.99998474121094
+            ],
+            [
+              538.7737426757812,
+              206.0
+            ],
+            [
+              541.3098754882812,
+              209.0
+            ],
+            [
+              541.9712524414062,
+              212.0
+            ],
+            [
+              540.6483764648438,
+              215.0
+            ],
+            [
+              537.5603637695312,
+              218.00001525878906
+            ],
+            [
+              533.2191772460938,
+              221.0
+            ],
+            [
+              528.3444213867188,
+              224.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 487.9853324890137,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/input.json",
+                "sha256": "770cc5c3cc3042bb0f9861faf9243d213bbfa7d0aaaf456431adee55bd5024fe"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/derived.json",
+                "sha256": "2ed1b3dca9998ddef14ca883b2dd999104ac59eb90270bb79a7ceaa4e50d927a"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/request.json",
+                "sha256": "945acf56ba272941e479a6954f26ce01b86a3bf4763d35f282141f5cee421834"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/decisions.json",
+                "sha256": "e0fcf5f52cfea7afa4f20bbf7690aa18f7d95173d8928bcf52155baa9b14b5e6"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR2/input.json",
+                "sha256": "2f1f75408d0a4dc2cbfb256dbd5be30ab3a3c1b524f94bda5e62442c8295629e"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR2/derived.json",
+                "sha256": "f5d1abb2a1097fd2f52403fead2d8447f22f67fae378579a1b4bf7369929c463"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR2/request.json",
+                "sha256": "945acf56ba272941e479a6954f26ce01b86a3bf4763d35f282141f5cee421834"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/decisions.json",
+                "sha256": "e0fcf5f52cfea7afa4f20bbf7690aa18f7d95173d8928bcf52155baa9b14b5e6"
+              },
+              "same_request_sha256": "945acf56ba272941e479a6954f26ce01b86a3bf4763d35f282141f5cee421834"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR4/input.json",
+                "sha256": "455381e3db88c1ef66a24ba336cce80dc8d3885c3b0877f495d2f343f1900787"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR4/derived.json",
+                "sha256": "57c562ee22ef16b9e4393043bfb0ae19fe6be55d63a5d14d9a8e271cfd13006d"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-DPR4/request.json",
+                "sha256": "945acf56ba272941e479a6954f26ce01b86a3bf4763d35f282141f5cee421834"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-trial-1/decisions.json",
+                "sha256": "e0fcf5f52cfea7afa4f20bbf7690aa18f7d95173d8928bcf52155baa9b14b5e6"
+              },
+              "same_request_sha256": "945acf56ba272941e479a6954f26ce01b86a3bf4763d35f282141f5cee421834"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-already-erased-interior-negative/input.json",
+              "sha256": "a4e336faa57f39de79649ae3cdb5220c1a68ea119ddf40fce062052d5f88e188"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-already-erased-interior-negative/derived.json",
+              "sha256": "b98710d663617073bbfd5738faa8597b321f50b2bd5c6a12bdcd4fef34e82581"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-already-erased-interior-negative/request.json",
+              "sha256": "0f5050e06b25e0f9d474e5f0f2eed5d65dc14decc4f1982d107066778596bce2"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-already-erased-interior-negative/decisions.json",
+              "sha256": "296a579e5824acd716aed9d1720462a4a0d587f7f3099a46427a8a620313bc4e"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-wrong-camera-negative/input.json",
+              "sha256": "2e65d6edcc5e5a4aea84a230106673e58236cdef7c163e65320415d0573cfb4f"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-wrong-camera-negative/derived.json",
+              "sha256": "1ca2a195fb8196d01f60821141d735eb3d07215a8606dd63d7b06e679944acc7"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-wrong-camera-negative/request.json",
+              "sha256": "c3d3fd445727be3c70c2c8054b37ebedf8b108edfcf1dada906fc1debb84c16c"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/3-wrong-camera-negative/decisions.json",
+              "sha256": "f76975e24e49c89f2bd85f4eb8f3f334f100ef6e940220ab0348877df3902fd6"
+            }
+          }
+        },
+        {
+          "index": 4,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              597.1610717773438,
+              162.7318878173828
+            ],
+            [
+              604.8912353515625,
+              167.58010864257812
+            ],
+            [
+              611.340087890625,
+              172.4283447265625
+            ],
+            [
+              615.4386596679688,
+              177.2765655517578
+            ],
+            [
+              616.5075073242188,
+              182.12478637695312
+            ],
+            [
+              614.36962890625,
+              186.97300720214844
+            ],
+            [
+              609.379150390625,
+              191.8212432861328
+            ],
+            [
+              602.3634643554688,
+              196.66946411132812
+            ],
+            [
+              594.4855346679688,
+              201.51768493652344
+            ]
+          ],
+          "world_points": [
+            [
+              570.0,
+              219.99998474121094
+            ],
+            [
+              574.7833251953125,
+              223.0
+            ],
+            [
+              578.7737426757812,
+              226.0
+            ],
+            [
+              581.3098754882812,
+              228.99998474121094
+            ],
+            [
+              581.9712524414062,
+              232.0
+            ],
+            [
+              580.6483764648438,
+              235.0
+            ],
+            [
+              577.5603637695312,
+              238.0
+            ],
+            [
+              573.2191772460938,
+              241.0
+            ],
+            [
+              568.3444213867188,
+              244.00001525878906
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 552.6283378601074,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/input.json",
+                "sha256": "7a012f37fd1ca4013bb6a77075fddbebb15e36f2c8678d8bf3ac602c7bdcd76b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/derived.json",
+                "sha256": "25425f8d482e16642d9b6f7a9f06e3c19c096083162653068b2ca0d6e2cac2e3"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/request.json",
+                "sha256": "12709a7999160df67e26f662740a3af9ffe331f905c4d865afea54b285047793"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/decisions.json",
+                "sha256": "b3e958aecd8188f5adaf27eefa5a5143fa34d7256051dd79edc8b785707fa327"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR2/input.json",
+                "sha256": "7b3b0b448fbe0ca657c60ae214c5c6deb4ea527be5fa551436f0d52055fb7e5d"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR2/derived.json",
+                "sha256": "3fa85c4cc12022c280f297dfcfcf547619113c71e9b1cc53906bdf97677162a6"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR2/request.json",
+                "sha256": "12709a7999160df67e26f662740a3af9ffe331f905c4d865afea54b285047793"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/decisions.json",
+                "sha256": "b3e958aecd8188f5adaf27eefa5a5143fa34d7256051dd79edc8b785707fa327"
+              },
+              "same_request_sha256": "12709a7999160df67e26f662740a3af9ffe331f905c4d865afea54b285047793"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR4/input.json",
+                "sha256": "4bda7ba03ff680b8a057725162321e51fc65bf8de8f48760417bc6473fc7ce6b"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR4/derived.json",
+                "sha256": "a78eac720fb32788dd8886a4de18a44744cb0ab9acdc8da5c0ba15486e46f54d"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-DPR4/request.json",
+                "sha256": "12709a7999160df67e26f662740a3af9ffe331f905c4d865afea54b285047793"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-trial-2/decisions.json",
+                "sha256": "b3e958aecd8188f5adaf27eefa5a5143fa34d7256051dd79edc8b785707fa327"
+              },
+              "same_request_sha256": "12709a7999160df67e26f662740a3af9ffe331f905c4d865afea54b285047793"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-already-erased-interior-negative/input.json",
+              "sha256": "33df8312f214e335ecfa7fb36c76c2eac008e733143703abdbc351497e785afa"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-already-erased-interior-negative/derived.json",
+              "sha256": "5b7d12407b3ce314dfe764bff3e06dbd1cbe9ab40084433ff5f8b24677b88424"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-already-erased-interior-negative/request.json",
+              "sha256": "4ea73d34dc3af13809670a22429056eed2652936f163b9d52ad6ef499aff2e88"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-already-erased-interior-negative/decisions.json",
+              "sha256": "ca70269282f56e7040ff1b1fe414ceea8a2ae870b4466e5854d47646f6077080"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-wrong-camera-negative/input.json",
+              "sha256": "d52c284d2c19112dc24338c069b2c17b54a38ad8dc15d734af46ecf3f76605b9"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-wrong-camera-negative/derived.json",
+              "sha256": "3807186175943ecc4af12d8b13ffce4a03a72b3bd24d3461bd74f03d4504a1f4"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-wrong-camera-negative/request.json",
+              "sha256": "4e78eeb1b2c33c1ec3fe22f7ecb6d1c60d988196d7f2a6c58df36ac2f9ea775f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/4-wrong-camera-negative/decisions.json",
+              "sha256": "528ca4e5e1c59e53848aeaabbf88be7e79bc7af8f6cd706a8cd4ec7fce1f4f67"
+            }
+          }
+        },
+        {
+          "index": 5,
+          "camera": {
+            "scale": 1.616074800491333,
+            "x": -324.0015869140625,
+            "y": -192.8045654296875
+          },
+          "view_points": [
+            [
+              484.03582763671875,
+              275.85711669921875
+            ],
+            [
+              491.7660217285156,
+              280.7053527832031
+            ],
+            [
+              498.21484375,
+              285.5535888671875
+            ],
+            [
+              502.31341552734375,
+              290.40179443359375
+            ],
+            [
+              503.3822937011719,
+              295.2500305175781
+            ],
+            [
+              501.24432373046875,
+              300.0982360839844
+            ],
+            [
+              496.2539367675781,
+              304.94647216796875
+            ],
+            [
+              489.23828125,
+              309.7947082519531
+            ],
+            [
+              481.3602600097656,
+              314.6429138183594
+            ]
+          ],
+          "world_points": [
+            [
+              500.0,
+              290.0
+            ],
+            [
+              504.7832946777344,
+              293.0
+            ],
+            [
+              508.77374267578125,
+              296.0
+            ],
+            [
+              511.30987548828125,
+              299.0
+            ],
+            [
+              511.9712829589844,
+              302.0
+            ],
+            [
+              510.6483459472656,
+              305.0
+            ],
+            [
+              507.56036376953125,
+              308.0
+            ],
+            [
+              503.2192077636719,
+              311.0
+            ],
+            [
+              498.3443908691406,
+              314.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 439.5030632019043,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/input.json",
+                "sha256": "4089f3bb50989b049626f032799e48bca3b4610ed4015e0e5160254e0f21ce4f"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/derived.json",
+                "sha256": "72a1e7f6d8acd31f689f11965239e56eacf49fd4b721d39a9d9bfd0b12dec400"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/request.json",
+                "sha256": "5acac3ec74455b99b5898530d809f15eb7a788b73cf2d0603d9f2632086ab5c3"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/decisions.json",
+                "sha256": "4a0332a14d49f9cf60ed59fae95a0e7e524e5bf306abc68af181d8a771d2fbd8"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR2/input.json",
+                "sha256": "0d8edee46531c00791b0cfb652e8b61795d74a34613ae491e22b26bc85de6a24"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR2/derived.json",
+                "sha256": "652aa83709f6e47c4fcdd48161104335c8ec4e71ec1985394e569226c1e158a1"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR2/request.json",
+                "sha256": "5acac3ec74455b99b5898530d809f15eb7a788b73cf2d0603d9f2632086ab5c3"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/decisions.json",
+                "sha256": "4a0332a14d49f9cf60ed59fae95a0e7e524e5bf306abc68af181d8a771d2fbd8"
+              },
+              "same_request_sha256": "5acac3ec74455b99b5898530d809f15eb7a788b73cf2d0603d9f2632086ab5c3"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR4/input.json",
+                "sha256": "c180a594b4ecead1fd1f319c38d81ab1129879a37a24bf522fb82e4321a613b1"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR4/derived.json",
+                "sha256": "2f07f5819e81ae3108838b6f7f7fc1a8a7a9263d0a28acfe4ec00b99f55bb81d"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-DPR4/request.json",
+                "sha256": "5acac3ec74455b99b5898530d809f15eb7a788b73cf2d0603d9f2632086ab5c3"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-trial-3/decisions.json",
+                "sha256": "4a0332a14d49f9cf60ed59fae95a0e7e524e5bf306abc68af181d8a771d2fbd8"
+              },
+              "same_request_sha256": "5acac3ec74455b99b5898530d809f15eb7a788b73cf2d0603d9f2632086ab5c3"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-already-erased-interior-negative/input.json",
+              "sha256": "b69f3ba948725b52b4920effcfe806ad8fb05456ed3fc44bc68bb64a9c56957d"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-already-erased-interior-negative/derived.json",
+              "sha256": "68d3f22ca9197222d5a271da13592f9d2d469ad13f208aa45c147e2b721e23be"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-already-erased-interior-negative/request.json",
+              "sha256": "032a15627ba1627bea64dd2f2d55515de015e5aedb0b6704c5992239259a2d5f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-already-erased-interior-negative/decisions.json",
+              "sha256": "c7c80e211ca7b0949cb380f9a1b449a3776a7f109b7b85f2fcc03c8862418161"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-wrong-camera-negative/input.json",
+              "sha256": "0019b0980cc803e811f5c74fea87c2ced4287d386fec974798351a7bc67f28b2"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-wrong-camera-negative/derived.json",
+              "sha256": "f0358afadd876f5978a4ee4cb40c49c965756a4f843aa970981e256269661c67"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-wrong-camera-negative/request.json",
+              "sha256": "affd9949a276ed656c776ecafd149ed8a27d6b1c4ec440b694fbc8e06145cf2f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/5-wrong-camera-negative/decisions.json",
+              "sha256": "140b10c38071dd0d2117a99517bc8e5ae1e6c18d745ba30d468a09baf3dbe39a"
+            }
+          }
+        },
+        {
+          "index": 6,
+          "camera": {
+            "scale": 2.61169695854187,
+            "x": -847.61181640625,
+            "y": -504.390869140625
+          },
+          "view_points": [
+            [
+              588.821533203125,
+              226.88427734375
+            ],
+            [
+              601.3140869140625,
+              234.71937561035156
+            ],
+            [
+              611.73583984375,
+              242.55445861816406
+            ],
+            [
+              618.3594970703125,
+              250.38955688476562
+            ],
+            [
+              620.0867919921875,
+              258.2246398925781
+            ],
+            [
+              616.6318359375,
+              266.0597229003906
+            ],
+            [
+              608.56689453125,
+              273.89483642578125
+            ],
+            [
+              597.22900390625,
+              281.72991943359375
+            ],
+            [
+              584.4976196289062,
+              289.56500244140625
+            ]
+          ],
+          "world_points": [
+            [
+              550.0,
+              280.0
+            ],
+            [
+              554.7833251953125,
+              283.0
+            ],
+            [
+              558.7737426757812,
+              286.0
+            ],
+            [
+              561.3098754882812,
+              289.0
+            ],
+            [
+              561.9712524414062,
+              292.0
+            ],
+            [
+              560.6483764648438,
+              294.9999694824219
+            ],
+            [
+              557.5603637695312,
+              298.0
+            ],
+            [
+              553.2191772460938,
+              301.0
+            ],
+            [
+              548.3443603515625,
+              304.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 526.7104682922363,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/input.json",
+                "sha256": "8554481b530cc2b86f1a16ce4619f3517d3bebec68c9c7b62fd2adcf101d0ac6"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/derived.json",
+                "sha256": "73d59e17bf2d9d141520fb2ed4e890e97ebd269a19fa5937729454f61f66d164"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/request.json",
+                "sha256": "6b0ed1a9733496e2a5c50ad303fc47b874c7244f50cc70c935fbd68be6048552"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/decisions.json",
+                "sha256": "e9781d69b46d1c598c966bae303c4df229a687241fad955e5cdfa1a563389d28"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR2/input.json",
+                "sha256": "521da857d5a336c0a7d77129b3d63b7b6a092902a150a8ba7b81e7b8450031c8"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR2/derived.json",
+                "sha256": "3c2e74242b9ce7a9e749ff6ab9d51b9f6e40d7ab76215a0393711a1e79b2176e"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR2/request.json",
+                "sha256": "6b0ed1a9733496e2a5c50ad303fc47b874c7244f50cc70c935fbd68be6048552"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/decisions.json",
+                "sha256": "e9781d69b46d1c598c966bae303c4df229a687241fad955e5cdfa1a563389d28"
+              },
+              "same_request_sha256": "6b0ed1a9733496e2a5c50ad303fc47b874c7244f50cc70c935fbd68be6048552"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR4/input.json",
+                "sha256": "11bd634c005dede439f7f84538a63ab3b4f96b5964f87d580c3a2a8dc4f68bda"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR4/derived.json",
+                "sha256": "5a818c7ec132c437c71a318680977b36fb9d6b75a55648cbb9d07a0a20994c65"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-DPR4/request.json",
+                "sha256": "6b0ed1a9733496e2a5c50ad303fc47b874c7244f50cc70c935fbd68be6048552"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-trial-4/decisions.json",
+                "sha256": "e9781d69b46d1c598c966bae303c4df229a687241fad955e5cdfa1a563389d28"
+              },
+              "same_request_sha256": "6b0ed1a9733496e2a5c50ad303fc47b874c7244f50cc70c935fbd68be6048552"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-already-erased-interior-negative/input.json",
+              "sha256": "57533ed609bddf541fb91b0bb559880f1bbe68dc31bf01f9f068223281f71274"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-already-erased-interior-negative/derived.json",
+              "sha256": "34e07fcc76940f49d1906b4b166306566193e50e2cbb708e70fe1dd94ce75157"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-already-erased-interior-negative/request.json",
+              "sha256": "13f1220d549d3f8ea4a648f3618ac64358feb71862bd9da5a2bbea09f5fa72e7"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-already-erased-interior-negative/decisions.json",
+              "sha256": "86b5662a05aa6e030c5c86610ca94710963272b39ffa48d97a9552c6118651b8"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-wrong-camera-negative/input.json",
+              "sha256": "c710b663d6ca0c1af53b31884ad1f3a841a277348312a5d069a5e95f059c120d"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-wrong-camera-negative/derived.json",
+              "sha256": "de5c515248ab72e39b9402554112dd8b5333e59cfdc74292a0ca152a6fb1e2f1"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-wrong-camera-negative/request.json",
+              "sha256": "4151ec558f1ef8574c71a09033e820b75c4225d855b0bbe6e58a86d31b7be66f"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/6-wrong-camera-negative/decisions.json",
+              "sha256": "550bc37b3c5a61ff2895e7baffe06602ad49e483d5a394b45e155c1681360c25"
+            }
+          }
+        },
+        {
+          "index": 7,
+          "camera": {
+            "scale": 2.61169695854187,
+            "x": -847.61181640625,
+            "y": -504.390869140625
+          },
+          "view_points": [
+            [
+              667.1724243164062,
+              174.6503448486328
+            ],
+            [
+              679.6650390625,
+              182.4854278564453
+            ],
+            [
+              690.0867919921875,
+              190.32052612304688
+            ],
+            [
+              696.7103881835938,
+              198.15560913085938
+            ],
+            [
+              698.4376831054688,
+              205.99070739746094
+            ],
+            [
+              694.9827270507812,
+              213.82579040527344
+            ],
+            [
+              686.9177856445312,
+              221.660888671875
+            ],
+            [
+              675.5799560546875,
+              229.4959716796875
+            ],
+            [
+              662.8485717773438,
+              237.33106994628906
+            ]
+          ],
+          "world_points": [
+            [
+              580.0,
+              260.0
+            ],
+            [
+              584.7833251953125,
+              263.0
+            ],
+            [
+              588.7737426757812,
+              266.0
+            ],
+            [
+              591.3098754882812,
+              269.0
+            ],
+            [
+              591.9712524414062,
+              272.0
+            ],
+            [
+              590.6483154296875,
+              275.0
+            ],
+            [
+              587.5603637695312,
+              278.0
+            ],
+            [
+              583.2191772460938,
+              281.0
+            ],
+            [
+              578.344482421875,
+              284.0
+            ]
+          ],
+          "radius_world": 16,
+          "expected_target_ids": [
+            "a0a3c498884d1d29a711f8f8a015c626",
+            "a1a3c498884d1d29a711f8f8a015c626",
+            "a2a3c498884d1d29a711f8f8a015c626",
+            "a3a3c498884d1d29a711f8f8a015c626",
+            "a4a3c498884d1d29a711f8f8a015c626",
+            "a6a3c498884d1d29a711f8f8a015c626",
+            "a7a3c498884d1d29a711f8f8a015c626",
+            "a8a3c498884d1d29a711f8f8a015c626",
+            "a9a3c498884d1d29a711f8f8a015c626",
+            "aaa3c498884d1d29a711f8f8a015c626",
+            "aba3c498884d1d29a711f8f8a015c626",
+            "aca3c498884d1d29a711f8f8a015c626",
+            "ada3c498884d1d29a711f8f8a015c626",
+            "aea3c498884d1d29a711f8f8a015c626",
+            "afa3c498884d1d29a711f8f8a015c626",
+            "b5a3c498884d1d29a711f8f8a015c626"
+          ],
+          "CSS_min_x_with_radius_and_AA_guard": 605.0614204406738,
+          "proof": {
+            "1": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/input.json",
+                "sha256": "d294848c3a972abc4c0c998c1e2411bfc84cefd4ab40b3429189932eea34e623"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/derived.json",
+                "sha256": "f4a28f34da0434bdbec021bc2690f680189306b19be8781d9f3fefcf5cc7ef30"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/request.json",
+                "sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+              },
+              "decisions.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/decisions.json",
+                "sha256": "6f2fdf7a9eaa833e69edd89de6ee1bc742d490770c20a2ab45948cff38c89e3b"
+              }
+            },
+            "2": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR2/input.json",
+                "sha256": "a0da806614c39ceef3bb6cd2a5cfcb5cc6cd4636a32183d1173b6174aa655d02"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR2/derived.json",
+                "sha256": "201219f218c56ffe39fe9112f3f66055ac584e47c1794e91bb0e31901f40290c"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR2/request.json",
+                "sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/decisions.json",
+                "sha256": "6f2fdf7a9eaa833e69edd89de6ee1bc742d490770c20a2ab45948cff38c89e3b"
+              },
+              "same_request_sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+            },
+            "4": {
+              "input.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR4/input.json",
+                "sha256": "d5c0de94b374a63773f7fe38cf3df9c542ad3104bc272a4dc48759cd63ddada5"
+              },
+              "derived.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR4/derived.json",
+                "sha256": "acd13795b99bad23d031e89e4605cb6c46716f3cc18b19761991199c509de041"
+              },
+              "request.json": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-DPR4/request.json",
+                "sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+              },
+              "exact_decisions_reused_by_identical_full_request": {
+                "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-trial-5/decisions.json",
+                "sha256": "6f2fdf7a9eaa833e69edd89de6ee1bc742d490770c20a2ab45948cff38c89e3b"
+              },
+              "same_request_sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+            }
+          },
+          "cancel_proof": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/cancel-positive-control/input.json",
+              "sha256": "d294848c3a972abc4c0c998c1e2411bfc84cefd4ab40b3429189932eea34e623"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/cancel-positive-control/derived.json",
+              "sha256": "f4a28f34da0434bdbec021bc2690f680189306b19be8781d9f3fefcf5cc7ef30"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/cancel-positive-control/request.json",
+              "sha256": "e334f301afbc5df15327436df4f871f94b5c0f1c1915a6efe5b797c937c22017"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/cancel-positive-control/decisions.json",
+              "sha256": "e711caae51a2c9ef9f32211f7e83755dc7aae9253e41c603908c7376d44ce90a"
+            }
+          },
+          "already_erased_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-already-erased-interior-negative/input.json",
+              "sha256": "faaf38f52c7afb61c7734034c78518779873c00a2e4420bb4a169dfeb664be5d"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-already-erased-interior-negative/derived.json",
+              "sha256": "f6795e70da4f6d8cc4825980a86294b85ccce8074dee29e2b856695dda66f712"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-already-erased-interior-negative/request.json",
+              "sha256": "078a7dea1f234471859b5a08c92101a9ca595bc77d83001800a155645cf36a78"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-already-erased-interior-negative/decisions.json",
+              "sha256": "39e376dcea28b44033e61d703cdb11b474a6f530a05608c892be1bd1cadae509"
+            }
+          },
+          "wrong_camera_negative": {
+            "input.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-wrong-camera-negative/input.json",
+              "sha256": "08a45986efe812830e2ae91b06aac18be202066bc1061b25bb24991512450853"
+            },
+            "derived.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-wrong-camera-negative/derived.json",
+              "sha256": "fefaf62bb6ee19a6d925fef19e8ec1f3e71db24b16fcac70861798b56e5905f8"
+            },
+            "request.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-wrong-camera-negative/request.json",
+              "sha256": "3333a611602678711e05784a398c5a386bc18817c97833eea3197d48029b19c7"
+            },
+            "decisions.json": {
+              "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/positive-trajectory-proof/S2/7-wrong-camera-negative/decisions.json",
+              "sha256": "f4d79b4812da5b659e0e68c4b5a7774a13e6c4da59b2af3f965fbd529d88ecdb"
+            }
+          }
+        }
+      ],
+      "expected_commits": 8,
+      "expected_operations_with_undo_redo": 10,
+      "DPR": [
+        1,
+        2,
+        4
+      ],
+      "cancel_does_not_append_history": true
+    }
+  }
+}

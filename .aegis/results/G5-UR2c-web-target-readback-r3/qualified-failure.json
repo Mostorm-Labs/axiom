@@ -1,0 +1,757 @@
+{
+  "classification": "PRODUCT_PIXEL_FAILURE_UNDER_UNCHANGED_LIVE_PREDICATE",
+  "blocking_class": "PRODUCT_PIXEL_FAILURE",
+  "case": "S2-continuous-DPR1",
+  "stage": "erase7-down",
+  "intent": "cancel trace just began; cancel and terminal Up had not been dispatched",
+  "state": {
+    "state": {
+      "activeContacts": 1,
+      "camera": {
+        "scale": 2.61169695854187,
+        "x": -847.61181640625,
+        "y": -504.390869140625
+      },
+      "canRedo": false,
+      "canUndo": false,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "7",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "25ffd20e901772692f45bf5e5aa6a860",
+        "ordinal": "7",
+        "presentedGeneration": "7",
+        "runtimeEpoch": "1"
+      },
+      "objects": 16,
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 2
+    },
+    "camera": {
+      "scale": 2.61169695854187,
+      "x": -847.61181640625,
+      "y": -504.390869140625
+    },
+    "selection": {
+      "actions": [
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 14,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        }
+      ],
+      "appearance": null,
+      "bounds": null,
+      "count": 0,
+      "generation": "7",
+      "groupScope": null,
+      "height": 0,
+      "kind": 0,
+      "primary": "00000000000000000000000000000000",
+      "reason": 0,
+      "roots": [],
+      "selectionRevision": "1",
+      "status": 1,
+      "transform": null,
+      "width": 0
+    },
+    "resource_binding": "1",
+    "stage": "live-erase7-down"
+  },
+  "qualifier": {
+    "status": "FAILED",
+    "interior": 53925,
+    "lost": 1,
+    "compared_bytes": 436800,
+    "selection": "fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection"
+  },
+  "magnitude": {
+    "classification": "PRODUCT_PIXEL_FAILURE_UNDER_FROZEN_LIVE_PREDICATE",
+    "lost": [
+      {
+        "ROI_pixel": [
+          154,
+          285
+        ],
+        "device_pixel": [
+          194,
+          325
+        ],
+        "before_RGBA": [
+          13,
+          27,
+          51,
+          255
+        ],
+        "failed_RGBA": [
+          13,
+          29,
+          53,
+          255
+        ],
+        "delta": [
+          0,
+          2,
+          2,
+          0
+        ]
+      }
+    ],
+    "all_ROI_pixels_changed": 1,
+    "trigger_equals_immediate_full_target_ROI": true,
+    "not_global_clear": true,
+    "interpretation": "One selected near-ink pixel crosses the frozen \u00b12 constant-color predicate; this is not the old all-zero ROI. Potential AA/rounding classification requires independent control. No threshold or selection was changed."
+  },
+  "observed": {
+    "all3buffers_valid_default_target_and_persisted": true,
+    "no_GL_errors": true,
+    "state_restored": true,
+    "full_canonical_ROI_equals_trigger": true,
+    "capture_finished_before_run_finally_observation_end": true,
+    "capture": {
+      "schema": "g5-immediate-target-failure-v1",
+      "id": "failure-1",
+      "reason": "live-erase7-down",
+      "started": 6252.099999964237,
+      "synchronous": true,
+      "state": {
+        "state": {
+          "activeContacts": 1,
+          "camera": {
+            "scale": 2.61169695854187,
+            "x": -847.61181640625,
+            "y": -504.390869140625
+          },
+          "canRedo": false,
+          "canUndo": false,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "7",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "25ffd20e901772692f45bf5e5aa6a860",
+            "ordinal": "7",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 16,
+          "primary": "00000000000000000000000000000000",
+          "selected": [],
+          "selectionMode": 0,
+          "selectionRevision": "1",
+          "shape": 0,
+          "surface": {
+            "available": true,
+            "height": 500,
+            "width": 800
+          },
+          "table": {
+            "columnId": "00000000000000000000000000000000",
+            "objectId": "00000000000000000000000000000000",
+            "rowId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 2
+        },
+        "camera": {
+          "scale": 2.61169695854187,
+          "x": -847.61181640625,
+          "y": -504.390869140625
+        },
+        "selection": {
+          "actions": [
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": null,
+          "bounds": null,
+          "count": 0,
+          "generation": "7",
+          "groupScope": null,
+          "height": 0,
+          "kind": 0,
+          "primary": "00000000000000000000000000000000",
+          "reason": 0,
+          "roots": [],
+          "selectionRevision": "1",
+          "status": 1,
+          "transform": null,
+          "width": 0
+        },
+        "resource_binding": "1",
+        "stage": "live-erase7-down"
+      },
+      "buffers": [
+        {
+          "role": "trigger-ROI",
+          "key": "failure-1-trigger-ROI",
+          "length": 436800,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 27,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 6164.099999964237,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "axiom-sdk-1-7q1ff21x93l-canonical",
+              "identity": "canvas-1",
+              "width": 800,
+              "height": 500
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": true,
+                "preserveDrawingBuffer": true,
+                "stencil": true,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 800,
+              "drawingBufferHeight": 500,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 40,
+              "y": 40,
+              "width": 260,
+              "height": 420,
+              "origin": "top-left",
+              "readY": 40
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 6249
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-failure-1-trigger-ROI.rgba",
+          "sha256": "4a1245917ea9c42693f0b688c4aea8bdb3b11b50a1b24f9228203cc4e3e02fc2"
+        },
+        {
+          "role": "canonical",
+          "key": "failure-1-canonical",
+          "length": 1600000,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 28,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 6252.599999964237,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "axiom-sdk-1-7q1ff21x93l-canonical",
+              "identity": "canvas-1",
+              "width": 800,
+              "height": 500
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": true,
+                "preserveDrawingBuffer": true,
+                "stencil": true,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 800,
+              "drawingBufferHeight": 500,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 800,
+              "height": 500,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 6254.099999964237
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-failure-1-canonical.rgba",
+          "sha256": "f7beeb226eb875d149f1ed284f3bd618d27d6dcea47ec26c2b715aaf5072c2ab"
+        },
+        {
+          "role": "preview",
+          "key": "failure-1-preview",
+          "length": 1600000,
+          "status": "PERSISTED",
+          "readback": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 29,
+            "role": "preview",
+            "status": "VALID",
+            "started": 6254.099999964237,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "axiom-sdk-1-7q1ff21x93l-preview",
+              "identity": "canvas-3",
+              "width": 800,
+              "height": 500
+            },
+            "context": {
+              "identity": "context-4",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": true,
+                "preserveDrawingBuffer": true,
+                "stencil": true,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 800,
+              "drawingBufferHeight": 500,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 0,
+              "y": 0,
+              "width": 800,
+              "height": 500,
+              "origin": "top-left",
+              "readY": 0
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 6255.800000011921
+          },
+          "reason": null,
+          "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-failure-1-preview.rgba",
+          "sha256": "58e0a2f7c0e88d03332c57054d218a14ea5c2b4a408cc7a5f7780f04298ba981"
+        }
+      ],
+      "finished": 6255.800000011921,
+      "persistence_started": 1794253369816,
+      "status": "COMPLETE",
+      "persistence_finished": 1794253369934
+    },
+    "raw_case": {
+      "path": ".aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-result.json",
+      "sha256": "2a2bbd3c59434bb4ecfb2d87f062c4613fd9b66a769d8eeb2dceafe259f35c19",
+      "bytes": 368532
+    }
+  },
+  "interpretation": "Not a clear/blank or alpha-loss event: exactly one pixel changes by[0,2,2,0] relative to the reference. It crosses the fixed ink-color \u00b12 live selection predicate. Original cold oracle uses pairwise <=2 outside its independent AA band; that rule is unchanged. Control should classify this small successful-redraw/AA-versus-live-rule discrepancy. This producer does not weaken the oracle or assert a root cause.",
+  "unrun_cases": [
+    "S2-continuous-DPR2",
+    "S2-continuous-DPR4"
+  ],
+  "missing_rows": [
+    "S2/DPR1remainingcancel/finalerase",
+    "S2/DPR1after/Undo/Redo cold oracles/roundtrip"
+  ],
+  "SDK_and_Runtime_change": false,
+  "next_action": "Independent control classification of this qualified one-pixel discrepancy under the frozen AA/live contracts; no product fix or new browser ID in this test-only package."
+}

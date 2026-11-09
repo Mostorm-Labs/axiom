@@ -890,6 +890,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         }
     }
     if(cache&&cache->stagedBodies()){
+        // Staged composition replaces the disposable attempt, not the provider
+        // display. Its real GPU epoch still owns any in-flight pixel lease.
+        transientDisplay_.reset();
         const auto staged=cache->prepareWorkingSet(*canvas,plan,allowance,images_,&textResources_,true,selectionOverlay);
         if(staged!=internal::SkiaRenderCache::Preparation::kReady){
             provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");

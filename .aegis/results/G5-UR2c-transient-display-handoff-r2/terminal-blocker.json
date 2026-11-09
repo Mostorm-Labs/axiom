@@ -1,0 +1,109 @@
+{
+  "class": "WORKER_GUARD_IDENTITY_OR_ORACLE_FAILURE",
+  "findings": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/web-findings.json",
+    "sha256": "be27dbc5bd2841ef0d4be5640a7c023c4077b7fc2a351dade025fe79eeb6adc5",
+    "bytes": 51379
+  },
+  "ledger": {
+    "schema": "g5-transient-display-two-windows-v1",
+    "planned_ids": [
+      "UR2CDR2-Q1",
+      "UR2CDR2-N1"
+    ],
+    "historical_starts": 86,
+    "historical_charged_seconds": 5518,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CDR2-Q1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 195,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/qualification-sdk",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/local-web/UR2CDR2-Q1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 194.24236466700677,
+          "peak_process_family_rss_kib": 2883920,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "OBSERVED",
+        "elapsed_trusted": true
+      },
+      {
+        "id": "UR2CDR2-N1",
+        "status": "STOPPED",
+        "reserved_seconds": 600,
+        "charged_seconds": 194,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/local-web/UR2CDR2-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+          ],
+          "reason": "nonzero_exit",
+          "returncode": 2,
+          "elapsed_s": 193.63702575000934,
+          "peak_process_family_rss_kib": 1783680,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 600,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "HARD_FAILURE",
+            "error": "Error: PRODUCT_CHECK: continuous case failed S0-continuous-DPR2\n    at worker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/transient_display_retry.mjs:117:251)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/identity-adapter.mjs:15:100"
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "HARD_FAILURE",
+        "elapsed_trusted": true
+      }
+    ],
+    "remaining_status": "MISSING",
+    "cumulative_starts": 88,
+    "cumulative_charged_seconds": 5907,
+    "remaining_seconds": 2463
+  },
+  "unrun_ids": [],
+  "failure_analysis": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/failure-analysis.json",
+    "sha256": "878353bd66324ada49efaabdb034e3324ba77e643dce394062715cf891a45c42",
+    "bytes": 10837
+  },
+  "full_failure_target": "MISSING",
+  "next_action": "Independent control classifies live readback target-identity gap versus product failure; repair verification read target/failure capture, freeze any new allowance. No old-ID retry or source edits after freeze.",
+  "remaining": [
+    "UR2CDR2-N1:HARD_FAILURE",
+    "S0-continuous-DPR2:FAILED",
+    "S0-continuous-DPR2:continuous correctness",
+    "incomplete frozen matrix",
+    "missing/failed worker closure"
+  ]
+}

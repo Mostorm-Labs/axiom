@@ -1,0 +1,13 @@
+本轮只修验证代码，保留R2全部生产修复。HEAD347a2b04+冻结8文件续修source d9bd0a26是测试主体；72个R2normal/qualificationSDK文件不变，不重建或伪装成新生产版本。任务不是UR3笔刷preview或UR2d。
+
+控制已核对15个累计postimage，独立重跑HO01/HO02均通过。当前Web阻断发生S0/DPR2 erase6-move4：baseline与live18字节一致，live19全RGBA0000；但probe未绑定/记录READ_FRAMEBUFFER、READ_BUFFER、PBO/PACK和GLerror。上下文属于canonical canvas不等于当前readFBO就是可见default。现有数据不能证明canvas真被清空，也不能证明产品没问题。
+
+readROI及fullsurface读取要用一个私有验证helper：显式选择该canvas默认READ_FRAMEBUFFER/null，正确readbuffer与紧密PACK/PBO；记录actualtarget、canvas尺寸/context属性、错误、状态前后，并try/finally准确恢复，不动DRAW或做任何draw/clear/resize/强制present。valid透明0000是数据，不能为了避错自动拒绝或自动PASS。新helper必须用真实WebGL两个不同颜色的default/offscreen来证明旧读法会错，且调用后状态相同；先有offline模拟RED与单测，再在S1真实GPU验证。
+
+还有失败捕获顺序漏洞：旧live在await persist以后才算verdict，catch里也没保存完整失败target。应同步判定；失败时在第一个await/RAF/input/cleanup之前读齐canonical+preview全buffer和状态，再异步传输。保存不了明确MISSING，不能拿olderbefore或laterafter替代，cleanup之后也不能假装原失败现场。截图只作辅助。
+
+可改现有verification driver/contract/runner/tests，新建webgl_target_readback模块与S1selftest。为让旧10个case同样读对，可在ur2a_handoff.mjs只改readSurface/readerimport/metadata接线；这是冻结保护的明确窄例外。case/input/receipt/settle/oracle/AA/plan不改。运行时SDK/Scene/Brush/预算/GPU code完全禁止改。
+
+新窗口仅UR2CRB3-S1最多120秒、UR2CRB3-N1最多600秒，历史88次5907秒保留，原8370cap剩2463秒。先完成offline，再冻结helper/driver/主体/计划，S1真实counterexample与restore/failurecapture合格后N1跑原10+全部6continuous。旧Q1的同主体receipt/native事实可复用，旧不明FBO像素不能替代新normal证据。所有旧窗口关闭，guard3GiB，一次一个worker，无额外smoke。若新绑定default、无GLerror且像素确实坏，携完整raw返回PRODUCT_PIXEL_FAILURE，不在这个test-only包里擅改Runtime。
+
+完整闭包RB01..04解清即连续做完，不要停在普通设计批准。输出只写G5-UR2c-web-target-readback-r3目录，旧R2证据/源码归档/SDK/4297不覆盖。完成READY或明确BLOCKED主动通知控制线程01a1b6f3-e69a-7fe2-8d9b-0222e8741f03 hostlocal，带exact主体/新harness/结果/原生SDKraw SHA、测试、账本、清理与余项。任务不commit/push，不签发官方Gate/性能PASS。

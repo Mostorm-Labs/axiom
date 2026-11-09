@@ -1,0 +1,55 @@
+{
+  "base": {
+    "commit": "347a2b0418862fae1fc28eb440808cf95798f95c"
+  },
+  "candidate_source": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/resume.patch",
+    "sha256": "810b56855d5a8c930ca68caa66d981d5ac5da292d4a73437ce6ee1480c9dbf5b",
+    "bytes": 42926
+  },
+  "roundtrip": "EXACT_BYTES",
+  "files": [
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before": "dcce1097a41f8d406c47908cd8ecb3eb2ecd91f578c10fd2fc298dcc3ba7a18f",
+      "after": "804efe691eba2d6de91eb8619cc6e16bbfedb004093012e717d6aa8fd991653c"
+    },
+    {
+      "path": "runtime/render/tests/transient_display_retry_test.cpp",
+      "before": "37fc1ac7b7f0013bbef9f637b9263bcb337eb6666ac691687ddbc8230c8c7880",
+      "after": "541921107474b80bd7ff0eb64fbcfde385ddbae71026c00498e853a75ef43337"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "before": "a7c293f479510e16969d2f43bbe8cb8908e22f6bbdb4e4bf7ca7fc27be901753",
+      "after": "1132e53563e60be683726c68e9809d56aac03bb5974487cca397fbdb34e0ba3e"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "before": "6673fd2c63cf25a85b24d1068c600f274a2300a8b1d5f461025f19b456961df6",
+      "after": "cebecdd930941a8772690b2bf69fbd316d70974093fb4b166bfc9ad83cf3f747"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "before": "9ebd38d3c14ab6e0395ab9b68e6e58da398c828ea6a90e2b57a937586f8922b9",
+      "after": "f41514f151df95ea4a0c89fbaa936e5920c2f96fd093088f8826dafd3a62e67e"
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "before": "3397963981e0dc3fd8e357da4af599d2e3a64957ddba7f3cfcd79db977b2bfd8",
+      "after": "cdbf3066de8e82921a65c5f14bfebb5e5c7a08fbc5e075f78942aec2004f3685"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "before": "17a55fe39a506ff62f9cdf6168d0265e71ea7eb21dda15d030b0c51b2fe35e88",
+      "after": "0a3576fb6fedf81674fd8e215947ed8e27cd59db70854066e2e05014a45e59e5"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_trajectory_oracle.cpp",
+      "before": "07d5efc2f32ce846dc9841a97eaa36f0b5d5223953e34941c8e007e8d755647b",
+      "after": "40e9b5df7e0ea3d104e7f40cb6bec807ef5c7cfff0a43e2f8b2e84b9e91efc04"
+    }
+  ],
+  "outside_scope": []
+}

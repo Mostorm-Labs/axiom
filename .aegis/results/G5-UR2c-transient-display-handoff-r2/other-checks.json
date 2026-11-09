@@ -1,0 +1,60 @@
+[
+  {
+    "name": "node-tests",
+    "command": [
+      "node",
+      "--test",
+      "verification/tests/g5_render_execution.test.mjs",
+      "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+      "verification/tests/g5_prepared_body_index.test.mjs",
+      "verification/tests/g5_transient_reference.test.mjs",
+      "verification/tests/g5_transient_attribution.test.mjs",
+      "verification/tests/g5_canonical_prepared_body.test.mjs",
+      "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+      "verification/tests/g5_resource_recovery.test.mjs",
+      "verification/sdk_controller/controller_test.mjs",
+      "verification/sdk_controller/transport_test.mjs",
+      "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+      "verification/tests/g5_ur2a_handoff.test.mjs",
+      "verification/tests/g5_ur2b_exact_query.test.mjs",
+      "verification/tests/g5_ur2c_mask_history.test.mjs",
+      "verification/tests/g5_transient_display_retry.test.mjs"
+    ],
+    "rc": 0,
+    "elapsed_s": 0.21022766694659367
+  },
+  {
+    "name": "python-tests",
+    "command": [
+      "python3.12",
+      "-m",
+      "unittest",
+      "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+      "verification/tests/test_g5_transient_reference.py",
+      "verification/tests/test_g5_prepared_body_index_reverify.py",
+      "verification/tests/test_g5_render_execution.py",
+      "verification/tests/test_g5_transient_attribution.py",
+      "verification/tests/test_g5_canonical_prepared_body.py",
+      "verification/tests/test_g5_prepared_body_index.py",
+      "verification/tests/test_g5_resource_recovery.py",
+      "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+      "verification/tests/test_g5_ur2a_handoff.py",
+      "verification/tests/test_g5_ur2b_exact_query.py",
+      "verification/tests/test_g5_ur2c_mask_history.py",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "rc": 0,
+    "elapsed_s": 0.235593791003339
+  },
+  {
+    "name": "boundary-tests",
+    "command": [
+      "python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "rc": 0,
+    "elapsed_s": 0.06885004200739786
+  }
+]

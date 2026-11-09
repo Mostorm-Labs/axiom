@@ -1,0 +1,55 @@
+{
+  "schema": "g5-web-target-readback-verification-lock-v1",
+  "status": "FROZEN",
+  "inherited_DR05": {
+    "path": ".aegis/packages/G5-UR2c-transient-display-handoff-r2/verification.lock.json",
+    "sha256": "64f876a583318e04419f32fa853615b0421241da62e44e50b19e116c3fd6945f",
+    "bytes": 5010
+  },
+  "r2_failure": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/failure-analysis.json",
+    "sha256": "878353bd66324ada49efaabdb034e3324ba77e643dce394062715cf891a45c42",
+    "bytes": 10837
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "42e4040e0c627c406daea01febd8317a7d0edbaa9cba50e3f4901b2f643e2a3c"
+  },
+  "obligations": [
+    {
+      "id": "RB01",
+      "requirement": "Everyfull/ROIreadidentifiesactualcanvasdefaultreadtargetandvalidtightlypackedRGBA, restoringpriorGLstate.",
+      "oracle": "Offlinefake-stateadversarialtestsandrealS1independentdefault/offscreenknowncolors; callerstartswithdifferentREAD/DRAWframebuffers,PBOandPACKstates.",
+      "acceptance": "UseREAD_FRAMEBUFFER/nullandproperdefaultreadbuffer; save/restorebotholdreadbinding+itsreadbufferanddefaultreadbufferifchanged,PBOandPACK_ALIGNMENT/ROW_LENGTH/SKIP_ROWS/SKIP_PIXELS intry/finally. DRAWframebufferandotheruntouchedstateunchanged. Recordcanvasid/contextidentity/actualattributes/drawingBufferdimensions/ROI, selectedreadtarget,statusandbefore/aftererrors+state. Invalidread/context/restorecannotbeinterpretedasvalidallzeroimage. Nohelperdraw/clear/resize/copy/forcedpresentorSDKpublication. Valid0000doesnotbecomeanautomaticerror; itmuststillfailanopaqueexpectedpixeloracle.",
+      "evidence_required": "OldREDcounterexamplesandnewknowncolorbuffers, realreadtarget/state/errorwitnesses, restorationfailure/exceptiontests, exacthelperhashandraw."
+    },
+    {
+      "id": "RB02",
+      "requirement": "Failedobservationcapturesfailure-adjacentfullactualtargetswithoutasynchronousraceorfabrication.",
+      "oracle": "InjectaqualificationfailureoncontrolledS1contexts; compareimmediatefullbufferswithindependentknownsentinelsandtheirroles; testloss/persistencefailureandno-later-framefallback.",
+      "acceptance": "Read/qualifyROIandcapturefailedROI+bothfullbuffers+state/identitysynchronouslybeforefirstawait,RAF,inputcontinuationorcleanup; thenstreamwithhashes. AnycapturefailureexplicitMISSINGwithreason; do notsubstituteolderbefore/stableafter/screenshot. Preserveactivecontact/event/Scene/frame/surfacestateatfailure; cleanupterminalcontrolaftercapture. Screenshot/DOMsupportingonly.",
+      "evidence_required": "Exactper-stagebuffers/metadata/timestamps/basis, hostpersistbeforeverdict, controlledfailureexerciseandnegativecases."
+    },
+    {
+      "id": "RB03",
+      "requirement": "Correctedreaderisusedbyallrequirednormalpixelpathsandcontinuousmatrixontheunchangedsubject.",
+      "oracle": "N1original10+all6continuousS0/S2DPR1/2/4, independentcoldpixeloraclesandR2nonemptyplan.",
+      "acceptance": "Existingcases/camera/input/8commits/UndoRedo/contact/qualifier/AAandstrictidentitypoliciesunchanged. Allfullcanonical/previewandliveROIreaderpathsareexplicitlybound. Ifqualifieddefaulttargetreallylosesunchangedcontent, returnPRODUCT_PIXEL_FAILUREwithraw; do nottreatitasharnesserrororpatchRuntimeinthispackage. Areading/GLidentityfailureblocksindependently.",
+      "evidence_required": "All16casesnewrawwithtargetmetadata, cold/final/roundtripsandliveROIs+inputproof/identities; unresolvedfailurecompletecapture. ReuseR2qualifiedreceipt/nativeonlyatdeclaredunchangedruntimeidentity."
+    },
+    {
+      "id": "RB04",
+      "requirement": "Subjectandindependentoraclesremainunchangedandallevidencehasexactseparateidentities.",
+      "oracle": "R2subjectproductpostimages+72SDKmembers/source+native+trajectory/oraclebindings before/after; scopedharnessdeltaandofflineNode/Python/boundarytests; guardledger/cleanup.",
+      "acceptance": "No runtime/sdk/app/CMake/lock/algorithm/budget/semanticchange. Newfullrepositorystatehashmaychangefromharnessedits; compiledsubjectremainsR2d9bdwithfrozenartifacts, clearlydistinguishedfromnewharnessidentity. No rebuildrequiredforunchangedsubject. No oldoutputoverwrite/commit/push ornew browserIDbeyondS1/N1.",
+      "evidence_required": "Exactsubject/harness/manifests/diff/inputref/S1+N1guard/raw/source andartifactstability, originalsunchanged, closedledgerandownedcleanup."
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "offline_before_mutation": "Snapshotexactoldreaderlines anddemonstrateoldcurrentFBO/PBOdependenceplusmissingfailurebuffer withindependentfake-GLstate beforeharnessbehaviorchanges.",
+    "real_S1_required": "Oldwrong/newrightagainstknownseparateactualGLframebuffers; notjustmockconformance.",
+    "old_product_RED_reuse": "NativeproviderpixelRED/HOREDremainr2frozenartifacts; no freshproductmutationornewSLO."
+  },
+  "no_authority_change": "Theseareimplementationrequirementsforalreadyfrozenactualtarget/failureevidence; pixel/AA/semanticcorrectnesscriteriaarenotchanged."
+}

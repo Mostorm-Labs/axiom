@@ -1,0 +1,508 @@
+diff --git a/verification/runners/g5/transient_display_retry.mjs b/verification/runners/g5/transient_display_retry.mjs
+index a1fb9d54..abe7cd02 100644
+--- a/verification/runners/g5/transient_display_retry.mjs
++++ b/verification/runners/g5/transient_display_retry.mjs
+@@ -7,10 +7,12 @@ const HERE=path.dirname(fileURLToPath(import.meta.url)),ROOT=path.resolve(HERE,'
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ import {handoffConsumer}from './ur2a_handoff.mjs';
+ import {CONTINUOUS_CASES,qualifyContinuous}from './transient_display_retry_contract.mjs';
++import {persistPageFailures,classifyFailureCaptures}from './webgl_target_readback_host.mjs';
+ export async function continuousConsumer(){
+  const {SENTINEL,validateTrajectoryPlan,requireTrajectoryCamera,qualifySentinel}=await import('/g5/transient_display_retry_contract.mjs');
+  const {boundedDisplayOpportunity}=await import('/g5/prepared_body_index_reverify_pacing.mjs');
+  const {captureColdStage}=await import('/g5/ur2a_cold_capture.mjs');
++ const {readWebGLTarget,captureFailureNow}=await import('/g5/webgl_target_readback.mjs');
+  const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
+  let sdk,fixture,tracePlan,trajectoryPlanSha,initial,clock=31004000000n,reference,referenceCamera,liveIndex=0;
+  const row={schedule:[],live:[],frames:[],operations:[],errors:[],cold:[]};const observer=installNavigationObserver(()=>sdk?.canvas);
+@@ -18,10 +20,21 @@ export async function continuousConsumer(){
+  const camera=()=>JSON.stringify(state().camera),check=(v,m)=>{if(!v)throw Error('PRODUCT_CHECK: '+m);};
+  const persist=async(key,b)=>{for(let off=0;off<b.length;off+=262144){const part=b.subarray(off,off+262144);let text='';for(let i=0;i<part.length;i+=8192)text+=String.fromCharCode(...part.subarray(i,i+8192));await window.transientPersist(key,off,btoa(text),b.length);}return{sha256:await digest(b),length:b.length};};
+  const settle=async()=>{const until=performance.now()+20000;for(;;){await boundedDisplayOpportunity({timeoutMs:5000});const s=state();if(s.activeContacts===0&&s.lastCommit.presentedGeneration===s.generation&&observer.activity().pending===0)return s;check(performance.now()<until,'20s exact safety bound');}};
+- const surface=role=>{const c=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');check(c,'missing content surface');const gl=c.getContext('webgl2');check(!gl.isContextLost(),'context lost');const width=c.width,height=c.height,raw=new Uint8Array(width*height*4),bytes=new Uint8Array(raw.length);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);for(let y=0;y<height;++y)bytes.set(raw.subarray((height-1-y)*width*4,(height-y)*width*4),y*width*4);let nonzeroAlpha=0;for(let i=3;i<bytes.length;i+=4)if(bytes[i])++nonzeroAlpha;const css=getComputedStyle(c);return{bytes,width,height,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0,target:c.id};};
+- const readROI=()=>{const c=sdk.canvas,gl=c.getContext('webgl2'),sx=c.width/800,sy=c.height/500,x=Math.round(SENTINEL.left*sx),y=Math.round(SENTINEL.top*sy),w=Math.round((SENTINEL.right-SENTINEL.left)*sx),h=Math.round((SENTINEL.bottom-SENTINEL.top)*sy),raw=new Uint8Array(w*h*4),bytes=new Uint8Array(raw.length);check(!gl.isContextLost(),'ROI context lost');gl.readPixels(x,c.height-y-h,w,h,gl.RGBA,gl.UNSIGNED_BYTE,raw);for(let j=0;j<h;++j)bytes.set(raw.subarray((h-1-j)*w*4,(h-j)*w*4),j*w*4);return{bytes,width:w,height:h,device:{x,y,w,h},target:c.id};};
+- const live=async stage=>{const r=readROI();const key='live-'+liveIndex++;const saved=await persist(key,r.bytes);const v={stage,at:performance.now(),state:state(),camera:camera(),...r,bytes:undefined,...saved,key};check(referenceCamera===v.camera,'camera changed during fixed-viewport ROI comparison');v.qualifier=qualifySentinel(reference,r.bytes);row.live.push(v);await window.transientMetadata(row);check(v.qualifier.status==='PRESERVED','unrelated ink disappeared at '+stage);};
+- const resetROI=async stage=>{await settle();const r=readROI();reference=r.bytes;referenceCamera=camera();row.roi={fixture:fixture.sha256,definition:SENTINEL,world_basis:state().camera};await persist('baseline-'+liveIndex,reference);const q=qualifySentinel(reference,reference);check(q.status==='PRESERVED','fixture-defined ROI has no valid opaque interior');row.schedule.push({kind:'ROI-basis',stage,camera:state().camera,qualifier:q});};
++ const failureNow=(reason,trigger)=>captureFailureNow({targets:{canonical:sdk.canvas,preview:()=>document.querySelector('#mount canvas[id$="-preview"]')},state:()=>({state:state(),camera:state().camera,selection:sdk.readSelection(),resource_binding:sdk.resources.list().binding,stage:reason}),reason,trigger});
++ const qualified=(role,rect,stage)=>{const c=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');const r=readWebGLTarget(c,{role,rect});if(r.metadata.status!=='VALID'){row.failure=failureNow(stage+': '+r.metadata.reason,r);throw Error('READ_TARGET_ERROR_OR_STATE_RESTORATION_FAILURE: '+r.metadata.reason);}return r;};
++ const surface=role=>{const r=qualified(role,undefined,'full-'+role),c=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');let nonzeroAlpha=0;for(let i=3;i<r.bytes.length;i+=4)if(r.bytes[i])++nonzeroAlpha;const css=getComputedStyle(c);return{...r,metadata:undefined,readback:r.metadata,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0};};
++ const readROI=stage=>{const c=sdk.canvas,sx=c.width/800,sy=c.height/500,x=Math.round(SENTINEL.left*sx),y=Math.round(SENTINEL.top*sy),w=Math.round((SENTINEL.right-SENTINEL.left)*sx),h=Math.round((SENTINEL.bottom-SENTINEL.top)*sy);const r=qualified('canonical',{x,y,width:w,height:h},stage);return{...r,metadata:undefined,readback:r.metadata,device:{x,y,w,h}};};
++ const live=async stage=>{
++  const r=readROI(stage),key='live-'+liveIndex++,v={stage,at:performance.now(),state:state(),camera:camera(),...r,bytes:undefined,key};
++  v.qualifier=referenceCamera===v.camera?qualifySentinel(reference,r.bytes):{status:'INVALID_CAMERA'};row.live.push(v);
++  if(v.qualifier.status!=='PRESERVED'){
++   // No await, RAF, continued input or cleanup can precede these copies.
++   row.failure=failureNow('live-'+stage,{...r,metadata:r.readback});
++   throw Error(v.qualifier.status==='INVALID_CAMERA'?'READ_TARGET_CAMERA_MISMATCH':'PRODUCT_PIXEL_FAILURE: unrelated ink disappeared at '+stage);
++  }
++  Object.assign(v,await persist(key,r.bytes));await window.transientMetadata(row);
++ };
++ const resetROI=async stage=>{await settle();const r=readROI('baseline-'+stage);reference=r.bytes;referenceCamera=camera();row.roi={fixture:fixture.sha256,definition:SENTINEL,world_basis:state().camera,readback:r.readback};const q=qualifySentinel(reference,reference);if(q.status!=='PRESERVED'){row.failure=failureNow('baseline-'+stage,{...r,metadata:r.readback});throw Error('PRODUCT_PIXEL_FAILURE: fixture-defined ROI has no valid opaque interior');}await persist('baseline-'+liveIndex,reference);row.schedule.push({kind:'ROI-basis',stage,camera:state().camera,qualifier:q});};
+  const pointer=(phase,x,y)=>{clock+=4000000n;const rect=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:Number(clock)/1e6});const started=performance.now();observer.dispatch(sdk.canvas,e);const r={kind:'pointer',phase,x,y,started,ended:performance.now(),activeContacts:state().activeContacts,generation:state().generation};row.schedule.push(r);return r;};
+  const point=(index,i)=>tracePlan.traces[index].view_points[i];
+  const bindTrace=(index,cancel=false)=>{const trace=tracePlan.traces[index];requireTrajectoryCamera(state().camera,trace);check(BigInt(state().generation)===BigInt(initial)+BigInt(index),'frozen history prefix generation');row.schedule.push({kind:'frozen-trajectory',index,cancel,trajectory_plan_sha256:trajectoryPlanSha,camera:state().camera,generation:state().generation,view_points:trace.view_points,world_points:trace.world_points,expected_target_ids:trace.expected_target_ids,proof:trace.proof[String(devicePixelRatio)]});};
+@@ -44,6 +57,7 @@ async function runContinuousCase({browser,url,manifest,out,qualify,oracle,spec,r
+   await page.exposeFunction('transientMetadata',r=>write(id+'-continuous-prefix.json',r));
+   await page.goto(url+'/continuous.html');await page.waitForFunction(()=>!!window.transientDisplay);row.init=await page.evaluate(f=>transientDisplay.init(f),{...manifest[fixture],trajectory_plan_sha256:trajectoryPlanSha});await write(id+'-init.json',row.init);
+   const save=async stage=>{const value=await page.evaluate(s=>transientDisplay.capture(s),stage);row.cold.push(value);await write(id+'-cold.json',row.cold);
++   const captured=await persistPageFailures(page,out,id);if(captured.length){row.failure_captures=captured;throw Error(classifyFailureCaptures(captured));}
+    for(const [v,key]of [...Object.entries(value.surfaces).map(([r,v])=>[v,stage+'-'+r]),...(value.snapshot?[[value.snapshot,stage+'-snapshot']]:[])])if(sha(await fs.readFile(fileFor(key)))!==v.sha256)throw Error('cold byte stream identity');
+    return value;};
+   await save('before');row.input=await page.evaluate(()=>transientDisplay.run());await save('after');for(const stage of['undo','redo']){await page.evaluate(s=>transientDisplay[s](),stage);await save(stage);}const final=await page.evaluate(()=>transientDisplay.dump());Object.assign(row,final);row.cold=final.cold;await write(id+'-final.json',row);
+@@ -52,8 +66,8 @@ async function runContinuousCase({browser,url,manifest,out,qualify,oracle,spec,r
+   for(const stage of row.cold)if(stage.snapshot&&stage.surfaces.canonical){const image=stage.surfaces.canonical;stage.oracle=await qualify({oracle,snapshot:fileFor(stage.stage+'-snapshot'),actual:await fs.readFile(fileFor(stage.stage+'-canonical')),request:{width:image.width,height:image.height,logical_width:800,logical_height:500,camera:stage.camera,hud_bounds:[]},prefix:path.join(out,id+'-'+stage.stage+'-reference')});}
+   row.cold_qualification=qualifyCold(row.cold);row.failures.push(...row.cold_qualification.failures);
+   row.roundtrip=comparePixels(await fs.readFile(fileFor('after-canonical')),await fs.readFile(fileFor('redo-canonical')),await fs.readFile(path.join(out,id+'-after-reference.edge')));row.qualification=qualifyContinuous(row);row.failures.push(...row.qualification.failures);row.close=await page.evaluate(()=>transientDisplay.close());if(!row.close.closed)row.failures.push('owner cleanup');row.status=row.failures.length?'FAILED':'COMPLETED';
+- }catch(e){row.status='FAILED';row.error=String(e.stack??e);try{row.partial=await page.evaluate(()=>window.transientDisplay?.dump());await write(id+'-partial.json',row.partial);}catch(x){row.partial_error=String(x);}}
+- finally{for(const h of files.values())if(h.handle)await h.handle.close();await write(id+'-result.json',row);await page.close();}
++ }catch(e){row.status='FAILED';row.error=String(e.stack??e);try{row.failure_captures=await persistPageFailures(page,out,id);row.blocking_class=classifyFailureCaptures(row.failure_captures);}catch(x){row.failure_capture_missing=String(x);row.blocking_class='FAILURE_ARTIFACT_CAPTURE_MISSING';}try{row.partial=await page.evaluate(()=>window.transientDisplay?.dump());await write(id+'-partial.json',row.partial);}catch(x){row.partial_error=String(x);}}
++ finally{for(const h of files.values())if(h.handle)await h.handle.close();if(row.status==='FAILED')try{row.failure_cleanup=await page.evaluate(()=>transientDisplay.close());}catch(x){row.failure_cleanup_missing=String(x);}await write(id+'-result.json',row);await page.close();}
+  console.log(JSON.stringify({stage:'continuous-closed',id,status:row.status,error:row.error??null,failures:row.failures}));return row;
+ }
+ const qualificationFactory=`import factory from '/_engine/internal/axiom.mjs';export default async function(args){const module=await factory(args);if(module._axiom_g5_trace_control(2,101)!==0||module._axiom_g5_trace_control(1,0)!==0)throw Error('trace init');const drain=()=>{const chunks=[];for(let i=0;i<256;++i){if(module._axiom_g5_trace_control(4,0)!==0)throw Error('trace drain');const p=module._axiom_g5_trace_bytes(),n=module._axiom_g5_trace_size(),v=JSON.parse(new TextDecoder().decode(module.HEAPU8.subarray(p,p+n)));chunks.push(v);if(v.finished)return chunks;}throw Error('trace guard');};let collected=[];const timer=setInterval(()=>collected.push(...drain()),100);window.ur2aTrace=()=>{const rows=[...collected,...drain()];collected=[];return rows;};window.ur2aTraceClose=()=>{clearInterval(timer);return window.ur2aTrace();};window.ur2aClock=()=>{const before=performance.now();module._axiom_g5_trace_control(3,0);const p=module._axiom_g5_trace_bytes(),n=module._axiom_g5_trace_size();return{before,...JSON.parse(new TextDecoder().decode(module.HEAPU8.subarray(p,p+n))),after:performance.now()};};return module;}`;
+@@ -63,7 +77,7 @@ export async function worker({sdkArg,outArg,variant,oracle,referenceCatalog,traj
+  const fixtures=path.join(ROOT,'.aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures'),manifest=JSON.parse(await fs.readFile(path.join(fixtures,'fixtures.json')));
+  const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,'ur2a_handoff_runner.py'),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
+  const artifacts=async()=>{const rows={};for(const n of(await fs.readdir(sdk,{recursive:true})).sort()){const p=path.join(sdk,n);if((await fs.stat(p)).isFile())rows[n]=sha(await fs.readFile(p));}return rows;};
+- const result={schema:'g5-ur2a-r2-web-worker',status:'STARTED',variant,source_before:source(),artifacts_before:await artifacts(),cases:[],page_errors:[]};
++ const result={schema:'g5-qualified-target-normal-web-worker-v1',status:'STARTED',variant,compiled_subject_source_tree_sha256:'d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc',SDK_rebuilt:false,harness_source_before:source(),artifacts_before:await artifacts(),cases:[],page_errors:[]};
+  const write=(n,v)=>fs.writeFile(path.join(out,n),JSON.stringify(v,null,2)+'\n');let browser,server,page;
+  const tagsText=await fs.readFile(path.join(ROOT,'runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp'),'utf8');const tags=Object.fromEntries(tagsText.match(/enum class Tag[^]*?\{([^]*?)\};/)[1].split(',').map((v,i)=>[v.trim().split('=')[0].trim(),i+1]));
+  try{
+@@ -79,6 +93,7 @@ export async function worker({sdkArg,outArg,variant,oracle,referenceCatalog,traj
+    await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');await page.waitForFunction(()=>!!window.ur2a);
+    const save=async stage=>{
+     const value=await page.evaluate(s=>ur2a.capture(s),stage);row.cold.push(value);await write(id+'-cold.json',row.cold);
++   const captured=await persistPageFailures(page,out,id);if(captured.length){row.failure_captures=captured;throw Error(classifyFailureCaptures(captured));}
+     const members=[...Object.entries(value.surfaces).map(([role,v])=>[v,role+'.rgba']),...(value.snapshot?[[value.snapshot,'axsnap']]:[])];
+     for(const [v,ext]of members){const filename=path.join(out,id+'-'+stage+'.'+ext),file=await fs.open(filename,'w');try{for(let off=0;off<v.length;off+=262144)await file.writeFile(Buffer.from(await page.evaluate(({key,off})=>ur2a.pull(key,off,262144),{key:v.key,off}),'base64'));}finally{await file.close();}
+      if(sha(await fs.readFile(filename))!==v.sha256)throw Error('cold transfer identity');await page.evaluate(key=>ur2a.release(key),v.key);
+@@ -117,8 +132,8 @@ export async function worker({sdkArg,outArg,variant,oracle,referenceCatalog,traj
+     const row=await runContinuousCase({browser,url:'http://127.0.0.1:'+server.address().port,manifest,out,qualify,oracle,spec,result,trajectoryPlanSha});result.cases.push(row);await write(spec.id+'-result.json',row);if(row.status!=='COMPLETED')throw Error('PRODUCT_CHECK: continuous case failed '+spec.id);
+   }
+   result.status=result.cases.every(r=>r.status==='COMPLETED')&&!result.page_errors.length?'OBSERVED':'PRODUCT_FAILURE_OBSERVED';
+- }catch(e){result.status='HARD_FAILURE';result.error=String(e.stack??e);if(page&&!page.isClosed())try{result.partial=await page.evaluate(()=>window.ur2a?.dump());await write('partial.json',result.partial);}catch(x){result.partial_error=String(x);}}
+- finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));result.source_after=source();result.artifacts_after=await artifacts();result.source_stable=result.source_before.source_tree_sha256===result.source_after.source_tree_sha256;result.artifacts_stable=JSON.stringify(result.artifacts_before)===JSON.stringify(result.artifacts_after);if(!result.source_stable||!result.artifacts_stable||result.crash)result.status='HARD_FAILURE';await write('worker-result.json',result);}
++ }catch(e){result.status='HARD_FAILURE';result.error=String(e.stack??e);if(page&&!page.isClosed())try{result.failure_captures=await persistPageFailures(page,out,'original-case');result.blocking_class=classifyFailureCaptures(result.failure_captures);}catch(x){result.failure_capture_missing=String(x);}if(page&&!page.isClosed())try{result.partial=await page.evaluate(()=>window.ur2a?.dump());await write('partial.json',result.partial);}catch(x){result.partial_error=String(x);}}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));result.harness_source_after=source();result.artifacts_after=await artifacts();result.source_stable=result.harness_source_before.source_tree_sha256===result.harness_source_after.source_tree_sha256;result.artifacts_stable=JSON.stringify(result.artifacts_before)===JSON.stringify(result.artifacts_after);if(!result.source_stable||!result.artifacts_stable||result.crash)result.status='HARD_FAILURE';await write('worker-result.json',result);}
+  console.log(JSON.stringify({stage:'worker-closed',status:result.status,error:result.error??null}));if(result.status==='HARD_FAILURE')process.exitCode=2;
+ }
+ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){const[sdkArg,outArg,variant,oracle,referenceCatalog,trajectoryPlanPath]=process.argv.slice(2);await worker({sdkArg,outArg,variant,oracle,referenceCatalog,trajectoryPlanPath});}
+diff --git a/verification/runners/g5/transient_display_retry_runner.py b/verification/runners/g5/transient_display_retry_runner.py
+index 97e190c7..278e309d 100644
+--- a/verification/runners/g5/transient_display_retry_runner.py
++++ b/verification/runners/g5/transient_display_retry_runner.py
+@@ -2,8 +2,8 @@
+ from pathlib import Path
+ import hashlib,importlib.util,json,math,subprocess,sys,time,shutil
+ ROOT=Path(__file__).resolve().parents[3];HERE=Path(__file__).resolve().parent
+-TASK='G5-UR2c-transient-display-handoff-r2';RESULT=ROOT/'.aegis/results'/TASK;OUTPUT=ROOT/'out'/TASK
+-IDS=('UR2CDR2-Q1','UR2CDR2-N1');RESERVES=(360,600);HISTORY={'starts':86,'charged_seconds':5518,'cap_seconds':8370}
++TASK='G5-UR2c-web-target-readback-r3';RESULT=ROOT/'.aegis/results'/TASK;OUTPUT=ROOT/'out'/TASK
++IDS=('UR2CRB3-S1','UR2CRB3-N1');RESERVES=(120,600);HISTORY={'starts':88,'charged_seconds':5907,'cap_seconds':8370}
+ def module(name,path):
+  s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+ def sha(path):
+@@ -11,27 +11,28 @@ def sha(path):
+ def write(path,value):
+  path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,indent=2)+'\n')
+ def identity(full=False):
+- m=module('display_preflight',RESULT/'preflight.py');v=m.identity()
++ m=module('r3_source_identity',HERE/'ur0/source_identity.py')
++ m.EXCLUDED=tuple(json.loads((ROOT/'.aegis/results/G5-UR2c-transient-display-handoff-r2/source-final.json').read_text())['excluded_self_outputs'])+(f'.aegis/results/{TASK}/',f'verification/evidence/performance/{TASK}/')
++ v=m.identity(ROOT);v['identity_kind']='VERIFICATION_HARNESS_REPOSITORY';v['compiled_subject_source_tree_sha256']='d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc'
+  if not full:v.pop('files')
+  return v
+ def artifacts(root):return{str(p.relative_to(root)):sha(p)for p in sorted(root.rglob('*'))if p.is_file()}
+ def protected():
+- package=ROOT/'.aegis/packages'/TASK;contract=json.loads((package/'execution-contract.json').read_text())['implementation']
+- superseded=set(contract['allowed_existing_paths']+contract['allowed_new_paths'])
+- bindings=json.loads((RESULT/'package-preflight.json').read_text())['bindings'];v={p:h for p,h in bindings.items()if p not in superseded}
+- prior=module('display_frozen_oracles',HERE/'ur2a_handoff_runner.py')
+- aliases={'node':Path(shutil.which('node')),'python3.12':Path(shutil.which('python3.12')),'oracle':ROOT/'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle','catalog':ROOT/'.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json'}
+- for path,digest in prior.protected(aliases['catalog']).items():
+-  p=aliases.get(path,Path(path));p=p if p.is_absolute()else ROOT/p
+-  assert p.is_file(),str(p)
+-  v[str(p.relative_to(ROOT))if p.is_relative_to(ROOT)else str(p)]=digest
++ package=ROOT/'.aegis/packages'/TASK;contract=json.loads((package/'execution-contract.json').read_text())['implementation'];superseded=set(contract['allowed_existing_paths'])
++ v={p:h for p,h in json.loads((RESULT/'package-preflight.json').read_text())['bindings'].items()if p not in superseded}
++ parent=ROOT/'.aegis/results/G5-UR2c-transient-display-handoff-r2';old=json.loads((parent/'worker-freeze.json').read_text())
++ for p,h in old['protected'].items():
++  if p not in superseded:v[p]=h
++ for row in json.loads((parent/'native-artifacts.json').read_text())['files']:v[row['path']]=row['sha256']
+  for p,h in v.items():assert sha(ROOT/p)==h,p
+  for p in package.iterdir():
+   if p.is_file():v[str(p.relative_to(ROOT))]=sha(p)
+- for name in ['verification/runners/g5/transient_display_retry.mjs','verification/runners/g5/transient_display_retry_contract.mjs','verification/runners/g5/transient_display_retry_runner.py']:
+-  v[name]=sha(ROOT/name)
++ for name in contract['allowed_existing_paths']+contract['allowed_new_paths']:
++  p=ROOT/name
++  if p.is_file():v[name]=sha(p)
++ for p in HERE.glob('webgl_target_readback_*.mjs'):v[str(p.relative_to(ROOT))]=sha(p)
+  return v
+-def new_ledger():return{'schema':'g5-transient-display-two-windows-v1','planned_ids':list(IDS),'historical_starts':86,'historical_charged_seconds':5518,'original_cap_seconds':8370,'attempts':[],'remaining_status':'PENDING','cumulative_starts':86,'cumulative_charged_seconds':5518}
++def new_ledger():return{'schema':'g5-transient-display-two-windows-v1','planned_ids':list(IDS),'historical_starts':88,'historical_charged_seconds':5907,'original_cap_seconds':8370,'attempts':[],'remaining_status':'PENDING','cumulative_starts':88,'cumulative_charged_seconds':5907}
+ def reserve(ledger,id):
+  i=len(ledger['attempts'])
+  if ledger['remaining_status']!='PENDING'or i>=2 or id!=IDS[i]or any(r['status']=='STARTED'for r in ledger['attempts']):raise ValueError('unplanned/concurrent/repeated window')
+@@ -44,32 +45,30 @@ def complete(ledger,guard,worker,stable):
+  charged=math.ceil(elapsed)if trusted else row['reserved_seconds']
+  good=bool(guard and guard.get('reason')=='completed'and guard.get('cleanup_complete')and stable and worker and worker.get('status')=='OBSERVED')
+  row.update(status='COMPLETED'if good else'STOPPED',guard=guard,identity_stable=stable,worker_status=worker.get('status')if worker else'MISSING',charged_seconds=charged,elapsed_trusted=trusted)
+- ledger.update(cumulative_starts=86+len(ledger['attempts']),cumulative_charged_seconds=5518+sum(r['charged_seconds']for r in ledger['attempts']))
++ ledger.update(cumulative_starts=88+len(ledger['attempts']),cumulative_charged_seconds=5907+sum(r['charged_seconds']for r in ledger['attempts']))
+  if not good or ledger['cumulative_charged_seconds']>8370:ledger['remaining_status']='MISSING'
+  elif len(ledger['attempts'])==2:ledger['remaining_status']='NONE'
+  ledger['remaining_seconds']=8370-ledger['cumulative_charged_seconds'];return good
+ def freeze():
+- assert not(RESULT/'local-web/sampling-ledger.json').exists();source=identity(True);write(RESULT/'source-final.json',source)
+- roots=[OUTPUT/'normal-install/js',OUTPUT/'qualification-sdk'];sdks={str(p):artifacts(p)for p in roots};assert all(len(v)==36 for v in sdks.values())
+- native=json.loads((RESULT/'native-summary.json').read_text());assert native['passed']==116 and native['registered']==117
+- extras=[RESULT/n for n in ['native-artifacts.json','native-summary.json','other-checks.json','design-preflight.json','handoff-red-result.json','trajectory-plan.json','trajectory-proof.json','old-trajectory-proof.json','check-qualification.mjs','driver-offline-integrity.json']]+[OUTPUT/'identity-adapter.mjs']
++ assert not(RESULT/'local-web/sampling-ledger.json').exists();source=identity(True);write(RESULT/'harness-source-final.json',source)
++ parent=ROOT/'.aegis/results/G5-UR2c-transient-display-handoff-r2';subject=json.loads((ROOT/'.aegis/packages'/TASK/'authority.lock.json').read_text())['subject']
++ for row in subject['protected_runtime_postimages']:assert sha(ROOT/row['path'])==row['sha256'],row['path']
++ for row in subject['protected72SDKmembers']:assert sha(ROOT/row['path'])==row['sha256'],row['path']
++ roots=[ROOT/'out/G5-UR2c-transient-display-handoff-r2/normal-install/js',ROOT/'out/G5-UR2c-transient-display-handoff-r2/qualification-sdk'];sdks={str(p):artifacts(p)for p in roots};assert all(len(v)==36 for v in sdks.values())
+  bound=protected()
+- for p in extras:bound[str(p.relative_to(ROOT))]=sha(p)
+- for root in [RESULT/'positive-trajectory-proof',RESULT/'old-trajectory-proof']:
+-  for p in root.rglob('*.json'):bound[str(p.relative_to(ROOT))]=sha(p)
+- helper=OUTPUT/'build-native/runtime/render/axiom_transient_display_trajectory_oracle';bound[str(helper.relative_to(ROOT))]=sha(helper)
+- proof=json.loads((RESULT/'trajectory-proof.json').read_text());assert proof['status']=='EIGHT_NONEMPTY_TRAJECTORIES_PROVED';assert sha(RESULT/'trajectory-plan.json')==proof['plan']['sha256']
+- for root in ['build-web-normal','build-web-qualification']:
+-  p=OUTPUT/root/'CMakeCache.txt';bound[str(p.relative_to(ROOT))]=sha(p)
+- write(RESULT/'worker-freeze.json',{'schema':'transient-display-workers-freeze-v1','source_tree_sha256':source['source_tree_sha256'],'protected':bound,'SDK':sdks,'ids':list(IDS),'history':HISTORY})
++ for n in ['old-reader-lines.json','old-reader-red.log','other-checks.json','design-preflight.json','scope-integrity.json']:
++  p=RESULT/n;bound[str(p.relative_to(ROOT))]=sha(p)
++ p=OUTPUT/'identity-adapter.mjs';bound[str(p.relative_to(ROOT))]=sha(p)
++ write(RESULT/'worker-freeze.json',{'schema':'web-target-readback-workers-freeze-v1','harness_source_tree_sha256':source['source_tree_sha256'],'compiled_subject':subject,'protected':bound,'SDK':sdks,'ids':list(IDS),'history':HISTORY,'native_rebuilt':False,'SDK_rebuilt':False})
+ def execute():
+  frozen=json.loads((RESULT/'worker-freeze.json').read_text());directory=RESULT/'local-web';directory.mkdir(exist_ok=True);ledger_path=directory/'sampling-ledger.json';assert not ledger_path.exists();ledger=new_ledger();write(ledger_path,ledger)
+  guard=module('display_guard',HERE/'bounded_worker.py');prior=module('display_process_identity',HERE/'ur2a_handoff_runner.py')
+- def stable():return identity()['source_tree_sha256']==frozen['source_tree_sha256']and all(sha(ROOT/p)==h for p,h in frozen['protected'].items())and all(artifacts(Path(p))==v for p,v in frozen['SDK'].items())
++ def stable():return identity()['source_tree_sha256']==frozen['harness_source_tree_sha256']and all(sha(ROOT/p)==h for p,h in frozen['protected'].items())and all(artifacts(Path(p))==v for p,v in frozen['SDK'].items())
+  for i,id in enumerate(IDS):
+   if not stable():ledger.update(remaining_status='MISSING',identity_failure=True);write(ledger_path,ledger);break
+   out=directory/id;assert not out.exists();reserve(ledger,id);write(ledger_path,ledger)
+-  sdk=OUTPUT/('qualification-sdk'if i==0 else'normal-install/js');cmd=['node',str(OUTPUT/'identity-adapter.mjs'),str(sdk),str(out),'qualification'if i==0 else'normal',str(ROOT/'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle'),str(ROOT/'.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json'),str(RESULT/'trajectory-plan.json')]
++  if i==0:cmd=['node',str(HERE/'webgl_target_readback_selftest.mjs'),str(out),str(RESULT/'old-reader-lines.json')]
++  else:cmd=['node',str(OUTPUT/'identity-adapter.mjs'),str(ROOT/'out/G5-UR2c-transient-display-handoff-r2/normal-install/js'),str(out),'normal',str(ROOT/'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle'),str(ROOT/'.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json'),str(ROOT/'.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json')]
+   original=guard.processes;owned={}
+   def observed():
+    table=original();prior.observe_owned_processes(table,cmd[1],str(out),owned);return table
+@@ -78,13 +77,11 @@ def execute():
+   except BaseException as error:g={'reason':'guard-exception','cleanup_complete':False,'error':repr(error)}
+   finally:guard.processes=original;write(directory/(id+'-owned-processes.json'),{'owned_processes':list(owned.values())})
+   wp=out/'worker-result.json';worker=json.loads(wp.read_text())if wp.is_file()else None
+-  if i==0 and g and g.get('reason')=='completed' and worker and worker.get('status')=='OBSERVED':
+-   consumer=subprocess.run(['node',str(RESULT/'check-qualification.mjs'),str(wp),str(directory/'Q1-mask-proof.json')],capture_output=True,text=True)
+-   write(directory/'Q1-mask-proof-command.json',{'exit_code':consumer.returncode,'stdout':consumer.stdout,'stderr':consumer.stderr})
+-   if consumer.returncode:worker=dict(worker,status='QUALIFICATION_CONSUMER_FAILURE')
++  if i==0 and worker and worker.get('status')=='OBSERVED':
++   if len(worker.get('cases',[]))!=8 or any(c.get('status')!='QUALIFIED'for c in worker['cases']):worker=dict(worker,status='SELFTEST_CLOSURE_FAILURE')
+   good=complete(ledger,g,worker,stable());write(ledger_path,ledger);print(json.dumps(ledger['attempts'][-1]),flush=True)
+   if not good:break
+- write(directory/'summary.json',{'ledger':ledger,'unrun_ids':list(IDS[len(ledger['attempts']):]),'source_tree_sha256':frozen['source_tree_sha256']})
++ write(directory/'summary.json',{'ledger':ledger,'unrun_ids':list(IDS[len(ledger['attempts']):]),'source_tree_sha256':frozen['harness_source_tree_sha256']})
+ if __name__=='__main__':
+  if sys.argv[1]=='--source-identity':print(json.dumps(identity()))
+  elif sys.argv[1]=='--freeze':freeze()
+diff --git a/verification/runners/g5/ur2a_handoff.mjs b/verification/runners/g5/ur2a_handoff.mjs
+index d510a431..5b7c4445 100644
+--- a/verification/runners/g5/ur2a_handoff.mjs
++++ b/verification/runners/g5/ur2a_handoff.mjs
+@@ -8,6 +8,7 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
+ export async function handoffConsumer(){
+  const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
+  const {captureColdStage}=await import('/g5/ur2a_cold_capture.mjs');
++ const {readWebGLTarget,captureFailureNow}=await import('/g5/webgl_target_readback.mjs');
+  const {runFunctionalErase,boundedDisplayOpportunity}=await import('/g5/prepared_body_index_reverify_pacing.mjs');
+  let sdk,fixture,initial,clock=31004000000n;const buffers={},phases=[],frames=[],errors=[],operations=[],cold=[];
+  const state=()=>sdk.readState(),observer=installNavigationObserver(()=>sdk?.canvas);
+@@ -27,11 +28,14 @@ export async function handoffConsumer(){
+   return{state:state(),build:sdk.readBuildInfo(),fixture_sha256:f.sha256,resource_binding:sdk.resources.list().binding,dpr:devicePixelRatio,clock:window.ur2aClock?.()??null};
+  };
+  const readSurface=role=>{
+-  const canvas=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');if(!canvas)throw Error('missing '+role+' canvas');
+-  const gl=canvas.getContext('webgl2');if(gl.isContextLost())throw Error('lost '+role+' context');
+-  const width=canvas.width,height=canvas.height,raw=new Uint8Array(width*height*4),bytes=new Uint8Array(raw.length);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);
+-  let nonzeroAlpha=0;for(let y=0;y<height;++y)bytes.set(raw.subarray((height-1-y)*width*4,(height-y)*width*4),y*width*4);for(let i=3;i<bytes.length;i+=4)if(bytes[i])++nonzeroAlpha;
+-  const css=getComputedStyle(canvas);return{bytes,width,height,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0,css:{display:css.display,visibility:css.visibility,opacity:css.opacity},target:canvas.id};
++  const canvas=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');
++  const r=readWebGLTarget(canvas,{role});
++  if(r.metadata.status!=='VALID'){
++   captureFailureNow({targets:{canonical:sdk.canvas,preview:()=>document.querySelector('#mount canvas[id$="-preview"]')},state:()=>({state:state(),camera:state().camera,selection:sdk.readSelection(),resource_binding:sdk.resources.list().binding}),reason:'full-'+role+': '+r.metadata.reason,trigger:r});
++   throw Error('READ_TARGET_ERROR_OR_STATE_RESTORATION_FAILURE: '+r.metadata.reason);
++  }
++  const{bytes,width,height}=r;let nonzeroAlpha=0;for(let i=3;i<bytes.length;i+=4)if(bytes[i])++nonzeroAlpha;
++  const css=getComputedStyle(canvas);return{bytes,width,height,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0,css:{display:css.display,visibility:css.visibility,opacity:css.opacity},target:canvas.id,readback:r.metadata};
+  };
+  const capture=async stage=>{
+   const settleErrors=[];try{await settled();}catch(e){settleErrors.push(error(e));}
+diff --git a/verification/runners/g5/webgl_target_readback.mjs b/verification/runners/g5/webgl_target_readback.mjs
+new file mode 100644
+index 00000000..d1cfd866
+--- /dev/null
++++ b/verification/runners/g5/webgl_target_readback.mjs
+@@ -0,0 +1,80 @@
++// Verification only: a context belongs to a canvas, but its current READ FBO
++// need not be that canvas's default target. Never draw or alter DRAW state here.
++const identities=new WeakMap();let nextIdentity=0,nextRead=0,nextFailure=0;
++const objectId=(o,kind)=>{if(o===null)return kind==='framebuffer'?'DEFAULT':'NONE';if(!identities.has(o))identities.set(o,kind+'-'+(++nextIdentity));return identities.get(o);};
++const now=()=>globalThis.performance?.now()??Date.now();
++const packNames=['PACK_ALIGNMENT','PACK_ROW_LENGTH','PACK_SKIP_ROWS','PACK_SKIP_PIXELS'];
++function errors(gl){const codes=[];for(let i=0;i<32;++i){const v=gl.getError();if(v===gl.NO_ERROR)return{codes,truncated:false};codes.push(v);}return{codes,truncated:true};}
++function state(gl){return{readFramebuffer:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),drawFramebuffer:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),readBuffer:gl.getParameter(gl.READ_BUFFER),pixelPackBuffer:gl.getParameter(gl.PIXEL_PACK_BUFFER_BINDING),pack:packNames.map(n=>gl.getParameter(gl[n]))};}
++function describe(s){return{readFramebuffer:objectId(s.readFramebuffer,'framebuffer'),drawFramebuffer:objectId(s.drawFramebuffer,'framebuffer'),readBuffer:s.readBuffer,pixelPackBuffer:objectId(s.pixelPackBuffer,'buffer'),pack:Object.fromEntries(packNames.map((n,i)=>[n,s.pack[i]]))};}
++function same(a,b){return a.readFramebuffer===b.readFramebuffer&&a.drawFramebuffer===b.drawFramebuffer&&a.readBuffer===b.readBuffer&&a.pixelPackBuffer===b.pixelPackBuffer&&a.pack.every((v,i)=>v===b.pack[i]);}
++export function readWebGLTarget(canvas,{role,rect}={}){
++ const metadata={schema:'g5-qualified-default-readback-v1',id:++nextRead,role,status:'INVALID',started:now(),selected:null,errors:{},restoration:{status:'NOT_CHANGED'},error_queue:'Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.'};
++ let gl,saved,defaultMode,changed=false,raw=null,bytes=null,width=0,height=0;
++ try{
++  if(!canvas)throw Error('target canvas unavailable');
++  metadata.canvas={id:canvas.id??'',identity:objectId(canvas,'canvas'),width:canvas.width,height:canvas.height};gl=canvas.getContext('webgl2');
++  if(!gl||gl.canvas!==canvas){metadata.status='UNAVAILABLE';throw Error('matching WebGL2 context unavailable');}
++  metadata.context={identity:objectId(gl,'context'),attributes:gl.getContextAttributes(),drawingBufferWidth:gl.drawingBufferWidth,drawingBufferHeight:gl.drawingBufferHeight,lost:gl.isContextLost()};
++  metadata.errors.preexisting=errors(gl);
++  if(metadata.context.lost){metadata.status='UNAVAILABLE';throw Error('context lost');}
++  saved=state(gl);metadata.before=describe(saved);
++  if(metadata.errors.preexisting.codes.length||metadata.errors.preexisting.truncated)throw Error('unexpected preexisting GL error');
++  const w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
++  if(!Number.isSafeInteger(w)||!Number.isSafeInteger(h)||w<=0||h<=0||canvas.width!==w||canvas.height!==h)throw Error('canvas/drawing buffer dimensions mismatch');
++  const r=rect??{x:0,y:0,width:w,height:h};
++  if(!['x','y','width','height'].every(k=>Number.isSafeInteger(r[k]))||r.x<0||r.y<0||r.width<=0||r.height<=0||r.x+r.width>w||r.y+r.height>h||!Number.isSafeInteger(r.width*r.height*4))throw Error('invalid readback ROI');
++  width=r.width;height=r.height;metadata.rectangle={...r,origin:'top-left',readY:h-r.y-r.height};
++  gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null);changed=true;defaultMode=gl.getParameter(gl.READ_BUFFER);metadata.defaultReadBufferBefore=defaultMode;
++  gl.readBuffer(gl.BACK);gl.bindBuffer(gl.PIXEL_PACK_BUFFER,null);
++  for(const n of packNames)gl.pixelStorei(gl[n],n==='PACK_ALIGNMENT'?1:0);
++  metadata.selected=describe(state(gl));metadata.errors.setup=errors(gl);
++  if(metadata.selected.readFramebuffer!=='DEFAULT'||metadata.selected.readBuffer!==gl.BACK||metadata.selected.pixelPackBuffer!=='NONE'||metadata.selected.drawFramebuffer!==metadata.before.drawFramebuffer||packNames.some(n=>metadata.selected.pack[n]!== (n==='PACK_ALIGNMENT'?1:0)))throw Error('selected default target/state mismatch');
++  if(metadata.errors.setup.codes.length||metadata.errors.setup.truncated)throw Error('read target selection GL error');
++  raw=new Uint8Array(width*height*4);gl.readPixels(r.x,h-r.y-r.height,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);metadata.errors.read=errors(gl);
++  if(metadata.errors.read.codes.length||metadata.errors.read.truncated||gl.isContextLost())throw Error('readPixels GL error/context loss');
++  bytes=new Uint8Array(raw.length);for(let y=0;y<height;++y)bytes.set(raw.subarray((height-1-y)*width*4,(height-y)*width*4),y*width*4);
++  metadata.status='VALID';
++ }catch(error){metadata.reason=String(error.message??error);if(gl?.isContextLost())metadata.status='UNAVAILABLE';}
++ finally{
++  if(saved&&changed){
++   const failures=[];const restore=fn=>{try{fn();}catch(e){failures.push(String(e.message??e));}};
++   restore(()=>gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null));
++   if(defaultMode!==undefined)restore(()=>gl.readBuffer(defaultMode));
++   restore(()=>{metadata.defaultReadBufferAfter=gl.getParameter(gl.READ_BUFFER);if(defaultMode!==undefined&&metadata.defaultReadBufferAfter!==defaultMode)failures.push('default per-FBO readBuffer mismatch');});
++   restore(()=>gl.bindFramebuffer(gl.READ_FRAMEBUFFER,saved.readFramebuffer));
++   if(saved.readFramebuffer!==null)restore(()=>gl.readBuffer(saved.readBuffer));
++   restore(()=>gl.bindBuffer(gl.PIXEL_PACK_BUFFER,saved.pixelPackBuffer));
++   for(let i=0;i<packNames.length;++i)restore(()=>gl.pixelStorei(gl[packNames[i]],saved.pack[i]));
++   restore(()=>{const after=state(gl);metadata.after=describe(after);if(!same(saved,after))failures.push('READ/DRAW/PBO/PACK state mismatch');});
++   restore(()=>{metadata.errors.restore=errors(gl);if(metadata.errors.restore.codes.length||metadata.errors.restore.truncated)failures.push('restoration GL error');});
++   metadata.restoration={status:failures.length?'FAILED':'RESTORED',failures};
++   if(failures.length){metadata.status=gl.isContextLost()?'UNAVAILABLE':'INVALID';metadata.reason='GL state restoration failed';}
++  }
++  if(saved&&!changed)try{metadata.after=describe(state(gl));}catch(e){metadata.restoration={status:'FAILED',failures:[String(e)]};metadata.status='INVALID';}
++  metadata.finished=now();
++ }
++ if(metadata.status!=='VALID')bytes=null;
++ return{bytes,width,height,target:canvas?.id??'',metadata};
++}
++// Failure witnesses own copied readbacks; no async persistence or later frame is
++// allowed to replace one. Host streaming can start only after this returns.
++const captures=[],buffers=new Map();
++export function captureFailureNow({targets,state:readState,reason,trigger}={}){
++ const id='failure-'+(++nextFailure),d={schema:'g5-immediate-target-failure-v1',id,reason,started:now(),synchronous:true,state:null,buffers:[]};
++ try{const v=readState?.();if(v?.then)throw Error('asynchronous failure state');d.state=structuredClone(v??null);}catch(e){d.state={status:'MISSING',reason:String(e)};}
++ const keep=(role,sample)=>{
++  const key=id+'-'+role;const meta={role,key,length:sample?.bytes?.length??0,status:sample?.bytes&&sample.metadata?.status==='VALID'?'AVAILABLE_CAPTURED':'MISSING',readback:sample?.metadata??null,reason:sample?.metadata?.reason??null};
++  if(meta.status==='AVAILABLE_CAPTURED')buffers.set(key,sample.bytes);else meta.reason??='qualified capture unavailable';d.buffers.push(meta);
++ };
++ if(trigger)keep('trigger-ROI',trigger);
++ for(const role of['canonical','preview']){
++  try{keep(role,readWebGLTarget(typeof targets?.[role]==='function'?targets[role]():targets?.[role],{role}));}
++  catch(e){keep(role,{metadata:{status:'INVALID',reason:String(e)},bytes:null});}
++ }
++ d.finished=now();captures.push(d);return structuredClone(d);
++}
++export function failureDescriptors(){return structuredClone(captures);}
++export function failureChunk(key,off,count){const b=buffers.get(key);if(!b)throw Error('captured buffer MISSING/released; no later-frame fallback');if(!Number.isSafeInteger(off)||!Number.isSafeInteger(count)||off<0||count<1||count>262144||off>=b.length)throw Error('failure chunk bounds');const part=b.subarray(off,Math.min(off+count,b.length));let s='';for(let i=0;i<part.length;i+=8192)s+=String.fromCharCode(...part.subarray(i,i+8192));return btoa(s);}
++export function releaseFailureBuffer(key){return buffers.delete(key);}
++export function resetFailureStoreForTests(){captures.length=0;buffers.clear();}
+diff --git a/verification/runners/g5/webgl_target_readback_host.mjs b/verification/runners/g5/webgl_target_readback_host.mjs
+new file mode 100644
+index 00000000..665e32db
+--- /dev/null
++++ b/verification/runners/g5/webgl_target_readback_host.mjs
+@@ -0,0 +1,36 @@
++import fs from 'node:fs/promises';import path from 'node:path';import{createHash}from'node:crypto';
++export async function persistCapturedFailures({descriptors,readChunk,release,write,metadata,cache=new Map()}){
++ const results=[];
++ for(const d of descriptors){
++  if(cache.has(d.id)){results.push(cache.get(d.id));continue;}
++  const row={...d,buffers:[],persistence_started:Date.now()};
++  for(const b of d.buffers){
++   const saved={...b};row.buffers.push(saved);if(b.status!=='AVAILABLE_CAPTURED')continue;
++   try{
++    const chunks=[];let count=0;
++    for(let off=0;off<b.length;off+=262144){const part=Buffer.from(await readChunk(b.key,off,Math.min(262144,b.length-off)),'base64');if(part.length!==Math.min(262144,b.length-off))throw Error('captured byte stream length');chunks.push(part);count+=part.length;}
++    const bytes=Buffer.concat(chunks,count);saved.file=await write(d.id,b,bytes);saved.sha256=createHash('sha256').update(bytes).digest('hex');saved.status='PERSISTED';await release?.(b.key);
++   }catch(e){saved.status='MISSING';saved.reason='Persistence failed: '+String(e.stack??e);}
++  }
++  row.status=row.buffers.every(b=>b.status==='PERSISTED')?'COMPLETE':'MISSING';row.persistence_finished=Date.now();results.push(row);cache.set(d.id,row);await metadata?.(row);
++ }
++ return results;
++}
++const pageCaches=new WeakMap();
++export async function persistPageFailures(page,out,prefix){
++ if(!pageCaches.has(page))pageCaches.set(page,new Map());
++ const descriptors=await page.evaluate(async()=>{const m=await import('/g5/webgl_target_readback.mjs');return m.failureDescriptors();});
++ return persistCapturedFailures({descriptors,cache:pageCaches.get(page),
++  readChunk:(key,off,count)=>page.evaluate(async({key,off,count})=>(await import('/g5/webgl_target_readback.mjs')).failureChunk(key,off,count),{key,off,count}),
++  release:key=>page.evaluate(async key=>(await import('/g5/webgl_target_readback.mjs')).releaseFailureBuffer(key),key),
++  write:async(id,b,bytes)=>{const p=path.join(out,prefix+'-'+id+'-'+b.role+'.rgba');await fs.writeFile(p,bytes);return p;},
++  metadata:r=>fs.writeFile(path.join(out,prefix+'-'+r.id+'-capture.json'),JSON.stringify(r,null,2)+'\n')});
++}
++export function classifyFailureCaptures(captures){
++ if(!captures?.length)return'FAILURE_ARTIFACT_CAPTURE_MISSING';
++ const c=captures.at(-1);
++ const trigger=c.buffers.find(b=>b.role==='trigger-ROI');
++ if(trigger?.readback?.status!=='VALID')return trigger?.readback?.errors?.preexisting?.codes?.length?'UNEXPECTED_PREEXISTING_GL_ERROR':'READ_TARGET_ERROR_OR_STATE_RESTORATION_FAILURE';
++ if(c.buffers.some(b=>b.status!=='PERSISTED'))return'FAILURE_ARTIFACT_CAPTURE_MISSING';
++ return'PRODUCT_PIXEL_FAILURE';
++}
+diff --git a/verification/runners/g5/webgl_target_readback_selftest.mjs b/verification/runners/g5/webgl_target_readback_selftest.mjs
+new file mode 100644
+index 00000000..0ac060e9
+--- /dev/null
++++ b/verification/runners/g5/webgl_target_readback_selftest.mjs
+@@ -0,0 +1,55 @@
++import fs from 'node:fs/promises';import path from 'node:path';import http from 'node:http';import{fileURLToPath}from'node:url';import{createHash}from'node:crypto';
++import{persistCapturedFailures}from'./webgl_target_readback_host.mjs';
++const HERE=path.dirname(fileURLToPath(import.meta.url));const sha=b=>createHash('sha256').update(b).digest('hex');
++export async function selftestConsumer(){
++ const m=await import('/g5/webgl_target_readback.mjs'),{qualifySentinel,SENTINEL}=await import('/g5/transient_display_retry_contract.mjs');
++ const captures=new Map(),rows=[],images=[];let imageId=0;
++ const check=(v,s)=>{if(!v)throw Error('S1: '+s);};
++ const remember=(name,sample,expected)=>{const image={name,key:'s1-image-'+(++imageId),width:sample.width,height:sample.height,length:sample.bytes?.length??0,readback:sample.metadata??{status:'UNQUALIFIED_OLD'},expected};if(sample.bytes)captures.set(image.key,sample.bytes);images.push(image);return image;};
++ const drain=gl=>{const a=[];for(let i=0;i<32;++i){const e=gl.getError();if(e===gl.NO_ERROR)return a;a.push(e);}return a;};
++ const make=(name)=>{const canvas=document.createElement('canvas');canvas.id=name;canvas.width=32;canvas.height=16;document.body.append(canvas);const gl=canvas.getContext('webgl2',{alpha:true,antialias:false,preserveDrawingBuffer:true,premultipliedAlpha:false});check(gl,'WebGL2 unavailable');return{canvas,gl};};
++ const flat=(bytes,color)=>!!bytes&&bytes.every((v,i)=>v===color[i%4]);
++ const pack=['PACK_ALIGNMENT','PACK_ROW_LENGTH','PACK_SKIP_ROWS','PACK_SKIP_PIXELS'];
++ const state=gl=>({read:gl.getParameter(gl.READ_FRAMEBUFFER_BINDING),draw:gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING),mode:gl.getParameter(gl.READ_BUFFER),pbo:gl.getParameter(gl.PIXEL_PACK_BUFFER_BINDING),pack:pack.map(n=>gl.getParameter(gl[n]))});
++ const equal=(a,b)=>a.read===b.read&&a.draw===b.draw&&a.mode===b.mode&&a.pbo===b.pbo&&a.pack.every((v,i)=>v===b.pack[i]);
++ const clean=gl=>{gl.bindBuffer(gl.PIXEL_PACK_BUFFER,null);for(const n of pack)gl.pixelStorei(gl[n],n==='PACK_ALIGNMENT'?4:0);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.readBuffer(gl.BACK);drain(gl);};
++ const paint=(gl,color)=>{gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.clearColor(...color.map(v=>v/255));gl.clear(gl.COLOR_BUFFER_BIT);};
++ const fbo=(gl,color)=>{const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,32,16,0,gl.RGBA,gl.UNSIGNED_BYTE,null);const f=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,f);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,t,0);check(gl.checkFramebufferStatus(gl.FRAMEBUFFER)===gl.FRAMEBUFFER_COMPLETE,'incomplete fixture FBO');gl.clearColor(...color.map(v=>v/255));gl.clear(gl.COLOR_BUFFER_BIT);return f;};
++ const probe=(gl,fn)=>{const events=[],names=['bindFramebuffer','drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced','clear','clearBufferfv','blitFramebuffer'];const old={};for(const n of names){old[n]=gl[n];gl[n]=function(...a){events.push({name:n,target:a[0]});return old[n].apply(this,a);};}try{return{value:fn(),events};}finally{for(const n of names)gl[n]=old[n];}};
++ const step=async(name,fn)=>{const row={name,status:'STARTED'};rows.push(row);try{Object.assign(row,await fn());row.status='QUALIFIED';}catch(e){row.status='FAILED';row.error=String(e.stack??e);throw e;}};
++ const c=make('s1-canonical'),p=make('s1-preview'),gl=c.gl;let readFbo,drawFbo,old;
++ const run=async oldSource=>{try{
++  old=Function('sdk','document','check','getComputedStyle','return ('+oldSource.full_reader+');')({canvas:c.canvas},document,check,getComputedStyle);
++  await step('default-vs-different-READ-and-DRAW',()=>{readFbo=fbo(gl,[0,0,255,255]);drawFbo=fbo(gl,[255,0,0,255]);paint(gl,[0,255,0,255]);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,readFbo);gl.readBuffer(gl.COLOR_ATTACHMENT0);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,drawFbo);const before=state(gl),legacy=old('canonical');remember('old-offscreen-blue',legacy,[0,0,255,255]);check(flat(legacy.bytes,[0,0,255,255]),'old reader did not read controlled wrong FBO');const q=probe(gl,()=>m.readWebGLTarget(c.canvas,{role:'canonical'}));remember('new-default-green',q.value,[0,255,0,255]);check(q.value.metadata.status==='VALID'&&flat(q.value.bytes,[0,255,0,255]),'new default target wrong');check(equal(before,state(gl)),'read/draw state changed');check(q.events.every(e=>e.name==='bindFramebuffer'&&e.target===gl.READ_FRAMEBUFFER),'helper issued draw/clear/DRAW operation');return{old_wrong_new_right:true,readback:q.value.metadata,helper_events:q.events,state_restored:true,renderer:gl.getParameter(gl.RENDERER),vendor:gl.getParameter(gl.VENDOR),version:gl.getParameter(gl.VERSION)};});
++  await step('PBO-PACK-and-two-NONE-readbuffers',()=>{gl.bindFramebuffer(gl.READ_FRAMEBUFFER,null);gl.readBuffer(gl.NONE);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,readFbo);gl.readBuffer(gl.NONE);const b=gl.createBuffer();gl.bindBuffer(gl.PIXEL_PACK_BUFFER,b);gl.bufferData(gl.PIXEL_PACK_BUFFER,65536,gl.STREAM_READ);for(const[n,v]of[['PACK_ALIGNMENT',8],['PACK_ROW_LENGTH',64],['PACK_SKIP_ROWS',2],['PACK_SKIP_PIXELS',3]])gl.pixelStorei(gl[n],v);const before=state(gl);const legacy=old('canonical'),legacyErrors=drain(gl);remember('old-PBO-read-invalid',legacy,null);check(legacyErrors.includes(gl.INVALID_OPERATION),'old PBO-dependent read did not fail');const r=m.readWebGLTarget(c.canvas,{role:'canonical'});remember('new-packed-default-green',r,[0,255,0,255]);check(r.metadata.status==='VALID'&&flat(r.bytes,[0,255,0,255]),'PBO/PACK qualified read wrong');check(equal(before,state(gl)),'PBO/PACK/READ/DRAW restoration');check(r.metadata.defaultReadBufferBefore===gl.NONE&&r.metadata.defaultReadBufferAfter===gl.NONE,'default per-FBO mode');return{legacyErrors,readback:r.metadata,state_restored:true};});
++  await step('valid-transparent-is-data-and-fails-opaque-oracle',()=>{clean(gl);paint(gl,[0,0,0,0]);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,readFbo);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,drawFbo);const r=m.readWebGLTarget(c.canvas,{role:'canonical'});remember('valid-transparent-default',r,[0,0,0,0]);check(r.metadata.status==='VALID'&&flat(r.bytes,[0,0,0,0]),'transparent data invalidated');const reference=new Uint8Array(r.bytes.length);for(let i=0;i<reference.length;i+=4)reference.set(SENTINEL.ink,i);const q=qualifySentinel(reference,r.bytes);check(q.status==='FAILED','transparent incorrectly passed opaque oracle');return{readback:r.metadata,opaque_qualifier:q};});
++  await step('invalid-ROI-and-real-context-read-exception',()=>{const before=state(gl),invalid=m.readWebGLTarget(c.canvas,{role:'canonical',rect:{x:0,y:0,width:100,height:16}});check(invalid.metadata.status==='INVALID'&&invalid.bytes===null,'invalid ROI accepted');const original=gl.readPixels;let thrown;try{gl.readPixels=()=>{throw Error('controlled read exception');};thrown=m.readWebGLTarget(c.canvas,{role:'canonical'});}finally{gl.readPixels=original;}check(thrown.metadata.status==='INVALID'&&thrown.bytes===null&&equal(before,state(gl)),'throw restoration');return{invalid:invalid.metadata,exception:thrown.metadata,state_restored:true};});
++  await step('preexisting-GL-error-is-explicit-invalid',()=>{gl.enable(0xdeadbeef);const before=state(gl),r=m.readWebGLTarget(c.canvas,{role:'canonical'});check(r.metadata.status==='INVALID'&&r.metadata.errors.preexisting.codes.includes(gl.INVALID_ENUM)&&equal(before,state(gl)),'preexisting error not isolated');return{readback:r.metadata,error_queue_consumed_and_recorded:true,state_restored:true};});
++  await step('synchronous-failure-before-first-yield',async()=>{clean(gl);clean(p.gl);paint(gl,SENTINEL.ink);paint(p.gl,[255,0,0,255]);gl.bindFramebuffer(gl.READ_FRAMEBUFFER,readFbo);gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER,drawFbo);const roi=m.readWebGLTarget(c.canvas,{role:'canonical',rect:{x:3,y:2,width:8,height:8}});const d=m.captureFailureNow({targets:{canonical:c.canvas,preview:p.canvas},state:()=>({generation:'6',activeContacts:1,phase:'failure-before-yield'}),reason:'S1-fully-captured-before-yield',trigger:roi});const firstYieldAt=performance.now();check(d.finished<=firstYieldAt,'capture yielded');await Promise.resolve();paint(gl,[0,0,255,255]);paint(p.gl,[0,255,0,255]);return{capture:d,firstYieldAt,later_canvas_colors:[[0,0,255,255],[0,255,0,255]],expected_captured_colors:{'trigger-ROI':SENTINEL.ink,canonical:SENTINEL.ink,preview:[255,0,0,255]}};});
++  await step('unavailable-preview-explicit-MISSING',async()=>{const lost=make('s1-lost-preview');const ext=lost.gl.getExtension('WEBGL_lose_context');check(ext,'loss extension unavailable');await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('controlled context loss event timeout')),5000);lost.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();clearTimeout(timer);resolve();},{once:true});ext.loseContext();});const r=m.readWebGLTarget(lost.canvas,{role:'preview'});check(r.metadata.status==='UNAVAILABLE'&&r.bytes===null,'context loss accepted');const d=m.captureFailureNow({targets:{canonical:c.canvas,preview:lost.canvas},state:()=>({generation:'6'}),reason:'S1-preview-unavailable'});check(d.buffers.find(b=>b.role==='preview').status==='MISSING','unavailable preview hidden');return{readback:r.metadata,capture:d};});
++  await step('host-persistence-negative-control',()=>{const d=m.captureFailureNow({targets:{canonical:c.canvas,preview:p.canvas},state:()=>({generation:'6'}),reason:'S1-persistence-failure'});return{capture:d,expected_canonical_status:'MISSING',expected_preview_status:'PERSISTED'};});
++  return{status:'OBSERVED',cases:rows,images};
++ }catch(e){return{status:'FAILED',error:String(e.stack??e),cases:rows,images};}};
++ window.s1={run,pull:(key,off,count)=>{const b=captures.get(key);if(!b)throw Error('image missing');let text='';const a=b.subarray(off,off+count);for(let i=0;i<a.length;i+=8192)text+=String.fromCharCode(...a.subarray(i,i+8192));return btoa(text);},release:key=>captures.delete(key)};
++}
++export async function selftestWorker({outArg,oldReaderPath}){
++ const out=path.resolve(outArg);await fs.mkdir(out,{recursive:true});let browser,server,page;const result={schema:'g5-real-WebGL-readback-selftest-v1',status:'STARTED',cases:[]};
++ const write=(n,v)=>fs.writeFile(path.join(out,n),JSON.stringify(v,null,2)+'\n');
++ try{
++  server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1');if(u.pathname==='/selftest.html'){res.setHeader('Content-Type','text/html');res.end('<body><script type="module">await ('+selftestConsumer.toString()+')();</script>');return;}const p=path.resolve(HERE,u.pathname.slice(4));if(!u.pathname.startsWith('/g5/')||!p.startsWith(HERE+path.sep))throw Error('path');res.setHeader('Content-Type','text/javascript');res.end(await fs.readFile(p));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  const{chromium}=await import('../../node_modules/playwright/index.mjs');browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});result.browser={version:browser.version(),headless:true};page=await browser.newPage();result.page_errors=[];page.on('pageerror',e=>result.page_errors.push(String(e)));await page.goto('http://127.0.0.1:'+server.address().port+'/selftest.html');await page.waitForFunction(()=>!!window.s1);Object.assign(result,await page.evaluate(old=>s1.run(old),JSON.parse(await fs.readFile(oldReaderPath))));await write('browser-prefix.json',result);
++  for(const image of result.images??[]){if(!image.length)continue;const parts=[];for(let off=0;off<image.length;off+=262144)parts.push(Buffer.from(await page.evaluate(({key,off})=>s1.pull(key,off,262144),{key:image.key,off}),'base64'));const bytes=Buffer.concat(parts);if(bytes.length!==image.length)throw Error('selftest image transfer length');const p=path.join(out,image.name+'.rgba');await fs.writeFile(p,bytes);image.path=p;image.sha256=sha(bytes);if(image.expected&&!bytes.every((v,i)=>v===image.expected[i%4]))throw Error('saved known-color mismatch '+image.name);await page.evaluate(key=>s1.release(key),image.key);}
++  const descriptors=await page.evaluate(async()=>(await import('/g5/webgl_target_readback.mjs')).failureDescriptors());const byId=new Map(descriptors.map(d=>[d.id,d]));
++  result.failure_captures=await persistCapturedFailures({descriptors,readChunk:(key,off,count)=>page.evaluate(async({key,off,count})=>(await import('/g5/webgl_target_readback.mjs')).failureChunk(key,off,count),{key,off,count}),release:key=>page.evaluate(async key=>(await import('/g5/webgl_target_readback.mjs')).releaseFailureBuffer(key),key),write:async(id,b,bytes)=>{if(byId.get(id).reason==='S1-persistence-failure'&&b.role==='canonical')throw Error('intentional S1 persistence failure');const p=path.join(out,id+'-'+b.role+'.rgba');await fs.writeFile(p,bytes);return p;},metadata:r=>write(r.id+'-capture.json',r)});
++  const complete=result.failure_captures.find(d=>d.reason==='S1-fully-captured-before-yield'),missing=result.failure_captures.find(d=>d.reason==='S1-preview-unavailable'),persist=result.failure_captures.find(d=>d.reason==='S1-persistence-failure');
++  if(result.status==='OBSERVED'){
++   if(complete?.status!=='COMPLETE'||complete.state.phase!=='failure-before-yield')throw Error('full synchronous capture missing');const expected=result.cases.find(c=>c.name==='synchronous-failure-before-first-yield').expected_captured_colors;
++   for(const b of complete.buffers){const bytes=await fs.readFile(b.file);if(!bytes.every((v,i)=>v===expected[b.role][i%4]))throw Error('failure buffer substituted by later pixels');}
++   if(missing?.status!=='MISSING'||missing.buffers.find(b=>b.role==='preview').status!=='MISSING'||persist?.status!=='MISSING'||persist.buffers.find(b=>b.role==='canonical').status!=='MISSING'||persist.buffers.find(b=>b.role==='preview').status!=='PERSISTED')throw Error('negative artifact controls incorrectly qualified');
++   if(result.cases.length!==8||result.cases.some(c=>c.status!=='QUALIFIED')||result.page_errors.length)throw Error('selftest closure incomplete');
++  }
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);}
++ finally{await write('worker-result.json',result);if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));}
++ console.log(JSON.stringify({stage:'reader-selftest-closed',status:result.status,error:result.error??null}));if(result.status!=='OBSERVED')process.exitCode=2;
++}
++if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){const[outArg,oldReaderPath]=process.argv.slice(2);await selftestWorker({outArg,oldReaderPath});}
+diff --git a/verification/tests/g5_webgl_target_readback.test.mjs b/verification/tests/g5_webgl_target_readback.test.mjs
+new file mode 100644
+index 00000000..e885d5c7
+--- /dev/null
++++ b/verification/tests/g5_webgl_target_readback.test.mjs
+@@ -0,0 +1,47 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';
++class FakeGL {
++ constructor(){Object.assign(this,{READ_FRAMEBUFFER:0x8ca8,DRAW_FRAMEBUFFER:0x8ca9,FRAMEBUFFER:0x8d40,READ_FRAMEBUFFER_BINDING:0x8caa,DRAW_FRAMEBUFFER_BINDING:0x8ca6,READ_BUFFER:0x0c02,PIXEL_PACK_BUFFER:0x88eb,PIXEL_PACK_BUFFER_BINDING:0x88ed,PACK_ALIGNMENT:0x0d05,PACK_ROW_LENGTH:0x0d02,PACK_SKIP_ROWS:0x0d03,PACK_SKIP_PIXELS:0x0d04,BACK:0x405,NONE:0,COLOR_ATTACHMENT0:0x8ce0,RGBA:0x1908,UNSIGNED_BYTE:0x1401,NO_ERROR:0,INVALID_OPERATION:0x502,CONTEXT_LOST_WEBGL:0x9242});this.off={name:'read-blue'};this.draw={name:'draw-red'};this.rb=this.off;this.db=this.draw;this.pbo=null;this.modes=new Map([[null,this.BACK],[this.off,this.COLOR_ATTACHMENT0]]);this.pack=new Map([[this.PACK_ALIGNMENT,4],[this.PACK_ROW_LENGTH,0],[this.PACK_SKIP_ROWS,0],[this.PACK_SKIP_PIXELS,0]]);this.errors=[];this.lost=false;this.calls=[];this.drawingBufferWidth=4;this.drawingBufferHeight=2;this.defaultColor=[0,255,0,255];this.canvas={id:'fake-canonical',width:4,height:2,getContext:()=>this,getBoundingClientRect:()=>({width:4,height:2})};}
++ getParameter(n){if(n===this.READ_FRAMEBUFFER_BINDING)return this.rb;if(n===this.DRAW_FRAMEBUFFER_BINDING)return this.db;if(n===this.READ_BUFFER)return this.modes.get(this.rb);if(n===this.PIXEL_PACK_BUFFER_BINDING)return this.pbo;return this.pack.get(n);}
++ getContextAttributes(){return{alpha:true,preserveDrawingBuffer:true};}isContextLost(){return this.lost;}getError(){return this.errors.shift()??this.NO_ERROR;}
++ bindFramebuffer(t,v){this.calls.push(['bindFramebuffer',t,v]);if(t===this.READ_FRAMEBUFFER)this.rb=v;else if(t===this.DRAW_FRAMEBUFFER)this.db=v;else if(t===this.FRAMEBUFFER)this.rb=this.db=v;else throw Error('bad target');}
++ readBuffer(v){this.modes.set(this.rb,v);}bindBuffer(t,v){assert.equal(t,this.PIXEL_PACK_BUFFER);this.pbo=v;}pixelStorei(p,v){if(this.failRestore&&p===this.PACK_ALIGNMENT&&v===8)throw Error('restore failure');this.pack.set(p,v);}
++ readPixels(x,y,w,h,format,type,bytes){this.calls.push(['readPixels',this.rb]);if(this.throwRead)throw Error('injected read throw');if(this.lossOnRead){this.lost=true;this.errors.push(this.CONTEXT_LOST_WEBGL);return;}if(this.pbo||this.modes.get(this.rb)===this.NONE||[this.PACK_ROW_LENGTH,this.PACK_SKIP_ROWS,this.PACK_SKIP_PIXELS].some(n=>this.pack.get(n))){this.errors.push(this.INVALID_OPERATION);return;}for(let i=0;i<bytes.length;i+=4)bytes.set(this.rb===null?this.defaultColor:[0,0,255,255],i);}
++ state(){return{read:this.rb,draw:this.db,pbo:this.pbo,defaultMode:this.modes.get(null),oldMode:this.modes.get(this.off),pack:[...this.pack]};}
++}
++const helper=()=>import('../runners/g5/webgl_target_readback.mjs');
++if(process.env.G5_OLD_READER_RED){
++ const old=JSON.parse(fs.readFileSync(process.env.G5_OLD_READER_RED));
++ test('old full reader violates actual default target requirement',()=>{const gl=new FakeGL();const f=Function('sdk','document','check','getComputedStyle','return ('+old.full_reader+');')({canvas:gl.canvas},{},(b,m)=>{if(!b)throw Error(m);},()=>({display:'block',visibility:'visible',opacity:'1'}));assert.deepEqual([...f('canonical').bytes.slice(0,4)],[0,255,0,255]);});
++ test('old live captures both full targets before its first await',async()=>{const order=[];const gl=new FakeGL();const f=Function('readROI','persist','row','state','camera','check','qualifySentinel','reference','referenceCamera','performance','window','let liveIndex=0;return ('+old.live+');')(()=>({bytes:new Uint8Array(8),target:gl.canvas.id}),async()=>{order.push('first-await-persist');return{};},{live:[]},()=>({}),()=>'',(b,m)=>{if(!b)throw Error(m);},()=>{order.push('qualifier');return{status:'FAILED'};},new Uint8Array(8),'',{now:()=>1},{transientMetadata:async()=>{}});await assert.rejects(f('controlled-failure'));assert.ok(order.indexOf('capture-both-targets')>=0&&order.indexOf('capture-both-targets')<order.indexOf('first-await-persist'));});
++}else{
++ test('qualified default target preserves distinct READ/DRAW and both per-FBO read modes',async()=>{const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.modes.set(null,gl.NONE);gl.modes.set(gl.off,gl.NONE);const before=gl.state();const r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.equal(r.metadata.status,'VALID');assert.deepEqual([...r.bytes.slice(0,4)],[0,255,0,255]);assert.deepEqual(gl.state(),before);assert.equal(gl.calls.some(c=>c[0]==='bindFramebuffer'&&c[1]!==gl.READ_FRAMEBUFFER),false);assert.equal(r.metadata.selected.readFramebuffer,'DEFAULT');});
++ test('PBO and nontrivial PACK values are restored and produce tightly packed bytes',async()=>{const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.pbo={name:'pbo'};for(const[n,v]of[[gl.PACK_ALIGNMENT,8],[gl.PACK_ROW_LENGTH,32],[gl.PACK_SKIP_ROWS,2],[gl.PACK_SKIP_PIXELS,3]])gl.pack.set(n,v);const before=gl.state(),r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.equal(r.metadata.status,'VALID');assert.equal(r.bytes.length,32);assert.deepEqual(gl.state(),before);});
++ test('valid transparent default remains data and fails an opaque pixel oracle',async()=>{const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.defaultColor=[0,0,0,0];const r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.equal(r.metadata.status,'VALID');assert.ok(r.bytes.every(v=>v===0));assert.notDeepEqual([...r.bytes.slice(0,4)],[13,26,51,255]);});
++ test('invalid ROI, lost context and preexisting errors cannot masquerade as valid zero pixels',async()=>{const{readWebGLTarget}=await helper();for(const kind of['roi','lost','preerror']){const gl=new FakeGL(),before=gl.state();if(kind==='lost')gl.lost=true;if(kind==='preerror')gl.errors.push(gl.INVALID_OPERATION);const r=readWebGLTarget(gl.canvas,{role:'canonical',rect:kind==='roi'?{x:0,y:0,width:9,height:2}:undefined});assert.notEqual(r.metadata.status,'VALID');assert.equal(r.bytes,null);assert.deepEqual(gl.state(),before);}});
++ test('read exception and context loss during read restore state and remain invalid',async()=>{const{readWebGLTarget}=await helper();for(const name of['throwRead','lossOnRead']){const gl=new FakeGL();gl[name]=true;const before=gl.state(),r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.notEqual(r.metadata.status,'VALID');assert.equal(r.bytes,null);assert.deepEqual(gl.state(),before);}});
++ test('restoration failure is explicit rather than a valid sample',async()=>{const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.pack.set(gl.PACK_ALIGNMENT,8);gl.failRestore=true;const r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.equal(r.metadata.status,'INVALID');assert.equal(r.metadata.restoration.status,'FAILED');assert.equal(r.bytes,null);});
++ test('failure captures both full targets and state synchronously, with explicit unavailable role',async()=>{const{captureFailureNow,failureDescriptors,failureChunk,releaseFailureBuffer,resetFailureStoreForTests}=await helper();resetFailureStoreForTests();const c=new FakeGL(),p=new FakeGL();p.canvas.id='fake-preview';p.defaultColor=[255,0,0,255];const event=[];const d=captureFailureNow({targets:{canonical:c.canvas,preview:p.canvas},state:()=>{event.push('state');return{generation:'6',activeContacts:1};},reason:'forced opaque mismatch',trigger:{bytes:new Uint8Array(4),metadata:{status:'VALID',role:'canonical'}}});event.push('capture-done');await Promise.resolve().then(()=>{event.push('first-await');c.defaultColor=[0,0,255,255];});assert.deepEqual(event,['state','capture-done','first-await']);assert.equal(d.state.activeContacts,1);assert.equal(failureDescriptors().length,1);const b=d.buffers.find(x=>x.role==='canonical');assert.deepEqual([...Buffer.from(failureChunk(b.key,0,4),'base64')],[0,255,0,255]);releaseFailureBuffer(b.key);const missing=captureFailureNow({targets:{canonical:c.canvas,preview:null},state:()=>({}),reason:'missing preview'});assert.equal(missing.buffers.find(x=>x.role==='preview').status,'MISSING');});
++}
++if(!process.env.G5_OLD_READER_RED)test('persistence failure is explicit MISSING, never substituted by a later read',async()=>{
++ const{persistCapturedFailures}=await import('../runners/g5/webgl_target_readback_host.mjs');const calls=[];
++ const d={id:'controlled',buffers:[{role:'canonical',key:'c',length:4,status:'AVAILABLE_CAPTURED'},{role:'preview',key:'p',length:4,status:'AVAILABLE_CAPTURED'}]};
++ const r=await persistCapturedFailures({descriptors:[d],readChunk:async k=>{calls.push(k);return Buffer.from([1,2,3,4]).toString('base64');},write:async(_,b)=>{if(b.role==='canonical')throw Error('disk failed');return'preview.rgba';}});
++ assert.equal(r[0].status,'MISSING');assert.equal(r[0].buffers[0].status,'MISSING');assert.equal(r[0].buffers[1].status,'PERSISTED');assert.deepEqual(calls,['c','p']);
++});
++if(!process.env.G5_OLD_READER_RED)test('invalid read classification remains distinct from missing valid failure artifact',async()=>{
++ const{classifyFailureCaptures}=await import('../runners/g5/webgl_target_readback_host.mjs');
++ assert.equal(classifyFailureCaptures([{buffers:[{role:'trigger-ROI',status:'MISSING',readback:{status:'INVALID',errors:{preexisting:{codes:[0x502]}}}},{role:'canonical',status:'PERSISTED'},{role:'preview',status:'PERSISTED'}]}]),'UNEXPECTED_PREEXISTING_GL_ERROR');
++});
++if(!process.env.G5_OLD_READER_RED)test('persisted failure buffers are not reread or relabelled on the outer catch path',async()=>{
++ const{persistCapturedFailures}=await import('../runners/g5/webgl_target_readback_host.mjs');const cache=new Map();let reads=0;
++ const args={descriptors:[{id:'once',buffers:[{role:'canonical',key:'c',length:4,status:'AVAILABLE_CAPTURED'}]}],cache,readChunk:async()=>{++reads;return'AAAAAA==';},write:async()=> 'saved.rgba'};
++ const a=await persistCapturedFailures(args),b=await persistCapturedFailures({...args,readChunk:async()=>{throw Error('buffer released');}});assert.deepEqual(a,b);assert.equal(reads,1);assert.equal(b[0].status,'COMPLETE');
++});
++if(!process.env.G5_OLD_READER_RED)test('unsuccessful default target selection cannot qualify merely because GL error queue is empty',async()=>{
++ const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.bindFramebuffer=()=>{};const r=readWebGLTarget(gl.canvas,{role:'canonical'});assert.equal(r.metadata.status,'INVALID');assert.equal(r.bytes,null);
++});
++if(!process.env.G5_OLD_READER_RED)test('ROI coordinates and returned rows use the canonical top-left convention',async()=>{
++ const{readWebGLTarget}=await helper(),gl=new FakeGL();gl.canvas.height=gl.drawingBufferHeight=4;
++ gl.readPixels=(x,y,w,h,f,t,b)=>{assert.deepEqual([x,y,w,h],[1,0,2,2]);b.set([255,0,0,255,255,0,0,255,0,0,255,255,0,0,255,255]);};
++ const r=readWebGLTarget(gl.canvas,{role:'canonical',rect:{x:1,y:2,width:2,height:2}});assert.equal(r.metadata.status,'VALID');assert.deepEqual([...r.bytes.slice(0,4)],[0,0,255,255]);assert.deepEqual([...r.bytes.slice(8,12)],[255,0,0,255]);
++});
+diff --git a/verification/tests/test_g5_transient_display_retry.py b/verification/tests/test_g5_transient_display_retry.py
+index fa75c500..631f93e9 100644
+--- a/verification/tests/test_g5_transient_display_retry.py
++++ b/verification/tests/test_g5_transient_display_retry.py
+@@ -3,8 +3,8 @@ from pathlib import Path
+ P=Path(__file__).resolve().parents[1]/'runners/g5/transient_display_retry_runner.py';spec=importlib.util.spec_from_file_location('display_runner',P);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+ class DisplayLedger(unittest.TestCase):
+  def test_exact_windows_and_limits(self):
+-  self.assertEqual(m.IDS,('UR2CDR2-Q1','UR2CDR2-N1'));l=m.new_ledger();self.assertEqual(l['cumulative_starts'],86);self.assertEqual(l['cumulative_charged_seconds'],5518);m.reserve(l,m.IDS[0]);self.assertEqual(l['attempts'][0]['reserved_seconds'],360)
+-  self.assertTrue(m.complete(l,{'reason':'completed','cleanup_complete':True,'elapsed_s':1.01},{'status':'OBSERVED'},True));self.assertEqual(l['cumulative_charged_seconds'],5520)
++  self.assertEqual(m.IDS,('UR2CRB3-S1','UR2CRB3-N1'));l=m.new_ledger();self.assertEqual(l['cumulative_starts'],88);self.assertEqual(l['cumulative_charged_seconds'],5907);m.reserve(l,m.IDS[0]);self.assertEqual(l['attempts'][0]['reserved_seconds'],120)
++  self.assertTrue(m.complete(l,{'reason':'completed','cleanup_complete':True,'elapsed_s':1.01},{'status':'OBSERVED'},True));self.assertEqual(l['cumulative_charged_seconds'],5909)
+   m.reserve(l,m.IDS[1]);self.assertEqual(l['attempts'][1]['reserved_seconds'],600)
+   self.assertTrue(m.complete(l,{'reason':'completed','cleanup_complete':True,'elapsed_s':2.5},{'status':'OBSERVED'},True));self.assertEqual(l['remaining_status'],'NONE')
+   with self.assertRaises(ValueError):m.reserve(l,m.IDS[0])
+@@ -19,7 +19,7 @@ class DisplayLedger(unittest.TestCase):
+    with self.assertRaises(ValueError):m.reserve(l,m.IDS[1])
+  def test_missing_or_untrusted_elapsed_charges_full(self):
+   for value in [None,-1,float('nan'),float('inf'),False,99999]:
+-   l=m.new_ledger();m.reserve(l,m.IDS[0]);m.complete(l,{'reason':'completed','elapsed_s':value,'cleanup_complete':False},None,False);self.assertEqual(l['attempts'][0]['charged_seconds'],360)
++   l=m.new_ledger();m.reserve(l,m.IDS[0]);m.complete(l,{'reason':'completed','elapsed_s':value,'cleanup_complete':False},None,False);self.assertEqual(l['attempts'][0]['charged_seconds'],120)
+  def test_historical_cap_cannot_be_reset(self):
+   l=m.new_ledger();l['cumulative_charged_seconds']=8360
+   with self.assertRaises(ValueError):m.reserve(l,m.IDS[0])

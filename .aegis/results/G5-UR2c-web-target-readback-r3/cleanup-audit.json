@@ -1,0 +1,812 @@
+{
+  "status": "COMPLETE",
+  "method": "Independent live process-table comparison against each observed PID and full command identity; reused foreign PIDs are not owned.",
+  "still_owned_alive": [],
+  "audits": [
+    {
+      "id": "UR2CRB3-S1",
+      "owned_file": ".aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1-owned-processes.json",
+      "owned_file_sha256": "a59e6d45e96dd07761acda3bcaec86a44879152a7bdb2060191953b54fad769d",
+      "observed_identities": 10,
+      "checks": [
+        {
+          "pid": 91145,
+          "observed_command": "node /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1 /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/old-reader-lines.json",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91149,
+          "observed_command": "(Google Chrome)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91154,
+          "observed_command": "/usr/bin/profiles status -type enrollment",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91160,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (GPU).app/Contents/MacOS/Google Chrome Helper (GPU) --type=gpu-process --gpu-recent-crash-count=0 --no-sandbox --disable-breakpad --headless --enable-unsafe-swiftshader --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-Mj8Ldq --gpu-preferences=WAAAAAAAAAAgAAAEAAAAAAAAAAAAAGAAQAAAAAAAAAADAAAAAAAAADgAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAAgAAAAAAAAADAAAAAEAAAAAAAAAAAAAAAgAAAAAAAAACAAAAAAAAAA= --shared-files --field-trial-handle=1718379636,r,1459979567025268855,648414726825132936,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,3682673459452488208,2071653984282336327,4 --trace-process-track-uuid=3190708988185955192",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91161,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=utility --utility-sub-type=network.mojom.NetworkService --lang=zh-CN --service-sandbox-type=network --no-sandbox --mute-audio --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-Mj8Ldq --shared-files --field-trial-handle=1718379636,r,1459979567025268855,648414726825132936,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,3682673459452488208,2071653984282336327,4 --trace-process-track-uuid=3190708989122997041",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91173,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=utility --utility-sub-type=storage.mojom.StorageService --lang=zh-CN --service-sandbox-type=service --no-sandbox --mute-audio --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-Mj8Ldq --shared-files --field-trial-handle=1718379636,r,1459979567025268855,648414726825132936,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,3682673459452488208,2071653984282336327,4 --trace-process-track-uuid=3190708990060038890",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91174,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91178,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --top-chrome-webui --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-Mj8Ldq --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=6 --launch-time-ticks=523311490861 --shared-files --field-trial-handle=1718379636,r,1459979567025268855,648414726825132936,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,3682673459452488208,2071653984282336327,4 --trace-process-track-uuid=3190708991934122588",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91180,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91181,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        }
+      ]
+    },
+    {
+      "id": "UR2CRB3-N1",
+      "owned_file": ".aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1-owned-processes.json",
+      "owned_file_sha256": "e73ee16a105b31b1d53823b311a2ddd81c9b78899d40a783173011b862b10fe5",
+      "observed_identities": 96,
+      "checks": [
+        {
+          "pid": 91218,
+          "observed_command": "node /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-web-target-readback-r3/identity-adapter.mjs /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1 normal /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91220,
+          "observed_command": "(Python)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91222,
+          "observed_command": "/Applications/Xcode-27.0.0.app/Contents/Developer/usr/bin/git -C /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom ls-files -z --cached --others --exclude-standard",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91368,
+          "observed_command": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --remote-debugging-pipe --no-startup-window",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91373,
+          "observed_command": "/usr/bin/profiles status -type enrollment",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91377,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91378,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91380,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91381,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91383,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --top-chrome-webui --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=6 --launch-time-ticks=523346446734 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190708991934122588",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91386,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=8 --launch-time-ticks=523346486579 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190708993808206286",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91387,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=7 --launch-time-ticks=523346488275 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190708992871164437",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91414,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper --type=utility --utility-sub-type=unzip.mojom.Unzipper --lang=zh-CN --service-sandbox-type=service --no-sandbox --mute-audio --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190708994745248135",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91471,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91517,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91557,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-E-reerase-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91599,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91600,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91601,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91673,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91712,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91752,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-P-pan-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91791,
+          "observed_command": "<defunct>",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91793,
+          "observed_command": "<defunct>",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91794,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=15 --launch-time-ticks=523376605389 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709000367499229",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91885,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91921,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-Z-zoom-reentry-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91951,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91983,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --top-chrome-webui --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=17 --launch-time-ticks=523391221899 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709002241582927",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91984,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=19 --launch-time-ticks=523391250274 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709004115666625",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 91985,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=18 --launch-time-ticks=523391250765 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709003178624776",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92044,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92085,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92126,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-H-undo-before-present-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92167,
+          "observed_command": "<defunct>",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92168,
+          "observed_command": "<defunct>",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92169,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=21 --launch-time-ticks=523405303610 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709005989750323",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92226,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92270,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92315,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-B-brush-erase-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92356,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92357,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92359,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92439,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92479,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92519,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-E-reerase-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92563,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92565,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92566,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92631,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92673,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-P-pan-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92713,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92752,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92753,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92754,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92855,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92887,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92920,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-Z-zoom-reentry-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92953,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --top-chrome-webui --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=32 --launch-time-ticks=523465583412 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709016297210662",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92954,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=34 --launch-time-ticks=523465603438 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709018171294360",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 92955,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=33 --launch-time-ticks=523465603882 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709017234252511",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93014,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93059,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93103,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-H-undo-before-present-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93161,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --top-chrome-webui --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=35 --launch-time-ticks=523480104868 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709019108336209",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93162,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=37 --launch-time-ticks=523480132854 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709020982419907",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93163,
+          "observed_command": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/156.0.8078.81/Helpers/Google Chrome Helper (Renderer).app/Contents/MacOS/Google Chrome Helper (Renderer) --type=renderer --noerrdialogs --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-144SdY --no-sandbox --disable-back-forward-cache --disable-background-timer-throttling --disable-breakpad --force-color-profile=srgb --remote-debugging-pipe --allow-pre-commit-input --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --lang=zh-CN --num-raster-threads=4 --enable-zero-copy --enable-gpu-memory-buffer-compositor-resources --enable-main-frame-before-activation --renderer-client-id=36 --launch-time-ticks=523480133324 --shared-files --field-trial-handle=1718379636,r,7467880365407965522,11946450903030291340,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --pseudonymization-salt-handle=1935764596,r,1512666985855282717,6108871095366262354,4 --trace-process-track-uuid=3190709020045378058",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93224,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93264,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93304,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-B-brush-erase-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93349,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93350,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93351,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93455,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93479,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93496,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-undo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-undo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-undo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93514,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR1-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93543,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93544,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93545,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93751,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93762,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93790,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93826,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR2-redo.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR2-redo-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR2-redo-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93868,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93869,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 93870,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95036,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-before.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-before-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-before-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95118,
+          "observed_command": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle --pixels /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-after.axsnap /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-after-reference.request.json /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-after-reference",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95212,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95312,
+          "observed_command": "(axiom_ur0_fixtur)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95414,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95415,
+          "observed_command": "<defunct>",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95416,
+          "observed_command": "(Google Chrome He)",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95501,
+          "observed_command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/transient_display_retry_runner.py --source-identity",
+          "current": null,
+          "same_owned_identity_alive": false
+        },
+        {
+          "pid": 95503,
+          "observed_command": "/Applications/Xcode-27.0.0.app/Contents/Developer/usr/bin/git -C /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom ls-files -z --cached --others --exclude-standard",
+          "current": null,
+          "same_owned_identity_alive": false
+        }
+      ]
+    }
+  ],
+  "ledger": {
+    "schema": "g5-transient-display-two-windows-v1",
+    "planned_ids": [
+      "UR2CRB3-S1",
+      "UR2CRB3-N1"
+    ],
+    "historical_starts": 88,
+    "historical_charged_seconds": 5907,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CRB3-S1",
+        "status": "COMPLETED",
+        "reserved_seconds": 120,
+        "charged_seconds": 3,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/webgl_target_readback_selftest.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-S1",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/old-reader-lines.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 2.0154565420234576,
+          "peak_process_family_rss_kib": 1032320,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 120,
+          "last_stage": {
+            "stage": "reader-selftest-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "OBSERVED",
+        "elapsed_trusted": true
+      },
+      {
+        "id": "UR2CRB3-N1",
+        "status": "STOPPED",
+        "reserved_seconds": 600,
+        "charged_seconds": 341,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-web-target-readback-r3/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+          ],
+          "reason": "nonzero_exit",
+          "returncode": 2,
+          "elapsed_s": 340.4710372079862,
+          "peak_process_family_rss_kib": 2124976,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 600,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "HARD_FAILURE",
+            "error": "Error: PRODUCT_CHECK: continuous case failed S2-continuous-DPR1\n    at worker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/transient_display_retry.mjs:132:251)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-web-target-readback-r3/identity-adapter.mjs:15:100"
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "HARD_FAILURE",
+        "elapsed_trusted": true
+      }
+    ],
+    "remaining_status": "MISSING",
+    "cumulative_starts": 90,
+    "cumulative_charged_seconds": 6251,
+    "remaining_seconds": 2119
+  },
+  "new_starts": 2,
+  "new_charged_seconds": 344,
+  "remaining_seconds": 2119,
+  "old_demo_preserved": [
+    {
+      "pid": 9739,
+      "port": 4292,
+      "process": {
+        "parent": 1,
+        "rss": 4432,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4292 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-exact-query-locality-r1/normal-install/js"
+      },
+      "cwd": "p9739\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom\n"
+    },
+    {
+      "pid": 22381,
+      "port": 4293,
+      "process": {
+        "parent": 1,
+        "rss": 4768,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4293 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2b-finite-proof-p36-r1/normal-install/js"
+      },
+      "cwd": "p22381\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom\n"
+    },
+    {
+      "pid": 44207,
+      "port": 4294,
+      "process": {
+        "parent": 1,
+        "rss": 6560,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4294 --bind 127.0.0.1"
+      },
+      "cwd": "p44207\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-mask-history-scene-r1/normal-install/js\n"
+    },
+    {
+      "pid": 59348,
+      "port": 4295,
+      "process": {
+        "parent": 1,
+        "rss": 6704,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4295 --bind 127.0.0.1"
+      },
+      "cwd": "p59348\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-history-progress-p36-r1/normal-install/js\n"
+    },
+    {
+      "pid": 75527,
+      "port": 4296,
+      "process": {
+        "parent": 1,
+        "rss": 8400,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4296 --bind 127.0.0.1"
+      },
+      "cwd": "p75527\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/normal-install/js\n"
+    },
+    {
+      "pid": 89003,
+      "port": 4297,
+      "process": {
+        "parent": 1,
+        "rss": 8400,
+        "state": "Ss",
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4297 --bind 127.0.0.1"
+      },
+      "cwd": "p89003\nfcwd\nn/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js\n"
+    }
+  ]
+}

@@ -1,0 +1,457 @@
+TAP version 13
+# Subtest: Web and native share public errors and an async controller factory
+ok 1 - Web and native share public errors and an async controller factory
+  ---
+  duration_ms: 1.799083
+  ...
+# Subtest: Controller copies queued arguments and preserves nested async reads
+ok 2 - Controller copies queued arguments and preserves nested async reads
+  ---
+  duration_ms: 1.867
+  ...
+# Subtest: Unsubscribe and close gate queued event callbacks
+ok 3 - Unsubscribe and close gate queued event callbacks
+  ---
+  duration_ms: 1.09
+  ...
+# Subtest: Failed close retains the controller so the data owner can release custody
+ok 4 - Failed close retains the controller so the data owner can release custody
+  ---
+  duration_ms: 0.952417
+  ...
+# Subtest: Close rejects new commands while the underlying owner is draining
+ok 5 - Close rejects new commands while the underlying owner is draining
+  ---
+  duration_ms: 0.358292
+  ...
+# Subtest: Listener rejection propagates to SDK dispatch to retain the operation cursor
+ok 6 - Listener rejection propagates to SDK dispatch to retain the operation cursor
+  ---
+  duration_ms: 0.460708
+  ...
+# Subtest: Native controller delegates controls and history through the existing wire vocabulary
+ok 7 - Native controller delegates controls and history through the existing wire vocabulary
+  ---
+  duration_ms: 2.096292
+  ...
+# Subtest: Foreign tokens are rejected before native dispatch, bytes copied before queue
+ok 8 - Foreign tokens are rejected before native dispatch, bytes copied before queue
+  ---
+  duration_ms: 0.323291
+  ...
+# Subtest: Transport validates queued byte types and gates subscriptions after close
+ok 9 - Transport validates queued byte types and gates subscriptions after close
+  ---
+  duration_ms: 1.373917
+  ...
+# Subtest: Native table commands capture generation and selection mutations carry both stamps
+ok 10 - Native table commands capture generation and selection mutations carry both stamps
+  ---
+  duration_ms: 0.342167
+  ...
+# Subtest: Portable native controller works without structuredClone in Hermes
+ok 11 - Portable native controller works without structuredClone in Hermes
+  ---
+  duration_ms: 0.207625
+  ...
+# Subtest: Native reads reject while close is waiting for its owner
+ok 12 - Native reads reject while close is waiting for its owner
+  ---
+  duration_ms: 0.899708
+  ...
+# Subtest: Clipboard controller returns owned bytes and complete owner-bound stamps
+ok 13 - Clipboard controller returns owned bytes and complete owner-bound stamps
+  ---
+  duration_ms: 1.215167
+  ...
+# Subtest: Clipboard mutations retain captured inputs while queued and propagate stale receipts
+ok 14 - Clipboard mutations retain captured inputs while queued and propagate stale receipts
+  ---
+  duration_ms: 5.56525
+  ...
+# Subtest: Clipboard rejects malformed options and oversized bytes without native dispatch
+ok 15 - Clipboard rejects malformed options and oversized bytes without native dispatch
+  ---
+  duration_ms: 4.12325
+  ...
+# Subtest: requires actual canonical and Direct draws on the same owner service
+ok 16 - requires actual canonical and Direct draws on the same owner service
+  ---
+  duration_ms: 1.994333
+  ...
+# Subtest: lookup-only facade and navigation/ink observations cannot prove Direct consumption
+ok 17 - lookup-only facade and navigation/ink observations cannot prove Direct consumption
+  ---
+  duration_ms: 0.425292
+  ...
+# Subtest: refuses oversized or invalid source-work quanta
+ok 18 - refuses oversized or invalid source-work quanta
+  ---
+  duration_ms: 0.372125
+  ...
+# Subtest: a Raster scope is never proof of GPU prepared execution
+ok 19 - a Raster scope is never proof of GPU prepared execution
+  ---
+  duration_ms: 0.179125
+  ...
+# Subtest: work before a later scope cannot be paired backwards
+ok 20 - work before a later scope cannot be paired backwards
+  ---
+  duration_ms: 0.295375
+  ...
+# Subtest: reports unique preparation separately from visible replay and validation
+ok 21 - reports unique preparation separately from visible replay and validation
+  ---
+  duration_ms: 0.147666
+  ...
+# Subtest: cold canonical cases require canonical consumption while editing requires both
+ok 22 - cold canonical cases require canonical consumption while editing requires both
+  ---
+  duration_ms: 0.288041
+  ...
+# Subtest: actual ordered consumers require the same service and a reused body
+ok 23 - actual ordered consumers require the same service and a reused body
+  ---
+  duration_ms: 2.841333
+  ...
+# Subtest: unknown equal allocations may use complete comparison before sharing
+ok 24 - unknown equal allocations may use complete comparison before sharing
+  ---
+  duration_ms: 0.0965
+  ...
+# Subtest: a service address or parent trace alone does not establish actual consumer work
+ok 25 - a service address or parent trace alone does not establish actual consumer work
+  ---
+  duration_ms: 0.0915
+  ...
+# Subtest: fixed saved-fixture cases preserve drag/cancel and add settled erase/navigation
+ok 26 - fixed saved-fixture cases preserve drag/cancel and add settled erase/navigation
+  ---
+  duration_ms: 0.130875
+  ...
+# Subtest: public camera restore awaits absolute zoom before calculating pan
+ok 27 - public camera restore awaits absolute zoom before calculating pan
+  ---
+  duration_ms: 1.083458
+  ...
+# {"subject":"repaired-functional","cold_ms":600,"active_frames":33,"moves":32,"last_planned":533.333344}
+# {"subject":"repaired-functional","cold_ms":1200,"active_frames":33,"moves":32,"last_planned":533.333344}
+# Subtest: cold overrun 600ms preserves later active display opportunities before Up
+ok 28 - cold overrun 600ms preserves later active display opportunities before Up
+  ---
+  duration_ms: 2.42225
+  ...
+# Subtest: cold overrun 1200ms preserves later active display opportunities before Up
+ok 29 - cold overrun 1200ms preserves later active display opportunities before Up
+  ---
+  duration_ms: 0.268625
+  ...
+# Subtest: functional pacing preserves positions/order/deadlines without a cold overrun
+ok 30 - functional pacing preserves positions/order/deadlines without a cold overrun
+  ---
+  duration_ms: 2.869584
+  ...
+# Subtest: abort cancels terminal contact and never sends Up
+ok 31 - abort cancels terminal contact and never sends Up
+  ---
+  duration_ms: 0.5455
+  ...
+# Subtest: cold work beyond the local functional bound cancels instead of passing
+ok 32 - cold work beyond the local functional bound cancels instead of passing
+  ---
+  duration_ms: 2.553917
+  ...
+# Subtest: display wait is bounded and cancels its queued RAF on timeout
+ok 33 - display wait is bounded and cancels its queued RAF on timeout
+  ---
+  duration_ms: 0.769
+  ...
+# Subtest: already aborted display wait never queues a RAF
+ok 34 - already aborted display wait never queues a RAF
+  ---
+  duration_ms: 0.408959
+  ...
+# Subtest: exact-input saved reference always compares the newly captured candidate
+ok 35 - exact-input saved reference always compares the newly captured candidate
+  ---
+  duration_ms: 30.588167
+  ...
+# Subtest: different snapshot bytes or complete request requires one original oracle invocation
+ok 36 - different snapshot bytes or complete request requires one original oracle invocation
+  ---
+  duration_ms: 10.539417
+  ...
+# Subtest: changed oracle or resource identity cannot reuse a saved reference
+ok 37 - changed oracle or resource identity cannot reuse a saved reference
+  ---
+  duration_ms: 10.671417
+  ...
+# Subtest: corrupted saved reference is an explicit failure and never hidden by fallback
+ok 38 - corrupted saved reference is an explicit failure and never hidden by fallback
+  ---
+  duration_ms: 5.960375
+  ...
+# Subtest: UR1b frozen endpoints exclude suspended UR2 flow
+ok 39 - UR1b frozen endpoints exclude suspended UR2 flow
+  ---
+  duration_ms: 0.808084
+  ...
+# Subtest: cold transaction preserves all available stages before a failed pixel predicate
+ok 40 - cold transaction preserves all available stages before a failed pixel predicate
+  ---
+  duration_ms: 0.301833
+  ...
+# Subtest: cold capture failure preserves its completed prefix
+ok 41 - cold capture failure preserves its completed prefix
+  ---
+  duration_ms: 0.205125
+  ...
+# Subtest: resource queue accounting rejects early or duplicate retirement
+ok 42 - resource queue accounting rejects early or duplicate retirement
+  ---
+  duration_ms: 0.533041
+  ...
+# Subtest: completed observation cannot imply ordered convergence
+ok 43 - completed observation cannot imply ordered convergence
+  ---
+  duration_ms: 0.072625
+  ...
+# Subtest: qualified owners remain distinct and use lossless counters
+ok 44 - qualified owners remain distinct and use lossless counters
+  ---
+  duration_ms: 0.067416
+  ...
+# Subtest: canonical receipt identity keeps operation and document epoch separate from surface
+ok 45 - canonical receipt identity keeps operation and document epoch separate from surface
+  ---
+  duration_ms: 0.411291
+  ...
+# Subtest: loss reverification forwards complete existing Recovery inputs with new private source identity
+ok 46 - loss reverification forwards complete existing Recovery inputs with new private source identity
+  ---
+  duration_ms: 1.575625
+  ...
+# Subtest: normal Recovery keeps the same path and cannot select core or another role
+ok 47 - normal Recovery keeps the same path and cannot select core or another role
+  ---
+  duration_ms: 0.325084
+  ...
+# Subtest: caller cannot replace the exact identity runner and no browser starts on import
+ok 48 - caller cannot replace the exact identity runner and no browser starts on import
+  ---
+  duration_ms: 0.131
+  ...
+# Subtest: a nextDown product failure preserves actual predicate, prior phase and SDK error
+ok 49 - a nextDown product failure preserves actual predicate, prior phase and SDK error
+  ---
+  duration_ms: 0.58925
+  ...
+# Subtest: successful action retains output and read-only diagnostic export
+ok 50 - successful action retains output and read-only diagnostic export
+  ---
+  duration_ms: 0.31
+  ...
+# Subtest: restored live semantic clock is independent of source and external checkpoint clocks
+ok 51 - restored live semantic clock is independent of source and external checkpoint clocks
+  ---
+  duration_ms: 0.317667
+  ...
+# Subtest: caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+ok 52 - caller-issued envelope preserves capture0 and checkpoint and rejects foreign/zero input
+  ---
+  duration_ms: 0.524042
+  ...
+# Subtest: consumer module promise waits for deliberately delayed installation
+ok 53 - consumer module promise waits for deliberately delayed installation
+  ---
+  duration_ms: 0.497334
+  ...
+# Subtest: only exact same snapshot and complete metadata may enter measured cases
+ok 54 - only exact same snapshot and complete metadata may enter measured cases
+  ---
+  duration_ms: 0.541042
+  ...
+# Subtest: optional GPU wrappers only forward preexisting calls once and label polling interval
+ok 55 - optional GPU wrappers only forward preexisting calls once and label polling interval
+  ---
+  duration_ms: 0.624583
+  ...
+# Subtest: no per-Move process logging, no timed readback and cold work is separate
+ok 56 - no per-Move process logging, no timed readback and cold work is separate
+  ---
+  duration_ms: 8.783125
+  ...
+# Subtest: exact six normal continuous cases preserve DPR and fixture matrix
+ok 57 - exact six normal continuous cases preserve DPR and fixture matrix
+  ---
+  duration_ms: 0.611542
+  ...
+# Subtest: global cleared target is detected even when no present was reported
+ok 58 - global cleared target is detected even when no present was reported
+  ---
+  duration_ms: 1.154625
+  ...
+# Subtest: partial missing ink and malformed/blank reference cannot qualify
+ok 59 - partial missing ink and malformed/blank reference cannot qualify
+  ---
+  duration_ms: 1.439834
+  ...
+# Subtest: semantic/contact/oracle gaps fail regardless of reported frame success
+ok 60 - semantic/contact/oracle gaps fail regardless of reported frame success
+  ---
+  duration_ms: 0.616
+  ...
+# Subtest: frozen trajectory rejects foreign fixture, camera, missing proof and swept sentinel overlap
+ok 61 - frozen trajectory rejects foreign fixture, camera, missing proof and swept sentinel overlap
+  ---
+  duration_ms: 2.916875
+  ...
+# Subtest: local timings retain a long handler and actual content submission gaps
+ok 62 - local timings retain a long handler and actual content submission gaps
+  ---
+  duration_ms: 0.735917
+  ...
+# Subtest: missing real content writes cannot be reported as a zero submission gap
+ok 63 - missing real content writes cannot be reported as a zero submission gap
+  ---
+  duration_ms: 0.183291
+  ...
+# Subtest: all available cold buffers persist before action failures are classified
+ok 64 - all available cold buffers persist before action failures are classified
+  ---
+  duration_ms: 2.363958
+  ...
+# Subtest: readback and snapshot errors preserve other surface and state
+ok 65 - readback and snapshot errors preserve other surface and state
+  ---
+  duration_ms: 0.21025
+  ...
+# Subtest: missing before or Undo and visible overlay cannot pass cold qualification
+ok 66 - missing before or Undo and visible overlay cannot pass cold qualification
+  ---
+  duration_ms: 0.193208
+  ...
+# Subtest: interior mismatch stays failed and clear/HUD/RAF-only operations are not feedback
+ok 67 - interior mismatch stays failed and clear/HUD/RAF-only operations are not feedback
+  ---
+  duration_ms: 0.109917
+  ...
+# Subtest: successor work is distinct from own visibility and requires frozen serial membership
+ok 68 - successor work is distinct from own visibility and requires frozen serial membership
+  ---
+  duration_ms: 0.356542
+  ...
+# Subtest: foreign work/commit and absent actual qualification fail closed
+ok 69 - foreign work/commit and absent actual qualification fail closed
+  ---
+  duration_ms: 0.112292
+  ...
+# Subtest: nearest rank reports all tails and missing observations honestly
+ok 70 - nearest rank reports all tails and missing observations honestly
+  ---
+  duration_ms: 0.704417
+  ...
+# Subtest: dispatch durations and Up-to-Down gaps come from actual events
+ok 71 - dispatch durations and Up-to-Down gaps come from actual events
+  ---
+  duration_ms: 0.340333
+  ...
+# Subtest: performance admission rejects capture, missing cases and stale exact state
+ok 72 - performance admission rejects capture, missing cases and stale exact state
+  ---
+  duration_ms: 0.092917
+  ...
+# Subtest: prepared consumer requires actual source body and exact job association
+ok 73 - prepared consumer requires actual source body and exact job association
+  ---
+  duration_ms: 0.148709
+  ...
+# Subtest: paired findings never turn mixed timing into performance PASS
+ok 74 - paired findings never turn mixed timing into performance PASS
+  ---
+  duration_ms: 0.286875
+  ...
+# Subtest: actual Up and published Scene join required for history reuse
+ok 75 - actual Up and published Scene join required for history reuse
+  ---
+  duration_ms: 0.621333
+  ...
+# Subtest: unpublished preparation, foreign Up and zero history cannot qualify
+ok 76 - unpublished preparation, foreign Up and zero history cannot qualify
+  ---
+  duration_ms: 0.142792
+  ...
+# Subtest: decimal source/job identities stay lossless
+ok 77 - decimal source/job identities stay lossless
+  ---
+  duration_ms: 0.395291
+  ...
+# Subtest: qualified default target preserves distinct READ/DRAW and both per-FBO read modes
+ok 78 - qualified default target preserves distinct READ/DRAW and both per-FBO read modes
+  ---
+  duration_ms: 4.618833
+  ...
+# Subtest: PBO and nontrivial PACK values are restored and produce tightly packed bytes
+ok 79 - PBO and nontrivial PACK values are restored and produce tightly packed bytes
+  ---
+  duration_ms: 0.358208
+  ...
+# Subtest: valid transparent default remains data and fails an opaque pixel oracle
+ok 80 - valid transparent default remains data and fails an opaque pixel oracle
+  ---
+  duration_ms: 0.244125
+  ...
+# Subtest: invalid ROI, lost context and preexisting errors cannot masquerade as valid zero pixels
+ok 81 - invalid ROI, lost context and preexisting errors cannot masquerade as valid zero pixels
+  ---
+  duration_ms: 0.356417
+  ...
+# Subtest: read exception and context loss during read restore state and remain invalid
+ok 82 - read exception and context loss during read restore state and remain invalid
+  ---
+  duration_ms: 0.874
+  ...
+# Subtest: restoration failure is explicit rather than a valid sample
+ok 83 - restoration failure is explicit rather than a valid sample
+  ---
+  duration_ms: 0.236209
+  ...
+# Subtest: failure captures both full targets and state synchronously, with explicit unavailable role
+ok 84 - failure captures both full targets and state synchronously, with explicit unavailable role
+  ---
+  duration_ms: 1.000292
+  ...
+# Subtest: persistence failure is explicit MISSING, never substituted by a later read
+ok 85 - persistence failure is explicit MISSING, never substituted by a later read
+  ---
+  duration_ms: 3.863083
+  ...
+# Subtest: invalid read classification remains distinct from missing valid failure artifact
+ok 86 - invalid read classification remains distinct from missing valid failure artifact
+  ---
+  duration_ms: 0.3655
+  ...
+# Subtest: persisted failure buffers are not reread or relabelled on the outer catch path
+ok 87 - persisted failure buffers are not reread or relabelled on the outer catch path
+  ---
+  duration_ms: 0.82525
+  ...
+# Subtest: unsuccessful default target selection cannot qualify merely because GL error queue is empty
+ok 88 - unsuccessful default target selection cannot qualify merely because GL error queue is empty
+  ---
+  duration_ms: 0.225875
+  ...
+# Subtest: ROI coordinates and returned rows use the canonical top-left convention
+ok 89 - ROI coordinates and returned rows use the canonical top-left convention
+  ---
+  duration_ms: 0.148334
+  ...
+1..89
+# tests 89
+# suites 0
+# pass 89
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 260.282375

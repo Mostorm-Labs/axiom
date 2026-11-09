@@ -1,0 +1,90 @@
+{
+  "base": {
+    "commit": "4d3c6c20fc4fc267a3fce709707441552182156f"
+  },
+  "candidate_source": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/cumulative.patch",
+    "sha256": "7e86546a25eac931c0994e53b3427944257d7538196e1bdcd26cfdb220346b27",
+    "bytes": 116619
+  },
+  "roundtrip": "EXACT_BYTES",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before": "e1d36a41342f1b49be1fdc7e37698ab97e20a43130b1ca36c29ff0bd253a7231",
+      "after": "6e66322247b3cf28a2557633c8ce2228314bf98ecf705af05b86ea8b9020d6ca"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "before": "5f80684daefe58a142456372130b978904e00ea75255578808e6794057483b7c",
+      "after": "bf3c48b3c0f7e8584699f1fc872b8a8364b87e7a20f266ceac1d62af6cff358a"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "before": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "after": "297135aa4720cedb0b9de8ec795ed7af4edf3a9f10577228ae6a6115967b1000"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "before": "13d64179f78412fa7e39ba9c4cf584f1b215b516eb09571ea549f0150db00e29",
+      "after": "c4a094cbb0b62b5b3d21ca7ee283c8122d60b38d593b340165328f16ffb95475"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "before": "cd1be31b88b77334a03ca08f56c6047c11aeb8ea94c8c9525ee678b757bbfb36",
+      "after": "c30be3678a9531f4dd34b688fc7cb86c3cb4971e2f25d7f3b635ba2a18e1a085"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "before": "14c4edd394b73fd576c41260f7f8abf894c172d4e6ff078f33ebcdfd04c0c146",
+      "after": "c29d058b94b817f4892d43089aaf1d0f99f323f8e0c28df38184600d74e3531f"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before": "70021b834c20371f10e69a90b87de731e0fb174d392573e4820774542dc3d6fe",
+      "after": "804efe691eba2d6de91eb8619cc6e16bbfedb004093012e717d6aa8fd991653c"
+    },
+    {
+      "path": "runtime/render/src/transient_display_state.hpp",
+      "before": null,
+      "after": "f389b7fa8983e2fd7e529415cee04032a651c9f4bf1f31caf8faa395944e31b8"
+    },
+    {
+      "path": "runtime/render/tests/transient_display_retry_test.cpp",
+      "before": null,
+      "after": "541921107474b80bd7ff0eb64fbcfde385ddbae71026c00498e853a75ef43337"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "before": null,
+      "after": "1132e53563e60be683726c68e9809d56aac03bb5974487cca397fbdb34e0ba3e"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "before": null,
+      "after": "cebecdd930941a8772690b2bf69fbd316d70974093fb4b166bfc9ad83cf3f747"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "before": null,
+      "after": "f41514f151df95ea4a0c89fbaa936e5920c2f96fd093088f8826dafd3a62e67e"
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "before": null,
+      "after": "cdbf3066de8e82921a65c5f14bfebb5e5c7a08fbc5e075f78942aec2004f3685"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "before": null,
+      "after": "0a3576fb6fedf81674fd8e215947ed8e27cd59db70854066e2e05014a45e59e5"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_trajectory_oracle.cpp",
+      "before": null,
+      "after": "40e9b5df7e0ea3d104e7f40cb6bec807ef5c7cfff0a43e2f8b2e84b9e91efc04"
+    }
+  ],
+  "outside_scope": []
+}

@@ -8,6 +8,7 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
 export async function handoffConsumer(){
  const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
  const {captureColdStage}=await import('/g5/ur2a_cold_capture.mjs');
+ const {readWebGLTarget,captureFailureNow}=await import('/g5/webgl_target_readback.mjs');
  const {runFunctionalErase,boundedDisplayOpportunity}=await import('/g5/prepared_body_index_reverify_pacing.mjs');
  let sdk,fixture,initial,clock=31004000000n;const buffers={},phases=[],frames=[],errors=[],operations=[],cold=[];
  const state=()=>sdk.readState(),observer=installNavigationObserver(()=>sdk?.canvas);
@@ -27,11 +28,14 @@ export async function handoffConsumer(){
   return{state:state(),build:sdk.readBuildInfo(),fixture_sha256:f.sha256,resource_binding:sdk.resources.list().binding,dpr:devicePixelRatio,clock:window.ur2aClock?.()??null};
  };
  const readSurface=role=>{
-  const canvas=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');if(!canvas)throw Error('missing '+role+' canvas');
-  const gl=canvas.getContext('webgl2');if(gl.isContextLost())throw Error('lost '+role+' context');
-  const width=canvas.width,height=canvas.height,raw=new Uint8Array(width*height*4),bytes=new Uint8Array(raw.length);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);
-  let nonzeroAlpha=0;for(let y=0;y<height;++y)bytes.set(raw.subarray((height-1-y)*width*4,(height-y)*width*4),y*width*4);for(let i=3;i<bytes.length;i+=4)if(bytes[i])++nonzeroAlpha;
-  const css=getComputedStyle(canvas);return{bytes,width,height,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0,css:{display:css.display,visibility:css.visibility,opacity:css.opacity},target:canvas.id};
+  const canvas=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');
+  const r=readWebGLTarget(canvas,{role});
+  if(r.metadata.status!=='VALID'){
+   captureFailureNow({targets:{canonical:sdk.canvas,preview:()=>document.querySelector('#mount canvas[id$="-preview"]')},state:()=>({state:state(),camera:state().camera,selection:sdk.readSelection(),resource_binding:sdk.resources.list().binding}),reason:'full-'+role+': '+r.metadata.reason,trigger:r});
+   throw Error('READ_TARGET_ERROR_OR_STATE_RESTORATION_FAILURE: '+r.metadata.reason);
+  }
+  const{bytes,width,height}=r;let nonzeroAlpha=0;for(let i=3;i<bytes.length;i+=4)if(bytes[i])++nonzeroAlpha;
+  const css=getComputedStyle(canvas);return{bytes,width,height,nonzeroAlpha,visible:css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity)>0,css:{display:css.display,visibility:css.visibility,opacity:css.opacity},target:canvas.id,readback:r.metadata};
  };
  const capture=async stage=>{
   const settleErrors=[];try{await settled();}catch(e){settleErrors.push(error(e));}

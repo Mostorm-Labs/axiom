@@ -1,0 +1,27 @@
+{
+  "status": "EIGHT_NONEMPTY_TRAJECTORIES_PROVED",
+  "plan": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json",
+    "sha256": "8fc2639b1e483150a20dd1eaf8b6c2dad3c79bc4056225c9d679ced78e3209d1"
+  },
+  "old_negative_proof": {
+    "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/old-trajectory-proof.json",
+    "sha256": "03a10490048f60e2e0e7e45a6a95f20c2cb06cfd5eaa1e3200c4457067fce50b"
+  },
+  "fixtures": [
+    "S0",
+    "S2"
+  ],
+  "DPR": [
+    1,
+    2,
+    4
+  ],
+  "independent_old_kernel": {
+    "path": "out/G5-UR2b-exact-query-locality-r1/oracle-old/exact-oracle",
+    "sha256": "551b7f9230a853b59d44b0a2c35a25c4feb811a8872b8c715593d1845bd7440e"
+  },
+  "selection": "Original fixture geometry and uncached old kernel only; no candidate pixels or browser mutation counters used.",
+  "DPR_reuse": "All three logical queries/normalized world coordinates byte-identical. Actual shared-coordinate helper executed forDPR1/2/4; independent decision reused only on full exact request equality.",
+  "new_browser_starts": 0
+}

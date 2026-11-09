@@ -1,0 +1,37 @@
+{
+  "classification": "PRODUCT_PIXEL_FAILURE_UNDER_FROZEN_LIVE_PREDICATE",
+  "lost": [
+    {
+      "ROI_pixel": [
+        154,
+        285
+      ],
+      "device_pixel": [
+        194,
+        325
+      ],
+      "before_RGBA": [
+        13,
+        27,
+        51,
+        255
+      ],
+      "failed_RGBA": [
+        13,
+        29,
+        53,
+        255
+      ],
+      "delta": [
+        0,
+        2,
+        2,
+        0
+      ]
+    }
+  ],
+  "all_ROI_pixels_changed": 1,
+  "trigger_equals_immediate_full_target_ROI": true,
+  "not_global_clear": true,
+  "interpretation": "One selected near-ink pixel crosses the frozen \u00b12 constant-color predicate; this is not the old all-zero ROI. Potential AA/rounding classification requires independent control. No threshold or selection was changed."
+}

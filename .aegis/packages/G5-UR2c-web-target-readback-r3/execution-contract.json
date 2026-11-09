@@ -1,0 +1,139 @@
+{
+  "schema": "g5-web-target-readback-execution-contract-v1",
+  "task_id": "G5-UR2c-web-target-readback-r3",
+  "stage": "P32 narrowtestimplementationrepair",
+  "implementation": {
+    "required_changes": [
+      "AddonesharedprivateWebGLtarget-qualifiedreadhelperanduseitforallrequiredfullsurface/liveROIcaptures.",
+      "Repairimmediatefullfailurecapture/persistencebeforeasyncyieldandcleanup; recordexplicitunavailable/GLerror/restorefailures.",
+      "Addfake-stateunitandrealWebGLselftestcounterexamples, thenrunnewnormalmatrixwithsameR2SDK/oracles/trajectory.",
+      "Reportexactsubjectandharnessidentitiesseparately,preserveallR2artifactsandproductchanges."
+    ],
+    "allowed_existing_paths": [
+      "verification/runners/g5/transient_display_retry.mjs",
+      "verification/runners/g5/transient_display_retry_contract.mjs",
+      "verification/runners/g5/transient_display_retry_runner.py",
+      "verification/runners/g5/ur2a_handoff.mjs",
+      "verification/tests/g5_transient_display_retry.test.mjs",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "allowed_new_paths": [
+      "verification/runners/g5/webgl_target_readback.mjs",
+      "verification/runners/g5/webgl_target_readback_selftest.mjs",
+      "verification/tests/g5_webgl_target_readback.test.mjs"
+    ],
+    "narrow_ur2a_exception": "ur2a_handoff.mjspreviouslyprotected; thispackagepermitsonlyreadSurface/readerimport/targetmetadataintegrationneededtofixsameunboundFBOdefect. Originalcases,events,settling,receipts,qualifiersandthresholdsremainunchanged. Do noteditpixel_oracle/refcatalog/coldcapture/kernel.",
+    "forbidden_changes": [
+      "No runtime/** sdk/** apps/** schema/** CMake/version/lock/dependency/buildartifactrewrite; productfixesarefrozenforclassification. No defaultbudget/inflight/semantic/input/GPU-policychanges orUR2d.",
+      "No changing8positiveplan/expected8commits+2history/pixelAA/sentinelselectiontofitnewoutput. No blanketallzeroaccept/rejectshortcut.",
+      "No helperdraw/clear/resize/restorescreenpixels orforcedSDKpresenttopreconditionreadback. Onlyreadstateandtemporarilyselectreadparameters, restoringallaffectedstate.",
+      "No alteringoldR2result/raw/source/SDK/manifests orpretendingmissingfailurebufferswerecaptured. No relabelingallzeroasdefiniteproductblankorreaderrorwithoutqualifiedwitness.",
+      "No extraChrome/browser smoke/newIDs, oldwindowreuse, publictestAPI, commit/push/reset/clean, orofficialGate/performancePASS."
+    ],
+    "new_support_within_scope": "Additionaltest-onlynewhelpernamesunderverification/runners/g5/webgl_target_readback_* ormatchingverificationtests allowedforS1/failure-capturecomposition; no newapplicationentrypoint."
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "not_human_approval_gate": true,
+    "record": [
+      "Allcurrentfull/ROIreadcallsandactualcanvasroles; sharedhelperselectedtargetandstate-restoration/errorprotocol.",
+      "ReadbufferisperFBO; preserveoldanddefaultreadbufferstatecorrectly. PBO/pack, contextloss, dimensionsandrowflipvalidation; GLerrorqueueconsumptionisdiagnosticandrecorded, notclaimedrestorable.",
+      "Synchronousfailuredetection/fullcapturebeforefirstawait; hoststreamfailureandcontactcleanuporder.",
+      "Compile/runtime/harnessidentityseparationandunchanged72SDK/native/plan; allRB01..04andselftestcasesmapped."
+    ],
+    "unresolved_semantic_decisions": "Mustbeempty; routinehelperengineeringcontinueswithoutanotherapproval."
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "offline_before_mutation": "Snapshotexactoldreaderlines anddemonstrateoldcurrentFBO/PBOdependenceplusmissingfailurebuffer withindependentfake-GLstate beforeharnessbehaviorchanges.",
+    "real_S1_required": "Oldwrong/newrightagainstknownseparateactualGLframebuffers; notjustmockconformance.",
+    "old_product_RED_reuse": "NativeproviderpixelRED/HOREDremainr2frozenartifacts; no freshproductmutationornewSLO."
+  },
+  "tests": {
+    "required_obligations": [
+      "RB01",
+      "RB02",
+      "RB03",
+      "RB04"
+    ],
+    "offline_required": [
+      "ExistingNode/Pythondriverchecks plusnewadversarialread/state/failurecapturetests.",
+      "tools/check_runtime_boundaries.py; modifiedverificationcontractkeepersrequiredbyimports.",
+      "ExactR2product/72SDK/oracle/trajectoryhashes before/after."
+    ],
+    "native_reuse": "R2product/nativeunchanged; reusereferencednative+independenthandoffreviews. Do not rerun117onlybecauseverificationJSchanged; newproductdriftisablocker."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "local_required": {
+      "path": "web-plan.json",
+      "sha256": "42e4040e0c627c406daea01febd8317a7d0edbaa9cba50e3f4901b2f643e2a3c"
+    }
+  },
+  "evidence": {
+    "blocking": [
+      "OfflineREDandnewunitchecks+realS1counterexamples/restoration/failureartifacttests.",
+      "N1all16normalcasesactualtargetevidenceorcompletehonestnewfailure; existingqualifiedreceipt/nativeexactreuseboundtosamesubject.",
+      "Unchangedsubject/oraclesandseparateharnessdiff+source/rawmanifests/readonlyarchives,closed720sallowance/cleanup."
+    ],
+    "corroborative": [
+      "Physicalbrowsercompositortiming/screenshots/taskmanagerCPU/GPU/performanceimprovement; originalzeroROIcause remainsambiguous."
+    ]
+  },
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-web-target-readback-r3/",
+    "out/G5-UR2c-web-target-readback-r3/",
+    "verification/evidence/performance/G5-UR2c-web-target-readback-r3/"
+  ],
+  "closure_stability": "RB01..04andexplicitS1/N1arecompleteblockingtarget. Noaddedproductoptimization/newplatform/large-scenebenchmark. Actualnewproductfailureorfundamentaloracleunsoundnessreturnsclassificationwithraw ratherthanextrapackagecreep.",
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "callback": {
+      "threadId": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "required_when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "explicitBLOCKEDterminal"
+      ],
+      "human_authorization": "Persistentdirecthumanrequestforadjacentimplementationandproactivecontrolnotification.",
+      "include": [
+        "Exactpackage/result/runtime-subject/harness-delta/native+SDK+rawhashes/materializedref.",
+        "S1known-target/error/state/failurecaptureproofandN1allcaseevidenceorqualifiedactualfailure.",
+        "Ledger88/5907history+newceiltime/unrunIDs/cleanup;4297unchangedsubjectandremainingissues; noGatePASS."
+      ]
+    }
+  },
+  "terminal_success": {
+    "all_of": [
+      "RB01..04satisfied; source/subject/oraclesunchangedoutsideharnessscope.",
+      "S1andN1newclosedIDscomplete allfrozencasesandcleanup.",
+      "Finaltestharnesssource/delta/input/S1+N1rawandmanifests/readonlyarchive+memberhashes independentlyaccessible; nofakeSDKrebuildidentity.",
+      "READY_FOR_CONTROL_REVIEWandproactivecallback."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_DESIGN_OR_PACKAGE_DEFECT",
+      "OLD_READER_RED_NOT_OBSERVED",
+      "READ_TARGET_ERROR_OR_STATE_RESTORATION_FAILURE",
+      "FAILURE_ARTIFACT_CAPTURE_MISSING",
+      "PRODUCT_PIXEL_FAILURE",
+      "UNEXPECTED_PREEXISTING_GL_ERROR",
+      "SUBJECT_OR_ORACLE_DRIFT",
+      "WORKER_RSS_TIMEOUT_IDENTITY_OR_ORACLE_FAILURE",
+      "ALLOWANCE_EXHAUSTED",
+      "MISSING_REVIEW_MATERIALIZATION"
+    ],
+    "action": "Saveexactraw/targetmetadataandfailurefullbuffers(ifavailable)beforecleanup,freezeID,stoplaterwindows,preserveworkandproactivelyreturn; noRuntimefix/unapprovednewID."
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "42e4040e0c627c406daea01febd8317a7d0edbaa9cba50e3f4901b2f643e2a3c"
+  }
+}

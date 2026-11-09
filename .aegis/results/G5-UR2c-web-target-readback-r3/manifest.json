@@ -1,0 +1,113 @@
+{
+  "schema": "g5-web-target-readback-manifest-v1",
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-web-target-readback-r3/package.json",
+    "sha256": "e3ab347447a5d69f6a20962001e57b8b867b050ac0652fa10c59b6e9c1cb67b0",
+    "bytes": 3028
+  },
+  "compiled_subject": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/subject-reuse.json",
+    "sha256": "d2e1cd3fafcee316284ed692f975d74f00a2c1d5839ac215705ac340bc252726",
+    "bytes": 20881
+  },
+  "harness_source": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/harness-source-final.json",
+    "sha256": "b097c34a1dd116c1ab91a184cadb0218ddd32b50443ec89345edffa576a12689",
+    "bytes": 7007564
+  },
+  "harness_source_tree_sha256": "1bd0d06fb0a9abbac50eb234c40bce9070a8f95c2f76ece61c106922aa7e57ff",
+  "harness_delta": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/harness-delta.json",
+    "sha256": "6d2c56925c561685eb6b86049ee685c91c0b688f23e7e3790501d19b1bb08a34",
+    "bytes": 2408
+  },
+  "target_proof": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/target-evidence.json",
+    "sha256": "d5ca5fbcd788dfd948e6c0996e1b734389429a773d378cfca96739bd01305d77",
+    "bytes": 717444
+  },
+  "obligation_closure": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/obligation-closure.json",
+    "sha256": "410d1d681d20f8049bf9d709ce01d7765d9db025689945e004fc9ae8e4af5f13",
+    "bytes": 5531
+  },
+  "tests": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/other-checks.json",
+    "sha256": "c8d711d87b52b8d656bf15daee7d28b8168b48d20e819ddbe3b18fdf83c8f270",
+    "bytes": 2287
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/local-web/sampling-ledger.json",
+    "sha256": "a93a04735a1db9a76d0fb2ee0ec3d458cf034dfc4955d087f909e5d97dcf2fd1",
+    "bytes": 3474
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/cleanup-audit.json",
+    "sha256": "ea4c3695fd15b62277d50063241eb65d74c76c90864544e9b86f7a45ae50b5e1",
+    "bytes": 74079
+  },
+  "demo": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/demo-HTTP-identity.json",
+    "sha256": "a6a3a38784c7df4ff8b0d2165fc11128af2103ef9daa304dbba78bb984772b57",
+    "bytes": 3767
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/harness-source-faf7a6429019be88d35406a1925e5eda6afa705e675bd06cad9670893112bbe3.tar.gz",
+        "sha256": "faf7a6429019be88d35406a1925e5eda6afa705e675bd06cad9670893112bbe3",
+        "bytes": 3042120
+      },
+      "members": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/harness-source-members.json",
+        "sha256": "10f3105896f1158dfe466a394361aed2afe42a231f8fca7d5718261954e9331a",
+        "bytes": 13344
+      },
+      "files": 41,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    },
+    "validation": {
+      "archive": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/verification-f5a61e2aa8e650f52d0d1fbe8ca8cf7bc48d8ddd54a7d0e9845f2ad19c5c6f06.tar.gz",
+        "sha256": "f5a61e2aa8e650f52d0d1fbe8ca8cf7bc48d8ddd54a7d0e9845f2ad19c5c6f06",
+        "bytes": 3043259
+      },
+      "members": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/verification-members.json",
+        "sha256": "aad2d538236c525dd8bc7e66c198f6f3e4ac031939dd47d7bd5c58376af687d4",
+        "bytes": 10637
+      },
+      "files": 35,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    },
+    "raw": {
+      "archive": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/new-WebGL-raw-529787ef7dfc96c5bd2a8f69fee217c4b101a361398bd77f30ac5516113abb26.tar.gz",
+        "sha256": "529787ef7dfc96c5bd2a8f69fee217c4b101a361398bd77f30ac5516113abb26",
+        "bytes": 125280842
+      },
+      "members": {
+        "path": "out/G5-UR2c-web-target-readback-r3/review-artifacts/new-WebGL-raw-members.json",
+        "sha256": "cb5cf89062c4bfd409ad1d32ba7050b8f66b8dbdc413b9ff565c3e91cfc660ed",
+        "bytes": 194599
+      },
+      "files": 529,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    }
+  },
+  "qualified_failure": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/qualified-failure.json",
+    "sha256": "3f0a9917a78a8e5be285792c61015477868f1afef1ff38478435b2334826698e",
+    "bytes": 22401
+  },
+  "pixel_difference_magnitude": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/pixel-difference-magnitude.json",
+    "sha256": "96deaae9af212aedeeb69fb7180d88de0080944f8a0791ef07b009d031cd4a14",
+    "bytes": 801
+  },
+  "archive_verification": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/archive-verification.json",
+    "sha256": "5a6968026567f0be03a2c05137fffc98504cff7694958fe6016479582842c9d6",
+    "bytes": 1349
+  }
+}

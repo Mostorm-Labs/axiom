@@ -1,0 +1,56 @@
+{
+  "base": "Exact R2 harness preimages; compiled subject remains R2d9bd",
+  "publication_cursor": "347a2b0418862fae1fc28eb440808cf95798f95c",
+  "compiled_subject_source_tree_sha256": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "harness_source_tree_sha256": "1bd0d06fb0a9abbac50eb234c40bce9070a8f95c2f76ece61c106922aa7e57ff",
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/harness.patch",
+    "sha256": "425afe921cc40e8a615f8eeb871f1f350dd8ecfe077b1e20feea80810de8d5e9",
+    "bytes": 74737
+  },
+  "roundtrip": "EXACT_BYTES",
+  "changed": [
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "before": "1132e53563e60be683726c68e9809d56aac03bb5974487cca397fbdb34e0ba3e",
+      "after": "e540f67262aee5b24f21909b27aabe7e92974febd96dbe8c6129f219fa211860"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "before": "f41514f151df95ea4a0c89fbaa936e5920c2f96fd093088f8826dafd3a62e67e",
+      "after": "b292efcc0a3892aa0480f6689e8b7b12dd92e313fcd326704b2a869fd8fd5047"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff.mjs",
+      "before": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1",
+      "after": "45ede1445abce8e43becfbc933cc2aa688e71542af84bd01f212b00380d0e1b9"
+    },
+    {
+      "path": "verification/runners/g5/webgl_target_readback.mjs",
+      "before": null,
+      "after": "1086e57c6bab1b0d5a6e9f311e07868b694137308245a7b180da6f1b16909642"
+    },
+    {
+      "path": "verification/runners/g5/webgl_target_readback_host.mjs",
+      "before": null,
+      "after": "1660f37060ea8b2984f01040b1e72e36b19b3f0d25fcfefa5d09783beb7ac9a9"
+    },
+    {
+      "path": "verification/runners/g5/webgl_target_readback_selftest.mjs",
+      "before": null,
+      "after": "9707fae05a60d079e2d441c4fdf317555a914fc8631efb2addc93dbe7b976bee"
+    },
+    {
+      "path": "verification/tests/g5_webgl_target_readback.test.mjs",
+      "before": null,
+      "after": "b86ff4efc154394a6e4de10695b8112435fc1a5682c6c7bb3146f27afcf638d3"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "before": "0a3576fb6fedf81674fd8e215947ed8e27cd59db70854066e2e05014a45e59e5",
+      "after": "59b00711e985816f096e26802f9677882707fc57179287ec813fdab7423da234"
+    }
+  ],
+  "product_files_unchanged": 995,
+  "new_SDK_or_native_build": false
+}

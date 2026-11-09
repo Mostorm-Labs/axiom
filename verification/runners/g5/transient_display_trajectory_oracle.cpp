@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 using namespace canvas;using nlohmann::json;
 namespace{
 json read(const std::filesystem::path& p){std::ifstream f(p);json j;f>>j;return j;}
@@ -31,10 +32,11 @@ int main(int argc,char** argv){try{
  const auto file=in.at("snapshot").get<std::string>();std::ifstream f(file,std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(f),{}};auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);if(!decoded.ok())throw std::runtime_error("snapshot decode");
  const auto& camera=in.at("camera");interaction::ViewportInteractionController viewport;if(!viewport.setCamera(camera.at("scale").get<float>(),camera.at("x").get<float>(),camera.at("y").get<float>()))throw std::runtime_error("camera");
  std::vector<foundation::WorldPoint> world;for(const auto& p:in.at("view_points")){const auto v=viewport.viewToContent(p[0].get<float>(),p[1].get<float>());world.push_back({v.first,v.second});}
- if(world.empty()||in.at("radius_world").get<double>()!=16.0)throw std::runtime_error("owner radius/trace mismatch");
- const auto prior=in.value("prior",json::object());json request={{"schema","g5-ur2b-exact-query-v1"},{"snapshot",file},{"snapshot_sha256",in.at("snapshot_sha256")},{"queries",json::array()}};json basis={{"schema","g5-transient-trajectory-basis-v1"},{"camera",camera},{"DPR",in.at("dpr")},{"radius_world",16},{"world_points",json::array()},{"objects",json::array()}};
+ const auto radius=in.at("radius_world").get<double>();
+ if(world.empty()||!std::isfinite(radius)||radius<=0||radius>16.0)throw std::runtime_error("owner radius/trace mismatch");
+ const auto prior=in.value("prior",json::object());json request={{"schema","g5-ur2b-exact-query-v1"},{"snapshot",file},{"snapshot_sha256",in.at("snapshot_sha256")},{"queries",json::array()}};json basis={{"schema","g5-transient-trajectory-basis-v1"},{"camera",camera},{"DPR",in.at("dpr")},{"radius_world",radius},{"world_points",json::array()},{"objects",json::array()}};
  for(const auto& p:world)basis["world_points"].push_back({p.x,p.y});
- for(const auto& o:decoded.snapshot->objects){if(o.kind!=semantic::ObjectKind::kVectorStroke&&o.kind!=semantic::ObjectKind::kDabStroke)continue;const auto id=hex(o.id);const auto g=interaction::partialEraseGeometry(world,o.transform,16.0);if(!g)throw std::runtime_error("geometry");json history=json::array();for(const auto& h:o.erase_masks)history.push_back(maskJson(h.geometry));if(prior.contains(id))for(const auto& h:prior.at(id))history.push_back(h);
+ for(const auto& o:decoded.snapshot->objects){if(o.kind!=semantic::ObjectKind::kVectorStroke&&o.kind!=semantic::ObjectKind::kDabStroke)continue;const auto id=hex(o.id);const auto g=interaction::partialEraseGeometry(world,o.transform,radius);if(!g)throw std::runtime_error("geometry");json history=json::array();for(const auto& h:o.erase_masks)history.push_back(maskJson(h.geometry));if(prior.contains(id))for(const auto& h:prior.at(id))history.push_back(h);
   request["queries"].push_back({{"id",id},{"object_id",id},{"mask",maskJson(*g)},{"history",history}});basis["objects"].push_back({{"id",id},{"transform",{o.transform.a,o.transform.b,o.transform.c,o.transform.d,o.transform.tx,o.transform.ty}},{"history_count",history.size()}});
  }
  if(request["queries"].size()!=16)throw std::runtime_error("fixture must have16ink objects");write(argv[2],{{"request",request},{"basis",basis}});return 0;
