@@ -1,0 +1,9 @@
+继续同一失败画面保护任务，不进入 UR2d。基线 HEAD4d3c6c20；受信执行光标是14文件候选3e213423，所有已完成的画面保护、累计damage、GPU生命周期和回归须保留。控制已独立核对14个postimage并重跑3个新native测试均绿，也独立重放了资源阻断。
+
+本次只修两项：
+1. warm1对象有效反馈→正确新Scene513对象staged需求：DPR4、4096x2304、默认32/96MiB。旧disposable TransientDisplaySurface保留36MiB，scratch36.25MiB；prepareWorkingSet要再申请36MiB，合计108.25MiB超过96MiB。GPUepochs已为0，8次used完全不动。fresh同请求第257调用成功，说明稳定需求本身可行。优先在同owner的stagedBodies分支、prepareWorkingSet准入之前放下不再使用的attempt。保留真实provider上最后显示，不丢PartialEraseFrame合法证明，不重置budget；尚在GPU使用的旧lease按原退休机制延后回收。
+2. 新continuous driver只完成6/8非空提交：换camera后indices4、5两个Up不产生Operation。所有Down被接收、Up后contact0，没有SDK错误，27个liveROI和4个cold均保持。因此先离线通过旧uncached exact geometry/kernel和原fixture/camera/history证明是Noop；若证明应Hit则停下报告真实产品问题。新8条有效轨迹必须在采样前固定，world/view和radius使用现有owner策略，既有历史mask及此前擦除都要考虑，cancel不增加mask。不能把expected8改6，也不能根据candidate输出边试边选点。
+
+先读package.json/本文/execution-contract，再做design和旧3eRED。验证范围完整继承DR01..06，增加HO01..03。新浏览器仅UR2CDR2-Q1(360s)、UR2CDR2-N1(600s)，累计历史86/5518，剩2852s，本包最多960s。旧窗口全部关闭且不改写，guard3GiB不变。所有driver设计/计划/offline目标证明和源码/SDK冻结后才开始。二次常规设计批准不是门槛，解清后连续执行到READY或明确终态。
+
+所有新构建和证据在G5-UR2c-transient-display-handoff-r2命名空间，不覆盖r1构建、4295/4296或用户文档。最终normal demo用4297（冲突下一个空闲），HTTP成员hash核查，不额外smoke浏览器。任务不commit/push。READY或任何BLOCKED终态必须主动通知控制线程01a1b6f3-e69a-7fe2-8d9b-0222e8741f03 hostlocal，带精确SHA、测试、账本、清理与余项。

@@ -1,0 +1,281 @@
+{
+  "schema": "g5-transient-display-result-v1",
+  "status": "BLOCKED",
+  "blocking_class": "RESOURCE_LIFETIME_OR_FORWARD_PROGRESS_FAILURE",
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-transient-display-retry-r1/package.json",
+    "sha256": "0781dc09384c9abafcd0bb5b14e4737159d6ec102eb421290e094393236dd642",
+    "bytes": 2124
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/manifest.json",
+    "sha256": "2172239a1f368f7691573fcec21810e406829b15935a577c52470f55965f130f",
+    "bytes": 6274
+  },
+  "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+  "source_revision": {
+    "base_commit": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "repair_delta": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+      "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+      "bytes": 4688
+    }
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1",
+    "archives": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/source-delta-and-inventory-aeab6d101383d725640c3f4d9a7cb855c7c32a9c63811f3c3b3093c33462dcc4.tar.gz",
+          "sha256": "aeab6d101383d725640c3f4d9a7cb855c7c32a9c63811f3c3b3093c33462dcc4",
+          "bytes": 4805009
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/source-delta-and-inventory-members.json",
+          "sha256": "c0f4288bd6e8b85633102c53fec5efc745fd908ce1f06b3fe10defb7a62b2de0",
+          "bytes": 28844
+        },
+        "files": 85
+      },
+      "native": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/native-48bb1b4a24dfa4183a6cce7ef62c7646d0e0358c09125eb5224f92ff8a12384c.tar.gz",
+          "sha256": "48bb1b4a24dfa4183a6cce7ef62c7646d0e0358c09125eb5224f92ff8a12384c",
+          "bytes": 555861419
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/native-members.json",
+          "sha256": "06be54838ee3e19d7c1c711d4d89a8ecff9f88623ebd7c1d915792859f95721c",
+          "bytes": 202594
+        },
+        "files": 588
+      },
+      "SDK": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/matched-SDK-268047788b701e88746d5a51d4c1a1cd76b0b763f7edc9646760e63241206d4a.tar.gz",
+          "sha256": "268047788b701e88746d5a51d4c1a1cd76b0b763f7edc9646760e63241206d4a",
+          "bytes": 39469525
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/matched-SDK-members.json",
+          "sha256": "206a9d0cfa4651a010f4c203f73b673dcbcb8dc9ed126e97f39ff57278e93dec",
+          "bytes": 23323
+        },
+        "files": 72
+      },
+      "raw": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/web-raw-ed3b57e0f79f9c7351f420379768b04f25405b70f5edbfdbc2bf581b398b96b0.tar.gz",
+          "sha256": "ed3b57e0f79f9c7351f420379768b04f25405b70f5edbfdbc2bf581b398b96b0",
+          "bytes": 211172125
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/web-raw-members.json",
+          "sha256": "ab6d44777fa4d9aad6e55151e1eca0a14799df6c04309d73a167a0cd5795ea89",
+          "bytes": 245691
+        },
+        "files": 651
+      }
+    }
+  },
+  "tests": {
+    "existing_native": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-summary.json",
+      "sha256": "aee90559acfdab3b897191f5af9ed3759df493f5ca7fea4a8894b377c1400bf2",
+      "bytes": 3483
+    },
+    "new_native": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-new-final-tests.log",
+      "sha256": "361802904b19c5d131ee50225ad697e883a3194a20859e34557c0679d3f49444",
+      "bytes": 551
+    },
+    "old_CPU634_and6": "Old-versus-candidate exact decisions identical; command/output refs in native summary.",
+    "Node_Python_boundary": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/other-checks.json",
+      "sha256": "15b26aa8bc680861ca25a7afc3d03e1c8cbbdc7ea56757e6a7d56461ca9f8241",
+      "bytes": 2226
+    }
+  },
+  "native_progress_blocker": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/terminal-blocker.json",
+    "sha256": "dbf9fe5abb22bed863a7d3f3f927cf4c5ace6a376d5a053e8bf3cf0c6718d372",
+    "bytes": 6482
+  },
+  "web": {
+    "findings": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/web-findings.json",
+      "sha256": "eba07f288ad713efed225c7204f3ae84051c5007e8b658316e227784eecc6d08",
+      "bytes": 50269
+    },
+    "counts": {
+      "cases": 21,
+      "original_cases": 20,
+      "continuous_cases": 1,
+      "cold_stages": 84,
+      "dual_surface_buffers": 168,
+      "roundtrips": 21,
+      "live_ROI_buffers": 27
+    },
+    "Q1": "10of10original cases/pixels/strict receipts and history consumption OBSERVED",
+    "N1": "10original cases green; first continuous case has27preserved ROI captures and qualified cold/Undo/Redo, but only6of8nonnoop commits; five remaining cases unrun."
+  },
+  "ledger": {
+    "schema": "g5-transient-display-two-windows-v1",
+    "planned_ids": [
+      "UR2CDR-1-Q1",
+      "UR2CDR-1-N1"
+    ],
+    "historical_starts": 84,
+    "historical_charged_seconds": 5139,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CDR-1-Q1",
+        "status": "COMPLETED",
+        "reserved_seconds": 360,
+        "charged_seconds": 195,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/qualification-sdk",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-retry-r1/local-web/UR2CDR-1-Q1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 194.2670117500238,
+          "peak_process_family_rss_kib": 2848992,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 360,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "OBSERVED",
+        "elapsed_trusted": true
+      },
+      {
+        "id": "UR2CDR-1-N1",
+        "status": "STOPPED",
+        "reserved_seconds": 600,
+        "charged_seconds": 184,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-retry-r1/local-web/UR2CDR-1-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "nonzero_exit",
+          "returncode": 2,
+          "elapsed_s": 183.9341170419939,
+          "peak_process_family_rss_kib": 1768768,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 600,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "HARD_FAILURE",
+            "error": "Error: PRODUCT_CHECK: continuous case failed S0-continuous-DPR1\n    at worker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/transient_display_retry.mjs:114:233)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/identity-adapter.mjs:15:100"
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "HARD_FAILURE",
+        "elapsed_trusted": true
+      }
+    ],
+    "remaining_status": "MISSING",
+    "cumulative_starts": 86,
+    "cumulative_charged_seconds": 5518,
+    "remaining_seconds": 2852
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/cleanup-audit.json",
+    "sha256": "a231a292506080470f549b7a1f1a9386e588b4e1e3d6b54728c67dc914f3c991",
+    "bytes": 101006
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4296/example.html",
+    "pid": 75527,
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-retry-r1/normal-install/js",
+    "profile": "normal",
+    "diagnostics": false,
+    "developer_components": false,
+    "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+    "HTTP_members": {
+      "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+      "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+      "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+      "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+      "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+      "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+      "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+      "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+      "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+      "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+      "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+      "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+      "axiom.wasm": "529bda284a4c80c2516d3ffdea828eb000085d2d021f7c89420693ad39dd6141",
+      "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+      "internal/axiom.mjs": "dfc1aaa9f204fe15f168d7a6984cf806c4987066cedcb183864591167fb9ab5a",
+      "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+      "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+      "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+      "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+      "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+      "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+      "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+      "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+      "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+      "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+      "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+      "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+      "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+      "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+      "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+      "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+      "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+      "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+      "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+      "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    "normal_manifest": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/normal-artifact-manifest.json",
+      "sha256": "bb9619d1e3b1e40b50bbae51de16a5807f6d07bf7679687780db93660512dd6b"
+    },
+    "browser_started": false,
+    "old_servers_untouched": true
+  },
+  "remaining": [
+    "Release obsolete disposable attempt before staged working-set admission; preserve last provider pixels and correct GPU deferral.",
+    "Fix offline nonnoop fixture/camera/remaining-mask validation before a newly frozen sampling allowance; no existing window reused.",
+    "All six new continuous cases remain unqualified as a matrix; no overall performance/G5/P34 PASS."
+  ],
+  "browser_starts": 2,
+  "commit_push_performed": false,
+  "index_empty": true,
+  "official_Gate_P34_performance_PASS": false,
+  "archive_verification": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/archive-verification.json",
+    "sha256": "4ca6b5ad0eed271c85f3655fe6e143fae0d34742bdf153951150c11a1426ee0a",
+    "bytes": 1771
+  }
+}

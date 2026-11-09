@@ -1,0 +1,94 @@
+{
+  "schema": "g5-transient-display-web-plan-v1",
+  "historical_result": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/result.json",
+    "sha256": "1ef10d39b124799735db54afd1f59b4bade247d81f61563970a577eef84b27f4",
+    "bytes": 13544
+  },
+  "historical_starts": 84,
+  "historical_charged_seconds": 5139,
+  "original_cap_seconds": 8370,
+  "remaining_before_seconds": 3231,
+  "workers": [
+    {
+      "id": "UR2CDR-1-Q1",
+      "variant": "qualification",
+      "timeout_seconds": 360,
+      "required_cases": "Unchanged10 S0/S2 UR2a handoff cases atDPR2; original cold oracle, independent AA and receipt consumers. New source-identity adapter may accept exactly final candidate; do not edit original driver/thresholds."
+    },
+    {
+      "id": "UR2CDR-1-N1",
+      "variant": "normal",
+      "timeout_seconds": 600,
+      "required_cases": "Same original10cases plus6extra S0/S2 x DPR1/2/4; diagnosticsOFF, developerOFF."
+    }
+  ],
+  "max_new_starts": 2,
+  "max_reserved_seconds": 960,
+  "remaining_after_worst_case_seconds": 2271,
+  "guard": {
+    "process_family_rss_limit_mib": 3072,
+    "one_browser_worker_at_a_time": true,
+    "driver": {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    "charge": "ceil actual elapsed or full reserved time if missing/untrusted guard output",
+    "all_attempts_count_including_failures": true,
+    "no_old_window_retry_or_smoke_browser": true,
+    "on_guard_timeout_RSS_identity_or_oracle_failure": "Freeze attempted ID, save partial raw/ledger, clean only exact owned PIDs and stop; no automatic retry, borrowing or next worker. Return terminal blocker with unrun IDs."
+  },
+  "fixture_manifest": {
+    "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/fixtures.json",
+    "sha256": "8c43a354609bf7ae778a477c1907af2187ab842819240cedc3c1ef64da4d16d5",
+    "bytes": 58547
+  },
+  "fixtures": [
+    {
+      "name": "S0",
+      "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+      "byteLength": 2080135
+    },
+    {
+      "name": "S2",
+      "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+      "byteLength": 2187559
+    }
+  ],
+  "extra_six_cases": {
+    "viewport_css": [
+      800,
+      500
+    ],
+    "DPR": [
+      1,
+      2,
+      4
+    ],
+    "fixtures": [
+      "S0",
+      "S2"
+    ],
+    "sequence": [
+      "Load verified16overlapping-v4-stroke fixture, establish exact frame and capture before.",
+      "Six short non-noop local erases (8move samples each) in independently selected intersecting subregions. First pair Up -> nextDown in same DOM task.",
+      "After second and sixth erase, immediate12pan+12pinch wheel events; keep existing owner admission.",
+      "Wait1s; perform another short erase, cancel an active erase after8moves, then one final committed erase.",
+      "Capture after,Undo,Redo with original independent snapshot/reference oracle and verify contact/operation/history identities."
+    ],
+    "live_pixel_checks": "Correctness-only readback at delivered display opportunities while viewport fixed. Define unchanged content sentinel/regions before candidate output from frozen fixture and eraser swept bounds+existing AA guard; compare their bytes against valid display and detect global white/partial-scene loss. Do not count toolbar/cursor as content or choose ROI from candidate difference. Stream buffers to host and release per stage; save failure-adjacent full target raw and exact requests. During camera changes retain content-write/identity checks plus independent final pixels; do not compare mismatched camera bytes.",
+    "performance_claims": false
+  },
+  "prebrowser_requirements": [
+    "Design/scope/RED native and keeper/driver unit tests complete.",
+    "Freeze final source, matching SDK member hashes, new driver/oracle hashes and ledger before firstbrowser.",
+    "Dry-run Node/Python contract tests offline; no browser launch just to see whether harness works."
+  ],
+  "new_normal_demo": {
+    "port": 4296,
+    "fallback": "If4296alreadyowned, choose next unused port and report exact URL; never kill existing unrelated server.",
+    "source": "Final matching normal diagnosticsOFF/developerOFF SDK; HTTP byte hash verification only is allowed without consuming browser ID.",
+    "preserve": "Demo4295 and user documents unchanged."
+  }
+}

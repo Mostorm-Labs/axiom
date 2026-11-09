@@ -1,0 +1,95 @@
+{
+  "schema": "g5-transient-display-verification-lock-v1",
+  "status": "FROZEN_BEFORE_MUTATION",
+  "trusted_basis": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/result.json",
+    "sha256": "bcdde3aa145baa86e229fee4567708f48758ad407244e8085f3daabe1ee1cc9a",
+    "bytes": 7570
+  },
+  "old_positive_control": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/failed-frame-result.json",
+    "sha256": "6539496197cde28e97b4c0504708cf015e30049e3719ec707dc9685cb50d9258",
+    "bytes": 4145
+  },
+  "old_native_keepers": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/native-summary.json",
+    "sha256": "fe28ccb05fc063becb5f66170868d0e355513502ba9374e3e9d89140758e54e3",
+    "bytes": 3477
+  },
+  "old_other_checks": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/other-checks.json",
+    "sha256": "8bddde8539521f16dfc32d64ae55fa8e92d676b99554232f9e0334d4ae64ce37",
+    "bytes": 2098
+  },
+  "old_exact_and_pixel_bindings": {
+    "path": ".aegis/packages/G5-UR2c-mask-history-scene-r1/verification.lock.json",
+    "sha256": "70b8123ca473cbb3574f88678c078adebacd81b6a1736977dd3dc9f4a26c6dc5",
+    "bytes": 20862
+  },
+  "old_exact_inputs": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/old-corpus-command.json",
+    "sha256": "c8134b69b2c1978f42b4a39a7aacf39577555319c5067986953c4d353b066bcf",
+    "bytes": 381
+  },
+  "old_finite_inputs": {
+    "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/old-finite-command.json",
+    "sha256": "374f2c9e086c325db9b92390814445f8361273d084b5cb673953666de07a4bea",
+    "bytes": 400
+  },
+  "old_reference_catalog": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+    "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c",
+    "bytes": 67637
+  },
+  "obligations": [
+    {
+      "id": "DR-01",
+      "requirement": "A recoverable prepare or draw failure on a healthy retained target does not change any last-successful visible target pixels, even after recorded GPU work is flushed/completed.",
+      "oracle": "RED on exact 4d3c6c20: ready real-GPU target first presents valid scene; invoke actual SkiaRenderer transient path with bounded prepare/coverage/mask refusal (including after one object/tile would have been painted); on Retry read the actual target after GPU completion and compare full RGBA byte-for-byte to the last accepted target. Native diagnostic helper is a starting witness, not sufficient alone for the final renderer oracle.",
+      "acceptance": "Old code must genuinely fail the preserved-pixel assertion; candidate passes for no-write, before-first-object and mid-draw refusal without Direct replay, false receipt or CPU fallback. Full-frame and qualified incremental-damage cases at DPR1/2/4, opaque/transparent/colored backgrounds, translucent overlaps, permanent+active masks. Unchanged failed target bytes have zero tolerance; successful CPU/GPU comparisons use existing frozen AA oracle.",
+      "evidence_required": "Old RED raw assertion, exact source/compiler/probe/binary identity; candidate status, actual before/after target hashes and saved failure/difference buffers, target/provider generation, CPU/GPU path and present/receipt identities."
+    },
+    {
+      "id": "DR-02",
+      "requirement": "Retry retains qualified last-display state and all unpresented mask/damage changes without reusing invalid target contents.",
+      "oracle": "Actual renderer sequence accepted A -> prepare/draw Retry B -> newer mask tail C -> Retry -> resources released -> accepted newest request; compare final output against unchanged original full-render oracle and inspect actual body compilation/mask work. Also inject acquire failure before writes.",
+      "acceptance": "No dropped B/C regions, no stale tail/double opacity/missing mask; no repeated full body preparation solely caused by discarded continuity. Use last accepted display basis rather than attempted frameSequence alone. Reusing a pointer without proving surface contents/provider/metrics/camera/resource/Scene validity does not satisfy this item.",
+      "evidence_required": "Per-attempt display basis, demand revision, accumulated damage, target validity, accepted completion and actual preparation counters."
+    },
+    {
+      "id": "DR-03",
+      "requirement": "Abort, publication and provider loss/failure have distinct truthful outcomes.",
+      "oracle": "Acquire unavailable, stale surface/metrics/context, ordinary Retry, synthetic present refusal before publication, and real existing context-loss/rebind/lifecycle regressions. Hold old completions while newer erase demand arrives.",
+      "acceptance": "No success counter/receipt/preview retirement for unaccepted attempts. Healthy pre-publication refusal preserves old pixels. Actual context loss may make display unavailable and cannot promise old buffer bytes; it must be explicitly observed and invalidate old target proof, preserve pending demand and recover after rebind. Do not relabel ordinary resource failure as loss to exempt it. Old completion cannot retire newer feedback. Keep existing Runtime input admission and canonical commit behavior.",
+      "evidence_required": "Exact failure stage, target actual availability/generation, successful display versus attempted submission, dirty/demand retention, rebind result and strict complete receipt joins."
+    },
+    {
+      "id": "DR-04",
+      "requirement": "Recovery is bounded, GPU-safe and makes progress under feasible stable demand.",
+      "oracle": "Native real-GPU pressure -> multiple Retry -> real completion/resource release -> accepted latest frame; pressure while history plan NotAdmitted and while GPU leases are in flight; idle/clear/close and context replacement checks.",
+      "acceptance": "Keep default32/96MiB and existing mask8MiB/512/default cache limits; no unbudgeted full-screen staging or unbounded retained revisions. All new staging/metadata charged; no resetting budget manager to hide in-flight resources, no early resource release or omitted flush/fence. Live resources converge after actual completion; stable feasible demand cannot loop rebuilding identical unusable work forever.",
+      "evidence_required": "Per-attempt live/pinned/in-flight/retired bytes, allocations/leases, GPU completion identity and actual successful progress. RSS falling is not required."
+    },
+    {
+      "id": "DR-05",
+      "requirement": "Continuous user erase/navigation behavior and canonical correctness remain intact through matching normal Web SDK.",
+      "oracle": "Frozen original UR2a ten cases on S0/S2 for qualification and normal variants, unchanged cold oracle/AA/refcatalog; normal-only extra S0/S2 x DPR1/2/4 continuous-erasure matrix defined in web-plan.json. Capture actual content target through feedback and stable regions, not toolbar/RAF alone.",
+      "acceptance": "All original input/History/strict receipts/cold dual-surface snapshots/after-redo parity remain valid. New six cases perform repeated short erases, immediate next erase, immediate pan/pinch,1s idle and another short erase, cancel and further erase; active contacts return0; exactly-once accepted mutations; no unrelated content disappearance or stale feedback. Persist raw content buffers and operation schedule before deciding verdict. Timing is diagnostic only; readback runs cannot claim production performance.",
+      "evidence_required": "Matching JS/types/WASM/resources and source; actual object/mask/operation/Scene/surface identities; continuous content ROI frames with independently defined unchanged sentinel/regions; after/Undo/Redo cold pixels+snapshots and raw event schedule. If original video trigger is not reproduced, disclose that while retaining deterministic native proof."
+    },
+    {
+      "id": "DR-06",
+      "requirement": "Accepted rendering, input, semantic, Scene, exact hit and public boundaries have no new regressions.",
+      "oracle": "Keeper commands frozen by native-summary.json and other-checks.json, original CPU634+6 decisions and existing40000-mask/progress-safety tests; add meaningful new native renderer and driver contract tests.",
+      "acceptance": "All previously green keeper tests stay green; preserve exactly the old RF01 full-rebuild line88 store-pointer expectation failure without fixing or hiding it. Existing valid local history refusal remains drawable and true global shortage remains pending. No SDK test/qualification seam leakage, geometry algorithm, mask order, AA policy, canonical schema or locks change.",
+      "evidence_required": "Exact commands/logs/source and binary identities; old-versus-candidate outcomes; scoped diff and protected-file hashes."
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "source_revision": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "expected_failure": "Actual last-accepted target RGBA changes despite recoverable transient Retry and no successful present. Real GPU; preserve unchanged budget-fault raw observation.",
+    "old_code_harness_failure_is_not_RED": true
+  },
+  "no_new_performance_threshold": "This is a correctness/recovery package, not an SLO claim. Preserve existing budgets and report dispatch/Up/nextDown/navigation/exact waits honestly. No new timing floor becomes a late blocking target."
+}

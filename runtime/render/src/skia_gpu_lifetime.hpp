@@ -34,6 +34,7 @@ class SkiaGpuLifetime final {
   ~SkiaGpuLifetime(){(void)finish();}
   SkiaGpuLifetime(const SkiaGpuLifetime&)=delete;
   bool ready()const noexcept{return ready_;}
+  std::uint64_t epoch()const noexcept{return ticket_?ticket_->epoch:0;}
   void bindFrame([[maybe_unused]] const FrameState& f,[[maybe_unused]] std::uint64_t resource)noexcept {
     if(!ticket_)return;
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::resource_lease,true,21,reinterpret_cast<std::uintptr_t>(ticket_.get()),ticket_->epoch,ticket_->state->lifetime,f.viewId.value(),f.frameId.value(),f.sceneGeneration.value(),f.sceneReadToken.value(),f.camera.generation.value(),f.surfaceGeneration.value(),f.metricsGeneration.value(),resource);

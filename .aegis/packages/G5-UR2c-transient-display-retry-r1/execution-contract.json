@@ -1,0 +1,191 @@
+{
+  "schema": "g5-transient-display-execution-contract-v1",
+  "task_id": "G5-UR2c-transient-display-retry-r1",
+  "stage": "P32 successor correctness repair",
+  "implementation": {
+    "required_changes": [
+      "Establish failure-safe transient publication under existing Render owners; do not expose cleared/partial target on recoverable Retry.",
+      "Separate qualified displayed basis from pending preparation and attempts; retain cumulative dirty mask/damage until valid publication, invalidate correctly for actual target/basis changes.",
+      "Preserve GPU completion, quotas, resource reclamation and latest-demand forward progress.",
+      "Add real renderer fail-pixel/continuity/progress tests and bounded Web correctness driver; rebuild matching normal/qualification SDK and serve fresh normal demo for human retest."
+    ],
+    "allowed_existing_product_paths": [
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/render_group_manager.cpp",
+      "runtime/render/include/canvas/render/render_group_manager.hpp",
+      "runtime/render/src/skia_gpu_lifetime.hpp",
+      "runtime/render/src/webgl_surface_backend.cpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/CMakeLists.txt"
+    ],
+    "allowed_new_private_support": "New runtime/render/src/transient_display_* .hpp/.cpp solely for existing Render owner preparation/publication/abort support; no new renderer or document owner. Add explicit path/owner mapping in DesignPreflight. Other private helper placement requires scope reconciliation before mutation.",
+    "allowed_tests": [
+      "runtime/render/tests/transient_display_retry_test.cpp",
+      "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "verification/runners/g5/transient_display_retry.mjs",
+      "verification/runners/g5/transient_display_retry_contract.mjs",
+      "verification/runners/g5/transient_display_retry_runner.py",
+      "verification/tests/g5_transient_display_retry.test.mjs",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "private_diagnostic_rule": "Aggregate attempt/publish/pending-damage counters or deterministic allocation faults may be private native-test/qualification-only helpers in above scope. No public SDK commands, deep imports for normal consumer, or normal-build fault/trace leak. Existing identity adapter may live in new out namespace.",
+    "forbidden_changes": [
+      "No Semantic/OperationEngine/History/Scene/input admission/asyncUp/nextDown/frozen roster/receipt semantic changes; no precise query algorithm optimization (UR2d).",
+      "No public SDK API/ABI/exports/install/version or app wrapper changes; no Brush geometry algorithm, canonical mask order/format, independent oracle kernel or AA policy changes.",
+      "No default budget/limit increases, uncharged retained frames, blanket every-frame clear/rebuild, forced CPU fallback, disabled GPU fence/flush or in-flight lease early release.",
+      "No old package/result/native/SDK/raw/output rewrites; no edits to protected oracle/worker/cold-pixel thresholds.",
+      "No commit/push/merge/rebase/reset/stash/clean in this task; no new browser starts except two frozen IDs.",
+      "No official overall G5/P34/platform performance/release/Vibe PASS."
+    ],
+    "protected_files": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/skia_scene_renderer.cpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "runtime/scene/src/full_scene_compiler.cpp",
+      "runtime/scene/src/runtime_scene_projection.cpp",
+      "sdk/web/axiom.mjs",
+      "sdk/web/axiom.d.mts",
+      "sdk/windows/include/axiom/api.h",
+      "verification/runners/g5/ur2a_handoff.mjs",
+      "verification/runners/g5/ur2a_handoff_contract.mjs",
+      "verification/runners/g5/ur2a_cold_capture.mjs",
+      "verification/runners/g5/ur2b_exact_query.mjs",
+      "verification/runners/g5/ur2c_mask_history_runner.py",
+      "verification/runners/g5/bounded_worker.py",
+      "verification/runners/g5/ur0/pixel_oracle.mjs"
+    ],
+    "preserve": "All accepted work at4d3c6c20, historical tests/results and ordinary existing demos."
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "not_human_approval_gate": true,
+    "required_records": [
+      "Current attempt->targetwrite->Retry/return->flush->provider path and qualified last-display identity.",
+      "Chosen Render owner/types/files for prepare/publish/abort; which steps can still fail before/after visible writes.",
+      "How actual surface contents, frameSequence, accumulated damage, masks and source/metrics/camera/resource identities remain correct through multiple Retry/newer requests.",
+      "Pixel/quota/storage accounting under DPR4 at96MiB; why scheme can eventually progress without unbounded fullscreen copies.",
+      "Loss versus healthy refusal and post-submit failure observability; no promise of restoring genuinely lost target.",
+      "DR01..06 implementation/test mapping, exact old RED harness and final fault coverage."
+    ],
+    "engineering_choices": "Equivalent bounded private implementation is executor discretion. Once unresolved_semantic_decisions is empty and scope/authority/verification conflicts false, continue immediately; do not wait for routine control approval."
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "source_revision": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "expected_failure": "Actual last-accepted target RGBA changes despite recoverable transient Retry and no successful present. Real GPU; preserve unchanged budget-fault raw observation.",
+    "old_code_harness_failure_is_not_RED": true
+  },
+  "tests": {
+    "required_obligations": [
+      "DR-01",
+      "DR-02",
+      "DR-03",
+      "DR-04",
+      "DR-05",
+      "DR-06"
+    ],
+    "native_keepers_command_ref": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/native-summary.json",
+      "sha256": "fe28ccb05fc063becb5f66170868d0e355513502ba9374e3e9d89140758e54e3",
+      "bytes": 3477
+    },
+    "other_checks_commands_ref": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/other-checks.json",
+      "sha256": "8bddde8539521f16dfc32d64ae55fa8e92d676b99554232f9e0334d4ae64ce37",
+      "bytes": 2098
+    },
+    "new_tests": "Register distinct native cases for fail-pixels, retained damage, recovery/lifecycle and integrate Node/Python driver contract tests; do not test only counters or duplicate implementation logic."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "local_required_web_plan_ref": {
+      "path": "web-plan.json",
+      "sha256": "7e9cb8c0d721ee522b1da2dece8d566ba4dc2fddb4429ff24dfff24c5bb087b2"
+    }
+  },
+  "evidence": {
+    "blocking": [
+      "Actual renderer oldRED and candidate failed-target byte preservation, latest-demand correctness and feasible progress.",
+      "All frozen native/CPUexact/Node/Python/boundary regression and new renderer/driver tests; only unchanged exactRF01 baseline failure allowed.",
+      "Two bounded Web worker closures and matching source/SDK; original cold/receipt checks and new six continuous cases; exact materialized return."
+    ],
+    "corroborative": [
+      "Timing improvements or perceivedVibe comparison; physical compositor timing/GPU execution time/RSS decrease.",
+      "Exact resource allocation responsible for the original recording if no trace exists; video pixel interval remains an observation."
+    ]
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "7e9cb8c0d721ee522b1da2dece8d566ba4dc2fddb4429ff24dfff24c5bb087b2"
+  },
+  "evidence_contract_ref": "evidence-contract.json",
+  "closure_stability": "DR01..06 and explicit web-plan are the complete blocking target. No extra all-platform/100K/1M/performance study or proof-of-proof requirement may be added during execution. If an actual earlier-layer defect is found, preserve work and return to its owner.",
+  "available_commands_policy": "Use exact previous keeper command lists replacing only build/output roots with new candidate paths; keep original input/oracle bindings. Add new cases and scoped driver tests. Rebuild against locked prebuilt SDKs only.",
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-transient-display-retry-r1/",
+    "out/G5-UR2c-transient-display-retry-r1/",
+    "verification/evidence/performance/G5-UR2c-transient-display-retry-r1/"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "do_not_stop_at": "Only plan/RED/code/native green/build/first browser while executable frozen items remain.",
+    "notify_control": {
+      "required": true,
+      "threadId": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit terminal BLOCKED/frozen failure"
+      ],
+      "authorization": "Human has repeatedly explicitly authorized adjacent implementation chat to proactively notify this control chat at completion or blocker.",
+      "include": [
+        "Exact package/result/source/repair delta/manifest/archives SHA and shared reviewer materialized_ref.",
+        "RED and candidate actual-pixel/continuity/progress evidence; commands/results and known historical failure.",
+        "Ledger cumulative starts/ceil seconds/remaining/unrun IDs and exact owned-process cleanup.",
+        "Matching normal demo URL/build identity, remaining issues, no commit/push and no officialGatePASS."
+      ]
+    }
+  },
+  "terminal_success": {
+    "all_of": [
+      "AllDR01..06 satisfied with independent frozen oracles and no new regressions.",
+      "All two permitted browser workers complete required correctness cases and close cleanly.",
+      "Candidate source/normal+qualification/native/raw manifests and reproducible archives independently accessible to control.",
+      "Fresh normal demo is served after HTTP member identity checks; no new smoke browser.",
+      "Return READY_FOR_CONTROL_REVIEW and proactively notify designated control thread."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_DESIGN_OR_PACKAGE_DEFECT",
+      "EXPECTED_OLD_PIXEL_RED_NOT_OBSERVED",
+      "PIXEL_OR_DIRTY_CONTINUITY_OR_RECEIPT_FAILURE",
+      "RESOURCE_LIFETIME_OR_FORWARD_PROGRESS_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "NEW_KEEPER_REGRESSION",
+      "WORKER_RSS_TIMEOUT_IDENTITY_OR_ORACLE_FAILURE",
+      "BROWSER_ALLOWANCE_EXHAUSTED",
+      "MISSING_MATCHING_REVIEW_MATERIALIZATION"
+    ],
+    "action": "Freeze exact failing stage/source/raw, preserve work, close owned processes, return explicit blocker and proactively notify control; no silent retry/window reuse."
+  }
+}

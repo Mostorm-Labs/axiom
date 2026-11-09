@@ -1,0 +1,66 @@
+{
+  "time_utc": "2026-11-09T18:35:34.975300+00:00",
+  "base_commit": "4d3c6c20fc4fc267a3fce709707441552182156f",
+  "commands": [
+    {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "out/G5-UR2c-transient-display-handoff-r2/build-native",
+        "-R",
+        "^G5TransientDisplay",
+        "--output-on-failure"
+      ],
+      "exit_code": 8,
+      "passed": [
+        "G5TransientDisplayRetryPixels",
+        "G5TransientDisplayContinuity",
+        "G5TransientDisplayRecovery"
+      ],
+      "failed": [
+        "G5TransientDisplayHandoff",
+        "G5TransientDisplayHandoffInflight"
+      ],
+      "total": 5,
+      "test_log": {
+        "path": "out/G5-UR2c-transient-display-handoff-r2/build-native/Testing/Temporary/LastTest.log",
+        "sha256": "2bec752570e2b2c7ebe629bd218fb2f8287167ca89fd19c86083ce9a5d64015a",
+        "bytes": 2137821
+      },
+      "last_failures": "248:G5TransientDisplayHandoff\n249:G5TransientDisplayHandoffInflight\n"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_transient_display_retry.test.mjs"
+      ],
+      "exit_code": 0,
+      "passed": 5
+    },
+    {
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification/tests/test_g5_transient_display_retry.py"
+      ],
+      "exit_code": 0,
+      "passed": 5
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "test_binary": {
+    "path": "out/G5-UR2c-transient-display-handoff-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+    "sha256": "e571343bd5af18943972cf7b4abd8ce842dd870fd5ffb53fb9037e9c688e097b",
+    "bytes": 24899600
+  },
+  "notes": "Fresh focused verification before requested WIP checkpoint; no all-regression or browser completion claim."
+}

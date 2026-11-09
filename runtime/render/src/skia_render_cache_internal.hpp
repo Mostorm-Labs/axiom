@@ -33,7 +33,7 @@ class SkiaRenderCache final {
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
-    void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {});
+    void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {},bool transient=false);
     CompactCoverageTargets& executionTargets() noexcept {coverageTargets_.budget=budget;return coverageTargets_;}
     bool canRetainCompact(const SkCanvas&,const ReferenceTraversalEntry&) const noexcept;
     // Called only after full plan validation. False executes permanent Direct.
@@ -60,6 +60,8 @@ class SkiaRenderCache final {
     // frames still consume per-object/streamed composition in original order.
     bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
+    void acknowledgeTransient() noexcept {pendingErase_={};hasPendingErase_=false;}
+    bool acquireTransientSurface(SkCanvas& canvas,sk_sp<SkSurface>& surface,resources::ResourceLease& lease){return acquireWorkSurface(canvas,surface,lease,true,resources::ResourceClass::kCanonicalFrame);}
     [[nodiscard]] std::uint64_t frameSequence()const noexcept{return tick_;}
     bool prepareEraseDamage(SkCanvas& canvas,bool mandatory=false){return (sourceAdmission_||mandatory)&&ensureScratch(canvas,mandatory);}
     enum class InkDraw {kSkipped,kDrawn,kRetry};
@@ -84,6 +86,7 @@ class SkiaRenderCache final {
     };
     std::map<foundation::ObjectId,BodyDependency> bodyDependencies_;
     bool stagedBodies_=false;
+    std::size_t stagedDemand_=0;
     std::optional<semantic::ObjectRecord> stagedCreation_;
     std::optional<scene::ConnectorGeometry> stagedCreationRoute_;
     resources::ResourceLease stagedCreationLease_;
@@ -150,6 +153,7 @@ class SkiaRenderCache final {
     std::uint64_t workId_=0;
     RenderGroupManager groups_;
     RenderGroupManager::EraseDamage eraseDamage_;
+    RenderGroupManager::EraseDamage pendingErase_;bool hasPendingErase_=false;
     bool damageOnly_=false,damageFailed_=false;
     const void* target_=nullptr;
     const SkSurface* surface_=nullptr;

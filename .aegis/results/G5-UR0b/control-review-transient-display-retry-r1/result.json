@@ -1,0 +1,193 @@
+{
+  "status": "BLOCKED_FROZEN_REQUIREMENT_FAILURE",
+  "official_Gate_PASS": false,
+  "candidate_result": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/result.json",
+    "sha256": "99bd71b8c4b5e46dfe187d69bfdbbb2afcd6b40b651a2d0bc2eb8851787d9c4b",
+    "bytes": 14429
+  },
+  "candidate_source": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+  "candidate_delta": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+    "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+    "bytes": 4688
+  },
+  "independent_checks": {
+    "all14postimages_match": true,
+    "new_renderer_pixel_continuity_recovery_tests": {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/native-new-regressions.json",
+      "sha256": "4cdc49edfb50282d8a070e508d455d4f25c02bc04ae1f5f3d9f56dd7e2931832",
+      "bytes": 1393
+    },
+    "resource_transition_reproduction": {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/independent-transition.json",
+      "sha256": "dde8571a086b1c7f37f8fd494c9064f33de0ad63489afdc9c7aa0d968b848f36",
+      "bytes": 3475
+    }
+  },
+  "findings": [
+    {
+      "id": "DR04-STAGED-OWNER-RETENTION-01",
+      "classification": "FROZEN_REQUIREMENT_FAILURE / implementation-owned Render resource handoff",
+      "blocking_requirement": "DR04 bounded recovery and feasible stable-demand progress",
+      "evidence": "Independent exact-binary replay: realMetal4096x2304,DPR4,default32/96MiB. Warm1->513 request remains Retry eight times with78131767bytes andGPUepochs0; fresh513 succeeds atcall257 with78302575bytes. Code retains disposable transientDisplay before staged working-set admission; three required planes113508352bytes exceed100663296 while two are feasible.",
+      "impact": "Stable feasible demand can stop making progress after a prior valid transient display.",
+      "preserve": "Existing qualified provider pixels and all14candidate files; native fail-pixel/continuity/recovery regressions independently pass.",
+      "repair_scope": "Retire obsolete renderer-owned disposable attempt before staged admission, with real deferred GPU retirement. Do not discard lastprovider display proof, reset budgets, enlarge limits or change semantics."
+    },
+    {
+      "id": "DR05-CONTINUOUS-TRAJECTORY-01",
+      "classification": "Test-driver implementation defect / missing nonempty workload proof, not demonstrated product input rejection",
+      "blocking_requirement": "DR05 requires eight genuine non-noop traces, not lowering expected mutation count",
+      "observed": {
+        "initial_generation": "0",
+        "after_generation": "6",
+        "errors": [],
+        "failures": [
+          "exactly eight non-noop commits",
+          "eight commits plus Undo/Redo operations"
+        ],
+        "pointer_up_summary": [
+          {
+            "phase": "down",
+            "x": 465,
+            "y": 180,
+            "generation": "0",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 463.34440959274525,
+            "y": 204,
+            "generation": "1",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 520,
+            "y": 205,
+            "generation": "1",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 518.3444095927453,
+            "y": 229,
+            "generation": "2",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 580,
+            "y": 220,
+            "generation": "2",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 578.3444095927453,
+            "y": 244,
+            "generation": "3",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 635,
+            "y": 260,
+            "generation": "3",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 633.3444095927453,
+            "y": 284,
+            "generation": "4",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 690,
+            "y": 295,
+            "generation": "4",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 688.3444095927453,
+            "y": 319,
+            "generation": "4",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 735,
+            "y": 330,
+            "generation": "4",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 733.3444095927453,
+            "y": 354,
+            "generation": "4",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 480,
+            "y": 330,
+            "generation": "4",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 478.34440959274525,
+            "y": 354,
+            "generation": "5",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 600,
+            "y": 340,
+            "generation": "5",
+            "activeContacts": 1
+          },
+          {
+            "phase": "cancel",
+            "x": 598.3444095927453,
+            "y": 364,
+            "generation": "5",
+            "activeContacts": 0
+          },
+          {
+            "phase": "down",
+            "x": 600,
+            "y": 340,
+            "generation": "5",
+            "activeContacts": 1
+          },
+          {
+            "phase": "up",
+            "x": 598.3444095927453,
+            "y": 364,
+            "generation": "6",
+            "activeContacts": 0
+          }
+        ]
+      },
+      "evidence": "All eight gestures finish withactiveContacts0; Up at CSS(688.3444,319) and(733.3444,354) leave generation4 after camera changed. This alone does not establish nonempty intersection or lost input.27liveROIs andall4coldstages preserved.",
+      "repair_scope": "Offline independent uncached exact query against originalS0/S2 geometry/current camera/history, prove oldnoops or diagnose contrary evidence, choose and freeze nonempty world traces before newbrowser starts. Keep8commits+UndoRedo and original pixel/receipt oracles."
+    }
+  ],
+  "preserved_boundary": "This is scoped continuation classification, not acceptance of the complete candidate or an alteration of prior published acceptance. No authority/schema/SDK/budget change is needed.",
+  "next_action": "Freeze a narrow continuation for both implementation-owned failures, with exact3e dirty-source cursor and new Web IDs. Reuse prior raw only under original identities; all six continuous cases remain incomplete.",
+  "ledger": {
+    "cumulative_starts": 86,
+    "charged_seconds": 5518,
+    "original_cap_seconds": 8370,
+    "remaining_seconds": 2852,
+    "review_new_browser_starts": 0
+  },
+  "production_changes_in_control": false
+}

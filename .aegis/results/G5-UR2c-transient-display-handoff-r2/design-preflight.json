@@ -1,0 +1,58 @@
+{
+  "status": "RESOLVED_FOR_IMPLEMENTATION",
+  "owner": "Existing SkiaRenderer and SkiaRenderCache; provider remains actual successful pixel owner",
+  "public_API_impact": "None",
+  "resources": {
+    "actual_provider": "Qualified visible pixels and PartialEraseFrame never replaced by disposal of an offscreen attempt",
+    "nonstaged": "one transientDisplay attempt plus existing scratch, charged through existing budget/epochs",
+    "staged": "one existing composite plus scratch; drop unused transientDisplay before prepareWorkingSet. CanonicalFrame not automatically pinned as an existing read, so dropping discoverability defers only to its actual prior GPU epoch. No budget reset.",
+    "reverse_switch": "Cache records staged demand count; only a strictly smaller demand permits one attempt to return to ordinary body residency. If denied it relatches staging at new count, not on every RAF. Reset disposable prepared composition through existing lease owner, preserve provider and cumulative damage.",
+    "inflight_test": "Private native-only weak attempt observation, real GPU sample/flush with delayed quota completion acknowledgment. Confirm attempt discoverability drops yet pendingRelease remains charged until actual finished callback has fired and owner acknowledges epoch. Not a fake physical loss."
+  },
+  "old_RED": {
+    "source_product": "3e213423",
+    "actual_renderer": true,
+    "fresh_accepted_at": 257,
+    "warm_retries": 1024,
+    "GPU_epochs_after_each": 0,
+    "unchanged_used_bytes": 78131767,
+    "exit": 1
+  },
+  "old_trajectory_diagnosis": {
+    "proof": "old-trajectory-proof.json",
+    "two_indices": [
+      4,
+      5
+    ],
+    "old_uncached_kernel_hits": [
+      0,
+      0
+    ],
+    "other_commits_each_hit_objects": 16,
+    "cancel_query_hits_but_no_history_append": true,
+    "radius_world": 16,
+    "Up_appends_no_sample": true
+  },
+  "trajectory_plan": "Select fixed world candidate traces using only originalS0/S2 geometry and old uncached exact kernel, sequentially include committed histories, retain cancel/noop controls. Freeze9gesture sequence (8commit+cancel), expected16-object hit IDs, exact Float32-mapped requests and original public camera tuples. Prove allDPR1/2/4 and ROI exclusion before browser. Driver consumes frozen view points, rejects fixture/camera/plan identity mismatch; never chooses replacement points from candidate output.",
+  "paths": {
+    "runtime/render/src/skia_renderer.cpp": "drop obsolete attempt before staged admission; native-only weak observation",
+    "runtime/render/src/skia_render_cache_internal.hpp": "private staged-demand latch metadata",
+    "runtime/render/src/skia_render_cache.cpp": "demand-shrink reverse handoff via existing preparation reset",
+    "runtime/render/src/transient_display_state.hpp": "private native/qualification weak observation only",
+    "runtime/render/tests/transient_display_retry_test.cpp": "actual RED/progress/failed RGBA/real completion switch regressions",
+    "verification/runners/g5/transient_display_trajectory_oracle.cpp": "readonly offline shared coordinate/geometry request helper, original exact binary decides",
+    "verification/runners/g5/transient_display_retry*.mjs": "consume frozen exact plan and original pixel/receipt rules",
+    "verification/runners/g5/transient_display_retry_runner.py": "new scoped allowance and plan/source binding"
+  },
+  "obligations": {
+    "HO01": "actual renderer warm/fresh513 DPR4 at4096x2304;1024safety ceiling unchanged8ms step allowance",
+    "HO02": "both path directions; delayed real GPU completion and quota convergence, repeated cycles, keep allDR01..04",
+    "HO03": "oldNoop independent proof and new8positive/cancel/already erased/wrong camera negatives; keepDR05expectedcounts",
+    "DR06": "frozen117+3+new/native4GTest/634+6/77Node52Python120boundary; onlyoldRF01failure"
+  },
+  "unresolved_semantic_decisions": [],
+  "scope_conflict": false,
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "auto_continue": true
+}

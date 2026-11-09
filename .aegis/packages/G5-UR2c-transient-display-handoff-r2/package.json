@@ -1,0 +1,69 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2c-transient-display-handoff-r2",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P33 scoped continuation",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2c-transient-display-handoff-r2",
+    "content_identity": "Exact package.json SHA256 in handoff"
+  },
+  "task_anchor": {
+    "revision": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "accepted_dirty_source": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+    "accepted_delta": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+      "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+      "bytes": 4688
+    },
+    "control_reconciliation": {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/result.json",
+      "sha256": "2a8466b3e4e581645fe411efd4b89ed3949f72464e85c88784c97b64871bd063",
+      "bytes": 7142
+    },
+    "completed_through": "r1failed-target isolation/dirtyretention code andindependentnewnativepixel/continuity/recoverychecks preserved; fulltaskBLOCKEDandnotaccepted.",
+    "next_action": "Verify14r1postimages; designandRED warm-to-staged; correctresourcehandoff and offlineprove8nonemptytraces; finalfrozenregressions/newbrowserwindows."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "d07be11a22f7aef0af5ee5ff35941267dc79ebb098616a423cddf32dd2c5807a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "64f876a583318e04419f32fa853615b0421241da62e44e50b19e116c3fd6945f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e8307da7d2fcdafbe38b886dc1cafd1fea88c785f21fce528a8eae1638b1f8ca"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "99a032674a93250d38e01a38333df373562972c37ee94a0a009686bf8ef16126"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "e37cfce92a32de5cf45a319e0f7ce959f3e939d5075344986c4f912da50f45cc"
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "fa7257bb42e3d5fdec6050150b6376a36a659d3cf0f38762faf56aa89cc72a32"
+  }
+}

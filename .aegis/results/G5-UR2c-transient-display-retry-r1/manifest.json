@@ -1,0 +1,144 @@
+{
+  "schema": "g5-transient-display-review-manifest-v1",
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-transient-display-retry-r1/package.json",
+    "sha256": "0781dc09384c9abafcd0bb5b14e4737159d6ec102eb421290e094393236dd642",
+    "bytes": 2124
+  },
+  "source": {
+    "inventory": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/source-final.json",
+      "sha256": "6f1173aff18dff1c03fd9e5224451c8f2cd026091761194485d896990c34c99b",
+      "bytes": 7002201
+    },
+    "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+    "base_commit": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "repair_delta": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+      "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+      "bytes": 4688
+    },
+    "reconstruction": "Published base commit plus exact-byte replayed14-file delta; full inventory binds unchanged historical same-host sources. Large archives LOCAL_ONLY, no Git publication."
+  },
+  "native": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-artifacts.json",
+    "sha256": "02af1dca22a99a4d422018250700cfad83e259e0c2cbe46a3330d43da3e1cbe1",
+    "bytes": 17353
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/candidate-builds.json",
+    "sha256": "4b4ccb2b91f8625425dff0f255da530c9facb5272d3d3a9a6a419b87db8a1c50",
+    "bytes": 8090
+  },
+  "native_pixels": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-pixel-proof.json",
+    "sha256": "265ddfe4464bd1b37f61dff70e4bdbe531bec03be7569edebaa399e913e15155",
+    "bytes": 73343
+  },
+  "blocker": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/terminal-blocker.json",
+    "sha256": "dbf9fe5abb22bed863a7d3f3f927cf4c5ace6a376d5a053e8bf3cf0c6718d372",
+    "bytes": 6482
+  },
+  "web": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/web-findings.json",
+    "sha256": "eba07f288ad713efed225c7204f3ae84051c5007e8b658316e227784eecc6d08",
+    "bytes": 50269
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/local-web/sampling-ledger.json",
+    "sha256": "d742c064fe8e5e5735b468d07fcbd42d30b7e273f28bb524f2df57e6a8e2f709",
+    "bytes": 3660
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/cleanup-audit.json",
+    "sha256": "a231a292506080470f549b7a1f1a9386e588b4e1e3d6b54728c67dc914f3c991",
+    "bytes": 101006
+  },
+  "demo": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/demo.json",
+    "sha256": "a90c73c3363d457ecf9e9291f33a772b84e5dd0d3721d511519ae7abe0e734b6",
+    "bytes": 4157
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/source-delta-and-inventory-aeab6d101383d725640c3f4d9a7cb855c7c32a9c63811f3c3b3093c33462dcc4.tar.gz",
+        "sha256": "aeab6d101383d725640c3f4d9a7cb855c7c32a9c63811f3c3b3093c33462dcc4",
+        "bytes": 4805009
+      },
+      "members": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/source-delta-and-inventory-members.json",
+        "sha256": "c0f4288bd6e8b85633102c53fec5efc745fd908ce1f06b3fe10defb7a62b2de0",
+        "bytes": 28844
+      },
+      "files": 85
+    },
+    "native": {
+      "archive": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/native-48bb1b4a24dfa4183a6cce7ef62c7646d0e0358c09125eb5224f92ff8a12384c.tar.gz",
+        "sha256": "48bb1b4a24dfa4183a6cce7ef62c7646d0e0358c09125eb5224f92ff8a12384c",
+        "bytes": 555861419
+      },
+      "members": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/native-members.json",
+        "sha256": "06be54838ee3e19d7c1c711d4d89a8ecff9f88623ebd7c1d915792859f95721c",
+        "bytes": 202594
+      },
+      "files": 588
+    },
+    "SDK": {
+      "archive": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/matched-SDK-268047788b701e88746d5a51d4c1a1cd76b0b763f7edc9646760e63241206d4a.tar.gz",
+        "sha256": "268047788b701e88746d5a51d4c1a1cd76b0b763f7edc9646760e63241206d4a",
+        "bytes": 39469525
+      },
+      "members": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/matched-SDK-members.json",
+        "sha256": "206a9d0cfa4651a010f4c203f73b673dcbcb8dc9ed126e97f39ff57278e93dec",
+        "bytes": 23323
+      },
+      "files": 72
+    },
+    "raw": {
+      "archive": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/web-raw-ed3b57e0f79f9c7351f420379768b04f25405b70f5edbfdbc2bf581b398b96b0.tar.gz",
+        "sha256": "ed3b57e0f79f9c7351f420379768b04f25405b70f5edbfdbc2bf581b398b96b0",
+        "bytes": 211172125
+      },
+      "members": {
+        "path": "out/G5-UR2c-transient-display-retry-r1/review-artifacts/web-raw-members.json",
+        "sha256": "ab6d44777fa4d9aad6e55151e1eca0a14799df6c04309d73a167a0cd5795ea89",
+        "bytes": 245691
+      },
+      "files": 651
+    }
+  },
+  "driver": {
+    "verification/runners/g5/transient_display_retry.mjs": {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "sha256": "a7c293f479510e16969d2f43bbe8cb8908e22f6bbdb4e4bf7ca7fc27be901753",
+      "bytes": 24640
+    },
+    "verification/runners/g5/transient_display_retry_contract.mjs": {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "sha256": "6673fd2c63cf25a85b24d1068c600f274a2300a8b1d5f461025f19b456961df6",
+      "bytes": 2164
+    },
+    "verification/runners/g5/transient_display_retry_runner.py": {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "sha256": "9ebd38d3c14ab6e0395ab9b68e6e58da398c828ea6a90e2b57a937586f8922b9",
+      "bytes": 7654
+    }
+  },
+  "protected_oracles_and_environment": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/worker-freeze.json",
+    "sha256": "fdddfe115a9b1636e49b6458d7cd88292d32a06f78d0d1253406af508d55528d",
+    "bytes": 41564
+  },
+  "archive_verification": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/archive-verification.json",
+    "sha256": "4ca6b5ad0eed271c85f3655fe6e143fae0d34742bdf153951150c11a1426ee0a",
+    "bytes": 1771
+  }
+}

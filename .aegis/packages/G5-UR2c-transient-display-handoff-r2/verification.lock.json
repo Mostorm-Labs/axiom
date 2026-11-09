@@ -1,0 +1,66 @@
+{
+  "schema": "g5-transient-display-handoff-verification-lock-v1",
+  "status": "FROZEN_CONTINUATION",
+  "inherited_obligations": {
+    "path": ".aegis/packages/G5-UR2c-transient-display-retry-r1/verification.lock.json",
+    "sha256": "5fb11d76b343aed90627043b25d73b0e81272c6f61b3b235134d0f43ab89822b",
+    "bytes": 9345
+  },
+  "inherited_ids": [
+    "DR-01",
+    "DR-02",
+    "DR-03",
+    "DR-04",
+    "DR-05",
+    "DR-06"
+  ],
+  "control_reproduction": {
+    "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/independent-transition.json",
+    "sha256": "dde8571a086b1c7f37f8fd494c9064f33de0ad63489afdc9c7aa0d968b848f36",
+    "bytes": 3475
+  },
+  "parent_blocker": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/terminal-blocker.json",
+    "sha256": "dbf9fe5abb22bed863a7d3f3f927cf4c5ace6a376d5a053e8bf3cf0c6718d372",
+    "bytes": 6482
+  },
+  "required_additional_oracles": [
+    {
+      "id": "HO-01",
+      "requirement": "A prior disposable transient render surface cannot permanently block feasible staged working-set admission.",
+      "oracle": "Register actual renderer warm1->staged workingSetPlan(513,true,4) on4096x2304,DPR4,default32/96MiB with correct newScene/semantic/frame identity. Contrast fresh renderer same513request. Preserve r1raw8Retries and add genuine RED assertion against frozen3esource before behavior change.",
+      "acceptance": "Bothwarmandfresh latest request accepted within1024existing bounded attempts with original per-call allowance, genuine completedGPU epochs observed; all unaccepted attempts preserve actual provider RGBA exactly. Stable samebasis failure cannot retain threewholeplanes. Body compile count does not scale with retrycount.1024 is a native progress safety ceiling derived from4xexisting fresh257calls, not a new frame or timing budget.",
+      "evidence_required": "OldRED raw/source/binary and candidate per-attempt status/preparation progress/usedbytes/classes/epoch/actualtarget hashes and acceptance. Do not merely disable staging, reset renderer/budget or increase allowances."
+    },
+    {
+      "id": "HO-02",
+      "requirement": "Path-switch resource release is safe for in-flight work and lastsuccessful display.",
+      "oracle": "Oldattempt GPU submission/completion delayed, warmnonstaged->staged, staged->nonstaged and repeatedcycles; realcompletion release andgeneration/context changes. Use actualRender+leaseowner tests; preserve existing pixel/damage/lifecycle regressions.",
+      "acceptance": "Retire onlydisposable staging, keep actualprovider lastsuccessful pixels and qualified basis as appropriate. Dropping discoverability does not free in-flightquotaearly. Afteractualcompletion allunneeded charges converge, latestdemand progresses and strict receipt/noCpuFallback staysvalid.",
+      "evidence_required": "Actuallease/inflight/owner identities, targetbytes before/afterRetries, successfullast-frame proof and eventual currentframe receipt."
+    },
+    {
+      "id": "HO-03",
+      "requirement": "Continuous workload proves8genuine nonempty erases before newbrowser evidence.",
+      "oracle": "Newprivateoffline trajectory helper reads exactoriginalS0/S2snapshots, replays requests/cameras/historical masks via unchanged uncached CPUexact kernel and existing partialEraseGeometry. Reconstruct oldN1two missing mutation queries; prove neweightcommitted andcancel traces atDPR1/2/4 before anysampling.",
+      "acceptance": "No false product-input-loss diagnosis; if oldqueriesareHit, stopforproductdefectclassification. Otherwise freeze all8newpositive traces pluscancel/noop andwrongcamera negatives. Preserve independentpixel/receipt oracles,8commits and10callback count, firstUp->nextDown sameDOMtask. Driver consumes frozenplan with fullbasis checks andnever adapts to candidate output.",
+      "evidence_required": "Originalsnapshot/query/transform/history SHA, oldnegative dispositions, newexpectedtarget IDs pergesture andproof artifact consumed by driver; offline Node/Python/native tests."
+    }
+  ],
+  "old_RED_reuse": "Original4d failed-target RED is frozen historical proof, not rerun under rewritten4dsource. NewHO01RED isagainst exact14-file3ecandidate, before r2mutation.",
+  "required_keepers": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-summary.json",
+    "sha256": "aee90559acfdab3b897191f5af9ed3759df493f5ca7fea4a8894b377c1400bf2",
+    "bytes": 3483
+  },
+  "required_checks": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/other-checks.json",
+    "sha256": "15b26aa8bc680861ca25a7afc3d03e1c8cbbdc7ea56757e6a7d56461ca9f8241",
+    "bytes": 2226
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "fa7257bb42e3d5fdec6050150b6376a36a659d3cf0f38762faf56aa89cc72a32"
+  },
+  "completion": "AllinheritedDR01..06 plusHO01..03. Newer-source correctness cannot rely onlyon r1binary results; rebuild/rerun relevant frozen native/tests and matching Webworkers. Originalreferencecatalog/CPU634+6/AA unchanged."
+}

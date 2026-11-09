@@ -1,0 +1,147 @@
+{
+  "base_commit": "4d3c6c20fc4fc267a3fce709707441552182156f",
+  "entry_source": "5b8843d556dc1c8f8865e5265a930d0344bbd3ac5331b9b228dafd85ae675e27",
+  "candidate_source": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair.patch",
+    "sha256": "9f4ab14f45835b19f764c6efa188a2ee84790dc3a13cd3448df86cad72a80f69",
+    "bytes": 92275
+  },
+  "roundtrip": "EXACT_BYTES",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "before": {
+        "sha256": "e1d36a41342f1b49be1fdc7e37698ab97e20a43130b1ca36c29ff0bd253a7231",
+        "executable": false
+      },
+      "after": {
+        "sha256": "e4ddfc51b7e2628ebd5a3033756d427dea174cc7f733f312373fb384bf517b91",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "before": {
+        "sha256": "5f80684daefe58a142456372130b978904e00ea75255578808e6794057483b7c",
+        "executable": false
+      },
+      "after": {
+        "sha256": "bf3c48b3c0f7e8584699f1fc872b8a8364b87e7a20f266ceac1d62af6cff358a",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "before": {
+        "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+        "executable": false
+      },
+      "after": {
+        "sha256": "297135aa4720cedb0b9de8ec795ed7af4edf3a9f10577228ae6a6115967b1000",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "before": {
+        "sha256": "13d64179f78412fa7e39ba9c4cf584f1b215b516eb09571ea549f0150db00e29",
+        "executable": false
+      },
+      "after": {
+        "sha256": "c4a094cbb0b62b5b3d21ca7ee283c8122d60b38d593b340165328f16ffb95475",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "before": {
+        "sha256": "cd1be31b88b77334a03ca08f56c6047c11aeb8ea94c8c9525ee678b757bbfb36",
+        "executable": false
+      },
+      "after": {
+        "sha256": "9542abeb398933662fad414cdd473699a44314a128e64a643f8356a2785dc4be",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "before": {
+        "sha256": "14c4edd394b73fd576c41260f7f8abf894c172d4e6ff078f33ebcdfd04c0c146",
+        "executable": false
+      },
+      "after": {
+        "sha256": "163727f8e678f801b892f95f0bc6bf33734e6ef3c5ee96d2d6a45f2659a57c1a",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "before": {
+        "sha256": "70021b834c20371f10e69a90b87de731e0fb174d392573e4820774542dc3d6fe",
+        "executable": false
+      },
+      "after": {
+        "sha256": "b441e8b085a5675f077ba17b39bef7a9af1c165ac1ecc11176c95106ecf6066e",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/src/transient_display_state.hpp",
+      "before": null,
+      "after": {
+        "sha256": "dcb3edf8339d0dfec48508c05bf82d3db0f018976f58abba41d1312785036456",
+        "executable": false
+      }
+    },
+    {
+      "path": "runtime/render/tests/transient_display_retry_test.cpp",
+      "before": null,
+      "after": {
+        "sha256": "7c5772802819c14b5b99b26c273614e4cdfc73f6ad1d280ff4ca2eb351e55798",
+        "executable": false
+      }
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "before": null,
+      "after": {
+        "sha256": "a7c293f479510e16969d2f43bbe8cb8908e22f6bbdb4e4bf7ca7fc27be901753",
+        "executable": false
+      }
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "before": null,
+      "after": {
+        "sha256": "6673fd2c63cf25a85b24d1068c600f274a2300a8b1d5f461025f19b456961df6",
+        "executable": false
+      }
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_runner.py",
+      "before": null,
+      "after": {
+        "sha256": "9ebd38d3c14ab6e0395ab9b68e6e58da398c828ea6a90e2b57a937586f8922b9",
+        "executable": false
+      }
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "before": null,
+      "after": {
+        "sha256": "3397963981e0dc3fd8e357da4af599d2e3a64957ddba7f3cfcd79db977b2bfd8",
+        "executable": false
+      }
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "before": null,
+      "after": {
+        "sha256": "17a55fe39a506ff62f9cdf6168d0265e71ea7eb21dda15d030b0c51b2fe35e88",
+        "executable": false
+      }
+    }
+  ],
+  "outside_scope": []
+}

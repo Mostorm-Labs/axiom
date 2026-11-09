@@ -21,7 +21,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
+namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -100,6 +100,7 @@ class SkiaRenderer final {
     std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
     struct PartialEraseFrame;
     std::shared_ptr<PartialEraseFrame> partialEraseFrame_;
+    std::shared_ptr<internal::TransientDisplaySurface> transientDisplay_;
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;

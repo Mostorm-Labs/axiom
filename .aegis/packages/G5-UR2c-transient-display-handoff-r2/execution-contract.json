@@ -1,0 +1,148 @@
+{
+  "schema": "g5-transient-display-handoff-execution-contract-v1",
+  "task_id": "G5-UR2c-transient-display-handoff-r2",
+  "stage": "P33 scoped continuation of frozenDR04/DR05 failures",
+  "implementation": {
+    "required_changes": [
+      "Safely relinquish obsolete renderer-owned disposable transientDisplay before stagedWorkingSet admission; preserve actualprovider lastsuccessful display and allpendingdamage. Equivalent bounded private fix is allowed when justified by sameowners.",
+      "Add actualrenderer warm->staged progress regression and in-flight resource switch coverage while preserving originalfailedpixel/damage/counter/receipt tests.",
+      "Offline diagnose oldtwoNoops, prove andfreeze neweightnonempty traces and camera/history/radius mapping; fix onlytestdriverworkload construction, not productinput orsemantic behavior.",
+      "Rebuildmatchingfinalnative/normal/qualificationSDK, complete finalfrozenregressions and newclosedbrowserwindows; materialize exactresult andfreshnormalDemo."
+    ],
+    "allowed_existing_paths": [
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/transient_display_state.hpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/tests/transient_display_retry_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "verification/runners/g5/transient_display_retry.mjs",
+      "verification/runners/g5/transient_display_retry_contract.mjs",
+      "verification/runners/g5/transient_display_retry_runner.py",
+      "verification/tests/g5_transient_display_retry.test.mjs",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "allowed_new_paths": [
+      "verification/runners/g5/transient_display_trajectory_oracle.cpp"
+    ],
+    "forbidden_changes": [
+      "No r1archive/result/source/SDK/output mutation; r2builds/results onlynewnamespace. No commit/push/merge/reset/stash/clean.",
+      "No publicSDK/ABI/version/exports/qualification leak, userdocument/snapshotI/Ofeature, Brushalgorithm/schema/semantic/Scene/History/admission/asyncUp/nextDown/receipt/UR2d changes.",
+      "No defaultcache32/96MiB/mask8MiB512 orper-callbudgetincrease, silentCPUfallback, unbounded/unaccountedstaging, newbudgetmanager tohidecharges, prematureGPU release or removedfence/flush.",
+      "No changingoriginaloracle kernels/AA/refcatalog/guard or lowering8commits to6. No candidate-pixel/drivermutationcount-driven trace selection.",
+      "Noextra browserIDs oroldwindowretry; noofficialGate/performancePASS."
+    ],
+    "preserve_all_other_r1postimages": true
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "not_human_approval_gate": true,
+    "required_records": [
+      "Mapactualtarget vsdisposableattempt vsstagedcomposite/scratch owners, quota reservations, current/oldGPUepochs and drop points.",
+      "Prepare/abort/lastdisplay handoff sequence through bothpathdirections andactualcontextloss; why pendingdirty andstrictbasis survive.",
+      "Exactoldtrace diagnosis and frozennewtracequery/target proof; sameDOMtask input schedule and unaffectedROI selection.",
+      "HO01..03/DR01..06 implementation andoracle mapping."
+    ],
+    "unresolved_semantic_decisions": "Mustbeempty; routineprivateengineeringchoices continuewithoutanotherapproval."
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+    "source_delta": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+      "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+      "bytes": 4688
+    },
+    "expected_failure": "Warm1->staged513 cannot obtain thirdplane afteractualGPUcompletion, whilefreshsame513feasible; actual lastsuccessfultarget remains unchanged. Addbounded assertion toactualrendererregression beforeproductbehavior changes."
+  },
+  "tests": {
+    "required": [
+      "AllinheritedDR01..06",
+      "HO01",
+      "HO02",
+      "HO03"
+    ],
+    "commands": "Rebuildmatchingnative; reuse frozenparent native-summary/other-checks commands with onlynewbuildroot, addnewnative progress/lease/offline trajectory cases and drivertests. Preserve exactknownRF01line88 pointerfailure and allpreviouslygreenkeepers. OriginalCPU634+6,40000historyprogress/failure safetyremain."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "local_required": {
+      "path": "web-plan.json",
+      "sha256": "fa7257bb42e3d5fdec6050150b6376a36a659d3cf0f38762faf56aa89cc72a32"
+    }
+  },
+  "evidence": {
+    "blocking": [
+      "OldHO01RED+candidateactual pixels/progress/lease safety; offline workloadproof foroldandnewtraces; finalsource matchednative/SDK/input manifests.",
+      "Allfrozenregressions and Q1/N1 newfullcorrectnessmatrix withstrictpixel/receipt oracles.",
+      "Closedledger/cleanupandreviewer-resolvable finalarchives/manifests/result."
+    ],
+    "corroborative": [
+      "Timingmagnitudes/physicaldisplay/GPUtime/RSSdrop/Vibecomparison; no newperformance threshold."
+    ]
+  },
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-transient-display-handoff-r2/",
+    "out/G5-UR2c-transient-display-handoff-r2/",
+    "verification/evidence/performance/G5-UR2c-transient-display-handoff-r2/"
+  ],
+  "terminal_success": {
+    "all_of": [
+      "AllDR01..06+HO01..03satisfied, no newregressions.",
+      "BothnewworkerIDscomplete allrequiredcases withfinalmatchingSDK andcleanup.",
+      "Exactrepair-r2andcumulative4ddelta/source/native/SDK/rawarchives+memberhashesmaterialized independentlyaccessible, oldr1unchanged.",
+      "NormaldiagnosticsOFF/developerOFF Demo4297servedafterHTTPmemberhashchecks; noextrasmokebrowser.",
+      "ReturnREADY_FOR_CONTROL_REVIEWandproactivecallback."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_DESIGN_OR_PACKAGE_DEFECT",
+      "EXPECTED_RED_NOT_OBSERVED",
+      "PIXEL_DIRTY_RECEIPT_OR_FORWARD_PROGRESS_FAILURE",
+      "GPU_LEASE_LIFETIME_FAILURE",
+      "OLD_OFFLINE_QUERY_HIT_WITH_MISSING_PRODUCT_MUTATION",
+      "EIGHT_NONEMPTY_TRAJECTORIES_UNPROVED",
+      "NEW_KEEPER_REGRESSION",
+      "WORKER_GUARD_IDENTITY_OR_ORACLE_FAILURE",
+      "BROWSER_ALLOWANCE_EXHAUSTED",
+      "MISSING_MATCHING_REVIEW_MATERIALIZATION"
+    ],
+    "action": "Freezeexactfailure/source/raw,stopnewwindowstarts,cleanupownedPIDs,preserveworkandproactivelycallbackcontrol; noautomaticnewIDorUR2d."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "not_intermediate_checkpoints": [
+      "designonly",
+      "oneRED",
+      "coderepair",
+      "nativegreen",
+      "firstworker"
+    ],
+    "notify_control": {
+      "threadId": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "required_when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "anyexplicitterminalBLOCKED"
+      ],
+      "human_authorization": "Persistent humaninstruction: notifycontroloncompletion/blocker.",
+      "include": [
+        "Exactpackage/result/source/r2repair+cumulativedelta/manifest/native+SDK+rawSHAandmaterializedref.",
+        "OldRED/candidatepixels/progress/lease/offlinetraces/testresults andunrunitems.",
+        "Ledgerstarts/ceilseconds/remaining/ownedPIDcleanup/newnormalDemo; noofficialGatePASS."
+      ]
+    }
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "fa7257bb42e3d5fdec6050150b6376a36a659d3cf0f38762faf56aa89cc72a32"
+  },
+  "closure_stability": "NoadditionalUR2d/allplatform/100K/1M/SLOtasks. This fixes two alreadyfrozen completion failures, not an extensionofoldcriteria."
+}

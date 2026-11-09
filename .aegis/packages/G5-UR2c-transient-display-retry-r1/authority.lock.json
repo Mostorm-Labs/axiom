@@ -1,0 +1,267 @@
+{
+  "schema": "g5-transient-display-authority-lock-v1",
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_authorization": "User explicitly requested 进行下一步 for preserving last successful frame, Retry display state and accumulated dirty regions, and failure-pixel/continuous-erase/progress regressions. Existing division: this chat designs/reviews; adjacent chat implements and proactively notifies control.",
+  "baseline": {
+    "repository": {
+      "provider": "github",
+      "full_name": "Mostorm-Labs/axiom"
+    },
+    "revision": "4d3c6c20fc4fc267a3fce709707441552182156f",
+    "accepted_UR2c_source": "9cc818e78047fa45211cdbf793dfcd83a3871f3ef0e4f453b42afbbb68a3201a",
+    "review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/result.json",
+      "sha256": "2c8dca5773c6667d6909ac35cb3919b3491d054c638f4201750c5161442ac3b7",
+      "bytes": 5226
+    },
+    "published_result": {
+      "path": ".aegis/results/G5-UR2c-history-progress-p36-r1/result.json",
+      "sha256": "1ef10d39b124799735db54afd1f59b4bade247d81f61563970a577eef84b27f4",
+      "bytes": 13544
+    }
+  },
+  "finding": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/result.json",
+    "sha256": "bcdde3aa145baa86e229fee4567708f48758ad407244e8085f3daabe1ee1cc9a",
+    "bytes": 7570
+  },
+  "video_observation": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/video-analysis.json",
+    "sha256": "e7671ceeaf060566df8b52c5a094c15ea29fdc2359257ce35b77a79ccfd98ac8",
+    "bytes": 60096
+  },
+  "native_probe": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/failed-frame-probe.cpp",
+    "sha256": "8c32d22a31f091e2afe24024b7be643c38fe9c9f2874cdd01bc2fc99ff5369a9",
+    "bytes": 4556
+  },
+  "native_probe_result": {
+    "path": ".aegis/results/G5-UR0b/erase-display-jump-analysis-r1/failed-frame-result.json",
+    "sha256": "6539496197cde28e97b4c0504708cf015e30049e3719ec707dc9685cb50d9258",
+    "bytes": 4145
+  },
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "bytes": 11364
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "bytes": 11224
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "bytes": 4508
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "bytes": 17316
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "bytes": 22744
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "bytes": 349
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "bytes": 39842
+    }
+  ],
+  "current_architecture_statements": [
+    "Architecture v0.4: OperationEngine/SemanticDocument is canonical; Scene/Render/GPU state is derived. CanonicalVisible is qualified by existing presentation proof; no pointer-Up shortcut.",
+    "AGENTS: extend existing state owners, retain private implementation boundary, use locked prebuilt SDKs; normal matching Web SDK is primary interactive verification.",
+    "User-authorized R3 design input: every visible update has one consistent frame basis; failed allocation must not publish incomplete scratch; retain complete identity and GPU completion lifetime. R3 is not a new semantic schema or public SDK authority."
+  ],
+  "scope_reconciliation": {
+    "kind": "new narrowly scoped successor repair for two newly discovered high-impact implementation findings; not an expansion or rewrite of prior accepted P36 closure",
+    "prior_validation_gap": "Prior failed-paint tests checked Retry/no successful present/receipt, but not actual last-visible target pixel preservation. New pixel invariant is frozen here before product mutation.",
+    "required_state_owner": "Existing shared SkiaRenderer/SkiaRenderCache/RenderGroupManager and provider realization; no new canonical/session/history owner.",
+    "public_API_impact": "None. Private SkiaRenderer state/helpers and test-only support may change; no public method/ABI/export/version/install change.",
+    "UR2d": "Exact-query/Up performance task deferred until this display-correctness task returns for independent review."
+  },
+  "product_preimages": [
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "70021b834c20371f10e69a90b87de731e0fb174d392573e4820774542dc3d6fe",
+      "bytes": 91585
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "5f80684daefe58a142456372130b978904e00ea75255578808e6794057483b7c",
+      "bytes": 6404
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "cd1be31b88b77334a03ca08f56c6047c11aeb8ea94c8c9525ee678b757bbfb36",
+      "bytes": 72811
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "14c4edd394b73fd576c41260f7f8abf894c172d4e6ff078f33ebcdfd04c0c146",
+      "bytes": 9680
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "13d64179f78412fa7e39ba9c4cf584f1b215b516eb09571ea549f0150db00e29",
+      "bytes": 13502
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "sha256": "a313803ab79bc39ecaf1e0671f8d97dbeb3f517b1eaecbe4d4dd9c5939658faa",
+      "bytes": 2476
+    },
+    {
+      "path": "runtime/render/src/render_group_manager.cpp",
+      "sha256": "83d9cfcb60a7f06cb2c621b98659f67c1f7d58e05410b094d891fc6e8ef88a6f",
+      "bytes": 6182
+    },
+    {
+      "path": "runtime/render/include/canvas/render/render_group_manager.hpp",
+      "sha256": "cfd1714357825869880bf671471874cdf4e480f90749b86eec05d68f40eee5d0",
+      "bytes": 1039
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "bytes": 3973
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "bytes": 13762
+    },
+    {
+      "path": "runtime/render/src/render_execution.cpp",
+      "sha256": "db9ad78813397347f1031daafef71bebc86e5320aeb3f8314b31275a36ef69fe",
+      "bytes": 8325
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "bytes": 4135
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "e1d36a41342f1b49be1fdc7e37698ab97e20a43130b1ca36c29ff0bd253a7231",
+      "bytes": 45663
+    }
+  ],
+  "protected_sources": [
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "8baa6d413b463f6424f9b0a867ef1e1b5bbd8ba4d5508a757b017e7b110d97b3",
+      "bytes": 320644
+    },
+    {
+      "path": "runtime/interaction/src/canvas_partial_erase.cpp",
+      "sha256": "5ec2c05a48bcb1a8f9433ca7a8b0a85802b0577a179a39bb9f844db8cb60cc4b",
+      "bytes": 4299
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "44ea582c5294e6f0f8d39a24cfcc17afeb6076b47a188a891fd9efffb167e2da",
+      "bytes": 52473
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "sha256": "d44e8830556ced27d2089d0ddea919b4467340de5ea32309283f2553f057750a",
+      "bytes": 2545
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+      "bytes": 37159
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da",
+      "bytes": 10255
+    },
+    {
+      "path": "runtime/render/src/skia_scene_renderer.cpp",
+      "sha256": "19a25143f9f0c4ad9d3a0012cdb1e5e836e20328733304f54f447e43c583d70e",
+      "bytes": 16559
+    },
+    {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "eb021b0b294c91d9c04fc03f42d6c3bb0fa344f0bf41bbdbdb58e26f716b30ac",
+      "bytes": 32153
+    },
+    {
+      "path": "runtime/scene/src/full_scene_compiler.cpp",
+      "sha256": "22917c2ca879fb2ca63f10a9dc2b501a1b70e114f160e6cee95a2be9f2b6279c",
+      "bytes": 341
+    },
+    {
+      "path": "runtime/scene/src/runtime_scene_projection.cpp",
+      "sha256": "cbdbe61d07142e9b50242c78bc9efb9e0611995cbc2d0db6956876c4c06253c1",
+      "bytes": 15784
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+      "bytes": 34722
+    },
+    {
+      "path": "sdk/web/axiom.d.mts",
+      "sha256": "ca35fe98851a70e6cc7770f29d21c68ed87dc87aee6156c5741cc9403b983647",
+      "bytes": 9690
+    },
+    {
+      "path": "sdk/windows/include/axiom/api.h",
+      "sha256": "f13abed4c7e12a7aef9739c61f12088ddae8fe96f950c0acfe80ec08149901cf",
+      "bytes": 3985
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff.mjs",
+      "sha256": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1",
+      "bytes": 19539
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff_contract.mjs",
+      "sha256": "9a3e653ef6480bc9c722349fc6e25d9dae86783e65a292ad9b4a69255bf060b6",
+      "bytes": 3358
+    },
+    {
+      "path": "verification/runners/g5/ur2a_cold_capture.mjs",
+      "sha256": "6d250ec51cb77fde9f8f41edcab69219ff811139572141ec2d63c38a3d778887",
+      "bytes": 1358
+    },
+    {
+      "path": "verification/runners/g5/ur2b_exact_query.mjs",
+      "sha256": "19e6654d9c44cdfa6d1f108bedadad703a03dd7a602c668879bba04d1b1428d4",
+      "bytes": 6059
+    },
+    {
+      "path": "verification/runners/g5/ur2c_mask_history_runner.py",
+      "sha256": "0d2f938c2be7581e188c09840335654240e44ca762f731c737ae153b39f0519c",
+      "bytes": 10504
+    },
+    {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+      "bytes": 3316
+    }
+  ],
+  "preserved_work": [
+    "All accepted UR1/UR2a input/History/handoff/current-Scene/frozen roster and strict receipt behavior.",
+    "UR2b complete finite body proof, prepared geometry and CPU exact decisions (634 original +6 finite cases).",
+    "UR2c immutable ordered mask history, NotAdmitted/ResourcePending distinction, bounded refusal witnesses and mask-only Scene reuse.",
+    "Historical control/results/raw/SDK/binaries and Demo4295 including user documents remain unchanged."
+  ]
+}

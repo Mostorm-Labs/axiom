@@ -1,0 +1,105 @@
+{
+  "checkpoint_status": "WIP_NOT_READY_FOR_CONTROL_REVIEW",
+  "historical_r1_status": "BLOCKED",
+  "published_records": [
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/result.json",
+      "sha256": "99bd71b8c4b5e46dfe187d69bfdbbb2afcd6b40b651a2d0bc2eb8851787d9c4b",
+      "bytes": 14429
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/manifest.json",
+      "sha256": "2172239a1f368f7691573fcec21810e406829b15935a577c52470f55965f130f",
+      "bytes": 6274
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/archives.json",
+      "sha256": "0f440217024c98a8434802baa0f67e872b8345fd4bd1b140b6ce2cd361e38ba2",
+      "bytes": 2218
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/archive-verification.json",
+      "sha256": "4ca6b5ad0eed271c85f3655fe6e143fae0d34742bdf153951150c11a1426ee0a",
+      "bytes": 1771
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/repair-delta.json",
+      "sha256": "d92fcbc784f838402a4609c4ca7bf692353bc8f3899262a540bc869fb7df5cf9",
+      "bytes": 4688
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/terminal-blocker.json",
+      "sha256": "dbf9fe5abb22bed863a7d3f3f927cf4c5ace6a376d5a053e8bf3cf0c6718d372",
+      "bytes": 6482
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/native-summary.json",
+      "sha256": "aee90559acfdab3b897191f5af9ed3759df493f5ca7fea4a8894b377c1400bf2",
+      "bytes": 3483
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/other-checks.json",
+      "sha256": "15b26aa8bc680861ca25a7afc3d03e1c8cbbdc7ea56757e6a7d56461ca9f8241",
+      "bytes": 2226
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/candidate-builds.json",
+      "sha256": "4b4ccb2b91f8625425dff0f255da530c9facb5272d3d3a9a6a419b87db8a1c50",
+      "bytes": 8090
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/normal-artifact-manifest.json",
+      "sha256": "bb9619d1e3b1e40b50bbae51de16a5807f6d07bf7679687780db93660512dd6b",
+      "bytes": 3772
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/qualification-artifact-manifest.json",
+      "sha256": "abdfb4e4138f5d38181da40916d50a2d9717f077dbe12a30d7331a6251509a46",
+      "bytes": 3771
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/result.json",
+      "sha256": "2a8466b3e4e581645fe411efd4b89ed3949f72464e85c88784c97b64871bd063",
+      "bytes": 7142
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-transient-display-retry-r1/independent-transition.json",
+      "sha256": "dde8571a086b1c7f37f8fd494c9064f33de0ad63489afdc9c7aa0d968b848f36",
+      "bytes": 3475
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/package-preflight.json",
+      "sha256": "0e4c7752b9ff01c5fcaf0d257828355043edb44e7f8e6cb6ab93ebc5924419ac",
+      "bytes": 4879
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/design-preflight.json",
+      "sha256": "0aed03608842367b8f2b850f2879d9eca96e5a22c7ca9a82f7f8b8e80359db51",
+      "bytes": 4022
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/handoff-red-result.json",
+      "sha256": "b3267893fd670ab704afab9eb66012d01a3655384789072e586116406d9701a4",
+      "bytes": 633
+    },
+    {
+      "path": ".aegis/results/G5-UR2c-transient-display-handoff-r2/old-trajectory-proof.json",
+      "sha256": "03a10490048f60e2e0e7e45a6a95f20c2cb06cfd5eaa1e3200c4457067fce50b",
+      "bytes": 28986
+    }
+  ],
+  "remaining": [
+    "DPR4 warm/staged handoff still exhausts 1024 bounded attempts.",
+    "In-flight handoff retains obsolete attempt; new native test currently fails.",
+    "Positive S0/S2 trajectory proof is incomplete; the driver still uses the r1 trajectory and ledger.",
+    "Matching final r2 normal/qualification SDKs and authorized r2 Web windows have not been executed."
+  ],
+  "sampling": {
+    "r2_windows_started": 0,
+    "historical_starts": 86,
+    "historical_charged_seconds": 5518,
+    "total_cap_seconds": 8370,
+    "r2_browser_proof": "NOT_RUN"
+  },
+  "publication_semantics": "Package and historical evidence bytes are preserved. This checkpoint does not supersede frozen authorities or certify r2 completion."
+}

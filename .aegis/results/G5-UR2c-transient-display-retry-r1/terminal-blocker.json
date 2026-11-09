@@ -1,0 +1,186 @@
+{
+  "primary_class": "RESOURCE_LIFETIME_OR_FORWARD_PROGRESS_FAILURE",
+  "source_tree_sha256": "3e2134232e5bcba11f298d5cb6695d9bd3e0dc95eb457c841567ff77f405a63d",
+  "resource_finding": {
+    "actual_surface": [
+      4096,
+      2304
+    ],
+    "CSS": [
+      1024,
+      576
+    ],
+    "DPR": 4,
+    "default_shared_cap": 100663296,
+    "sequence": "accepted1-object live frame -> newScene513-object staged demand; fresh513-object demand is positive control",
+    "warm_attempts": [
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 0,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 1,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 2,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 3,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 4,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 5,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 6,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      },
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 7,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "transient working set pending",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 2,
+        "used": 78131767,
+        "warm_prior_display": true
+      }
+    ],
+    "fresh_positive": [
+      {
+        "CPU_tiles": 0,
+        "GPU_epochs": 0,
+        "attempt": 256,
+        "body_builds": 1,
+        "frame_bytes": 37748736,
+        "message": "",
+        "presents": 1,
+        "scratch_bytes": 38010880,
+        "status": 0,
+        "used": 78302575,
+        "warm_prior_display": false
+      }
+    ],
+    "actual_GPU_complete_each_attempt": true,
+    "minimum_three_planes_bytes": 113508352,
+    "diagnosis": "Renderer-owned prior TransientDisplaySurface remains retained when prepareWorkingSet needs a complete composite and scratch. This is live owner retention, not unresolved GPU work; GPU_epochs=0 and used bytes are identical across8Retries. Same stable request succeeds on fresh renderer after257bounded calls.",
+    "repair_location": "runtime/render/src/skia_renderer.cpp: stagedBodies preparation branch; relinquish obsolete disposable transientDisplay before cooperative working-set admission, retain actual provider display basis and GPU deferred release. Do not increase cap or reset manager.",
+    "source_probe": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/transition-probe.cpp",
+      "sha256": "5d81eaa75c8759a449601979efcbb721f4ab80537d539e8bdc2cb4d32193cded",
+      "bytes": 2842
+    },
+    "binary": {
+      "path": "out/G5-UR2c-transient-display-retry-r1/transition-probe",
+      "sha256": "9f7c3e9d225c33c070aa47513baef040d0de893caf841d7a4a9e9a6e3da961db",
+      "bytes": 24786352
+    },
+    "log": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/transition-run.log",
+      "sha256": "ef687f766ef6490744c02c36c9dbaa238adb1f5ef49171c0f04ab9bc65ab9887",
+      "bytes": 349600
+    }
+  },
+  "web_finding": {
+    "class": "DR05_DRIVER_COVERAGE_INCOMPLETE",
+    "failed_case": "S0-continuous-DPR1",
+    "expected_nonnoop": 8,
+    "actual_generation_delta": 6,
+    "operations_including_Undo_Redo": 8,
+    "cold": {
+      "status": "QUALIFIED",
+      "failures": []
+    },
+    "live_ROI_preserved": true,
+    "actual_pointer_errors": [],
+    "classification": "The driver did not establish that all eight planned strokes intersect unmasked content after camera changes. Two Up calls emitted no Operation; do not classify that alone as lost input or accept it as full coverage. Frozen sampler stopped; no coordinate change/retry permitted in this task.",
+    "remaining_continuous_cases": [
+      "S0-continuous-DPR2",
+      "S0-continuous-DPR4",
+      "S2-continuous-DPR1",
+      "S2-continuous-DPR2",
+      "S2-continuous-DPR4"
+    ],
+    "raw": {
+      "path": ".aegis/results/G5-UR2c-transient-display-retry-r1/local-web/UR2CDR-1-N1/S0-continuous-DPR1-result.json",
+      "sha256": "887836fcc49a2f21a3256b46623c15803f0e3f4729f33be5afcb0fb4855a0f9f",
+      "bytes": 537128
+    }
+  },
+  "stop_rule": "Execution contract: Freeze exact failing stage/source/raw, preserve work, close owned processes, return explicit blocker; no silent retry/window reuse.",
+  "next_action": "Control successor: repair staged-display resource handoff, add this warm-to-staged native regression, independently validate nonnoop query positions against full fixture/camera/history before freezing new bounded Web IDs. Same owners/default budgets and frozen oracle.",
+  "not_applied_after_freeze": true
+}
