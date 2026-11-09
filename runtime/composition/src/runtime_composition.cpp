@@ -37,6 +37,7 @@ RuntimeCompositionCore::RuntimeCompositionCore(render::ViewId viewId)
           *provider_, canvas::text::LayoutContext{128.0F, 1U})),
       ownerThread_(std::this_thread::get_id()), viewId_(viewId),
       runtimeInstanceId_(allocateRuntimeInstanceId()) {
+  runtime_->registerDisplayWorkOwner(runtimeInstanceId_);
   runtime_->bindResourceManifest(&resources_.manifest);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
@@ -493,7 +494,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
         !pendingPreviewIdentity_ ||
         pendingPreviewIdentity_->lifetimeGeneration != resources_.lifetimeGeneration ||
         pendingPreviewIdentity_->metricsGeneration != runtime_->surface().metricsGeneration ||
-        state.contentRevision != pendingPreviewCapture_->contentRevision ||
+        state.contentRevision != pendingPreviewCapture_->contentRevision || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() ||
         runtime_->previewSurfaceGeneration() !=
             pendingPreviewCapture_->surfaceGeneration) {
       pendingPreviewCapture_.reset();
@@ -514,6 +515,9 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
       runtime_->selectionTransformActive() || runtime_->regionSelectionActive())) || runtime_->objectEraseFeedbackActive() || runtime_->partialEraseFeedbackActive());
   const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
       runtime_->retryTransientOverlayFrame();
+  if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
+    pendingPreviewCapture_.reset();pendingPreviewIdentity_.reset();pendingPreviewPresentCount_=0;pendingPreviewWorkId_=0;
+  }
   if(shouldCanonical && !forceCanonical && !editingTransient)
     out.navigationPending=runtime_->serviceNavigationPresentation(
         std::chrono::steady_clock::now(),out.navigationPresented);
@@ -533,7 +537,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   }
   if (!captureCanonicalWork()) return false;
   out.previewActive = runtime_->previewActive();
-  out.previewDirty = runtime_->previewRenderState().dirty;
+  out.previewDirty = runtime_->previewRenderState().dirty||runtime_->previewDisplayDirty();
   if (out.previewActive && out.previewDirty && !pendingPreviewCapture_.has_value()) {
     if (nextPreviewWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
     interaction::PreviewPresentationCapture capture{};
@@ -571,7 +575,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   }
   out.needsPaint = out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
-      out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
+      out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
   return true;
 }
 bool RuntimeCompositionCore::finishFrameOpportunity(
@@ -627,6 +631,7 @@ bool RuntimeCompositionCore::captureCanonicalWork() noexcept {
       nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   pendingCanonicalWork_ = CanonicalWork{runtimeInstanceId_, resources_.lifetimeGeneration,
       attachmentEpoch_, nextCanonicalWorkId_++, *frame};
+  if(!runtime_->bindDisplayWork({runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,pendingCanonicalWork_->workId},*frame))return false;
   G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,pendingCanonicalWork_->workId,runtimeInstanceId_,resources_.lifetimeGeneration,attachmentEpoch_,g5::word(runtime_->documentId(),0),g5::word(runtime_->documentId(),1),runtime_->canonicalCommitFence().runtime_epoch.value(),runtime_->canonicalCommitFence().ordinal.value(),resources_.manifest.manifest_revision,runtime_->sceneRevision(),runtime_->cameraGeneration());
   G5_OBSERVE(g5::Kind::Submit,g5::Tag::canonical_receipt,true,pendingCanonicalWork_->workId,frame->viewId.value(),frame->frameId.value(),frame->documentRevision,frame->sceneGeneration,frame->surfaceGeneration.value(),frame->metricsGeneration.value());
   return true;
@@ -657,7 +662,7 @@ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion&
       frame.surfaceGeneration, frame.metricsGeneration, completion.outcome,
       completion.evidence, completion.presentedTimeNs});
   G5_OBSERVE(g5::Kind::Complete,g5::Tag::canonical_receipt,true,accepted?1ULL:2ULL,completion.work.workId,completion.work.runtimeInstanceId,completion.work.lifetimeGeneration,completion.work.attachmentEpoch,frame.viewId.value(),frame.frameId.value(),frame.documentRevision,frame.sceneGeneration,frame.surfaceGeneration.value(),frame.metricsGeneration.value());
-  if (accepted) pendingCanonicalWork_.reset();
+  if (accepted) { runtime_->completeDisplayWork({current->runtimeInstanceId,current->lifetimeGeneration,current->attachmentEpoch,current->workId},frame);pendingCanonicalWork_.reset(); }
   return accepted;
 }
 bool RuntimeCompositionCore::loseSurface() noexcept {

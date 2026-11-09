@@ -1,0 +1,58 @@
+{
+  "schema": "g5-ur2a-current-scene-handoff-r2-result-v1",
+  "status": "BLOCKED",
+  "blocking_class": "PIXEL_INTERIOR_OR_MASK_ORDER_FAILURE",
+  "return_surface": "CONTROL_REVIEW",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/package.json",
+    "sha256": "cec78f78ad5456400a5ef3dba7a3409f1ee58a3489390ec1ea3f0f70110c05a6",
+    "bytes": 2897
+  },
+  "source_tree_sha256": "f31fa76cc26b7f541c1ae49aee79102899a7e54d6bce219487c5641cd071331c",
+  "manifest": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/delivery-manifest.json",
+    "sha256": "f37ede9eb77a7a3a1b134e833c0c0763549d200bf540c024f450cb05f3083f55",
+    "bytes": 2739
+  },
+  "report": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/report.txt",
+    "sha256": "0da1e2161dc22526e700f8bc2d5c183894aaaa6e6e7ecfdd28805e21a5674ed6",
+    "bytes": 2959
+  },
+  "blocker": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/terminal-blocker.json",
+    "sha256": "aa7bb169ab6479010f2f1d7e403b65ab93bc643e7bae48ddad0b37ab9050ee9f",
+    "bytes": 96367
+  },
+  "tests": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/test-summary.json",
+    "sha256": "7924a44b337a6e527dc3e23c1a4250eb009c5043126eba0d733460e01035dc02",
+    "bytes": 2149
+  },
+  "normal_demo_url": "http://127.0.0.1:4290/example.html",
+  "source_changes_committed": false,
+  "index_empty": true,
+  "post_freeze_product_or_driver_edits": false,
+  "original_oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+  "accounting": {
+    "new_starts": 2,
+    "new_charged_seconds": 448,
+    "cumulative_starts": 62,
+    "cumulative_charged_seconds": 2724,
+    "remaining_seconds": 5646,
+    "remaining_worker_ids": [],
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "remaining": [
+    "Fix opaque background/interior pixel defect on separately authorized frozen repair/reverification candidate; all failed buffers/references retained.",
+    "No relative performance/SLO, WebDPR4, other platform or whole G5/P34 acceptance."
+  ],
+  "next_action": "Independent control review of exact failure; no more implementation/sampling in this frozen package.",
+  "official_Gate_P34_performance_PASS": false,
+  "evidence_materialization": "COMPLETE_LOCAL_SHARED_WORKTREE_READONLY_PAYLOAD_AND_HASHED_ARCHIVES"
+}

@@ -1,0 +1,319 @@
+{
+  "schema": "g5-ur2a-publication-evidence-index-v1",
+  "accepted_review": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/result.json",
+    "sha256": "02553275c0353e9f80389f7a25f0c9fc762ca512e5fa7cd5011c72aeb13bfd72",
+    "bytes": 7031
+  },
+  "subjects": [
+    {
+      "task": "G5-UR2a-current-scene-handoff-r2",
+      "result": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/result.json",
+        "sha256": "349e558d2fc83405aaaadef8ce7ebcfb4317ecee80e0976190e9700e1bd17c84",
+        "bytes": 2565
+      },
+      "delivery": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/delivery-manifest.json",
+        "sha256": "f37ede9eb77a7a3a1b134e833c0c0763549d200bf540c024f450cb05f3083f55",
+        "bytes": 2739
+      },
+      "bindings": {
+        "source": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-identity.json",
+          "sha256": "9b55f14d7829c043ab7377d425df6cf95a483bd1b3cb73e8f7a943a58d60971f",
+          "bytes": 6622960,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "delta": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta-manifest.json",
+          "sha256": "abf3c67cb6f107577eb391c25b01fd9ad4f777ff03c03954bbf76322283a83ed",
+          "bytes": 5624,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "driver": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/driver-identity.json",
+          "sha256": "7b0bc6f5f558b90fcc4d51656a4dca2c23d7262f3948fda421ecb38d0e2fa535",
+          "bytes": 27659,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "sdk": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/candidate-builds.json",
+          "sha256": "83034747ac809b5adb55559c75b5fdb7a0a372c903a8d128cf114ab499699156",
+          "bytes": 17500,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "native": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-artifact-manifest.json",
+          "sha256": "793f55cab9e9a905e4b45838bfc9a562f4f6770740a088a2b1bda7acf93544b3",
+          "bytes": 11034,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "package": {
+          "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/package.json",
+          "sha256": "cec78f78ad5456400a5ef3dba7a3409f1ee58a3489390ec1ea3f0f70110c05a6",
+          "bytes": 2897,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "tests": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/test-summary.json",
+          "sha256": "7924a44b337a6e527dc3e23c1a4250eb009c5043126eba0d733460e01035dc02",
+          "bytes": 2149,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "observations": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/functional-observations.json",
+          "sha256": "be32b4e29d003eae493a8d9f1dda52767c853be0bb6fa92c3e9f500bd9b2f60c",
+          "bytes": 32159,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "blocker": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/terminal-blocker.json",
+          "sha256": "aa7bb169ab6479010f2f1d7e403b65ab93bc643e7bae48ddad0b37ab9050ee9f",
+          "bytes": 96367,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "ledger": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/sampling-ledger.json",
+          "sha256": "8319560d249f568e1ef8dedcb820802cadba736892bb292ce13a87c49b795dd8",
+          "bytes": 3149,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "payload": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/payload-manifest.json",
+          "sha256": "eea8afbeb32cb0f04b79b372b66a5eea52ea0fb06175527cce7f53387ab1522c",
+          "bytes": 382094,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "archives": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/archive-manifest.json",
+          "sha256": "fe1d322998ad4ce81fb4c2ff015f26bd05e3823cbd2a2d5bd42892559a7dca26",
+          "bytes": 231128,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "local_only": {
+          "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-only-boundary.json",
+          "sha256": "635d18202089dc1071fca540103be3865648d791c7d9beac80f214f8f4bc2498",
+          "bytes": 643,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        }
+      }
+    },
+    {
+      "task": "G5-UR2a-mask-isolation-p36-r1",
+      "result": {
+        "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/result.json",
+        "sha256": "0ee8fc9c974bd70ea6e5477b5ac354178a76b230e0a39a35b89c341392ab6f7c",
+        "bytes": 2132
+      },
+      "delivery": {
+        "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/delivery-manifest.json",
+        "sha256": "f2b709ca3a7e452f8b3367bd2061cb488719b9a7eaf8b9a500d7c251b3f533d2",
+        "bytes": 2910
+      },
+      "bindings": {
+        "source": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-identity.json",
+          "sha256": "42786dcdabd28fdd91ef0f83990e1fdb49999c9ceb57d391b06c31cfdf55b519",
+          "bytes": 6623949,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "delta": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta-manifest.json",
+          "sha256": "42019cb4f884e5f13fa2b07c97863c12defa8505ff18e20bbe6f79d99ec165ae",
+          "bytes": 5777,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "repair_delta": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta-manifest.json",
+          "sha256": "7d48a3493dae2f86c2c4a08e322946db3cf277933c01010dcd879a4e1b3fb385",
+          "bytes": 1791,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "driver": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/driver-identity.json",
+          "sha256": "1dce59a73ca1552212c1754afa116aaf84ac66e33b34d350305e9eeecc4eb2a1",
+          "bytes": 39487,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "sdk": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/candidate-builds.json",
+          "sha256": "1e84611f256680e3ce492b29eb1caf0dc1c05b3f9a271b79616bc95442917ac2",
+          "bytes": 17273,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "native": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-artifact-manifest.json",
+          "sha256": "3e1dab7fd94208cda5eab36651972195c3b42e92adb50cbed1ab9123dc8d0731",
+          "bytes": 11128,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "package": {
+          "path": ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/package.json",
+          "sha256": "6a50bb05576034137f9f65c35e9a51c2b71fff0149e1a426284fd9f24e56b1b5",
+          "bytes": 1778,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "tests": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/test-summary.json",
+          "sha256": "6826cd0d37fed6bee3f8a56d4c3eb0238892ed908332d9f10e3db7f6f2a5f564",
+          "bytes": 2108,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "observations": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/functional-observations.json",
+          "sha256": "63470ded27d52c80d4fd68fc39acd0de5ca1ac3b145f52579cf21e545c743bfe",
+          "bytes": 32014,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "closure": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-closure.json",
+          "sha256": "629254b9b62d1e38a942760585f346af0c0d5f6373857c098cf95436b70eb23b",
+          "bytes": 1291,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "ledger": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/local-functional/sampling-ledger.json",
+          "sha256": "4f089491fa46a0787085eea04fbbfc7e30e449aa79720b0c2314b29c70d697f5",
+          "bytes": 3085,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "payload": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/payload-manifest.json",
+          "sha256": "b42995d9406dca21d63c3982e81590b972446ccf2bf3de13e52b4d6ba3da4134",
+          "bytes": 366936,
+          "availability": "LOCAL_ONLY_SHARED_WORKTREE"
+        },
+        "archives": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/archive-manifest.json",
+          "sha256": "ffeaeb903ff154846d3b0210350a00b02f8a179723ff865400e914a77ad66ecf",
+          "bytes": 221098,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        },
+        "local_only": {
+          "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/local-only-boundary.json",
+          "sha256": "2717c539250df9b240756476ec4d4d56bcca35cd73a7249d8067b138dc6b5d3b",
+          "bytes": 800,
+          "availability": "PUBLISHED_GIT_INDEX_OR_SOURCE"
+        }
+      }
+    }
+  ],
+  "published_paths": [
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/authority.lock.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/entry-reconciliation.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/evidence-contract.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/execution-contract.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/handoff-contract.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/implementation-context.md",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/package.json",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/state-diagram.mmd",
+    ".aegis/packages/G5-UR2a-current-scene-handoff-r2/verification.lock.json",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/package.json",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/repair-contract.json",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/review-context.md",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/review-inputs.json",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/verification.lock.json",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/authority.lock.json",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/evidence-contract.json",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/execution-contract.json",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/implementation-context.md",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/package.json",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/verification.lock.json",
+    ".aegis/publications/G5-UR2a-2026-11-09/README.md",
+    ".aegis/publications/G5-UR2a-2026-11-09/accepted-source-postimages.json",
+    ".aegis/publications/G5-UR2a-2026-11-09/authorization.json",
+    ".aegis/publications/G5-UR2a-2026-11-09/evidence-index.json",
+    ".aegis/publications/G5-UR2a-2026-11-09/local-only-boundary.json",
+    ".aegis/publications/G5-UR2a-2026-11-09/publication-checks.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/demo-check.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/functional-review.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/functional-review.py",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/integrity-review.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/integrity-review.py",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/offline-pixels.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/offline-pixels.mjs",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/regressions.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/report.txt",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/result.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/run-regressions.py",
+    ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/source-review.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-r2/integrity-review.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-r2/live-inventory-drift.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-review.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-r2/offline-pixels.json",
+    ".aegis/results/G5-UR0b/control-review-ur2a-r2/result.json",
+    ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/frozen-publication-files.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/archive-manifest.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/delivery-manifest.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-only-boundary.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/report.txt",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/result.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta-manifest.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta.patch",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/terminal-blocker.json",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/test-summary.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/archive-manifest.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/candidate-builds.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/delivery-manifest.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/driver-identity.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/local-only-boundary.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-causal-green-results.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-causal-red-results.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-closure.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta-manifest.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta.patch",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/report.txt",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/result.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/root-cause-confirmation.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta-manifest.json",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta.patch",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/test-summary.json",
+    "runtime/composition/CMakeLists.txt",
+    "runtime/composition/src/runtime_composition.cpp",
+    "runtime/composition/tests/fc02_text_geometry_test.cpp",
+    "runtime/composition/tests/ur2a_handoff_test.cpp",
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_navigation_tiles.hpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/tests/ur2a_current_composition_test.cpp",
+    "runtime/render/tests/ur2a_mask_isolation_test.cpp",
+    "verification/runners/g5/resource_recovery_build.py",
+    "verification/runners/g5/ur2a_cold_capture.mjs",
+    "verification/runners/g5/ur2a_handoff.mjs",
+    "verification/runners/g5/ur2a_handoff_contract.mjs",
+    "verification/runners/g5/ur2a_handoff_runner.py",
+    "verification/tests/g5_ur2a_handoff.test.mjs",
+    "verification/tests/test_g5_ur2a_handoff.py",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/package.json",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/authority.lock.json",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/verification.lock.json",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/execution-contract.json",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/implementation-context.md",
+    ".aegis/packages/G5-UR2a-publication-whitespace-r1/evidence-contract.json",
+    ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json"
+  ],
+  "publication_verification_result": {
+    "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/result.json",
+    "availability": "LOCAL_ONLY_POST_COMMIT_RECORD",
+    "reason": "Final commit cannot self-reference its own metadata"
+  },
+  "official_G5_P34_performance_release_PASS": false,
+  "checker_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512",
+    "bytes": 2297
+  },
+  "prior_blocked_publication": {
+    "path": ".aegis/results/G5-UR2a-publication-2026-11-09/result.json",
+    "sha256": "fd96b66081a8fa493dc9aa284cc9c678d2ad4f8242a81e1553402ce8943e33c7",
+    "bytes": 2224
+  }
+}

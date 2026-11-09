@@ -137,6 +137,14 @@ struct PreviewPresentationCapture final {
   render::PreviewStyleOverride style{};
   std::uint64_t contentRevision = 0;
   std::uint64_t surfaceGeneration = 0;
+  std::uint64_t displayRevision = 0;
+  bool visible = true;
+};
+
+// Private composition-to-interaction work binding; never a consumer token.
+struct DisplayWorkBasis final {
+  std::uint64_t runtime = 0, lifetime = 0, attachment = 0, work = 0;
+  bool operator==(const DisplayWorkBasis&) const = default;
 };
 
 // Shared editor composition. Existing Semantic/Session/Scene/History/Render
@@ -529,6 +537,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::size_t pendingCanonicalHandoffCount() const noexcept {
     return pendingCanonicalIdentities_.size();
   }
+  void registerDisplayWorkOwner(std::uint64_t runtime) noexcept { displayOwner_=runtime; }
+  [[nodiscard]] bool bindDisplayWork(const DisplayWorkBasis&, const render::RuntimeFrameIdentity&) noexcept;
+  void completeDisplayWork(const DisplayWorkBasis&, const render::RuntimeFrameIdentity&) noexcept;
+  [[nodiscard]] bool previewDisplayDirty() const noexcept { return previewDisplayDirty_; }
+  [[nodiscard]] std::uint64_t previewDisplayRevision() const noexcept { return previewDisplayRevision_; }
   [[nodiscard]] bool presentCanonicalFrame(std::uint64_t frameId,
                                            double frameMs,
                                            bool retirePreview = true) noexcept;
@@ -619,12 +632,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
            keyedStrokeIds_.empty() && history_.canRedo();
   }
   [[nodiscard]] bool undo() noexcept {
-    if (!canUndo() || !history_.undo()) return false;
+    if (!recoverHistoryScene() || !canUndo() || !history_.undo()) return false;
     canonicalPresentationDirty_ = true;
     return true;
   }
   [[nodiscard]] bool redo() noexcept {
-    if (!canRedo() || !history_.redo()) return false;
+    if (!recoverHistoryScene() || !canRedo() || !history_.redo()) return false;
     canonicalPresentationDirty_ = true;
     return true;
   }
@@ -729,6 +742,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool applyTextOperation(semantic::Operation f,semantic::Operation i) override;
   std::pair<float,float> textContentPoint(float x,float y) const noexcept override { return viewportController_->viewToContent(x,y); }
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
+  void observeApplied(const semantic::Operation&, semantic::ApplyResult&&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
       semantic::Operation forward, semantic::Operation inverse) noexcept;
   [[nodiscard]] bool recoverHistoryScene() noexcept;
@@ -911,11 +925,51 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t navigationCameraGeneration_=0,navigationSubmittedGeneration_=0;
   std::chrono::steady_clock::time_point navigationChangedAt_{};
   bool navigationActive_=false, navigationExactPreparation_=false;
+  bool navigationRequested_=false;
   std::shared_ptr<const render::FramePlan> exactDemand_;
   const render::SkiaSurfaceProvider* exactDemandProvider_=nullptr;
   semantic::DocumentId exactDemandDocument_{};
   std::uint64_t exactDemandResourceEpoch_=0,presentationResourceEpoch_=0;
   std::uint64_t exactDemandSelectionRevision_=0;
+  // Bounded display metadata, not a second semantic/mask/geometry store.
+  enum class DisplayKind : std::uint8_t { kBrush, kErase };
+  struct DisplayRecord final {
+    std::uint64_t serial=0,session=0;
+    DisplayKind kind=DisplayKind::kErase;
+    bool sealed=false,covered=false;
+    input::PointerKey key{};
+    semantic::DocumentId document{};
+    semantic::OperationId operation{};
+    semantic::CanonicalCommitStamp commit{};
+    semantic::SemanticGeneration semantic{};
+    std::uint64_t scene=0,view=0,surface=0,metrics=0,resource=0,camera=0;
+    foundation::ObjectId object{};
+  };
+  static constexpr std::size_t displayCapacity_=128;
+  std::array<DisplayRecord,displayCapacity_> displayRecords_{};
+  std::uint64_t displayOwner_=0;
+  std::uint64_t nextDisplaySerial_=1,previewDisplayRevision_=1;
+  bool previewDisplayDirty_=false;
+  input::PointerKey displayInputKey_{};
+  struct DisplayRoster final {
+    std::array<std::uint64_t,displayCapacity_> serials{};
+    std::array<std::uint8_t,displayCapacity_> outcomes{};
+    std::size_t count=0;
+    render::RuntimeFrameIdentity frame{};
+    semantic::DocumentId document{};
+    const render::SkiaSurfaceProvider* provider=nullptr;
+    std::uint64_t resource=0,camera=0;
+    DisplayWorkBasis work{};
+    bool frozen=false,bound=false;
+  };
+  DisplayRoster exactDisplayRoster_{},submittedDisplayRoster_{};
+  [[nodiscard]] DisplayRecord* reserveDisplay(std::uint64_t,DisplayKind) noexcept;
+  [[nodiscard]] DisplayRecord* findDisplay(std::uint64_t,DisplayKind) noexcept;
+  void cancelDisplay(std::uint64_t,DisplayKind) noexcept;
+  void sealDisplay(DisplayRecord&,const semantic::CanonicalCommitRecord&,foundation::ObjectId = {}) noexcept;
+  void freezeDisplayRoster(const render::FramePlan&) noexcept;
+  void coverBrushDisplays(const render::FramePlan&) noexcept;
+  void cancelDisplayDemands() noexcept;
   bool canonicalPresentationDirty_ = false;
   bool connectorRoutingPending_ = false;
   semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;

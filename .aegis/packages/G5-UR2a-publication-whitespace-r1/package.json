@@ -1,0 +1,55 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2a-publication-whitespace-r1",
+  "status": "AUTHORIZED_PUBLICATION_AMENDMENT",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2a-publication-whitespace-r1",
+    "content_identity": "package.json SHA256 inexacthandoff"
+  },
+  "task_anchor": {
+    "revision": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "completed_through": "92stagedpaths exact,independentstrict87clean;no commit/push",
+    "next_action": "Verifyexistingindex;preservemetadatapreimages;applyexactartifactpolicy;99pathcommit/push/servercallback"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "supersedes_original_package_only_for_publication_policy": {
+    "path": ".aegis/packages/G5-UR2a-publication-2026-11-09/package.json",
+    "sha256": "3c9afcbd88b7463db429e943b03542f1759f798de4dedbb983e3923ad3e46e94"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "5fce2ae5212e0bb44754dbbe6868905b1dc1b1647b08351d04ad75c7db2e5a23"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "e843e1586901df842040edbfad13333c4d49ea3ff2c5b02cf09f535d99cb259f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "c133664c86b9c2cf08deb2e2c7d04df8154b31dbecfa0dbfeb673e753f552223"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "6bc2b1bad52240e7c4c8c1bbb9db9f6b0e2152be14f5ab9f3b9103f59670353f"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "30c01375cb4453611d9aaf85667d1bf1d6f166007575110954ed618697c2a69b"
+  }
+}

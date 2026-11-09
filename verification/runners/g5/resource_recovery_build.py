@@ -26,7 +26,7 @@ def assemble(normal, normal_build, qualification_build, output, manifest):
     names=sorted(str(p.relative_to(normal)) for p in normal.rglob('*') if p.is_file())
     assert len(names)==36 and not any(Path(p).suffix in ('.a','.h','.hpp','.lib') for p in names)
     assert not output.exists(), 'private artifact is immutable once assembled'
-    assert any(task in output.parts for task in ('G5-UR1d-resource-recovery','G5-UR1d-physical-loss-repair-r1'))
+    assert any(task in output.parts for task in ('G5-UR1d-resource-recovery','G5-UR1d-physical-loss-repair-r1','G5-UR2a-current-scene-handoff-r2'))
     shutil.copytree(normal,output)
     replacements={}
     for name in ('internal/axiom.mjs','axiom.wasm','axiom.data'):

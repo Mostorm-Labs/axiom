@@ -1,0 +1,19 @@
+{
+  "status": "CONFIRMED",
+  "classification": "Inherited Render classifier defect, exposed by current valid handoff scheduling and translated masked fixtures",
+  "mechanism": "Nonidentity compact-v4 incorrectly selects destination-clear instead of own body isolation. Identity and forced isolation controls opaque; translated real Direct/Metal prepared pixels zero alpha.",
+  "binary_and_behavior": "native-causal-red-results.json",
+  "paths": [
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "identical_to_bed9": true,
+      "sha256": "4df1f6de23ca75f70f64e47d8d9b6e6ccaf50dbce90ad1e9b4d725d1e05fc394"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "identical_to_bed9": true,
+      "sha256": "bb9e8750c764d5f95d2ffae226856dabf834b987e12e69999c06d3ca184aed6e"
+    }
+  ],
+  "one_owning_fix": "shared shouldIsolateInkEntry v4 rule, used by Direct/preparation/working set"
+}

@@ -1,0 +1,278 @@
+{
+  "schema": "g5-ur2a-scoped-authority-r2",
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_authorization": "下一步开始吧，准备新的ur2a包",
+  "repository": "Mostorm-Labs/axiom",
+  "published_baseline": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "authority_sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "scoped_design_inputs": [
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016"
+    }
+  ],
+  "entry_reconciliation": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/entry-reconciliation.json",
+    "sha256": "b28b283ed4d107b9e90fc3fae30ed1ec11ad432807d67ec2ab32852b2fa115a6"
+  },
+  "handoff_contract": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/handoff-contract.json",
+    "sha256": "7febcd9699c62745d714e3cbd0f506cb836674706a172566a1c6f32406330e12"
+  },
+  "state_diagram": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/state-diagram.mmd",
+    "sha256": "a1dc6a9ad733d9efb17dad6690be6e6332d98491a3406644a63a913f50fd22e9"
+  },
+  "accepted_control_and_publication": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json",
+      "sha256": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/control-publication-finalization-receipt.json",
+      "sha256": "b7074e29596fc3c0d55b5b0a454331366c39f720c6efaf1e28c3d39f5a9cf6bd"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/control-publication-receipt.json",
+      "sha256": "6d6a717e1fc8f30024a85b750d0cf6c95c737cf975f295fcae8942096b4cb2e5"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/ur2-entry-assessment.json",
+      "sha256": "e531989dfa08c895a24ed01964ad0901d72e0eccf25ff77922fe2172e1b110fb"
+    }
+  ],
+  "historical_candidate_not_authority": [
+    {
+      "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/manifest.json",
+      "sha256": "449971d6bc347598a43cdcbf9ff8a06c92b739bd272d8a3d876ba7636fc4165e"
+    },
+    {
+      "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/checkpoint.json",
+      "sha256": "bc1088a5510162a6f72d2c367e00b109219dfa3c6a80a1d794a8814583b6ca44"
+    },
+    {
+      "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/control-review.json",
+      "sha256": "4cdd3521490817cbf3e969932df0823c9ea6fdc85072b21e458ed312fdef6cb8"
+    },
+    {
+      "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/frozen-candidate/design.md",
+      "sha256": "b89acf75427bdcdfb60949ee21ec1dac8c5291c9dd6438e4fddaba0d78399e9e"
+    },
+    {
+      "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/repair-wip/design.md",
+      "sha256": "cc560768d928e37c2440ee741e464ddc5c88bbe3cc18c45649adf81df7d12b00"
+    }
+  ],
+  "existing_source_baseline": [
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "520d967c917da7b578c7e34c05b85b756537d4a5b4276b438b30a05150550071"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "aec89ed818b94669c5623532b9e33df507efadf3b49a018018f710b048c64570"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/navigation_sources.hpp",
+      "sha256": "d4d2b8358d64c74df342965233b9c14b4bc0988938836bda4460dfa58ff27639"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc"
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "2e4d8d7cfa5b8f73ca1fa314d0e4f62d6605e7f39e31e1076e6c1bc8559c7067"
+    }
+  ],
+  "frozen_statements": [
+    "User authorizes this new package and established design/control-to-implementation workflow; old UR2 remains reference, not accepted dependency.",
+    "This bounded slice closes post-Up display/Scene/readmission dependency and eraser transaction preparation. Exact-query algorithm/locality, incremental mask generation and mask-only Scene performance are successors, not secretly required here.",
+    "Current Scene composition proof is an explicit narrow Render dependency in this package, resolving old UR2 scope omission before coding.",
+    "Full exact replacement proof is separate from original operation CanonicalVisible and GPU quota retirement. Preserve all original strict receipt paths and new-action ownership.",
+    "Architecture v0.4/current Semantic and SDK contracts prevail; R3 global SLO, UR0c queue tuning and remaining route migration are not blanket gates.",
+    "No public SDK/API/ABI/version/descriptor/lock changes, second owner, new thread, increased work or resource budget, snapshotUI or restored old artifact."
+  ],
+  "precedence": "Current user scoped authorization plus this enumerated private handoff contract; authoritative canonical and SDK contracts unchanged. Conflicting unknown semantic choices return to control, routine private implementation choices continue.",
+  "assigned_existing_source_baseline": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "e7e9af290483e0d3cd0b8d86666056950b08c4989c6d8f7d255c14d413db345e"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "aec89ed818b94669c5623532b9e33df507efadf3b49a018018f710b048c64570"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092"
+    },
+    {
+      "path": "runtime/composition/tests/fc02_text_geometry_test.cpp",
+      "sha256": "5f62ec9c150b0e1fd03b72d3b5246b5127e41d7ced963f8e28049e6c93750a34"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "520d967c917da7b578c7e34c05b85b756537d4a5b4276b438b30a05150550071"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "623484811c90526f4b5f3b793dd375da9fd41beca8e0c88f73b1668514e47d25"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/navigation_sources.hpp",
+      "sha256": "d4d2b8358d64c74df342965233b9c14b4bc0988938836bda4460dfa58ff27639"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "2e4d8d7cfa5b8f73ca1fa314d0e4f62d6605e7f39e31e1076e6c1bc8559c7067"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11"
+    },
+    {
+      "path": "runtime/render/tests/g5_observation_identity_test.cpp",
+      "sha256": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03"
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "ece40be2bb86702ed98b3dffeb8933cad92e0bd1678e3df22d9fef456e9dd152"
+    }
+  ],
+  "required_readonly_owner_contracts": [
+    {
+      "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "sha256": "421a73db4652cfdfda849364d761d6bb993bd0c42bcfdcec357f232498d3ea5b"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "9bc7a5c6f2fcfd9e2e9532f35338dc18d3267cf8bb1b6e237dee16872b5d4c82"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/local_operation_sink.hpp",
+      "sha256": "08b846f96d7e569f94d1dc39d34c44e8804d4f1a64b9d203f58a8f756948a5a3"
+    },
+    {
+      "path": "runtime/render/src/runtime_frame_coordinator.cpp",
+      "sha256": "f1798283adabb2fdcdf2ee6915862af1cf3634b10c99bf46c4032b9ed963b577"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/runtime_frame_coordinator.hpp",
+      "sha256": "1630894ac7b68c60f6c3381516c72f395bb61acabcb09d00c5a6b40cc7be2028"
+    },
+    {
+      "path": "runtime/ink/include/canvas/ink/arc_runtime_sinks.hpp",
+      "sha256": "c2be9322be41aa8868d8db5847831066cee3a3cd887c4d4363e9f0fbd5ea143f"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "f2b6d3057ec8d69aa17fd8892e973becfb054dba1d4517770bcad0bc347ec884"
+    }
+  ]
+}

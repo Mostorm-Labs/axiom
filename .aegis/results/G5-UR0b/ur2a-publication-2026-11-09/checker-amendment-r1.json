@@ -1,0 +1,28 @@
+{
+  "schema": "g5-ur2a-publication-checker-amendment-r1",
+  "classification": "TASK_PACKAGE_DEFECT: exact frozen metadata syntax omitted from artifact whitespace policy",
+  "status": "CURRENT_USER_AUTHORIZED_PUBLICATION_ONLY",
+  "original_package": {
+    "path": ".aegis/packages/G5-UR2a-publication-2026-11-09/package.json",
+    "sha256": "3c9afcbd88b7463db429e943b03542f1759f798de4dedbb983e3923ad3e46e94"
+  },
+  "original_blocked_result": {
+    "path": ".aegis/results/G5-UR2a-publication-2026-11-09/result.json",
+    "sha256": "fd96b66081a8fa493dc9aa284cc9c678d2ad4f8242a81e1553402ce8943e33c7"
+  },
+  "original_fixed_manifest": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/frozen-publication-files.json",
+    "sha256": "c46452ef83a6d7b60e2022323f1e3fd160f0369ea10a0b6bb88314a5abb90bca"
+  },
+  "independent_diagnostic": "Exactly two frozen Markdown EOFblankline findings outside original3patch exceptions; allremaining87stagedpaths independently gitdiff cached check0. No source issue.",
+  "exact_artifact_exceptions": {
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta.patch": "d004222b70e33aff8b770683ca7ef2f67f5e4cd414e44833a4be07e0152b671e",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta.patch": "7510935f37241a8f756e9bae68ecf106841f66026498573a2e3bbe829c1d7af2",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta.patch": "a2aa6a4ecc02ff49102f97d6419e416401b930ee4cfe05b7c600806ce5f65791",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/review-context.md": "5c9240c7fe7eed6d3d557b14396eb6fdfbeda5154cb8f54e9ca56917f47b78e2",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/implementation-context.md": "c27a62b9bc34947c216692746b328e4dd0089777bbe294bb732b47c8fabb1461"
+  },
+  "policy": "Preserve full unmodified gitdiff cached check exit/output; only5 exact SHA-bound paths have accepted noncode syntax findings. Allremaining94of99paths strictcheck0. No source/test/driver or othermetadata exception; no globalGit config changes.",
+  "no_byte_rewrite": "Existing79fixedfiles,6originalpublicationpackagefiles andfixedmanifest stay byte-for-byte. Newamendmentfiles generated without trailing blankline. Preserve oldpublicationmetadata6 preimages before boundedupdates.",
+  "official_Gate_or_performance_PASS": false
+}

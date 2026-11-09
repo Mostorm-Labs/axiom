@@ -1,0 +1,24 @@
+{
+  "status": "VERIFIED_SUBJECT_WITH_HISTORIC_LOG_DRIFT",
+  "result_sha256": "349e558d2fc83405aaaadef8ce7ebcfb4317ecee80e0976190e9700e1bd17c84",
+  "source_tree_sha256": "f31fa76cc26b7f541c1ae49aee79102899a7e54d6bce219487c5641cd071331c",
+  "source_files": 30907,
+  "delta_files": 20,
+  "other_tracked_unchanged": 31669,
+  "patch_roundtrip": true,
+  "payload_files": 918,
+  "archive_members": 898,
+  "hash_checks": 32215,
+  "sdk_files_each": 36,
+  "index_empty": true,
+  "browser_starts": 0,
+  "oracle_invocations": 0,
+  "historical_log_drift": [
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/demo-server.log",
+      "frozen_sha256": "595b739e5d41078a4474c206216ba9985b8b693834b7db92d761f298eb6ff4bb",
+      "live_sha256": "393ffe98e55880661e922d645ab1160d16ddfaac159db96613db6d9a9be27ec6",
+      "classification": "NON_BLOCKING_FINDING: old intentionally retained server appended requests; not a compiler, driver, oracle, candidate artifact or current result input"
+    }
+  ]
+}

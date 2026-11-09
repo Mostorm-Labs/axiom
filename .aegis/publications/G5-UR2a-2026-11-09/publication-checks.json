@@ -1,0 +1,72 @@
+{
+  "schema": "g5-ur2a-publication-checks-r1",
+  "phase": "STAGE_AND_WHITESPACE_VERIFIED_R1",
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-publication-whitespace-r1/package.json",
+    "sha256": "60d9888c64d6b4de11df7f4578f00db859e9edc7e84f7c36935dcf29af16c7ed",
+    "bytes": 2309
+  },
+  "amendment": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512",
+    "bytes": 2297
+  },
+  "preflight": {
+    "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/preflight.json",
+    "sha256": "07127631a87371a154cf3e7588c0ee6893d212194201f14cf8ca96067613c59b",
+    "bytes": 3213
+  },
+  "metadata_preimages": {
+    "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/metadata-preimage-manifest.json",
+    "sha256": "308d17031de349dbe9161f81121c1c17aaae371c702c6bd006006943429a83fd",
+    "bytes": 2842
+  },
+  "fixed_paths": 79,
+  "source_paths": 23,
+  "total_authorized_paths": 99,
+  "strict_remaining_paths": 94,
+  "exact_artifact_exceptions": {
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta.patch": "d004222b70e33aff8b770683ca7ef2f67f5e4cd414e44833a4be07e0152b671e",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta.patch": "7510935f37241a8f756e9bae68ecf106841f66026498573a2e3bbe829c1d7af2",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta.patch": "a2aa6a4ecc02ff49102f97d6419e416401b930ee4cfe05b7c600806ce5f65791",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/review-context.md": "5c9240c7fe7eed6d3d557b14396eb6fdfbeda5154cb8f54e9ca56917f47b78e2",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/implementation-context.md": "c27a62b9bc34947c216692746b328e4dd0089777bbe294bb732b47c8fabb1461"
+  },
+  "historical_blocker": {
+    "result": {
+      "path": ".aegis/results/G5-UR2a-publication-2026-11-09/result.json",
+      "sha256": "fd96b66081a8fa493dc9aa284cc9c678d2ad4f8242a81e1553402ce8943e33c7",
+      "bytes": 2224
+    },
+    "original_checker": {
+      "returncode": 2,
+      "path": ".aegis/results/G5-UR2a-publication-2026-11-09/initial-strict-check.log",
+      "sha256": "1a772eb1692b684a2b06d00183337e09788da4cdb3b6db5704567e0ac0d27417"
+    }
+  },
+  "per_command_core_autocrlf": false,
+  "final_stage_and_server_result": {
+    "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/result.json",
+    "availability": "LOCAL_ONLY_POST_COMMIT",
+    "self_reference_policy": "Actual commit/tree and final own-blob identity are external post-commit facts."
+  },
+  "checker": {
+    "full": {
+      "returncode": 2,
+      "log": {
+        "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/initial99-full-check.log",
+        "sha256": "78fae117ed2cd841902bca420dc1e5ec6a37d813cb905ec4d7e057955c3c2df2",
+        "bytes": 84080
+      }
+    },
+    "strict94": {
+      "returncode": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR2a-publication-whitespace-r1/initial99-strict94-check.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  },
+  "final_recheck": "Final99 own-blob manifest recorded in LOCAL_ONLY post-commit result"
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "g5-ur2a-publication-closure-v1",
+  "implementation": {
+    "required_changes": [
+      "Verify exactpackage,23sourcepostimages, allfixedfiles,indexempty and currentbed9/remote ancestry before staging.",
+      "Generate6namedpublicationmetadata paths binding acceptedcontrol/newandoldresults/package/archives/SDK/source inventories andlocal-onlylimits.",
+      "Stageonly exactfixedlist, exact6filepublicationpackage,frozenfilemanifest,and6namedmetadata paths, using per-command core.autocrlf=false to preserve rawblobs. Explicit path args only.",
+      "Commitone meaningful UR2a source/evidencecheckpoint; ordinarypush origin/codex/geometry-navigation-integration. Verify authenticatedserverHEAD/tracking and parent.",
+      "Save precise resultandcallback; do not activateUR2b absent separateexactpackage."
+    ],
+    "fixed_file_manifest": {
+      "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/frozen-publication-files.json",
+      "sha256": "c46452ef83a6d7b60e2022323f1e3fd160f0369ea10a0b6bb88314a5abb90bca"
+    },
+    "package_paths": [
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/package.json",
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/authority.lock.json",
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/verification.lock.json",
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/execution-contract.json",
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/implementation-context.md",
+      ".aegis/packages/G5-UR2a-publication-2026-11-09/evidence-contract.json"
+    ],
+    "additional_manifest_path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/frozen-publication-files.json",
+    "new_metadata_paths": [
+      ".aegis/publications/G5-UR2a-2026-11-09/README.md",
+      ".aegis/publications/G5-UR2a-2026-11-09/authorization.json",
+      ".aegis/publications/G5-UR2a-2026-11-09/accepted-source-postimages.json",
+      ".aegis/publications/G5-UR2a-2026-11-09/evidence-index.json",
+      ".aegis/publications/G5-UR2a-2026-11-09/local-only-boundary.json",
+      ".aegis/publications/G5-UR2a-2026-11-09/publication-checks.json"
+    ],
+    "forbidden_changes": [
+      "Product/test/driver edits; SDKbuild/newbrowser orbenchmark; oldresult rewriting; schema/locks/version/publicAPI changes; remote evidence readiness or performancePASS claims",
+      "gitaddall/commitall, unrelatedstage, forcepush/reset/stash/clean/rebase/merge/cherrypick/remoteorcredentialconfigrewrite",
+      "LargeSDK/native/WASM/rawpixel/snapshot/fullsourceinventory/tar payloads inGit"
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "evidence": {
+    "blocking": [
+      "Exactsource/file/stageblob/modes/tree and checkerpolicy",
+      "Commit/tree/parent/serverref andpublication/local-onlyindex"
+    ],
+    "corroborative": [
+      "Already independently reviewed tests/source-bound; no newruns"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Exactwhitelist only;23sourcepostimages unchanged;no unrelateddirty/indexeffects",
+      "Onecommitfastforwardpushed,authenticatedserver=tracking=HEAD,indexempty,trackedtreeclean",
+      "Resultpreciseref,publication/local-onlyindexes andproactivecallback"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "SOURCE_OR_INDEX_MISMATCH",
+      "AUTHENTICATION_OR_NETWORK_BLOCKER"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "callback_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "include": "commit/tree/parent,resultandmanifestSHA,serverSHA,source/stageproof,Gitstatus andlocalrawlimits"
+  },
+  "network": "Use existingauthenticated SSH or per-commandHTTPS gh credentialhelper ifneeded; neverprintcredentials orchangeconfig. No destructive recovery."
+}

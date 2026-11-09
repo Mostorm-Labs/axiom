@@ -1,0 +1,396 @@
+{
+  "schema": "g5-ur2a-verification-lock-r2",
+  "obligations": [
+    {
+      "id": "U2R-01",
+      "requirement": "Valid deferred partial erase begins independently of exact drawing.",
+      "oracle": "Actual RuntimeCompositionCore.submit -> real nonempty v4 seed/first erase -> BusyProvider acquire or present denial; count BOTH providers during B Down. Old bed9 product must exhibit the failure. Pointer/source generation and no-op/cancel terminal negatives through real ingress.",
+      "acceptance": "With available writable document and ready/recoverable current Scene, B Down is admitted, active contact/trace exists, with no provider acquire/clear/raster/present and no semantic generation change. Move is preview-only. Terminal rejected Up/cancel drains input state and next reused pointer is not DUPLICATE_CONTACT.",
+      "evidence_required": [
+        "Baseline behavioral RED logs and exact source binding, not compile errors",
+        "GREEN raw submit/contact/provider/semantic counters and pointer-generation sequences"
+      ]
+    },
+    {
+      "id": "U2R-02",
+      "requirement": "Scene readiness is independent of pixel rendering and preserves accepted state.",
+      "oracle": "Fault Scene apply after accepted A; recover at B Down, B exact query, navigation and Undo/Redo, with success and failure. Include two Up operations with no frame opportunity.",
+      "acceptance": "Use latest accepted semantic generation and matching Scene revision or recover independently; do not query stale masks. Failure does not reapply mutation, invent acceptance or reverse A. After feasible recovery demand progresses through existing owner opportunities.",
+      "evidence_required": [
+        "Before/after commit/gen/Scene/query basis and fault facts",
+        "Operation/History counts, current mask hit results, recovery without provider calls"
+      ]
+    },
+    {
+      "id": "U2R-03",
+      "requirement": "Prepare eraser transaction storage before apply and finalize exactly once.",
+      "oracle": "Existing History prepareRecord/commitPrepared plus real publication sink reservations: fail inverse/history/metadata/publication preparation, reject apply; then fail Scene/present/observer-derived work after apply. Test observer reentry. Optional extra baseline RED at publication callback activates one-shot history allocation failure.",
+      "acceptance": "Before apply failure leaves document/clock/History/custody unchanged. Applied Up returns accepted once, has exactly one complete commit record, undoable History and one publication finalization; no fallible mandatory recording after apply. Preserve canonical_commit observation and selection/observer effects. No global History or Semantic SDK redesign.",
+      "evidence_required": [
+        "Actual generation/ledger/stamp/History cursor/queue snapshots and callback order",
+        "Failure hooks are private labelled native injection; no consumer knobs"
+      ]
+    },
+    {
+      "id": "U2R-04",
+      "requirement": "Active/sealed visual ownership and qualified exact replacement preserve newer actions.",
+      "oracle": "Actual Skia pixels DPR1/2/4 with transformed object, translucent overlapping strokes, historic+active masks and nonwhite/transparent backgrounds. A Up/B Down/A completion; A draw cancelled and only exact B; B submitted then active/sealed C; current-state Undo/Delete and missing/not-full proof negatives.",
+      "acceptance": "No erased ink resurrection, old-position flash, duplicate mask/opacity or global clear. Freeze eligible set BEFORE submit and associate only successful actual CanonicalWork. B gets only B receipt, old A may be ReplacedByCurrentFrame(B)/SupersededByCurrentState, never fake CanonicalVisible(A). Newer C outside roster remains.",
+      "evidence_required": [
+        "Raw canonical/overlay/composed buffers plus independent CPU reference or deterministic native reference",
+        "Frozen roster/full basis/submit association/qualified outcome with exact identities"
+      ]
+    },
+    {
+      "id": "U2R-05",
+      "requirement": "Brush overlay display ownership is real and separate from its logical handoff.",
+      "oracle": "Actual nonempty Brush preview visible before seal, then erase B Down/Move with canonical pending. Spy forwards real visibility; capture pixels. Accepted full current transient may represent old committed Brush; fail/stale/partial transfer negatives; new Brush C after transfer; canonical B replacement and old A callback cases, including no original A preview acknowledgement.",
+      "acceptance": "Down alone neither hides nor clears retained Brush. Transfer only for represented old identities after accepted full current transient; keep logical session/commit until strict own completion or separately qualified current exact replacement outcome. Later preview/ack must not redraw suppressed old contour over erased pixels. New C stays visible, no overlay/waiter leak, no forged old receipt or commit cancel.",
+      "evidence_required": [
+        "Actual overlay visibility and Skia pixels, logical/session identities separately",
+        "Native sink terminal/control facts and exact replacement outcomes; Web Brush->erase case observations"
+      ]
+    },
+    {
+      "id": "U2R-06",
+      "requirement": "Current Scene navigation policy bootstraps without an already-current exact plane.",
+      "oracle": "Baseline committed A then pan/zoom shows no navigation progress solely due old exact Scene. New private current composition proof tests with no current plane, supported mixed sources and background/isolation changes; mismatched Scene/resource/target, changed order/body/masks and unknown policy negatives.",
+      "acceptance": "Validate current Scene-derived FramePlan/policy independently; retain complete source/order/mask/AA/resource/target proof for old regions. No forced compatibility flag or old-frame restamp. Input camera acceptance distinct from display. At healthy supported demand, actual navigation feedback can present before replacement exact completes; missing source or temporary target returns meaningful pending, no false exact receipt.",
+      "evidence_required": [
+        "Actual current semantic/Scene/camera/surface/resource demands and Render decision/leaf/proof facts",
+        "Native Skia pixels and actual Web default framebuffer color writes"
+      ]
+    },
+    {
+      "id": "U2R-07",
+      "requirement": "Lifecycle, completion and resource fairness remain strict.",
+      "oracle": "Wrong work/frame/document/view/lifetime/operation/commit/surface/metrics/resource/incarnation; before/after resize/lost/rebind/close, source loss, no-op/cancel/pointer reuse, Undo/Redo before callback. Busy release and stable demand, plus original UR1d GPU/cancel/quota and one-step513 working-set regressions.",
+      "acceptance": "Strict existing canonical work/tracker/coordinator checks remain; approximate navigation or partial/unknown work cannot retire sealed display as exact. Lifecycle display cancellation differs from visible replacement. Preserve UR1d physical-loss vs unknown abandon, charged GPU leases, prepared progress, hard32/96MiB and existing allowances. Feasible quiet exact replacement and all terminal cleanup finish under deterministic native8192 opportunity guard / Web20s settle safety bound, neither a latency SLO nor new per-frame budget.",
+      "evidence_required": [
+        "Raw lifecycle/order/negative outcomes, current/old complete identities and resource state",
+        "No stranded display records/contacts/leases/always-retry loop after available current work drains"
+      ]
+    },
+    {
+      "id": "U2R-08",
+      "requirement": "Actual public Web continuous sequences close on the fresh matched candidate.",
+      "oracle": "Exactly two new serial Q/N workers; S0/S2 x five cases E/P/Z/H/B as frozen below. Public root SDK and DOM collectors only; no state edits/private semantic entry points. Same-task Up->next action and planned4ms gaps are distinguished, actual arrival and handler intervals retained.",
+      "acceptance": "All non-noop accepted Ups exactly one commit; expected next Downs and camera commands accepted without INPUT_REJECTED/DUPLICATE_CONTACT; final contacts0. Navigation cases have at least one observed default-framebuffer CONTENT color write during actual camera input and before current exact qualification, not just RAF/callback/HUD/offscreen draw. Final state/History/snapshot/pixels and owner cleanup correct.",
+      "evidence_required": [
+        "Raw public inputs/results/state, operation identities, planned/actual schedule and GL observer rows",
+        "Actual default framebuffer target role; qualified current Scene demand/leaf in Q, tracefree N",
+        "All pre/post/Undo/Redo buffers and failure prefix preserved"
+      ]
+    },
+    {
+      "id": "U2R-09",
+      "requirement": "Verification preserves every obtained cold artifact before testing assertions.",
+      "oracle": "Use accepted capture/qualifier primitives, new small tested capture-first wrapper. Negative helper tests: after-action throws, before/Undo stage absent, snapshot/readback error, interior mismatch, corrupted reference and default-only/HUD-only writes. Save available both-surface RGBA, CSS visibility, state, snapshot/checkpoint and structured error before any failure throw.",
+      "acceptance": "Old failures remain FAILED; no missing diagnostic image caused by assertion order. Settled before/after/Undo/Redo canonical pixels use original CPU/null-cache oracle, exact full snapshot+request+resources and unchanged independent2-device-pixel AA boundary / <=2 interior channel levels. At settled no active demand, overlay must be hidden or transparent and not alter final composition. Compare after vs Redo at same camera, not naive before vs Undo after camera changed. No readback/snapshot inside timed input handlers and no force-clear to manufacture capture.",
+      "evidence_required": [
+        "All80 new cold stages across20 cases (4 per case), both surfaces/visibility and snapshots where available",
+        "Independent reference identity and raw failed predicate;20 after/Redo roundtrips",
+        "Unit negative preservation/attribution tests with actual executable helper"
+      ]
+    },
+    {
+      "id": "U2R-10",
+      "requirement": "Exact observable outcome joins distinguish commit, own visibility and successor replacement.",
+      "oracle": "Private typed g5 events at actual existing owners: gesture, prepared/frozen roster, apply commit, Scene readiness, submit/work association, strict qualified outcome and retirement. Join only exact full identity; unit wrong/foreign/stale/late record negatives.",
+      "acceptance": "Record Up->own CanonicalVisible only when real own qualifying outcome exists; cancelled old job may have null with reason and separate Up->ReplacedByCurrentFrame(B) timing. No receipt inferred from latest generation/callback. Record dispatch/Up/nextDown/admission/first feedback and camera content gap; no global33ms, relative performance or pure GPU/display claim. Trace loss that prevents these facts remains explicit, normal diagnostics OFF.",
+      "evidence_required": [
+        "Raw typed event chunks/counter map and complete identity joins",
+        "Normal public functional/GL observations separately from private qualification outcomes"
+      ]
+    },
+    {
+      "id": "U2R-11",
+      "requirement": "Affected owner and consumer boundaries regressions remain valid.",
+      "oracle": "Frozen71 existing CTests +10 new named tests, targeted FC02 PartialEraseLive and two clipboard guards, existing58 Node/33 Python plus new driver/cold/identity/ledger checks and120 boundaries. Match fresh JS wrapper/declarations/WASM/data, normal install and private qualification layout.",
+      "acceptance": "No public SDK/API/ABI/version/schema/descriptor/dependency lock changes or private Runtime/Skia export. Reconcile only named old sweep seed using genuine qualified initial Brush handoff; keep every sweep/mask/assertion and add retained-Brush test. No blanket existing expected-value updates or silently waiving affected failures.",
+      "evidence_required": [
+        "Final matching registered selection/commands/raw tests and baseline RED",
+        "Package/export/install profiles, outside-scope diff/hash proof and boundary result"
+      ]
+    },
+    {
+      "id": "U2R-12",
+      "requirement": "Execution is bounded, source-bound and independently reviewable.",
+      "oracle": "Package/source/artifacts/driver/oracle/resource binding preflight, fresh normal/private qualification builds, hash freeze before two workers, exact ledger/guards, content-addressed source and raw/native/SDK archives plus member hashes.",
+      "acceptance": "Continue to READY_FOR_CONTROL_REVIEW or precise blocker. Source/delta/pre/postimages and result/raw archive graph accessible in shared worktree; explicit LOCAL_ONLY bytes. All old artifacts/ports/records preserved, no old window restart, no test-only success labels as official Gate/P34/performance PASS; proactive callback.",
+      "evidence_required": [
+        "Full source identity/delta and old/new binding inventory",
+        "Result/manifest/archives and immutable payload; exclude live stdout from closed hashes",
+        "Two-ID ceil ledger, owned process cleanup, new ordinary Demo>=4290"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "before_product_mutation": true,
+    "baseline": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+    "required_behavioral_RED": [
+      "G5UR2AReadmissionAcquire",
+      "G5UR2AReadmissionPresent",
+      "G5UR2ANavigation"
+    ],
+    "expected": "Baseline-facing test subset using actual submit/control/nonemptyv4 and qualified seed; BDown forced canonical fails under busy target, current Scene camera demand does not make navigation feedback.",
+    "cannot_count": "Missing future method/field compile error, invalid empty fixture or unqualified seed, mutated old product, stubbed desired result, old browser rerun.",
+    "additional_Brush_visibility_RED": "Use current existing visibility/probe APIs and actual preview pixels if baseline-facing setup supports it; otherwise original source/real pipeline failure observation remains test input and new GREEN is required, not an extra browser start."
+  },
+  "native_existing_selection": [
+    "G5ScaleFixtureContract",
+    "G5Ur0Observation",
+    "G5GeometryChunkLocality",
+    "G4EraserSession",
+    "G4EditorHistory",
+    "FC01EditorHistoryInverseFamilies",
+    "G45PerfectFreehandReference",
+    "G5GpuRetirementContract",
+    "G5GpuResourceRecovery",
+    "G5CanonicalPreparedBody",
+    "G5CanonicalPreparedBodyBounded",
+    "G5CanonicalPreparedBodyPixels",
+    "G5CanonicalPreparedWorkingSet",
+    "G5PreparedBodyIndex",
+    "G5RenderExecution",
+    "G5EraseExactHit",
+    "G5RenderCache",
+    "G5CanonicalPreparedCompatibility",
+    "G5LiveEraseGpuMiss",
+    "G5LiveEraseDpr",
+    "G5TranslatedV4Drag",
+    "G5InkBodyMaskReuse",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5V4CoverageFallback",
+    "G5MaskedCanonicalRecovery",
+    "G5ErasedMixedNavigation",
+    "G5RetainedZoomReentry",
+    "G5MixedNavigationReentry",
+    "G5TileWork",
+    "G5RenderDamage",
+    "G47ImageResource",
+    "G5SkiaChunkRangeEntry",
+    "G5PreparedGeometry",
+    "FC00XFrameCoordinator",
+    "G3SkiaSurfaceProvider",
+    "G3PreviewSurface",
+    "G3SurfacePresentation",
+    "G3DirectReference",
+    "G5TransientReference",
+    "G3FrameOrchestration",
+    "G5SharedScenePayload",
+    "G5SharedSceneSnapshot",
+    "G5SharedSceneIndex",
+    "G5SharedSceneReaders",
+    "G5SharedSceneRetention",
+    "G5SharedSceneParity",
+    "G5Ur0ObservationIdentity",
+    "FC00XBrushBatchEvaluation",
+    "FC00XBrushBatchSemantics",
+    "FC00XFatalProviderFailure",
+    "SDKPublicResources",
+    "G5Navigation",
+    "FC04MSEHistoryFaultUndo",
+    "FC04MSEHistoryFaultRedo",
+    "FC01InsertHistory",
+    "FC00XCanonicalBusyPreviewProgress",
+    "FC00XPreviewBusyCanonicalProgress",
+    "FC00XBusyCanonicalPendingFeedback",
+    "FC00XLiveBrushPreview",
+    "SDKPublicDocumentIdentity",
+    "SDKPublicDocumentOperations",
+    "SDKPublicDocumentSnapshot",
+    "SDKPublicOperationIdentity",
+    "SDKPublicDocumentBackground",
+    "SDKPublicSelectionInput",
+    "FC01AxisPublicationTruth",
+    "FC01HostPublicationTruth",
+    "G45BrushPreviewHandoff",
+    "F08FrameQualification",
+    "SDKNativeNavigationPreview"
+  ],
+  "native_new_test_names": [
+    "G5UR2AReadmissionAcquire",
+    "G5UR2AReadmissionPresent",
+    "G5UR2ANavigation",
+    "G5UR2AHandoff",
+    "G5UR2ASceneRecovery",
+    "G5UR2AHistory",
+    "G5UR2ALifecycle",
+    "G5UR2ANavigationSafety",
+    "G5UR2ACompositionProof",
+    "G5UR2ABrushVisibility"
+  ],
+  "native_command": [
+    "ctest",
+    "--test-dir",
+    "out/G5-UR2a-current-scene-handoff-r2/build-native",
+    "--output-on-failure",
+    "-R",
+    "^(G5ScaleFixtureContract|G5Ur0Observation|G5GeometryChunkLocality|G4EraserSession|G4EditorHistory|FC01EditorHistoryInverseFamilies|G45PerfectFreehandReference|G5GpuRetirementContract|G5GpuResourceRecovery|G5CanonicalPreparedBody|G5CanonicalPreparedBodyBounded|G5CanonicalPreparedBodyPixels|G5CanonicalPreparedWorkingSet|G5PreparedBodyIndex|G5RenderExecution|G5EraseExactHit|G5RenderCache|G5CanonicalPreparedCompatibility|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5V4CoverageFallback|G5MaskedCanonicalRecovery|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderDamage|G47ImageResource|G5SkiaChunkRangeEntry|G5PreparedGeometry|FC00XFrameCoordinator|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G3DirectReference|G5TransientReference|G3FrameOrchestration|G5SharedScenePayload|G5SharedSceneSnapshot|G5SharedSceneIndex|G5SharedSceneReaders|G5SharedSceneRetention|G5SharedSceneParity|G5Ur0ObservationIdentity|FC00XBrushBatchEvaluation|FC00XBrushBatchSemantics|FC00XFatalProviderFailure|SDKPublicResources|G5Navigation|FC04MSEHistoryFaultUndo|FC04MSEHistoryFaultRedo|FC01InsertHistory|FC00XCanonicalBusyPreviewProgress|FC00XPreviewBusyCanonicalProgress|FC00XBusyCanonicalPendingFeedback|FC00XLiveBrushPreview|SDKPublicDocumentIdentity|SDKPublicDocumentOperations|SDKPublicDocumentSnapshot|SDKPublicOperationIdentity|SDKPublicDocumentBackground|SDKPublicSelectionInput|FC01AxisPublicationTruth|FC01HostPublicationTruth|G45BrushPreviewHandoff|F08FrameQualification|SDKNativeNavigationPreview|G5UR2AReadmissionAcquire|G5UR2AReadmissionPresent|G5UR2ANavigation|G5UR2AHandoff|G5UR2ASceneRecovery|G5UR2AHistory|G5UR2ALifecycle|G5UR2ANavigationSafety|G5UR2ACompositionProof|G5UR2ABrushVisibility)$"
+  ],
+  "expected_CTest_selection": 81,
+  "additional_GTest_command": [
+    "out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_fc02_text_tests",
+    "--gtest_filter=PartialEraseLive.*:ObjectClipboard.PublicationBackpressureRejectsDuplicateAndCutAtomically:ObjectClipboard.MaskedInkKeepsAppearanceButAllocatesFreshMaskIdentity"
+  ],
+  "native_DPR": [
+    1,
+    2,
+    4
+  ],
+  "native_tests_scope": "New tests use actual owner paths and Skia surfaces; reference expected pixels from independent CPU/null-cache or explicit independent full reference. ExistingactualMetal andGPU resource regressions retained. Test spies must forward real overlay visibility/present state.",
+  "node_existing_command": [
+    "node",
+    "--test",
+    "verification/tests/g5_render_execution.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+    "verification/tests/g5_prepared_body_index.test.mjs",
+    "verification/tests/g5_transient_reference.test.mjs",
+    "verification/tests/g5_transient_attribution.test.mjs",
+    "verification/tests/g5_canonical_prepared_body.test.mjs",
+    "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+    "verification/tests/g5_resource_recovery.test.mjs",
+    "verification/sdk_controller/controller_test.mjs",
+    "verification/sdk_controller/transport_test.mjs",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs"
+  ],
+  "node_new_tests": [
+    "verification/tests/g5_ur2a_handoff.test.mjs"
+  ],
+  "python_existing_files": [
+    "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+    "verification/tests/test_g5_transient_reference.py",
+    "verification/tests/test_g5_prepared_body_index_reverify.py",
+    "verification/tests/test_g5_render_execution.py",
+    "verification/tests/test_g5_transient_attribution.py",
+    "verification/tests/test_g5_canonical_prepared_body.py",
+    "verification/tests/test_g5_prepared_body_index.py",
+    "verification/tests/test_g5_resource_recovery.py",
+    "verification/tests/test_g5_resource_recovery_loss_reverify.py"
+  ],
+  "python_new_tests": [
+    "verification/tests/test_g5_ur2a_handoff.py"
+  ],
+  "boundaries_command": [
+    "python3.12",
+    "tools/check_runtime_boundaries.py",
+    "--root",
+    "."
+  ],
+  "existing_checker_count": 120,
+  "new_helper_topics": [
+    "capture/export happens before failing assertions, bothsurface/state/snapshot prefix persistence",
+    "interior mismatch/reference identity corruption stays failed",
+    "navigation counts actual content/default target not RAF/onlyHUD/offscreendraw",
+    "exact roster/work/commit joins reject wrong or late identities",
+    "ledger twoIDs no-repeat/history/guard/partial accounting",
+    "source/SDK mismatch and failedcase cleanup/immutable old rows"
+  ],
+  "browser_window": {
+    "ids": [
+      "UR2A2-Q1",
+      "UR2A2-N1"
+    ],
+    "order": [
+      "qualification",
+      "normal"
+    ],
+    "new_starts_max": 2,
+    "concurrency": 1,
+    "outer_seconds": [
+      360,
+      360
+    ],
+    "process_family_rss_mib": 3072,
+    "historical_starts": 60,
+    "historical_charged_seconds": 2276,
+    "new_nominal_seconds_max": 720,
+    "original_cap_seconds": 8370,
+    "remaining_cap_before": 6094,
+    "fixtures": [
+      {
+        "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/fixtures.json",
+        "sha256": "8c43a354609bf7ae778a477c1907af2187ab842819240cedc3c1ef64da4d16d5"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S0.axsnap",
+        "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404"
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S2.axsnap",
+        "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0"
+      }
+    ],
+    "initial_fixture_once_per_independent_case": true,
+    "DPR": 2,
+    "logical_size": [
+      800,
+      500
+    ],
+    "cases_per_worker": [
+      "S0-E-reerase",
+      "S0-P-pan",
+      "S0-Z-zoom-reentry",
+      "S0-H-undo-before-present",
+      "S0-B-brush-erase",
+      "S2-E-reerase",
+      "S2-P-pan",
+      "S2-Z-zoom-reentry",
+      "S2-H-undo-before-present",
+      "S2-B-brush-erase"
+    ],
+    "case_definitions": {
+      "E-reerase": "Three non-noop short erasures in dense ink. NextDown planned4ms after eachUp; no receipt/settle waits. Include one exact Up->Down dispatch in same DOM task to deterministically exercise pending canonical. No-op/cancel/pointer reuse additionally in native tests.",
+      "P-pan": "EraseUp followed immediately by24 real wheel-pan events, planned12ms spacing. Observe actual content writes while input active before exact qualifier; camera semantics only, no extra canonical operations.",
+      "Z-zoom-reentry": "EraseUp followed immediately by24 real ctrl-wheel zoom events planned12ms; pause1s then12pan/12zoom events. Record actual event sequence and exact vs nav outcome, do not force settle before first postUp action.",
+      "H-undo-before-present": "EraseUp -> public Undo -> Redo before awaiting any exact frame; preserve intermediate state snapshots and actual operation records. Native explicitly replays stale old completion after successor submit; browser never forges private tokens.",
+      "B-brush-erase": "Produce genuine short defaultv4 Brush preview with displayed preview while moving; seal then immediate partial erase Down/Move/Up while original exact handoff pending. Observe physical shared overlay ownership/Brush suppression and later qualified exact replacement, no private geometry injection."
+    },
+    "pacing": "Use root consumer/DOM sequence, planned vs actual timestamps. Same-task boundary means microtask/RAF queue order is captured; no fabricated historical event arrival. No afterUp settled barrier before target next action.",
+    "cold_stages": [
+      "before",
+      "after",
+      "undo",
+      "redo"
+    ],
+    "cold_total": 80,
+    "after_redo_roundtrips": 20,
+    "settle_safety_timeout_ms": 20000,
+    "meaning_of_timeout": "Functional bounded wait, not performanceSLO. On failure persist all available buffers/state/error before case verdict.",
+    "completion_withholding": "If needed to expose queued completion race, reuse labelled qualification-only wrapper that withholds real GL observations; no fake completion/pure GPU pending assertion. Native BusyProvider/old callback oracles remain independent. Same functional schedule in normal; native controls definitive forced-busy state.",
+    "stop_conditions": [
+      "RSS/time guard",
+      "cleanup failure",
+      "identity mismatch",
+      "crash",
+      "new unsafe lifetime/false receipt or semantic-integrity defect"
+    ],
+    "ordinary_product_failure": "Preserve every case and prefix; ordinary safe failed predicates may finish reserved independent cases/normal control as original bounded policy, no retries. READY requires all frozen cases pass.",
+    "ledger": "Reserve360 before spawn; chargeceil(actual) only with complete guard facts, otherwise reserved ceiling. cumulative60/2276 baseline; remaining seconds do not authorize additionalIDs.",
+    "forbidden": [
+      "seed/smoke/browserwarmup outside declared cases",
+      "oldUR2/UR0 windows, attribution A/B or extra performance matrix",
+      "nativeHost evidence relabelled real Web",
+      "automatically reloading user Demo or restoring snapshot to conceal a failed live run"
+    ]
+  },
+  "reference": {
+    "oracle": {
+      "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+    },
+    "saved_catalog": {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+      "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c"
+    },
+    "snapshot_request_rule": "Exact complete snapshotbytes,width,height,logicalsize,camera,HUD bounds,oraclebinary andresource/lock identities. Copy matched old reference bytes only after full equality. Otherwise original oracle once per complete newinput, timeout10000ms, no retries.",
+    "AA": "Original independent2-device-pixel perprimitive/mask/alpha geometry band, <=2 interior channel levels. No candidate-difference exclusion or widened tolerance.",
+    "cold_surface_rule": "Save canonical and previewRGBA plusactualCSSvisibility/target dimensions before predicate. Settled canonical mustqualify against independentreference and leftoveroverlay must be hidden/transparent when no active demand. Do not hide it in verifier. After/Redo compare at samecamera; Undo still uses live currentcamera independentreference.",
+    "resources": "Use exactcatalogresource entries andmatching SDKdata/fontlicenses; all protected in source/driver binding."
+  },
+  "whitespace": "Changed production/test/driver/source code gitdiff --check mustpass. Archive raw frozenpatch artifacts separately with declaredrawSHA; intentional evidenceCRLF/unifieddiffcontext whitespace is not code-whitespace failure andmustnot trigger byte edits. No extra commit in this task.",
+  "claims": "Functional currentScene/readmission/feedback proof, not33ms/relativeperformance/fullG5/P34/platformqualification; exact outcome delays and remaining cost findings reported honestly."
+}

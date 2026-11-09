@@ -1,0 +1,55 @@
+{
+  "schema": "g5-ur2a-mask-isolation-p36-r1-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "blocking_class": null,
+  "return_surface": "CONTROL_REVIEW",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/package.json",
+    "sha256": "6a50bb05576034137f9f65c35e9a51c2b71fff0149e1a426284fd9f24e56b1b5",
+    "bytes": 1778
+  },
+  "source_tree_sha256": "09ed8dc2199b2009cd4d8b2bdbb8c10880dc411afd622e977b72de5355d6fef8",
+  "manifest": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/delivery-manifest.json",
+    "sha256": "f2b709ca3a7e452f8b3367bd2061cb488719b9a7eaf8b9a500d7c251b3f533d2",
+    "bytes": 2910
+  },
+  "report": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/report.txt",
+    "sha256": "56196551451afa59be2d8eefcd204a90eaf648c707ba42f6d83690bd61e78245",
+    "bytes": 2471
+  },
+  "closure": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-closure.json",
+    "sha256": "629254b9b62d1e38a942760585f346af0c0d5f6373857c098cf95436b70eb23b",
+    "bytes": 1291
+  },
+  "tests": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/test-summary.json",
+    "sha256": "6826cd0d37fed6bee3f8a56d4c3eb0238892ed908332d9f10e3db7f6f2a5f564",
+    "bytes": 2108
+  },
+  "normal_demo_url": "http://127.0.0.1:4291/example.html",
+  "index_empty": true,
+  "commit_push": false,
+  "post_freeze_source_driver_SDK_edits": false,
+  "accounting": {
+    "new_starts": 2,
+    "new_charged_seconds": 394,
+    "cumulative_starts": 64,
+    "cumulative_charged_seconds": 3118,
+    "remaining_seconds": 5252,
+    "remaining_worker_ids": [],
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "materialization": "LOCAL_ONLY_SHARED_WORKTREE_READONLY_PAYLOAD_AND_MEMBER_HASHED_ARCHIVES",
+  "remaining": [
+    "Independent scoped control review",
+    "No WebDPR4/other-platform/physicalGPU/relative performance/SLO qualification"
+  ],
+  "official_G5_P34_performance_PASS": false
+}

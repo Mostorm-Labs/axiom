@@ -1,0 +1,109 @@
+{
+  "schema": "g5-ur2a-publication-local-boundary-v1",
+  "kind": "LOCAL_ONLY_SHARED_WORKTREE",
+  "approximately_excluded": "3.35GiB per frozen control boundary, not exact physical memory/disk measurement",
+  "bindings": [
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "source",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-identity.json",
+      "sha256": "9b55f14d7829c043ab7377d425df6cf95a483bd1b3cb73e8f7a943a58d60971f",
+      "bytes": 6622960
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "driver",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/driver-identity.json",
+      "sha256": "7b0bc6f5f558b90fcc4d51656a4dca2c23d7262f3948fda421ecb38d0e2fa535",
+      "bytes": 27659
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "sdk",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/candidate-builds.json",
+      "sha256": "83034747ac809b5adb55559c75b5fdb7a0a372c903a8d128cf114ab499699156",
+      "bytes": 17500
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "native",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-artifact-manifest.json",
+      "sha256": "793f55cab9e9a905e4b45838bfc9a562f4f6770740a088a2b1bda7acf93544b3",
+      "bytes": 11034
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "observations",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/functional-observations.json",
+      "sha256": "be32b4e29d003eae493a8d9f1dda52767c853be0bb6fa92c3e9f500bd9b2f60c",
+      "bytes": 32159
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "ledger",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/sampling-ledger.json",
+      "sha256": "8319560d249f568e1ef8dedcb820802cadba736892bb292ce13a87c49b795dd8",
+      "bytes": 3149
+    },
+    {
+      "subject": "G5-UR2a-current-scene-handoff-r2",
+      "role": "payload",
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/payload-manifest.json",
+      "sha256": "eea8afbeb32cb0f04b79b372b66a5eea52ea0fb06175527cce7f53387ab1522c",
+      "bytes": 382094
+    },
+    {
+      "subject": "G5-UR2a-mask-isolation-p36-r1",
+      "role": "source",
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-identity.json",
+      "sha256": "42786dcdabd28fdd91ef0f83990e1fdb49999c9ceb57d391b06c31cfdf55b519",
+      "bytes": 6623949
+    },
+    {
+      "subject": "G5-UR2a-mask-isolation-p36-r1",
+      "role": "native",
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-artifact-manifest.json",
+      "sha256": "3e1dab7fd94208cda5eab36651972195c3b42e92adb50cbed1ab9123dc8d0731",
+      "bytes": 11128
+    },
+    {
+      "subject": "G5-UR2a-mask-isolation-p36-r1",
+      "role": "observations",
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/functional-observations.json",
+      "sha256": "63470ded27d52c80d4fd68fc39acd0de5ca1ac3b145f52579cf21e545c743bfe",
+      "bytes": 32014
+    },
+    {
+      "subject": "G5-UR2a-mask-isolation-p36-r1",
+      "role": "ledger",
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/local-functional/sampling-ledger.json",
+      "sha256": "4f089491fa46a0787085eea04fbbfc7e30e449aa79720b0c2314b29c70d697f5",
+      "bytes": 3085
+    },
+    {
+      "subject": "G5-UR2a-mask-isolation-p36-r1",
+      "role": "payload",
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/payload-manifest.json",
+      "sha256": "b42995d9406dca21d63c3982e81590b972446ccf2bf3de13e52b4d6ba3da4134",
+      "bytes": 366936
+    }
+  ],
+  "excluded_raw_roots": [
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/local-functional/",
+    "out/G5-UR2a-current-scene-handoff-r2/",
+    "out/G5-UR2a-mask-isolation-p36-r1/"
+  ],
+  "remote_checkout_recovers_large_payload": false,
+  "publication_is_not_hosted_evidence_or_release_acceptance": true,
+  "publication_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512",
+    "bytes": 2297
+  },
+  "prior_blocked_publication": {
+    "path": ".aegis/results/G5-UR2a-publication-2026-11-09/result.json",
+    "sha256": "fd96b66081a8fa493dc9aa284cc9c678d2ad4f8242a81e1553402ce8943e33c7",
+    "bytes": 2224
+  }
+}

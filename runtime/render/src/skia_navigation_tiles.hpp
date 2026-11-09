@@ -42,7 +42,7 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={},std::uint32_t background=0xffffffffU);
  private:
     using ValidRegions=NavigationRegions;
     struct Sources {
@@ -94,6 +94,7 @@ class SkiaNavigationTiles final {
     std::optional<foundation::WorldRect> fallbackFocus_;
     CanonicalViewportTransform camera_{};
     std::uint64_t scene_=0;
+    std::uint32_t background_=0xffffffffU;
     bool dirty_=true;
     std::optional<int> level_;
     std::size_t warmed_=0;

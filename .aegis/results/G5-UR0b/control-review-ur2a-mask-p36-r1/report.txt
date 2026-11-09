@@ -1,0 +1,9 @@
+UR2a 本轮控制复核通过（SCOPED_CONTROL_ACCEPTED）。
+
+根因：平移后的 v4 本体带永久遮罩时，旧隔离判定和准备阶段准入可能把遮罩直接作用到有序合成目标，清除了背景。保存的旧二进制在真实 Metal 的 Direct／prepared、DPR1/2/4 下独立重现透明洞。修复仅涉及两个 Render 产品文件：让该类本体使用自身图层，并在准备阶段复用同一判断；未更改 Brush 算法、GPU策略、预算、Oracle、AA或公开接口。
+
+独立核对结果：85项定向原生、4项targeted GTest、64项Node、38项Python和120个边界文件通过。保存的80个冷态阶段全部通过原独立CPU/null-cache像素规则；20个after/Redo回环通过，原14处失败均闭合。20组public SDK输入正常结束；8组相机操作在精确帧前有实际default-FBO内容绘制；10组资格记录的提交／冻结名单／实际work／严格收据／显示退场按时序逐条对账，未把successor replacement伪装成原操作的CanonicalVisible。源码、两份SDK、882个只读payload和853个归档成员身份验证通过。控制面没有新增浏览器或Oracle调用。
+
+累计64次采样、3118秒；两个新窗口已关闭，剩5252秒不等于新的采样授权。源码及证据保持冻结，未提交推送。正常Demo：http://127.0.0.1:4291/example.html，HTTP内容与匹配SDK成员一致。
+
+结论仅覆盖本轮UR2a功能及修复闭环；不代表完整G5、P34、发布或性能SLO通过。真实Web只有DPR2，原生覆盖DPR1/2/4。后续优化需另行定义范围和采样窗口。

@@ -1,0 +1,4141 @@
+{
+  "schema": "g5-ur2a-r2-terminal-blocker-v1",
+  "class": "PIXEL_INTERIOR_OR_MASK_ORDER_FAILURE",
+  "status": "BLOCKED",
+  "id": "U2R-PIXEL-OPAQUE-BACKGROUND-01",
+  "facts": "Fresh ordinary and qualification Web canonical buffers contain transparent pixels where independent unchanged CPU/null-cache reference requires opaque white after consecutive erase; S2 zoom/reentry also fails. Not an AA-edge-only difference. No post-freeze repair or retry.",
+  "failed_stages": [
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S0-E-reerase",
+      "stage": "after",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-after.canonical.rgba",
+        "sha256": "e0f6eea9e689704359bafc0f1d767b8a2546d938b93ee1e97b8eb39243df18aa",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-after.axsnap",
+        "sha256": "43cc1279f8f2ccac237f7069c8b3221ec5ef97c1a025c5ab10223206f723a6d1",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-after-reference.rgba",
+        "sha256": "70d3b5c63f49df22a0f1c6228802b8901bd0a65f06fae64099f667de84c81d6c",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-after-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S0-E-reerase",
+      "stage": "redo",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-redo.canonical.rgba",
+        "sha256": "e0f6eea9e689704359bafc0f1d767b8a2546d938b93ee1e97b8eb39243df18aa",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-redo.axsnap",
+        "sha256": "4176126ed0b658c42ba41803dd67f09265c6da8228d8cf953bff73d2117c8d2e",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-redo-reference.rgba",
+        "sha256": "70d3b5c63f49df22a0f1c6228802b8901bd0a65f06fae64099f667de84c81d6c",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S0-E-reerase-redo-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S2-E-reerase",
+      "stage": "after",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-after.canonical.rgba",
+        "sha256": "0b88b6c47e1537a251fa43d4bf6fa940d59d497c5170b9d77d5dd977f3b67654",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-after.axsnap",
+        "sha256": "255b2537c050d8ae4d68b44ae62ac85e24e6493dcfe0635e82448593acf9bf2a",
+        "bytes": 2348695
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-after-reference.rgba",
+        "sha256": "6d4cc0903d433e606c885e3d44ad7ef8f2ab4b0b64d719f5902580d9e75ff0b9",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-after-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S2-E-reerase",
+      "stage": "redo",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-redo.canonical.rgba",
+        "sha256": "cf55711648b5445a6aae378b893d9a6150d300911ea92c3bed8eb371eebde765",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-redo.axsnap",
+        "sha256": "7cf4b360b4ca6c16bb7b2b9c0e6bada6b3ad5a071cec3d2ccaa1ba9008dfff57",
+        "bytes": 2348695
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-redo-reference.rgba",
+        "sha256": "6d4cc0903d433e606c885e3d44ad7ef8f2ab4b0b64d719f5902580d9e75ff0b9",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-E-reerase-redo-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "after",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-after.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-after.axsnap",
+        "sha256": "a16fded0809fb717c9d0403138efbd3d9382f015a91f7dcde2415c74942b4d82",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-after-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-after-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "undo",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-undo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-undo.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-undo.axsnap",
+        "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+        "bytes": 2187559
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-undo-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-undo-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-Q1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "redo",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-redo.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-redo.axsnap",
+        "sha256": "9436bc1790fa2f71b99e1f19b4bc18214f5d80aeb8a9bd702cae6dc33b3a5c51",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-redo-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-Q1/S2-Z-zoom-reentry-redo-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S0-E-reerase",
+      "stage": "after",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-after.canonical.rgba",
+        "sha256": "45e65edf4758c68bb486999542dd7952a38fe370f9156324936a55c8093a7467",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-after.axsnap",
+        "sha256": "da1f2db1f0b9be348874e27a5190c9e4167e19b6b2310f6e93650c2cd0f0fba2",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-after-reference.rgba",
+        "sha256": "81d65588e6c95b0d0c6f37fe9b74a6af6aaadd56e8d0f9d3cce7e62cbf7fd918",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-after-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S0-E-reerase",
+      "stage": "redo",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-redo.canonical.rgba",
+        "sha256": "45e65edf4758c68bb486999542dd7952a38fe370f9156324936a55c8093a7467",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-redo.axsnap",
+        "sha256": "6e0943c955551d82881e8d7096d04bd3b2d496315d3f62ecca7a0cbd832f792d",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-redo-reference.rgba",
+        "sha256": "81d65588e6c95b0d0c6f37fe9b74a6af6aaadd56e8d0f9d3cce7e62cbf7fd918",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S0-E-reerase-redo-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S2-E-reerase",
+      "stage": "after",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-after.canonical.rgba",
+        "sha256": "ae862a786cc9a927f860356af9e872402d98bc6258a9373012eb4d8bb5418357",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-after.axsnap",
+        "sha256": "b6d83344d6df90a08a357166c6adc00dc57706d2052e6d63a160dbd2fac84950",
+        "bytes": 2348695
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-after-reference.rgba",
+        "sha256": "58741363bcdb6e8e406e21c22a97bd6fd380bc7ba0bb45b49117f8aa3c8fc2a3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-after-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S2-E-reerase",
+      "stage": "redo",
+      "interior_mismatched_pixels": 4432,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 676470,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679658,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679675,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679676,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679677,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 679685,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681263,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 681264,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 886957,
+        "aa_boundary_pixels": 713043,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 4432,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 676470,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679658,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679675,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679676,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679677,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 679685,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681263,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 681264,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-redo.canonical.rgba",
+        "sha256": "ae862a786cc9a927f860356af9e872402d98bc6258a9373012eb4d8bb5418357",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-redo.axsnap",
+        "sha256": "0d3573ace3f08e6185ca16941931fc84f97a4be1574d8e20c544b9d7f48a759e",
+        "bytes": 2348695
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-redo-reference.rgba",
+        "sha256": "58741363bcdb6e8e406e21c22a97bd6fd380bc7ba0bb45b49117f8aa3c8fc2a3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-E-reerase-redo-reference.edge",
+        "sha256": "d4347711d821e092e28ab3a9806216b52483379d0390f0fe9c236dcddfc27a44",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "after",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-after.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-after.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-after.axsnap",
+        "sha256": "76281b7227361b2930afe36bf6602ace78dba40526de380e6032e99fa590248e",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-after-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-after-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "undo",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-undo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-undo.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-undo.axsnap",
+        "sha256": "4531a8dd678bf5da2692f22c3504c0a1e81b5fc667e68a6fc2e5b58a1f40cedd",
+        "bytes": 2187559
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-undo-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-undo-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    },
+    {
+      "worker": "UR2A2-N1",
+      "case": "S2-Z-zoom-reentry",
+      "stage": "redo",
+      "interior_mismatched_pixels": 1069,
+      "max_interior_delta": 255,
+      "witnesses": [
+        {
+          "pixel": 130598,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155836,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 155837,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173438,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 173439,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 174980,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179770,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "pixel": 179771,
+          "actual": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "reference": [
+            255,
+            255,
+            255,
+            255
+          ]
+        }
+      ],
+      "oracle": {
+        "status": "FAILED",
+        "compared_pixels": 2296,
+        "aa_boundary_pixels": 1597704,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1069,
+        "max_interior_delta": 255,
+        "witnesses": [
+          {
+            "pixel": 130598,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155836,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 155837,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173438,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 173439,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 174980,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179770,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "pixel": 179771,
+            "actual": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference": [
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+        "reference": {
+          "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+          "edge_bytes": 1600000,
+          "height": 1000,
+          "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+          "objects": 16,
+          "private_frame_ids": "oracle-local only; not production receipts",
+          "rgba_bytes": 6400000,
+          "status": "REFERENCE_RENDERED",
+          "width": 1600
+        },
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-redo.axsnap",
+        "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+        "readback": "correctness-only cold worker; not primary performance sampling",
+        "reference_origin": "NEW_ORACLE_ONCE"
+      },
+      "actual": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-redo.canonical.rgba",
+        "sha256": "4842cb04490879d4ff62e3fdce8db7511bc71af2489bdcde651b84b9afe51bf5",
+        "bytes": 6400000
+      },
+      "snapshot": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-redo.axsnap",
+        "sha256": "5f2872770bd2b68091435752c8ed03533fecd60ff63b477e4bcd0c8597c4b18a",
+        "bytes": 2241271
+      },
+      "reference": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-redo-reference.rgba",
+        "sha256": "361050ac8c4710b54e00fcf52a7abdc48d65a1c1537524122f1ed3b74a05d4d3",
+        "bytes": 6400000
+      },
+      "edge": {
+        "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/UR2A2-N1/S2-Z-zoom-reentry-redo-reference.edge",
+        "sha256": "813d3f8b283ea299f412b001ce01bc52bbe6e64b10156dd763df0517a34d6d16",
+        "bytes": 1600000
+      }
+    }
+  ],
+  "root_cause_status": "Observed product output defect; exact raster/material/damage root cause not yet isolated. Not attributed to environment or upstream authority without proof.",
+  "next_owner": "CONTROL_REVIEW: review this exact frozen failure and authorize a narrow Render repair/reverification candidate/window. Existing source owners/budgets/oracle remain."
+}

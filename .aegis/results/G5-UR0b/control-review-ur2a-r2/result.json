@@ -1,0 +1,85 @@
+{
+  "schema": "g5-ur2a-r2-independent-control-review-v1",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "subject": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/result.json",
+    "sha256": "349e558d2fc83405aaaadef8ce7ebcfb4317ecee80e0976190e9700e1bd17c84"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/package.json",
+    "sha256": "cec78f78ad5456400a5ef3dba7a3409f1ee58a3489390ec1ea3f0f70110c05a6"
+  },
+  "source_tree_sha256": "f31fa76cc26b7f541c1ae49aee79102899a7e54d6bce219487c5641cd071331c",
+  "review_surface": "CONTROL_REVIEW",
+  "verdict": "BLOCKED",
+  "classification": "FROZEN_REQUIREMENT_FAILURE",
+  "defect_layer": "IMPLEMENTATION_DEFECT",
+  "owner": "runtime/render existing composition and mask-isolation decisions",
+  "failed_obligation": "U2R-09: original independent CPU/null-cache interior qualification",
+  "failure_id": "U2R-PIXEL-OPAQUE-BACKGROUND-01",
+  "independent_evidence": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/integrity-review.json",
+      "sha256": "ec11fa152d9838c0b821cc772a05b6a35f739c7881002b6a63a03c1449c815fa"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/offline-pixels.json",
+      "sha256": "ca2453aa920f9523d84394c4f92495697812421450e006387f1e8c85f94de79a"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-review.json",
+      "sha256": "082ec94761af5bd5a1baa27ad765127fda9ef1b9a144dca2910df709472fb77f"
+    }
+  ],
+  "facts": {
+    "exact_delta_files": 20,
+    "other_tracked_unchanged": 31669,
+    "readonly_payload_files": 918,
+    "archive_members": 898,
+    "cold_stages_independently_recompared": 80,
+    "qualified": 66,
+    "failed": 14,
+    "after_redo_repeatability_passes": 20,
+    "new_native_independently_replayed": 10,
+    "prior_native71_and_GTest_Node_Python": "Producer frozen logs and matching artifacts verified; not independently restamped here",
+    "browser_starts": 0,
+    "oracle_invocations": 0,
+    "no_product_or_index_changes_by_control": true
+  },
+  "localization": {
+    "confidence": "Concrete Render path identified; causal native RED must precede a production fix",
+    "source_facts": [
+      "skia_headless_backend.cpp shouldIsolateInkEntry excludes nonidentity transforms even for compact Brush sources",
+      "skia_render_cache.cpp canRetainCompact requires no permanent mask",
+      "prepare admission selects kComposite for transformed nonisolated masked sources, then applies masks on that ordered composite",
+      "fixture native metadata confirms 16 compact v4 bodies with nonidentity translations; original CPU oracle explicitly isolates masks",
+      "All 14 failed stages are transparent-zero against opaque-white outside the unchanged independent AA band; preview hidden and empty",
+      "Diagnostic white compositing eliminates these interior differences; this is not an acceptance workaround"
+    ],
+    "failure_mode": "Permanent object mask can clear the document/backdrop instead of only its own stroke when admission/materialization paths change",
+    "impact": "Actual canonical RGBA loses opaque background; mixed-color/transparent-background or ordered overlaps can be corrupted; CSS white cannot qualify this image",
+    "repair_precondition": "Native or existing binary causal reproduction of transformed masked v4 path before repair. If this hypothesis is disproved, preserve new RED and stop for revised owner classification, no speculative multi-fix."
+  },
+  "non_blocking_findings": [
+    {
+      "id": "HISTORIC_SERVER_LOG_APPEND",
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/demo-server.log",
+      "meaning": "Old retained server appended request log after full source inventory freeze. All compiler/source/delta/driver/native/SDK/current raw manifests and archives verified. Preserve both digests and exclude this exact mutable historical log from a successor inventory. Do not rewrite the original source identity.",
+      "proof": {
+        "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/live-inventory-drift.json",
+        "sha256": "141f11d8c6af69acbc289d8e8161b116b106a10ec8a001067d9d87c512e2adb8"
+      }
+    }
+  ],
+  "closure_stability": {
+    "no_new_tolerance": true,
+    "no_new_semantic_schema": true,
+    "no_new_redundant_gate_obligations": true,
+    "old_UR2a_failures_preserved": true
+  },
+  "next_action": "P36 narrow Render implementation repair and failed frozen evidence plus relevant regressions on a separately frozen candidate/window; no UR2b/performance acceptance",
+  "no_official_G5_P34_or_performance_PASS": true
+}

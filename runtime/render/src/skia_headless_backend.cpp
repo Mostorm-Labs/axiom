@@ -826,6 +826,12 @@ bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
     // semantics. Preserve that behavior even for an ink-only frame. Legacy
     // VectorStroke/DabStroke content uses direct kClear when it is standalone,
     // but needs isolation when a real shape/image/etc. is underneath it.
+    // V4 permanent masks are source-local even for affine aliases. This same
+    // decision selects the isolated target in Direct, cooperative preparation
+    // and bounded working-set materialization; never clear their backdrop.
+    const auto* compact = std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+    if (compact && compact->content.get().stroke.config.algorithmVersion == 4 &&
+        !entry.record.eraseMasks.empty()) return true;
     return (hasDrawableNonInk && isInkReferenceEntry(entry)) ||
            (isBrushReferenceEntry(entry) && !hasNonIdentityTransform(entry));
 }

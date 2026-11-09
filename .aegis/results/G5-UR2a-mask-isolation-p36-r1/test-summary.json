@@ -1,0 +1,68 @@
+{
+  "native": {
+    "passed": 85,
+    "failed": 0,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-final-tests.log",
+      "sha256": "f54e0061b7b1aacd5778da77038ba6322ec6c1bc66d4e6ca66e34b9d70a573b6",
+      "bytes": 10032
+    },
+    "raw": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-final-full-raw.log",
+      "sha256": "7b40407f08b88f7873aacd434674c2fa2491c7336b2adabeb3a53101761217c4",
+      "bytes": 37287410
+    },
+    "registered": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-final-registered.json",
+      "sha256": "3813b1346f1e460e5c0e4c095d81283d5cae69ebaa2e031946972825f5c6f85b",
+      "bytes": 57279
+    }
+  },
+  "targeted_GTest": {
+    "passed": 4,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-targeted-GTest.log",
+      "sha256": "49f8aaefe9f493f74fbc626a7faf1391650c0a11c47389d3b7c671a6179d2475",
+      "bytes": 47747
+    }
+  },
+  "node": {
+    "passed": 64,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/node-tests.log",
+      "sha256": "bbd783685bde0080ab730d30e84fe9f9dcc6e3dc7da3b9039a9c6201e8c3dc3e",
+      "bytes": 12953
+    }
+  },
+  "python": {
+    "passed": 38,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/python-tests.log",
+      "sha256": "d42c135449569f6e493ffc8207571422303c92f04032311a286a164471b8b43a",
+      "bytes": 137
+    }
+  },
+  "boundary_files": {
+    "passed": 120,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/boundaries.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "baseline_behavioral_RED": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-causal-red-results.json",
+    "sha256": "850bd90ee4f58cbc5889124f5ab51ec50bee5485b593b5a513acf7e916fa0596",
+    "bytes": 315
+  },
+  "web": {
+    "cases": 20,
+    "passed_cases": 20,
+    "failed_cases": 0,
+    "cold_stages": 80,
+    "qualified": 80,
+    "failed": 0,
+    "after_redo_qualified": 20,
+    "required_after_redo": 20
+  }
+}

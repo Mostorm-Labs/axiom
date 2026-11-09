@@ -204,7 +204,7 @@ bool SkiaNavigationTiles::coverage(const foundation::WorldRect& visible,std::uin
 }
 void SkiaNavigationTiles::compose(SkCanvas& canvas,std::span<const Patch> patches,
     const CanonicalViewportTransform& camera,const FrameState& frame){
-    canvas.save();canvas.resetMatrix();canvas.clear(SK_ColorWHITE);
+    canvas.save();canvas.resetMatrix();canvas.clear(background_);
     double total=0,low=0,retainedArea=0;work.maximumUpscale=0;
     const double sx=frame.metrics.physicalWidth/frame.metrics.logicalWidth;
     const double sy=frame.metrics.physicalHeight/frame.metrics.logicalHeight;
@@ -230,7 +230,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const CanonicalViewportTransform& camera,const FrameState& frame,const NavigationSourceQuery& query,
     std::uint64_t resourceEpoch,const RenderCacheOptions& options,
     std::shared_ptr<resources::ResourceBudgetManager> budget,bool allowPrewarm,const RetainedNavigationSource* retainedSource, SkiaTextResources* textResources, ImageResourceResolver* images,
-    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements,std::shared_ptr<PreparedGeometryCache> prepared){
+    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements,std::shared_ptr<PreparedGeometryCache> prepared,std::uint32_t background){
     if(prepared)geometry_=std::move(prepared);
     // Standalone private callers retain their existing local service. Production
     // always receives the renderer-owned shared service.
@@ -310,10 +310,10 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
        !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY)||
        frame.metrics.logicalWidth<=0||frame.metrics.logicalHeight<=0)
         return BackendSubmissionResult::retry("world navigation ineligible");
-    if(budgetOwner_.lock()!=budget||provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
+    if(background_!=background||budgetOwner_.lock()!=budget||provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
         cancel();tiles_.clear();sources_.clear();work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
-        budgetOwner_=budget;provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
+        background_=background;budgetOwner_=budget;provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     const auto scene=frame.sceneReadToken.value();
     const bool demandChanged=!last_||scene_!=scene||camera_.scale!=camera.scale||

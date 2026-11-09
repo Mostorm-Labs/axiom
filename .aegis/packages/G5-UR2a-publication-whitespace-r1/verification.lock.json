@@ -1,0 +1,26 @@
+{
+  "schema": "g5-ur2a-publication-amendment-verification-r1",
+  "inherit": {
+    "path": ".aegis/packages/G5-UR2a-publication-2026-11-09/verification.lock.json",
+    "sha256": "a70ab5328a8c4f57cc58090143321f73dd5752007ec3fed5eb2c482566e2cced"
+  },
+  "supersedes_only": "artifact_whitespace accepts exact5paths; 99indexpaths,strict94",
+  "amendment": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512"
+  },
+  "exact_exceptions": {
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta.patch": "d004222b70e33aff8b770683ca7ef2f67f5e4cd414e44833a4be07e0152b671e",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta.patch": "7510935f37241a8f756e9bae68ecf106841f66026498573a2e3bbe829c1d7af2",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta.patch": "a2aa6a4ecc02ff49102f97d6419e416401b930ee4cfe05b7c600806ce5f65791",
+    ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/review-context.md": "5c9240c7fe7eed6d3d557b14396eb6fdfbeda5154cb8f54e9ca56917f47b78e2",
+    ".aegis/packages/G5-UR2a-publication-2026-11-09/implementation-context.md": "c27a62b9bc34947c216692746b328e4dd0089777bbe294bb732b47c8fabb1461"
+  },
+  "requirements": [
+    "Verify initial92stagepath/blob/modes match blocked-stage-manifest, all23source/79fixedpostimages exact.",
+    "Stageexact unionoforiginal92+this6fileamendmentpackage+checker-amendment-r1.json=99. Only6generatedpublicationmetadata may update withpreservedpreimages.",
+    "Fullchecker diagnostics retained, strictallother94paths=0, rawfilesandmodes match stage.",
+    "Oneordinarycommit parentbed9,pushcorrectbranch;authenticatedserver=tracking=HEAD,indexempty,trackedclean;unrelateduntrackedretained.",
+    "Preserve priorBLOCKEDresult/diagnostics andpublishsource/localonlyboundary honestly. No newbuilds/tests/browser/Oracle."
+  ]
+}

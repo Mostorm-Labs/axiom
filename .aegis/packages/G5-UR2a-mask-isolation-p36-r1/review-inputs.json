@@ -1,0 +1,102 @@
+{
+  "schema": "g5-ur2a-p36-review-inputs-v1",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "review": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/result.json",
+    "sha256": "278ff23c23395232e7bc99dc65a2fde122b7673214b969ee8b66c67f1c285644"
+  },
+  "original_package": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/package.json",
+    "sha256": "cec78f78ad5456400a5ef3dba7a3409f1ee58a3489390ec1ea3f0f70110c05a6"
+  },
+  "original_verification": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/verification.lock.json",
+    "sha256": "4fe75946e9e3bfcc0bf69d6d2aabb933b6448e61cb2b876fe4de904763a2a1ff"
+  },
+  "original_authority": {
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2/authority.lock.json",
+    "sha256": "b348e7147dde7141d08f755be9f52d1f0a56b90d139307ecc9134f95e6563c91"
+  },
+  "blocked_result": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/result.json",
+    "sha256": "349e558d2fc83405aaaadef8ce7ebcfb4317ecee80e0976190e9700e1bd17c84"
+  },
+  "delta": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta-manifest.json",
+    "sha256": "abf3c67cb6f107577eb391c25b01fd9ad4f777ff03c03954bbf76322283a83ed"
+  },
+  "source_identity": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-identity.json",
+    "sha256": "9b55f14d7829c043ab7377d425df6cf95a483bd1b3cb73e8f7a943a58d60971f"
+  },
+  "source_tree_sha256": "f31fa76cc26b7f541c1ae49aee79102899a7e54d6bce219487c5641cd071331c",
+  "driver_identity": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/driver-identity.json",
+    "sha256": "7b0bc6f5f558b90fcc4d51656a4dca2c23d7262f3948fda421ecb38d0e2fa535"
+  },
+  "builds": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/candidate-builds.json",
+    "sha256": "83034747ac809b5adb55559c75b5fdb7a0a372c903a8d128cf114ab499699156"
+  },
+  "delivery": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/delivery-manifest.json",
+    "sha256": "f37ede9eb77a7a3a1b134e833c0c0763549d200bf540c024f450cb05f3083f55"
+  },
+  "archives": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/archive-manifest.json",
+    "sha256": "fe1d322998ad4ce81fb4c2ff015f26bd05e3823cbd2a2d5bd42892559a7dca26"
+  },
+  "pixels": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/offline-pixels.json",
+    "sha256": "ca2453aa920f9523d84394c4f92495697812421450e006387f1e8c85f94de79a"
+  },
+  "integrity": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/integrity-review.json",
+    "sha256": "ec11fa152d9838c0b821cc772a05b6a35f739c7881002b6a63a03c1449c815fa"
+  },
+  "native": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-review.json",
+    "sha256": "082ec94761af5bd5a1baa27ad765127fda9ef1b9a144dca2910df709472fb77f"
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/local-functional/sampling-ledger.json",
+    "sha256": "8319560d249f568e1ef8dedcb820802cadba736892bb292ce13a87c49b795dd8"
+  },
+  "mutable_preimages": [
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "4df1f6de23ca75f70f64e47d8d9b6e6ccaf50dbce90ad1e9b4d725d1e05fc394"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "bb9e8750c764d5f95d2ffae226856dabf834b987e12e69999c06d3ca184aed6e"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "0420acbf55da90feae54faa5f589818c2382e74d34542280284136cf0ad878ea"
+    },
+    {
+      "path": "runtime/render/src/skia_geometry_internal.hpp",
+      "sha256": "9362db7b748f9024f02dc9b2ea76fc80704609d8a253c7fbd7b7bc4fc80eaf81"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "233094bff2041453f58f8da02b38cd5e914cadc4c9b03c2fe129b573381db327"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "cf9a5d5bd0c6367ebb8ef9436c0de3e608240066e8eb0b9867ab20c6d9bd958c"
+    },
+    {
+      "path": "runtime/render/tests/ur2a_current_composition_test.cpp",
+      "sha256": "5bca9807c565ee9998162ff0e13771b26f23c91260a2b51a1b963a64844e34d8"
+    }
+  ],
+  "historical_log": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/demo-server.log",
+    "action": "Preserve prior frozen identity and recorded appended identity; successor full inventory may explicitly exclude only this mutable historical request log. It is not candidate code/evidence."
+  }
+}

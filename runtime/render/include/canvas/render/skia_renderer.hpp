@@ -53,7 +53,8 @@ class SkiaRenderer final {
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
         const NavigationSourceQuery&, bool allowPrewarm=false,
         const EditingOverlay* selectionOverlay=nullptr,
-        const NavigationBackgroundQuery& backgroundOnly={});
+        const NavigationBackgroundQuery& backgroundOnly={},
+        const FramePlan* currentComposition=nullptr);
     [[nodiscard]] NavigationWork navigationWork() const noexcept;
     void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(

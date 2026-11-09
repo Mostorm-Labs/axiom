@@ -588,7 +588,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
 }
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
-    const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly){
+    const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly,const FramePlan* currentComposition){
     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
 
@@ -599,6 +599,22 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
+    // Composition authority is a validated current plan, independent of cached
+    // exact pixels. Unknown policy cannot authorize regional reuse.
+    SkColor background=SK_ColorWHITE;bool isolation=false;
+    if(currentComposition){
+        const auto& p=*currentComposition;
+        if(p.frame!=current||provider.generation()!=current.surfaceGeneration.value()||
+           internal::validateReferencePlan(p).code!=BackendSubmissionCode::kAccepted||
+           p.background.mode!=foundation::BackgroundMode::kPlain||p.transparentBackground||
+           p.background.color[3]!=1.0F||p.referenceDrawList.viewportClip!=foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight})
+            return BackendSubmissionResult::retry("current navigation composition unproven");
+        const auto& color=p.background.color;
+        background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();isolation=p.isolateEraseMasks;
+        G5_OBSERVE(g5::Kind::Basis,g5::Tag::composition_proof,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.camera.generation.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,background,isolation);
+    }else if(navigationCache_&&navigationCache_->matches(&provider,current)){
+        background=navigationCache_->background;isolation=navigationCache_->isolate;
+    }
     // Keep same-demand exact work;discard only obsolete offscreen preparation.
     // Its leases still wait for actual GPU completion before becoming reusable.
     if(renderCache_)renderCache_->releaseIdleWorkBuffers(current,
@@ -609,10 +625,11 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     const auto revalidate=[&](const std::shared_ptr<NavigationCache>& cache){
         if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_)return;
         if(cache->matches(&provider,current))return;
-        // A completed current plane supplies the current background/isolation
-        // policy. Without it, a source-only comparison cannot certify pixels.
+        // FrameState-only compatibility callers still need a current plane.
+        // New callers supply the independently validated current FramePlan.
         const auto basis=navigationCache_;
-        if(!basis||!basis->matches(&provider,current)||basis->background!=cache->background||basis->isolate!=cache->isolate)return;
+        if(currentComposition){if(background!=cache->background||isolation!=cache->isolate)return;}
+        else if(!basis||!basis->matches(&provider,current)||basis->background!=cache->background||basis->isolate!=cache->isolate)return;
         if(!cache->sources||cache->proofSemantic>current.sceneGeneration.value()||cache->proofScene>current.sceneReadToken.value()||
            !query||!options.navigationMaxQueries||
            std::chrono::steady_clock::now()-proofStart>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return;
@@ -723,7 +740,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     try{
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background);
         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}

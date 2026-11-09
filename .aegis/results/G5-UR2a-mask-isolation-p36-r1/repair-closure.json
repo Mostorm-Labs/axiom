@@ -1,0 +1,26 @@
+{
+  "status": "VERIFIED",
+  "failure_id": "U2R-PIXEL-OPAQUE-BACKGROUND-01",
+  "causal_RED": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-causal-red-results.json",
+    "sha256": "850bd90ee4f58cbc5889124f5ab51ec50bee5485b593b5a513acf7e916fa0596",
+    "bytes": 315
+  },
+  "causal_GREEN": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/native-causal-green-results.json",
+    "sha256": "9d8ffc2b0f467b429ca0ce0312120675b81a8795d7938d1db99ac348c220c76d",
+    "bytes": 107
+  },
+  "root_cause": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/root-cause-confirmation.json",
+    "sha256": "729193fe5363a914189583222f4d2e290995c387aa77ef938d12939e145cfd6b",
+    "bytes": 930
+  },
+  "failed_stages": [],
+  "causal_fix": "Masked compact-v4 always uses own-source isolation; Direct and prepare admission share the decision. Unmasked translated CPU and all legacy branches unchanged.",
+  "first_regression_failure_preserved": "Full first83/85 and native-final-full-raw-before-unmasked-guard.log retain incompatible unmasked CPU cache admission; guard narrowed, no keeper assertions edited. Final85/85 passing.",
+  "native_new_groups": 4,
+  "Web_pixel_stages_qualified": 80,
+  "Web_after_Redo_qualified": 20,
+  "GPU_policy_budget_oracle_AA_unchanged": true
+}

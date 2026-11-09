@@ -1,0 +1,36 @@
+{
+  "schema": "g5-ur2a-publication-verification-v1",
+  "obligations": [
+    {
+      "id": "PUB1",
+      "requirement": "Exact accepted source and lightweight evidence only",
+      "oracle": "Fixed list rawSHA+Git stage blob/modes; compare fullindexpaths to fixed+sixpackage+manifest+sixnamedpublicationmetadata; source23hashes unchanged.",
+      "acceptance": "No unrelated stage, no code mutation or byte normalization. Preserve full gitdiff cached check output; strict allotherpaths zero.",
+      "evidence_required": "Exactstagedblob/modes manifest,sourcehashes/checks/transcript"
+    },
+    {
+      "id": "PUB2",
+      "requirement": "Ordinaryfastforward correctremote",
+      "oracle": "Parentanchor ancestor; gitpush+authenticated lsremote; HEAD/tracking/server equal.",
+      "acceptance": "Onecommit parentbed9; noforce orhistory/config rewrite.",
+      "evidence_required": "Commit/tree/parent/push/serverlookup/index/trackedstatus"
+    },
+    {
+      "id": "PUB3",
+      "requirement": "Publishedsource isdistinctfrom localraw",
+      "oracle": "Repo publicationindex explicit source/result/review/rawSHA andLOCAL_ONLY boundary.",
+      "acceptance": "No binary/WASM/native/tar/rawpixels/fullsourceinventory in Git; do not claim remote recovers local-only3GiBpayload. No P34/G5/performancePASS.",
+      "evidence_required": "Published6fileindex and exact resultcallback"
+    }
+  ],
+  "artifact_whitespace": {
+    "exact_patch_exceptions": {
+      ".aegis/results/G5-UR2a-current-scene-handoff-r2/source-delta.patch": "d004222b70e33aff8b770683ca7ef2f67f5e4cd414e44833a4be07e0152b671e",
+      ".aegis/results/G5-UR2a-mask-isolation-p36-r1/repair-delta.patch": "7510935f37241a8f756e9bae68ecf106841f66026498573a2e3bbe829c1d7af2",
+      ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta.patch": "a2aa6a4ecc02ff49102f97d6419e416401b930ee4cfe05b7c600806ce5f65791"
+    },
+    "policy": "Frozen.patch artifacts keep exactbytes (CRLF/diffblankcontext). Preserve full unmodified checker diagnostic/nonzero exit. Only these exact SHA-bound artifacts may be excluded; strict remaining path check0. No source exceptions."
+  },
+  "no_new_browser_or_native_runs": true,
+  "existing_verification": "Reviewed85native+4GTest+64Node+38Python+120boundaries and80pixels/20roundtrips belong to unchangedsource; publicationmetadata not new testsubject."
+}

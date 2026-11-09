@@ -1,0 +1,58 @@
+{
+  "schema": "g5-ur2a-entry-reconciliation-r2",
+  "status": "FOUNDATIONS_ACCEPTED_SCOPED_UR2A_AUTHORIZED",
+  "human_authorization": "下一步开始吧，准备新的ur2a包",
+  "anchor": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "accepted_foundations": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json",
+      "sha256": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/control-publication-finalization-receipt.json",
+      "sha256": "b7074e29596fc3c0d55b5b0a454331366c39f720c6efaf1e28c3d39f5a9cf6bd"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/control-publication-receipt.json",
+      "sha256": "6d6a717e1fc8f30024a85b750d0cf6c95c737cf975f295fcae8942096b4cb2e5"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/ur2-entry-assessment.json",
+      "sha256": "e531989dfa08c895a24ed01964ad0901d72e0eccf25ff77922fe2172e1b110fb"
+    }
+  ],
+  "sequence_reconciliation": "The old resume document records UR1b as next at its historical issuance. Subsequent exact accepted UR1b/c/d results and user instruction supersede only that sequence restriction. R3 remains a design input except statements frozen in this package. No UR1e, fullUR0 or globalSLO entry gate.",
+  "remaining_foundation": "Current-Scene composition proof independent of old exact pixels is explicitly within this UR2a scope before removing presentation-dependent admission.",
+  "saved_UR2": {
+    "status": "SHELVED_REFERENCE_ONLY",
+    "refs": [
+      {
+        "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/manifest.json",
+        "sha256": "449971d6bc347598a43cdcbf9ff8a06c92b739bd272d8a3d876ba7636fc4165e"
+      },
+      {
+        "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/checkpoint.json",
+        "sha256": "bc1088a5510162a6f72d2c367e00b109219dfa3c6a80a1d794a8814583b6ca44"
+      },
+      {
+        "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/control-review.json",
+        "sha256": "4cdd3521490817cbf3e969932df0823c9ea6fdc85072b21e458ed312fdef6cb8"
+      },
+      {
+        "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/frozen-candidate/design.md",
+        "sha256": "b89acf75427bdcdfb60949ee21ec1dac8c5291c9dd6438e4fddaba0d78399e9e"
+      },
+      {
+        "path": ".aegis/checkpoints/G5-UR2-shelved-2026-11-09/evidence/repair-wip/design.md",
+        "sha256": "cc560768d928e37c2440ee741e464ddc5c88bbe3cc18c45649adf81df7d12b00"
+      }
+    ],
+    "retained_failures": [
+      "3 Web cold pixel failures lacking complete buffers",
+      "6 navigation phases with no observed content writes",
+      "old sweep fixture relied on nextDown forcing Brush handoff",
+      "actual Brush overlay visibility risk despite logical previewActive"
+    ]
+  },
+  "implementation_strategy": "Read and selectively reconcile old useful code/tests into current owners; no blanket patch/restore and no use of old candidate SDK as new proof."
+}

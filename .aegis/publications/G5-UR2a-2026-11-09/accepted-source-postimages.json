@@ -1,0 +1,157 @@
+{
+  "schema": "g5-ur2a-accepted-source-postimages-v1",
+  "source_tree_sha256": "09ed8dc2199b2009cd4d8b2bdbb8c10880dc411afd622e977b72de5355d6fef8",
+  "source_delta": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/source-delta-manifest.json",
+    "sha256": "42019cb4f884e5f13fa2b07c97863c12defa8505ff18e20bbe6f79d99ec165ae",
+    "bytes": 5777
+  },
+  "source_files": 23,
+  "files": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "2abb87f77eeb20cd14ba11e7600da63700e8be13356053c1475f540be761d78c",
+      "bytes": 20284,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "abe34d15a52e25054fae31b521ce0bf3ae4d07413003f27bddb32d780b9ed9a8",
+      "bytes": 49252,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/composition/tests/fc02_text_geometry_test.cpp",
+      "sha256": "da626e01c5c1ce22cf588594191830e1280e8ea9695e761d827c120cdd2578a9",
+      "bytes": 158142,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/composition/tests/ur2a_handoff_test.cpp",
+      "sha256": "b7ab049247ba930e228a3c8a54d7e557b418588f37b624b54c46f7f56339cdb5",
+      "bytes": 24548,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "65074c07f786b2434b07d293df221c0b388c7aaf44a8c014cd6eb7b64938815c",
+      "bytes": 6969,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "ad3d74905171f4a9e6d17a0511d9f1e72d4c2006a9879072c35ccee79c5cc8cd",
+      "bytes": 63301,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "d457e64bd9e68b5051e20664f901fa07b10a28fbf13c24febf2825408a6b45f0",
+      "bytes": 317518,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "e8024b2183b6caaa33a3640f87b305233e96f6d5b80800c84c878a453fecfdca",
+      "bytes": 42870,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "5f80684daefe58a142456372130b978904e00ea75255578808e6794057483b7c",
+      "bytes": 6404,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38",
+      "bytes": 77534,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "367ef141f6e7069ba9b3e4c705124c5e8f79636d8c2923d2fad6696c5612a8c1",
+      "bytes": 67122,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "bb85cfcf21923c94fa4a7a9d52a4566841bb22ee3b9eb40c34e08a7dd4368094",
+      "bytes": 5057,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "5043208f5659c70cb5da2007e535e57b6f2b49f43d1da4c4d313888aeee6853d",
+      "bytes": 71007,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "233094bff2041453f58f8da02b38cd5e914cadc4c9b03c2fe129b573381db327",
+      "bytes": 90754,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/tests/ur2a_current_composition_test.cpp",
+      "sha256": "5bca9807c565ee9998162ff0e13771b26f23c91260a2b51a1b963a64844e34d8",
+      "bytes": 5328,
+      "git_mode": "100644"
+    },
+    {
+      "path": "runtime/render/tests/ur2a_mask_isolation_test.cpp",
+      "sha256": "57152d79bf4c888fdca0456f14389dab502294895c18698b652cacac882c4244",
+      "bytes": 16417,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "bd0348c4dbb435448e9ee00e0d476efc80c7693a56ceca1b28a5fce3b709f1c8",
+      "bytes": 3545,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_cold_capture.mjs",
+      "sha256": "6d250ec51cb77fde9f8f41edcab69219ff811139572141ec2d63c38a3d778887",
+      "bytes": 1358,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff.mjs",
+      "sha256": "640451afe3d4036b1cbefcdced0eedda2ecddcf23ff053a01d0c78caef3156a1",
+      "bytes": 19539,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff_contract.mjs",
+      "sha256": "9a3e653ef6480bc9c722349fc6e25d9dae86783e65a292ad9b4a69255bf060b6",
+      "bytes": 3358,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/runners/g5/ur2a_handoff_runner.py",
+      "sha256": "15b53c56b0704986c1fd3dbbd925f19f5e94533accd4bfe8a71f183dff8b182e",
+      "bytes": 7384,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/tests/g5_ur2a_handoff.test.mjs",
+      "sha256": "f917da875259944f8301bec578289727165a443ac38b75fae95e6ebec4be1a9b",
+      "bytes": 3561,
+      "git_mode": "100644"
+    },
+    {
+      "path": "verification/tests/test_g5_ur2a_handoff.py",
+      "sha256": "6af40d84c640cfbcbebb654b2c7bb1068ebd72f76dcdc82ab90299ebde95497b",
+      "bytes": 2177,
+      "git_mode": "100644"
+    }
+  ],
+  "scope": "Exactly reviewed cumulative UR2a and P36 source, unchanged at publication.",
+  "publication_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512",
+    "bytes": 2297
+  },
+  "source_23_postimages_unchanged": true
+}

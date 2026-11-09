@@ -1,0 +1,131 @@
+{
+  "schema": "g5-ur2a-private-handoff-contract-r2",
+  "status": "FROZEN_SCOPED_INTERNAL_EXECUTION_RULES",
+  "public_API_ABI_impact": "NONE",
+  "canonical_model": "Unchanged Operation-only atomic apply and compensation Undo/Redo. Up remains synchronous semantic acceptance, not queued admission. Display, commit, Scene readiness, GPU completion and durability remain different facts.",
+  "owners": {
+    "input": "Existing RuntimeAppBinding/InputRouter/CanvasInteractionCoordinator/dispatch lane",
+    "transaction_and_display": "CanvasEditingRuntime existing eraser/Brush/selection/history/publication owners",
+    "scene": "Existing IncrementalRuntimeCoordinator/SceneCompiler/RuntimeScene; no scene in SDK or second projection owner",
+    "canonical_work": "Existing RuntimeCompositionCore captureCanonicalWork plus strict receivePlatformPresented; no new consumer token",
+    "render": "Existing SkiaRenderer, navigation/source/prepared/body/mask/pixel owners; same32/96MiB and frame allowances",
+    "physical_completion": "Existing SkiaSurfaceProvider and qualified GPU retirement; display records are not leases"
+  },
+  "state_axes": {
+    "semantic": [
+      "Uncommitted",
+      "Applied(commit_record)",
+      "NoOp",
+      "RejectedBeforeApply"
+    ],
+    "scene": [
+      "ReadyAtAcceptedGenerationAndRevision",
+      "RecoveryPending",
+      "RecoveryFailed"
+    ],
+    "display": [
+      "ActiveFeedback",
+      "SealedAwaitingReplacement",
+      "CoveredByTransientReplacement",
+      "RetiredByExactReplacement",
+      "CancelledDisplayDemand"
+    ],
+    "frame": [
+      "NotPrepared",
+      "FrozenEligibleRoster",
+      "SubmittedExactWork",
+      "StrictPlatformQualified",
+      "RejectedOrStale"
+    ]
+  },
+  "valid_deferred_next_down": {
+    "preconditions": [
+      "writable available same document/view/lifetime, permitted tool/source/pointer",
+      "latest committed Scene already ready or recoverable through existing Scene recovery independently of render",
+      "Stable valid metrics/binding; SDK metric flush/lifecycle work remains outside this stable-surface eraserBegin contract."
+    ],
+    "required": [
+      "Recover Scene before hit-dependent use, including two Up events with no frame opportunity.",
+      "Create current gesture trace/session identity without canonical or preview acquire/raster/clear/present or forcing exact preparation.",
+      "Do not hide retained Brush/erase feedback merely because Down occurs.",
+      "Once source/admission rejects, existing terminal cleanup leaves no stranded contact/session."
+    ],
+    "non_healthy_cases": "Surface unavailable, stale/foreign identity, permission/reentrancy/real Scene recovery failure remain explicit existing admission failures; no stale query, fake commit, or blanket all-input acceptance."
+  },
+  "transaction": {
+    "prepare_before_apply": [
+      "Current Scene/exact target result through current algorithm",
+      "Forward and inverse Operations/identities",
+      "EditorHistory.prepareRecord and all local fallible History storage",
+      "Existing PublicationReservation/prepared volatile custody",
+      "Bounded gesture/commit/display metadata and roster storage"
+    ],
+    "failure_before_apply": "Release reservation and cancel only uncommitted active gesture; no document, commit clock or History cursor mutation. No-op creates no Operation or History.",
+    "apply": "Exactly one OperationEngine.apply using existing generation/ledger/clock; preserve complete record.",
+    "after_applied": [
+      "Move/retain actual complete commit_record exactly once, including change_set and source/operation/commit identities.",
+      "Finalize already prepared History and volatile publication once; preserve original semantic acceptance even if derived Scene/render fails.",
+      "Keep equivalent canonical_commit observation, selection invalidation and observer/callback/reentrancy ordering. Avoid losing old observeApplied behavior by copying it incompletely.",
+      "Scene apply/recover uses accepted before/after generation/change_set and must not re-execute Operation.",
+      "Keep user-visible return accepted for committed Up; observer/derived failure cannot turn an applied commit into uncommitted/cancelled."
+    ],
+    "allocation_boundary": "No new fallible mandatory History/display/publication storage after apply. Reuse prepared/move/noexcept support; not a global D07 or external observer-allocation guarantee.",
+    "undo_redo": "Use existing History compensation engine. Independently prepare/recover current Scene before relevant Undo/Redo admission. Maintain current-state display proof after compensation; never reverse accepted Operation by deleting it."
+  },
+  "display_records": {
+    "structural_capacity": 128,
+    "capacity_policy": "Bounded private metadata admission, reserved before apply; exhaustion rejects before canonical mutation. No silent eviction or performance watermarks. Test-only smaller capacity/fault injection may exercise the same admission helper without public API.",
+    "identity_fields": [
+      "documentId and document/runtime epoch",
+      "runtime instance,viewId,view/lifetime and attachment identity",
+      "source/pointer generation,gesture/session identity and monotonic gesture serial",
+      "Brush session generation if applicable",
+      "operationId and CanonicalCommitStamp(runtime_epoch,ordinal)",
+      "actual after SemanticGeneration, Scene generation/revision",
+      "surface and metrics generations, provider/resource binding",
+      "camera/viewport and display source basis, object incarnation/mask identity where required"
+    ],
+    "geometry_policy": "Keep committed masks only in authoritative Scene. Active mask is disposable trace-derived feedback. Sealed records hold metadata, not another stroke/mask store; never reapply sealed masks on top of current canonical masks."
+  },
+  "brush_display": {
+    "preserve": "Existing BrushEngine geometry, paint and preview style remain unchanged, including the established ARC style override where applicable. Original exact CanonicalVisible identity/path unchanged; no new ARC wire/API.",
+    "transfer": "Deferred Down alone never hides/clears valid retained ARC. Only an accepted, validated full-viewport current-Scene transient replacement containing its committed content may take its display ownership; suppress only those old represented contours from later shared-overlay render, retaining their logical commit/session identities.",
+    "fresh_contours": "New active or sealed C not frozen into that replacement remains visible and is never globally cleared/suppressed.",
+    "completion": "Original matching CanonicalVisible may retire through its existing strict path. A newer full exact frame may instead close an eligible older display demand via distinct ReplacedByCurrentFrame(B)/SupersededByCurrentState outcome, never by forging CanonicalVisible(A) or relabelling B as A. Retire/remove only identities proven by B frozen roster using existing Runtime/controller lifecycle methods; preserve required terminal controls.",
+    "invalidation": "Failed/stale/partial/translucent-unproven transient does not transfer ownership. Camera/Scene/surface/resource changes invalidate display proof and schedule current feedback; logical identities do not become successful receipts. Lifecycle display cancellation has a distinct reason and cannot revoke a semantic commit."
+  },
+  "exact_replacement": {
+    "freeze": "From synchronized authoritative Scene at exact frame preparation, freeze bounded eligible records and complete basis; bind that immutable set only to successful actual renderer/coordinator/tracker submission and actual CanonicalWork from Core. Never enlarge at capture or completion.",
+    "qualification": "Existing Core work equality, tracker and RuntimeFrameCoordinator receive/retirePreview exact matching stay strict. A newer full current frame receives only its own qualified receipt.",
+    "outcomes": [
+      "ReplacedByCurrentFrame(B): explicit full current projection covers eligible old demand",
+      "SupersededByCurrentState: Undo/Delete/current incarnation makes old effect no longer part of current state, proven from current Scene/commit basis",
+      "CancelledDisplayDemand: loss/hide/owner exit/new viewport cancels that display request, not a successful visible result"
+    ],
+    "reject": [
+      "Only revision/ordinal comparison without current projection/coverage proof",
+      "Approximate nav, partial tiles, unknown completion or provider submit alone",
+      "Wrong document,view,lifetime,object incarnation,work/frame,surface/metrics/resource",
+      "A record or active/sealed C created after frozen roster"
+    ],
+    "safety": "Old A completion cannot clear B/C; cancelled A need not receive a fake A completion when exact B replaces its eligible display. GPU leases retire independently under UR1d."
+  },
+  "current_scene_navigation": {
+    "demand": "Build separate disposable current FrameState/query from synchronized Scene and current camera/surface/resource identity. Keep captured old exact identities immutable; no original-frame restamping.",
+    "composition_proof": "Runtime supplies a private fully validated current-Scene composition FramePlan/proof independent of old pixels. Derive background, isolation/compositing, clip/metrics/resource/source scope using existing canonical defaults and FramePlan validation; no caller bool force-compatible bypass. Reuse immutable source data and avoid discarded canonical encoding/digest on policy/transient paths.",
+    "regional_reuse": "Renderer still requires target/resource identity, complete ordered source/body equality, object-specific historical/active masks and conservative AA/filter damage validity. Unknown/missing proof returns Pending/reject and preserves only genuinely valid feedback. No reuse of erased areas as current pixels.",
+    "scheduling": "Current camera feedback can present before exact canonical finishes; it is not CanonicalVisible or a canonical completion-slot user. Preserve useful same-basis jobs/progress, existing work allowance, current GPU decision and resource lifecycle. After input ends feasible current exact work must finish fairly; no always-transient scheduler that starves exact.",
+    "backpressure": "Temporary actual target/metadata shortage returns bounded retry with demand/progress, no whole-frame synchronous CPU fallback or repeated from-zero work. Genuine lost/invalid targets keep UR1d classification."
+  },
+  "required_orders": [
+    "A-Up -> B-Down -> A-completion",
+    "A/B committed, A rendering cancelled, only exact B completion",
+    "B submitted -> active/sealed C -> B-completion",
+    "commit -> Undo -> Redo -> old completion",
+    "Scene apply failure -> next erasure -> recovery success/failure",
+    "A-Up -> wheel pan / ctrl-wheel zoom while canonical pending",
+    "Brush seal -> partial erase with real visible overlay and later qualified replacement",
+    "no-op,cancel,source-lost,pointer reuse,resize,lost/rebind,close"
+  ],
+  "semantic_conflict_policy": "No upstream schema or consumer-semantic reinterpretation authorized. If existing owner contracts cannot express these private display distinctions, report exact conflict before expanding API/semantic scope."
+}

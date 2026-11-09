@@ -1,0 +1,141 @@
+{
+  "schema": "g5-ur2a-mask-isolation-independent-control-review-v1",
+  "status": "SCOPED_CONTROL_ACCEPTED",
+  "review_surface": "CONTROL_REVIEW",
+  "scope": "G5-UR2a-current-scene-handoff-r2 frozen U2R-01..12 plus P36 permanent-mask own-source isolation repair; not whole G5/release/performance Gate",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+  "subject": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/result.json",
+    "sha256": "0ee8fc9c974bd70ea6e5477b5ac354178a76b230e0a39a35b89c341392ab6f7c"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2a-mask-isolation-p36-r1/package.json",
+    "sha256": "6a50bb05576034137f9f65c35e9a51c2b71fff0149e1a426284fd9f24e56b1b5"
+  },
+  "original_blocked_result": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/result.json",
+    "sha256": "349e558d2fc83405aaaadef8ce7ebcfb4317ecee80e0976190e9700e1bd17c84"
+  },
+  "prior_control_blocker": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur2a-r2/result.json",
+    "sha256": "278ff23c23395232e7bc99dc65a2fde122b7673214b969ee8b66c67f1c285644"
+  },
+  "source_tree_sha256": "09ed8dc2199b2009cd4d8b2bdbb8c10880dc411afd622e977b72de5355d6fef8",
+  "delivery": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/delivery-manifest.json",
+    "sha256": "f2b709ca3a7e452f8b3367bd2061cb488719b9a7eaf8b9a500d7c251b3f533d2"
+  },
+  "archives": {
+    "path": ".aegis/results/G5-UR2a-mask-isolation-p36-r1/archive-manifest.json",
+    "sha256": "ffeaeb903ff154846d3b0210350a00b02f8a179723ff865400e914a77ad66ecf"
+  },
+  "independent_evidence": [
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/integrity-review.json",
+      "sha256": "93b478ed9a49421c78dccfddb7f3ac78e95884f44904b7a049d349b7436b4b77"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/regressions.json",
+      "sha256": "b7ccaf4d2bffc42c8347bbcce65a892f1393e6b44f131bc8b18c7f00fe5d8111"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/offline-pixels.json",
+      "sha256": "f5345dcdc81c4ea9672d262e347806e9c9a63cb65c57966f79f30886c67a3862"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/functional-review.json",
+      "sha256": "9bb54ecf42eaae0900b02514d140e9ad8a3fe20c3fb82e636c79edef4d49e562"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/source-review.json",
+      "sha256": "ff8693943d900a77e69a105c3930bd23577eed9ec4e4d1593450ed0dbdc8939b"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2a-mask-p36-r1/demo-check.json",
+      "sha256": "4a852f38d28292c0f014da2cd74342139cb47fed21dab50dc7e98dfd4146b18c"
+    }
+  ],
+  "frozen_requirement_audit": {
+    "passed": {
+      "U2R-01": "Real native busy acquire/present admission, terminal input cleanup and20 public Web input sequences pass.",
+      "U2R-02": "Scene failure/recovery independent from presentation and latest semantic-state query tests pass.",
+      "U2R-03": "Prepare/finalize History/publication and exactly-once mutation tests pass; expected Web operation deltas independently checked.",
+      "U2R-04": "Strict frozen roster/current display replacement/native newerC and actual successful work association pass.",
+      "U2R-05": "Native Brush visibility test plus4 actual CSS-visible Web Brush cases, cold preview empty/hidden after handoff.",
+      "U2R-06": "CurrentScene composition proof/native navigation and all8 Web camera cases have default-FBO content before exact.",
+      "U2R-07": "Native lifecycle, stale/mismatched identities, strict GPU lifetime/fair progress and resource cases pass without budget changes.",
+      "U2R-08": "Fresh matched public root SDK normal+qualification20 cases complete, contacts0 and no public input errors.",
+      "U2R-09": "All80 original independent CPU/null-cache pixel comparisons and20 after/Redo repeatability checks independently pass.",
+      "U2R-10": "Independent chronological traversal of raw10 qualification cases validates commit/eligible serial/frame/work/accepted completion before display outcome; own-visible and successor replacement distinct.",
+      "U2R-11": "85 registered native+4 targetedGTest,64Node,38Python and120boundary checks independently rerun; matching artifacts checked before/after.",
+      "U2R-12": "Package/source/delta/compiler/native/driver/SDK/read-only payload/archive identities resolve; guarded closed two-window ledger/cleanup and declared LOCAL_ONLY boundary verified."
+    },
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "all_original14_failed_stages_closed": true,
+    "causal_RED_and_final_GREEN_independently_observed": true,
+    "pixel_stages": 80,
+    "after_redo": 20,
+    "native": 85,
+    "targeted_GTest": 4,
+    "Node": 64,
+    "Python": 38,
+    "boundary_files": 120,
+    "readonly_payload_files": 882,
+    "archive_members": 853,
+    "new_browser_starts_by_control": 0,
+    "new_oracle_invocations_by_control": 0
+  },
+  "repository_reality_audit": {
+    "repair_files": 4,
+    "product_files": 2,
+    "cumulative_delta_files": 23,
+    "other_tracked_unchanged": 31667,
+    "repair_and_cumulative_patch_roundtrips": true,
+    "normal_and_qualification_SDK_members_each": 36,
+    "public_API_ABI_versions_locks_budgets_unchanged": true,
+    "normal_diagnostics_and_timing": "OFF",
+    "developer_components": "OFF",
+    "index_empty": true,
+    "commit_push": false,
+    "materialization": "LOCAL_ONLY_SHARED_WORKTREE, exact readonly payload+member-hashed archives independently resolved"
+  },
+  "new_blocking_findings": [],
+  "blocking_findings_closed": [
+    "U2R-PIXEL-OPAQUE-BACKGROUND-01"
+  ],
+  "non_blocking_findings": [
+    {
+      "id": "PERFORMANCE_SCOPE",
+      "meaning": "Functional waiting and handler timings are unpaired observations; no relative performance,33ms SLO or Vibe equivalence conclusion."
+    },
+    {
+      "id": "PLATFORM_SCOPE",
+      "meaning": "Actual WebDPR2 and nativeDPR1/2/4 only. No other platform ABI/release or physical GPU-display qualification."
+    }
+  ],
+  "accounting": {
+    "historical_starts": 62,
+    "historical_seconds": 2724,
+    "new_starts": 2,
+    "new_ceiled_seconds": 394,
+    "cumulative_starts": 64,
+    "cumulative_seconds": 3118,
+    "original_cap_seconds": 8370,
+    "remaining_seconds": 5252,
+    "remaining_authorized_ids": [],
+    "owned_processes_cleaned": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4291/example.html",
+    "HTTP_matching_artifact": true,
+    "old_failed4290_preserved": true
+  },
+  "next_action": "Return scoped acceptance to implementation; retain source/evidence freeze and current Demo. No automatic commit/push, UR2b or new browser/performance window; successor requires its own task scope.",
+  "official_whole_G5_P34_performance_or_release_PASS": false,
+  "control_product_or_index_mutation": false
+}

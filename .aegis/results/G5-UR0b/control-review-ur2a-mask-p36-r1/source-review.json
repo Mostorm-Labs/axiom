@@ -1,0 +1,16 @@
+{
+  "status": "ACCEPTED",
+  "repair_paths": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/tests/ur2a_mask_isolation_test.cpp"
+  ],
+  "product_fix": "Permanent-mask compact algorithm4 is an isolated source under affine aliases; shared requiresInkEntryIsolation is now used by admission and existing Direct/working-set paths. No geometry/evaluator/mask mathematics change.",
+  "legacy": "Rule applies only when permanent masks exist; old unmasked CPU group-count regressions independently pass, Vector/Dab/v3 retain existing branch.",
+  "ownership": "Existing Runtime input/Operation/History/Scene/work/receipt/ARC owners and public API unchanged relative to reviewed r2; only two Render product files change.",
+  "verification_adapter": "Read source: exact python3.12 executable+two-argument old --source-identity command is redirected. All other execFileSync calls and original imported worker/matrix/capture/oracle/pacing/guard are unchanged and independently hashed. Authorized successor self-output and one historical log exclusion only.",
+  "no_css_flatten_background_repaint_or_budget_change": true,
+  "whitespace_check_exit": 0,
+  "causal_red": "Saved exact pre-fix binary independently rerun on real native Metal, Direct and ordinary prepared exit1 as expected; final matching source compiled binary passes complete85 selection."
+}

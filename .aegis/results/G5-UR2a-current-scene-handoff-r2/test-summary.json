@@ -1,0 +1,68 @@
+{
+  "native": {
+    "passed": 81,
+    "failed": 0,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-final-tests.log",
+      "sha256": "9ccd605c9f0aea658ea21de0561321286cb1cf26b817aa936592328ffe528eea",
+      "bytes": 9555
+    },
+    "raw": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-final-full-raw.log",
+      "sha256": "112ce87acc679b4209e6aad4ef590a8fca7e91c0c279a7f5bddcf8ad5b68216b",
+      "bytes": 36637788
+    },
+    "registered": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-final-registered.json",
+      "sha256": "93373649814fc5e88488674d717b987e2ebdbb0e90d1937839cfd16927a5e969",
+      "bytes": 55117
+    }
+  },
+  "targeted_GTest": {
+    "passed": 4,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-targeted-GTest.log",
+      "sha256": "cf47bbb3acea75dbf33c2fef09852d9dae471ed4fa7b372945cccf4dc86d4639",
+      "bytes": 47785
+    }
+  },
+  "node": {
+    "passed": 64,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/node-freeze-tests.log",
+      "sha256": "19bde89264cd2ceee635e5875782d6d70beca56249d7f036caf0cdba42ca1513",
+      "bytes": 12955
+    }
+  },
+  "python": {
+    "passed": 38,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/python-preworker-tests.log",
+      "sha256": "8f537a6c6a49e3c9e1c756c7d40c7caa4bab96d10d0864430414aae536ef3a93",
+      "bytes": 137
+    }
+  },
+  "boundary_files": {
+    "passed": 120,
+    "log": {
+      "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/boundaries-freeze.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  },
+  "baseline_behavioral_RED": {
+    "path": ".aegis/results/G5-UR2a-current-scene-handoff-r2/native-red-results.json",
+    "sha256": "c9ce920d78a84779c88ce9805863dc32b1876619f7bec301ce24102a6d7a625d",
+    "bytes": 246
+  },
+  "web": {
+    "cases": 20,
+    "passed_cases": 14,
+    "failed_cases": 6,
+    "cold_stages": 80,
+    "qualified": 66,
+    "failed": 14,
+    "after_redo_qualified": 20,
+    "required_after_redo": 20
+  }
+}

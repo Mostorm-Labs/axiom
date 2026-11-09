@@ -1,0 +1,65 @@
+{
+  "schema": "g5-ur2a-publication-amendment-closure-r1",
+  "inherits_execution": {
+    "path": ".aegis/packages/G5-UR2a-publication-2026-11-09/execution-contract.json",
+    "sha256": "a59f6e9458b2089c28f78e3131ec3e1f5ee0f311c940e3c4ec29452ccd7d8beb"
+  },
+  "overrides": {
+    "exact_index_paths": "Original92 union new6packagefiles and one checker-amendment JSON =99. No otherpaths.",
+    "allowed_additions": [
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/package.json",
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/authority.lock.json",
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/verification.lock.json",
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/execution-contract.json",
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/implementation-context.md",
+      ".aegis/packages/G5-UR2a-publication-whitespace-r1/evidence-contract.json",
+      ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json"
+    ],
+    "whitespace_contract": {
+      "path": ".aegis/results/G5-UR0b/ur2a-publication-2026-11-09/checker-amendment-r1.json",
+      "sha256": "616c005d4598fa5aabc88de1b7dab22fed0932541f9ff4cd6a20798a70d34512"
+    },
+    "metadata_updates": "Preserve exact6oldpublicationmetadata preimages andstageblobidentity into newresults before updating bounded publicationindexes/checks to r1. Fixed79,old6pubpackageandfrozenmanifest immutable.",
+    "runner": "May create new publication-r1.py under new resultoutput; update mechanical99whitelist andexact5 exceptions only. Keep oldrunner andBLOCKEDresult/transcripts untouched.",
+    "result_path": ".aegis/results/G5-UR2a-publication-whitespace-r1/result.json"
+  },
+  "forbidden": [
+    "No acceptedsource/test/driver/packagebyte rewriting",
+    "Noforce/reset/stash/clean/rebase/merge/remoteorcredentialconfigrewrite",
+    "No newSDKbuild/native/browser/Oracle orlargepayloadGitstage",
+    "NoUR2bproductworkuntilpublishedandseparatepackage"
+  ],
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "evidence": {
+    "blocking": [
+      "99rawstagepath/blob/modes andstrict94/completechecker",
+      "Exactcommit/tree/parent/server,indexstatus/localonly/callback"
+    ],
+    "corroborative": [
+      "Prioracceptedsource-bound regressions unchanged"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Exact99only,all23source/79fixed unchanged,fullcheckerartifactsclassified,strict94check0",
+      "Onecorrectfastforwardcommitandpush,authenticatedserver=HEAD=tracking,cleantracked,indexempty",
+      "Durableresult/publicationindex+localonlytruth andproactivecontrolcallback"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "REPOSITORY_OR_SOURCE_OR_INDEX_MISMATCH",
+      "NEW_NONEXEMPT_WHITESPACE_FINDING",
+      "AUTHENTICATION_OR_NETWORK_BLOCKER"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "callback_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "include": "commit/tree/parent,result/manifest SHA,authenticatedserver,status,99/94checks andlocalrawlimits"
+  }
+}

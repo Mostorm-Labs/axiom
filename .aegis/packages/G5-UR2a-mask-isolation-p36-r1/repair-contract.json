@@ -1,0 +1,56 @@
+{
+  "schema": "g5-ur2a-p36-repair-contract-v1",
+  "failure_id": "U2R-PIXEL-OPAQUE-BACKGROUND-01",
+  "classification": "FROZEN_REQUIREMENT_FAILURE / IMPLEMENTATION_DEFECT / Render",
+  "trusted_target": "Original U2R-09 independent CPU/null-cache opaque-background and per-object-mask qualification; no new schema or AA policy",
+  "scope": "Repair v4 compact source/backdrop isolation consistently across Direct, cooperative preparation and bounded working-set materialization. Keep accepted UR2a input, atomic commit, currentScene navigation and frozen receipt/display work unchanged.",
+  "allowed_product_paths": [
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_geometry_internal.hpp",
+    "runtime/render/src/skia_renderer.cpp"
+  ],
+  "allowed_test_paths": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/tests/ur2a_mask_isolation_test.cpp",
+    "runtime/render/tests/ur2a_current_composition_test.cpp"
+  ],
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/",
+    "verification/evidence/performance/g5-ur2a-mask-isolation-p36-r1/",
+    "out/G5-UR2a-mask-isolation-p36-r1/"
+  ],
+  "readonly": [
+    "All other product paths",
+    "All original verification drivers/worker/guard/fixture/oracle code",
+    "All old source/results/payloads/archives/packages",
+    "OperationEngine, History, Scene, FrameCoordinator, canonical receipt tracker, ARC protocol and schemas",
+    "GPU completion/retirement/strict target decisions and budgets",
+    "All JS/C/consumer public API/ABI/version/install profiles and dependency/descriptor locks"
+  ],
+  "root_cause_phase": {
+    "required_before_fix": true,
+    "method": [
+      "Before changing listed product files, add a real native causal RED on frozen f31 source: transformed v4 compact body + permanent mask, same geometry/mask with identity transform as control; include mask extending beyond own ink onto opaque backdrop. Existing APIs only, no compile-red.",
+      "Exercise the actual Direct/preparation/staged branch that creates the wrong alpha. Independent explicit expected RGBA or pinned CPU/null-cache isolation=true reference must establish opaque/background/other objects; do not use the faulty classifier as expected.",
+      "Bind active admission/material target and masking destination to evidence; contrast exactly the isolation variable. Preserve red stdout and exact preimage/binary.",
+      "Confirm whether this is inherited in bed9 or first exposed by UR2a scheduling without erasing old failures. If concrete causal RED contradicts this localization, STOP with CODE_PATH_NOT_CONFIRMED, diagnostic evidence and no speculative fix or browser attempt."
+    ],
+    "localization": "Nonidentity compact sources excluded by shouldIsolateInkEntry; canRetainCompact excludes permanent masks; preparation can select kComposite then drawEraseMasks on ordered composite. Captured fixtures have16 translated v4 aliases. Static path and transparent-zero witnesses localize Render, but causal RED is mandatory."
+  },
+  "implementation_rules": [
+    "Extend existing shared Render helpers/owners; centralize the existing v4 source-isolation decision where needed, no alternate renderer or document owner.",
+    "A permanent object mask clears its own v4 body, not the document background or other ordered objects, regardless of transform/cache hit/admission/pressure. Geometry identity stays transform/mask independent.",
+    "Do not fix by CSS white, final alpha flatten, root background repaint, changing reference, increasing tolerance, disabling masks, dropping older mask history or drawing selected objects above all others.",
+    "Preserve true transparent/custom backgrounds, opacity/self-intersection/object order/AA and seam correctness. Preserve legacy VectorStroke/Dab/v3 contracts; no global legacy semantic rewrite through blanket isolation=true.",
+    "No changes to GPU policy, strict fallback, completion fences,32/96MiB limits,8MiB/512 entries, canonical/nav time/step budgets or staged progress. No per-frame synchronous CPU escape.",
+    "Do not modify or discard any existing20-file UR2a delta outside listed minimal Render changes; all outside-scope tracked files and public boundaries unchanged.",
+    "No product edits after new source/driver/native/SDK freeze before either new browser worker; if new failure appears return BLOCKED with saved bytes, never patch-and-retry old window."
+  ],
+  "handoff_rules": [
+    "Do not commit/push or activate UR2b. Old4290 remains immutable failed comparison Demo. Prepare a fresh normal Demo on unused port>=4291 only after artifacts matched.",
+    "Implementation is sole code/index writer; control package author does not mutate source. Continue ordinary implementation decisions within frozen scope without an approval pause.",
+    "Proactively notify control01a1b6f3-e69a-7fe2-8d9b-0222e8741f03 on READY_FOR_CONTROL_REVIEW or any BLOCKED/terminal state, with exact package/result/source/driver/manifest/archive SHA, tests, pixels, ledger, PID cleanup and remaining findings. User explicitly authorized the notification workflow."
+  ]
+}

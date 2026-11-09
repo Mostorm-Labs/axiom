@@ -1,0 +1,43 @@
+{
+  "schema": "g5-ur2a-p36-exact-repair-delta-v1",
+  "baseline": "f31fa76cc26b7f541c1ae49aee79102899a7e54d6bce219487c5641cd071331c",
+  "entry_inventory_sha256": "8ce91869982df18a4723fa4e1d3ecf1d3e965ebe399828baeca83b0c1e36822e",
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "e8024b2183b6caaa33a3640f87b305233e96f6d5b80800c84c878a453fecfdca",
+      "preimage_sha256": "cf9a5d5bd0c6367ebb8ef9436c0de3e608240066e8eb0b9867ab20c6d9bd958c",
+      "bytes": 42870
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38",
+      "preimage_sha256": "4df1f6de23ca75f70f64e47d8d9b6e6ccaf50dbce90ad1e9b4d725d1e05fc394",
+      "bytes": 77534
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "5043208f5659c70cb5da2007e535e57b6f2b49f43d1da4c4d313888aeee6853d",
+      "preimage_sha256": "bb9e8750c764d5f95d2ffae226856dabf834b987e12e69999c06d3ca184aed6e",
+      "bytes": 71007
+    },
+    {
+      "path": "runtime/render/tests/ur2a_mask_isolation_test.cpp",
+      "sha256": "57152d79bf4c888fdca0456f14389dab502294895c18698b652cacac882c4244",
+      "preimage_sha256": null,
+      "bytes": 16417
+    }
+  ],
+  "patch_sha256": "7510935f37241a8f756e9bae68ecf106841f66026498573a2e3bbe829c1d7af2",
+  "roundtrip": "VERIFIED",
+  "outside_entry_unchanged": 30908,
+  "exclusions": [
+    ".aegis/results/G5-UR0b/",
+    "verification/evidence/performance/g5-unified-render-ur0b/",
+    ".aegis/results/G5-UR2a-current-scene-handoff-r2/",
+    ".aegis/results/G5-UR2a-mask-isolation-p36-r1/",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/demo-server.log"
+  ],
+  "public_API_ABI_versions_locks_budgets_unchanged": true,
+  "index_empty": true
+}

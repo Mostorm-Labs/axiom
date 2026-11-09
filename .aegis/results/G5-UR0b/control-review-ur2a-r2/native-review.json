@@ -1,0 +1,108 @@
+{
+  "status": "VERIFIED",
+  "passed": 10,
+  "selection": "Only ten new registered UR2a tests; existing71 plus targetedGTest/Node/Python remain producer evidence at this blocked review",
+  "cases": [
+    {
+      "name": "G5UR2ACompositionProof",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/render/axiom_ur2a_current_composition_tests"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.1321644590352662,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ACompositionProof.log"
+    },
+    {
+      "name": "G5UR2AReadmissionAcquire",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "acquire"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.23736770800314844,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2AReadmissionAcquire.log"
+    },
+    {
+      "name": "G5UR2AReadmissionPresent",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "present"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.02067820797674358,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2AReadmissionPresent.log"
+    },
+    {
+      "name": "G5UR2ANavigation",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.019505542004480958,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ANavigation.log"
+    },
+    {
+      "name": "G5UR2AHandoff",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "handoff"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.019100082980003208,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2AHandoff.log"
+    },
+    {
+      "name": "G5UR2ASceneRecovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "scene"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.01956383400829509,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ASceneRecovery.log"
+    },
+    {
+      "name": "G5UR2AHistory",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "history"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.020586666010785848,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2AHistory.log"
+    },
+    {
+      "name": "G5UR2ALifecycle",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "lifecycle"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.020614958950318396,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ALifecycle.log"
+    },
+    {
+      "name": "G5UR2ANavigationSafety",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation-safety"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.12939337501302361,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ANavigationSafety.log"
+    },
+    {
+      "name": "G5UR2ABrushVisibility",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2a-current-scene-handoff-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "brush"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.020624166005291045,
+      "log": ".aegis/results/G5-UR0b/control-review-ur2a-r2/native-G5UR2ABrushVisibility.log"
+    }
+  ],
+  "new_builds": 0,
+  "browser_starts": 0
+}

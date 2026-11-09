@@ -478,7 +478,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
                 continue;
             }
             const auto& t=entry.record.transform;
-            if(!isolatedInk&&!canRetainCompact(canvas,entry)&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
+            if(!requiresInkEntryIsolation(entry,isolatedInk)&&!canRetainCompact(canvas,entry)&&!(plan.isolateEraseMasks&&!entry.record.eraseMasks.empty())&&
                (t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)){
                 // Direct transformed ink-only material blends onto the actual
                 // backdrop. A transparent per-object cache adds a quantization

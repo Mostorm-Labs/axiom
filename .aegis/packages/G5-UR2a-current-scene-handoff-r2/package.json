@@ -1,0 +1,68 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2a-current-scene-handoff-r2",
+  "status": "AUTHORIZED_SCOPED_UR2A",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2a-current-scene-handoff-r2",
+    "content_identity": "package.json SHA256 in exact controlhandoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "bed9e779fb8f5a7f58709096bedb8dbd401d7261",
+    "completed_through": "Published accepted UR1a/b/c/d andP36; oldUR2shelved; historical60starts/2276sclosed",
+    "next_action": "Exact package/source/design preflight, baseline-facing realRED then complete frozen UR2a implementation/regression/twoWebwindows andterminal callback",
+    "publication_control_ref": {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/control-publication-finalization-receipt.json",
+      "sha256": "b7074e29596fc3c0d55b5b0a454331366c39f720c6efaf1e28c3d39f5a9cf6bd"
+    }
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b348e7147dde7141d08f755be9f52d1f0a56b90d139307ecc9134f95e6563c91"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "4fe75946e9e3bfcc0bf69d6d2aabb933b6448e61cb2b876fe4de904763a2a1ff"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "3c4a554fb99c7d27c370e1cc07783012e76bb0a9d46be7dbf2fe6b6ad8c14ea9"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "ea5d9a196797092fdc00c687d8b2f36370bdd06f3f50d61e59754ba8757e7cfc"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "76a4e7bc2fdd25a29df51309c287e33d47d797fa8b0a5bd1c9c7297df72ed83a"
+  },
+  "handoff_contract_ref": {
+    "path": "handoff-contract.json",
+    "sha256": "7febcd9699c62745d714e3cbd0f506cb836674706a172566a1c6f32406330e12"
+  },
+  "state_diagram_ref": {
+    "path": "state-diagram.mmd",
+    "sha256": "a1dc6a9ad733d9efb17dad6690be6e6332d98491a3406644a63a913f50fd22e9"
+  },
+  "entry_reconciliation_ref": {
+    "path": "entry-reconciliation.json",
+    "sha256": "b28b283ed4d107b9e90fc3fae30ed1ec11ad432807d67ec2ab32852b2fa115a6"
+  }
+}
