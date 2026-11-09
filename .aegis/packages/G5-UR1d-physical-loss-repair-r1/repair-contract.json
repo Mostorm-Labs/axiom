@@ -1,0 +1,62 @@
+{
+  "schema": "g5-ur1d-loss-p36-contract-v1",
+  "scope": "Repair U1D-PHYSICAL-LOSS-01 inside the existing provider; preserve all accepted UR1d implementation and failed raw rows.",
+  "state_owner": "WebGlSurfaceProvider::Impl retains its context-lifetime GpuCompletionState; queue/budget and Runtime composition remain original owners.",
+  "public_API_ABI_impact": "NONE; no consumer root exports/types/transport/versions or SDK installation contract change.",
+  "allowed_product_paths": [
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/src/webgl_context_liveness.hpp",
+    "runtime/render/tests/gpu_retirement_contract_test.cpp",
+    "runtime/render/tests/gpu_resource_recovery_test.cpp",
+    "runtime/render/CMakeLists.txt"
+  ],
+  "product_limits": {
+    "webgl_surface_backend.cpp": "Only live-registry proof and physical-loss vs unknown-abandon decision/ordering and its minimal helper; ordinary success/service/submit semantics stay intact.",
+    "webgl_context_liveness.hpp": "Optional private testable probe/classification helper consumed by production; not installed or exported.",
+    "tests": "Meaningful regression for valid-but-lost/attributes-null; deleted/invalid and missing handle reported lost remain unknown; logical resize stays nonphysical; old/new lifetime/late-callback isolation retained. Original real-Web failures already provide the RED; no unauthorized browser RED rerun.",
+    "CMakeLists.txt": "Test integration only if necessary."
+  },
+  "allowed_verification_paths": [
+    "verification/runners/g5/resource_recovery_loss_reverify_runner.py",
+    "verification/runners/g5/resource_recovery_loss_reverify.mjs",
+    "verification/runners/g5/resource_recovery.mjs",
+    "verification/runners/g5/resource_recovery_build.py",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+    "verification/tests/test_g5_resource_recovery_loss_reverify.py"
+  ],
+  "verification_limits": {
+    "resource_recovery.mjs": "Only additive private identityRunner parameter/default forwarding so new wrapper binds the new source/output identity; do not change consumer behavior, fault, reference, pixel predicate, lifecycle/receipt/queue predicate or tracing.",
+    "resource_recovery_build.py": "Only admit the explicit new private task output root alongside the original root; no install guard/profile/default relaxation.",
+    "new_private_wrappers": "Exactly two recovery IDs/history/limits/output/source-freeze handling, invoking unchanged existing recovery worker/oracle/guard. Do not call core, seed, smoke or external browser probes.",
+    "new_tests": "Ledger no-repeat/history/guard and identity-wrapper/classification-relevant checks; existing tests preserved."
+  },
+  "repair_rules": [
+    "Establish registry/context validity independently of getContextAttributes before treating isContextLost as real physical loss. The pinned drawing-buffer API is a supported option; zero dimensions during loss must not imply deletion.",
+    "Do not merely move isContextLost first: pinned Emscripten returns true for deleted handles as well. Unknown/deleted handles must remain conservative and cannot grant successful completion.",
+    "Mark physicalLost for the affected retained lifetime before abandonContext; do not restamp old state as the restored provider or collapse identities by numeric handle.",
+    "Service remains owner-thread, nonblocking and nonreentrant; callback retains ticket/state/budget only, no live Runtime/provider. No artificial completion, synchronous wait/readback, semantic mutation or snapshot reload.",
+    "If the actual repair needs other production owners or changes to the oracle/threshold/resource policy, return BLOCKED with exact dependency instead of expanding scope."
+  ],
+  "preserved_constraints": [
+    "32/96MiB defaults; 8MiB/512entries; existing aggregate allowance,1024 epoch cap andnav2 preparation guard",
+    "Semantic/Skia locks and prebuilt supply chain; no third-party rebuild",
+    "No GPU budget/coverage/geometry/mask changes, input/readmission/Operation/History/Scene/Brush/ARC changes, UR2 activation or new worker/cache owner",
+    "No product/source/index edits by control; implementation remains sole writer",
+    "No commit/push until a separate explicit accepted publication instruction; no release/tag/npm actions"
+  ],
+  "subject_identity": "Freeze exact cumulative source and old-e4-to-new delta/pre/postimages; all original product paths outside this narrow repair must match frozen e4 subject. Preserve original 23-file delta and provisional/final evidence, never regenerate old result rows under new hashes.",
+  "artifact_policy": "Fresh matching native + normal diagnostics-OFF consumer SDK + private diagnostics-ON qualification layout, developer componentsOFF, from locked SDKs. New roots under out/G5-UR1d-physical-loss-repair-r1; do not mutate old builds, SDKs or archives. Ordinary consumer install guard stays. New normal Demo>=4289; retain4288 and earlier listeners.",
+  "terminal_callback": {
+    "required": true,
+    "thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+    "host": "local",
+    "when": "READY_FOR_CONTROL_REVIEW or any BLOCKED/frozen terminal",
+    "include": [
+      "exact result/source/delta/package/driver/SDK/manifest hashes",
+      "tests and original-failure closure facts",
+      "browser IDs,ceil ledger,remaining IDs/cap and owned cleanup",
+      "limits and unresolved items"
+    ],
+    "independence": "Producer returns evidence, never self-issues official Gate/G5/P34/performance PASS."
+  }
+}

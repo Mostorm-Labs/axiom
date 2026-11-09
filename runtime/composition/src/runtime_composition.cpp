@@ -214,7 +214,9 @@ bool RuntimeCompositionCore::resizeSurface(const render::SurfaceMetrics& metrics
       metrics.physicalWidth == 0U || metrics.physicalHeight == 0U) return false;
   const auto before = runtime_->surface();
   surfaceTransitionActive_ = true;
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
   const bool resized = runtime_->resizeSurface(metrics);
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
   surfaceTransitionActive_ = false;
   if (state_ != RuntimeCompositionState::kReady &&
       state_ != RuntimeCompositionState::kLost) return false;
@@ -466,6 +468,10 @@ bool RuntimeCompositionCore::requestCanonicalFrame(std::uint64_t frameId) noexce
   if (!pumped) return false;
   return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false)) && captureCanonicalWork();
 }
+bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
+  return runtime_ && runtime_->resourceRetirementPending();
+}
+
 bool RuntimeCompositionCore::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
 
@@ -656,7 +662,11 @@ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion&
 }
 bool RuntimeCompositionCore::loseSurface() noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
-      state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;
+      state_ != RuntimeCompositionState::kReady) return false;
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
+  const bool lost=runtime_->loseSurface();
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
+  if(!lost)return false;
   state_ = RuntimeCompositionState::kLost;
   surfaceBindingChanged();
   return true;
@@ -670,7 +680,9 @@ bool RuntimeCompositionCore::rebindSurface(const render::SurfaceMetrics& metrics
   if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ ||
       state_ != RuntimeCompositionState::kLost || !canAdvanceSurfaceBinding()) return false;
   surfaceTransitionActive_ = true;
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
   const bool rebound = runtime_->rebindSurface(metrics);
+  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
   surfaceTransitionActive_ = false;
   if (!rebound || state_ != RuntimeCompositionState::kLost) return false;
   state_ = RuntimeCompositionState::kReady;

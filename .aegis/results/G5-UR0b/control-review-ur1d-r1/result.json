@@ -1,0 +1,96 @@
+{
+  "schema": "g5-ur1d-independent-control-review-v1",
+  "subject": {
+    "path": ".aegis/results/G5-UR1d-resource-recovery/result.json",
+    "sha256": "c3fdb7d489bd962e8a647e3e3094d38de434d12053d44470e8bba80dfbb42015"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR1d-resource-recovery/package.json",
+    "sha256": "d4924ec62438d6aeb8a47e3242f606809d90e67b7aaeed50a9f75043b5562ca6"
+  },
+  "source_tree_sha256": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "head": "9994c8492b46e8672dde0901003352b119d19e96",
+  "execution_surface": "CONTROL_REVIEW",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "verdict": "BLOCKED",
+  "terminal_blocker": "RESOURCE_LIFETIME_OR_FALSE_COMPLETION_DEFECT",
+  "frozen_requirement_audit": {
+    "observed_satisfied": [
+      "U1D-01",
+      "U1D-02",
+      "U1D-03",
+      "U1D-05"
+    ],
+    "failed": [
+      "U1D-04"
+    ],
+    "U1D-06": "Exact source/artifact/window materialization verified; its all-functional-cases clause is not satisfied because U1D-04 fails."
+  },
+  "frozen_evidence_audit": {
+    "native": 56,
+    "node": 55,
+    "python": 26,
+    "boundaries": 120,
+    "cold_pixel_qualifications": 40,
+    "roundtrips": 8,
+    "core_web_cases": 12,
+    "recovery_web_cases": 4,
+    "preserved_failures": 2,
+    "review_browser_starts": 0,
+    "review_oracle_invocations": 0,
+    "refs": [
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/input-integrity.json",
+        "sha256": "9a0a47337701a24b247437e862f862d5ef21354b2a5c60aa6167d1f2aa57e876"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/regressions.json",
+        "sha256": "eadd339995e7d230b047ac8a921cd5ae7568efd6f139698ff5b7fe77161d53f0"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/offline-pixel-review.json",
+        "sha256": "bf5fbeea1db71ab35da42f0a251a17eed562773533cb2b5b7d5e5e54712d3a7d"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/actual-consumers-review.json",
+        "sha256": "ba7de293cc48e7db132747a03346eb10e57294cf33238c23b88ddb8557d1db98"
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "exact_source_files": 29403,
+    "delta_files": 23,
+    "payload_files": 544,
+    "archive_members": 529,
+    "normal_and_private_qualification_sdk_files_each": 36,
+    "index_empty": true,
+    "normal_consumer_install": true,
+    "qualification_is_private_layout": true,
+    "no_control_product_edits": true
+  },
+  "defect": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/defect-classification.json",
+    "sha256": "0732869667e914cebcf076da120573d8977fdcc06abaa671e3040724a6a1bf20"
+  },
+  "new_blocking_findings": [],
+  "non_blocking_findings": [
+    "Recovery functional pixels/document/receipts work but classification is incomplete; do not infer GPU resource lifetime completion from a restore receipt.",
+    "Observed handler/content gaps are not paired performance evidence. Exact Up-to-matching-CanonicalVisible time remains null.",
+    "Actual Web DPR2 and host Metal DPR1/2/4 do not establish Web DPR4, physical display or other platform qualification.",
+    "Large raw artifacts remain local shared-worktree evidence; publication baseline recovers source/indexes, not all binaries or historical raw proof."
+  ],
+  "accounting": {
+    "new_starts": 4,
+    "new_charged_seconds": 127,
+    "cumulative_starts": 58,
+    "cumulative_charged_seconds": 2234,
+    "remaining_cap_seconds": 6136,
+    "remaining_workers": []
+  },
+  "next_action": "P36 narrow live-registry/physical-loss classification repair and original failed recovery evidence plus relevant regressions; no UR2 activation.",
+  "official_P34_G5_or_performance_PASS": false
+}

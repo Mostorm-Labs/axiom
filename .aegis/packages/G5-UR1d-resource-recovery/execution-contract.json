@@ -1,0 +1,199 @@
+{
+  "schema": "g5-ur1d-execution-closure-v1",
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "return_only_for_real_conflict": true
+  },
+  "implementation": {
+    "authorized_source_paths": [
+      "runtime/render/src/gpu_resource_retirement.hpp",
+      "runtime/render/src/skia_gpu_lifetime.hpp",
+      "runtime/render/src/resource_reclaim.hpp",
+      "runtime/render/src/render_execution.*",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+      "runtime/render/include/canvas/render/webgl_surface_backend.hpp",
+      "runtime/render/src/webgl_surface_backend.cpp",
+      "runtime/render/src/skia_surface_provider.cpp",
+      "runtime/render/src/surface_lifecycle.cpp",
+      "runtime/render/src/skia_navigation_tiles.*",
+      "runtime/render/src/skia_render_cache*",
+      "runtime/render/src/compact_raster_internal.hpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/render/src/preview_surface.cpp",
+      "runtime/render/include/canvas/render/preview_surface.hpp",
+      "runtime/render/src/skia_ink_layers.*",
+      "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/foundation/src/g5_observation.cpp",
+      "runtime/render/tests/gpu_resource_recovery_test.cpp",
+      "runtime/render/tests/gpu_retirement_contract_test.cpp",
+      "runtime/render/tests/render_cache_test.cpp",
+      "runtime/render/tests/g5_observation_identity_test.cpp",
+      "runtime/render/tests/skia_surface_provider_test.cpp",
+      "runtime/render/tests/preview_surface_test.cpp",
+      "runtime/render/tests/surface_presentation_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/composition/tests/resource_recovery_test.cpp",
+      "runtime/composition/CMakeLists.txt",
+      "sdk/web/web_runtime_adapter.cpp",
+      "sdk/web/bridge.cpp",
+      "sdk/web/axiom.mjs",
+      "sdk/web/CMakeLists.txt",
+      "verification/runners/g5/resource_recovery*",
+      "verification/tests/g5_resource_recovery*",
+      "verification/tests/test_g5_resource_recovery*"
+    ],
+    "limited_forwarding_scope": {
+      "runtime/composition/src/runtime_composition.cpp": "Resource service/lifecycle andread-onlyretryfacts only. No control/commit/Scene/feedbacksemanticchanges.",
+      "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": "Private resourceprogress/statusvalueforwarding only,notconsumerAPI.",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "Existingresource-serviceinlineforwarder/read-onlyresourcependingvalueonly; noinput/edit/commit methods.",
+      "sdk/web/axiom.mjs": "Existingcontextlost/restored,frame/retry/idle servicing andclosecleanup only. Publicexports/arguments/typesunchanged.",
+      "runtime/render/include/canvas/render/render_cache.hpp": "Privatework/statistics additions only; everydefaultoptionremainsunchanged."
+    },
+    "required_changes": [
+      "Beforecoding recordexactexisting-owner flow,qualification/recovery diagram,purpose/context/fullbasis binding,sharedquota/lease cancellation/retirement,actualfailureseams andnative/Weboracles. Resolve routine implementationchoices within frozenownership andcontinue,do not waitforanotherapproval.",
+      "Implement/finish small private GPUretirement observations along existingservice/Ticket/SkiaGpuLifetime. Separate unused,recorded,submitted,not-observedcomplete,donewaitingorderedretire,abandoned/physicallylost,retired. Monotonicunits andlosslessuint64transport; boundedaggregate/event storage withdropcount; no perMove fullserialization/readback.",
+      "Deduplicate completionservicing byqualified sharedservice/context lifetime withinoneownerpass; do notcollapseold/newlifetimesmerelybysamehandle/pointervalue. Preserveexistingstructuralqueueadmission andservicebeforeadmission; make saturation/temporarilyunavailable/unsupported/lost explicit at actual allocation/consumer boundary. No inventednewtunedwatermark/ageSLO. If a latency-policy proposalneedsdata,returnobservations/recommendationwithoutmakingitthispackageblocker.",
+      "Closefrozen cancellation,pressure,recovery andteardown defects in existingowners only. Protectinflightcurrent-job/source/lease charges; actualcompletedprefixretiresonlyqualifiedepochs. ClearstaleGPUeligibility onloss andnewbinding; retainvalidworldbodyprogress; callback mustnotretainRuntime/provider/renderer.",
+      "Ensure necessaryretirement/preparation can convergeafterinputstops viaexistingowner opportunities/nonblockingpolls. Limitedprivatevaluestatus/forwarding through Composition andexistingWebtransport isallowedsolelyto service resourcework. No editing,inputadmission,History/Scene/canonicalmutation/ARCretirement rulechanges.",
+      "Use existingtestable actualallocationhelper/provider failure paths. Nativequalification-only allocator/result fault injectionisallowed whenlabelledinjected; nevercall a GPUintentbool proof ofactualGPU,neverfakesuccess/readbackcompletion. Recordalready-satisfiedrequirementsasretained; do notmanufacturecompile-failRED. Foractualunsatisfiedbehavior preserveoldmechanismREDbeforefix.",
+      "Addnewmeaningfulnative transition/quotabounds/latecallback/fairprogress cases andallrequiredregressions. KeepC2originalsameprobedistinct/equal513working-setprogressandlegacy-support/compilerzero whilequalified,andmask/transform/orderpixels.",
+      "Buildnewmatchednormal/qualificationSDKs fromlockedSemantic/Skia packages,developercomponentsOFF,normaltiming/diagnosticsOFF. FreshnormalDemo newunusedport>=4288; preserve4284/4285/4286/4287 andtheirboundartifacts.",
+      "Aftercomplete source/driver/artifactfreeze runonlyfournewguardedWebIDs asfrozen. Reusecorrectedfunctional pacing andcompleteexact-input referencechecks. Keepallcoldbuffers beforepredicates,originalrawfailures,normaltrace-free andprivatequalificationsourcepaths. Noextra browserpreflight.",
+      "Returnmaterializedexactresult/source/delta/SDK/driver/oracle/rawartifacts/closedledger atREADY_FOR_CONTROL_REVIEW,orpreciselayer/blocker. Stopoldwindowretriesandnotifycontrol immediatelyafterterminalguard. Do notstopatintermediatenative-onlysuccess whilefrozenWebworkremainsexecutable."
+    ],
+    "forbidden_changes": [
+      "AnySemantic/Scene/Operation/History/Brushalgorithm/schema/descriptor/SDKlock edits; no dependencySDKsourcebuild,globalOOMsweep orsnapshotreloadforGPUrecovery.",
+      "AnyUR2postUp/nextDown/readmission/replacementstate-machine change; inputroute,previewseal/cancel/CanonicalVisible rules stayauthority-owned. No localeraserexactquery ormasksemanticoptimization inUR1d.",
+      "NewpublicSDKbusinessAPI/ABI/version,exposedGPU/Skia/Runtimeowner/debugcommands,Windows/DLLsignature/packagingchanges,newworkers/threads,anothercache/document/viewportowner.",
+      "Changing32/96MiB,8MiB/512entries,existingaggregateworkbudget,existing1024epoch/ticket structuralcap ornav2ticket guard,oraddingunmeasuredhigh/lowwatermarks/agecaps.",
+      "SynchronousglFinish/CPU GPUwait/readback inproductionhotpath,service reentryintoRuntime/draw/present,memoryreleasebeforequalifiedcompletionorforce-droppingacceptedsemanticterminalcontrol.",
+      "Rewritingoldaccepted/failedpackages,SDKs,ports,referenceoutputs/rawpredicates,UR2archive orreviewrecords; noforcepush,blanketgitstage/reset/stash/clean.",
+      "NoBrowserseed/smoke/retryornewrowsbeyondfrozen4IDs; noofficialUR1/G5/P34/release/performancePASS.",
+      "NoUR1dcommit/push inthispackage; userauthorizedinitialacceptedC1/C2publicationisalreadyaseparatecompletedaction."
+    ]
+  },
+  "tests": {
+    "native_command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-UR1d-resource-recovery/build-native",
+      "--output-on-failure",
+      "-R",
+      "^(G5ScaleFixtureContract|G5Ur0Observation|G5GeometryChunkLocality|G4EraserSession|G4EditorHistory|FC01EditorHistoryInverseFamilies|G45PerfectFreehandReference|G5RenderExecution|G5EraseExactHit|G5RenderCache|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5V4CoverageFallback|G5MaskedCanonicalRecovery|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderDamage|G5SkiaChunkRangeEntry|G5PreparedGeometry|FC00XFrameCoordinator|G3DirectReference|G5TransientReference|G3FrameOrchestration|G5SharedScenePayload|G5SharedSceneSnapshot|G5SharedSceneIndex|G5SharedSceneReaders|G5SharedSceneRetention|G5SharedSceneParity|G5Ur0ObservationIdentity|FC00XBrushBatchEvaluation|FC00XBrushBatchSemantics|G5Navigation|FC04MSEHistoryFaultUndo|FC04MSEHistoryFaultRedo|FC01InsertHistory|G5PreparedBodyIndex|G5CanonicalPreparedBody|G5CanonicalPreparedBodyBounded|G5CanonicalPreparedBodyPixels|G5CanonicalPreparedCompatibility|G5CanonicalPreparedWorkingSet|G47ImageResource|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|FC00XFatalProviderFailure|SDKPublicResources|G5GpuResourceRecovery|G5GpuRetirementContract)$"
+    ],
+    "new_native_test_names": [
+      "G5GpuResourceRecovery",
+      "G5GpuRetirementContract"
+    ],
+    "node_python_boundary": "verification.lock.json exact obligations andexisting36/21/120 plusnewnecessaryresourceoracles. Re-runonlyaffectedconsumer/native checks,do notrerunfullknown-brokenrepositoryas a hiddenpassgate."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "scope": "LocalrealChrome/WASM plusnativeMetalunderfrozenwindow;noCI/workflow/releasechanges required."
+  },
+  "evidence": {
+    "blocking": [
+      "FrozenU1D01..06 actualbehavior/source/SDK/independentreference/rawprovider/windowclosure."
+    ],
+    "corroborative": [
+      "Optionalpairedprofile/performance/queue-watermarkrecommendations,physicalGPUcounterclaims,allDPR/platform/scaleproof remainnotblocking."
+    ]
+  },
+  "browser_window": {
+    "ids": [
+      "UR1D-CORE-Q1",
+      "UR1D-CORE-N1",
+      "UR1D-REC-Q1",
+      "UR1D-REC-N1"
+    ],
+    "order": [
+      "core-qualification",
+      "core-normal",
+      "recovery-qualification",
+      "recovery-normal"
+    ],
+    "new_browser_starts_max": 4,
+    "concurrency": 1,
+    "outer_seconds": [
+      180,
+      180,
+      240,
+      240
+    ],
+    "process_family_rss_mib": 3072,
+    "historical_starts": 54,
+    "historical_charged_seconds": 2107,
+    "new_nominal_seconds_max": 840,
+    "original_cumulative_cap_seconds": 8370,
+    "core_cases": [
+      "S0-canonical",
+      "S0-drag",
+      "S0-erase-navigation",
+      "S2-canonical",
+      "S2-drag",
+      "S2-erase-navigation"
+    ],
+    "recovery_cases": [
+      "S0-retirement-context-recovery",
+      "S2-retirement-context-recovery"
+    ],
+    "logical_target": [
+      800,
+      500
+    ],
+    "device_pixel_ratio": 2,
+    "native_dpr_coverage": [
+      1,
+      2,
+      4
+    ],
+    "recovery_sequence": [
+      "Restore exact boundfixture once asstartup; settle,savebaselinecanonical/documentstate.",
+      "Withhold completionobservation for8realRAF opportunities usingtest-only forwardingwrapper orqualifiedfaultseam; distinguish withheldobservations from physicallypendingGPU. Then restore realpolling and service tosettle without newsemanticinput.",
+      "Lose canonical context with realbrowserextension; waitforlost lifecycle; nofakecompletion/oldreceipt; restore and awaitnewbindingcurrentframe; capture postcanonicalrestore.",
+      "Lose preview context similarly; restorepairedproviders and awaitcurrentframe; capture postpreviewrestore.",
+      "Compare currentsemantic/commit/document/snapshotbinding unchanged acrossloss/recovery; preserve source identity andalloperationnotifications. Close owner andpage,cleanuphooks/processfamily."
+    ],
+    "recovery_cold_stages": [
+      "before-loss",
+      "after-canonical-restore",
+      "after-preview-restore"
+    ],
+    "core_pixels": "28coldstages+8Undo/Redoroundtrips across2workers",
+    "recovery_pixels": "6coldstagesperworker/12across2workers,unchangedoriginalCPUreference andcompleteexactinputreusepolicy",
+    "policy": "These4newIDs are reserved onceonly. Noextra smoke/seed/retry/browser; performnonbrowserpath/dependencypreflight before freezing. Freezeallsource/driver/artifacts first. Guard/identity/crash/environment failure stopsremainingrowsandnotifiescontrol; completedfunctional failuremaypreserveonlyalreadyplannednormalpair. Chargeceilactualseconds; original54/2107unchanged.",
+    "scope_limits": "ActualWebDPR2 only; nativeDPR1/2/4 coversscaledresourcebasis. No claim of fullrealWebDPR4/multidevice/physicaldisplay/performancequalification."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "Frozen U1D-01 through U1D-06 are met within the declared subset; required native and real Web functional rows complete with correct source, SDK and oracle identities.",
+      "OldC2acceptancepreserved,nomixedgeneration/partialreceipt/fallbackorquota/UAFregression; honestlimitationreport.",
+      "Exact reviewer-accessiblematerializedpayload+hashmanifest+archives+closedledger+ownedcleanup+terminalcallback."
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_OR_SCOPE_CONFLICT",
+    "REPOSITORY_OR_CURSOR_DIVERGENCE",
+    "RESOURCE_LIFETIME_OR_FALSE_COMPLETION_DEFECT",
+    "STABLE_VALID_DEMAND_NO_PROGRESS",
+    "FROZEN_PIXEL_OR_STATE_OR_RECEIPT_FAILURE",
+    "REQUIRED_BUILD_PROVIDER_OR_REAL_WEB_EVIDENCE_UNAVAILABLE",
+    "SOURCE_ARTIFACT_IDENTITY_OR_GUARD_FAILURE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "no_extra_permission_for_resolved_preflight": true,
+    "callback_required": true
+  }
+}

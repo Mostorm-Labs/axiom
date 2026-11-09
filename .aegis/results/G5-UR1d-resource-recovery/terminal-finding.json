@@ -1,0 +1,22 @@
+{
+  "id": "U1D-PHYSICAL-LOSS-01",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "blocker": "RESOURCE_LIFETIME_OR_FALSE_COMPLETION_DEFECT",
+  "requirement": "U1D-04",
+  "actual": "Both S0/S2 real canonical and preview WEBGL_lose_context events restore current frames with unchanged snapshots and correct pixels, but qualified completion service reports unknown-abandon / physical_loss=false.",
+  "mechanism": "WebGlSurfaceProvider::Impl::service checks get_context_attributes first. Pinned Emscripten returns INVALID_TARGET for both deleted registry handles and a live lost context whose getContextAttributes() is null. The physical-loss branch is consequently bypassed.",
+  "source": "runtime/render/src/webgl_surface_backend.cpp",
+  "actual_rows": [
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1/S0-result.json",
+      "sha256": "91dc8a0999a1fc78a7f48e18f7834bcd361ad1f956af0a3820f4da1a560f135a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1/S2-result.json",
+      "sha256": "0f4d1841273ec5958dbbef90e888ac88b41b23a6f67be82d8d32311a3fa87eb1"
+    }
+  ],
+  "native_retirement_safety": "Fail-closed unknown-abandon retains unresolved charges; no false successful completion is claimed. This does not meet the frozen physical-loss classification/recovery contract.",
+  "repair_direction": "Validate live context registry independently (e.g. pinned drawing-buffer-size API), then distinguish actual context loss from deletion; retain old native-handle reuse negatives. This is a proposed repair, not implemented or verified in this subject.",
+  "frozen_window": "All four authorized IDs consumed and closed. No source/driver/SDK changes or browser retries after freeze; a new control repair/reverification package is needed."
+}

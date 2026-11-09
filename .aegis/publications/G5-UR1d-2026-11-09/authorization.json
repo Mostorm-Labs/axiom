@@ -1,0 +1,58 @@
+{
+  "schema": "g5-ur1d-publication-authorization-v1",
+  "human_authorization": "提交并推送ur1d，后续进入ur2了吗",
+  "package": {
+    "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/package.json",
+    "sha256": "6de889972731b7c8485c059d0a3b3ec8ce02f503404187585495496ce085e27f",
+    "bytes": 2506
+  },
+  "authority_lock": {
+    "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/authority.lock.json",
+    "sha256": "279e011fad271ada1a791b8b12248aea985dbfc8df558b489c6429123d2f2c46",
+    "bytes": 1597
+  },
+  "accepted_control_review": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json",
+    "sha256": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3",
+    "bytes": 7625,
+    "remote_git": "IN_FIXED_PUBLICATION"
+  },
+  "baseline": "9994c8492b46e8672dde0901003352b119d19e96",
+  "permitted": "One ordinary commit/push of exact accepted UR1d/P36 paths and this bounded index. No product edit/rebuild/browser/UR2/release/tag/npm.",
+  "checker_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "729b4a0094974d4bea167acfcdf3ef9b25c6a7fa1aaf991dc7f4ba304c5c8192",
+    "bytes": 2447
+  },
+  "checker_amendment_content": {
+    "schema": "g5-ur1d-publication-checker-amendment-v1",
+    "classification": "TASK_PACKAGE_DEFECT",
+    "owning_stage": "P31",
+    "prior_package_sha256": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07",
+    "preserved_prior_package": {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/pre-amendment-r1",
+      "files": {
+        "verification.lock.json": "a97a5ae989b8fca1b989dc88cc0b1aeb8be1b431351288c2261afcea0ba9e840",
+        "evidence-contract.json": "bb341b119fff56aaf81f38d39419bf877628e18c46b7ebcb44e26ad78a131dce",
+        "implementation-context.md": "0f3335ccc846968127481c4af6f71670344f184de84348e66b1d6f8fc9dbf401",
+        "authority.lock.json": "e03abff66b52d23b3b9dd1799342c0874ef2cbaaef94978ee069f0c943d439bd",
+        "package.json": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07",
+        "execution-contract.json": "860ee30694e0c97fd1df195070f58fbcdef4b0146a401f9abe430f2821322e5b"
+      }
+    },
+    "human_authorization": "提交并推送ur1d; routine publication of alreadyaccepted immutable evidence",
+    "reason": "Generic whitespace checker reports originalCRLF/unifieddiffcontext spaces in immutable patch evidence. Modifyingthosebytes wouldcorrupt frozenrawartifactidentity. Sourcewhitespace acceptance staysstrict.",
+    "exception_scope": {
+      ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+      ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+      ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9"
+    },
+    "rules": [
+      "Preserve full default git diff --cached --check output, exitcode2 andall174reportedlines; never report that fullcheck passed.",
+      "Every reported whitespace-error path must belong to these exact3 frozenpatch artifacts andtheirindex/worktreeSHA mustmatch frozen postimage. No other exemption.",
+      "Allremaining99publishedpaths, including all28source files, must passscoped git diff --cached --check=0.",
+      "Keep all102indexblobs/modes exact; no evidencebyte/hash edit, no global/repoConfig/attributes change, no public API or product source/threshold relaxation.",
+      "Only refresh the same6publicationpackage files andexisting6publicationindex metadata; no newstagepaths/browserruns."
+    ]
+  }
+}

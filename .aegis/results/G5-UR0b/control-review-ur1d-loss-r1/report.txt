@@ -1,0 +1,11 @@
+UR1d 独立复核：PASS_WITH_FINDINGS（仅限原冻结 U1D-01..06 和窄 P36）。
+
+原 U1D-PHYSICAL-LOSS-01 已闭合。生产 provider 用独立 registry/GLctx 探测区分真实丢失和未知弃用，保留零尺寸、删除/无效 handle 与新旧 retained lifetime 的边界。真实 S0/S2 两类 surface 共4条 physical-loss 均匹配旧身份，恢复新身份且 unavailable 阶段没有新增 receipt；文档、snapshot、资源绑定保持，idle 队列收敛。原失败不覆盖。
+
+控制面独立核验29414源文件、9文件窄delta、28文件累计delta、两个patch roundtrip、339 payload文件、319新归档成员、两套各36文件SDK；旧payload/归档原样。29399个旧源文件未受修复影响。复跑56 native、58 Node、33 Python、120 boundaries；独立12新coldpixels按原CPU/null-cache/AA判断通过，复核无新增browser/oracle。旧40pixels/8roundtrips保持e4主体，经窄delta及相关回归判断适用，未伪称新运行。
+
+原新增native失败来自“poll loss同pass立刻退休”的测试假设，原契约不保证同pass；生产queue未改，实际loss生命周期原有begin/end服务和修正后的下一owner机会有相应覆盖。
+
+仍保留性能长尾、Up→匹配CanonicalVisible精确时间为空、Web DPR4/其他平台及物理GPU显示指标未验证等finding。此接受不代表完整UR1/G5/P34或性能PASS。原四窗口和新两窗口全部关闭，累计60次/2276秒，剩余6094秒不构成新启动授权。
+
+正常Demo：http://127.0.0.1:4289/example.html。UR1d/P36尚未提交；本控制面未改生产源码/index，UR2保持隔离。

@@ -1,0 +1,40 @@
+{
+  "schema": "g5-ur1d-loss-p36-authority-v1",
+  "status": "AUTHORIZED_SCOPED_P36",
+  "human_authorization": "提交并推送，然后开始后续的ur1d吧; continuing existing UR1d defect repair without changing its scope",
+  "owner": "Aegis Gate Review P35/P36; CONTROL_REVIEW -> CODE_REVERIFY",
+  "original_package": {
+    "path": ".aegis/packages/G5-UR1d-resource-recovery/package.json",
+    "sha256": "d4924ec62438d6aeb8a47e3242f606809d90e67b7aaeed50a9f75043b5562ca6"
+  },
+  "original_authority": {
+    "path": ".aegis/packages/G5-UR1d-resource-recovery/authority.lock.json",
+    "sha256": "efbc0662e43ee16383fd576e4267dfde371760213dd6ff07b7ddd02ee91d419c"
+  },
+  "original_verification": {
+    "path": ".aegis/packages/G5-UR1d-resource-recovery/verification.lock.json",
+    "sha256": "90dc4d7b435510e582f71fc16cc9cd8e2337da5d3c4f5ef0d99de9cb3004156f"
+  },
+  "original_result": {
+    "path": ".aegis/results/G5-UR1d-resource-recovery/result.json",
+    "sha256": "c3fdb7d489bd962e8a647e3e3094d38de434d12053d44470e8bba80dfbb42015"
+  },
+  "independent_review": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/result.json",
+    "sha256": "01c5ff4d13ecfe7ec557083ea1752737d4c64b550092c61281334277b905227c"
+  },
+  "defect_classification": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/defect-classification.json",
+    "sha256": "0732869667e914cebcf076da120573d8977fdcc06abaa671e3040724a6a1bf20"
+  },
+  "failed_source": {
+    "path": ".aegis/results/G5-UR1d-resource-recovery/source-identity.json",
+    "sha256": "3044af02509b933827c7741797046587374cd9e050d13635f3bd77c9d2a6d1d6"
+  },
+  "failed_delta": {
+    "path": ".aegis/results/G5-UR1d-resource-recovery/source-delta-manifest.json",
+    "sha256": "ea2b68956bd1c453c7ab4e0d48d2e7480e881ed0b4ec04707bc29a32c1fd24a5"
+  },
+  "published_baseline": "9994c8492b46e8672dde0901003352b119d19e96",
+  "precedence": "All original U1D obligations and API/semantic/budget/locked SDK boundaries remain; this package defines only narrow P36 delta and relevant reverification."
+}

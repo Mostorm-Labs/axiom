@@ -30,7 +30,7 @@ int quotaProbe(std::size_t cap,bool observe){
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
    if(observe)canvas::foundation::internal::g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket.get()),17,ticket->epoch);
 #endif
-   ticket->end();queue.service();delayed=budget->used();
+   ticket->end();ticket->submitted(true);queue.service();delayed=budget->used();
    service->status->abandoned=mode!=0;service->status->physicalLost=mode==2;
    ticket->finish();queue.service();completed=budget->used();budget->close();queue.service();closed=budget->used();
   }

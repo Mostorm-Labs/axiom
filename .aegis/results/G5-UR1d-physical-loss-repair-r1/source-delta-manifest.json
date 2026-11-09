@@ -1,0 +1,78 @@
+{
+  "schema": "g5-ur1d-loss-repair-delta-v1",
+  "baseline_source_tree_sha256": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+  "baseline_source_manifest_sha256": "3044af02509b933827c7741797046587374cd9e050d13635f3bd77c9d2a6d1d6",
+  "files": [
+    {
+      "path": "runtime/render/src/webgl_context_liveness.hpp",
+      "sha256": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0",
+      "bytes": 871,
+      "preimage_sha256": null
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "bytes": 13762,
+      "preimage_sha256": "41ab56246e093b642904f09b66177a154e5a301dd6a67df7fede72bada84bb47"
+    },
+    {
+      "path": "runtime/render/tests/gpu_retirement_contract_test.cpp",
+      "sha256": "d64865e29b00f79274d19fa85b74e6bd078131063fb8a1e63abb8072cf55379e",
+      "bytes": 10154,
+      "preimage_sha256": "d96d80244485a68ac408c02dea2c4f812f0bbd7561f70c0dfee56cfe84b450ae"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery.mjs",
+      "sha256": "0a2286f2f6577a0d3f7ca269a6988e07b3326a2102564a68f60f45ca0fce5ddf",
+      "bytes": 18504,
+      "preimage_sha256": "4601d54dfe476d33fbe8188a6210b5b70107aa173061ba4fceee9960842755ce"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "ece40be2bb86702ed98b3dffeb8933cad92e0bd1678e3df22d9fef456e9dd152",
+      "bytes": 3510,
+      "preimage_sha256": "d56a952b8adafb01250ae9f39698dd5cb6fcdd6c0daf69703cceba5b4c3ab1f3"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify.mjs",
+      "sha256": "3712d256f602e46c21104cf2c4e55ea2e8e6388e80d8a87bcdbd92c4a13da5d1",
+      "bytes": 708,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify_runner.py",
+      "sha256": "d3aac8f70f0b177afcb103140c0d73177e40a896a1fc251d7437b9a2b8113a92",
+      "bytes": 8106,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+      "sha256": "95ba37b2fc016acb8e2237a50ea23cd7da52810c70baabc6ea35cbba1aaba2e7",
+      "bytes": 1196,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+      "sha256": "0d80fd09072f51a5f10c2f93ee6364e6ec689dd9f466a07cd2f688f1733186cb",
+      "bytes": 3383,
+      "preimage_sha256": null
+    }
+  ],
+  "patch_sha256": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+  "roundtrip": "VERIFIED",
+  "old_source_files_unchanged_outside_repair": 29399,
+  "modified_old_files": [
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/tests/gpu_retirement_contract_test.cpp",
+    "verification/runners/g5/resource_recovery.mjs",
+    "verification/runners/g5/resource_recovery_build.py"
+  ],
+  "new_files": [
+    "runtime/render/src/webgl_context_liveness.hpp",
+    "verification/runners/g5/resource_recovery_loss_reverify.mjs",
+    "verification/runners/g5/resource_recovery_loss_reverify_runner.py",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+    "verification/tests/test_g5_resource_recovery_loss_reverify.py"
+  ],
+  "no_public_API_budget_or_semantic_changes": true
+}

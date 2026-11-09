@@ -1,0 +1,58 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1d-publication-2026-11-09",
+  "status": "AUTHORIZED_PUBLICATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1d-publication-2026-11-09",
+    "content_identity": "package.json SHA256 in exact handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "accepted_control_review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json",
+      "sha256": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3"
+    },
+    "completed_through": "UR1d/P36 independently accepted, publication explicituserauthorized",
+    "next_action": "Verifyexactpostimages/index, boundedpublicationmetadata, commit/push,serververification andterminalcallback"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "279e011fad271ada1a791b8b12248aea985dbfc8df558b489c6429123d2f2c46"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "ee53386b4a90dcf06c21e524b0d284ae4c75893d4e5e5cc427120aacbca26f2b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "af8f98887ede3a5d70bcfa7d424b040b0b498d118bdd2eed6e933a7da78c914e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e4cdf4b9a5af5710dbede2f3247f591cff4ee58c8cac4009808bbcaf4717a71e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "e621be46982baaf102102ebd6a9afcea8a1e527e10ebf5cfe5a120d2f1d88a8b"
+  },
+  "publication_contract_revision": "r1-artifact-whitespace-scope",
+  "supersedes_package_sha256": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07"
+}

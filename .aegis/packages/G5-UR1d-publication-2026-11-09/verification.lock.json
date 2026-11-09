@@ -1,0 +1,36 @@
+{
+  "schema": "g5-ur1d-publication-verification-v1",
+  "requirements": [
+    {
+      "id": "PUB-1",
+      "requirement": "Commit exactly accepted implementation and bounded review/authority/evidence metadata; preserve other dirty/untracked work.",
+      "oracle": "Hash exact fixedfiles and102indexblob/modes. Preserve default full git diff --cached --check exit/output; accept knownartifactsyntax warnings only on the3 exact SHA-bound.patch paths. Run samechecker excluding onlythose3 paths; allremaining99paths mustexit0.",
+      "acceptance": "All28source and89fixedpostimages/102publishedblobs unchanged. Only exact3 frozenpatchartifacts may produce preserved fullchecker whitespace diagnostics; source/other99paths stillzero. No unrelatedindexpaths or rewrites.",
+      "evidence_required": "Exactpath/blob/mode/tree manifest, fullunmodifiedchecker exit/output and3pathclassification, strictscoped99pathcheck=0, sourcehashes andamendmentrecord."
+    },
+    {
+      "id": "PUB-2",
+      "requirement": "Ordinary fast-forward publication on correct controlled branch.",
+      "oracle": "Compare HEAD,origin tracking and authenticated server refs/heads/codex/geometry-navigation-integration after push; capture exact parent.",
+      "acceptance": "Server equals new commit; ancestry from9994c849 verified; no force/merge/rebase/reset/stash/clean or remote/config rewrite.",
+      "evidence_required": "Commit/tree/parent, push transcript and authenticated remote lookup."
+    },
+    {
+      "id": "PUB-3",
+      "requirement": "Publication truth distinguishes source/indexes from local raw proof.",
+      "oracle": "Explicit publication index and local-only boundary binding old/new archives, SDKs and source inventories.",
+      "acceptance": "Do not claim remote Git recovers large binaries/rawpixels; original failures and review findings preserved, no inflated Gate/performance verdict.",
+      "evidence_required": "Repo .aegis/publications/G5-UR1d-2026-11-09 index and local-only manifest."
+    }
+  ],
+  "product_regressions": "Already independently passed56native/58Node/33Python/120boundaries and12newcoldpixels under exact accepted source. No rerun or browser sampling for metadata-only publication; new source changes require control reconciliation.",
+  "artifact_whitespace_exceptions": {
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+    ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9"
+  },
+  "checker_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "729b4a0094974d4bea167acfcdf3ef9b25c6a7fa1aaf991dc7f4ba304c5c8192"
+  }
+}

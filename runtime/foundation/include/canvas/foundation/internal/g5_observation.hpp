@@ -78,6 +78,8 @@ void gpuTicketPrepared(std::uintptr_t,std::uint64_t contextId,std::uint64_t epoc
 void gpuTicketSubmitted(std::uintptr_t,bool accepted) noexcept;
 void gpuTicketCompleted(std::uintptr_t,bool abandoned,bool physicalLost) noexcept;
 void gpuTicketRetired(std::uintptr_t,std::uint64_t epoch) noexcept;
+void gpuTicketDiscarded(std::uintptr_t,std::uint64_t reason) noexcept;
+void gpuTicketCancelled(std::uintptr_t) noexcept;
 int control(std::uint32_t opcode,std::uint32_t value) noexcept;
 const char* bytes() noexcept;
 std::uint32_t size() noexcept;

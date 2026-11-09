@@ -1,0 +1,157 @@
+{
+  "schema": "g5-ur1d-loss-independent-control-review-v1",
+  "status": "ACCEPTED_SCOPED_UR1D_WITH_FINDINGS",
+  "verdict": "PASS_WITH_FINDINGS",
+  "scope": "Frozen UR1d resource/recovery obligations U1D-01..U1D-06, including narrow P36 closure U1D-PHYSICAL-LOSS-01; not whole UR1/G5/Release/P34/performance acceptance",
+  "execution_surface": "CONTROL_REVIEW",
+  "producer_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "reviewer_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "9994c8492b46e8672dde0901003352b119d19e96",
+  "package": {
+    "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/package.json",
+    "sha256": "eb15be0e7af62797cec50d2f6f92f6047e0e33b4ae75751fe4d3c5b2bb30e4b3"
+  },
+  "subject_result": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/result.json",
+    "sha256": "d79e09d34d6f5c4faf14f21226f7d44ce5588c0e7d5eef13b3113a018ba35aaf"
+  },
+  "source_tree_sha256": "8aa194b1c9a3e35e9417ded72b29e6320ff71ba8d26f4862c361e292cb83230c",
+  "prior_control_review": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/result.json",
+    "sha256": "01c5ff4d13ecfe7ec557083ea1752737d4c64b550092c61281334277b905227c"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "U1D-01",
+      "U1D-02",
+      "U1D-03",
+      "U1D-04",
+      "U1D-05",
+      "U1D-06"
+    ],
+    "failed": [],
+    "original_failure_preserved": true,
+    "closed_defect": "U1D-PHYSICAL-LOSS-01",
+    "physical_loss_old_new_identity": "All4 actual S0/S2 canonical/preview events matched old created lifetime/handle/role, physical_loss=true before abandonment; restoration new lifetime and attachmentEpoch, no unavailable-frame receipt.",
+    "unknown_or_deleted_handle": "Production probe checks registry/GLctx presence independently; native negative tests keep invalid/deleted handles unknown, including isLost=true; zero buffer and logical resize are not proof of loss.",
+    "native_test_timing_correction": "Same-pass retirement was not frozen. Added test now supplies next existing owner service opportunity, matching unchanged queue and real loss lifecycle begin/end service. Original first failed test and real Web RED retained; no queue change.",
+    "original_other_obligations": "Previous independent UR1d audit accepted U1D-01/02/03/05 subject e4. Exact narrow delta shows their owners/consumers unchanged; final matching relevant regressions plus fresh recovery establish applicability, without restamping old Core runs."
+  },
+  "frozen_evidence_audit": {
+    "passed": {
+      "native": 56,
+      "node": 58,
+      "python": 33,
+      "boundaries": 120,
+      "fresh_cold_pixels": 12,
+      "fresh_roundtrips": 0,
+      "prior_e4_cold_pixels": 40,
+      "prior_e4_roundtrips": 8,
+      "actual_restoration_cases": 4,
+      "actual_physical_loss_events": 4
+    },
+    "failed": [],
+    "review_browser_starts": 0,
+    "review_oracle_invocations": 0,
+    "independent_inputs": [
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/input-integrity.json",
+        "sha256": "07ef36aebf8ce08dd5ae21bbfd3f19ac73b9cc62823c4efa31a6ba7698607dcb"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/regressions.json",
+        "sha256": "01fb233cc3933c867a39621914e04e70f67977277cf68b23df1027c411c6f03d"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/offline-pixel-review.json",
+        "sha256": "2aa00226d681e1cf7da453f52b13653e46ca8fcc4372f2f3c3a38cbd5dbc592c"
+      },
+      {
+        "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/actual-recovery-review.json",
+        "sha256": "e116f30da5a46ce6ee038e7d1e24c0b0085110878f74c3643039257d068cb40a"
+      }
+    ],
+    "native_mechanisms": [
+      {
+        "test": "G5GpuRetirementContract",
+        "raw_json_rows": 48,
+        "all_checks_passed": true,
+        "log": {
+          "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5GpuRetirementContract.log",
+          "sha256": "de7baf37ed573a307b39e49ae93d9a62d8cc34ad55ea5103c5d77b1921d48f1b"
+        }
+      },
+      {
+        "test": "G5GpuResourceRecovery",
+        "raw_json_rows": 78,
+        "all_checks_passed": true,
+        "log": {
+          "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5GpuResourceRecovery.log",
+          "sha256": "a9a38edf3d3ea11133ea4c26b729daa112be3abbf6c8e7fa1a98321070a26f8e"
+        }
+      },
+      {
+        "test": "G5CanonicalPreparedWorkingSet",
+        "raw_json_rows": 6,
+        "all_checks_passed": true,
+        "log": {
+          "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedWorkingSet.log",
+          "sha256": "cb405b8f31b37f85233f4958f510074b771aff441f8c9f8cebef88bc5bfbc572"
+        }
+      }
+    ],
+    "reference": "Original ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105 CPU/null-cache oracle, exact snapshot/request/resources and original independent AA boundary/interior tolerance; no new oracle launch or relaxed predicates."
+  },
+  "repository_reality_audit": {
+    "source_files": 29414,
+    "repair_files": 9,
+    "cumulative_unpublished_source_files": 28,
+    "outside_repair_old_source_files_unchanged": 29399,
+    "independent_patch_roundtrips": 2,
+    "payload_files": 339,
+    "new_archive_members": 319,
+    "normal_and_qualification_sdk_files_each": 36,
+    "normal_diagnostics_off": true,
+    "private_qualification_not_consumer_install": true,
+    "public_API_ABI_version_locks_budgets_unchanged": true,
+    "index_empty": true,
+    "product_edits_by_control": false,
+    "commit_push_in_this_review": false,
+    "UR2_activated": false
+  },
+  "new_blocking_findings": [],
+  "non_blocking_findings": [
+    {
+      "id": "UR1D-F1",
+      "finding": "Prior unpaired functional handler/content gaps and exact Up-to-matching-CanonicalVisible timestamp=null remain; this liveness repair does not establish latency improvement or 33ms/performance SLO."
+    },
+    {
+      "id": "UR1D-F2",
+      "finding": "Actual Web proof is DPR2, native Metal tests DPR1/2/4; no real Web DPR4, other-platform product/ABI, pure GPU time, physical display or hardware-memory qualification."
+    },
+    {
+      "id": "UR1D-F3",
+      "finding": "Withheld observation seam is labelled injected and does not prove physically pending GPU work. Loss-over-pending lifetime safety additionally relies on native independent cases."
+    },
+    {
+      "id": "UR1D-F4",
+      "finding": "Raw SDK/native/pixel artifacts are content-addressed local shared-worktree materialization; not all recoverable from Git alone. Prior evidence retains original subject and original BLOCKED record."
+    }
+  ],
+  "accounting": {
+    "new_starts": 2,
+    "new_seconds": 42,
+    "cumulative_starts": 60,
+    "cumulative_seconds": 2276,
+    "remaining_seconds": 6094,
+    "remaining_IDs": [],
+    "cleanup_complete": true
+  },
+  "normal_demo_url": "http://127.0.0.1:4289/example.html",
+  "publication_state": "UR1c publication remains9994c849; cumulative28 UR1d/P36 source files remain uncommitted and indexempty per current handoff. Acceptance does not activate UR2 or authorize new browser IDs.",
+  "next_action": "Notify producer of accepted scoped review and preserve source/evidence. No repair work or sampling remains in this package. Subsequent publication or UR1e work follows an explicit next instruction/package.",
+  "official_full_UR1_G5_P34_release_performance_PASS": false
+}

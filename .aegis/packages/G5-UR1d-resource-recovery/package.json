@@ -1,0 +1,60 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1d-resource-recovery",
+  "status": "AUTHORIZED_SCOPED_UR1D",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1d-resource-recovery",
+    "content_identity": "package.jsonSHA256inexacthandoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "accepted_review_ref": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/result.json",
+      "sha256": "d1fcfd065547d8eda407dd1be256c83b471803eaa140927373466246057ab455"
+    },
+    "publication_ref": {
+      "path": ".aegis/results/G5-UR0b/ur1d-planning/publication-receipt.json",
+      "sha256": "2a0b6853576407f59287d9ac1ed7a12745546d64e59cd8eef4fbdc5b4995f35e"
+    },
+    "completed_through": "AcceptedC1/C2/P36published;UR2shelved;54browserstarts/2107secondsclosed.",
+    "next_action": "Resolvedresourceowner/design/negativeoraclepreflight,scopedUR1dimplementation andallfrozennative/SDK/fourrealWebrows;terminalcallback."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "efbc0662e43ee16383fd576e4267dfde371760213dd6ff07b7ddd02ee91d419c"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "90dc4d7b435510e582f71fc16cc9cd8e2337da5d3c4f5ef0d99de9cb3004156f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e321b8b9eed871a021c0585b33420d62a66929d8d22f710ae7c0e306942c35ae"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "5eec33e2fa09429fe290cf78b4ed83f6c7b8ba6e8f944c88f03d680f358b7385"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f1d0f6624c2f52541d8558ccf27a624336e3381dd1da7de294c141b6469af72f"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "status": "VERIFIED",
+  "closure": "U1D-PHYSICAL-LOSS-01 / U1D-04",
+  "source_tree_sha256": "8aa194b1c9a3e35e9417ded72b29e6320ff71ba8d26f4862c361e292cb83230c",
+  "cases": [
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S0-retirement-context-recovery",
+      "status": "VERIFIED",
+      "canonical_snapshot_resource_unchanged": true,
+      "withheld_observation_opportunities": 8,
+      "logical_and_physical_loss_distinct": true,
+      "idle_ordered_queue": [
+        {
+          "owner": "1",
+          "admitted": "121",
+          "ordered_retired": "121",
+          "queued": 0,
+          "polled_lifetimes": 1,
+          "observed": 0,
+          "waiting_ordered": 0,
+          "unknown_abandon": 0,
+          "needs_service": false
+        }
+      ]
+    },
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S2-retirement-context-recovery",
+      "status": "VERIFIED",
+      "canonical_snapshot_resource_unchanged": true,
+      "withheld_observation_opportunities": 8,
+      "logical_and_physical_loss_distinct": true,
+      "idle_ordered_queue": [
+        {
+          "owner": "1",
+          "admitted": "123",
+          "ordered_retired": "123",
+          "queued": 0,
+          "polled_lifetimes": 1,
+          "observed": 0,
+          "waiting_ordered": 0,
+          "unknown_abandon": 0,
+          "needs_service": false
+        }
+      ]
+    },
+    {
+      "worker": "UR1DLOSSR1-N1",
+      "case": "S0-retirement-context-recovery",
+      "status": "VERIFIED",
+      "canonical_snapshot_resource_unchanged": true,
+      "withheld_observation_opportunities": 8,
+      "logical_and_physical_loss_distinct": true,
+      "idle_ordered_queue": "DIAGNOSTICS_OFF"
+    },
+    {
+      "worker": "UR1DLOSSR1-N1",
+      "case": "S2-retirement-context-recovery",
+      "status": "VERIFIED",
+      "canonical_snapshot_resource_unchanged": true,
+      "withheld_observation_opportunities": 8,
+      "logical_and_physical_loss_distinct": true,
+      "idle_ordered_queue": "DIAGNOSTICS_OFF"
+    }
+  ],
+  "actual_role_loss_events": [
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S0-retirement-context-recovery",
+      "role": "canonical",
+      "lost_lifetime": "1",
+      "native_handle": "1",
+      "lost_generation": "1",
+      "restored_lifetime": "3",
+      "attachment_before": "2",
+      "attachment_after": "4",
+      "no_unavailable_receipt": true
+    },
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S0-retirement-context-recovery",
+      "role": "preview",
+      "lost_lifetime": "4",
+      "native_handle": "2",
+      "lost_generation": "2",
+      "restored_lifetime": "6",
+      "attachment_before": "4",
+      "attachment_after": "6",
+      "no_unavailable_receipt": true
+    },
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S2-retirement-context-recovery",
+      "role": "canonical",
+      "lost_lifetime": "1",
+      "native_handle": "1",
+      "lost_generation": "1",
+      "restored_lifetime": "3",
+      "attachment_before": "2",
+      "attachment_after": "4",
+      "no_unavailable_receipt": true
+    },
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S2-retirement-context-recovery",
+      "role": "preview",
+      "lost_lifetime": "4",
+      "native_handle": "2",
+      "lost_generation": "2",
+      "restored_lifetime": "6",
+      "attachment_before": "4",
+      "attachment_after": "6",
+      "no_unavailable_receipt": true
+    }
+  ],
+  "original_BLOCKED_and_failures_preserved": true,
+  "prior_Core_and40pixels8roundtrips": "Old e4 subject only; applicable through exact narrow delta and matching regressions, never fresh runs",
+  "review_browser_starts": 0,
+  "review_oracle_invocations": 0,
+  "accounting": {
+    "new_starts": 2,
+    "new_seconds": 42,
+    "cumulative_starts": 60,
+    "cumulative_seconds": 2276,
+    "remaining_seconds": 6094,
+    "remaining_IDs": [],
+    "cleanup_complete": true
+  }
+}

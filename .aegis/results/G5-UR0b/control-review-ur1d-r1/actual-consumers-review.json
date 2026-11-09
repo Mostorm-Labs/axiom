@@ -1,0 +1,266 @@
+{
+  "status": "FROZEN_REQUIREMENT_FAILURE_CONFIRMED",
+  "source_tree_sha256": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+  "review_browser_starts": 0,
+  "review_oracle_invocations": 0,
+  "cases": [
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S0-canonical",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 15,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S0-drag",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 79,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S0-erase-navigation",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 104,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S2-canonical",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 16,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S2-drag",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 74,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-Q1",
+      "case": "S2-erase-navigation",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 107,
+      "world_preparation": {
+        "job_admissions": 1,
+        "advances": 675,
+        "support_knots": 7199,
+        "distance_inputs": 7198,
+        "compile_inputs": 7199
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S0-canonical",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S0-drag",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S0-erase-navigation",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S2-canonical",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S2-drag",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-CORE-N1",
+      "case": "S2-erase-navigation",
+      "status": "VERIFIED",
+      "actual_completed_gpu_roots": 0,
+      "world_preparation": {
+        "job_admissions": 0,
+        "advances": 0,
+        "support_knots": 0,
+        "distance_inputs": 0,
+        "compile_inputs": 0
+      }
+    },
+    {
+      "worker": "UR1D-REC-Q1",
+      "case": "S0-retirement-context-recovery",
+      "functional_restore": "VERIFIED",
+      "snapshot_document_resource_unchanged": true,
+      "resource_queue": "VERIFIED",
+      "known_frozen_failure": true
+    },
+    {
+      "worker": "UR1D-REC-Q1",
+      "case": "S2-retirement-context-recovery",
+      "functional_restore": "VERIFIED",
+      "snapshot_document_resource_unchanged": true,
+      "resource_queue": "VERIFIED",
+      "known_frozen_failure": true
+    },
+    {
+      "worker": "UR1D-REC-N1",
+      "case": "S0-retirement-context-recovery",
+      "functional_restore": "VERIFIED",
+      "snapshot_document_resource_unchanged": true,
+      "resource_queue": "DIAGNOSTICS_OFF",
+      "known_frozen_failure": false
+    },
+    {
+      "worker": "UR1D-REC-N1",
+      "case": "S2-retirement-context-recovery",
+      "functional_restore": "VERIFIED",
+      "snapshot_document_resource_unchanged": true,
+      "resource_queue": "DIAGNOSTICS_OFF",
+      "known_frozen_failure": false
+    }
+  ],
+  "failures": [
+    {
+      "worker": "UR1D-REC-Q1",
+      "case": "S0-retirement-context-recovery",
+      "frozen_requirement": "U1D-04",
+      "id": "U1D-PHYSICAL-LOSS-01",
+      "physical_loss_roles_missing": [
+        "canonical",
+        "preview"
+      ],
+      "observed_unknown_abandon": [
+        {
+          "event": "unknown-abandon",
+          "lifetime": "1",
+          "native_handle": "1",
+          "role": "canonical",
+          "generation": "1",
+          "abandoned": true,
+          "physical_loss": false
+        },
+        {
+          "event": "unknown-abandon",
+          "lifetime": "4",
+          "native_handle": "2",
+          "role": "preview",
+          "generation": "2",
+          "abandoned": true,
+          "physical_loss": false
+        }
+      ]
+    },
+    {
+      "worker": "UR1D-REC-Q1",
+      "case": "S2-retirement-context-recovery",
+      "frozen_requirement": "U1D-04",
+      "id": "U1D-PHYSICAL-LOSS-01",
+      "physical_loss_roles_missing": [
+        "canonical",
+        "preview"
+      ],
+      "observed_unknown_abandon": [
+        {
+          "event": "unknown-abandon",
+          "lifetime": "1",
+          "native_handle": "1",
+          "role": "canonical",
+          "generation": "1",
+          "abandoned": true,
+          "physical_loss": false
+        },
+        {
+          "event": "unknown-abandon",
+          "lifetime": "4",
+          "native_handle": "2",
+          "role": "preview",
+          "generation": "2",
+          "abandoned": true,
+          "physical_loss": false
+        }
+      ]
+    }
+  ],
+  "accounting": {
+    "new_starts": 4,
+    "new_charged_seconds": 127,
+    "cumulative_starts": 58,
+    "cumulative_charged_seconds": 2234,
+    "remaining_cap_seconds": 6136,
+    "remaining_workers": []
+  }
+}

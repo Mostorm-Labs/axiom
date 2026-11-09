@@ -1,0 +1,588 @@
+{
+  "schema": "g5-ur1d-publication-prestage-checks-v1",
+  "state": "SCOPED_R1_PRECOMMIT_CHECKS",
+  "fixed_path_manifest": {
+    "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/frozen-publication-files.json",
+    "sha256": "8fb86f244b4e1e051b77f30a8898de85d979ea9df01d6cc403a61ef6254a4099",
+    "bytes": 19455,
+    "remote_git": "LOCAL_ONLY_UNLESS_EXPLICITLY_INDEXED"
+  },
+  "baseline": "9994c8492b46e8672dde0901003352b119d19e96",
+  "authenticated_server_before": "9994c8492b46e8672dde0901003352b119d19e96",
+  "index_was_empty": true,
+  "fixed_hashes_verified": 89,
+  "accepted_postimages_verified": 28,
+  "preexisting_reviewed_source_files_unchanged": 29414,
+  "expected_staged_count": 102,
+  "frozen_inputs": [
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/authority.lock.json",
+      "sha256": "1bb8109cd0e3a946b88b154431ecc526cbefdd4c3759d0260e183c4a7dcc2446",
+      "bytes": 2044
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/evidence-contract.json",
+      "sha256": "a8e8d4378257ed16865e15fbe080a5696c46dcea1134b89ef78b94663dc6ed9a",
+      "bytes": 1823
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/implementation-context.md",
+      "sha256": "4caf4d1a3dca280eea7b5ef99c7d3d93e247689a652dd82c38809de7d3956667",
+      "bytes": 1827
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/package.json",
+      "sha256": "eb15be0e7af62797cec50d2f6f92f6047e0e33b4ae75751fe4d3c5b2bb30e4b3",
+      "bytes": 2353
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/repair-contract.json",
+      "sha256": "9f2f4cdeff4061a2400974fc8b2b1e78322eea2805a82cb482dbe9841033fa4d",
+      "bytes": 5551
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/verification.lock.json",
+      "sha256": "763c7c12d227b5bd12f9a47caeecfdfe4553bf41c29bc837894875eb3f9e06e8",
+      "bytes": 9774
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/authority.lock.json",
+      "sha256": "279e011fad271ada1a791b8b12248aea985dbfc8df558b489c6429123d2f2c46",
+      "bytes": 1597
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/evidence-contract.json",
+      "sha256": "e621be46982baaf102102ebd6a9afcea8a1e527e10ebf5cfe5a120d2f1d88a8b",
+      "bytes": 886
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/execution-contract.json",
+      "sha256": "af8f98887ede3a5d70bcfa7d424b040b0b498d118bdd2eed6e933a7da78c914e",
+      "bytes": 6699
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/implementation-context.md",
+      "sha256": "e4cdf4b9a5af5710dbede2f3247f591cff4ee58c8cac4009808bbcaf4717a71e",
+      "bytes": 1588
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/package.json",
+      "sha256": "6de889972731b7c8485c059d0a3b3ec8ce02f503404187585495496ce085e27f",
+      "bytes": 2506
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-publication-2026-11-09/verification.lock.json",
+      "sha256": "ee53386b4a90dcf06c21e524b0d284ae4c75893d4e5e5cc427120aacbca26f2b",
+      "bytes": 2938
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/authority.lock.json",
+      "sha256": "efbc0662e43ee16383fd576e4267dfde371760213dd6ff07b7ddd02ee91d419c",
+      "bytes": 7672
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/evidence-contract.json",
+      "sha256": "f1d0f6624c2f52541d8558ccf27a624336e3381dd1da7de294c141b6469af72f",
+      "bytes": 2235
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/execution-contract.json",
+      "sha256": "e321b8b9eed871a021c0585b33420d62a66929d8d22f710ae7c0e306942c35ae",
+      "bytes": 14094
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/implementation-context.md",
+      "sha256": "5eec33e2fa09429fe290cf78b4ed83f6c7b8ba6e8f944c88f03d680f358b7385",
+      "bytes": 5260
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/package.json",
+      "sha256": "d4924ec62438d6aeb8a47e3242f606809d90e67b7aaeed50a9f75043b5562ca6",
+      "bytes": 2556
+    },
+    {
+      "path": ".aegis/packages/G5-UR1d-resource-recovery/verification.lock.json",
+      "sha256": "90dc4d7b435510e582f71fc16cc9cd8e2337da5d3c4f5ef0d99de9cb3004156f",
+      "bytes": 13803
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/actual-recovery-review.json",
+      "sha256": "e116f30da5a46ce6ee038e7d1e24c0b0085110878f74c3643039257d068cb40a",
+      "bytes": 3871
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/input-integrity.json",
+      "sha256": "07ef36aebf8ce08dd5ae21bbfd3f19ac73b9cc62823c4efa31a6ba7698607dcb",
+      "bytes": 599
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/offline-pixel-review.json",
+      "sha256": "2aa00226d681e1cf7da453f52b13653e46ca8fcc4372f2f3c3a38cbd5dbc592c",
+      "bytes": 9744
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/regressions.json",
+      "sha256": "01fb233cc3933c867a39621914e04e70f67977277cf68b23df1027c411c6f03d",
+      "bytes": 37163
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/report.txt",
+      "sha256": "0fe8f4dfc6f8cca462b90a2fc563b9b85f51212387e48313ba4509235c4033d8",
+      "bytes": 1633
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json",
+      "sha256": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3",
+      "bytes": 7625
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/actual-consumers-review.json",
+      "sha256": "ba7de293cc48e7db132747a03346eb10e57294cf33238c23b88ddb8557d1db98",
+      "bytes": 6926
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/defect-classification.json",
+      "sha256": "0732869667e914cebcf076da120573d8977fdcc06abaa671e3040724a6a1bf20",
+      "bytes": 2344
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/input-integrity.json",
+      "sha256": "9a0a47337701a24b247437e862f862d5ef21354b2a5c60aa6167d1f2aa57e876",
+      "bytes": 463
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/offline-pixel-review.json",
+      "sha256": "bf5fbeea1db71ab35da42f0a251a17eed562773533cb2b5b7d5e5e54712d3a7d",
+      "bytes": 32862
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/regressions.json",
+      "sha256": "eadd339995e7d230b047ac8a921cd5ae7568efd6f139698ff5b7fe77161d53f0",
+      "bytes": 36040
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/result.json",
+      "sha256": "01c5ff4d13ecfe7ec557083ea1752737d4c64b550092c61281334277b905227c",
+      "bytes": 3975
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/frozen-publication-files.json",
+      "sha256": "8fb86f244b4e1e051b77f30a8898de85d979ea9df01d6cc403a61ef6254a4099",
+      "bytes": 19455
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/archive-manifest.json",
+      "sha256": "e37a454acc15499ad994f6ca494a9f172001936902169151e14023d133204938",
+      "bytes": 80583
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/candidate-builds.json",
+      "sha256": "77585515e2eaf3c409ae4fb6bcbe5673ef87859e53361a6e1665b19e09ea12b2",
+      "bytes": 7747
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/closure-facts.json",
+      "sha256": "d424f3e1b66bb928a911d9d566ec2b5f600166b661be02d5b253a78433303a26",
+      "bytes": 17071
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta-manifest.json",
+      "sha256": "188efdb010736e5bcdb981eab365514166d29c26a55d1ebb0b24e2d1db2cd855",
+      "bytes": 7326
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch",
+      "sha256": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+      "bytes": 130949
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/delivery-manifest.json",
+      "sha256": "f5827881b18e240a8a8c5736a55218205975e02a0b4e2512db09378dcbc6f327",
+      "bytes": 2154
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/driver-identity.json",
+      "sha256": "88d14b87273ce6e84566fcbf92d4f49029c2c96dfdb820bfe7405b2bee32cf4a",
+      "bytes": 54051
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/sampling-ledger.json",
+      "sha256": "5a179ecbdc6cc57e513e2f6f92a6cca967ae10593d29243bbf388bb5c0f8b775",
+      "bytes": 3199
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-only-boundary.json",
+      "sha256": "1e59f71e2b9ef20bb71b7419717555f587d89cad4915ec0abb81b3a86e071ad3",
+      "bytes": 1004
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/native-artifact-manifest.json",
+      "sha256": "2f240f9f15530c61fab51f98b15927066cc1a7ca3454b63307f1478bc44709ba",
+      "bytes": 7760
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/payload-manifest.json",
+      "sha256": "0a0df6be276ef83de8514b93df08b3496a23480897d24c949988e1f02127ac30",
+      "bytes": 77622
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/prior-evidence-applicability.json",
+      "sha256": "31ddd4005d0c58ef1481a4a76e43356b28a0db6126ca078cb2acaf7cd8f6c26c",
+      "bytes": 4413
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/profiles.json",
+      "sha256": "2435becfa9e170886aef173cb2c802c2f17d5b24309c2633215d050fdc993054",
+      "bytes": 941
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/qualification-layout.json",
+      "sha256": "6565e084a9d88227e3a07aee0d02195fe9911c481f5bd2f327534152731384f6",
+      "bytes": 5292
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/report.md",
+      "sha256": "0574633d2f2b0006215f51a409685a206e7d2d9314a7c3dba00bca2dc8d5002e",
+      "bytes": 4795
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/result.json",
+      "sha256": "d79e09d34d6f5c4faf14f21226f7d44ce5588c0e7d5eef13b3113a018ba35aaf",
+      "bytes": 2099
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta-manifest.json",
+      "sha256": "837bbdd5152e20389243ccab8253a5c56343254e8c717efedc70ceef90bc0c8e",
+      "bytes": 3323
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch",
+      "sha256": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+      "bytes": 25800
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/worker-freeze.json",
+      "sha256": "6a33173d0f2fdb281188830006af5ec64f88afc154639f404228aa1891dd867f",
+      "bytes": 61242
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/archive-manifest.json",
+      "sha256": "04e3d2d66c167b50bae538ca4ac66cb4ef76595dbb26a765e229fd307f39abb3",
+      "bytes": 131152
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/blocked-terminal.json",
+      "sha256": "9fbdbd2b192bccff696eb9905b486bff0fd23d989b6fab663ed6020b223c42e5",
+      "bytes": 3001
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/candidate-builds.json",
+      "sha256": "7831c0f43205cbb7c91ca4e5986f333e0c2a6636fc32df254ec173c1d28ea59a",
+      "bytes": 7735
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/delivery-manifest.json",
+      "sha256": "f52681888e67351109d560f10e49d4f1a519eaf3b179d36a1b648cbbf69814ff",
+      "bytes": 2291
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/driver-identity.json",
+      "sha256": "ff8c015cad969ca14d89e31047c3f1b2746d2b6353dca6a1d9e5a7b161e52afd",
+      "bytes": 50701
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/sampling-ledger.json",
+      "sha256": "fa98b9b8b26a5998f87be6e19aae2573cfbdf25ebac2a9dfbda8f122562fa2f4",
+      "bytes": 6078
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-only-boundary.json",
+      "sha256": "faeb8919209a43f0bd8bfbd6b1afc7002521d0ad3e2a70bee6658eadb1648fb7",
+      "bytes": 1302
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/native-artifact-manifest.json",
+      "sha256": "db77cf33cd22f15bc5caabebd94202459b3e6e4e9be15d24f93acac4361f8b34",
+      "bytes": 7562
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/payload-manifest.json",
+      "sha256": "c4fdc6fe869bffe17a26c2c47597bf6010067963836ddd3a7f120647b884d2a2",
+      "bytes": 122820
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/profiles.json",
+      "sha256": "3b36d5b5a16ce5d7c8a39695af9a1cb350bc54dc098785f78b319c31f1b80f5d",
+      "bytes": 937
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/qualification-layout.json",
+      "sha256": "d1bb2eb1c1bf586061aef3307aba71c88a1f7c127a0284e74b11ac1d4faa7da8",
+      "bytes": 4890
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/report.md",
+      "sha256": "22eda683b98bf7fa1885726983d3713298fdc83b79b9bd796a79c680faf8e436",
+      "bytes": 5032
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/result.json",
+      "sha256": "c3fdb7d489bd962e8a647e3e3094d38de434d12053d44470e8bba80dfbb42015",
+      "bytes": 3638
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/source-delta-manifest.json",
+      "sha256": "ea2b68956bd1c453c7ab4e0d48d2e7480e881ed0b4ec04707bc29a32c1fd24a5",
+      "bytes": 6293
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch",
+      "sha256": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9",
+      "bytes": 109968
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/terminal-finding.json",
+      "sha256": "abc75af09f588a02172e59917eb3859b89f1d46ec713eff58988ce233a531964",
+      "bytes": 1822
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/terminal-inputs.json",
+      "sha256": "a95e1114668a3f1fd13ebb5511f82d4b98bc0ac4b8db143435410cb1b6914f4d",
+      "bytes": 3650
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/worker-freeze.json",
+      "sha256": "d3f96f13c0c62334710c6c3dc9499cbe18c810c28e0822092f9f598c24315699",
+      "bytes": 57876
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+      "bytes": 14456
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092",
+      "bytes": 48437
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346",
+      "bytes": 6918
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+      "bytes": 19366
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb",
+      "bytes": 60479
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "623484811c90526f4b5f3b793dd375da9fd41beca8e0c88f73b1668514e47d25",
+      "bytes": 41199
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad",
+      "bytes": 6351
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+      "sha256": "6a4ec68a18ce2822f19c25ce4c62fa3cbe73d427267424deb8e6d27d9d1f95df",
+      "bytes": 8499
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+      "bytes": 8828
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "bytes": 4135
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "bytes": 3973
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e",
+      "bytes": 67051
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11",
+      "bytes": 89188
+    },
+    {
+      "path": "runtime/render/src/webgl_context_liveness.hpp",
+      "sha256": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0",
+      "bytes": 871
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "bytes": 13762
+    },
+    {
+      "path": "runtime/render/tests/g5_observation_identity_test.cpp",
+      "sha256": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03",
+      "bytes": 4354
+    },
+    {
+      "path": "runtime/render/tests/gpu_resource_recovery_test.cpp",
+      "sha256": "56a00100804f57042c2d1bed60a5bcfc7b8258208dd6f178959f6e23ef271e72",
+      "bytes": 12667
+    },
+    {
+      "path": "runtime/render/tests/gpu_retirement_contract_test.cpp",
+      "sha256": "d64865e29b00f79274d19fa85b74e6bd078131063fb8a1e63abb8072cf55379e",
+      "bytes": 10154
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "bytes": 11386
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery.mjs",
+      "sha256": "0a2286f2f6577a0d3f7ca269a6988e07b3326a2102564a68f60f45ca0fce5ddf",
+      "bytes": 18504
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "ece40be2bb86702ed98b3dffeb8933cad92e0bd1678e3df22d9fef456e9dd152",
+      "bytes": 3510
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify.mjs",
+      "sha256": "3712d256f602e46c21104cf2c4e55ea2e8e6388e80d8a87bcdbd92c4a13da5d1",
+      "bytes": 708
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify_runner.py",
+      "sha256": "d3aac8f70f0b177afcb103140c0d73177e40a896a1fc251d7437b9a2b8113a92",
+      "bytes": 8106
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_runner.py",
+      "sha256": "0353f413fe9e3f822f38e1ecaa2571e9f04cdae77a7e727dbcf8917e571cf1a8",
+      "bytes": 9888
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery.test.mjs",
+      "sha256": "b079223fcbeecb078c0d95b3133316c985ff57c680a8a21682aaa48844e81e93",
+      "bytes": 1750
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+      "sha256": "95ba37b2fc016acb8e2237a50ea23cd7da52810c70baabc6ea35cbba1aaba2e7",
+      "bytes": 1196
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery.py",
+      "sha256": "1078b43dac9b616dbdd129535654d8861449363ecd58b821e382cff90d51ed5a",
+      "bytes": 2475
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+      "sha256": "0d80fd09072f51a5f10c2f93ee6364e6ec689dd9f466a07cd2f688f1733186cb",
+      "bytes": 3383
+    }
+  ],
+  "generated_index_files": [
+    {
+      "path": ".aegis/publications/G5-UR1d-2026-11-09/README.md",
+      "sha256": "5e03fc022fd1308bf2e8b5bd7093fc8cc1956aa597e86ae9e66a8b80f632135e",
+      "bytes": 2026
+    },
+    {
+      "path": ".aegis/publications/G5-UR1d-2026-11-09/accepted-source-postimages.json",
+      "sha256": "97b2c1995087e9d047c0cc49d87bbab92d05a2d4c6c40634d4e0fa53e135962f",
+      "bytes": 9956
+    },
+    {
+      "path": ".aegis/publications/G5-UR1d-2026-11-09/authorization.json",
+      "sha256": "7a78e3da6cb5f0f4b62d8ef1387bc61613c82ce40595b61f0324efb8e9c75232",
+      "bytes": 3759
+    },
+    {
+      "path": ".aegis/publications/G5-UR1d-2026-11-09/evidence-index.json",
+      "sha256": "44d67d28fab546f7ddc2820de0d117910904739d87c187fd40ab7664dc373d0c",
+      "bytes": 12137
+    },
+    {
+      "path": ".aegis/publications/G5-UR1d-2026-11-09/local-only-boundary.json",
+      "sha256": "b2718bd3542e230585e152e598fb321ff0f75e82d8026036fde64a555861d9c6",
+      "bytes": 8412
+    }
+  ],
+  "policy": "Actual all102 index path/blob/mode proof and final commit/tree/server checks are recorded after staging in local publication result. No self-hash cycle.",
+  "required_poststage_check": "Full raw102blob/mode equality; default checker exit2 only the3 SHA-bound frozen artifacts/174 lines preserved; strict remaining99 check0; oneparent commit; ordinarypush and exactserver/tracking/HEAD equality",
+  "checker_amendment": {
+    "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/checker-amendment-r1.json",
+    "sha256": "729b4a0094974d4bea167acfcdf3ef9b25c6a7fa1aaf991dc7f4ba304c5c8192",
+    "bytes": 2447,
+    "content": {
+      "schema": "g5-ur1d-publication-checker-amendment-v1",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "owning_stage": "P31",
+      "prior_package_sha256": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07",
+      "preserved_prior_package": {
+        "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/pre-amendment-r1",
+        "files": {
+          "verification.lock.json": "a97a5ae989b8fca1b989dc88cc0b1aeb8be1b431351288c2261afcea0ba9e840",
+          "evidence-contract.json": "bb341b119fff56aaf81f38d39419bf877628e18c46b7ebcb44e26ad78a131dce",
+          "implementation-context.md": "0f3335ccc846968127481c4af6f71670344f184de84348e66b1d6f8fc9dbf401",
+          "authority.lock.json": "e03abff66b52d23b3b9dd1799342c0874ef2cbaaef94978ee069f0c943d439bd",
+          "package.json": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07",
+          "execution-contract.json": "860ee30694e0c97fd1df195070f58fbcdef4b0146a401f9abe430f2821322e5b"
+        }
+      },
+      "human_authorization": "提交并推送ur1d; routine publication of alreadyaccepted immutable evidence",
+      "reason": "Generic whitespace checker reports originalCRLF/unifieddiffcontext spaces in immutable patch evidence. Modifyingthosebytes wouldcorrupt frozenrawartifactidentity. Sourcewhitespace acceptance staysstrict.",
+      "exception_scope": {
+        ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+        ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+        ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9"
+      },
+      "rules": [
+        "Preserve full default git diff --cached --check output, exitcode2 andall174reportedlines; never report that fullcheck passed.",
+        "Every reported whitespace-error path must belong to these exact3 frozenpatch artifacts andtheirindex/worktreeSHA mustmatch frozen postimage. No other exemption.",
+        "Allremaining99publishedpaths, including all28source files, must passscoped git diff --cached --check=0.",
+        "Keep all102indexblobs/modes exact; no evidencebyte/hash edit, no global/repoConfig/attributes change, no public API or product source/threshold relaxation.",
+        "Only refresh the same6publicationpackage files andexisting6publicationindex metadata; no newstagepaths/browserruns."
+      ]
+    }
+  },
+  "default_full_checker": {
+    "exit_code": 2,
+    "output_lines": 174,
+    "output": {
+      "path": ".aegis/results/G5-UR1d-publication-2026-11-09/staged-diff-check.txt",
+      "sha256": "4e4691baccd03893d34dc120109136ba0c343c45e07b560d388bbafc7ef9319f",
+      "bytes": 11371
+    },
+    "claim": "PRESERVED_ARTIFACT_DIAGNOSTICS_NOT_PASS"
+  },
+  "strict_scoped_checker": {
+    "paths": 99,
+    "exit_code": 0,
+    "output": {
+      "path": ".aegis/results/G5-UR1d-publication-2026-11-09/staged-source-metadata-diff-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "excludes_only": {
+      ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+      ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+      ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9"
+    }
+  }
+}

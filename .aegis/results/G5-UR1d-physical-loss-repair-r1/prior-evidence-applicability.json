@@ -1,0 +1,105 @@
+{
+  "schema": "g5-ur1d-loss-prior-applicability-v1",
+  "prior_subject": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+  "prior_evidence": [
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/result.json",
+      "sha256": "c3fdb7d489bd962e8a647e3e3094d38de434d12053d44470e8bba80dfbb42015"
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/worker-freeze.json",
+      "sha256": "d3f96f13c0c62334710c6c3dc9499cbe18c810c28e0822092f9f598c24315699"
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-Q1/worker-result.json",
+      "sha256": "66995738915caf8d02130ecf36efd255ed1c3b215ce01b307ad5d880559c9d79"
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-N1/worker-result.json",
+      "sha256": "426d9640e17970f67870d3c8a9d17abf0e19823fa6068cbe279ca419c9910b6b"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/offline-pixel-review.json",
+      "sha256": "bf5fbeea1db71ab35da42f0a251a17eed562773533cb2b5b7d5e5e54712d3a7d"
+    },
+    {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/actual-consumers-review.json",
+      "sha256": "ba7de293cc48e7db132747a03346eb10e57294cf33238c23b88ddb8557d1db98"
+    }
+  ],
+  "unchanged_owners_and_consumers": [
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092",
+      "changed": false
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "sha256": "f1c89dedd3d9c800e383a5e56243383c18d82e1019377968b7c8199188530e00",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.hpp",
+      "sha256": "11f7ee7e88708cd7d2e33c21f76d1150c959bb69d34c6c654e052f1b8d2f94ca",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "27bd94fa57321d3c5fecb22411e1517d370034f08ab2c1347ab2ee6b68893f57",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "593fe4920ecbf0ade95e6efabd1bcb6555d1eb836c992e9b66b2048227fea7fb",
+      "changed": false
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11",
+      "changed": false
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "changed": false
+    }
+  ],
+  "new_product_delta": [
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/src/webgl_context_liveness.hpp"
+  ],
+  "tests_delta": [
+    "runtime/render/tests/gpu_retirement_contract_test.cpp"
+  ],
+  "verification_delta": "Only private identity forwarding/root allowlist and new two-ID wrapper/tests; no lifecycle/fault/pixel/queue predicates changed.",
+  "applicability": "Core evidence stays explicitly old-e4 subject evidence. The narrow liveness/classification decision leaves canonical/Direct geometry, prepared body, budgets, caches, general GPU queue, SDK lifecycle and Core harness intact; final matching regressions plus fresh Recovery pair determine proportional P36 closure. No fresh Core runs or prior pixels/roundtrips relabeled as new.",
+  "prior_cold_pixels": 40,
+  "prior_roundtrips": 8,
+  "fresh_Recovery_cold_pixels_required": 12,
+  "new_Core_or_roundtrip_runs": 0
+}

@@ -1,0 +1,170 @@
+{
+  "schema": "g5-ur1d-scoped-verification-v1",
+  "obligations": [
+    {
+      "id": "U1D-01",
+      "requirement": "GPU lifetime state and identities are truthful at real execution boundaries.",
+      "oracle": "Deterministicnative completion-service/clock cases plus actualMetalGPU and actualWebGL provider runs. Match ticket/job/attempt,purpose,context-lifetime,surface/resource/framebasis to actualsubmit/observedfinish/orderedretire; negative no-work,submitfailure,unsupported andinvalidcontext cases.",
+      "acceptance": "No-workticket is not GPUsubmit; submitted-not-observed anddone-waiting-for-orderedretirement are different. submitfailure/abandon/loss never become successfulcompletionorreceipt. Oldcontext identities cannot be mistaken fornew ones. Counters reconcile admitted,unused,submitted,completed,cancelled/abandoned andretired rows without claiming GPUcommandcounts/pureGPUtime.",
+      "evidence_required": "Rawboundedtyped events/aggregates,countermap andnative negativecases; normaltracefree andprivate diagnostics only. Groupservicecalls byqualified sharedservice/context lifetime; repeatedtickets cannot multiply the samepollwithinonepass."
+    },
+    {
+      "id": "U1D-02",
+      "requirement": "Cancellation,supersession andteardown keep lifetime safety and exactcompletionqualification.",
+      "oracle": "HeldGPU epochs/fake out-of-ordercompletion,actualproviderreplacement/resize,cancelledcanonical/preparation/navigation,renderer/providerclose andlastrelease; captureoldcallback afternewbinding; use existingframe/provider oracles.",
+      "acceptance": "No callback retains/dereferences destroyedRuntime/renderer/provider orpublishes currentreceipt. In-flightshared leases staycharged until actualcompletion/physical-loss/ownerclose underexisting rules. CPUgeometry/source job ownership staysvalid whereallowed. No duplicatefinish,doublefree,earlyshrink orcrosscontextgeneration qualification.",
+      "evidence_required": "Native rawtransition/progress/quota snapshots,old/newfullbasis,presentcount andlifetime negatives."
+    },
+    {
+      "id": "U1D-03",
+      "requirement": "Resourcepressure and delayedcompletion recover boundedly without hiddenfullCPUfallback orpartialpresent.",
+      "oracle": "ExistingC2one-stepworking-set and513alias tests plus reclaimedresident pressure,actualheldGPUretirement,partialcoverageallocationdenial/scratchfailure,ordereddonebacklog,unavailablecompletion/actualtargetmismatch andstructurallyimpossible target. Use samebudgetowner.",
+      "acceptance": "used/staging/pendingRelease andsharedallocations arecharged once; logicaleviction isnot physicalrelease. Temporarydenial preservesprogress,currentbody/job andvalidfeedback; aftercompletion/admissible-reclaim stablevaliddemand completes within a deterministicwork-bound fixture. Impossibleconfiguration rejects; no busywait,retry-from-zero,restampedoldframe,orGPU-root Raster/wholehistoryfallback. Defaults32/96MiB,8MiB/512entries andexistingaggregateworklimits stayfixed.",
+      "evidence_required": "NativeRED whereanexistingrequirement actuallyfails,thenrawGREEN; actualallocation-result failureseam may beprivate qualification-onlyandlabelledinjected,notcalledphysicalOOM."
+    },
+    {
+      "id": "U1D-04",
+      "requirement": "Surface/context loss,logicalresize and rebind aregeneration-safe and preserve canonical state.",
+      "oracle": "Native acquired-generation/actualsurfacekind/lost-unavailable-stale andcompletion-serviceabandon cases; realWebGL canonical-only andpreview-only WEBGL_lose_context/restoration through existingrootSDK andpairedprovidertransaction. Test oldqueuedcompletion afternewbinding.",
+      "acceptance": "Normalresize doesnotclaimphysicalLoss. Missing/deletedhandle isunknownabandon,notphysicalcompletion. RealWebGLloss discards oldGPUeligibility; rebind createsqualifiednewgeneration anddraws fromunchanged canonicaldocument. No snapshotreload/semanticrollback orfakeoldreceipt. Provider acquire/present failuresremainexplicit,old-framepresent rejected.",
+      "evidence_required": "Fullbefore/afterdocument/commit/surface/metrics/context identities,operationcount,stateandsnapshotcapture before/afterrecovery,strict generation negatives andindependentpostrestorepixels."
+    },
+    {
+      "id": "U1D-05",
+      "requirement": "Real consumers continue service and recovery after input stops without creating new semantics.",
+      "oracle": "Matched publicrootSDK coreS0/S2canonical/drag-cancel/erase-navigation workers; separaterecoveryworkers with boundedwithheld completionobservation thenrelease,canonicalcontextloss/restore andpreviewcontextloss/restore,followed byidle owneropportunities andsettledcaptures.",
+      "acceptance": "Existingcanonical/Directpreparedconsumer andnormaltracefreecriteria remain. Oncefaultreleased,necessarywork/staging/pendingRelease retire through nonblockingowner opportunities without requiring anotheruseredit; validresidentcaches/WASMheap/RSSneednotzero. Canonical/previewcontextroles remainindependent; nextordinaryframe works. ExistingpostUp/readmissiondebt is recorded,notsilentlywaivedorrewritten.",
+      "evidence_required": "RawrootSDKreceipts/state andactualRenderleaf/retirement facts,resourceendstate,window/callbackfailurepreservation,no readbackinsideinputtiming."
+    },
+    {
+      "id": "U1D-06",
+      "requirement": "Exact source,SDK,oracle,evidence and boundedexecution are independently reviewable.",
+      "oracle": "Frozenexisting54native selection plus2newresource tests andaffectedowner regressions; existing36Node/21Python/120boundaries,SDKcontroller/transportchecks; lockednative/WASM builds,machingnormal/qualification36-file SDKpackages,newDemo andfour serialguardedWebworkers.",
+      "acceptance": "Allrequiredfunctional cases meet frozenoracles; unchanged originalCPU/null-cache andGPUAApolicy; normalcontainsno newdebugexports/trace. Completecoldbuffers andfailureprefixes,exactsource/delta/package/build/SDK/driver/oracle/resourcehashes,closedceilaccounting andownedcleanup; no self-issuedGate/P34/fullUR1/performancePASS.",
+      "evidence_required": "Reviewer-accessible shared-worktree result+manifest+sourcepreimages/postimages+rawnative/Web/SDK archives andmemberhashes; explicitlocal-only artifactmanifest ifnot inGit."
+    }
+  ],
+  "native_command": [
+    "ctest",
+    "--test-dir",
+    "out/G5-UR1d-resource-recovery/build-native",
+    "--output-on-failure",
+    "-R",
+    "^(G5ScaleFixtureContract|G5Ur0Observation|G5GeometryChunkLocality|G4EraserSession|G4EditorHistory|FC01EditorHistoryInverseFamilies|G45PerfectFreehandReference|G5RenderExecution|G5EraseExactHit|G5RenderCache|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5V4CoverageFallback|G5MaskedCanonicalRecovery|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderDamage|G5SkiaChunkRangeEntry|G5PreparedGeometry|FC00XFrameCoordinator|G3DirectReference|G5TransientReference|G3FrameOrchestration|G5SharedScenePayload|G5SharedSceneSnapshot|G5SharedSceneIndex|G5SharedSceneReaders|G5SharedSceneRetention|G5SharedSceneParity|G5Ur0ObservationIdentity|FC00XBrushBatchEvaluation|FC00XBrushBatchSemantics|G5Navigation|FC04MSEHistoryFaultUndo|FC04MSEHistoryFaultRedo|FC01InsertHistory|G5PreparedBodyIndex|G5CanonicalPreparedBody|G5CanonicalPreparedBodyBounded|G5CanonicalPreparedBodyPixels|G5CanonicalPreparedCompatibility|G5CanonicalPreparedWorkingSet|G47ImageResource|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|FC00XFatalProviderFailure|SDKPublicResources|G5GpuResourceRecovery|G5GpuRetirementContract)$"
+  ],
+  "new_native_test_names": [
+    "G5GpuResourceRecovery",
+    "G5GpuRetirementContract"
+  ],
+  "node": "Existing36G5Node plus node --test verification/sdk_controller/controller_test.mjs verification/sdk_controller/transport_test.mjs andnewresource helpers.",
+  "python": "Existing21G5Python plus newresource/ledger/failureprefix tests.",
+  "boundaries_command": [
+    "python3.12",
+    "tools/check_runtime_boundaries.py",
+    "--root",
+    "."
+  ],
+  "public_boundary": "NewWebcases runmatchingrootSDKonly; keepdeclarations/publicexports/versions unchanged. Inspectinstallmanifest withdevelopercomponentsOFF andnormaldiagnosticsOFF. Lifecycleforwarding changesmustretainJS/Ctransport state/error/uint64 widths andexistingreadonlypubliccontracts. NoWindowsABIclaim fromhost.",
+  "correctness_reference": {
+    "cpu_oracle_path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "cpu_oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "timeout_ms": 10000,
+    "rule": "Original independent CPU geometry AA boundary and<=2interior channel levels for qualified GPU; preserve explicit CPU/reference semantics. Candidate prepared service must not generate its ownreference.",
+    "saved_reference_catalogs": [
+      {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/reference-catalog.json",
+        "sha256": "ae8804499d66ceb7f3de7d29cf78775cee2905c1d005199cbea96b8e4f9b5512",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "additional_saved_outputs": [
+      {
+        "path": ".aegis/results/G5-UR1c1-web-consumer-reverify-r1/payload-manifest.json",
+        "sha256": "b1edbef200afa382f3ed855d14121fa598c74a67d3020020844b1ace6a2cb69d",
+        "identity_kind": "local-content-addressed"
+      },
+      {
+        "path": ".aegis/results/G5-UR1c1-prepared-body-index/payload-manifest.json",
+        "sha256": "0c5e725935a54f65f42e4099288745cb493eb7d07cdc52542f02ce174b6ef700",
+        "identity_kind": "local-content-addressed"
+      }
+    ],
+    "exact_input_reuse": "May reuse only intact complete old independent references under identical fullsnapshotbytes,complete request,oldoraclebinary+resource/lockidentity. Newly captured candidateRGBA always compared. Otherwise run original oracle once with10000ms bound. No retries,tolerance changes or edits to old outputs.",
+    "bound_latest_reference_catalog": {
+      "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/reference-catalog.json",
+      "sha256": "846c9e9126f591630e1c4102a8ca9eef0d69f8971853ac77caee1486f4297d0c"
+    }
+  },
+  "browser_window": {
+    "ids": [
+      "UR1D-CORE-Q1",
+      "UR1D-CORE-N1",
+      "UR1D-REC-Q1",
+      "UR1D-REC-N1"
+    ],
+    "order": [
+      "core-qualification",
+      "core-normal",
+      "recovery-qualification",
+      "recovery-normal"
+    ],
+    "new_browser_starts_max": 4,
+    "concurrency": 1,
+    "outer_seconds": [
+      180,
+      180,
+      240,
+      240
+    ],
+    "process_family_rss_mib": 3072,
+    "historical_starts": 54,
+    "historical_charged_seconds": 2107,
+    "new_nominal_seconds_max": 840,
+    "original_cumulative_cap_seconds": 8370,
+    "core_cases": [
+      "S0-canonical",
+      "S0-drag",
+      "S0-erase-navigation",
+      "S2-canonical",
+      "S2-drag",
+      "S2-erase-navigation"
+    ],
+    "recovery_cases": [
+      "S0-retirement-context-recovery",
+      "S2-retirement-context-recovery"
+    ],
+    "logical_target": [
+      800,
+      500
+    ],
+    "device_pixel_ratio": 2,
+    "native_dpr_coverage": [
+      1,
+      2,
+      4
+    ],
+    "recovery_sequence": [
+      "Restore exact boundfixture once asstartup; settle,savebaselinecanonical/documentstate.",
+      "Withhold completionobservation for8realRAF opportunities usingtest-only forwardingwrapper orqualifiedfaultseam; distinguish withheldobservations from physicallypendingGPU. Then restore realpolling and service tosettle without newsemanticinput.",
+      "Lose canonical context with realbrowserextension; waitforlost lifecycle; nofakecompletion/oldreceipt; restore and awaitnewbindingcurrentframe; capture postcanonicalrestore.",
+      "Lose preview context similarly; restorepairedproviders and awaitcurrentframe; capture postpreviewrestore.",
+      "Compare currentsemantic/commit/document/snapshotbinding unchanged acrossloss/recovery; preserve source identity andalloperationnotifications. Close owner andpage,cleanuphooks/processfamily."
+    ],
+    "recovery_cold_stages": [
+      "before-loss",
+      "after-canonical-restore",
+      "after-preview-restore"
+    ],
+    "core_pixels": "28coldstages+8Undo/Redoroundtrips across2workers",
+    "recovery_pixels": "6coldstagesperworker/12across2workers,unchangedoriginalCPUreference andcompleteexactinputreusepolicy",
+    "policy": "These4newIDs are reserved onceonly. Noextra smoke/seed/retry/browser; performnonbrowserpath/dependencypreflight before freezing. Freezeallsource/driver/artifacts first. Guard/identity/crash/environment failure stopsremainingrowsandnotifiescontrol; completedfunctional failuremaypreserveonlyalreadyplannednormalpair. Chargeceilactualseconds; original54/2107unchanged.",
+    "scope_limits": "ActualWebDPR2 only; nativeDPR1/2/4 coversscaledresourcebasis. No claim of fullrealWebDPR4/multidevice/physicaldisplay/performancequalification."
+  },
+  "evidence_necessity": {
+    "failure_mode": "GPU work/quota/owner state can appear completed onsubmit/abandon,leak orreleaseearly,acknowledgestalegeneration orstall afterrecoverablepressure/contextloss.",
+    "impact": "Unsafe reuse/falsevisible receipt andpermanentinput/displaywait even afterUR1c2geometryreuse; a cachehit/pixelreference alonecannotdetect lifetime/progress.",
+    "existing_independent_coverage": "AcceptedC1/C2/P36identity/alias/one-step/pixel tests andcurrentprovider/generation tests retained.",
+    "unique_detection_value": "Explicit delayed/out-of-order/lost/failedactualtarget transitions andservice-onlyrecovery,usingactualSDK/providers plus deterministicprivate nativeoracles.",
+    "not_added": "NofullUR0 rerun,newqueueSLO,100K/1M,UR2handshake orallalgorithmsacceptance."
+  }
+}

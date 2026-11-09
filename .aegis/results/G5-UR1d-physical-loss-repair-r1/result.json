@@ -1,0 +1,59 @@
+{
+  "schema": "g5-ur1d-loss-final-result-v1",
+  "task_id": "G5-UR1d-physical-loss-repair-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "continue_execution": false,
+  "package": {
+    "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1/package.json",
+    "sha256": "eb15be0e7af62797cec50d2f6f92f6047e0e33b4ae75751fe4d3c5b2bb30e4b3",
+    "bytes": 2353
+  },
+  "result_revision": "9994c8492b46e8672dde0901003352b119d19e96",
+  "source_tree_sha256": "8aa194b1c9a3e35e9417ded72b29e6320ff71ba8d26f4862c361e292cb83230c",
+  "materialized_ref": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/delivery-manifest.json",
+    "sha256": "f5827881b18e240a8a8c5736a55218205975e02a0b4e2512db09378dcbc6f327",
+    "bytes": 2154
+  },
+  "report": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/report.md",
+    "sha256": "0574633d2f2b0006215f51a409685a206e7d2d9314a7c3dba00bca2dc8d5002e",
+    "bytes": 4795
+  },
+  "closure": {
+    "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/closure-facts.json",
+    "sha256": "d424f3e1b66bb928a911d9d566ec2b5f600166b661be02d5b253a78433303a26",
+    "bytes": 17071
+  },
+  "tests": {
+    "native": 56,
+    "node": 58,
+    "python": 33,
+    "boundaries": 120,
+    "fresh_cold_pixels": 12,
+    "fresh_roundtrips": 0,
+    "prior_cold_pixels": 40,
+    "prior_roundtrips": 8
+  },
+  "ledger": {
+    "new_starts": 2,
+    "new_charged_seconds": 42,
+    "cumulative_starts": 60,
+    "cumulative_charged_seconds": 2276,
+    "original_cap_seconds": 8370,
+    "remaining_seconds": 6094,
+    "remaining_IDs": [],
+    "cleanup_complete": true
+  },
+  "original_failure_preserved": "G5-UR1d-resource-recovery result remains BLOCKED, not relabeled",
+  "no_product_expansion": true,
+  "normal_demo_url": "http://127.0.0.1:4289/example.html",
+  "no_commit_push": true,
+  "UR2_activated": false,
+  "official_Gate_G5_P34_performance_PASS": false,
+  "remaining": [
+    "Independent control review",
+    "Earlier unpaired content-gap findings and null exact Up-to-CanonicalVisible time remain",
+    "Real Web DPR4 and other platform products remain unqualified"
+  ]
+}

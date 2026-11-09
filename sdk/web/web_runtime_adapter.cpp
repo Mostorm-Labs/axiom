@@ -150,7 +150,8 @@ WebFrameResult WebRuntimeAdapter::prepareFrame(bool force) noexcept {
   // ARC preview submissions retain their qualified completion fences.
   if (!work.canonicalWork && !work.previewWork)
     return impl_->core.canonicalPresentationDirty() ||
-           (impl_->core.previewActive() && impl_->core.previewRenderState().dirty)
+           (impl_->core.previewActive() && impl_->core.previewRenderState().dirty) ||
+           impl_->core.resourceRetirementPending()
         ? WebFrameResult::kRetry : WebFrameResult::kIdle;
   if ((work.canonicalWork && !impl_->canonicalFence.insert(impl_->canonical)) ||
       (work.previewWork && !impl_->previewFence.insert(impl_->preview))) {

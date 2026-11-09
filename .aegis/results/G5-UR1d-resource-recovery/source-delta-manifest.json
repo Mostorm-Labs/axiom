@@ -1,0 +1,149 @@
+{
+  "schema": "g5-ur1d-exact-delta-v1",
+  "baseline": "9994c8492b46e8672dde0901003352b119d19e96",
+  "files": [
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+      "bytes": 14456,
+      "preimage_sha256": "e320606ba03390cfda751a3003df12b8e8fce2292cfc130a489bac9295b9918b"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092",
+      "bytes": 48437,
+      "preimage_sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346",
+      "bytes": 6918,
+      "preimage_sha256": "83d043007bb4f369785fedad6fb22c8ce5d56f45aa6a93a1b812e08e877a7ab3"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+      "bytes": 19366,
+      "preimage_sha256": "7f25360b98edb7f8e3d5ff8ea685130dbeff9f7ed70f2d892cc886b9a04f338b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb",
+      "bytes": 60479,
+      "preimage_sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "623484811c90526f4b5f3b793dd375da9fd41beca8e0c88f73b1668514e47d25",
+      "bytes": 41199,
+      "preimage_sha256": "bcf6290e4319b7568e7e0e4652c667a407846a61a8d9869dbc9b01fb0afa3e48"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad",
+      "bytes": 6351,
+      "preimage_sha256": "7f610332b0749da1c703d56aab55def9841fb4ace685efd5ffe746bbb165b979"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+      "sha256": "6a4ec68a18ce2822f19c25ce4c62fa3cbe73d427267424deb8e6d27d9d1f95df",
+      "bytes": 8499,
+      "preimage_sha256": "90d14d3dc71e9667e37b8f4c1d32e66a39a6a5b9bb210781b49035ccb1a059f3"
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+      "bytes": 8828,
+      "preimage_sha256": "a64c8be36ca3a20e2c9e8dbac561fddab7ee4e92e46d0a8b41f49f2b8f4d0eca"
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "bytes": 4135,
+      "preimage_sha256": "24136f2d51765fbd22d135f82cd53ed395cb42a7f85005717b7cbb25efcef6b9"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "bytes": 3973,
+      "preimage_sha256": "3ce71ae1400a6f5e35d50a3193441b4b98bac547a623ee24b847adf3b52c5da5"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e",
+      "bytes": 67051,
+      "preimage_sha256": "05912e746de746a1ed48f51e4186898957760ca520d59b81bb5d87bb68931a38"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11",
+      "bytes": 89188,
+      "preimage_sha256": "433764e8230bb0071278edbe70fe72b221517ece6c8962a940793a93ddeaa601"
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "41ab56246e093b642904f09b66177a154e5a301dd6a67df7fede72bada84bb47",
+      "bytes": 13688,
+      "preimage_sha256": "7b18e9ceefde8b35a88ff638baf43fef76511b0aa6b783d8f3c4a89bb487aad5"
+    },
+    {
+      "path": "runtime/render/tests/g5_observation_identity_test.cpp",
+      "sha256": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03",
+      "bytes": 4354,
+      "preimage_sha256": "7ff3a038ac8a676ad5ee610365c6ca07c48fbb3986d08974f0e7d356448fb1a5"
+    },
+    {
+      "path": "runtime/render/tests/gpu_resource_recovery_test.cpp",
+      "sha256": "56a00100804f57042c2d1bed60a5bcfc7b8258208dd6f178959f6e23ef271e72",
+      "bytes": 12667,
+      "preimage_sha256": null
+    },
+    {
+      "path": "runtime/render/tests/gpu_retirement_contract_test.cpp",
+      "sha256": "d96d80244485a68ac408c02dea2c4f812f0bbd7561f70c0dfee56cfe84b450ae",
+      "bytes": 5839,
+      "preimage_sha256": null
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "bytes": 11386,
+      "preimage_sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery.mjs",
+      "sha256": "4601d54dfe476d33fbe8188a6210b5b70107aa173061ba4fceee9960842755ce",
+      "bytes": 18474,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "d56a952b8adafb01250ae9f39698dd5cb6fcdd6c0daf69703cceba5b4c3ab1f3",
+      "bytes": 3452,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_runner.py",
+      "sha256": "0353f413fe9e3f822f38e1ecaa2571e9f04cdae77a7e727dbcf8917e571cf1a8",
+      "bytes": 9888,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery.test.mjs",
+      "sha256": "b079223fcbeecb078c0d95b3133316c985ff57c680a8a21682aaa48844e81e93",
+      "bytes": 1750,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery.py",
+      "sha256": "1078b43dac9b616dbdd129535654d8861449363ecd58b821e382cff90d51ed5a",
+      "bytes": 2475,
+      "preimage_sha256": null
+    }
+  ],
+  "patch_sha256": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9",
+  "roundtrip": "VERIFIED",
+  "outside_tracked_unchanged": 31579,
+  "public_API_version_locks_unchanged": true,
+  "index_empty": true
+}

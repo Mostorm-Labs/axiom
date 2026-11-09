@@ -390,6 +390,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile)&
         ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
         ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
+    gpu.bindFrame(frame,resourceEpoch);
     if(!gpu.ready())return BackendSubmissionResult::retry("world navigation completion unavailable");
     RetainedNavigationSource retainedValue=retainedSource?*retainedSource:RetainedNavigationSource{};
     const RetainedNavigationSource* retained=retainedSource?&retainedValue:nullptr;
@@ -412,6 +413,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
+        if(!gpu.finish())return BackendSubmissionResult::rejected("world navigation GPU submission failed");
         const auto result=provider.present();
         G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
         if(result.code!=BackendSubmissionCode::kAccepted)return result;
@@ -420,6 +422,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     if(!release.active){
         acquired=provider.acquire();if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return BackendSubmissionResult::retry("navigation reacquire failed");
         release.active=true;if(!valid())return BackendSubmissionResult::rejected("stale navigation reacquire");target=acquired.frame.surface->getCanvas();
+        if(!gpu.restart())return BackendSubmissionResult::retry("navigation continuation completion unavailable");
+        gpu.bindFrame(frame,resourceEpoch);
     }
     const auto ready=[&](TileKey key){auto it=tiles_.find(key);return it!=tiles_.end()&&it->second.image&&it->second.checkedScene==scene&&it->second.valid.full(grid_.bounds(key));};
     // A newly exposed frontier owns priority over disposable refinement.
@@ -834,6 +838,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;
+        if(!gpu.finish())return BackendSubmissionResult::rejected("world navigation GPU submission failed");
         const auto result=provider.present();
         G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
         if(result.code!=BackendSubmissionCode::kAccepted)return result;
@@ -844,6 +849,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     // sharper plane has actually reached present.
     work.pending|=dirty_;
     last_=std::make_unique<FrameState>(frame);fallbackFocus_=focus;camera_=camera;scene_=scene;
+    if(!gpu.finish())return BackendSubmissionResult::rejected("navigation preparation GPU submission failed");
     return BackendSubmissionResult::accepted();
 }
 }

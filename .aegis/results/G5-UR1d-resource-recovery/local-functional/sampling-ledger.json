@@ -1,0 +1,151 @@
+{
+  "schema": "g5-ur1d-four-worker-accounting-v1",
+  "planned_ids": [
+    "UR1D-CORE-Q1",
+    "UR1D-CORE-N1",
+    "UR1D-REC-Q1",
+    "UR1D-REC-N1"
+  ],
+  "historical_starts": 54,
+  "historical_charged_seconds": 2107,
+  "new_nominal_seconds_max": 840,
+  "original_cap_seconds": 8370,
+  "attempts": [
+    {
+      "id": "UR1D-CORE-Q1",
+      "status": "COMPLETED",
+      "reserved_seconds": 180,
+      "charged_seconds": 49,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery.mjs",
+          "core",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/qualification-runtime/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-Q1",
+          "qualification",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 48.686349332972895,
+        "peak_process_family_rss_kib": 1950848,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "UR1D-CORE-N1",
+      "status": "COMPLETED",
+      "reserved_seconds": 180,
+      "charged_seconds": 48,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery.mjs",
+          "core",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/normal-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-N1",
+          "normal",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 47.938352333032526,
+        "peak_process_family_rss_kib": 1890448,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "UR1D-REC-Q1",
+      "status": "COMPLETED",
+      "reserved_seconds": 240,
+      "charged_seconds": 16,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery.mjs",
+          "recovery",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/qualification-runtime/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1",
+          "qualification",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 15.410766750050243,
+        "peak_process_family_rss_kib": 1882336,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "PRODUCT_FAILURE_OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "PRODUCT_FAILURE_OBSERVED"
+    },
+    {
+      "id": "UR1D-REC-N1",
+      "status": "COMPLETED",
+      "reserved_seconds": 240,
+      "charged_seconds": 14,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery.mjs",
+          "recovery",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/normal-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-N1",
+          "normal",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-resource-recovery/reference-catalog.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.682315792015288,
+        "peak_process_family_rss_kib": 1765808,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "worker-complete",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "OBSERVED"
+    }
+  ],
+  "remaining_status": "NONE",
+  "cumulative_starts": 58,
+  "cumulative_charged_seconds": 2234,
+  "functional_failure_observed": true
+}

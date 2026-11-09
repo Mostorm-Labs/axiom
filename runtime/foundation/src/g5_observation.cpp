@@ -208,6 +208,12 @@ void ticketEvent(std::uintptr_t ticket,unsigned action,bool a=false,bool b=false
   if(action==0)append(r,slot.origin,Kind::GpuSubmit,0,{slot.group,slot.contextId,slot.epoch,a?1ULL:0ULL},true);
   else if(action==1&&!slot.completed){append(r,slot.origin,Kind::GpuComplete,0,{slot.group,slot.contextId,a?1ULL:0ULL,b?1ULL:0ULL},true);slot.completed=true;r.pending.fetch_sub(1,std::memory_order_release);}
   else if(action==2){append(r,slot.origin,Kind::GpuRetire,0,{slot.group,epoch},true);slot={};r.gpuLive.fetch_sub(1,std::memory_order_release);}
+  else if(action==3){
+   append(r,slot.origin,Kind::Terminal,static_cast<unsigned>(Tag::resource_lease),{20,epoch,slot.group,slot.contextId,slot.epoch,slot.completed?1ULL:0ULL},true);
+   if(!slot.completed)r.pending.fetch_sub(1,std::memory_order_release);
+   slot={};r.gpuLive.fetch_sub(1,std::memory_order_release);
+  }
+  else if(action==4)append(r,slot.origin,Kind::Counter,static_cast<unsigned>(Tag::resource_lease),{22,slot.group,slot.contextId,slot.epoch},true);
   break;
  }
  r.gpuWriting.clear(std::memory_order_release);
@@ -216,6 +222,8 @@ void ticketEvent(std::uintptr_t ticket,unsigned action,bool a=false,bool b=false
 void gpuTicketSubmitted(std::uintptr_t t,bool accepted) noexcept {ticketEvent(t,0,accepted);}
 void gpuTicketCompleted(std::uintptr_t t,bool abandoned,bool lost) noexcept {ticketEvent(t,1,abandoned,lost);}
 void gpuTicketRetired(std::uintptr_t t,std::uint64_t epoch) noexcept {ticketEvent(t,2,false,false,epoch);}
+void gpuTicketDiscarded(std::uintptr_t t,std::uint64_t reason) noexcept {ticketEvent(t,3,false,false,reason);}
+void gpuTicketCancelled(std::uintptr_t t) noexcept {ticketEvent(t,4);}
 int control(std::uint32_t opcode,std::uint32_t value) noexcept {
  std::unique_lock lock(controls,std::try_to_lock);if(!lock.owns_lock())return -2;
  if(owner!=std::thread::id{}&&owner!=std::this_thread::get_id())return -2;

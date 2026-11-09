@@ -1,0 +1,201 @@
+{
+  "schema": "g5-ur1d-publication-local-boundary-v1",
+  "published": "The exact28 accepted source/verification postimages, frozen authority/review/result metadata and this bounded publication index.",
+  "not_recoverable_from_remote_git_alone": [
+    "Full source inventories",
+    "SDK installs/WASM/data and native executables",
+    "Original browser raw pixels/snapshots/traces",
+    "Archive tar.gz bytes",
+    "Other historical untracked evidence/UR2 checkpoints"
+  ],
+  "local_archive_index": [
+    {
+      "subject": "original-blocked",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/archive-manifest.json",
+        "sha256": "04e3d2d66c167b50bae538ca4ac66cb4ef76595dbb26a765e229fd307f39abb3",
+        "bytes": 131152,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "archives": [
+        {
+          "path": "out/G5-UR1d-resource-recovery/archives-final/source-delta.tar.gz",
+          "sha256": "7f60f6e73b641d95ba0d78851572e80fdc08e9fb83a6d0063a0156521a8486fe",
+          "bytes": 1616148
+        },
+        {
+          "path": "out/G5-UR1d-resource-recovery/archives-final/matching-sdk.tar.gz",
+          "sha256": "7a378952168696ca870b486e1c9f74c92959ccb1f934341bd2acbbd2acb98fcd",
+          "bytes": 39431573
+        },
+        {
+          "path": "out/G5-UR1d-resource-recovery/archives-final/native-proof.tar.gz",
+          "sha256": "f1231c912c45e5c3905279fb6068d7d24f091d946117a8389fcb39a7cc053f6a",
+          "bytes": 214953764
+        },
+        {
+          "path": "out/G5-UR1d-resource-recovery/archives-final/web-raw.tar.gz",
+          "sha256": "8b6d6713b32a62803e840308f4c9530fec46409de972d1cd486a81b7cf34966e",
+          "bytes": 88903649
+        }
+      ],
+      "storage": "LOCAL_ONLY; archive bytes are not committed"
+    },
+    {
+      "subject": "accepted-P36",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/archive-manifest.json",
+        "sha256": "e37a454acc15499ad994f6ca494a9f172001936902169151e14023d133204938",
+        "bytes": 80583,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "archives": [
+        {
+          "path": "out/G5-UR1d-physical-loss-repair-r1/archives/source-delta.tar.gz",
+          "sha256": "e76a13b6005c2b215fe1fd54438a1ca1a83e6674e20d5844ee82980d3bfffc10",
+          "bytes": 1676782
+        },
+        {
+          "path": "out/G5-UR1d-physical-loss-repair-r1/archives/matching-sdk.tar.gz",
+          "sha256": "b2b276eb03a6baa1965daf82820b58df182e75ec3bf86d0ac5e84a2e33484f54",
+          "bytes": 39431808
+        },
+        {
+          "path": "out/G5-UR1d-physical-loss-repair-r1/archives/native-proof.tar.gz",
+          "sha256": "702e552ba2e317461e39b860caeb06fd49bec342042360b5b194cd5568211283",
+          "bytes": 204215235
+        },
+        {
+          "path": "out/G5-UR1d-physical-loss-repair-r1/archives/web-raw.tar.gz",
+          "sha256": "63fb62ed5e614087456c46eceef694bf6d83b8adbb9440226ff1b819780873f7",
+          "bytes": 27338669
+        }
+      ],
+      "storage": "LOCAL_ONLY; archive bytes are not committed"
+    }
+  ],
+  "local_SDK_index": [
+    {
+      "subject": "original-blocked",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/candidate-builds.json",
+        "sha256": "7831c0f43205cbb7c91ca4e5986f333e0c2a6636fc32df254ec173c1d28ea59a",
+        "bytes": 7735,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "SDKs": [
+        {
+          "variant": "normal",
+          "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/normal-install/js",
+          "file_count": 36,
+          "wasm_sha256": "2652142d69f6f950c54703f3918216e92d7d063e5c8a0e0fcb115392b767c6c5",
+          "kind": "CONSUMER_INSTALL",
+          "storage": "LOCAL_ONLY"
+        },
+        {
+          "variant": "qualification",
+          "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-resource-recovery/qualification-runtime/js",
+          "file_count": 36,
+          "wasm_sha256": "9878bade66a5908bc8f9c3d0fb0c718385032f1423e0da9cd0b98d3a22a8e7c1",
+          "kind": "PRIVATE_QUALIFICATION_LAYOUT",
+          "storage": "LOCAL_ONLY"
+        }
+      ]
+    },
+    {
+      "subject": "accepted-P36",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/candidate-builds.json",
+        "sha256": "77585515e2eaf3c409ae4fb6bcbe5673ef87859e53361a6e1665b19e09ea12b2",
+        "bytes": 7747,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "SDKs": [
+        {
+          "variant": "normal",
+          "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/normal-install/js",
+          "file_count": 36,
+          "wasm_sha256": "6833d3c99d46f216999219b16fd53d3f42e09acc37c6d12d81f8d6a34e082b28",
+          "kind": "CONSUMER_INSTALL",
+          "storage": "LOCAL_ONLY"
+        },
+        {
+          "variant": "qualification",
+          "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/qualification-runtime/js",
+          "file_count": 36,
+          "wasm_sha256": "fa1e087ab3c10938605c4278249e8cafd16dbb3c24ccdc950abcd64297b087aa",
+          "kind": "PRIVATE_QUALIFICATION_LAYOUT",
+          "storage": "LOCAL_ONLY"
+        }
+      ]
+    }
+  ],
+  "local_native_index": [
+    {
+      "subject": "original-blocked",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/native-artifact-manifest.json",
+        "sha256": "db77cf33cd22f15bc5caabebd94202459b3e6e4e9be15d24f93acac4361f8b34",
+        "bytes": 7562,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "storage": "LOCAL_ONLY compiled artifacts"
+    },
+    {
+      "subject": "accepted-P36",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/native-artifact-manifest.json",
+        "sha256": "2f240f9f15530c61fab51f98b15927066cc1a7ca3454b63307f1478bc44709ba",
+        "bytes": 7760,
+        "remote_git": "IN_FIXED_PUBLICATION"
+      },
+      "storage": "LOCAL_ONLY compiled artifacts"
+    }
+  ],
+  "local_source_inventory_index": [
+    {
+      "subject": "original-blocked",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/source-identity.json",
+        "sha256": "3044af02509b933827c7741797046587374cd9e050d13635f3bd77c9d2a6d1d6",
+        "bytes": 6294307,
+        "remote_git": "LOCAL_ONLY_UNLESS_EXPLICITLY_INDEXED"
+      },
+      "storage": "LOCAL_ONLY complete source inventory"
+    },
+    {
+      "subject": "accepted-P36",
+      "manifest": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-identity.json",
+        "sha256": "c9e208d92557d60038890ed40791989d35419e2cefe52f296930196a48a65e8b",
+        "bytes": 6296533,
+        "remote_git": "LOCAL_ONLY_UNLESS_EXPLICITLY_INDEXED"
+      },
+      "storage": "LOCAL_ONLY complete source inventory"
+    }
+  ],
+  "shared_worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "reviewer_recovery": "Resolve the exact paths/hashes in evidence-index and original delivery manifests in this retained shared worktree. Git blob metadata does not promise the referenced local binary/raw bytes are uploaded.",
+  "demos_retained": [
+    "http://127.0.0.1:4288/example.html",
+    "http://127.0.0.1:4289/example.html"
+  ],
+  "pending_findings": [
+    "Unpaired functional long-tail gaps",
+    "Exact Up-to-matching-CanonicalVisible timestamp null",
+    "Real Web DPR4 and other platform products not qualified"
+  ],
+  "no_new_build_or_sampling": true,
+  "pre_amendment_publication_package": {
+    "path": ".aegis/results/G5-UR0b/ur1d-publication-2026-11-09/pre-amendment-r1",
+    "files": {
+      "verification.lock.json": "a97a5ae989b8fca1b989dc88cc0b1aeb8be1b431351288c2261afcea0ba9e840",
+      "evidence-contract.json": "bb341b119fff56aaf81f38d39419bf877628e18c46b7ebcb44e26ad78a131dce",
+      "implementation-context.md": "0f3335ccc846968127481c4af6f71670344f184de84348e66b1d6f8fc9dbf401",
+      "authority.lock.json": "e03abff66b52d23b3b9dd1799342c0874ef2cbaaef94978ee069f0c943d439bd",
+      "package.json": "b7c0cbc56daf39138bc2e410dfbc50aac3a522d8388e6aaf79e926cb1462da07",
+      "execution-contract.json": "860ee30694e0c97fd1df195070f58fbcdef4b0146a401f9abe430f2821322e5b"
+    },
+    "storage": "LOCAL_ONLY historical six-file snapshot"
+  }
+}

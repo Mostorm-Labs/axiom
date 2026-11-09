@@ -1,0 +1,56 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR1d-physical-loss-repair-r1",
+  "status": "AUTHORIZED_SCOPED_P36",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR1d-physical-loss-repair-r1",
+    "content_identity": "package.json SHA256 in exact handoff"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "9994c8492b46e8672dde0901003352b119d19e96",
+    "subject_source_tree_sha256": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+    "control_review": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur1d-r1/result.json",
+      "sha256": "01c5ff4d13ecfe7ec557083ea1752737d4c64b550092c61281334277b905227c"
+    },
+    "next_action": "Repair frozen U1D-04 and original failed recovery cases with explicit2-ID P36 window; preserve UR1d and return terminal notification."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "1bb8109cd0e3a946b88b154431ecc526cbefdd4c3759d0260e183c4a7dcc2446"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "763c7c12d227b5bd12f9a47caeecfdfe4553bf41c29bc837894875eb3f9e06e8"
+  },
+  "repair_contract_ref": {
+    "path": "repair-contract.json",
+    "sha256": "9f2f4cdeff4061a2400974fc8b2b1e78322eea2805a82cb482dbe9841033fa4d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "4caf4d1a3dca280eea7b5ef99c7d3d93e247689a652dd82c38809de7d3956667"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "a8e8d4378257ed16865e15fbe080a5696c46dcea1134b89ef78b94663dc6ed9a"
+  }
+}

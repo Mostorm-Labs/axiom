@@ -1,0 +1,48 @@
+{
+  "schema": "ur1d-physical-loss-classification-review-v1",
+  "id": "U1D-PHYSICAL-LOSS-01",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "closure_kind": "FROZEN_REQUIREMENT_FAILURE",
+  "requirement": "U1D-04",
+  "source": {
+    "path": "runtime/render/src/webgl_surface_backend.cpp",
+    "sha256": "41ab56246e093b642904f09b66177a154e5a301dd6a67df7fede72bada84bb47"
+  },
+  "pinned_toolchain_source": {
+    "path": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/src/lib/libhtml5_webgl.js",
+    "sha256": "f6c01739115dfac0e3efea9da759ca7628afc75b4502a5764992ae567459e3d1"
+  },
+  "mechanism": {
+    "attributes_lines": [
+      304,
+      314
+    ],
+    "drawing_buffer_lines": [
+      259,
+      269
+    ],
+    "is_lost_lines": [
+      468,
+      470
+    ],
+    "facts": [
+      "attributes returns INVALID_TARGET both for a missing registry entry and for a registered lost context whose getContextAttributes is null",
+      "isContextLost returns true for a missing entry too, so moving it first alone would conflate deletion and physical loss",
+      "drawing-buffer-size first checks the live registry GLContext and GLctx, independently of context attributes; dimensions may be zero during loss and are not themselves liveness proof"
+    ],
+    "observed_provider": "attributes failure marks abandoned and returns before physical-loss branch"
+  },
+  "impact": "Frozen real-loss fact missing; conservative unknown abandon is safe against false completion but can retain unresolved quota until owner close when physical loss overlaps work. No unsafe release, false CanonicalVisible, or document mutation was observed.",
+  "original_failing_inputs": [
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1/S0-result.json",
+      "sha256": "91dc8a0999a1fc78a7f48e18f7834bcd361ad1f956af0a3820f4da1a560f135a"
+    },
+    {
+      "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1/S2-result.json",
+      "sha256": "0f4d1841273ec5958dbbef90e888ac88b41b23a6f67be82d8d32311a3fa87eb1"
+    }
+  ],
+  "repair_owner": "Existing WebGlSurfaceProvider completion service; no new surface or Runtime owner",
+  "not_upstream_defect": "The existing frozen U1D-04 Web oracle detected the problem; no new finish-line requirement or authority amendment is needed."
+}

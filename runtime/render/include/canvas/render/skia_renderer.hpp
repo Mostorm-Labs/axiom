@@ -25,6 +25,8 @@ namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class Source
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
+// Private/source lifecycle hint; not a JS/DLL consumer capability.
+enum class ResourceServiceMode { kOwnerOpportunity, kBeginSurfaceTransition, kEndSurfaceTransition };
 
 // The only common drawing adapter. It consumes runtime-owned render data and
 // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.
@@ -35,7 +37,8 @@ class SkiaRenderer final {
     SkiaRenderer(const SkiaRenderer&)=delete;
     SkiaRenderer& operator=(const SkiaRenderer&)=delete;
     // Private/source owner opportunity only; no GPU handle or consumer API.
-    void serviceResourceRetirements()noexcept;
+    void serviceResourceRetirements(ResourceServiceMode = ResourceServiceMode::kOwnerOpportunity)noexcept;
+    [[nodiscard]] bool resourceRetirementPending()const noexcept;
     explicit SkiaRenderer(ImageResourceResolver* images) : SkiaRenderer() { images_ = images; }
     void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
@@ -114,6 +117,7 @@ class SkiaRenderer final {
     std::shared_ptr<internal::SkiaRenderCache> renderCache_;
     RenderCacheOptions renderCacheOptions_{};
     std::uint64_t resourceEpoch_=0;
+    bool preserveWorldPreparation_=false;
 };
 
 } // namespace canvas::render

@@ -1,0 +1,506 @@
+{
+  "schema": "g5-ur1d-loss-closure-facts-v1",
+  "status": "VERIFIED",
+  "closes": "U1D-PHYSICAL-LOSS-01 / frozen U1D-04",
+  "original_results_preserved": "BLOCKED; never relabeled",
+  "fresh_cold_pixels": 12,
+  "fresh_roundtrips": 0,
+  "workers": [
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S0-retirement-context-recovery",
+      "source_ref": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-Q1/worker-result.json",
+        "sha256": "46fcdd9b2f0218cc3b540e28177ee95341a4511526aae09935a0c7f9db798b6c"
+      },
+      "document_snapshot_resource_unchanged": true,
+      "cold": [
+        {
+          "stage": "before-loss",
+          "rgba_sha256": "a7909d3e53794ecf33a2dbaf69fe2a2000dcf3994db62a8ddd0c8ea232fcb6fe",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-canonical-restore",
+          "rgba_sha256": "6bcf96f4b3ad03137a1d373e0c1b36d2f20d556bba0e81a20a1bcbae212fb21c",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-preview-restore",
+          "rgba_sha256": "c674aeb25f558484804ffaa9f0093c5c5a2620e7e3bda9641817b89c58a63b0d",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        }
+      ],
+      "queue": {
+        "status": "OBSERVED",
+        "final": [
+          {
+            "owner": "1",
+            "admitted": "121",
+            "ordered_retired": "121",
+            "queued": 0,
+            "polled_lifetimes": 1,
+            "observed": 0,
+            "waiting_ordered": 0,
+            "unknown_abandon": 0,
+            "needs_service": false
+          }
+        ],
+        "scope": "owner-observed service/ordered retirement; not pure GPU time or physical display"
+      },
+      "canonical": {
+        "physical_loss": {
+          "event": "physical-loss",
+          "lifetime": "1",
+          "native_handle": "1",
+          "role": "canonical",
+          "generation": "1",
+          "abandoned": true,
+          "physical_loss": true
+        },
+        "created": [
+          {
+            "event": "created",
+            "lifetime": "1",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "3",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "5",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          }
+        ],
+        "before_target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "unavailable_target": {
+          "attachmentEpoch": "3",
+          "runtimeEpoch": "2",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "after_target": {
+          "attachmentEpoch": "4",
+          "runtimeEpoch": "3",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "before_frames": 3,
+        "unavailable_frames": 3,
+        "after_frames": 4
+      },
+      "preview": {
+        "physical_loss": {
+          "event": "physical-loss",
+          "lifetime": "4",
+          "native_handle": "2",
+          "role": "preview",
+          "generation": "2",
+          "abandoned": true,
+          "physical_loss": true
+        },
+        "created": [
+          {
+            "event": "created",
+            "lifetime": "2",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "4",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "6",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          }
+        ],
+        "before_target": {
+          "attachmentEpoch": "4",
+          "runtimeEpoch": "3",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "unavailable_target": {
+          "attachmentEpoch": "5",
+          "runtimeEpoch": "4",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "after_target": {
+          "attachmentEpoch": "6",
+          "runtimeEpoch": "5",
+          "viewEpoch": "3",
+          "viewId": "1"
+        },
+        "before_frames": 4,
+        "unavailable_frames": 4,
+        "after_frames": 5
+      }
+    },
+    {
+      "worker": "UR1DLOSSR1-Q1",
+      "case": "S2-retirement-context-recovery",
+      "source_ref": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-Q1/worker-result.json",
+        "sha256": "46fcdd9b2f0218cc3b540e28177ee95341a4511526aae09935a0c7f9db798b6c"
+      },
+      "document_snapshot_resource_unchanged": true,
+      "cold": [
+        {
+          "stage": "before-loss",
+          "rgba_sha256": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-canonical-restore",
+          "rgba_sha256": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-preview-restore",
+          "rgba_sha256": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        }
+      ],
+      "queue": {
+        "status": "OBSERVED",
+        "final": [
+          {
+            "owner": "1",
+            "admitted": "123",
+            "ordered_retired": "123",
+            "queued": 0,
+            "polled_lifetimes": 1,
+            "observed": 0,
+            "waiting_ordered": 0,
+            "unknown_abandon": 0,
+            "needs_service": false
+          }
+        ],
+        "scope": "owner-observed service/ordered retirement; not pure GPU time or physical display"
+      },
+      "canonical": {
+        "physical_loss": {
+          "event": "physical-loss",
+          "lifetime": "1",
+          "native_handle": "1",
+          "role": "canonical",
+          "generation": "1",
+          "abandoned": true,
+          "physical_loss": true
+        },
+        "created": [
+          {
+            "event": "created",
+            "lifetime": "1",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "3",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "5",
+            "native_handle": "1",
+            "role": "canonical",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          }
+        ],
+        "before_target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "unavailable_target": {
+          "attachmentEpoch": "3",
+          "runtimeEpoch": "2",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "after_target": {
+          "attachmentEpoch": "4",
+          "runtimeEpoch": "3",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "before_frames": 3,
+        "unavailable_frames": 3,
+        "after_frames": 4
+      },
+      "preview": {
+        "physical_loss": {
+          "event": "physical-loss",
+          "lifetime": "4",
+          "native_handle": "2",
+          "role": "preview",
+          "generation": "2",
+          "abandoned": true,
+          "physical_loss": true
+        },
+        "created": [
+          {
+            "event": "created",
+            "lifetime": "2",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "4",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          },
+          {
+            "event": "created",
+            "lifetime": "6",
+            "native_handle": "2",
+            "role": "preview",
+            "generation": "1",
+            "abandoned": false,
+            "physical_loss": false
+          }
+        ],
+        "before_target": {
+          "attachmentEpoch": "4",
+          "runtimeEpoch": "3",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "unavailable_target": {
+          "attachmentEpoch": "5",
+          "runtimeEpoch": "4",
+          "viewEpoch": "2",
+          "viewId": "1"
+        },
+        "after_target": {
+          "attachmentEpoch": "6",
+          "runtimeEpoch": "5",
+          "viewEpoch": "3",
+          "viewId": "1"
+        },
+        "before_frames": 4,
+        "unavailable_frames": 4,
+        "after_frames": 5
+      }
+    },
+    {
+      "worker": "UR1DLOSSR1-N1",
+      "case": "S0-retirement-context-recovery",
+      "source_ref": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-N1/worker-result.json",
+        "sha256": "09670049703032d18fe329c0f37f11302a59f9dda10a4a09a75435256f7b9aa2"
+      },
+      "document_snapshot_resource_unchanged": true,
+      "cold": [
+        {
+          "stage": "before-loss",
+          "rgba_sha256": "a2028eca704ff18943557b9e88d2b9ba1468021222d5fad1e4bfa0d86c5eb610",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-canonical-restore",
+          "rgba_sha256": "86251a4e295ca7eb6bcf0b17195da49e69f377ae989ad3caf0939e8fa240b4d4",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-preview-restore",
+          "rgba_sha256": "a7909d3e53794ecf33a2dbaf69fe2a2000dcf3994db62a8ddd0c8ea232fcb6fe",
+          "snapshot_sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        }
+      ],
+      "queue": {
+        "status": "MISSING",
+        "final": [],
+        "scope": "owner-observed service/ordered retirement; not pure GPU time or physical display"
+      }
+    },
+    {
+      "worker": "UR1DLOSSR1-N1",
+      "case": "S2-retirement-context-recovery",
+      "source_ref": {
+        "path": ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-N1/worker-result.json",
+        "sha256": "09670049703032d18fe329c0f37f11302a59f9dda10a4a09a75435256f7b9aa2"
+      },
+      "document_snapshot_resource_unchanged": true,
+      "cold": [
+        {
+          "stage": "before-loss",
+          "rgba_sha256": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-canonical-restore",
+          "rgba_sha256": "4a67d20795ce8eeb50001134598a7028ae5186bba0809749248be700c5e285dc",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        },
+        {
+          "stage": "after-preview-restore",
+          "rgba_sha256": "9bf231e8ee9aedc77a935b3db66d132bf6901b2c2ad002d290f000967d3ff81a",
+          "snapshot_sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+          "oracle": "QUALIFIED",
+          "reference_origin": "SAVED_EXACT_INPUT"
+        }
+      ],
+      "queue": {
+        "status": "MISSING",
+        "final": [],
+        "scope": "owner-observed service/ordered retirement; not pure GPU time or physical display"
+      }
+    }
+  ],
+  "ledger": {
+    "schema": "g5-ur1d-loss-two-worker-accounting-v1",
+    "planned_ids": [
+      "UR1DLOSSR1-Q1",
+      "UR1DLOSSR1-N1"
+    ],
+    "historical_starts": 58,
+    "historical_charged_seconds": 2234,
+    "new_nominal_seconds_max": 480,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR1DLOSSR1-Q1",
+        "status": "COMPLETED",
+        "reserved_seconds": 240,
+        "charged_seconds": 22,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery_loss_reverify.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/qualification-runtime/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-Q1",
+            "qualification",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 21.34086275001755,
+          "peak_process_family_rss_kib": 1762736,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 240,
+          "last_stage": {
+            "stage": "worker-complete",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED"
+      },
+      {
+        "id": "UR1DLOSSR1-N1",
+        "status": "COMPLETED",
+        "reserved_seconds": 240,
+        "charged_seconds": 20,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/resource_recovery_loss_reverify.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/UR1DLOSSR1-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 19.18524958298076,
+          "peak_process_family_rss_kib": 1631360,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 240,
+          "last_stage": {
+            "stage": "worker-complete",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "worker_status": "OBSERVED"
+      }
+    ],
+    "remaining_status": "NONE",
+    "cumulative_starts": 60,
+    "cumulative_charged_seconds": 2276
+  }
+}

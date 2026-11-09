@@ -1,0 +1,663 @@
+{
+  "status": "VERIFIED",
+  "browser_starts": 0,
+  "new_builds": 0,
+  "binary_hashes_unchanged": true,
+  "results": [
+    {
+      "name": "native",
+      "cases": [
+        {
+          "name": "native-G5ScaleFixtureContract",
+          "command": [
+            "/opt/homebrew/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_scale_fixture.py",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/axiom_g5_scale_fixture"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native",
+          "returncode": 0,
+          "elapsed_s": 0.6431475420249626,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5ScaleFixtureContract.log"
+        },
+        {
+          "name": "native-G5Ur0Observation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/foundation/axiom_g5_observation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/foundation",
+          "returncode": 0,
+          "elapsed_s": 0.593324291985482,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5Ur0Observation.log"
+        },
+        {
+          "name": "native-G5GeometryChunkLocality",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/scene/tests/canvas_g5_geometry_chunk_locality"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/scene/tests",
+          "returncode": 0,
+          "elapsed_s": 0.011050332977902144,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5GeometryChunkLocality.log"
+        },
+        {
+          "name": "native-G4EraserSession",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction/axiom_eraser_session_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.005751749966293573,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G4EraserSession.log"
+        },
+        {
+          "name": "native-G4EditorHistory",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction/axiom_editor_history_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.01206754200393334,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G4EditorHistory.log"
+        },
+        {
+          "name": "native-FC01EditorHistoryInverseFamilies",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction/axiom_editor_history_tests",
+            "fc01"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/interaction",
+          "returncode": 0,
+          "elapsed_s": 0.012467083986848593,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC01EditorHistoryInverseFamilies.log"
+        },
+        {
+          "name": "native-G45PerfectFreehandReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/ink/axiom_g45_perfect_freehand_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/ink",
+          "returncode": 0,
+          "elapsed_s": 0.0065356669947505,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G45PerfectFreehandReference.log"
+        },
+        {
+          "name": "native-G5GpuRetirementContract",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.023651958035770804,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5GpuRetirementContract.log"
+        },
+        {
+          "name": "native-G5GpuResourceRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_gpu_resource_recovery_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.18833783303853124,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5GpuResourceRecovery.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBody",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.14031966601032764,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedBody.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBodyBounded",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--bounded"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.0404842920252122,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedBodyBounded.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedBodyPixels",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--pixels"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.3143851250060834,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedBodyPixels.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedWorkingSet",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+            "--working-set"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 6.2717028329498135,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedWorkingSet.log"
+        },
+        {
+          "name": "native-G5PreparedBodyIndex",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_prepared_body_index_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.18985199998132885,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5PreparedBodyIndex.log"
+        },
+        {
+          "name": "native-G5RenderExecution",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_execution_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04604908300098032,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5RenderExecution.log"
+        },
+        {
+          "name": "native-G5EraseExactHit",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_erase_hit_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04358795803273097,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5EraseExactHit.log"
+        },
+        {
+          "name": "native-G5RenderCache",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 169.28570824995404,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5RenderCache.log"
+        },
+        {
+          "name": "native-G5CanonicalPreparedCompatibility",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--exact-pressure-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.023797166999429464,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5CanonicalPreparedCompatibility.log"
+        },
+        {
+          "name": "native-G5LiveEraseGpuMiss",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--live-erase-gpu-miss-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012110125040635467,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5LiveEraseGpuMiss.log"
+        },
+        {
+          "name": "native-G5LiveEraseDpr",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--live-dpr-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.023446083010639995,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5LiveEraseDpr.log"
+        },
+        {
+          "name": "native-G5TranslatedV4Drag",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--translated-v4-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.19543104199692607,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5TranslatedV4Drag.log"
+        },
+        {
+          "name": "native-G5InkBodyMaskReuse",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--body-mask-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04608291701879352,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5InkBodyMaskReuse.log"
+        },
+        {
+          "name": "native-G5RegionalMaskValidity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--regional-mask-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.08264770801179111,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5RegionalMaskValidity.log"
+        },
+        {
+          "name": "native-G5MaskedNavigationProgress",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-progress-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.02189041703240946,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5MaskedNavigationProgress.log"
+        },
+        {
+          "name": "native-G5V4CoverageFallback",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--v4-fallback-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.02365691604791209,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5V4CoverageFallback.log"
+        },
+        {
+          "name": "native-G5MaskedCanonicalRecovery",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-canonical-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.4750813749851659,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5MaskedCanonicalRecovery.log"
+        },
+        {
+          "name": "native-G5ErasedMixedNavigation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--masked-mixed-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.2514278329908848,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5ErasedMixedNavigation.log"
+        },
+        {
+          "name": "native-G5RetainedZoomReentry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--reentry-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.08838016696972772,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5RetainedZoomReentry.log"
+        },
+        {
+          "name": "native-G5MixedNavigationReentry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_cache_tests",
+            "--mixed-reentry-only"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04741283296607435,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5MixedNavigationReentry.log"
+        },
+        {
+          "name": "native-G5TileWork",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_tile_work_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012425958004314452,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5TileWork.log"
+        },
+        {
+          "name": "native-G5RenderDamage",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_damage_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.011550416995305568,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5RenderDamage.log"
+        },
+        {
+          "name": "native-G47ImageResource",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_image_resource_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.022917124966625124,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G47ImageResource.log"
+        },
+        {
+          "name": "native-G5SkiaChunkRangeEntry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_skia_chunk_range_entry_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.07918741699540988,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SkiaChunkRangeEntry.log"
+        },
+        {
+          "name": "native-G5PreparedGeometry",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_prepared_geometry_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.41899125004420057,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5PreparedGeometry.log"
+        },
+        {
+          "name": "native-FC00XFrameCoordinator",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_runtime_frame_coordinator_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.017307583009824157,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC00XFrameCoordinator.log"
+        },
+        {
+          "name": "native-G3SkiaSurfaceProvider",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_skia_surface_provider_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012253875029273331,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G3SkiaSurfaceProvider.log"
+        },
+        {
+          "name": "native-G3PreviewSurface",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_preview_surface_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.010428625042550266,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G3PreviewSurface.log"
+        },
+        {
+          "name": "native-G3SurfacePresentation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_surface_presentation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012172874994575977,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G3SurfacePresentation.log"
+        },
+        {
+          "name": "native-G3DirectReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_direct_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.3023626250214875,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G3DirectReference.log"
+        },
+        {
+          "name": "native-G5TransientReference",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_transient_reference_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.13828037498751655,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5TransientReference.log"
+        },
+        {
+          "name": "native-G3FrameOrchestration",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_render_frame_orchestration_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012467208958696574,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G3FrameOrchestration.log"
+        },
+        {
+          "name": "native-G5SharedScenePayload",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--payload"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012307457975111902,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedScenePayload.log"
+        },
+        {
+          "name": "native-G5SharedSceneSnapshot",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--snapshot"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.012090500036720186,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedSceneSnapshot.log"
+        },
+        {
+          "name": "native-G5SharedSceneIndex",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--index"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.04031091701472178,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedSceneIndex.log"
+        },
+        {
+          "name": "native-G5SharedSceneReaders",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--readers"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.025390916038304567,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedSceneReaders.log"
+        },
+        {
+          "name": "native-G5SharedSceneRetention",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--retention"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.02420037501724437,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedSceneRetention.log"
+        },
+        {
+          "name": "native-G5SharedSceneParity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_shared_scene_tests",
+            "--parity"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.023825041949748993,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5SharedSceneParity.log"
+        },
+        {
+          "name": "native-G5Ur0ObservationIdentity",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render/axiom_g5_observation_identity_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/render",
+          "returncode": 0,
+          "elapsed_s": 0.011058583972044289,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5Ur0ObservationIdentity.log"
+        },
+        {
+          "name": "native-FC00XBrushBatchEvaluation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "batch"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.012311708997003734,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC00XBrushBatchEvaluation.log"
+        },
+        {
+          "name": "native-FC00XBrushBatchSemantics",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "semantics"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.023881707980763167,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC00XBrushBatchSemantics.log"
+        },
+        {
+          "name": "native-FC00XFatalProviderFailure",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/axiom_brush_batch_frame_retry_tests",
+            "fatal"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.011265166976954788,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC00XFatalProviderFailure.log"
+        },
+        {
+          "name": "native-SDKPublicResources",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/axiom_sdk_public_resources_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.01236699998844415,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-SDKPublicResources.log"
+        },
+        {
+          "name": "native-G5Navigation",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/axiom_navigation_presentation_tests"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition",
+          "returncode": 0,
+          "elapsed_s": 0.9479518750449643,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-G5Navigation.log"
+        },
+        {
+          "name": "native-FC04MSEHistoryFaultUndo",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/verification/fc04_mse/axiom_fc04_mse_fault_probe",
+            "undo"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/../../verification/fc04_mse",
+          "returncode": 0,
+          "elapsed_s": 0.13577420799992979,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC04MSEHistoryFaultUndo.log"
+        },
+        {
+          "name": "native-FC04MSEHistoryFaultRedo",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/verification/fc04_mse/axiom_fc04_mse_fault_probe",
+            "redo"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/runtime/composition/../../verification/fc04_mse",
+          "returncode": 0,
+          "elapsed_s": 0.021013749996200204,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC04MSEHistoryFaultRedo.log"
+        },
+        {
+          "name": "native-FC01InsertHistory",
+          "command": [
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/verification/runtime_qualification/axiom_fc01_selected_actions_tests",
+            "creation"
+          ],
+          "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1d-physical-loss-repair-r1/build-native/verification/runtime_qualification",
+          "returncode": 0,
+          "elapsed_s": 0.0245061669847928,
+          "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/native-FC01InsertHistory.log"
+        }
+      ],
+      "passed": 56,
+      "failed": 0,
+      "registered": 56,
+      "method": "Run exact registered commands without rewriting producer CTest logs"
+    },
+    {
+      "name": "node",
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_render_execution.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+        "verification/tests/g5_prepared_body_index.test.mjs",
+        "verification/tests/g5_transient_reference.test.mjs",
+        "verification/tests/g5_transient_attribution.test.mjs",
+        "verification/tests/g5_canonical_prepared_body.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+        "verification/tests/g5_resource_recovery.test.mjs",
+        "verification/sdk_controller/controller_test.mjs",
+        "verification/sdk_controller/transport_test.mjs",
+        "verification/tests/g5_resource_recovery_loss_reverify.test.mjs"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.37813537498004735,
+      "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/node.log"
+    },
+    {
+      "name": "python",
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+        "verification/tests/test_g5_transient_reference.py",
+        "verification/tests/test_g5_prepared_body_index_reverify.py",
+        "verification/tests/test_g5_render_execution.py",
+        "verification/tests/test_g5_transient_attribution.py",
+        "verification/tests/test_g5_canonical_prepared_body.py",
+        "verification/tests/test_g5_prepared_body_index.py",
+        "verification/tests/test_g5_resource_recovery.py",
+        "verification/tests/test_g5_resource_recovery_loss_reverify.py"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.5809292500489391,
+      "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/python.log"
+    },
+    {
+      "name": "boundaries",
+      "command": [
+        "python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+      "returncode": 0,
+      "elapsed_s": 0.2442653340403922,
+      "log": ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/boundaries.log"
+    }
+  ]
+}

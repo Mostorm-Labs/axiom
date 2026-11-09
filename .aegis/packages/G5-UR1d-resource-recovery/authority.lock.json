@@ -1,0 +1,138 @@
+{
+  "schema": "g5-ur1d-scoped-authority-v1",
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_authorization": "提交并推送，然后开始后续的ur1d吧",
+  "published_baseline": "9994c8492b46e8672dde0901003352b119d19e96",
+  "publication_ref": {
+    "path": ".aegis/results/G5-UR0b/ur1d-planning/publication-receipt.json",
+    "sha256": "2a0b6853576407f59287d9ac1ed7a12745546d64e59cd8eef4fbdc5b4995f35e"
+  },
+  "accepted_control_review_ref": {
+    "path": ".aegis/results/G5-UR0b/control-review-ur1c2-working-set-r1/result.json",
+    "sha256": "d1fcfd065547d8eda407dd1be256c83b471803eaa140927373466246057ab455"
+  },
+  "accepted_candidate_result_ref": {
+    "path": ".aegis/results/G5-UR1c2-working-set-repair-r1/result.json",
+    "sha256": "38777e7eace9a86cebaeb02bba361963b18bd5f3176e146999e79a705e139955"
+  },
+  "authority_sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/planning/g5-unified-render/ur1-resume-and-ur2-entry-r1.md",
+      "sha256": "b35864462dade4807383355177dbc5e45846e124f2b9ed4f165e358071431c0b"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be"
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "source_baseline": [
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "a64c8be36ca3a20e2c9e8dbac561fddab7ee4e92e46d0a8b41f49f2b8f4d0eca"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "3ce71ae1400a6f5e35d50a3193441b4b98bac547a623ee24b847adf3b52c5da5"
+    },
+    {
+      "path": "runtime/render/src/resource_reclaim.hpp",
+      "sha256": "a3f357b7497f12dfff22c4379bc85d05450508925ac32c02eefd82bcfafda467"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "433764e8230bb0071278edbe70fe72b221517ece6c8962a940793a93ddeaa601"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "7f610332b0749da1c703d56aab55def9841fb4ace685efd5ffe746bbb165b979"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+      "sha256": "90d14d3dc71e9667e37b8f4c1d32e66a39a6a5b9bb210781b49035ccb1a059f3"
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7b18e9ceefde8b35a88ff638baf43fef76511b0aa6b783d8f3c4a89bb487aad5"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "05912e746de746a1ed48f51e4186898957760ca520d59b81bb5d87bb68931a38"
+    },
+    {
+      "path": "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+      "sha256": "1c3f391180733808cd780f96ad16276cb649eb489222811f3c0e90dc09ed117d"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "83d043007bb4f369785fedad6fb22c8ce5d56f45aa6a93a1b812e08e877a7ab3"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "e320606ba03390cfda751a3003df12b8e8fce2292cfc130a489bac9295b9918b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd"
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+    },
+    {
+      "path": "sdk/web/bridge.cpp",
+      "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c"
+    }
+  ],
+  "frozen_statements": [
+    "User explicitly authorized publication of accepted implementation and beginning UR1d on2026-11-09. This package is the scoped continuation after acceptedC1/C2/P36,not an activation of shelvedUR2.",
+    "Current scoped sequence is the UR1resume amendment: resource/budget/lease/GPU-retirement owners; cancellation,pressure/loss/rebind,actualtargetfailure andstable-demandprogress. FullUR0 and33ms/performance/100K-1M matrices are not entry requirements.",
+    "R3 blueprint/contracts remain design inputs. Only the resource/recovery constraints enumerated here are frozen by current user-authorizedUR1d. Their proposed globalSLO/UR0c/newqueuewatermarks are not silently promoted.",
+    "Use existing owner-thread nonblocking/nonreentrant completion service and callbacks. GPU work submission,observed completion,ordered quota retirement,presented-frame receipt and canonical mutation are distinct. Do not replace exact CanonicalVisible identity or use navigation completion in its slot.",
+    "Keep logicalsurface loss/resize,unknownabandon/deleted registryhandle,realphysicalcontextloss,ownerclose andqualifiedcompletion distinct. Unknownabandon cannot release GPU quota by pretending it finished. Oldcallback cannot acknowledge or mutate newprovider/context/generation.",
+    "Derived resources may be discarded/rebuilt from current canonical state. Loss/recovery must not roll back SemanticDocument or reload a snapshot. Preserve source/prepared-body reuse when valid; invalidate only GPU/pixel generations that actually became stale.",
+    "Temporarypressure returns explicit Pending/retry with progress and charged in-flight resources. Completion/reclaim allows stable feasible demand to finish; structurally impossible requests reject distinctly rather than infiniteRetry. Optional residency and RSS need not drain tozero.",
+    "Do not invent queue high/low watermarks or age/latency gates. Keep existing1024metadata/epochcap and existingnavigation2preparation-ticket limit; report these as structural/legacyguardrails,not measured performance policy. Collect small truthful queue observations; future tuned thresholds require a separate measured/control decision.",
+    "No new public JS/C/DLL API,ABI,SDKversion,globalworker/cache/registry,document/selection/history owner,Brushalgorithm,Scene/query orpostUp input-readmission changes. LockedSemantic/Skia artifacts only. No release/tag/npm publication is authorized."
+  ],
+  "precedence": "Currentuserauthorization+scopedresumeorder+enumeratedUR1dstatements; existingSDK/semantic contracts remain authoritative. UnenumeratedR3proposals are not completiongates."
+}

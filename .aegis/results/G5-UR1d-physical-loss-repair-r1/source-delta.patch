@@ -1,0 +1,409 @@
+diff --git a/runtime/render/src/webgl_context_liveness.hpp b/runtime/render/src/webgl_context_liveness.hpp
+new file mode 100644
+index 0000000..72995d7
+--- /dev/null
++++ b/runtime/render/src/webgl_context_liveness.hpp
+@@ -0,0 +1,19 @@
++#pragma once
++
++namespace canvas::render::internal {
++
++enum class WebGlContextLiveness { kAlive, kPhysicalLost, kUnknown };
++
++// The pinned attributes API cannot distinguish a deleted registry entry from
++// a live lost context. The drawing-buffer API independently validates both the
++// registry entry and GLctx; its dimensions may legitimately be zero during loss.
++// isContextLost alone is insufficient too: Emscripten returns true for deletion.
++template<class DrawingBufferProbe, class LossProbe>
++WebGlContextLiveness probeWebGlContext(
++    int handle, DrawingBufferProbe drawingBuffer, LossProbe isLost) noexcept {
++    int width=0,height=0;
++    if(handle<=0||!drawingBuffer(handle,&width,&height))return WebGlContextLiveness::kUnknown;
++    return isLost(handle)?WebGlContextLiveness::kPhysicalLost:WebGlContextLiveness::kAlive;
++}
++
++} // namespace canvas::render::internal
+diff --git a/runtime/render/src/webgl_surface_backend.cpp b/runtime/render/src/webgl_surface_backend.cpp
+index d619aed..22c7d50 100644
+--- a/runtime/render/src/webgl_surface_backend.cpp
++++ b/runtime/render/src/webgl_surface_backend.cpp
+@@ -1,4 +1,5 @@
+ #include "canvas/render/webgl_surface_backend.hpp"
++#include "webgl_context_liveness.hpp"
+ 
+ #include "include/core/SkColorSpace.h"
+ #include "include/core/SkSurface.h"
+@@ -39,14 +40,14 @@ struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
+     void service()noexcept override {
+       if(!context||completion->abandoned.load())return;
+       const auto previous=emscripten_webgl_get_current_context();
+-      // Emscripten also reports a deleted registry handle as "lost". That
+-      // alone does NOT prove the browser GPU context has physically finished.
+-      EmscriptenWebGLContextAttributes actual;
+-      if(emscripten_webgl_get_context_attributes(webgl,&actual)!=EMSCRIPTEN_RESULT_SUCCESS){
+-        completion->abandoned=true;observe("unknown-abandon");context->abandonContext();return;
+-      }
+-      if(emscripten_is_webgl_context_lost(webgl)){
+-        completion->physicalLost=true;completion->abandoned=true;observe("physical-loss");context->abandonContext();return;
++      const auto liveness=internal::probeWebGlContext(webgl,
++        [](int handle,int* width,int* height){
++          return emscripten_webgl_get_drawing_buffer_size(handle,width,height)==EMSCRIPTEN_RESULT_SUCCESS;
++        },[](int handle){return emscripten_is_webgl_context_lost(handle);});
++      if(liveness!=internal::WebGlContextLiveness::kAlive){
++        const bool physical=liveness==internal::WebGlContextLiveness::kPhysicalLost;
++        if(physical)completion->physicalLost=true;
++        completion->abandoned=true;observe(physical?"physical-loss":"unknown-abandon");context->abandonContext();return;
+       }
+       if(emscripten_webgl_make_context_current(webgl)!=EMSCRIPTEN_RESULT_SUCCESS)return;
+       context->checkAsyncWorkCompletion();
+diff --git a/runtime/render/tests/gpu_retirement_contract_test.cpp b/runtime/render/tests/gpu_retirement_contract_test.cpp
+index 12b54fc..2caa1a7 100644
+--- a/runtime/render/tests/gpu_retirement_contract_test.cpp
++++ b/runtime/render/tests/gpu_retirement_contract_test.cpp
+@@ -1,5 +1,6 @@
+ #include <algorithm>
+ #include "gpu_resource_retirement.hpp"
++#include "webgl_context_liveness.hpp"
+ #include <cstdio>
+ #include <functional>
+ #include <memory>
+@@ -15,6 +16,25 @@ struct Completion final : GpuCompletionService {
+     void service() noexcept override {++polls;if(onPoll)onPoll();}
+     std::shared_ptr<const GpuCompletionState> state()const noexcept override{return value;}
+ };
++// Models the pinned Emscripten registry probe, including a live lost context
++// with null attributes/zero drawing-buffer dimensions. The production helper
++// is also used by WebGlSurfaceProvider; real browser integration is separate.
++struct WebGlCompletion final : GpuCompletionService {
++    std::shared_ptr<GpuCompletionState> value=std::make_shared<GpuCompletionState>();
++    int handle=7,width=800,height=500;
++    bool registered=true,lost=false;
++    unsigned registryQueries=0,lossQueries=0;
++    void service() noexcept override {
++        if(value->abandoned.load())return;
++        const auto status=internal::probeWebGlContext(handle,
++            [&](int,int* w,int* h){++registryQueries;*w=width;*h=height;return registered;},
++            [&](int){++lossQueries;return lost;});
++        if(status==internal::WebGlContextLiveness::kAlive)return;
++        if(status==internal::WebGlContextLiveness::kPhysicalLost)value->physicalLost=true;
++        value->abandoned=true;
++    }
++    std::shared_ptr<const GpuCompletionState> state()const noexcept override{return value;}
++};
+ template<class T> void submitted(T& t){
+     if constexpr(requires{t.submitted(true);}) t.submitted(true);
+ }
+@@ -25,6 +45,52 @@ int main(){
+         std::printf("{\"case\":\"%s\",\"pass\":%s}\n",name,value?"true":"false");
+         failures+=!value;
+     };
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();
++        auto t=q.begin(b,s);t->end();submitted(*t);
++        const auto id=b->reserve(resources::ResourceClass::kScratch,4096,true);
++        check(bool(id),"webgl_loss_quota_admitted");resources::ResourceLease lease(b,*id);lease.reset();
++        s->lost=true;s->width=s->height=0;q.service();
++        check(s->value->physicalLost.load()&&s->value->abandoned.load(),
++              "registered_lost_context_with_zero_buffer_is_physical_loss");
++        // A loss first observed during polling is retired at the next existing
++        // owner opportunity, rather than by reentering/changing the queue.
++        q.service();
++        check(b->gpuEpochRetired(t->epoch)&&b->used()==0&&!q.blocked(),
++              "physical_loss_releases_affected_lifetime_without_owner_close");
++    }
++    for(const int handle:{0,-1,7}){
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();auto t=q.begin(b,s);t->end();submitted(*t);
++        s->registryQueries=s->lossQueries=0;s->handle=handle;s->registered=false;s->lost=true;q.service();
++        check(s->value->abandoned.load()&&!s->value->physicalLost.load()&&s->lossQueries==0,
++              "deleted_or_invalid_handle_reported_lost_remains_unknown");
++        check(s->registryQueries==(handle>0?1U:0U)&&!b->gpuEpochRetired(t->epoch)&&q.blocked(),
++              "unknown_registry_cannot_grant_physical_completion");
++        t->finish();q.service();check(!b->gpuEpochRetired(t->epoch),"unknown_old_callback_does_not_release_quota");b->close();
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();auto t=q.begin(b,s);t->end();submitted(*t);
++        s->width=s->height=0;q.service();s->width=1600;s->height=1000;q.service();
++        check(!s->value->physicalLost.load()&&!s->value->abandoned.load()&&!b->gpuEpochRetired(t->epoch),
++              "logical_resize_and_zero_dimensions_do_not_imply_context_loss");
++        t->finish();q.service();check(b->gpuEpochRetired(t->epoch),"healthy_context_keeps_normal_callback_completion");
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto old=std::make_shared<WebGlCompletion>();auto a=q.begin(b,old);a->end();submitted(*a);
++        old->lost=true;q.service();
++        auto fresh=std::make_shared<WebGlCompletion>();auto n=q.begin(b,fresh);n->end();submitted(*n);
++        a->finish();q.service();
++        check(old->handle==fresh->handle&&old->value->lifetime!=fresh->value->lifetime,
++              "reused_numeric_handle_has_distinct_retained_context_lifetime");
++        check(b->gpuEpochRetired(a->epoch)&&!b->gpuEpochRetired(n->epoch)&&
++              !fresh->value->physicalLost.load()&&!fresh->value->abandoned.load(),
++              "old_loss_and_late_callback_cannot_complete_restored_lifetime");
++        n->finish();q.service();check(b->pendingGpuEpochCount()==0,"restored_lifetime_completes_independently");
++    }
+     {
+         GpuResourceRetirement q;
+         auto b=std::make_shared<resources::ResourceBudgetManager>();
+diff --git a/verification/runners/g5/resource_recovery.mjs b/verification/runners/g5/resource_recovery.mjs
+index 9c70aa0..ec47669 100644
+--- a/verification/runners/g5/resource_recovery.mjs
++++ b/verification/runners/g5/resource_recovery.mjs
+@@ -129,10 +129,10 @@ window.resourceTrace=()=>{const result=[...collected,...drain()];collected=[];re
+ window.resourceTraceClose=()=>{clearInterval(timer);return window.resourceTrace();};
+ return module;}`;
+ 
+-export async function recoveryWorker({sdkArg,outArg,variant,oracle,referenceCatalog}){
++export async function recoveryWorker({sdkArg,outArg,variant,oracle,referenceCatalog,identityRunner='resource_recovery_runner.py'}){
+   const sdk=path.resolve(sdkArg),out=path.resolve(outArg);await fs.mkdir(out,{recursive:true});
+   const fixtures=path.join(ROOT,'.aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures'),manifest=JSON.parse(await fs.readFile(path.join(fixtures,'fixtures.json')));
+-  const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,'resource_recovery_runner.py'),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
++  const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,identityRunner),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
+   const write=(name,value)=>fs.writeFile(path.join(out,name),JSON.stringify(value,null,2)+'\n');
+   const result={schema:'g5-ur1d-real-resource-worker-v1',status:'STARTED',variant,source_before:source(),artifacts_before:await artifactIdentity(sdk),cases:[],page_errors:[],rss_guard:'external owned-process-family guard'};
+   let server,browser,page;
+diff --git a/verification/runners/g5/resource_recovery_build.py b/verification/runners/g5/resource_recovery_build.py
+index a15d491..7ff8780 100644
+--- a/verification/runners/g5/resource_recovery_build.py
++++ b/verification/runners/g5/resource_recovery_build.py
+@@ -26,7 +26,7 @@ def assemble(normal, normal_build, qualification_build, output, manifest):
+     names=sorted(str(p.relative_to(normal)) for p in normal.rglob('*') if p.is_file())
+     assert len(names)==36 and not any(Path(p).suffix in ('.a','.h','.hpp','.lib') for p in names)
+     assert not output.exists(), 'private artifact is immutable once assembled'
+-    assert 'G5-UR1d-resource-recovery' in output.parts
++    assert any(task in output.parts for task in ('G5-UR1d-resource-recovery','G5-UR1d-physical-loss-repair-r1'))
+     shutil.copytree(normal,output)
+     replacements={}
+     for name in ('internal/axiom.mjs','axiom.wasm','axiom.data'):
+diff --git a/verification/runners/g5/resource_recovery_loss_reverify.mjs b/verification/runners/g5/resource_recovery_loss_reverify.mjs
+new file mode 100644
+index 0000000..5f35685
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_loss_reverify.mjs
+@@ -0,0 +1,12 @@
++import path from 'node:path';
++import {fileURLToPath} from 'node:url';
++import {recoveryWorker} from './resource_recovery.mjs';
++
++export function recoveryArguments({sdkArg,outArg,variant,oracle,referenceCatalog}){
++  if(!['qualification','normal'].includes(variant))throw Error('explicit Recovery qualification/normal role required');
++  return {sdkArg,outArg,variant,oracle,referenceCatalog,identityRunner:'resource_recovery_loss_reverify_runner.py'};
++}
++if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
++  const [sdkArg,outArg,variant,oracle,referenceCatalog]=process.argv.slice(2);
++  await recoveryWorker(recoveryArguments({sdkArg,outArg,variant,oracle,referenceCatalog}));
++}
+diff --git a/verification/runners/g5/resource_recovery_loss_reverify_runner.py b/verification/runners/g5/resource_recovery_loss_reverify_runner.py
+new file mode 100644
+index 0000000..f05d4fa
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_loss_reverify_runner.py
+@@ -0,0 +1,128 @@
++"""Narrow P36: exactly two fresh serial Recovery windows, no other browser run."""
++import argparse
++import json
++import math
++from pathlib import Path
++import importlib.util
++
++ROOT=Path(__file__).resolve().parents[3]
++HERE=Path(__file__).resolve().parent
++TASK='G5-UR1d-physical-loss-repair-r1'
++RESULT=ROOT/'.aegis/results'/TASK
++BUILD=ROOT/'out'/TASK
++IDS=('UR1DLOSSR1-Q1','UR1DLOSSR1-N1')
++LIMITS=(240,240)
++spec=importlib.util.spec_from_file_location('ur1d_original',HERE/'resource_recovery_runner.py')
++base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
++sha,write=base.sha,base.write
++
++def source_identity(full=False,root=ROOT):
++    source=base.module('loss_source',HERE/'ur0/source_identity.py')
++    prior=json.loads((ROOT/'.aegis/results/G5-UR1d-resource-recovery/source-identity.json').read_text())
++    source.EXCLUDED=tuple(prior['excluded_self_outputs'])+(
++        '.aegis/results/'+TASK+'/', 'verification/evidence/performance/g5-ur1d-physical-loss-repair-r1/')
++    value=source.identity(root)
++    if not full:value.pop('files')
++    return value
++
++def protected(catalog):
++    value=base.protected(catalog)
++    package=ROOT/'.aegis/packages'/TASK
++    def check(v):
++        if isinstance(v,dict):
++            if 'path' in v and 'sha256' in v:
++                p=package/v['path'] if (package/v['path']).is_file() else ROOT/v['path']
++                if sha(p)!=v['sha256']:raise RuntimeError('repair binding changed: '+str(p))
++                value[str(p.relative_to(ROOT))]=v['sha256']
++            for x in v.values():check(x)
++        elif isinstance(v,list):
++            for x in v:check(x)
++    for p in sorted(package.iterdir()):
++        if p.is_file():
++            value[str(p.relative_to(ROOT))]=sha(p)
++            if p.suffix=='.json':check(json.loads(p.read_text()))
++    return value
++
++def new_ledger():
++    return {'schema':'g5-ur1d-loss-two-worker-accounting-v1','planned_ids':list(IDS),
++        'historical_starts':58,'historical_charged_seconds':2234,
++        'new_nominal_seconds_max':480,'original_cap_seconds':8370,'attempts':[],
++        'remaining_status':'PENDING'}
++
++def reserve(ledger,identity):
++    i=len(ledger['attempts'])
++    if ledger['remaining_status']!='PENDING' or i>=len(IDS) or identity!=IDS[i] or any(x['status']=='STARTED' for x in ledger['attempts']):
++        raise ValueError('concurrent, duplicate, closed or unplanned recovery start')
++    ledger['attempts'].append({'id':identity,'status':'STARTED','reserved_seconds':LIMITS[i],
++        'charged_seconds':LIMITS[i],'rss_limit_mib':3072})
++
++def unsafe(worker):
++    return any(c.get('queues',{}).get('status')=='INVALID' or any(
++        'lost context did not create presentation receipt' in f for f in c.get('failures',[]))
++        for c in (worker or {}).get('cases',[]))
++
++def complete(ledger,guard,worker):
++    if not ledger['attempts'] or ledger['attempts'][-1]['status']!='STARTED':raise ValueError('no active row')
++    row=ledger['attempts'][-1]
++    observed=guard is not None and all(k in guard for k in ('reason','returncode','cleanup_complete','remaining_owned_pids','elapsed_s')) and math.isfinite(guard['elapsed_s']) and guard['elapsed_s']>=0
++    ok=observed and guard['reason']=='completed' and guard['returncode']==0 and guard['cleanup_complete'] and not guard['remaining_owned_pids'] and worker is not None and worker['status'] in ('OBSERVED','PRODUCT_FAILURE_OBSERVED') and not worker.get('crash') and not unsafe(worker)
++    row.update(status='COMPLETED' if ok else 'STOPPED',guard=guard,
++        worker_status=worker['status'] if worker else 'MISSING',
++        charged_seconds=math.ceil(guard['elapsed_s']) if observed else row['reserved_seconds'])
++    if worker and worker['status']=='PRODUCT_FAILURE_OBSERVED':ledger['functional_failure_observed']=True
++    if unsafe(worker):ledger['unsafe_resource_or_receipt_failure']=True
++    if not ok:ledger['remaining_status']='MISSING'
++    elif len(ledger['attempts'])==len(IDS):ledger['remaining_status']='NONE'
++    ledger['cumulative_starts']=58+len(ledger['attempts'])
++    ledger['cumulative_charged_seconds']=2234+sum(x['charged_seconds'] for x in ledger['attempts'])
++    if ledger['cumulative_charged_seconds']>8370:ledger['remaining_status']='MISSING'
++
++def own_sdks(qualification,normal):
++    for p in (qualification,normal):
++        if not p.resolve().is_relative_to(BUILD):raise RuntimeError('fresh exact task SDK root required')
++
++def freeze(qualification,normal,catalog):
++    own_sdks(qualification,normal)
++    if (RESULT/'local-functional/sampling-ledger.json').exists():raise RuntimeError('window already reserved')
++    value=source_identity(True);write(RESULT/'source-identity.json',value)
++    write(RESULT/'worker-freeze.json',{'source_tree_sha256':value['source_tree_sha256'],
++        'protected':protected(catalog),'artifacts':{str(p.resolve()):base.artifacts(p) for p in (qualification,normal)}})
++
++def execute(qualification,normal,oracle,catalog,output):
++    own_sdks(qualification,normal)
++    if output.resolve()!=(RESULT/'local-functional').resolve():raise RuntimeError('exact new result root required')
++    output.mkdir(parents=True,exist_ok=True);ledger_path=output/'sampling-ledger.json'
++    if ledger_path.exists():raise RuntimeError('no repeat window')
++    frozen=json.loads((RESULT/'worker-freeze.json').read_text());guard=base.module('loss_guard',HERE/'bounded_worker.py');ledger=new_ledger();write(ledger_path,ledger)
++    def stable():
++        return source_identity()['source_tree_sha256']==frozen['source_tree_sha256'] and protected(catalog)==frozen['protected'] and all(base.artifacts(p)==frozen['artifacts'][str(p.resolve())] for p in (qualification,normal))
++    for i,identity in enumerate(IDS):
++        try:valid=stable()
++        except Exception as e:valid=False;ledger['identity_error']=str(e)
++        if not valid:
++            ledger['identity_failure']=True;ledger['remaining_status']='MISSING';write(ledger_path,ledger);break
++        sdk=(qualification,normal)[i];reserve(ledger,identity);write(ledger_path,ledger)
++        command=['node',str(HERE/'resource_recovery_loss_reverify.mjs'),str(sdk.resolve()),str((output/identity).resolve()),'qualification' if i==0 else 'normal',str(oracle.resolve()),str(catalog.resolve())]
++        try:observed=guard.run(command,output/identity,LIMITS[i],3072*1024)
++        except BaseException:
++            complete(ledger,None,None);write(ledger_path,ledger);raise
++        p=output/identity/'worker-result.json';worker=json.loads(p.read_text()) if p.exists() else None
++        try:valid=stable()
++        except Exception as e:valid=False;ledger['identity_error']=str(e)
++        write(output/(identity+'-identity-after.json'),{'stable':valid})
++        if not valid:worker={**(worker or {}),'status':'HARD_FAILURE','identity_failure':True}
++        complete(ledger,observed,worker);write(ledger_path,ledger)
++        print(json.dumps({'id':identity,'guard':observed['reason'],'worker':worker['status'] if worker else 'MISSING','charged_seconds':ledger['attempts'][-1]['charged_seconds'],'remaining':ledger['remaining_status']}),flush=True)
++        if ledger['remaining_status']=='MISSING':break
++    write(output/'summary.json',{'ledger':ledger,'unrun_ids':list(IDS[len(ledger['attempts']):]),'source_tree_sha256':frozen['source_tree_sha256'],'new_charged_seconds':sum(x['charged_seconds'] for x in ledger['attempts'])})
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--source-identity',action='store_true');p.add_argument('--freeze',action='store_true');p.add_argument('--execute',action='store_true')
++    for name in ('qualification-sdk','normal-sdk','oracle','catalog','output'):p.add_argument('--'+name,type=Path)
++    a=p.parse_args()
++    if a.source_identity:print(json.dumps(source_identity()))
++    elif a.freeze and all((a.qualification_sdk,a.normal_sdk,a.catalog)):freeze(a.qualification_sdk,a.normal_sdk,a.catalog)
++    elif a.execute and all((a.qualification_sdk,a.normal_sdk,a.oracle,a.catalog,a.output)):execute(a.qualification_sdk,a.normal_sdk,a.oracle,a.catalog,a.output)
++    else:p.error('complete explicit operation required')
++
++if __name__=='__main__':main()
+diff --git a/verification/tests/g5_resource_recovery_loss_reverify.test.mjs b/verification/tests/g5_resource_recovery_loss_reverify.test.mjs
+new file mode 100644
+index 0000000..cfdfa13
+--- /dev/null
++++ b/verification/tests/g5_resource_recovery_loss_reverify.test.mjs
+@@ -0,0 +1,18 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {recoveryArguments} from '../runners/g5/resource_recovery_loss_reverify.mjs';
++import {recoveryWorker} from '../runners/g5/resource_recovery.mjs';
++
++const input={sdkArg:'/new/sdk',outArg:'/new/output',variant:'qualification',oracle:'/locked/oracle',referenceCatalog:'/locked/catalog'};
++test('loss reverification forwards complete existing Recovery inputs with new private source identity',()=>{
++  assert.deepEqual(recoveryArguments(input),{...input,identityRunner:'resource_recovery_loss_reverify_runner.py'});
++});
++test('normal Recovery keeps the same path and cannot select core or another role',()=>{
++  assert.equal(recoveryArguments({...input,variant:'normal'}).variant,'normal');
++  assert.throws(()=>recoveryArguments({...input,variant:'core'}));
++  assert.throws(()=>recoveryArguments({...input,variant:'seed'}));
++});
++test('caller cannot replace the exact identity runner and no browser starts on import',()=>{
++  assert.equal(recoveryArguments({...input,identityRunner:'resource_recovery_runner.py'}).identityRunner,'resource_recovery_loss_reverify_runner.py');
++  assert.equal(typeof recoveryWorker,'function');
++});
+diff --git a/verification/tests/test_g5_resource_recovery_loss_reverify.py b/verification/tests/test_g5_resource_recovery_loss_reverify.py
+new file mode 100644
+index 0000000..e475882
+--- /dev/null
++++ b/verification/tests/test_g5_resource_recovery_loss_reverify.py
+@@ -0,0 +1,49 @@
++import importlib.util
++import unittest
++from pathlib import Path
++
++P=Path(__file__).resolve().parents[1]/'runners/g5/resource_recovery_loss_reverify_runner.py'
++spec=importlib.util.spec_from_file_location('loss_reverify',P)
++m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++
++def observed(**changes):
++    return dict(reason='completed',returncode=0,cleanup_complete=True,remaining_owned_pids=[],elapsed_s=1.01,**changes)
++
++class LossReverificationWindow(unittest.TestCase):
++    def test_only_new_recovery_ids_and_original_cap(self):
++        d=m.new_ledger()
++        self.assertEqual(m.IDS,('UR1DLOSSR1-Q1','UR1DLOSSR1-N1'))
++        self.assertEqual(m.LIMITS,(240,240))
++        self.assertEqual((d['historical_starts'],d['historical_charged_seconds'],d['new_nominal_seconds_max'],d['original_cap_seconds']),(58,2234,480,8370))
++    def test_serial_reservations_charge_ceil_and_cannot_restart(self):
++        d=m.new_ledger()
++        for identity in m.IDS:
++            m.reserve(d,identity)
++            with self.assertRaises(ValueError):m.reserve(d,identity)
++            m.complete(d,observed(),{'status':'OBSERVED'})
++        self.assertEqual((d['remaining_status'],d['cumulative_starts'],d['cumulative_charged_seconds']),('NONE',60,2238))
++        with self.assertRaises(ValueError):m.reserve(d,m.IDS[0])
++    def test_unobserved_guard_keeps_reserved_ceiling(self):
++        for guard in [None,{'elapsed_s':0.01}]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,guard,None)
++            self.assertEqual(d['attempts'][0]['charged_seconds'],240)
++            self.assertEqual(d['remaining_status'],'MISSING')
++    def test_guard_cleanup_and_crash_stop_remaining_id(self):
++        for guard,worker in [({**observed(),'reason':'timeout'},{'status':'OBSERVED'}),({**observed(),'cleanup_complete':False},{'status':'OBSERVED'}),({**observed(),'remaining_owned_pids':[12]},{'status':'OBSERVED'}),(observed(),{'status':'HARD_FAILURE'}),(observed(),{'status':'OBSERVED','crash':True})]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,guard,worker)
++            self.assertEqual(d['remaining_status'],'MISSING')
++            with self.assertRaises(ValueError):m.reserve(d,m.IDS[1])
++    def test_safe_failed_classification_may_finish_normal_control_only(self):
++        d=m.new_ledger();m.reserve(d,m.IDS[0])
++        m.complete(d,observed(),{'status':'PRODUCT_FAILURE_OBSERVED','cases':[{'failures':['actual resource/context facts missing']}]})
++        self.assertEqual(d['remaining_status'],'PENDING');m.reserve(d,m.IDS[1]);m.complete(d,observed(),{'status':'OBSERVED'})
++        self.assertEqual(d['remaining_status'],'NONE');self.assertTrue(d['functional_failure_observed'])
++    def test_false_receipt_and_invalid_retirement_stop_next_row(self):
++        for case in [{'failures':['PRODUCT_CHECK: lost context did not create presentation receipt']},{'queues':{'status':'INVALID'},'failures':[]}]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,observed(),{'status':'PRODUCT_FAILURE_OBSERVED','cases':[case]})
++            self.assertEqual(d['remaining_status'],'MISSING')
++    def test_old_ids_and_reordered_start_never_consume_a_slot(self):
++        d=m.new_ledger()
++        for identity in ['UR1D-CORE-Q1','UR1D-REC-Q1',m.IDS[1]]:
++            with self.assertRaises(ValueError):m.reserve(d,identity)
++        self.assertEqual(d['attempts'],[])

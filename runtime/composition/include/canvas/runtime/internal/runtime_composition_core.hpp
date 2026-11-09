@@ -173,6 +173,7 @@ class RuntimeCompositionCore final {
   // frame identity; platform hosts only execute/observe the returned work.
   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
                                               RuntimeFrameOpportunity& out) noexcept;
+  [[nodiscard]] bool resourceRetirementPending() const noexcept;
   // Completes the Runtime-owned preview handoff after the platform has
   // supplied its real presentation observation. Hosts do not capture or
   // acknowledge preview sessions themselves.

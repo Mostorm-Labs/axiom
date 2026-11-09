@@ -1,0 +1,1928 @@
+diff --git a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+index 5b59b250..2f30e3ca 100644
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+@@ -173,6 +173,7 @@ class RuntimeCompositionCore final {
+   // frame identity; platform hosts only execute/observe the returned work.
+   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
+                                               RuntimeFrameOpportunity& out) noexcept;
++  [[nodiscard]] bool resourceRetirementPending() const noexcept;
+   // Completes the Runtime-owned preview handoff after the platform has
+   // supplied its real presentation observation. Hosts do not capture or
+   // acknowledge preview sessions themselves.
+diff --git a/runtime/composition/src/runtime_composition.cpp b/runtime/composition/src/runtime_composition.cpp
+index 375498f9..62020426 100644
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -214,7 +214,9 @@ bool RuntimeCompositionCore::resizeSurface(const render::SurfaceMetrics& metrics
+       metrics.physicalWidth == 0U || metrics.physicalHeight == 0U) return false;
+   const auto before = runtime_->surface();
+   surfaceTransitionActive_ = true;
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
+   const bool resized = runtime_->resizeSurface(metrics);
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
+   surfaceTransitionActive_ = false;
+   if (state_ != RuntimeCompositionState::kReady &&
+       state_ != RuntimeCompositionState::kLost) return false;
+@@ -466,6 +468,10 @@ bool RuntimeCompositionCore::requestCanonicalFrame(std::uint64_t frameId) noexce
+   if (!pumped) return false;
+   return G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false)) && captureCanonicalWork();
+ }
++bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
++  return runtime_ && runtime_->resourceRetirementPending();
++}
++
+ bool RuntimeCompositionCore::serviceFrameOpportunity(
+     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
+ 
+@@ -656,7 +662,11 @@ bool RuntimeCompositionCore::receivePlatformPresented(const CanonicalCompletion&
+ }
+ bool RuntimeCompositionCore::loseSurface() noexcept {
+   if (std::this_thread::get_id() != ownerThread_ ||
+-      state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;
++      state_ != RuntimeCompositionState::kReady) return false;
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
++  const bool lost=runtime_->loseSurface();
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
++  if(!lost)return false;
+   state_ = RuntimeCompositionState::kLost;
+   surfaceBindingChanged();
+   return true;
+@@ -670,7 +680,9 @@ bool RuntimeCompositionCore::rebindSurface(const render::SurfaceMetrics& metrics
+   if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ ||
+       state_ != RuntimeCompositionState::kLost || !canAdvanceSurfaceBinding()) return false;
+   surfaceTransitionActive_ = true;
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kBeginSurfaceTransition);
+   const bool rebound = runtime_->rebindSurface(metrics);
++  runtime_->serviceResourceRetirements(render::ResourceServiceMode::kEndSurfaceTransition);
+   surfaceTransitionActive_ = false;
+   if (!rebound || state_ != RuntimeCompositionState::kLost) return false;
+   state_ = RuntimeCompositionState::kReady;
+diff --git a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+index 365cc699..92c2ed41 100644
+--- a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
++++ b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+@@ -78,6 +78,8 @@ void gpuTicketPrepared(std::uintptr_t,std::uint64_t contextId,std::uint64_t epoc
+ void gpuTicketSubmitted(std::uintptr_t,bool accepted) noexcept;
+ void gpuTicketCompleted(std::uintptr_t,bool abandoned,bool physicalLost) noexcept;
+ void gpuTicketRetired(std::uintptr_t,std::uint64_t epoch) noexcept;
++void gpuTicketDiscarded(std::uintptr_t,std::uint64_t reason) noexcept;
++void gpuTicketCancelled(std::uintptr_t) noexcept;
+ int control(std::uint32_t opcode,std::uint32_t value) noexcept;
+ const char* bytes() noexcept;
+ std::uint32_t size() noexcept;
+diff --git a/runtime/foundation/src/g5_observation.cpp b/runtime/foundation/src/g5_observation.cpp
+index ab7e5f41..ff01a406 100644
+--- a/runtime/foundation/src/g5_observation.cpp
++++ b/runtime/foundation/src/g5_observation.cpp
+@@ -208,6 +208,12 @@ void ticketEvent(std::uintptr_t ticket,unsigned action,bool a=false,bool b=false
+   if(action==0)append(r,slot.origin,Kind::GpuSubmit,0,{slot.group,slot.contextId,slot.epoch,a?1ULL:0ULL},true);
+   else if(action==1&&!slot.completed){append(r,slot.origin,Kind::GpuComplete,0,{slot.group,slot.contextId,a?1ULL:0ULL,b?1ULL:0ULL},true);slot.completed=true;r.pending.fetch_sub(1,std::memory_order_release);}
+   else if(action==2){append(r,slot.origin,Kind::GpuRetire,0,{slot.group,epoch},true);slot={};r.gpuLive.fetch_sub(1,std::memory_order_release);}
++  else if(action==3){
++   append(r,slot.origin,Kind::Terminal,static_cast<unsigned>(Tag::resource_lease),{20,epoch,slot.group,slot.contextId,slot.epoch,slot.completed?1ULL:0ULL},true);
++   if(!slot.completed)r.pending.fetch_sub(1,std::memory_order_release);
++   slot={};r.gpuLive.fetch_sub(1,std::memory_order_release);
++  }
++  else if(action==4)append(r,slot.origin,Kind::Counter,static_cast<unsigned>(Tag::resource_lease),{22,slot.group,slot.contextId,slot.epoch},true);
+   break;
+  }
+  r.gpuWriting.clear(std::memory_order_release);
+@@ -216,6 +222,8 @@ void ticketEvent(std::uintptr_t ticket,unsigned action,bool a=false,bool b=false
+ void gpuTicketSubmitted(std::uintptr_t t,bool accepted) noexcept {ticketEvent(t,0,accepted);}
+ void gpuTicketCompleted(std::uintptr_t t,bool abandoned,bool lost) noexcept {ticketEvent(t,1,abandoned,lost);}
+ void gpuTicketRetired(std::uintptr_t t,std::uint64_t epoch) noexcept {ticketEvent(t,2,false,false,epoch);}
++void gpuTicketDiscarded(std::uintptr_t t,std::uint64_t reason) noexcept {ticketEvent(t,3,false,false,reason);}
++void gpuTicketCancelled(std::uintptr_t t) noexcept {ticketEvent(t,4);}
+ int control(std::uint32_t opcode,std::uint32_t value) noexcept {
+  std::unique_lock lock(controls,std::try_to_lock);if(!lock.owns_lock())return -2;
+  if(owner!=std::thread::id{}&&owner!=std::this_thread::get_id())return -2;
+diff --git a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+index dcc9039b..e3a5450b 100644
+--- a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
++++ b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+@@ -558,7 +558,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
+     return canonicalPresentationDirty_ || connectorRoutingPending_ || connectorPreviewRoutingPending();
+   }
+   // Shared owner frame opportunity; true holds exact work until navigation settles.
+-  void serviceResourceRetirements()noexcept {skiaRenderer_.serviceResourceRetirements();previewRenderer_.serviceResourceRetirements();}
++  void serviceResourceRetirements(render::ResourceServiceMode mode=render::ResourceServiceMode::kOwnerOpportunity)noexcept {skiaRenderer_.serviceResourceRetirements(mode);previewRenderer_.serviceResourceRetirements(mode);}
++  [[nodiscard]] bool resourceRetirementPending()const noexcept {return skiaRenderer_.resourceRetirementPending()||previewRenderer_.resourceRetirementPending();}
+   bool serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept;
+   bool serviceConnectorRouting() noexcept;
+   [[nodiscard]] bool connectorPreviewRoutingPending() const noexcept;
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 92a6f6aa..d3f455cc 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -207,6 +207,16 @@ else()
+ endif()
+ 
+ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
++    add_executable(axiom_gpu_retirement_contract_tests tests/gpu_retirement_contract_test.cpp)
++    target_include_directories(axiom_gpu_retirement_contract_tests PRIVATE src)
++    target_link_libraries(axiom_gpu_retirement_contract_tests PRIVATE canvas_runtime_render)
++    add_test(NAME G5GpuRetirementContract COMMAND axiom_gpu_retirement_contract_tests)
++    add_executable(axiom_gpu_resource_recovery_tests tests/gpu_resource_recovery_test.cpp)
++    target_link_libraries(axiom_gpu_resource_recovery_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    if(APPLE)
++        target_link_libraries(axiom_gpu_resource_recovery_tests PRIVATE "-framework Foundation" objc)
++    endif()
++    add_test(NAME G5GpuResourceRecovery COMMAND axiom_gpu_resource_recovery_tests)
+     add_executable(axiom_canonical_prepared_body_tests tests/canonical_prepared_body_test.cpp)
+     target_link_libraries(axiom_canonical_prepared_body_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     if(APPLE)
+diff --git a/runtime/render/include/canvas/render/skia_renderer.hpp b/runtime/render/include/canvas/render/skia_renderer.hpp
+index 91b15c1a..6d6cfad7 100644
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -25,6 +25,8 @@ namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;class Source
+ 
+ struct CanonicalStrokePoint;
+ struct CanonicalViewportTransform;
++// Private/source lifecycle hint; not a JS/DLL consumer capability.
++enum class ResourceServiceMode { kOwnerOpportunity, kBeginSurfaceTransition, kEndSurfaceTransition };
+ 
+ // The only common drawing adapter. It consumes runtime-owned render data and
+ // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.
+@@ -35,7 +37,8 @@ class SkiaRenderer final {
+     SkiaRenderer(const SkiaRenderer&)=delete;
+     SkiaRenderer& operator=(const SkiaRenderer&)=delete;
+     // Private/source owner opportunity only; no GPU handle or consumer API.
+-    void serviceResourceRetirements()noexcept;
++    void serviceResourceRetirements(ResourceServiceMode = ResourceServiceMode::kOwnerOpportunity)noexcept;
++    [[nodiscard]] bool resourceRetirementPending()const noexcept;
+     explicit SkiaRenderer(ImageResourceResolver* images) : SkiaRenderer() { images_ = images; }
+     void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
+     [[nodiscard]] BackendSubmissionResult renderFrame(
+@@ -114,6 +117,7 @@ class SkiaRenderer final {
+     std::shared_ptr<internal::SkiaRenderCache> renderCache_;
+     RenderCacheOptions renderCacheOptions_{};
+     std::uint64_t resourceEpoch_=0;
++    bool preserveWorldPreparation_=false;
+ };
+ 
+ } // namespace canvas::render
+diff --git a/runtime/render/include/canvas/render/skia_surface_provider.hpp b/runtime/render/include/canvas/render/skia_surface_provider.hpp
+index c4428683..d92286eb 100644
+--- a/runtime/render/include/canvas/render/skia_surface_provider.hpp
++++ b/runtime/render/include/canvas/render/skia_surface_provider.hpp
+@@ -48,7 +48,11 @@ struct SkiaSurfaceAcquireResult final {
+ // Runtime/document callbacks. A shared service retains the context independently
+ // of the logical provider. Callback state outlives it without retaining context.
+ struct GpuCompletionState final {
++    // Identity of this retained context lifetime, never a native numeric handle.
++    const std::uint64_t lifetime = nextLifetime_.fetch_add(1, std::memory_order_relaxed);
+     std::atomic<bool> abandoned=false,physicalLost=false;
++  private:
++    inline static std::atomic<std::uint64_t> nextLifetime_{1};
+ };
+ class GpuCompletionService {
+   public:
+diff --git a/runtime/render/src/gpu_resource_retirement.hpp b/runtime/render/src/gpu_resource_retirement.hpp
+index 42b43aa7..d55b2229 100644
+--- a/runtime/render/src/gpu_resource_retirement.hpp
++++ b/runtime/render/src/gpu_resource_retirement.hpp
+@@ -1,14 +1,23 @@
++#pragma once
+ #include "canvas/foundation/internal/g5_observation.hpp"
+ namespace g5 = canvas::foundation::internal::g5;
+-#pragma once
+ #include "canvas/render/skia_surface_provider.hpp"
+ #include "canvas/resources/resource_budget_manager.hpp"
+ #include <array>
+ #include <list>
++#include <algorithm>
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++#include <cstdio>
++#endif
+ namespace canvas::render::internal {
+ // GPU callbacks retain only quota/state, never provider, renderer or Runtime.
+ class GpuResourceRetirement final {
+  public:
++  ~GpuResourceRetirement(){
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    for(const auto& e:entries_)g5::gpuTicketDiscarded(reinterpret_cast<std::uintptr_t>(e.ticket.get()),1);
++#endif
++  }
+   // Canonical drawing can CREATE a new retained snapshot,but does not sample
+   // the prior navigation image. Only navigation read scopes extend that use.
+   static constexpr auto canonicalAllocations=resources::kPixelResourceClasses&
+@@ -21,32 +30,45 @@ class GpuResourceRetirement final {
+     std::shared_ptr<const GpuCompletionState> state;
+     resources::ResourceLease metadata;
+     std::uint64_t epoch=0;std::atomic<bool> done=false;
++    // Standalone private queue callers already supply a qualified finished
++    // callback. The production recording scope explicitly requires an outcome.
++    std::atomic<int> submission{-1};
++    std::atomic<bool> observed=false, resolved=false;
++    std::atomic<bool> displayCancelled=false;
++    bool unusedWork=false,requireSubmission=false;
+     bool preparation=false;std::size_t count=0;
+     std::array<resources::CompletedResourceShrink,8> shrink;
+     bool add(resources::CompletedResourceShrink permit)noexcept {
+       if(count==shrink.size())return false;shrink[count++]=std::move(permit);return true;
+     }
+     void end()noexcept{(void)budget->endGpuEpoch(epoch);}
+-    void finish()noexcept {
+-      // Abandon callbacks may run before physical GPU finish. Fail closed on
+-      // that path: retain orphaned charges until this budget owner closes.
+-      if(!state->abandoned.load(std::memory_order_acquire)){
+-        for(std::size_t i=0;i<count;++i)(void)shrink[i].apply();
+-        (void)budget->completeGpuEpoch(epoch);
+-      }else if(state->physicalLost.load(std::memory_order_acquire)){
+-        (void)budget->completeGpuEpoch(epoch);
+-      }
++    void resolve()noexcept {
++      if(!observed.load(std::memory_order_acquire)||submission.load(std::memory_order_acquire)<0||resolved.exchange(true))return;
++      const bool lost=state->physicalLost.load(std::memory_order_acquire);
++      const bool abandoned=state->abandoned.load(std::memory_order_acquire)||submission.load()==0;
++      if(!abandoned||lost)(void)budget->completeGpuEpoch(epoch);
+       #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+-      g5::gpuTicketCompleted(reinterpret_cast<std::uintptr_t>(this),state->abandoned.load(std::memory_order_acquire),state->physicalLost.load(std::memory_order_acquire));
++      if(!unusedWork)g5::gpuTicketCompleted(reinterpret_cast<std::uintptr_t>(this),abandoned,lost);
+ #endif
+       done.store(true,std::memory_order_release);
+     }
++    void submitted(bool success)noexcept {submission.store(success?1:0,std::memory_order_release);resolve();}
++    void expectSubmission()noexcept {requireSubmission=true;submission.store(-1,std::memory_order_release);}
++    void finish()noexcept {
++      if(!requireSubmission){int expected=-1;submission.compare_exchange_strong(expected,1);}
++      observed.store(true,std::memory_order_release);resolve();
++    }
++    void unused()noexcept {
++      unusedWork=true;submission.store(1);observed.store(true);resolve();
++      G5_OBSERVE(g5::Kind::Counter,g5::Tag::resource_lease,false,20,0,reinterpret_cast<std::uintptr_t>(this),epoch,state->lifetime);
++    }
+   };
+   std::shared_ptr<Ticket> begin(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+       std::shared_ptr<GpuCompletionService> service,
+       resources::ResourceClassMask mask=resources::kPixelResourceClasses,
+       resources::ResourceClassMask existing=resources::kPixelResourceClasses){
+-    if(!service||entries_.size()>=1024)return {};
++    this->service();
++    if(!budget||!service||entries_.size()>=1024)return {};
+     const auto token=budget->reserve(resources::ResourceClass::kRecorded,sizeof(Ticket)+sizeof(Entry)+128,true);
+     if(!token)return {};
+     resources::ResourceLease metadata(budget,*token);
+@@ -56,15 +78,70 @@ class GpuResourceRetirement final {
+     entries_.push_back({ticket,std::move(service)});
+     const auto epoch=budget->beginGpuEpoch(mask,existing);
+     if(!epoch){entries_.pop_back();return {};}
+-    ticket->epoch=*epoch;ticket->metadata=std::move(metadata);return ticket;
++    ticket->epoch=*epoch;ticket->metadata=std::move(metadata);++admitted_;
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::resource_lease,false,20,1,reinterpret_cast<std::uintptr_t>(ticket.get()),ticket->epoch,ticket->state->lifetime,entries_.size());
++    return ticket;
+   }
+   void service()noexcept {
+-    for(auto& e:entries_)if(!e.ticket->done.load(std::memory_order_acquire))e.service->service();
+-    std::erase_if(entries_,[](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;
++    if(servicing_)return;
++    servicing_=true;
++    std::array<const Entry*,1024> polled{};std::size_t count=0;
++    for(auto& e:entries_){
++      const auto& state=e.ticket->state;
++      if(state->physicalLost.load(std::memory_order_acquire)){
++        (void)e.ticket->budget->completeGpuEpoch(e.ticket->epoch);
++      }
++      if(e.ticket->done.load(std::memory_order_acquire))continue;
++      if(state->abandoned.load(std::memory_order_acquire)){
++        // Unknown abandon is terminal, not successful completion. Physical loss
++        // is a separate fact and may release an otherwise orphaned epoch.
++        if(state->physicalLost.load(std::memory_order_acquire)){
++          int expected=-1;e.ticket->submission.compare_exchange_strong(expected,0);
++          e.ticket->finish();
++        }
++        continue;
++      }
++      bool seen=false;
++      for(std::size_t i=0;i<count;++i){const auto& old=polled[i]->ticket->state;
++        if(old.get()==state.get()&&!old.owner_before(state)&&!state.owner_before(old)){seen=true;break;}}
++      if(!seen){polled[count++]=&e;e.service->service();}
++    }
++    std::erase_if(entries_,[this](auto& e){if(!e.ticket->done.load(std::memory_order_acquire)||!e.ticket->budget->gpuEpochRetired(e.ticket->epoch))return false;
++      if(!e.ticket->state->abandoned.load()&&e.ticket->submission.load()==1)
++        for(std::size_t i=0;i<e.ticket->count;++i)(void)e.ticket->shrink[i].apply();
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+       g5::gpuTicketRetired(reinterpret_cast<std::uintptr_t>(e.ticket.get()),e.ticket->epoch);
+ #endif
+-      e.ticket->metadata.reset();return true;});
++      ++retired_;e.ticket->metadata.reset();return true;});
++    G5_OBSERVE(g5::Kind::Counter,g5::Tag::resource_lease,false,20,2,count,entries_.size(),preparationCount());
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    if(count||previousQueued_!=entries_.size()||previousRetired_!=retired_){
++      std::size_t waiting=0,unknown=0,observed=0;
++      for(const auto& e:entries_){waiting+=e.ticket->done.load()&&!e.ticket->budget->gpuEpochRetired(e.ticket->epoch);unknown+=e.ticket->state->abandoned.load()&&!e.ticket->state->physicalLost.load();observed+=e.ticket->observed.load();}
++      std::fprintf(stderr,"AXIOM_GPU_RETIREMENT {\"owner\":\"%llu\",\"admitted\":\"%llu\",\"ordered_retired\":\"%llu\",\"queued\":%zu,\"polled_lifetimes\":%zu,\"observed\":%zu,\"waiting_ordered\":%zu,\"unknown_abandon\":%zu,\"needs_service\":%s}\n",static_cast<unsigned long long>(identity_),static_cast<unsigned long long>(admitted_),static_cast<unsigned long long>(retired_),entries_.size(),count,observed,waiting,unknown,pending()?"true":"false");
++      previousQueued_=entries_.size();previousRetired_=retired_;
++    }
++#endif
++    servicing_=false;
++  }
++  bool pending()const noexcept {
++    return std::any_of(entries_.begin(),entries_.end(),[](const auto& e){
++      return e.ticket->budget->gpuEpochRetired(e.ticket->epoch)||
++        (!e.ticket->done.load()&&!e.ticket->state->abandoned.load()&&e.ticket->submission.load()!=0);
++    });
++  }
++  bool blocked()const noexcept {
++    return std::any_of(entries_.begin(),entries_.end(),[](const auto& e){return
++      !e.ticket->budget->gpuEpochRetired(e.ticket->epoch)&&
++      ((e.ticket->state->abandoned.load()&&!e.ticket->state->physicalLost.load())||e.ticket->submission.load()==0);
++    });
++  }
++  void invalidateDisplays()noexcept {
++    for(const auto& e:entries_)if(!e.ticket->displayCancelled.exchange(true)){
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++      g5::gpuTicketCancelled(reinterpret_cast<std::uintptr_t>(e.ticket.get()));
++#endif
++    }
+   }
+   std::size_t preparationCount()const noexcept {
+     return std::count_if(entries_.begin(),entries_.end(),[](const auto& e){return e.ticket->preparation&&!e.ticket->done.load(std::memory_order_acquire);});
+@@ -72,5 +149,13 @@ class GpuResourceRetirement final {
+  private:
+   struct Entry{std::shared_ptr<Ticket> ticket;std::shared_ptr<GpuCompletionService> service;};
+   std::list<Entry> entries_;
++  bool servicing_=false;
++  std::uint64_t admitted_=0,retired_=0;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++  inline static std::atomic<std::uint64_t> nextIdentity_{1};
++  const std::uint64_t identity_=nextIdentity_.fetch_add(1);
++  std::size_t previousQueued_=0;
++  std::uint64_t previousRetired_=0;
++#endif
+ };
+ }
+diff --git a/runtime/render/src/render_execution.hpp b/runtime/render/src/render_execution.hpp
+index 619223aa..dabd2b97 100644
+--- a/runtime/render/src/render_execution.hpp
++++ b/runtime/render/src/render_execution.hpp
+@@ -58,6 +58,7 @@ class RenderExecutionScope final {
+     void preparedUse(bool direct) noexcept {if(direct)++totals_.preparedDirectDraws;else ++totals_.preparedCanonicalDraws;}
+     bool pending()const noexcept{return pending_;}
+     bool rejected()const noexcept{return rejected_;}
++    bool gpuWorkRecorded()const noexcept{return gpu_||directGpu_||totals_.executionGpuAllocations>beforeGpuAllocations_;}
+  private:
+     RenderExecutionScope* previous_=nullptr;
+     [[maybe_unused]] ExecutionPurpose purpose_;
+diff --git a/runtime/render/src/skia_gpu_lifetime.hpp b/runtime/render/src/skia_gpu_lifetime.hpp
+index 88adfdf4..8bc3b112 100644
+--- a/runtime/render/src/skia_gpu_lifetime.hpp
++++ b/runtime/render/src/skia_gpu_lifetime.hpp
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include "gpu_resource_retirement.hpp"
++#include "render_execution.hpp"
+ #include "include/gpu/ganesh/GrDirectContext.h"
+ #include <memory>
+ namespace canvas::render::internal {
+@@ -10,44 +11,66 @@ class SkiaGpuLifetime final {
+   SkiaGpuLifetime(GpuResourceRetirement& queue,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+       SkiaSurfaceProvider& provider,GrDirectContext* context,
+       resources::ResourceClassMask classes=resources::kPixelResourceClasses,
+-      resources::ResourceClassMask existing=resources::kPixelResourceClasses)noexcept:context_(context){
++      resources::ResourceClassMask existing=resources::kPixelResourceClasses)noexcept
++      :context_(context),queue_(queue),budget_(budget),provider_(provider),classes_(classes),existing_(existing){
++    admit();
++  }
++  bool restart()noexcept {
++    if(ticket_)return false;
++    ready_=false;used_=false;success_=true;admit();return ready_;
++  }
++ private:
++  void admit()noexcept {
+     if(!context_){ready_=true;return;}
+     try{
+       auto payload=std::make_unique<std::shared_ptr<GpuResourceRetirement::Ticket>>();
+-      ticket_=queue.begin(budget,provider.gpuCompletionService(),classes,existing);
++      ticket_=queue_.begin(budget_,provider_.gpuCompletionService(),classes_,existing_);
+       if(!ticket_)return;
++      ticket_->expectSubmission();
+       *payload=ticket_;payload_=std::move(payload);ready_=true;
+     }catch(const std::bad_alloc&){}
+   }
+-  ~SkiaGpuLifetime(){finish();}
++ public:
++  ~SkiaGpuLifetime(){(void)finish();}
+   SkiaGpuLifetime(const SkiaGpuLifetime&)=delete;
+   bool ready()const noexcept{return ready_;}
++  void bindFrame([[maybe_unused]] const FrameState& f,[[maybe_unused]] std::uint64_t resource)noexcept {
++    if(!ticket_)return;
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::resource_lease,true,21,reinterpret_cast<std::uintptr_t>(ticket_.get()),ticket_->epoch,ticket_->state->lifetime,f.viewId.value(),f.frameId.value(),f.sceneGeneration.value(),f.sceneReadToken.value(),f.camera.generation.value(),f.surfaceGeneration.value(),f.metricsGeneration.value(),resource);
++  }
+   void touch(bool preparation=false)noexcept{used_=true;if(ticket_&&preparation)ticket_->preparation=true;}
+   bool publish(resources::ResourceLease& lease,std::size_t resident)noexcept {
+     return ticket_?ticket_->add(lease.completedShrink(resident)):lease.shrink(resident);
+   }
+-  void finish()noexcept {
+-    if(!ticket_)return;
++  bool finish()noexcept {
++    if(!ticket_)return success_;
+     ticket_->end();
+-    if(used_){
++    if(used_||(execution_&&execution_->gpuWorkRecorded())){
+       GrFlushInfo info;info.fFinishedContext=payload_.release();
+       info.fFinishedProc=[](void* raw){std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> p(
+           static_cast<std::shared_ptr<GpuResourceRetirement::Ticket>*>(raw));(*p)->finish();};
+       #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+       g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket_.get()),reinterpret_cast<std::uintptr_t>(context_),ticket_->epoch);
++      G5_OBSERVE(g5::Kind::Basis,g5::Tag::resource_lease,true,20,reinterpret_cast<std::uintptr_t>(ticket_.get()),ticket_->epoch,ticket_->state->lifetime);
+ #endif
+       context_->flush(info);
++      success_=context_->submit(GrSyncCpu::kNo)&&!ticket_->state->abandoned.load();
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+-      const auto submitted=context_->submit(GrSyncCpu::kNo);
+-      g5::gpuTicketSubmitted(reinterpret_cast<std::uintptr_t>(ticket_.get()),submitted);
+-#else
+-      (void)context_->submit(GrSyncCpu::kNo);
++      g5::gpuTicketSubmitted(reinterpret_cast<std::uintptr_t>(ticket_.get()),success_);
+ #endif
+-    }else ticket_->finish();
++      ticket_->submitted(success_);
++      if(!success_)ticket_->finish(); // Failed submission, not successful GPU completion.
++    }else ticket_->unused();
+     ticket_.reset();payload_.reset();
++    return success_;
+   }
+  private:
+-  GrDirectContext* context_;bool ready_=false,used_=false;
++  GrDirectContext* context_;bool ready_=false,used_=false,success_=true;
++  GpuResourceRetirement& queue_;
++  const std::shared_ptr<resources::ResourceBudgetManager> budget_;
++  SkiaSurfaceProvider& provider_;
++  resources::ResourceClassMask classes_,existing_;
++  RenderExecutionScope* execution_=RenderExecutionScope::current();
+   std::shared_ptr<GpuResourceRetirement::Ticket> ticket_;
+   std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> payload_;
+ };
+diff --git a/runtime/render/src/skia_navigation_tiles.cpp b/runtime/render/src/skia_navigation_tiles.cpp
+index db0d8bd8..e46e7956 100644
+--- a/runtime/render/src/skia_navigation_tiles.cpp
++++ b/runtime/render/src/skia_navigation_tiles.cpp
+@@ -390,6 +390,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kNavigationTile)&
+         ~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
+         ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
++    gpu.bindFrame(frame,resourceEpoch);
+     if(!gpu.ready())return BackendSubmissionResult::retry("world navigation completion unavailable");
+     RetainedNavigationSource retainedValue=retainedSource?*retainedSource:RetainedNavigationSource{};
+     const RetainedNavigationSource* retained=retainedSource?&retainedValue:nullptr;
+@@ -412,6 +413,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+         compose(*target,patches,camera,frame);
+         if(drawOverlay)drawOverlay(*target);
+         provider.release();release.active=false;
++        if(!gpu.finish())return BackendSubmissionResult::rejected("world navigation GPU submission failed");
+         const auto result=provider.present();
+         G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
+         if(result.code!=BackendSubmissionCode::kAccepted)return result;
+@@ -420,6 +422,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+     if(!release.active){
+         acquired=provider.acquire();if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return BackendSubmissionResult::retry("navigation reacquire failed");
+         release.active=true;if(!valid())return BackendSubmissionResult::rejected("stale navigation reacquire");target=acquired.frame.surface->getCanvas();
++        if(!gpu.restart())return BackendSubmissionResult::retry("navigation continuation completion unavailable");
++        gpu.bindFrame(frame,resourceEpoch);
+     }
+     const auto ready=[&](TileKey key){auto it=tiles_.find(key);return it!=tiles_.end()&&it->second.image&&it->second.checkedScene==scene&&it->second.valid.full(grid_.bounds(key));};
+     // A newly exposed frontier owns priority over disposable refinement.
+@@ -834,6 +838,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+         compose(*target,patches,camera,frame);
+         if(drawOverlay)drawOverlay(*target);
+         provider.release();release.active=false;
++        if(!gpu.finish())return BackendSubmissionResult::rejected("world navigation GPU submission failed");
+         const auto result=provider.present();
+         G5_OBSERVE(g5::Kind::Submit,g5::Tag::navigation,true,frame.viewId.value(),scene,frame.sceneGeneration.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value(),g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY),static_cast<unsigned>(result.code),work.coverageComplete);
+         if(result.code!=BackendSubmissionCode::kAccepted)return result;
+@@ -844,6 +849,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
+     // sharper plane has actually reached present.
+     work.pending|=dirty_;
+     last_=std::make_unique<FrameState>(frame);fallbackFocus_=focus;camera_=camera;scene_=scene;
++    if(!gpu.finish())return BackendSubmissionResult::rejected("navigation preparation GPU submission failed");
+     return BackendSubmissionResult::accepted();
+ }
+ }
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 11d7dd67..ce0da9ae 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -54,7 +54,12 @@ SkiaRenderer::~SkiaRenderer(){
+     if(resourceBudget_)resourceBudget_->close();
+     clearRenderCache();gpuRetirements_.reset();
+ }
+-void SkiaRenderer::serviceResourceRetirements()noexcept {if(gpuRetirements_)gpuRetirements_->service();}
++void SkiaRenderer::serviceResourceRetirements(ResourceServiceMode mode)noexcept {
++    if(mode==ResourceServiceMode::kBeginSurfaceTransition)preserveWorldPreparation_=true;
++    if(mode==ResourceServiceMode::kEndSurfaceTransition)preserveWorldPreparation_=false;
++    if(gpuRetirements_)gpuRetirements_->service();
++}
++bool SkiaRenderer::resourceRetirementPending()const noexcept {return gpuRetirements_&&gpuRetirements_->pending();}
+ 
+ // Constant-size validity only. Pixels remain owned by the qualified target;
+ // canonical source records and mask-prefix validation stay in RenderGroupManager.
+@@ -341,20 +346,21 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
+     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
+-    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
+-        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kCanonical,plan,
+         *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
+         renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
++    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
++        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
++    gpu.bindFrame(plan.frame,resourceEpoch_);
+     if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
+     if(gpuContext&&!gpu.ready()){
+-        const bool permanent=!provider.gpuCompletionService();
++        const auto completion=provider.gpuCompletionService();
++        const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
+         internal::ExecutionDecision unavailable;
+         execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
+         provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
+     }
+     const bool cachedGpuSafe=!gpuContext||gpu.ready();
+-    if(gpu.ready())gpu.touch();
+     internal::SkiaRenderCache* cache=nullptr;
+     if(!cachedGpuSafe)clearRenderCache();
+     if(cachedGpuSafe)try {
+@@ -427,12 +433,15 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+         }
+         if(prepared==internal::SkiaRenderCache::Preparation::kPending ||
+            prepared==internal::SkiaRenderCache::Preparation::kResourcePending){
+-            provider.release();return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("exact cache preparation pending");
++            provider.release();
++            if(prepared==internal::SkiaRenderCache::Preparation::kResourcePending&&gpuRetirements_->blocked())return BackendSubmissionResult::rejected("unqualified abandoned GPU quota blocks canonical preparation");
++            return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("exact cache preparation pending");
+         }
+     }
+     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
+     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
+     AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
++    if(gpu.ready())gpu.touch();
+     const auto result = (cache && (preparation||cache->stagedBodies()) && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
+         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
+         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
+@@ -502,6 +511,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+     }
+     provider.release();
+     if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
++    if(!gpu.finish()){clearRenderCache();return BackendSubmissionResult::rejected("canonical GPU submission failed");}
+     ++submissions_;
+     rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
+     AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
+@@ -541,6 +551,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
+         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
+         ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
++    gpu.bindFrame(current,resourceEpoch_);
+     if(!gpu.ready()){provider.release();return BackendSubmissionResult::retry("navigation completion unavailable");}
+     gpu.touch();
+     const auto& old=cache->transform;
+@@ -572,6 +583,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+ #endif
+     }
+     provider.release();
++    if(!gpu.finish())return BackendSubmissionResult::rejected("navigation GPU submission failed");
+     return provider.present();
+ }
+ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+@@ -712,9 +724,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
+         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
+         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_);
+-        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
++        if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
+         return result;
+-    }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
++    }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}
+ }
+ void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
+ NavigationWork SkiaRenderer::navigationWork() const noexcept {
+@@ -723,7 +735,7 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
+ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
+     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+ }
+-void SkiaRenderer::clearRenderCache() noexcept {eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_)preparedGeometry_->clear();}
++void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+     if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
+     if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+@@ -790,14 +802,15 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
+     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
+         internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
++    gpu.bindFrame(plan.frame,resourceEpoch_);
+     if(gpuContext&&!gpu.ready()){
+-        const bool permanent=!provider.gpuCompletionService();
++        const auto completion=provider.gpuCompletionService();
++        const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
+         internal::ExecutionDecision unavailable;
+         execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
+         provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
+     }
+     const bool cachedGpuSafe=!gpuContext||gpu.ready();
+-    if(gpu.ready())gpu.touch();
+     internal::SkiaRenderCache* cache=nullptr;
+     if(!cachedGpuSafe)clearRenderCache();
+     if(cachedGpuSafe)try{
+@@ -845,7 +858,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+             provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");
+         }
+     }
+-    // Selection/creation transient presentation is a complete replacement
++    if(gpu.ready())gpu.touch();
++    // Selection/creation transient presentation is a complete replacement
+     // frame for the overlay window.  Drawing only the moved object on a
+     // transparent surface leaves the old canonical pixels visible underneath
+     // it, which looks like a duplicated object during a drag.  The reference
+@@ -945,6 +959,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+         candidate->contents=acquired.frame.surface->generationID();
+     }catch(const std::bad_alloc&){} // Optional validity; next frame fully replaces.
+     provider.release();
++    if(!gpu.finish())return BackendSubmissionResult::rejected("transient GPU submission failed");
+     ++submissions_;
+     ++rasterizations_;
+     G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
+@@ -980,6 +995,15 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
+         provider.release();
+         return BackendSubmissionResult::rejected("stale preview surface generation");
+     }
++    serviceResourceRetirements();
++    try{
++        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
++        if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
++    }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview completion metadata unavailable");}
++    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
++    if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview GPU completion unavailable");}
++    G5_OBSERVE(g5::Kind::Basis,g5::Tag::preview,true,geometry.documentEpoch,geometry.session,geometry.sessionGeneration,geometry.revision,geometry.surfaceGeneration.value(),resourceEpoch_,g5::bits(geometry.viewport.scale),g5::bits(geometry.viewport.translationX),g5::bits(geometry.viewport.translationY),static_cast<std::uint64_t>(acquired.frame.surface->width()),static_cast<std::uint64_t>(acquired.frame.surface->height()),g5::bits(geometry.logicalToPhysicalX),g5::bits(geometry.logicalToPhysicalY));
++    gpu.touch();
+     G5_TARGET(acquired.frame.surface,true);
+     auto* canvas = acquired.frame.surface->getCanvas();
+     canvas->clear(SK_ColorTRANSPARENT);
+@@ -1140,6 +1164,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
+     }
+     canvas->restore();
+     provider.release();
++    if(!gpu.finish())return BackendSubmissionResult::rejected("preview GPU submission failed");
+     ++submissions_;
+     ++rasterizations_;
+     return provider.present();
+@@ -1158,8 +1183,17 @@ BackendSubmissionResult SkiaRenderer::clearPreview(
+         provider.release();
+         return BackendSubmissionResult::rejected("stale preview clear surface generation");
+     }
++    serviceResourceRetirements();
++    try{
++        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
++        if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
++    }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview clear completion metadata unavailable");}
++    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
++    if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview clear GPU completion unavailable");}
++    gpu.touch();
+     acquired.frame.surface->getCanvas()->clear(SK_ColorTRANSPARENT);
+     provider.release();
++    if(!gpu.finish())return BackendSubmissionResult::rejected("preview clear GPU submission failed");
+     ++submissions_;
+     ++rasterizations_;
+     return provider.present();
+diff --git a/runtime/render/src/webgl_surface_backend.cpp b/runtime/render/src/webgl_surface_backend.cpp
+index 30b07a03..22c7d505 100644
+--- a/runtime/render/src/webgl_surface_backend.cpp
++++ b/runtime/render/src/webgl_surface_backend.cpp
+@@ -1,4 +1,5 @@
+ #include "canvas/render/webgl_surface_backend.hpp"
++#include "webgl_context_liveness.hpp"
+ 
+ #include "include/core/SkColorSpace.h"
+ #include "include/core/SkSurface.h"
+@@ -13,6 +14,7 @@
+ #include <emscripten/html5.h>
+ #include <limits>
+ #include <utility>
++#include <cstdio>
+ 
+ namespace canvas::render {
+ struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
+@@ -29,24 +31,29 @@ struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
+     bool overlayVisible = true;
+     bool completionCapable=false,retainedContents=false;
+     std::shared_ptr<GpuCompletionState> completion=std::make_shared<GpuCompletionState>();
++    void observe([[maybe_unused]] const char* event)const noexcept {
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++      std::fprintf(stderr,"AXIOM_GPU_CONTEXT {\"event\":\"%s\",\"lifetime\":\"%llu\",\"native_handle\":\"%llu\",\"role\":\"%s\",\"generation\":\"%llu\",\"abandoned\":%s,\"physical_loss\":%s}\n",event,static_cast<unsigned long long>(completion->lifetime),static_cast<unsigned long long>(webgl),config.overlayVisibility?"preview":"canonical",static_cast<unsigned long long>(generation),completion->abandoned.load()?"true":"false",completion->physicalLost.load()?"true":"false");
++#endif
++    }
+     std::shared_ptr<const GpuCompletionState> state()const noexcept override{return completion;}
+     void service()noexcept override {
+       if(!context||completion->abandoned.load())return;
+       const auto previous=emscripten_webgl_get_current_context();
+-      // Emscripten also reports a deleted registry handle as "lost". That
+-      // alone does NOT prove the browser GPU context has physically finished.
+-      EmscriptenWebGLContextAttributes actual;
+-      if(emscripten_webgl_get_context_attributes(webgl,&actual)!=EMSCRIPTEN_RESULT_SUCCESS){
+-        completion->abandoned=true;context->abandonContext();return;
+-      }
+-      if(emscripten_is_webgl_context_lost(webgl)){
+-        completion->physicalLost=true;completion->abandoned=true;context->abandonContext();return;
++      const auto liveness=internal::probeWebGlContext(webgl,
++        [](int handle,int* width,int* height){
++          return emscripten_webgl_get_drawing_buffer_size(handle,width,height)==EMSCRIPTEN_RESULT_SUCCESS;
++        },[](int handle){return emscripten_is_webgl_context_lost(handle);});
++      if(liveness!=internal::WebGlContextLiveness::kAlive){
++        const bool physical=liveness==internal::WebGlContextLiveness::kPhysicalLost;
++        if(physical)completion->physicalLost=true;
++        completion->abandoned=true;observe(physical?"physical-loss":"unknown-abandon");context->abandonContext();return;
+       }
+       if(emscripten_webgl_make_context_current(webgl)!=EMSCRIPTEN_RESULT_SUCCESS)return;
+       context->checkAsyncWorkCompletion();
+       if(previous!=webgl)(void)emscripten_webgl_make_context_current(previous);
+     }
+-    ~Impl() { completion->abandoned=true;surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
++    ~Impl() { completion->abandoned=true;observe("owner-close");surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
+ };
+ WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(std::make_shared<Impl>()) {
+     impl_->config = std::move(config);
+@@ -71,6 +78,7 @@ WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(st
+     const auto target = GrBackendRenderTargets::MakeGL(static_cast<int>(impl_->config.physicalWidth), static_cast<int>(impl_->config.physicalHeight), 1, 8, info);
+     impl_->surface = SkSurfaces::WrapBackendRenderTarget(impl_->context.get(), target, kBottomLeft_GrSurfaceOrigin, kRGBA_8888_SkColorType, SkColorSpace::MakeSRGB(), nullptr);
+     if (!impl_->surface) impl_->error = "Skia WebGL2 surface wrapping failed";
++    impl_->observe("created");
+ }
+ std::unique_ptr<WebGlSurfaceProvider> WebGlSurfaceProvider::fromCurrentContext(
+     std::uint32_t physicalWidth, std::uint32_t physicalHeight) {
+@@ -100,13 +108,16 @@ SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire() noexcept {
+   return SkiaSurfaceAcquireResult::acquired({impl_->surface.get(), impl_->generation});
+ }
+ void WebGlSurfaceProvider::release() noexcept { if (impl_) impl_->acquired = false; }
+-BackendSubmissionResult WebGlSurfaceProvider::lose() noexcept { if (!impl_) return BackendSubmissionResult::rejected("WebGL surface is not initialized"); impl_->acquired = false; impl_->lost = true; return BackendSubmissionResult::accepted(); }
++BackendSubmissionResult WebGlSurfaceProvider::lose() noexcept { if (!impl_) return BackendSubmissionResult::rejected("WebGL surface is not initialized"); impl_->service(); impl_->acquired = false; impl_->lost = true; return BackendSubmissionResult::accepted(); }
+ BackendSubmissionResult WebGlSurfaceProvider::present() noexcept {
+-  if (!ready()) return BackendSubmissionResult::rejected("WebGL surface is not ready");
++  if (!ready() || impl_->lost) return BackendSubmissionResult::rejected("WebGL surface is not ready");
++  impl_->service();
++  if (!ready()) return BackendSubmissionResult::rejected("WebGL context unavailable or lost");
+   if (emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
+     return BackendSubmissionResult::rejected("WebGL context activation failed");
+   }
+-  impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
++  impl_->context->flush(impl_->surface.get());
++  if (!impl_->context->submit(GrSyncCpu::kNo)) return BackendSubmissionResult::rejected("WebGL GPU submit failed");
+   ++impl_->presents;
+   return BackendSubmissionResult::accepted();
+ }
+diff --git a/runtime/render/tests/g5_observation_identity_test.cpp b/runtime/render/tests/g5_observation_identity_test.cpp
+index 8e868be7..046b76bc 100644
+--- a/runtime/render/tests/g5_observation_identity_test.cpp
++++ b/runtime/render/tests/g5_observation_identity_test.cpp
+@@ -30,7 +30,7 @@ int quotaProbe(std::size_t cap,bool observe){
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    if(observe)canvas::foundation::internal::g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket.get()),17,ticket->epoch);
+ #endif
+-   ticket->end();queue.service();delayed=budget->used();
++   ticket->end();ticket->submitted(true);queue.service();delayed=budget->used();
+    service->status->abandoned=mode!=0;service->status->physicalLost=mode==2;
+    ticket->finish();queue.service();completed=budget->used();budget->close();queue.service();closed=budget->used();
+   }
+diff --git a/sdk/web/web_runtime_adapter.cpp b/sdk/web/web_runtime_adapter.cpp
+index 1add3890..1bf4e9e0 100644
+--- a/sdk/web/web_runtime_adapter.cpp
++++ b/sdk/web/web_runtime_adapter.cpp
+@@ -150,7 +150,8 @@ WebFrameResult WebRuntimeAdapter::prepareFrame(bool force) noexcept {
+   // ARC preview submissions retain their qualified completion fences.
+   if (!work.canonicalWork && !work.previewWork)
+     return impl_->core.canonicalPresentationDirty() ||
+-           (impl_->core.previewActive() && impl_->core.previewRenderState().dirty)
++           (impl_->core.previewActive() && impl_->core.previewRenderState().dirty) ||
++           impl_->core.resourceRetirementPending()
+         ? WebFrameResult::kRetry : WebFrameResult::kIdle;
+   if ((work.canonicalWork && !impl_->canonicalFence.insert(impl_->canonical)) ||
+       (work.previewWork && !impl_->previewFence.insert(impl_->preview))) {
+diff --git a/runtime/render/src/webgl_context_liveness.hpp b/runtime/render/src/webgl_context_liveness.hpp
+new file mode 100644
+index 00000000..72995d7e
+--- /dev/null
++++ b/runtime/render/src/webgl_context_liveness.hpp
+@@ -0,0 +1,19 @@
++#pragma once
++
++namespace canvas::render::internal {
++
++enum class WebGlContextLiveness { kAlive, kPhysicalLost, kUnknown };
++
++// The pinned attributes API cannot distinguish a deleted registry entry from
++// a live lost context. The drawing-buffer API independently validates both the
++// registry entry and GLctx; its dimensions may legitimately be zero during loss.
++// isContextLost alone is insufficient too: Emscripten returns true for deletion.
++template<class DrawingBufferProbe, class LossProbe>
++WebGlContextLiveness probeWebGlContext(
++    int handle, DrawingBufferProbe drawingBuffer, LossProbe isLost) noexcept {
++    int width=0,height=0;
++    if(handle<=0||!drawingBuffer(handle,&width,&height))return WebGlContextLiveness::kUnknown;
++    return isLost(handle)?WebGlContextLiveness::kPhysicalLost:WebGlContextLiveness::kAlive;
++}
++
++} // namespace canvas::render::internal
+diff --git a/runtime/render/tests/gpu_resource_recovery_test.cpp b/runtime/render/tests/gpu_resource_recovery_test.cpp
+new file mode 100644
+index 00000000..00a7045b
+--- /dev/null
++++ b/runtime/render/tests/gpu_resource_recovery_test.cpp
+@@ -0,0 +1,156 @@
++#include "../src/skia_prepared_geometry.hpp"
++#include "../src/skia_render_cache_internal.hpp"
++#include "../src/skia_geometry_internal.hpp"
++#include "../src/compact_contour_skia_path.hpp"
++#include "include/core/SkPathBuilder.h"
++#include "include/core/SkPaint.h"
++#include "canvas/render/skia_renderer.hpp"
++#include "canvas/scene/scene_types.hpp"
++#include "canvas/render/skia_scene_renderer.hpp"
++#include "include/core/SkSurface.h"
++#include "include/core/SkCanvas.h"
++#include <tuple>
++#include <fstream>
++#include "canvas/ink/compact_geometry.hpp"
++#include "include/core/SkMatrix.h"
++#include <chrono>
++#if defined(__APPLE__)
++#include "include/gpu/ganesh/mtl/GrMtlBackendContext.h"
++#include "include/gpu/ganesh/mtl/GrMtlDirectContext.h"
++#include "include/gpu/ganesh/GrDirectContext.h"
++#include "include/gpu/ganesh/SkSurfaceGanesh.h"
++#include <objc/message.h>
++#include <objc/runtime.h>
++extern "C" id MTLCreateSystemDefaultDevice(void);
++#endif
++#include <cmath>
++#include <cstdio>
++#include <stdexcept>
++#include <string_view>
++
++
++using namespace canvas;
++using namespace canvas::render;
++namespace {
++void require(bool b,const char* name){std::printf("{\"case\":\"%s\",\"pass\":%s}\n",name,b?"true":"false");if(!b)throw std::runtime_error(name);}
++#if defined(__APPLE__)
++id message(id target,const char* name){return reinterpret_cast<id(*)(id,SEL)>(objc_msgSend)(target,sel_registerName(name));}
++struct NativeMetalCompletion final:GpuCompletionService {
++    sk_sp<GrDirectContext> context;std::shared_ptr<GpuCompletionState> flags=std::make_shared<GpuCompletionState>();
++    ~NativeMetalCompletion()override{context->flushAndSubmit(GrSyncCpu::kYes);context->checkAsyncWorkCompletion();flags->abandoned.store(true);}
++    void service()noexcept override{context->checkAsyncWorkCompletion();}
++    std::shared_ptr<const GpuCompletionState> state()const noexcept override{return flags;}
++};
++class NativeMetalTarget final:public SkiaSurfaceProvider {
++    std::shared_ptr<NativeMetalCompletion> completion_;sk_sp<SkSurface> surface_;
++    std::uint64_t generation_=0,presents_=0,reads_=0;
++ public:
++    explicit NativeMetalTarget(std::shared_ptr<NativeMetalCompletion> completion):completion_(std::move(completion)){}
++    std::shared_ptr<GpuCompletionService> gpuCompletionService()const noexcept override{return unsupported?nullptr:completion_;}
++    RenderTargetInfo describe()const noexcept override{RenderTargetInfo info;info.profileId="native-test-metal";info.kind=RenderTargetKind::kGpuOffscreen;info.backend=RenderTargetBackend::kMetal;info.capabilities.gpuAccelerated=true;info.capabilities.supportsReadback=true;info.capabilities.supportsPresent=true;info.capabilities.supportsPartialUpdate=true;return info;}
++    SkiaSurfaceAcquireResult acquire()noexcept override{if(temporarilyUnavailable)return SkiaSurfaceAcquireResult::rejected(SkiaSurfaceAcquireCode::kUnavailable,"injected temporarily withheld target");return surface_?SkiaSurfaceAcquireResult::acquired({surface_.get(),generation_}):SkiaSurfaceAcquireResult{};}
++    bool abandonOnRelease=false,failPresent=false,unsupported=false,temporarilyUnavailable=false;
++    void release()noexcept override{if(abandonOnRelease){completion_->context->abandonContext();completion_->flags->abandoned=true;}}
++    BackendSubmissionResult present()noexcept override{if(failPresent)return BackendSubmissionResult::rejected("injected provider present failure");completion_->context->flushAndSubmit(GrSyncCpu::kNo);++presents_;return BackendSubmissionResult::accepted();}
++    BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h)noexcept override{surface_=SkSurfaces::RenderTarget(completion_->context.get(),skgpu::Budgeted::kNo,SkImageInfo::MakeN32Premul(w,h));++generation_;return surface_?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("Metal test target unavailable");}
++    BackendSubmissionResult readbackRgba(std::span<std::uint8_t> out)noexcept override{++reads_;auto info=SkImageInfo::Make(surface_->width(),surface_->height(),kRGBA_8888_SkColorType,kPremul_SkAlphaType);return surface_->readPixels(info,out.data(),info.minRowBytes(),0,0)?BackendSubmissionResult::accepted():BackendSubmissionResult::rejected("Metal test readback failed");}
++    std::uint64_t generation()const noexcept override{return generation_;}
++    BackendSubmissionResult advanceGeneration()noexcept override{++generation_;return BackendSubmissionResult::accepted();}
++    std::uint64_t readbackCount()const noexcept override{return reads_;}
++    std::uint64_t cpuCopyCount()const noexcept override{return reads_;}
++    std::uint64_t presentCount()const noexcept override{return presents_;}
++};
++FramePlan renderPlan(const ReferenceTraversalEntry& entry,std::uint64_t id,unsigned dpr,std::uint64_t surfaceGeneration=1){
++    FrameState f{ViewId{1},CameraState{{128,64},1,0,CameraGeneration{1}},{0,0,256,128},
++        {256,128,256*dpr,128*dpr,float(dpr),1},semantic::SemanticGeneration{1},SceneRevision{1},SurfaceGeneration{surfaceGeneration},MetricsGeneration{1},FrameId{id},{0,0,256,128}};
++    ReferenceDrawList draw{f};draw.viewportClip={0,0,256,128};
++    semantic::ObjectRecord backdrop;backdrop.id=ObjectId::fromUint64(99);backdrop.kind=semantic::ObjectKind::kShape;backdrop.kind_version=1;
++    backdrop.content=semantic::ShapeContent{1,256,128};backdrop.placement.order_key=semantic::OrderKey({1});
++    backdrop.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{0,0,1,1}}}}};
++    const auto projected=projectRuntimeScene({&backdrop,1},semantic::SemanticGeneration{1});
++    draw.entries={ReferenceTraversalEntry{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(backdrop.content)}},entry};
++    return FramePlan{f,std::move(draw),{},false,true};
++}
++ReferenceTraversalEntry stroke(){
++    semantic::CompactStrokeContent c;c.stroke.config.version=2;c.stroke.config.algorithmVersion=4;
++    c.stroke.config.signalVersion=3;c.stroke.config.size=18;c.stroke.config.smoothing=.5;c.stroke.seed=42;
++    for(unsigned i=0;i<128;++i)c.stroke.knots.push_back({20.+i,64+25*std::sin(i*.06),32768});
++    ReferenceTraversalEntry e;e.record.objectId=ObjectId::fromUint64(1);e.record.content=std::move(c);
++    e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(e.record.content)};return e;
++}
++std::shared_ptr<NativeMetalCompletion> context(){
++    const auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++    GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++    auto c=std::make_shared<NativeMetalCompletion>();c->context=GrDirectContexts::MakeMetal(backend);
++    require(bool(c->context),"actual_Metal_context");return c;
++}
++#endif
++}
++int main(){try{
++#if defined(__APPLE__)
++ for(unsigned dpr:{1U,2U,4U}){
++    auto c=context();NativeMetalTarget p(c);SkiaRenderer r;
++    require(p.resize(256*dpr,128*dpr).code==BackendSubmissionCode::kAccepted,"physical_target");
++    const auto source=stroke();auto frame=renderPlan(source,1,dpr,p.generation());
++    auto result=r.renderFrame(p,frame);
++    for(unsigned i=0;result.code==BackendSubmissionCode::kRetry&&i<1024;++i)result=r.renderFrame(p,frame);
++    require(result.code==BackendSubmissionCode::kAccepted&&p.presentCount()==1,"actual_canonical_submission");
++    std::vector<std::uint8_t> before(std::size_t(256*dpr)*128*dpr*4);
++    require(p.readbackRgba(before).code==BackendSubmissionCode::kAccepted,"cold_target_pixels");
++    for(unsigned i=0;i<256&&r.resourceRetirementPending();++i){c->context->checkAsyncWorkCompletion();r.serviceResourceRetirements();}
++    require(!r.resourceRetirementPending(),"idle_retirement_converges_without_edit");
++    NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& out){out=frame.referenceDrawList.entries;return true;};
++    for(unsigned i=0;i<8&&!r.navigationWork().preparedGeometryBytes;++i)(void)r.renderNavigation(p,{1,0,0},frame.frame,query);
++    const auto progress=r.navigationWork();require(progress.preparedGeometryBytes>0,"actual_navigation_retained_world_preparation");
++    p.temporarilyUnavailable=true;
++    require(r.renderNavigation(p,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kRetry,"temporary_target_denial");
++    require(r.navigationWork().preparedGeometryBytes==progress.preparedGeometryBytes,"temporary_target_denial_keeps_navigation_owner");
++    p.temporarilyUnavailable=false;
++    const auto lifetime=c->flags->lifetime,old=p.generation(),presentsBeforeResize=p.presentCount();
++    require(p.resize(256*dpr,128*dpr).code==BackendSubmissionCode::kAccepted&&c->flags->lifetime==lifetime,"logical_resize_preserves_context_lifetime");
++    require(r.renderFrame(p,frame).code==BackendSubmissionCode::kRejected&&p.presentCount()==presentsBeforeResize,"old_surface_generation_never_presents");
++    const auto rebound=renderPlan(source,2,dpr,p.generation());
++    result=r.renderFrame(p,rebound);
++    for(unsigned i=0;result.code==BackendSubmissionCode::kRetry&&i<1024;++i)result=r.renderFrame(p,rebound);
++    require(result.code==BackendSubmissionCode::kAccepted&&p.generation()>old,"rebind_draws_current_generation");
++    std::vector<std::uint8_t> after(before.size());require(p.readbackRgba(after).code==BackendSubmissionCode::kAccepted&&before==after,"resize_preserves_canonical_pixels");
++    p.failPresent=true;const auto count=p.presentCount();
++    require(r.renderFrame(p,rebound).code==BackendSubmissionCode::kRejected&&p.presentCount()==count,"present_failure_not_success");
++    p.failPresent=false;
++    PreviewGeometry preview;preview.revision=1;preview.surfaceGeneration=SurfaceGeneration{p.generation()};
++    preview.logicalToPhysicalX=preview.logicalToPhysicalY=float(dpr);preview.outline={{10,10},{30,10},{30,30},{10,30}};
++    require(r.renderPreview(p,preview).code==BackendSubmissionCode::kAccepted,"preview_actual_GPU_lifetime");
++    require(r.clearPreview(p,preview.surfaceGeneration).code==BackendSubmissionCode::kAccepted,"preview_clear_actual_GPU_lifetime");
++    std::vector<std::uint8_t> empty(before.size());require(p.readbackRgba(empty).code==BackendSubmissionCode::kAccepted&&std::all_of(empty.begin(),empty.end(),[](auto x){return x==0;}),"preview_clear_transparent_pixels");
++ }
++ {
++    auto c=context();NativeMetalTarget p(c);SkiaRenderer r;
++    require(p.resize(256,128).code==BackendSubmissionCode::kAccepted,"bounded_world_progress_target");
++    auto e=stroke();e.record.content.update([](auto& content){auto& stroke=std::get<semantic::CompactStrokeContent>(content).stroke;
++      stroke.knots.clear();for(unsigned i=0;i<7199;++i)stroke.knots.push_back({20.+i*.02,64+25*std::sin(i*.006),32768});});
++    e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(e.record.content)};
++    const auto first=renderPlan(e,5,1,p.generation());RenderPreparationBudget one;one.maxCoverageSteps=1;
++    for(unsigned i=0;i<20;++i)require(r.renderFrame(p,first,nullptr,&one).code==BackendSubmissionCode::kRetry,"bounded_cold_pending");
++    require(r.renderCacheWork().preparedSupportKnots>0&&p.presentCount()==0,"pending_world_preparation_no_partial_present");
++    r.serviceResourceRetirements(ResourceServiceMode::kBeginSurfaceTransition);
++    r.clearRenderCache();require(p.resize(256,128).code==BackendSubmissionCode::kAccepted,"world_progress_surface_rebind");
++    r.serviceResourceRetirements(ResourceServiceMode::kEndSurfaceTransition);
++    const auto next=renderPlan(e,6,1,p.generation());auto result=BackendSubmissionResult::retry("begin");
++    for(unsigned i=0;i<4096&&result.code==BackendSubmissionCode::kRetry;++i)result=r.renderFrame(p,next,nullptr,&one);
++    const auto work=r.renderCacheWork();
++    require(result.code==BackendSubmissionCode::kAccepted&&p.presentCount()==1,"bounded_world_preparation_resumes_after_surface_rebind");
++    require(work.preparedSupportKnots==7199&&work.preparedCompileInputs==7199&&work.preparedBodyBuilds==1,"world_progress_not_restarted_by_surface_loss");
++ }
++ {
++    auto c=context();NativeMetalTarget p(c);SkiaRenderer r;
++    require(p.resize(256,128).code==BackendSubmissionCode::kAccepted,"submit_failure_target");
++    p.abandonOnRelease=true;
++    const auto result=r.renderFrame(p,renderPlan(stroke(),3,1,p.generation()));
++    require(result.code==BackendSubmissionCode::kRejected&&p.presentCount()==0,"failed_submit_precedes_provider_present_result");
++    require(!c->flags->physicalLost.load(),"injected_abandon_not_physical_loss");
++ }
++#else
++ throw std::runtime_error("frozen actual native Metal provider unavailable");
++#endif
++ return 0;
++}catch(const std::exception& e){std::fprintf(stderr,"%s\n",e.what());return 1;}}
+diff --git a/runtime/render/tests/gpu_retirement_contract_test.cpp b/runtime/render/tests/gpu_retirement_contract_test.cpp
+new file mode 100644
+index 00000000..2caa1a75
+--- /dev/null
++++ b/runtime/render/tests/gpu_retirement_contract_test.cpp
+@@ -0,0 +1,169 @@
++#include <algorithm>
++#include "gpu_resource_retirement.hpp"
++#include "webgl_context_liveness.hpp"
++#include <cstdio>
++#include <functional>
++#include <memory>
++#include <vector>
++using namespace canvas;
++using namespace canvas::render;
++using internal::GpuResourceRetirement;
++namespace {
++struct Completion final : GpuCompletionService {
++    std::shared_ptr<GpuCompletionState> value=std::make_shared<GpuCompletionState>();
++    unsigned polls=0;
++    std::function<void()> onPoll;
++    void service() noexcept override {++polls;if(onPoll)onPoll();}
++    std::shared_ptr<const GpuCompletionState> state()const noexcept override{return value;}
++};
++// Models the pinned Emscripten registry probe, including a live lost context
++// with null attributes/zero drawing-buffer dimensions. The production helper
++// is also used by WebGlSurfaceProvider; real browser integration is separate.
++struct WebGlCompletion final : GpuCompletionService {
++    std::shared_ptr<GpuCompletionState> value=std::make_shared<GpuCompletionState>();
++    int handle=7,width=800,height=500;
++    bool registered=true,lost=false;
++    unsigned registryQueries=0,lossQueries=0;
++    void service() noexcept override {
++        if(value->abandoned.load())return;
++        const auto status=internal::probeWebGlContext(handle,
++            [&](int,int* w,int* h){++registryQueries;*w=width;*h=height;return registered;},
++            [&](int){++lossQueries;return lost;});
++        if(status==internal::WebGlContextLiveness::kAlive)return;
++        if(status==internal::WebGlContextLiveness::kPhysicalLost)value->physicalLost=true;
++        value->abandoned=true;
++    }
++    std::shared_ptr<const GpuCompletionState> state()const noexcept override{return value;}
++};
++template<class T> void submitted(T& t){
++    if constexpr(requires{t.submitted(true);}) t.submitted(true);
++}
++}
++int main(){
++    unsigned failures=0;
++    const auto check=[&](bool value,const char* name){
++        std::printf("{\"case\":\"%s\",\"pass\":%s}\n",name,value?"true":"false");
++        failures+=!value;
++    };
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();
++        auto t=q.begin(b,s);t->end();submitted(*t);
++        const auto id=b->reserve(resources::ResourceClass::kScratch,4096,true);
++        check(bool(id),"webgl_loss_quota_admitted");resources::ResourceLease lease(b,*id);lease.reset();
++        s->lost=true;s->width=s->height=0;q.service();
++        check(s->value->physicalLost.load()&&s->value->abandoned.load(),
++              "registered_lost_context_with_zero_buffer_is_physical_loss");
++        // A loss first observed during polling is retired at the next existing
++        // owner opportunity, rather than by reentering/changing the queue.
++        q.service();
++        check(b->gpuEpochRetired(t->epoch)&&b->used()==0&&!q.blocked(),
++              "physical_loss_releases_affected_lifetime_without_owner_close");
++    }
++    for(const int handle:{0,-1,7}){
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();auto t=q.begin(b,s);t->end();submitted(*t);
++        s->registryQueries=s->lossQueries=0;s->handle=handle;s->registered=false;s->lost=true;q.service();
++        check(s->value->abandoned.load()&&!s->value->physicalLost.load()&&s->lossQueries==0,
++              "deleted_or_invalid_handle_reported_lost_remains_unknown");
++        check(s->registryQueries==(handle>0?1U:0U)&&!b->gpuEpochRetired(t->epoch)&&q.blocked(),
++              "unknown_registry_cannot_grant_physical_completion");
++        t->finish();q.service();check(!b->gpuEpochRetired(t->epoch),"unknown_old_callback_does_not_release_quota");b->close();
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<WebGlCompletion>();auto t=q.begin(b,s);t->end();submitted(*t);
++        s->width=s->height=0;q.service();s->width=1600;s->height=1000;q.service();
++        check(!s->value->physicalLost.load()&&!s->value->abandoned.load()&&!b->gpuEpochRetired(t->epoch),
++              "logical_resize_and_zero_dimensions_do_not_imply_context_loss");
++        t->finish();q.service();check(b->gpuEpochRetired(t->epoch),"healthy_context_keeps_normal_callback_completion");
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto old=std::make_shared<WebGlCompletion>();auto a=q.begin(b,old);a->end();submitted(*a);
++        old->lost=true;q.service();
++        auto fresh=std::make_shared<WebGlCompletion>();auto n=q.begin(b,fresh);n->end();submitted(*n);
++        a->finish();q.service();
++        check(old->handle==fresh->handle&&old->value->lifetime!=fresh->value->lifetime,
++              "reused_numeric_handle_has_distinct_retained_context_lifetime");
++        check(b->gpuEpochRetired(a->epoch)&&!b->gpuEpochRetired(n->epoch)&&
++              !fresh->value->physicalLost.load()&&!fresh->value->abandoned.load(),
++              "old_loss_and_late_callback_cannot_complete_restored_lifetime");
++        n->finish();q.service();check(b->pendingGpuEpochCount()==0,"restored_lifetime_completes_independently");
++    }
++    {
++        GpuResourceRetirement q;
++        auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<Completion>();
++        std::vector<std::shared_ptr<GpuResourceRetirement::Ticket>> ts;
++        for(unsigned i=0;i<8;++i){auto t=q.begin(b,s);check(bool(t),"admit");t->end();submitted(*t);ts.push_back(t);}
++        s->polls=0;q.service();check(s->polls==1,"one_poll_per_context_lifetime_owner_pass");
++        for(auto& t:ts)t->finish();q.service();
++        check(b->pendingGpuEpochCount()==0,"completion_retires_epochs");
++    }
++    {
++        GpuResourceRetirement q;
++        auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto s=std::make_shared<Completion>();
++        auto first=q.begin(b,s);first->end();submitted(*first);
++        auto second=q.begin(b,s);
++        const auto id=b->reserve(resources::ResourceClass::kScratch,4096,true,1024);
++        check(bool(id),"staging_admission");resources::ResourceLease lease(b,*id);
++        check(second->add(lease.completedShrink(1024)),"staging_permit");
++        second->end();submitted(*second);second->finish();q.service();
++        check(b->snapshot(resources::ResourceClass::kScratch).staging==3072,
++              "observed_later_epoch_keeps_staging_until_ordered_retirement");
++        check(!b->gpuEpochRetired(second->epoch),"later_done_waits_for_earlier");
++        first->finish();q.service();
++        check(b->snapshot(resources::ResourceClass::kScratch).staging==0,
++              "ordered_retirement_releases_staging");
++        lease.reset();check(b->used()==0,"last_release_drains_quota");
++    }
++    {
++        GpuResourceRetirement q;
++        auto b=std::make_shared<resources::ResourceBudgetManager>();
++        auto old=std::make_shared<Completion>(),fresh=std::make_shared<Completion>();
++        auto a=q.begin(b,old);a->end();submitted(*a);
++        auto n=q.begin(b,fresh);n->end();submitted(*n);
++        old->polls=fresh->polls=0;old->onPoll=[&]{q.service();};
++        q.service();check(old->polls==1&&fresh->polls==1,"distinct_lifetimes_polled_once_nonreentrant");
++        old->onPoll={};old->value->abandoned=true;a->finish();q.service();
++        check(!b->gpuEpochRetired(a->epoch)&&q.blocked(),"unknown_abandon_keeps_epoch_charged");
++        n->finish();q.service();check(!q.pending(),"terminal_unknown_not_infinite_retry");
++        old->value->physicalLost=true;q.service();
++        check(b->pendingGpuEpochCount()==0&&!q.blocked(),"late_physical_loss_retires_ordered_prefix");
++        check(old->value->lifetime!=fresh->value->lifetime,"context_lifetime_not_native_handle");
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();auto s=std::make_shared<Completion>();
++        auto t=q.begin(b,s);t->expectSubmission();t->end();
++        t->finish();check(b->pendingGpuEpochCount()==1,"callback_before_submit_outcome_cannot_grant_completion");
++        t->submitted(false);q.service();
++        check(!b->gpuEpochRetired(t->epoch)&&!q.pending(),"failed_submit_not_completion_or_busy_retry");
++        b->close();q.service();check(b->used()==0,"owner_close_closes_unknown_quota");
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();auto s=std::make_shared<Completion>();
++        auto t=q.begin(b,s);t->end();t->unused();q.service();
++        check(b->pendingGpuEpochCount()==0&&b->used()==0,"unused_epoch_drains_without_gpu_submit");
++        auto first=q.begin(b,s);first->end();submitted(*first);
++        const auto p=b->reserve(resources::ResourceClass::kScratch,16,true);resources::ResourceLease lease(b,*p);
++        auto last=q.begin(b,s);last->end();submitted(*last);lease.reset();
++        q.invalidateDisplays();
++        const auto held=b->snapshot(resources::ResourceClass::kScratch);
++        check(held.pendingRelease==16&&last->displayCancelled.load(),"cancelled_gpu_lease_stays_charged");
++        last->finish();q.service();check(b->snapshot(resources::ResourceClass::kScratch).pendingRelease==16,"later_completion_cannot_release_cancelled_prefix");
++        first->finish();q.service();check(b->used()==0,"owner_service_drains_without_new_edit");
++    }
++    {
++        GpuResourceRetirement q;auto b=std::make_shared<resources::ResourceBudgetManager>();auto s=std::make_shared<Completion>();
++        std::vector<std::shared_ptr<GpuResourceRetirement::Ticket>> held;
++        for(unsigned i=0;i<1024;++i){auto t=q.begin(b,s);if(!t)break;t->end();submitted(*t);held.push_back(t);}
++        check(held.size()==1024&&!q.begin(b,s),"existing_1024_structural_guard");
++        s->onPoll=[&]{for(auto& t:held)t->finish();};
++        auto next=q.begin(b,s);
++        check(bool(next),"admission_services_completed_prefix_before_structural_guard");
++        s->onPoll={};if(next){next->end();next->unused();}q.service();check(b->used()==0,"saturation_recovery_preserves_quota");
++    }
++    return failures?1:0;
++}
+diff --git a/verification/runners/g5/resource_recovery.mjs b/verification/runners/g5/resource_recovery.mjs
+new file mode 100644
+index 00000000..ec476699
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery.mjs
+@@ -0,0 +1,215 @@
++import fs from 'node:fs/promises';
++import path from 'node:path';
++import http from 'node:http';
++import {createHash} from 'node:crypto';
++import {execFileSync} from 'node:child_process';
++import {fileURLToPath} from 'node:url';
++import {runWorker as coreWorker} from './canonical_prepared_body_working_set.mjs';
++import {createReferenceQualifier} from './prepared_body_index_reverify_reference.mjs';
++
++const HERE=path.dirname(fileURLToPath(import.meta.url)),ROOT=path.resolve(HERE,'../../..');
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export function canonicalIdentity(s){
++  return {documentId:s.documentId,generation:s.generation,objects:s.objects,
++    operationId:s.lastCommit.operationId,ordinal:s.lastCommit.ordinal,runtimeEpoch:s.lastCommit.runtimeEpoch};
++}
++export function qualifyQueues(rows){
++  const owners=new Map();
++  for(const row of rows){
++    const admitted=BigInt(row.admitted),retired=BigInt(row.ordered_retired);
++    const before=owners.get(row.owner);
++    if(retired>admitted||admitted-retired!==BigInt(row.queued)||
++       before&&(admitted<BigInt(before.admitted)||retired<BigInt(before.ordered_retired)))return {status:'INVALID',row};
++    owners.set(row.owner,row);
++  }
++  return {status:rows.length&&[...owners.values()].every(r=>!r.needs_service)?'OBSERVED':'MISSING',
++    final:[...owners.values()],scope:'owner-observed service/ordered retirement; not pure GPU time or physical display'};
++}
++
++// Serialized into the verification page. Only public root SDK commands edit or
++// navigate. GL wrappers withhold observations, never fabricate GPU completion.
++export async function recoveryConsumer(){
++  const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++  let sdk,fixture,initialGeneration;
++  const frames=[],errors=[],operations=[],events=[],cold=[],buffers={};
++  const observer=installNavigationObserver(()=>sdk?.canvas);
++  const raf=()=>new Promise(resolve=>{resolve.g5SamplerRaf=true;requestAnimationFrame(resolve);});
++  const state=()=>sdk.readState();
++  const check=(ok,label)=>{if(!ok)throw Error('PRODUCT_CHECK: '+label);};
++  const digest=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
++  const snapshot=()=>({at:performance.now(),state:state(),frames:frames.length,operations:operations.length,activity:observer.activity()});
++  const settled=async()=>{
++    const end=performance.now()+30000;
++    do{await raf();const s=state();if(s.surface.available&&s.activeContacts===0&&s.lastCommit.presentedGeneration===s.generation&&observer.activity().pending===0)return snapshot();}
++    while(performance.now()<end);
++    throw Error('PRODUCT_CHECK: resource/canonical idle completion timeout');
++  };
++  const init=async f=>{
++    fixture=f;const bytes=new Uint8Array(await(await fetch('/fixtures/'+f.name+'.axsnap')).arrayBuffer());
++    check(await digest(bytes)===f.sha256,'fixture bytes');
++    const {createRuntime}=await import('/axiom.mjs');
++    sdk=await createRuntime({mount:document.getElementById('mount'),documentId:f.state.documentId,
++      builtinFonts:false,permission:'localSingleUser',restore:{bytes,metadata:f.metadata},
++      onFrame:value=>frames.push({at:performance.now(),...value}),onError:e=>errors.push({code:e.code,message:String(e.message),at:performance.now()}),
++      onOperation:b=>operations.push({at:performance.now(),bytes:b.length})});
++    initialGeneration=state().generation;await settled();
++    check(state().objects===16&&state().activeContacts===0,'restored canonical state');
++    return {snapshot:snapshot(),build:sdk.readBuildInfo(),fixture_sha256:f.sha256,resource_binding:sdk.resources.list().binding,dpr:devicePixelRatio};
++  };
++  const capture=async stage=>{
++    const current=state(),gl=sdk.canvas.getContext('webgl2'),width=sdk.canvas.width,height=sdk.canvas.height;
++    const raw=new Uint8Array(width*height*4),rgba=new Uint8Array(raw.length);
++    gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,raw);
++    for(let y=0;y<height;++y)rgba.set(raw.subarray((height-y-1)*width*4,(height-y)*width*4),y*width*4);
++    const row={stage,state:current,selection:sdk.readSelection(),activity:observer.activity(),camera:current.camera,width,height,
++      rgba_key:stage+'-rgba',rgba_bytes:rgba.length,rgba_sha256:await digest(rgba),resource_binding:sdk.resources.list().binding};
++    buffers[row.rgba_key]=rgba;cold.push(row);
++    try{
++      const documentRevision=(BigInt(fixture.metadata.documentRevision)+BigInt(current.generation)-BigInt(initialGeneration)).toString();
++      const request={generation:current.generation,documentRevision,recoveryFrontier:fixture.metadata.recoveryFrontier};
++      const value=await sdk.captureSnapshot(request);
++      Object.assign(row,{snapshot_key:stage+'-snapshot',snapshot_bytes:value.bytes.length,snapshot_sha256:await digest(value.bytes),checkpoint_digest:value.checkpointDigest,checkpoint_request:request});
++      buffers[row.snapshot_key]=value.bytes;
++    }catch(e){row.snapshot_error=String(e.stack??e);}
++    return row;
++  };
++  const withhold=async()=>{
++    const contexts=[sdk.canvas,...document.querySelectorAll('#mount canvas')].filter((c,i,a)=>a.indexOf(c)===i).map(c=>c.getContext('webgl2')).filter(Boolean);
++    const saved=[],calls=[];
++    for(const gl of contexts)for(const name of ['clientWaitSync','getSyncParameter']){
++      const fn=gl[name];saved.push({gl,name,fn});
++      gl[name]=function(...args){
++        if(name==='clientWaitSync'){calls.push({name,at:performance.now()});return gl.TIMEOUT_EXPIRED;}
++        if(args[1]===gl.SYNC_STATUS){calls.push({name,at:performance.now()});return gl.UNSIGNALED;}
++        return Reflect.apply(fn,this,args);
++      };
++    }
++    const before=snapshot(),opportunities=[];
++    try{
++      await sdk.panBy(1,0);
++      for(let i=0;i<8;++i){await raf();opportunities.push(snapshot());}
++    }finally{for(const {gl,name,fn} of saved)gl[name]=fn;}
++    const released=snapshot();const drained=await settled();
++    events.push({kind:'withheld-completion-observations',before,opportunities,calls,released,drained,
++      injected:true,scope:'eight real RAF observation opportunities; does not assert physically pending GPU'});
++    check(calls.length>0,'withheld wrapper reached actual GL completion observation');
++    await sdk.panBy(-1,0);await settled();
++    return events.at(-1);
++  };
++  const lose=async role=>{
++    const canvas=role==='canonical'?sdk.canvas:document.querySelector('#mount canvas[id$="-preview"]');
++    const gl=canvas?.getContext('webgl2'),extension=gl?.getExtension('WEBGL_lose_context');
++    if(!extension)throw Error('ENVIRONMENT: WEBGL_lose_context unavailable');
++    const before=snapshot();
++    const lost=new Promise(resolve=>canvas.addEventListener('webglcontextlost',resolve,{once:true}));
++    extension.loseContext();await lost;await raf();
++    const unavailable=snapshot();check(!unavailable.state.surface.available,'lost surface lifecycle unavailable');
++    check(unavailable.frames===before.frames,'lost context did not create presentation receipt');
++    const restored=new Promise(resolve=>canvas.addEventListener('webglcontextrestored',resolve,{once:true}));
++    extension.restoreContext();await restored;const after=await settled();
++    events.push({kind:'real-webgl-loss-restore',role,before,unavailable,after,
++      actual_extension:true,context_object_retained:true,physical_loss_distinct_from_logical_paired_loss:true});
++    check(after.frames>before.frames,'new binding actually presented');
++    check(BigInt(after.state.target.attachmentEpoch)>BigInt(before.state.target.attachmentEpoch),'new attachment generation; private trace binds full surface generation');
++    return events.at(-1);
++  };
++  const dump=()=>({state:sdk?state():null,frames,errors,operations,events,cold,activity:observer.activity()});
++  window.resourceRecovery={init,capture,withhold,lose,dump,
++    pull(key,off,count){const b=buffers[key].subarray(off,off+count);let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s);},
++    async close(){await sdk?.close();observer.restore();return {closed:!document.querySelector('#mount canvas'),errors,operations};}};
++}
++
++async function artifactIdentity(root){const value={};for(const name of(await fs.readdir(root,{recursive:true})).sort()){const p=path.join(root,name);if((await fs.stat(p)).isFile())value[name]=sha(await fs.readFile(p));}return value;}
++const qualificationFactory=`import factory from '/_engine/internal/axiom.mjs';
++export default async function(args){const module=await factory(args);
++if(module._axiom_g5_trace_control(2,101)!==0||module._axiom_g5_trace_control(1,0)!==0)throw Error('qualification trace initialization');
++const drain=()=>{const chunks=[];for(let i=0;i<256;++i){if(module._axiom_g5_trace_control(4,0)!==0)throw Error('trace drain failed');const p=module._axiom_g5_trace_bytes(),n=module._axiom_g5_trace_size();const value=JSON.parse(new TextDecoder().decode(module.HEAPU8.subarray(p,p+n)));chunks.push(value);if(value.finished)return chunks;}throw Error('bounded trace drain exceeded');};
++let collected=[];const timer=setInterval(()=>collected.push(...drain()),100);
++window.resourceTrace=()=>{const result=[...collected,...drain()];collected=[];return result;};
++window.resourceTraceClose=()=>{clearInterval(timer);return window.resourceTrace();};
++return module;}`;
++
++export async function recoveryWorker({sdkArg,outArg,variant,oracle,referenceCatalog,identityRunner='resource_recovery_runner.py'}){
++  const sdk=path.resolve(sdkArg),out=path.resolve(outArg);await fs.mkdir(out,{recursive:true});
++  const fixtures=path.join(ROOT,'.aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures'),manifest=JSON.parse(await fs.readFile(path.join(fixtures,'fixtures.json')));
++  const source=()=>JSON.parse(execFileSync('python3.12',[path.join(HERE,identityRunner),'--source-identity'],{encoding:'utf8',maxBuffer:1024*1024}));
++  const write=(name,value)=>fs.writeFile(path.join(out,name),JSON.stringify(value,null,2)+'\n');
++  const result={schema:'g5-ur1d-real-resource-worker-v1',status:'STARTED',variant,source_before:source(),artifacts_before:await artifactIdentity(sdk),cases:[],page_errors:[],rss_guard:'external owned-process-family guard'};
++  let server,browser,page;
++  const {chromium}=await import('../../node_modules/playwright/index.mjs');
++  try{
++    const qualify=await createReferenceQualifier(JSON.parse(await fs.readFile(referenceCatalog)),oracle);
++    server=http.createServer(async(req,res)=>{try{
++      const u=new URL(req.url,'http://127.0.0.1');
++      if(u.pathname==='/probe.html'){res.setHeader('Content-Type','text/html');res.end('<body style="margin:0"><div id="mount" style="width:800px;height:500px"></div><script type="module">await ('+recoveryConsumer.toString()+')();</script>');return;}
++      if(variant==='qualification'&&u.pathname==='/internal/axiom.mjs'){res.setHeader('Content-Type','text/javascript');res.end(qualificationFactory);return;}
++      const [base,suffix]=u.pathname.startsWith('/_engine/')?[sdk,u.pathname.slice(9)]:u.pathname.startsWith('/g5/')?[HERE,u.pathname.slice(4)]:u.pathname.startsWith('/fixtures/')?[fixtures,u.pathname.slice(10)]:[sdk,u.pathname.slice(1)];
++      const p=path.resolve(base,suffix);if(!p.startsWith(base+path.sep))throw Error('path');
++      res.setHeader('Content-Type',p.endsWith('.mjs')?'text/javascript':p.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(p));
++    }catch(e){res.statusCode=404;res.end(String(e));}});
++    await new Promise(r=>server.listen(0,'127.0.0.1',r));
++    browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});result.browser={version:browser.version(),headless:true};
++    for(const name of ['S0','S2']){
++      if(sha(await fs.readFile(path.join(fixtures,name+'.axsnap')))!==manifest[name].sha256)throw Error('fixture identity');
++      const row={id:name+'-retirement-context-recovery',status:'STARTED',retirements:[],contexts:[],execution:[],cold:[],traces:[],failures:[]};result.cases.push(row);
++      page=await browser.newPage({viewport:{width:900,height:650},deviceScaleFactor:2});
++      page.on('pageerror',e=>result.page_errors.push(String(e)));page.on('crash',()=>{result.crash=true;});
++      page.on('console',m=>{const text=m.text();for(const [prefix,key] of [['AXIOM_GPU_RETIREMENT ','retirements'],['AXIOM_GPU_CONTEXT ','contexts'],['AXIOM_RENDER_EXECUTION ','execution']])if(text.startsWith(prefix))try{row[key].push(JSON.parse(text.slice(prefix.length)));}catch(e){result.page_errors.push(String(e));}});
++      await page.goto('http://127.0.0.1:'+server.address().port+'/probe.html');await page.waitForFunction(()=>!!window.resourceRecovery);
++      row.init=await page.evaluate(f=>resourceRecovery.init(f),manifest[name]);await write(name+'-init.json',row.init);
++      const saveCold=async stage=>{
++        const value=await page.evaluate(s=>resourceRecovery.capture(s),stage);row.cold.push(value);await write(name+'-cold.json',row.cold);
++        for(const [key,count,ext] of [[value.rgba_key,value.rgba_bytes,'rgba'],[value.snapshot_key,value.snapshot_bytes,'axsnap']]){
++          if(!key)continue;const f=await fs.open(path.join(out,name+'-'+stage+'.'+ext),'w');
++          try{for(let off=0;off<count;off+=65536)await f.writeFile(Buffer.from(await page.evaluate(({key,off})=>resourceRecovery.pull(key,off,65536),{key,off}),'base64'));}finally{await f.close();}
++        }
++        if(variant==='qualification')row.traces.push({stage,chunks:await page.evaluate(()=>resourceTrace())});
++        await write(name+'-trace.json',row.traces);
++      };
++      try{
++        await saveCold('before-loss');
++        row.withheld=await page.evaluate(()=>resourceRecovery.withhold());await write(name+'-withheld.json',row.withheld);
++        row.canonical=await page.evaluate(()=>resourceRecovery.lose('canonical'));await saveCold('after-canonical-restore');
++        row.preview=await page.evaluate(()=>resourceRecovery.lose('preview'));await saveCold('after-preview-restore');
++      }catch(e){row.failures.push(String(e.stack??e));if(String(e).includes('ENVIRONMENT:'))throw e;}
++      row.final=await page.evaluate(()=>resourceRecovery.dump());await write(name+'-final.json',row.final);
++      // All obtained cold buffers are durable before any pixel/state predicate.
++      for(const stage of row.cold){
++        if(!stage.snapshot_key){row.failures.push('snapshot unavailable at '+stage.stage);continue;}
++        const actual=await fs.readFile(path.join(out,name+'-'+stage.stage+'.rgba')),snapshot=path.join(out,name+'-'+stage.stage+'.axsnap');
++        if(sha(actual)!==stage.rgba_sha256||sha(await fs.readFile(snapshot))!==stage.snapshot_sha256)throw Error('cold transfer identity');
++        stage.oracle=await qualify({oracle,snapshot,actual,request:{width:stage.width,height:stage.height,logical_width:800,logical_height:500,camera:stage.camera,hud_bounds:[]},prefix:path.join(out,name+'-'+stage.stage+'-reference')});
++        if(stage.oracle.status!=='QUALIFIED')row.failures.push('independent pixel mismatch at '+stage.stage);
++      }
++      row.document_unchanged=row.cold.length===3&&row.cold.every(s=>JSON.stringify(canonicalIdentity(s.state))===JSON.stringify(canonicalIdentity(row.cold[0].state))&&s.snapshot_sha256===row.cold[0].snapshot_sha256&&s.resource_binding===row.cold[0].resource_binding);
++      if(!row.document_unchanged)row.failures.push('canonical/snapshot/resource identity changed across loss');
++      row.queues=qualifyQueues(row.retirements);
++      if(variant==='qualification'&&(row.queues.status!=='OBSERVED'||!row.contexts.some(x=>x.role==='canonical'&&x.event==='physical-loss')||!row.contexts.some(x=>x.role==='preview'&&x.event==='physical-loss')))row.failures.push('actual resource/context facts missing');
++      if(variant==='normal'&&(row.retirements.length||row.contexts.length||row.execution.length||await page.evaluate(()=>typeof window.resourceTrace!=='undefined')))row.failures.push('normal diagnostic leak');
++      row.close=await page.evaluate(()=>resourceRecovery.close());if(!row.close.closed)throw Error('owner close cleanup');
++      if(variant==='qualification'){
++        row.traces.push({stage:'owner-close',chunks:await page.evaluate(()=>resourceTraceClose())});
++        await write(name+'-trace.json',row.traces);
++        if(row.traces.some(t=>t.chunks.some(c=>c.loss.critical)))row.failures.push('critical resource observation loss');
++      }
++      if(row.final.errors.length||row.final.operations.length!==row.init.snapshot.operations)row.failures.push('unexpected SDK error or operation across recovery');
++      row.status=row.failures.length?'FAILED':'COMPLETED';await write(name+'-result.json',row);
++      await page.close();page=null;console.log(JSON.stringify({stage:'recovery-case-closed',id:row.id,status:row.status,failures:row.failures}));
++    }
++    result.status=result.cases.every(c=>c.status==='COMPLETED')&&!result.page_errors.length?'OBSERVED':'PRODUCT_FAILURE_OBSERVED';
++  }catch(e){result.status='HARD_FAILURE';result.error=String(e.stack??e);if(page&&!page.isClosed())try{result.partial=await page.evaluate(()=>window.resourceRecovery?.dump());await write('partial.json',result.partial);}catch(x){result.partial_error=String(x);}}
++  finally{
++    if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));
++    result.source_after=source();result.artifacts_after=await artifactIdentity(sdk);
++    result.source_stable=result.source_before.source_tree_sha256===result.source_after.source_tree_sha256;result.artifacts_stable=JSON.stringify(result.artifacts_before)===JSON.stringify(result.artifacts_after);
++    if(!result.source_stable||!result.artifacts_stable||result.crash){result.status='HARD_FAILURE';result.identity_or_crash=true;}
++    await write('worker-result.json',result);
++  }
++  console.log(JSON.stringify({stage:'worker-complete',status:result.status,error:result.error??null}));if(result.status==='HARD_FAILURE')process.exitCode=2;
++}
++if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
++  const [kind,sdkArg,outArg,variant,oracle,referenceCatalog]=process.argv.slice(2);
++  if(kind==='core')await coreWorker({sdkArg,outArg,variant,oracle,referenceCatalog,identityRunner:'resource_recovery_runner.py',functionalPacing:true});
++  else if(kind==='recovery')await recoveryWorker({sdkArg,outArg,variant,oracle,referenceCatalog});
++  else throw Error('explicit core/recovery kind required');
++}
+diff --git a/verification/runners/g5/resource_recovery_build.py b/verification/runners/g5/resource_recovery_build.py
+new file mode 100644
+index 00000000..7ff87801
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_build.py
+@@ -0,0 +1,56 @@
++"""Assemble private UR1d qualification layout without bypassing consumer install.
++
++The repository deliberately refuses installing UR0 diagnostics as a consumer SDK.
++Use the matching normal facade/assets and freshly built qualification engine only
++in this task's out directory. The resulting layout is not a consumer distribution.
++"""
++import argparse
++import hashlib
++import json
++import shutil
++from pathlib import Path
++
++def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++
++def cache(path):
++    return {line.split(':',1)[0]:line.split('=',1)[1] for line in Path(path).read_text().splitlines()
++            if ':' in line and '=' in line and not line.startswith(('#','//'))}
++
++def assemble(normal, normal_build, qualification_build, output, manifest):
++    n,q=cache(normal_build/'CMakeCache.txt'),cache(qualification_build/'CMakeCache.txt')
++    for data in (n,q):
++        assert data['AXIOM_INSTALL_DEVELOPER_COMPONENTS']=='OFF'
++        assert data['AXIOM_RENDER_CACHE_MIB']=='32' and data['AXIOM_RENDER_SHARED_MIB']=='96'
++    assert n['AXIOM_G5_UR0_DIAGNOSTICS']=='OFF' and n['AXIOM_ENABLE_FRAME_TIMING']=='OFF'
++    assert q['AXIOM_G5_UR0_DIAGNOSTICS']=='ON' and q['AXIOM_ENABLE_FRAME_TIMING']=='ON'
++    names=sorted(str(p.relative_to(normal)) for p in normal.rglob('*') if p.is_file())
++    assert len(names)==36 and not any(Path(p).suffix in ('.a','.h','.hpp','.lib') for p in names)
++    assert not output.exists(), 'private artifact is immutable once assembled'
++    assert any(task in output.parts for task in ('G5-UR1d-resource-recovery','G5-UR1d-physical-loss-repair-r1'))
++    shutil.copytree(normal,output)
++    replacements={}
++    for name in ('internal/axiom.mjs','axiom.wasm','axiom.data'):
++        source=qualification_build/'sdk/web/internal'/Path(name).name
++        assert source.is_file(),source
++        shutil.copyfile(source,output/name)
++        replacements[name]={'path':str(source),'sha256':sha(source)}
++    # Emscripten minifies the WASM export names; their public module aliases
++    # are assigned in the matching generated JS, not stored verbatim in WASM.
++    assert b'axiom_g5_trace_control' not in (normal/'internal/axiom.mjs').read_bytes()
++    assert b'axiom_g5_trace_control' in (output/'internal/axiom.mjs').read_bytes()
++    assert b'AXIOM_GPU_RETIREMENT' not in (normal/'axiom.wasm').read_bytes()
++    value={'schema':'g5-ur1d-private-qualification-layout-v1',
++        'kind':'PRIVATE_VERIFICATION_ONLY_NOT_CONSUMER_INSTALL','consumer_install_succeeded':False,
++        'consumer_install_guard':'UR0 qualification artifacts are not consumer install packages',
++        'normal_source':str(normal),'qualification_build':str(qualification_build),'output':str(output),
++        'normal_cache_sha256':sha(normal_build/'CMakeCache.txt'),
++        'qualification_cache_sha256':sha(qualification_build/'CMakeCache.txt'),
++        'replacements':replacements,'files':{name:sha(output/name) for name in names},
++        'facade_declarations_assets_match_normal':all(sha(normal/name)==sha(output/name) for name in names if name not in replacements)}
++    manifest.write_text(json.dumps(value,indent=2)+'\n')
++    print('private qualification layout',len(names),'files; consumer install guard preserved')
++
++if __name__=='__main__':
++    p=argparse.ArgumentParser()
++    for name in ('normal','normal-build','qualification-build','output','manifest'): p.add_argument('--'+name,type=Path,required=True)
++    a=p.parse_args();assemble(a.normal,a.normal_build,a.qualification_build,a.output,a.manifest)
+diff --git a/verification/runners/g5/resource_recovery_loss_reverify.mjs b/verification/runners/g5/resource_recovery_loss_reverify.mjs
+new file mode 100644
+index 00000000..5f356852
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_loss_reverify.mjs
+@@ -0,0 +1,12 @@
++import path from 'node:path';
++import {fileURLToPath} from 'node:url';
++import {recoveryWorker} from './resource_recovery.mjs';
++
++export function recoveryArguments({sdkArg,outArg,variant,oracle,referenceCatalog}){
++  if(!['qualification','normal'].includes(variant))throw Error('explicit Recovery qualification/normal role required');
++  return {sdkArg,outArg,variant,oracle,referenceCatalog,identityRunner:'resource_recovery_loss_reverify_runner.py'};
++}
++if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
++  const [sdkArg,outArg,variant,oracle,referenceCatalog]=process.argv.slice(2);
++  await recoveryWorker(recoveryArguments({sdkArg,outArg,variant,oracle,referenceCatalog}));
++}
+diff --git a/verification/runners/g5/resource_recovery_loss_reverify_runner.py b/verification/runners/g5/resource_recovery_loss_reverify_runner.py
+new file mode 100644
+index 00000000..f05d4fa3
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_loss_reverify_runner.py
+@@ -0,0 +1,128 @@
++"""Narrow P36: exactly two fresh serial Recovery windows, no other browser run."""
++import argparse
++import json
++import math
++from pathlib import Path
++import importlib.util
++
++ROOT=Path(__file__).resolve().parents[3]
++HERE=Path(__file__).resolve().parent
++TASK='G5-UR1d-physical-loss-repair-r1'
++RESULT=ROOT/'.aegis/results'/TASK
++BUILD=ROOT/'out'/TASK
++IDS=('UR1DLOSSR1-Q1','UR1DLOSSR1-N1')
++LIMITS=(240,240)
++spec=importlib.util.spec_from_file_location('ur1d_original',HERE/'resource_recovery_runner.py')
++base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
++sha,write=base.sha,base.write
++
++def source_identity(full=False,root=ROOT):
++    source=base.module('loss_source',HERE/'ur0/source_identity.py')
++    prior=json.loads((ROOT/'.aegis/results/G5-UR1d-resource-recovery/source-identity.json').read_text())
++    source.EXCLUDED=tuple(prior['excluded_self_outputs'])+(
++        '.aegis/results/'+TASK+'/', 'verification/evidence/performance/g5-ur1d-physical-loss-repair-r1/')
++    value=source.identity(root)
++    if not full:value.pop('files')
++    return value
++
++def protected(catalog):
++    value=base.protected(catalog)
++    package=ROOT/'.aegis/packages'/TASK
++    def check(v):
++        if isinstance(v,dict):
++            if 'path' in v and 'sha256' in v:
++                p=package/v['path'] if (package/v['path']).is_file() else ROOT/v['path']
++                if sha(p)!=v['sha256']:raise RuntimeError('repair binding changed: '+str(p))
++                value[str(p.relative_to(ROOT))]=v['sha256']
++            for x in v.values():check(x)
++        elif isinstance(v,list):
++            for x in v:check(x)
++    for p in sorted(package.iterdir()):
++        if p.is_file():
++            value[str(p.relative_to(ROOT))]=sha(p)
++            if p.suffix=='.json':check(json.loads(p.read_text()))
++    return value
++
++def new_ledger():
++    return {'schema':'g5-ur1d-loss-two-worker-accounting-v1','planned_ids':list(IDS),
++        'historical_starts':58,'historical_charged_seconds':2234,
++        'new_nominal_seconds_max':480,'original_cap_seconds':8370,'attempts':[],
++        'remaining_status':'PENDING'}
++
++def reserve(ledger,identity):
++    i=len(ledger['attempts'])
++    if ledger['remaining_status']!='PENDING' or i>=len(IDS) or identity!=IDS[i] or any(x['status']=='STARTED' for x in ledger['attempts']):
++        raise ValueError('concurrent, duplicate, closed or unplanned recovery start')
++    ledger['attempts'].append({'id':identity,'status':'STARTED','reserved_seconds':LIMITS[i],
++        'charged_seconds':LIMITS[i],'rss_limit_mib':3072})
++
++def unsafe(worker):
++    return any(c.get('queues',{}).get('status')=='INVALID' or any(
++        'lost context did not create presentation receipt' in f for f in c.get('failures',[]))
++        for c in (worker or {}).get('cases',[]))
++
++def complete(ledger,guard,worker):
++    if not ledger['attempts'] or ledger['attempts'][-1]['status']!='STARTED':raise ValueError('no active row')
++    row=ledger['attempts'][-1]
++    observed=guard is not None and all(k in guard for k in ('reason','returncode','cleanup_complete','remaining_owned_pids','elapsed_s')) and math.isfinite(guard['elapsed_s']) and guard['elapsed_s']>=0
++    ok=observed and guard['reason']=='completed' and guard['returncode']==0 and guard['cleanup_complete'] and not guard['remaining_owned_pids'] and worker is not None and worker['status'] in ('OBSERVED','PRODUCT_FAILURE_OBSERVED') and not worker.get('crash') and not unsafe(worker)
++    row.update(status='COMPLETED' if ok else 'STOPPED',guard=guard,
++        worker_status=worker['status'] if worker else 'MISSING',
++        charged_seconds=math.ceil(guard['elapsed_s']) if observed else row['reserved_seconds'])
++    if worker and worker['status']=='PRODUCT_FAILURE_OBSERVED':ledger['functional_failure_observed']=True
++    if unsafe(worker):ledger['unsafe_resource_or_receipt_failure']=True
++    if not ok:ledger['remaining_status']='MISSING'
++    elif len(ledger['attempts'])==len(IDS):ledger['remaining_status']='NONE'
++    ledger['cumulative_starts']=58+len(ledger['attempts'])
++    ledger['cumulative_charged_seconds']=2234+sum(x['charged_seconds'] for x in ledger['attempts'])
++    if ledger['cumulative_charged_seconds']>8370:ledger['remaining_status']='MISSING'
++
++def own_sdks(qualification,normal):
++    for p in (qualification,normal):
++        if not p.resolve().is_relative_to(BUILD):raise RuntimeError('fresh exact task SDK root required')
++
++def freeze(qualification,normal,catalog):
++    own_sdks(qualification,normal)
++    if (RESULT/'local-functional/sampling-ledger.json').exists():raise RuntimeError('window already reserved')
++    value=source_identity(True);write(RESULT/'source-identity.json',value)
++    write(RESULT/'worker-freeze.json',{'source_tree_sha256':value['source_tree_sha256'],
++        'protected':protected(catalog),'artifacts':{str(p.resolve()):base.artifacts(p) for p in (qualification,normal)}})
++
++def execute(qualification,normal,oracle,catalog,output):
++    own_sdks(qualification,normal)
++    if output.resolve()!=(RESULT/'local-functional').resolve():raise RuntimeError('exact new result root required')
++    output.mkdir(parents=True,exist_ok=True);ledger_path=output/'sampling-ledger.json'
++    if ledger_path.exists():raise RuntimeError('no repeat window')
++    frozen=json.loads((RESULT/'worker-freeze.json').read_text());guard=base.module('loss_guard',HERE/'bounded_worker.py');ledger=new_ledger();write(ledger_path,ledger)
++    def stable():
++        return source_identity()['source_tree_sha256']==frozen['source_tree_sha256'] and protected(catalog)==frozen['protected'] and all(base.artifacts(p)==frozen['artifacts'][str(p.resolve())] for p in (qualification,normal))
++    for i,identity in enumerate(IDS):
++        try:valid=stable()
++        except Exception as e:valid=False;ledger['identity_error']=str(e)
++        if not valid:
++            ledger['identity_failure']=True;ledger['remaining_status']='MISSING';write(ledger_path,ledger);break
++        sdk=(qualification,normal)[i];reserve(ledger,identity);write(ledger_path,ledger)
++        command=['node',str(HERE/'resource_recovery_loss_reverify.mjs'),str(sdk.resolve()),str((output/identity).resolve()),'qualification' if i==0 else 'normal',str(oracle.resolve()),str(catalog.resolve())]
++        try:observed=guard.run(command,output/identity,LIMITS[i],3072*1024)
++        except BaseException:
++            complete(ledger,None,None);write(ledger_path,ledger);raise
++        p=output/identity/'worker-result.json';worker=json.loads(p.read_text()) if p.exists() else None
++        try:valid=stable()
++        except Exception as e:valid=False;ledger['identity_error']=str(e)
++        write(output/(identity+'-identity-after.json'),{'stable':valid})
++        if not valid:worker={**(worker or {}),'status':'HARD_FAILURE','identity_failure':True}
++        complete(ledger,observed,worker);write(ledger_path,ledger)
++        print(json.dumps({'id':identity,'guard':observed['reason'],'worker':worker['status'] if worker else 'MISSING','charged_seconds':ledger['attempts'][-1]['charged_seconds'],'remaining':ledger['remaining_status']}),flush=True)
++        if ledger['remaining_status']=='MISSING':break
++    write(output/'summary.json',{'ledger':ledger,'unrun_ids':list(IDS[len(ledger['attempts']):]),'source_tree_sha256':frozen['source_tree_sha256'],'new_charged_seconds':sum(x['charged_seconds'] for x in ledger['attempts'])})
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--source-identity',action='store_true');p.add_argument('--freeze',action='store_true');p.add_argument('--execute',action='store_true')
++    for name in ('qualification-sdk','normal-sdk','oracle','catalog','output'):p.add_argument('--'+name,type=Path)
++    a=p.parse_args()
++    if a.source_identity:print(json.dumps(source_identity()))
++    elif a.freeze and all((a.qualification_sdk,a.normal_sdk,a.catalog)):freeze(a.qualification_sdk,a.normal_sdk,a.catalog)
++    elif a.execute and all((a.qualification_sdk,a.normal_sdk,a.oracle,a.catalog,a.output)):execute(a.qualification_sdk,a.normal_sdk,a.oracle,a.catalog,a.output)
++    else:p.error('complete explicit operation required')
++
++if __name__=='__main__':main()
+diff --git a/verification/runners/g5/resource_recovery_runner.py b/verification/runners/g5/resource_recovery_runner.py
+new file mode 100644
+index 00000000..7ddbe735
+--- /dev/null
++++ b/verification/runners/g5/resource_recovery_runner.py
+@@ -0,0 +1,172 @@
++"""UR1d exact four-start resource/recovery window. No seed, retry or smoke."""
++import argparse
++import hashlib
++import importlib.util
++import json
++import math
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[3]
++HERE = Path(__file__).resolve().parent
++TASK = 'G5-UR1d-resource-recovery'
++RESULT = ROOT / '.aegis/results' / TASK
++IDS = ('UR1D-CORE-Q1', 'UR1D-CORE-N1', 'UR1D-REC-Q1', 'UR1D-REC-N1')
++LIMITS = (180, 180, 240, 240)
++
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    value = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(value)
++    return value
++
++def sha(path):
++    h = hashlib.sha256()
++    with Path(path).open('rb') as f:
++        for block in iter(lambda: f.read(1024 * 1024), b''): h.update(block)
++    return h.hexdigest()
++
++def write(path, value):
++    Path(path).parent.mkdir(parents=True, exist_ok=True)
++    Path(path).write_text(json.dumps(value, indent=2) + '\n')
++
++def source_identity(full=False, root=ROOT):
++    source = module('ur1d_source', HERE / 'ur0/source_identity.py')
++    source.EXCLUDED += (
++        '.aegis/results/G5-UR1c2-canonical-prepared-body/',
++        'verification/evidence/performance/g5-ur1c2-canonical-prepared-body/',
++        '.aegis/results/G5-UR1c2-working-set-repair-r1/',
++        'verification/evidence/performance/g5-ur1c2-working-set-repair-r1/',
++        '.aegis/results/' + TASK + '/',
++        'verification/evidence/performance/g5-ur1d-resource-recovery/')
++    value = source.identity(root)
++    if not full: value.pop('files')
++    return value
++
++def artifacts(root):
++    return {str(p.relative_to(root)): sha(p) for p in sorted(Path(root).rglob('*')) if p.is_file()}
++
++def protected(catalog):
++    package = ROOT / '.aegis/packages' / TASK
++    authority = json.loads((package / 'authority.lock.json').read_text())
++    value = {}
++    for row in authority['authority_sources'] + [authority[k] for k in
++            ('publication_ref', 'accepted_control_review_ref', 'accepted_candidate_result_ref')]:
++        if sha(ROOT / row['path']) != row['sha256']: raise RuntimeError('authority changed: ' + row['path'])
++        value[row['path']] = row['sha256']
++    for p in package.iterdir():
++        if p.is_file(): value[str(p.relative_to(ROOT))] = sha(p)
++    oracle = ROOT / 'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle'
++    value['oracle'] = sha(oracle)
++    if value['oracle'] != 'ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105':
++        raise RuntimeError('independent CPU oracle changed')
++    value['catalog'] = sha(catalog)
++    for row in json.loads(Path(catalog).read_text())['resources']:
++        if sha(row['path']) != row['sha256']: raise RuntimeError('oracle resource changed')
++        value[row['path']] = row['sha256']
++    original = json.loads((ROOT / '.aegis/results/G5-UR1c1-prepared-body-index/driver-before-workers.json').read_text())
++    for p, digest in original['files'].items():
++        if p.startswith('/Applications/'):
++            if sha(p) != digest: raise RuntimeError('frozen browser changed: ' + p)
++            value[p] = digest
++    playwright = (ROOT / 'verification/node_modules/playwright').resolve(strict=True)
++    for base in [playwright, (playwright.parent / 'playwright-core').resolve(strict=True)]:
++        for p in sorted(base.rglob('*')):
++            if p.is_file(): value[str(p)] = sha(p)
++    for name in ('node', 'python3.12'):
++        value[name] = sha(Path(shutil.which(name)).resolve(strict=True))
++    for p in sorted(HERE.rglob('*')):
++        if p.is_file() and p.suffix in ('.mjs', '.py'): value[str(p.relative_to(ROOT))] = sha(p)
++    return value
++
++def new_ledger():
++    return {'schema': 'g5-ur1d-four-worker-accounting-v1', 'planned_ids': list(IDS),
++        'historical_starts': 54, 'historical_charged_seconds': 2107,
++        'new_nominal_seconds_max': 840, 'original_cap_seconds': 8370,
++        'attempts': [], 'remaining_status': 'PENDING'}
++
++def reserve(ledger, identity):
++    i = len(ledger['attempts'])
++    if ledger['remaining_status'] != 'PENDING' or i >= len(IDS) or identity != IDS[i] or any(
++            x['status'] == 'STARTED' for x in ledger['attempts']):
++        raise ValueError('concurrent, duplicate, closed or unplanned start')
++    ledger['attempts'].append({'id': identity, 'status': 'STARTED', 'reserved_seconds': LIMITS[i],
++        'charged_seconds': LIMITS[i], 'rss_limit_mib': 3072})
++
++def complete(ledger, guard, worker):
++    if not ledger['attempts'] or ledger['attempts'][-1]['status'] != 'STARTED': raise ValueError('no active row')
++    row = ledger['attempts'][-1]
++    ok = guard is not None and guard['reason'] == 'completed' and guard['cleanup_complete'] and worker is not None and worker['status'] in ('OBSERVED', 'PRODUCT_FAILURE_OBSERVED')
++    row.update(status='COMPLETED' if ok else 'STOPPED', guard=guard,
++        worker_status=worker['status'] if worker else 'MISSING',
++        charged_seconds=math.ceil(guard['elapsed_s']) if guard else row['reserved_seconds'])
++    if not ok: ledger['remaining_status'] = 'MISSING'
++    elif len(ledger['attempts']) == len(IDS): ledger['remaining_status'] = 'NONE'
++    ledger['cumulative_starts'] = 54 + len(ledger['attempts'])
++    ledger['cumulative_charged_seconds'] = 2107 + sum(x['charged_seconds'] for x in ledger['attempts'])
++    if ledger['cumulative_charged_seconds'] > 8370: ledger['remaining_status'] = 'MISSING'
++
++def freeze(qualification, normal, catalog):
++    if (RESULT / 'local-functional/sampling-ledger.json').exists(): raise RuntimeError('window already reserved')
++    value = source_identity(True)
++    write(RESULT / 'source-identity.json', value)
++    write(RESULT / 'worker-freeze.json', {'source_tree_sha256': value['source_tree_sha256'],
++        'protected': protected(catalog), 'artifacts': {str(p.resolve()): artifacts(p) for p in (qualification, normal)}})
++
++def execute(qualification, normal, oracle, catalog, output):
++    if not output.resolve().is_relative_to(RESULT): raise RuntimeError('own result directory required')
++    output.mkdir(parents=True, exist_ok=True)
++    ledger_path = output / 'sampling-ledger.json'
++    if ledger_path.exists(): raise RuntimeError('no repeat window')
++    frozen = json.loads((RESULT / 'worker-freeze.json').read_text())
++    guard_module = module('ur1d_guard', HERE / 'bounded_worker.py')
++    ledger = new_ledger()
++    write(ledger_path, ledger)
++    functional_pair = None
++    for i, identity in enumerate(IDS):
++        sdk = qualification if i % 2 == 0 else normal
++        try:
++            stable = source_identity()['source_tree_sha256'] == frozen['source_tree_sha256'] and protected(catalog) == frozen['protected'] and all(artifacts(p) == frozen['artifacts'][str(p.resolve())] for p in (qualification, normal))
++        except Exception as e:
++            stable = False; ledger['identity_error'] = str(e)
++        if not stable:
++            ledger['remaining_status'] = 'MISSING'; ledger['identity_failure'] = True; write(ledger_path, ledger); break
++        reserve(ledger, identity); write(ledger_path, ledger)
++        command = ['node', str(HERE / 'resource_recovery.mjs'), 'core' if i < 2 else 'recovery',
++            str(sdk.resolve()), str((output / identity).resolve()), 'qualification' if i % 2 == 0 else 'normal',
++            str(oracle.resolve()), str(catalog.resolve())]
++        try:
++            observed = guard_module.run(command, output / identity, LIMITS[i], 3072 * 1024)
++        except BaseException:
++            complete(ledger, None, None); write(ledger_path, ledger); raise
++        p = output / identity / 'worker-result.json'
++        worker = json.loads(p.read_text()) if p.exists() else None
++        try:
++            stable = source_identity()['source_tree_sha256'] == frozen['source_tree_sha256'] and protected(catalog) == frozen['protected'] and artifacts(sdk) == frozen['artifacts'][str(sdk.resolve())]
++        except Exception as e:
++            stable = False; ledger['identity_error'] = str(e)
++        write(output / (identity + '-identity-after.json'), {'stable': stable})
++        if not stable: worker = {**(worker or {}), 'status': 'HARD_FAILURE', 'identity_failure': True}
++        complete(ledger, observed, worker)
++        if worker and worker['status'] == 'PRODUCT_FAILURE_OBSERVED': functional_pair = i // 2
++        if functional_pair is not None:
++            ledger['functional_failure_observed'] = True
++            if i % 2 == 1 and i + 1 < len(IDS): ledger['remaining_status'] = 'MISSING'
++        write(ledger_path, ledger)
++        print(json.dumps({'id': identity, 'guard': observed['reason'], 'worker': worker['status'] if worker else 'MISSING', 'charged_seconds': ledger['attempts'][-1]['charged_seconds'], 'remaining': ledger['remaining_status']}), flush=True)
++        if ledger['remaining_status'] == 'MISSING': break
++    write(output / 'summary.json', {'ledger': ledger, 'unrun_ids': list(IDS[len(ledger['attempts']):]),
++        'source_tree_sha256': frozen['source_tree_sha256'], 'new_charged_seconds': sum(x['charged_seconds'] for x in ledger['attempts'])})
++
++def main():
++    p = argparse.ArgumentParser();p.add_argument('--source-identity', action='store_true');p.add_argument('--freeze', action='store_true');p.add_argument('--execute', action='store_true')
++    for name in ('qualification-sdk', 'normal-sdk', 'oracle', 'catalog', 'output'): p.add_argument('--' + name, type=Path)
++    a = p.parse_args()
++    if a.source_identity: print(json.dumps(source_identity()))
++    elif a.freeze and all((a.qualification_sdk, a.normal_sdk, a.catalog)): freeze(a.qualification_sdk, a.normal_sdk, a.catalog)
++    elif a.execute and all((a.qualification_sdk, a.normal_sdk, a.oracle, a.catalog, a.output)): execute(a.qualification_sdk, a.normal_sdk, a.oracle, a.catalog, a.output)
++    else: p.error('complete explicit operation required')
++
++if __name__ == '__main__': main()
+diff --git a/verification/tests/g5_resource_recovery.test.mjs b/verification/tests/g5_resource_recovery.test.mjs
+new file mode 100644
+index 00000000..c42a1012
+--- /dev/null
++++ b/verification/tests/g5_resource_recovery.test.mjs
+@@ -0,0 +1,23 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {canonicalIdentity,qualifyQueues} from '../runners/g5/resource_recovery.mjs';
++
++test('resource queue accounting rejects early or duplicate retirement',()=>{
++  assert.equal(qualifyQueues([{owner:'1',admitted:'4',ordered_retired:'5',queued:0,needs_service:false}]).status,'INVALID');
++  assert.equal(qualifyQueues([{owner:'1',admitted:'4',ordered_retired:'2',queued:1,needs_service:false}]).status,'INVALID');
++});
++test('completed observation cannot imply ordered convergence',()=>{
++  assert.equal(qualifyQueues([{owner:'1',admitted:'4',ordered_retired:'2',queued:2,needs_service:true,observed:2}]).status,'MISSING');
++});
++test('qualified owners remain distinct and use lossless counters',()=>{
++  const a={owner:'1',admitted:'18446744073709551614',ordered_retired:'18446744073709551613',queued:1,needs_service:true};
++  const b={...a,ordered_retired:a.admitted,queued:0,needs_service:false};
++  assert.equal(qualifyQueues([a,b,{owner:'2',admitted:'1',ordered_retired:'1',queued:0,needs_service:false}]).status,'OBSERVED');
++  assert.equal(qualifyQueues([b,a]).status,'INVALID');
++});
++test('canonical receipt identity keeps operation and document epoch separate from surface',()=>{
++  const state={documentId:'a',generation:'7',objects:16,lastCommit:{operationId:'b',ordinal:'9',runtimeEpoch:'3'},surface:{available:true}};
++  assert.deepEqual(canonicalIdentity(state),canonicalIdentity({...state,surface:{available:false}}));
++  assert.notDeepEqual(canonicalIdentity(state),canonicalIdentity({...state,lastCommit:{...state.lastCommit,runtimeEpoch:'4'}}));
++  assert.notDeepEqual(canonicalIdentity(state),canonicalIdentity({...state,lastCommit:{...state.lastCommit,ordinal:'10'}}));
++});
+diff --git a/verification/tests/g5_resource_recovery_loss_reverify.test.mjs b/verification/tests/g5_resource_recovery_loss_reverify.test.mjs
+new file mode 100644
+index 00000000..cfdfa130
+--- /dev/null
++++ b/verification/tests/g5_resource_recovery_loss_reverify.test.mjs
+@@ -0,0 +1,18 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {recoveryArguments} from '../runners/g5/resource_recovery_loss_reverify.mjs';
++import {recoveryWorker} from '../runners/g5/resource_recovery.mjs';
++
++const input={sdkArg:'/new/sdk',outArg:'/new/output',variant:'qualification',oracle:'/locked/oracle',referenceCatalog:'/locked/catalog'};
++test('loss reverification forwards complete existing Recovery inputs with new private source identity',()=>{
++  assert.deepEqual(recoveryArguments(input),{...input,identityRunner:'resource_recovery_loss_reverify_runner.py'});
++});
++test('normal Recovery keeps the same path and cannot select core or another role',()=>{
++  assert.equal(recoveryArguments({...input,variant:'normal'}).variant,'normal');
++  assert.throws(()=>recoveryArguments({...input,variant:'core'}));
++  assert.throws(()=>recoveryArguments({...input,variant:'seed'}));
++});
++test('caller cannot replace the exact identity runner and no browser starts on import',()=>{
++  assert.equal(recoveryArguments({...input,identityRunner:'resource_recovery_runner.py'}).identityRunner,'resource_recovery_loss_reverify_runner.py');
++  assert.equal(typeof recoveryWorker,'function');
++});
+diff --git a/verification/tests/test_g5_resource_recovery.py b/verification/tests/test_g5_resource_recovery.py
+new file mode 100644
+index 00000000..b0476df8
+--- /dev/null
++++ b/verification/tests/test_g5_resource_recovery.py
+@@ -0,0 +1,40 @@
++import importlib.util
++import unittest
++from pathlib import Path
++
++P=Path(__file__).resolve().parents[1]/'runners/g5/resource_recovery_runner.py'
++spec=importlib.util.spec_from_file_location('ur1d',P)
++m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++
++class ResourceWindow(unittest.TestCase):
++    def test_exact_history_and_nominal_authority(self):
++        d=m.new_ledger()
++        self.assertEqual((d['historical_starts'],d['historical_charged_seconds']),(54,2107))
++        self.assertEqual((sum(m.LIMITS),d['new_nominal_seconds_max'],d['original_cap_seconds']),(840,840,8370))
++    def test_four_serial_slots_actual_ceil_and_no_restart(self):
++        d=m.new_ledger()
++        for i,identity in enumerate(m.IDS):
++            m.reserve(d,identity)
++            self.assertEqual(d['attempts'][-1]['reserved_seconds'],m.LIMITS[i])
++            with self.assertRaises(ValueError):m.reserve(d,identity)
++            m.complete(d,{'reason':'completed','cleanup_complete':True,'elapsed_s':1.01},{'status':'OBSERVED'})
++            self.assertEqual(d['attempts'][-1]['charged_seconds'],2)
++        self.assertEqual(d['remaining_status'],'NONE')
++        self.assertEqual(d['cumulative_charged_seconds'],2115)
++        with self.assertRaises(ValueError):m.reserve(d,m.IDS[0])
++    def test_guard_stops_all_remaining_rows(self):
++        for reason,cleanup in [('timeout',True),('rss_limit',True),('completed',False)]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,{'reason':reason,'cleanup_complete':cleanup,'elapsed_s':2.2},{'status':'OBSERVED'})
++            self.assertEqual(d['remaining_status'],'MISSING')
++            with self.assertRaises(ValueError):m.reserve(d,m.IDS[1])
++    def test_recovery_missing_observation_never_uses_core_reservation(self):
++        d=m.new_ledger()
++        for identity in m.IDS[:2]:
++            m.reserve(d,identity);m.complete(d,{'reason':'completed','cleanup_complete':True,'elapsed_s':1},{'status':'OBSERVED'})
++        m.reserve(d,m.IDS[2]);m.complete(d,None,None)
++        self.assertEqual(d['attempts'][-1]['charged_seconds'],240)
++        self.assertEqual(d['remaining_status'],'MISSING')
++    def test_missing_worker_or_identity_failure_stops(self):
++        for worker in [None,{'status':'HARD_FAILURE','identity_failure':True}]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,{'reason':'completed','cleanup_complete':True,'elapsed_s':1},worker)
++            self.assertEqual(d['remaining_status'],'MISSING')
+diff --git a/verification/tests/test_g5_resource_recovery_loss_reverify.py b/verification/tests/test_g5_resource_recovery_loss_reverify.py
+new file mode 100644
+index 00000000..e4758821
+--- /dev/null
++++ b/verification/tests/test_g5_resource_recovery_loss_reverify.py
+@@ -0,0 +1,49 @@
++import importlib.util
++import unittest
++from pathlib import Path
++
++P=Path(__file__).resolve().parents[1]/'runners/g5/resource_recovery_loss_reverify_runner.py'
++spec=importlib.util.spec_from_file_location('loss_reverify',P)
++m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++
++def observed(**changes):
++    return dict(reason='completed',returncode=0,cleanup_complete=True,remaining_owned_pids=[],elapsed_s=1.01,**changes)
++
++class LossReverificationWindow(unittest.TestCase):
++    def test_only_new_recovery_ids_and_original_cap(self):
++        d=m.new_ledger()
++        self.assertEqual(m.IDS,('UR1DLOSSR1-Q1','UR1DLOSSR1-N1'))
++        self.assertEqual(m.LIMITS,(240,240))
++        self.assertEqual((d['historical_starts'],d['historical_charged_seconds'],d['new_nominal_seconds_max'],d['original_cap_seconds']),(58,2234,480,8370))
++    def test_serial_reservations_charge_ceil_and_cannot_restart(self):
++        d=m.new_ledger()
++        for identity in m.IDS:
++            m.reserve(d,identity)
++            with self.assertRaises(ValueError):m.reserve(d,identity)
++            m.complete(d,observed(),{'status':'OBSERVED'})
++        self.assertEqual((d['remaining_status'],d['cumulative_starts'],d['cumulative_charged_seconds']),('NONE',60,2238))
++        with self.assertRaises(ValueError):m.reserve(d,m.IDS[0])
++    def test_unobserved_guard_keeps_reserved_ceiling(self):
++        for guard in [None,{'elapsed_s':0.01}]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,guard,None)
++            self.assertEqual(d['attempts'][0]['charged_seconds'],240)
++            self.assertEqual(d['remaining_status'],'MISSING')
++    def test_guard_cleanup_and_crash_stop_remaining_id(self):
++        for guard,worker in [({**observed(),'reason':'timeout'},{'status':'OBSERVED'}),({**observed(),'cleanup_complete':False},{'status':'OBSERVED'}),({**observed(),'remaining_owned_pids':[12]},{'status':'OBSERVED'}),(observed(),{'status':'HARD_FAILURE'}),(observed(),{'status':'OBSERVED','crash':True})]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,guard,worker)
++            self.assertEqual(d['remaining_status'],'MISSING')
++            with self.assertRaises(ValueError):m.reserve(d,m.IDS[1])
++    def test_safe_failed_classification_may_finish_normal_control_only(self):
++        d=m.new_ledger();m.reserve(d,m.IDS[0])
++        m.complete(d,observed(),{'status':'PRODUCT_FAILURE_OBSERVED','cases':[{'failures':['actual resource/context facts missing']}]})
++        self.assertEqual(d['remaining_status'],'PENDING');m.reserve(d,m.IDS[1]);m.complete(d,observed(),{'status':'OBSERVED'})
++        self.assertEqual(d['remaining_status'],'NONE');self.assertTrue(d['functional_failure_observed'])
++    def test_false_receipt_and_invalid_retirement_stop_next_row(self):
++        for case in [{'failures':['PRODUCT_CHECK: lost context did not create presentation receipt']},{'queues':{'status':'INVALID'},'failures':[]}]:
++            d=m.new_ledger();m.reserve(d,m.IDS[0]);m.complete(d,observed(),{'status':'PRODUCT_FAILURE_OBSERVED','cases':[case]})
++            self.assertEqual(d['remaining_status'],'MISSING')
++    def test_old_ids_and_reordered_start_never_consume_a_slot(self):
++        d=m.new_ledger()
++        for identity in ['UR1D-CORE-Q1','UR1D-REC-Q1',m.IDS[1]]:
++            with self.assertRaises(ValueError):m.reserve(d,identity)
++        self.assertEqual(d['attempts'],[])

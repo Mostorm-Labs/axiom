@@ -54,7 +54,12 @@ SkiaRenderer::~SkiaRenderer(){
     if(resourceBudget_)resourceBudget_->close();
     clearRenderCache();gpuRetirements_.reset();
 }
-void SkiaRenderer::serviceResourceRetirements()noexcept {if(gpuRetirements_)gpuRetirements_->service();}
+void SkiaRenderer::serviceResourceRetirements(ResourceServiceMode mode)noexcept {
+    if(mode==ResourceServiceMode::kBeginSurfaceTransition)preserveWorldPreparation_=true;
+    if(mode==ResourceServiceMode::kEndSurfaceTransition)preserveWorldPreparation_=false;
+    if(gpuRetirements_)gpuRetirements_->service();
+}
+bool SkiaRenderer::resourceRetirementPending()const noexcept {return gpuRetirements_&&gpuRetirements_->pending();}
 
 // Constant-size validity only. Pixels remain owned by the qualified target;
 // canonical source records and mask-prefix validation stay in RenderGroupManager.
@@ -341,20 +346,21 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
-    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
-        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kCanonical,plan,
         *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
         renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
+        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+    gpu.bindFrame(plan.frame,resourceEpoch_);
     if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
     if(gpuContext&&!gpu.ready()){
-        const bool permanent=!provider.gpuCompletionService();
+        const auto completion=provider.gpuCompletionService();
+        const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
         internal::ExecutionDecision unavailable;
         execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
         provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
     }
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
-    if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;
     if(!cachedGpuSafe)clearRenderCache();
     if(cachedGpuSafe)try {
@@ -427,12 +433,15 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
         if(prepared==internal::SkiaRenderCache::Preparation::kPending ||
            prepared==internal::SkiaRenderCache::Preparation::kResourcePending){
-            provider.release();return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("exact cache preparation pending");
+            provider.release();
+            if(prepared==internal::SkiaRenderCache::Preparation::kResourcePending&&gpuRetirements_->blocked())return BackendSubmissionResult::rejected("unqualified abandoned GPU quota blocks canonical preparation");
+            return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("exact cache preparation pending");
         }
     }
     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
+    if(gpu.ready())gpu.touch();
     const auto result = (cache && (preparation||cache->stagedBodies()) && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
@@ -502,6 +511,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     }
     provider.release();
     if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
+    if(!gpu.finish()){clearRenderCache();return BackendSubmissionResult::rejected("canonical GPU submission failed");}
     ++submissions_;
     rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
     AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
@@ -541,6 +551,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
         ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
+    gpu.bindFrame(current,resourceEpoch_);
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::retry("navigation completion unavailable");}
     gpu.touch();
     const auto& old=cache->transform;
@@ -572,6 +583,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
 #endif
     }
     provider.release();
+    if(!gpu.finish())return BackendSubmissionResult::rejected("navigation GPU submission failed");
     return provider.present();
 }
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
@@ -712,9 +724,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_);
-        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
+        if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;
-    }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
+    }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}
 }
 void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
 NavigationWork SkiaRenderer::navigationWork() const noexcept {
@@ -723,7 +735,7 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();eraseQueries_.reset();partialEraseFrame_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
     if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
     if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
@@ -790,14 +802,15 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
         internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+    gpu.bindFrame(plan.frame,resourceEpoch_);
     if(gpuContext&&!gpu.ready()){
-        const bool permanent=!provider.gpuCompletionService();
+        const auto completion=provider.gpuCompletionService();
+        const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
         internal::ExecutionDecision unavailable;
         execution.unavailable(unavailable,permanent?internal::ExecutionReason::kMissingCompletion:internal::ExecutionReason::kAllocationDenied,permanent);
         provider.release();return permanent?BackendSubmissionResult::rejected("GPU completion service unavailable"):BackendSubmissionResult::retry("GPU completion metadata pending");
     }
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
-    if(gpu.ready())gpu.touch();
     internal::SkiaRenderCache* cache=nullptr;
     if(!cachedGpuSafe)clearRenderCache();
     if(cachedGpuSafe)try{
@@ -845,6 +858,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
             provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");
         }
     }
+    if(gpu.ready())gpu.touch();
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -945,6 +959,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         candidate->contents=acquired.frame.surface->generationID();
     }catch(const std::bad_alloc&){} // Optional validity; next frame fully replaces.
     provider.release();
+    if(!gpu.finish())return BackendSubmissionResult::rejected("transient GPU submission failed");
     ++submissions_;
     ++rasterizations_;
     G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
@@ -980,6 +995,15 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         provider.release();
         return BackendSubmissionResult::rejected("stale preview surface generation");
     }
+    serviceResourceRetirements();
+    try{
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
+        if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+    }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview completion metadata unavailable");}
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
+    if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview GPU completion unavailable");}
+    G5_OBSERVE(g5::Kind::Basis,g5::Tag::preview,true,geometry.documentEpoch,geometry.session,geometry.sessionGeneration,geometry.revision,geometry.surfaceGeneration.value(),resourceEpoch_,g5::bits(geometry.viewport.scale),g5::bits(geometry.viewport.translationX),g5::bits(geometry.viewport.translationY),static_cast<std::uint64_t>(acquired.frame.surface->width()),static_cast<std::uint64_t>(acquired.frame.surface->height()),g5::bits(geometry.logicalToPhysicalX),g5::bits(geometry.logicalToPhysicalY));
+    gpu.touch();
     G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
     canvas->clear(SK_ColorTRANSPARENT);
@@ -1140,6 +1164,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     }
     canvas->restore();
     provider.release();
+    if(!gpu.finish())return BackendSubmissionResult::rejected("preview GPU submission failed");
     ++submissions_;
     ++rasterizations_;
     return provider.present();
@@ -1158,8 +1183,17 @@ BackendSubmissionResult SkiaRenderer::clearPreview(
         provider.release();
         return BackendSubmissionResult::rejected("stale preview clear surface generation");
     }
+    serviceResourceRetirements();
+    try{
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
+        if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+    }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview clear completion metadata unavailable");}
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
+    if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview clear GPU completion unavailable");}
+    gpu.touch();
     acquired.frame.surface->getCanvas()->clear(SK_ColorTRANSPARENT);
     provider.release();
+    if(!gpu.finish())return BackendSubmissionResult::rejected("preview clear GPU submission failed");
     ++submissions_;
     ++rasterizations_;
     return provider.present();

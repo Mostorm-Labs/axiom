@@ -48,7 +48,11 @@ struct SkiaSurfaceAcquireResult final {
 // Runtime/document callbacks. A shared service retains the context independently
 // of the logical provider. Callback state outlives it without retaining context.
 struct GpuCompletionState final {
+    // Identity of this retained context lifetime, never a native numeric handle.
+    const std::uint64_t lifetime = nextLifetime_.fetch_add(1, std::memory_order_relaxed);
     std::atomic<bool> abandoned=false,physicalLost=false;
+  private:
+    inline static std::atomic<std::uint64_t> nextLifetime_{1};
 };
 class GpuCompletionService {
   public:

@@ -1,0 +1,265 @@
+{
+  "schema": "g5-ur1d-publication-files-v1",
+  "accepted_source_files": [
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+      "bytes": 14456,
+      "preimage_sha256": "e320606ba03390cfda751a3003df12b8e8fce2292cfc130a489bac9295b9918b"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092",
+      "bytes": 48437,
+      "preimage_sha256": "20f4431ad5b2a4eb26f651d4360a7c559604db2490209b4bf127383fda707485"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "sha256": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346",
+      "bytes": 6918,
+      "preimage_sha256": "83d043007bb4f369785fedad6fb22c8ce5d56f45aa6a93a1b812e08e877a7ab3"
+    },
+    {
+      "path": "runtime/foundation/src/g5_observation.cpp",
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+      "bytes": 19366,
+      "preimage_sha256": "7f25360b98edb7f8e3d5ff8ea685130dbeff9f7ed70f2d892cc886b9a04f338b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb",
+      "bytes": 60479,
+      "preimage_sha256": "09dd4cd7d1107d3a68d4d44208a9e6308a5816bfa626dfd8f7b2d593d68971cd"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "623484811c90526f4b5f3b793dd375da9fd41beca8e0c88f73b1668514e47d25",
+      "bytes": 41199,
+      "preimage_sha256": "bcf6290e4319b7568e7e0e4652c667a407846a61a8d9869dbc9b01fb0afa3e48"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad",
+      "bytes": 6351,
+      "preimage_sha256": "7f610332b0749da1c703d56aab55def9841fb4ace685efd5ffe746bbb165b979"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+      "sha256": "6a4ec68a18ce2822f19c25ce4c62fa3cbe73d427267424deb8e6d27d9d1f95df",
+      "bytes": 8499,
+      "preimage_sha256": "90d14d3dc71e9667e37b8f4c1d32e66a39a6a5b9bb210781b49035ccb1a059f3"
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+      "bytes": 8828,
+      "preimage_sha256": "a64c8be36ca3a20e2c9e8dbac561fddab7ee4e92e46d0a8b41f49f2b8f4d0eca"
+    },
+    {
+      "path": "runtime/render/src/render_execution.hpp",
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "bytes": 4135,
+      "preimage_sha256": "24136f2d51765fbd22d135f82cd53ed395cb42a7f85005717b7cbb25efcef6b9"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+      "bytes": 3973,
+      "preimage_sha256": "3ce71ae1400a6f5e35d50a3193441b4b98bac547a623ee24b847adf3b52c5da5"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e",
+      "bytes": 67051,
+      "preimage_sha256": "05912e746de746a1ed48f51e4186898957760ca520d59b81bb5d87bb68931a38"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11",
+      "bytes": 89188,
+      "preimage_sha256": "433764e8230bb0071278edbe70fe72b221517ece6c8962a940793a93ddeaa601"
+    },
+    {
+      "path": "runtime/render/src/webgl_context_liveness.hpp",
+      "sha256": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0",
+      "bytes": 871,
+      "preimage_sha256": null
+    },
+    {
+      "path": "runtime/render/src/webgl_surface_backend.cpp",
+      "sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "bytes": 13762,
+      "preimage_sha256": "7b18e9ceefde8b35a88ff638baf43fef76511b0aa6b783d8f3c4a89bb487aad5"
+    },
+    {
+      "path": "runtime/render/tests/g5_observation_identity_test.cpp",
+      "sha256": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03",
+      "bytes": 4354,
+      "preimage_sha256": "7ff3a038ac8a676ad5ee610365c6ca07c48fbb3986d08974f0e7d356448fb1a5"
+    },
+    {
+      "path": "runtime/render/tests/gpu_resource_recovery_test.cpp",
+      "sha256": "56a00100804f57042c2d1bed60a5bcfc7b8258208dd6f178959f6e23ef271e72",
+      "bytes": 12667,
+      "preimage_sha256": null
+    },
+    {
+      "path": "runtime/render/tests/gpu_retirement_contract_test.cpp",
+      "sha256": "d64865e29b00f79274d19fa85b74e6bd078131063fb8a1e63abb8072cf55379e",
+      "bytes": 10154,
+      "preimage_sha256": null
+    },
+    {
+      "path": "sdk/web/web_runtime_adapter.cpp",
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "bytes": 11386,
+      "preimage_sha256": "ec30bbb85eddd339e2a6f20b42c1a5966c36e26ced423a64fe718eef11091370"
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery.mjs",
+      "sha256": "0a2286f2f6577a0d3f7ca269a6988e07b3326a2102564a68f60f45ca0fce5ddf",
+      "bytes": 18504,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_build.py",
+      "sha256": "ece40be2bb86702ed98b3dffeb8933cad92e0bd1678e3df22d9fef456e9dd152",
+      "bytes": 3510,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify.mjs",
+      "sha256": "3712d256f602e46c21104cf2c4e55ea2e8e6388e80d8a87bcdbd92c4a13da5d1",
+      "bytes": 708,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_loss_reverify_runner.py",
+      "sha256": "d3aac8f70f0b177afcb103140c0d73177e40a896a1fc251d7437b9a2b8113a92",
+      "bytes": 8106,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/runners/g5/resource_recovery_runner.py",
+      "sha256": "0353f413fe9e3f822f38e1ecaa2571e9f04cdae77a7e727dbcf8917e571cf1a8",
+      "bytes": 9888,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery.test.mjs",
+      "sha256": "b079223fcbeecb078c0d95b3133316c985ff57c680a8a21682aaa48844e81e93",
+      "bytes": 1750,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+      "sha256": "95ba37b2fc016acb8e2237a50ea23cd7da52810c70baabc6ea35cbba1aaba2e7",
+      "bytes": 1196,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery.py",
+      "sha256": "1078b43dac9b616dbdd129535654d8861449363ecd58b821e382cff90d51ed5a",
+      "bytes": 2475,
+      "preimage_sha256": null
+    },
+    {
+      "path": "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+      "sha256": "0d80fd09072f51a5f10c2f93ee6364e6ec689dd9f466a07cd2f688f1733186cb",
+      "bytes": 3383,
+      "preimage_sha256": null
+    }
+  ],
+  "fixed_paths": {
+    "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+    "runtime/composition/src/runtime_composition.cpp": "a4998542951e22946740b1153930275f1d9e09b7d8a3c3ff68259e292fa65092",
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": "de21859ecc45b250e51760f26668698be6b9c532d8e9d641fe6d92f30505b346",
+    "runtime/foundation/src/g5_observation.cpp": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "bf82c70adf39c67e640b4cdbc38de3e2051f1b533ff5d66b6b2cc679cab36fcb",
+    "runtime/render/CMakeLists.txt": "623484811c90526f4b5f3b793dd375da9fd41beca8e0c88f73b1668514e47d25",
+    "runtime/render/include/canvas/render/skia_renderer.hpp": "115841477a9ca6ebd6145b519f1e5e34e2b2c4fc2006c5e35c74d7534e3561ad",
+    "runtime/render/include/canvas/render/skia_surface_provider.hpp": "6a4ec68a18ce2822f19c25ce4c62fa3cbe73d427267424deb8e6d27d9d1f95df",
+    "runtime/render/src/gpu_resource_retirement.hpp": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+    "runtime/render/src/render_execution.hpp": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+    "runtime/render/src/skia_gpu_lifetime.hpp": "64305a46a1f41b8c8a591c86c84873a8e1acc1776eaea35da07733e2cdef1b82",
+    "runtime/render/src/skia_navigation_tiles.cpp": "ec2e88be1b83cc550d9973712d0948fb0b75f0b39d3299b38e2f330fb29b456e",
+    "runtime/render/src/skia_renderer.cpp": "777fa2f67200b0667236bc7a46f6fbfea9a97e9ddbec9ea0ea0f71f2a5fbbd11",
+    "runtime/render/src/webgl_context_liveness.hpp": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0",
+    "runtime/render/src/webgl_surface_backend.cpp": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+    "runtime/render/tests/g5_observation_identity_test.cpp": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03",
+    "runtime/render/tests/gpu_resource_recovery_test.cpp": "56a00100804f57042c2d1bed60a5bcfc7b8258208dd6f178959f6e23ef271e72",
+    "runtime/render/tests/gpu_retirement_contract_test.cpp": "d64865e29b00f79274d19fa85b74e6bd078131063fb8a1e63abb8072cf55379e",
+    "sdk/web/web_runtime_adapter.cpp": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+    "verification/runners/g5/resource_recovery.mjs": "0a2286f2f6577a0d3f7ca269a6988e07b3326a2102564a68f60f45ca0fce5ddf",
+    "verification/runners/g5/resource_recovery_build.py": "ece40be2bb86702ed98b3dffeb8933cad92e0bd1678e3df22d9fef456e9dd152",
+    "verification/runners/g5/resource_recovery_loss_reverify.mjs": "3712d256f602e46c21104cf2c4e55ea2e8e6388e80d8a87bcdbd92c4a13da5d1",
+    "verification/runners/g5/resource_recovery_loss_reverify_runner.py": "d3aac8f70f0b177afcb103140c0d73177e40a896a1fc251d7437b9a2b8113a92",
+    "verification/runners/g5/resource_recovery_runner.py": "0353f413fe9e3f822f38e1ecaa2571e9f04cdae77a7e727dbcf8917e571cf1a8",
+    "verification/tests/g5_resource_recovery.test.mjs": "b079223fcbeecb078c0d95b3133316c985ff57c680a8a21682aaa48844e81e93",
+    "verification/tests/g5_resource_recovery_loss_reverify.test.mjs": "95ba37b2fc016acb8e2237a50ea23cd7da52810c70baabc6ea35cbba1aaba2e7",
+    "verification/tests/test_g5_resource_recovery.py": "1078b43dac9b616dbdd129535654d8861449363ecd58b821e382cff90d51ed5a",
+    "verification/tests/test_g5_resource_recovery_loss_reverify.py": "0d80fd09072f51a5f10c2f93ee6364e6ec689dd9f466a07cd2f688f1733186cb",
+    ".aegis/packages/G5-UR1d-resource-recovery/verification.lock.json": "90dc4d7b435510e582f71fc16cc9cd8e2337da5d3c4f5ef0d99de9cb3004156f",
+    ".aegis/packages/G5-UR1d-resource-recovery/evidence-contract.json": "f1d0f6624c2f52541d8558ccf27a624336e3381dd1da7de294c141b6469af72f",
+    ".aegis/packages/G5-UR1d-resource-recovery/implementation-context.md": "5eec33e2fa09429fe290cf78b4ed83f6c7b8ba6e8f944c88f03d680f358b7385",
+    ".aegis/packages/G5-UR1d-resource-recovery/authority.lock.json": "efbc0662e43ee16383fd576e4267dfde371760213dd6ff07b7ddd02ee91d419c",
+    ".aegis/packages/G5-UR1d-resource-recovery/package.json": "d4924ec62438d6aeb8a47e3242f606809d90e67b7aaeed50a9f75043b5562ca6",
+    ".aegis/packages/G5-UR1d-resource-recovery/execution-contract.json": "e321b8b9eed871a021c0585b33420d62a66929d8d22f710ae7c0e306942c35ae",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/verification.lock.json": "763c7c12d227b5bd12f9a47caeecfdfe4553bf41c29bc837894875eb3f9e06e8",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/evidence-contract.json": "a8e8d4378257ed16865e15fbe080a5696c46dcea1134b89ef78b94663dc6ed9a",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/implementation-context.md": "4caf4d1a3dca280eea7b5ef99c7d3d93e247689a652dd82c38809de7d3956667",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/authority.lock.json": "1bb8109cd0e3a946b88b154431ecc526cbefdd4c3759d0260e183c4a7dcc2446",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/package.json": "eb15be0e7af62797cec50d2f6f92f6047e0e33b4ae75751fe4d3c5b2bb30e4b3",
+    ".aegis/packages/G5-UR1d-physical-loss-repair-r1/repair-contract.json": "9f2f4cdeff4061a2400974fc8b2b1e78322eea2805a82cb482dbe9841033fa4d",
+    ".aegis/results/G5-UR1d-resource-recovery/result.json": "c3fdb7d489bd962e8a647e3e3094d38de434d12053d44470e8bba80dfbb42015",
+    ".aegis/results/G5-UR1d-resource-recovery/report.md": "22eda683b98bf7fa1885726983d3713298fdc83b79b9bd796a79c680faf8e436",
+    ".aegis/results/G5-UR1d-resource-recovery/delivery-manifest.json": "f52681888e67351109d560f10e49d4f1a519eaf3b179d36a1b648cbbf69814ff",
+    ".aegis/results/G5-UR1d-resource-recovery/payload-manifest.json": "c4fdc6fe869bffe17a26c2c47597bf6010067963836ddd3a7f120647b884d2a2",
+    ".aegis/results/G5-UR1d-resource-recovery/archive-manifest.json": "04e3d2d66c167b50bae538ca4ac66cb4ef76595dbb26a765e229fd307f39abb3",
+    ".aegis/results/G5-UR1d-resource-recovery/source-delta-manifest.json": "ea2b68956bd1c453c7ab4e0d48d2e7480e881ed0b4ec04707bc29a32c1fd24a5",
+    ".aegis/results/G5-UR1d-resource-recovery/source-delta.patch": "f91b2e037418375022222007a3e5391d18c889364e5439569704702809c087d9",
+    ".aegis/results/G5-UR1d-resource-recovery/terminal-finding.json": "abc75af09f588a02172e59917eb3859b89f1d46ec713eff58988ce233a531964",
+    ".aegis/results/G5-UR1d-resource-recovery/blocked-terminal.json": "9fbdbd2b192bccff696eb9905b486bff0fd23d989b6fab663ed6020b223c42e5",
+    ".aegis/results/G5-UR1d-resource-recovery/terminal-inputs.json": "a95e1114668a3f1fd13ebb5511f82d4b98bc0ac4b8db143435410cb1b6914f4d",
+    ".aegis/results/G5-UR1d-resource-recovery/candidate-builds.json": "7831c0f43205cbb7c91ca4e5986f333e0c2a6636fc32df254ec173c1d28ea59a",
+    ".aegis/results/G5-UR1d-resource-recovery/profiles.json": "3b36d5b5a16ce5d7c8a39695af9a1cb350bc54dc098785f78b319c31f1b80f5d",
+    ".aegis/results/G5-UR1d-resource-recovery/qualification-layout.json": "d1bb2eb1c1bf586061aef3307aba71c88a1f7c127a0284e74b11ac1d4faa7da8",
+    ".aegis/results/G5-UR1d-resource-recovery/local-only-boundary.json": "faeb8919209a43f0bd8bfbd6b1afc7002521d0ad3e2a70bee6658eadb1648fb7",
+    ".aegis/results/G5-UR1d-resource-recovery/driver-identity.json": "ff8c015cad969ca14d89e31047c3f1b2746d2b6353dca6a1d9e5a7b161e52afd",
+    ".aegis/results/G5-UR1d-resource-recovery/worker-freeze.json": "d3f96f13c0c62334710c6c3dc9499cbe18c810c28e0822092f9f598c24315699",
+    ".aegis/results/G5-UR1d-resource-recovery/native-artifact-manifest.json": "db77cf33cd22f15bc5caabebd94202459b3e6e4e9be15d24f93acac4361f8b34",
+    ".aegis/results/G5-UR1d-resource-recovery/local-functional/sampling-ledger.json": "fa98b9b8b26a5998f87be6e19aae2573cfbdf25ebac2a9dfbda8f122562fa2f4",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/result.json": "d79e09d34d6f5c4faf14f21226f7d44ce5588c0e7d5eef13b3113a018ba35aaf",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/report.md": "0574633d2f2b0006215f51a409685a206e7d2d9314a7c3dba00bca2dc8d5002e",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/delivery-manifest.json": "f5827881b18e240a8a8c5736a55218205975e02a0b4e2512db09378dcbc6f327",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/payload-manifest.json": "0a0df6be276ef83de8514b93df08b3496a23480897d24c949988e1f02127ac30",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/archive-manifest.json": "e37a454acc15499ad994f6ca494a9f172001936902169151e14023d133204938",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta-manifest.json": "837bbdd5152e20389243ccab8253a5c56343254e8c717efedc70ceef90bc0c8e",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/source-delta.patch": "e85cee1d4e6fdd07de2c1640428146475d30c46dbcdf547ec515cbee6c36635c",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta-manifest.json": "188efdb010736e5bcdb981eab365514166d29c26a55d1ebb0b24e2d1db2cd855",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/cumulative-source-delta.patch": "09f1617dde4cdcdf86d9cb2dbed594c9fc3d0565a8ff67aea02b0c42ebe7cfe3",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/candidate-builds.json": "77585515e2eaf3c409ae4fb6bcbe5673ef87859e53361a6e1665b19e09ea12b2",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/profiles.json": "2435becfa9e170886aef173cb2c802c2f17d5b24309c2633215d050fdc993054",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/qualification-layout.json": "6565e084a9d88227e3a07aee0d02195fe9911c481f5bd2f327534152731384f6",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-only-boundary.json": "1e59f71e2b9ef20bb71b7419717555f587d89cad4915ec0abb81b3a86e071ad3",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/driver-identity.json": "88d14b87273ce6e84566fcbf92d4f49029c2c96dfdb820bfe7405b2bee32cf4a",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/worker-freeze.json": "6a33173d0f2fdb281188830006af5ec64f88afc154639f404228aa1891dd867f",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/native-artifact-manifest.json": "2f240f9f15530c61fab51f98b15927066cc1a7ca3454b63307f1478bc44709ba",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/closure-facts.json": "d424f3e1b66bb928a911d9d566ec2b5f600166b661be02d5b253a78433303a26",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/prior-evidence-applicability.json": "31ddd4005d0c58ef1481a4a76e43356b28a0db6126ca078cb2acaf7cd8f6c26c",
+    ".aegis/results/G5-UR1d-physical-loss-repair-r1/local-functional/sampling-ledger.json": "5a179ecbdc6cc57e513e2f6f92a6cca967ae10593d29243bbf388bb5c0f8b775",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/result.json": "01c5ff4d13ecfe7ec557083ea1752737d4c64b550092c61281334277b905227c",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/input-integrity.json": "9a0a47337701a24b247437e862f862d5ef21354b2a5c60aa6167d1f2aa57e876",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/regressions.json": "eadd339995e7d230b047ac8a921cd5ae7568efd6f139698ff5b7fe77161d53f0",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/offline-pixel-review.json": "bf5fbeea1db71ab35da42f0a251a17eed562773533cb2b5b7d5e5e54712d3a7d",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/defect-classification.json": "0732869667e914cebcf076da120573d8977fdcc06abaa671e3040724a6a1bf20",
+    ".aegis/results/G5-UR0b/control-review-ur1d-r1/actual-consumers-review.json": "ba7de293cc48e7db132747a03346eb10e57294cf33238c23b88ddb8557d1db98",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/result.json": "d35b559eb646c5ed798544e42845a8256106a5d2a8a0e6f85a5a35d1a2a766d3",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/input-integrity.json": "07ef36aebf8ce08dd5ae21bbfd3f19ac73b9cc62823c4efa31a6ba7698607dcb",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/regressions.json": "01fb233cc3933c867a39621914e04e70f67977277cf68b23df1027c411c6f03d",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/offline-pixel-review.json": "2aa00226d681e1cf7da453f52b13653e46ca8fcc4372f2f3c3a38cbd5dbc592c",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/actual-recovery-review.json": "e116f30da5a46ce6ee038e7d1e24c0b0085110878f74c3643039257d068cb40a",
+    ".aegis/results/G5-UR0b/control-review-ur1d-loss-r1/report.txt": "0fe8f4dfc6f8cca462b90a2fc563b9b85f51212387e48313ba4509235c4033d8"
+  },
+  "no_live_logs_or_large_binaries": true
+}

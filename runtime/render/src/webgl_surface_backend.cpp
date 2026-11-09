@@ -1,4 +1,5 @@
 #include "canvas/render/webgl_surface_backend.hpp"
+#include "webgl_context_liveness.hpp"
 
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkSurface.h"
@@ -13,6 +14,7 @@
 #include <emscripten/html5.h>
 #include <limits>
 #include <utility>
+#include <cstdio>
 
 namespace canvas::render {
 struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
@@ -29,24 +31,29 @@ struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
     bool overlayVisible = true;
     bool completionCapable=false,retainedContents=false;
     std::shared_ptr<GpuCompletionState> completion=std::make_shared<GpuCompletionState>();
+    void observe([[maybe_unused]] const char* event)const noexcept {
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+      std::fprintf(stderr,"AXIOM_GPU_CONTEXT {\"event\":\"%s\",\"lifetime\":\"%llu\",\"native_handle\":\"%llu\",\"role\":\"%s\",\"generation\":\"%llu\",\"abandoned\":%s,\"physical_loss\":%s}\n",event,static_cast<unsigned long long>(completion->lifetime),static_cast<unsigned long long>(webgl),config.overlayVisibility?"preview":"canonical",static_cast<unsigned long long>(generation),completion->abandoned.load()?"true":"false",completion->physicalLost.load()?"true":"false");
+#endif
+    }
     std::shared_ptr<const GpuCompletionState> state()const noexcept override{return completion;}
     void service()noexcept override {
       if(!context||completion->abandoned.load())return;
       const auto previous=emscripten_webgl_get_current_context();
-      // Emscripten also reports a deleted registry handle as "lost". That
-      // alone does NOT prove the browser GPU context has physically finished.
-      EmscriptenWebGLContextAttributes actual;
-      if(emscripten_webgl_get_context_attributes(webgl,&actual)!=EMSCRIPTEN_RESULT_SUCCESS){
-        completion->abandoned=true;context->abandonContext();return;
-      }
-      if(emscripten_is_webgl_context_lost(webgl)){
-        completion->physicalLost=true;completion->abandoned=true;context->abandonContext();return;
+      const auto liveness=internal::probeWebGlContext(webgl,
+        [](int handle,int* width,int* height){
+          return emscripten_webgl_get_drawing_buffer_size(handle,width,height)==EMSCRIPTEN_RESULT_SUCCESS;
+        },[](int handle){return emscripten_is_webgl_context_lost(handle);});
+      if(liveness!=internal::WebGlContextLiveness::kAlive){
+        const bool physical=liveness==internal::WebGlContextLiveness::kPhysicalLost;
+        if(physical)completion->physicalLost=true;
+        completion->abandoned=true;observe(physical?"physical-loss":"unknown-abandon");context->abandonContext();return;
       }
       if(emscripten_webgl_make_context_current(webgl)!=EMSCRIPTEN_RESULT_SUCCESS)return;
       context->checkAsyncWorkCompletion();
       if(previous!=webgl)(void)emscripten_webgl_make_context_current(previous);
     }
-    ~Impl() { completion->abandoned=true;surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
+    ~Impl() { completion->abandoned=true;observe("owner-close");surface.reset(); if (context) { context->abandonContext(); context.reset(); } if (ownsContext && webgl > 0) emscripten_webgl_destroy_context(webgl); }
 };
 WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(std::make_shared<Impl>()) {
     impl_->config = std::move(config);
@@ -71,6 +78,7 @@ WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(st
     const auto target = GrBackendRenderTargets::MakeGL(static_cast<int>(impl_->config.physicalWidth), static_cast<int>(impl_->config.physicalHeight), 1, 8, info);
     impl_->surface = SkSurfaces::WrapBackendRenderTarget(impl_->context.get(), target, kBottomLeft_GrSurfaceOrigin, kRGBA_8888_SkColorType, SkColorSpace::MakeSRGB(), nullptr);
     if (!impl_->surface) impl_->error = "Skia WebGL2 surface wrapping failed";
+    impl_->observe("created");
 }
 std::unique_ptr<WebGlSurfaceProvider> WebGlSurfaceProvider::fromCurrentContext(
     std::uint32_t physicalWidth, std::uint32_t physicalHeight) {
@@ -100,13 +108,16 @@ SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire() noexcept {
   return SkiaSurfaceAcquireResult::acquired({impl_->surface.get(), impl_->generation});
 }
 void WebGlSurfaceProvider::release() noexcept { if (impl_) impl_->acquired = false; }
-BackendSubmissionResult WebGlSurfaceProvider::lose() noexcept { if (!impl_) return BackendSubmissionResult::rejected("WebGL surface is not initialized"); impl_->acquired = false; impl_->lost = true; return BackendSubmissionResult::accepted(); }
+BackendSubmissionResult WebGlSurfaceProvider::lose() noexcept { if (!impl_) return BackendSubmissionResult::rejected("WebGL surface is not initialized"); impl_->service(); impl_->acquired = false; impl_->lost = true; return BackendSubmissionResult::accepted(); }
 BackendSubmissionResult WebGlSurfaceProvider::present() noexcept {
-  if (!ready()) return BackendSubmissionResult::rejected("WebGL surface is not ready");
+  if (!ready() || impl_->lost) return BackendSubmissionResult::rejected("WebGL surface is not ready");
+  impl_->service();
+  if (!ready()) return BackendSubmissionResult::rejected("WebGL context unavailable or lost");
   if (emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
     return BackendSubmissionResult::rejected("WebGL context activation failed");
   }
-  impl_->context->flushAndSubmit(impl_->surface.get(), GrSyncCpu::kNo);
+  impl_->context->flush(impl_->surface.get());
+  if (!impl_->context->submit(GrSyncCpu::kNo)) return BackendSubmissionResult::rejected("WebGL GPU submit failed");
   ++impl_->presents;
   return BackendSubmissionResult::accepted();
 }

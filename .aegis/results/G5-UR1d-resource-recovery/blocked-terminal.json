@@ -1,0 +1,83 @@
+{
+  "schema": "g5-ur1d-terminal-v1",
+  "task_id": "G5-UR1d-resource-recovery",
+  "status": "BLOCKED",
+  "terminal_blocker": "RESOURCE_LIFETIME_OR_FALSE_COMPLETION_DEFECT",
+  "continue_execution": false,
+  "head": "9994c8492b46e8672dde0901003352b119d19e96",
+  "branch": "codex/geometry-navigation-integration",
+  "inputs": {
+    "path": ".aegis/results/G5-UR1d-resource-recovery/terminal-inputs.json",
+    "sha256": "a95e1114668a3f1fd13ebb5511f82d4b98bc0ac4b8db143435410cb1b6914f4d"
+  },
+  "source_tree_sha256": "e4bbe08a6d02dffa315ec5d62c197068df64595e1ea9b74d2df7fadd4a7c88a3",
+  "native": 56,
+  "node": 55,
+  "python": 26,
+  "boundaries": 120,
+  "cold_pixels_qualified": 40,
+  "roundtrips_qualified": 8,
+  "worker_outcomes": [
+    {
+      "id": "UR1D-CORE-Q1",
+      "status": "OBSERVED",
+      "charged_seconds": 49,
+      "elapsed_s": 48.686349332972895,
+      "peak_rss_kib": 1950848,
+      "cleanup_complete": true,
+      "ref": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-Q1/worker-result.json",
+        "sha256": "66995738915caf8d02130ecf36efd255ed1c3b215ce01b307ad5d880559c9d79"
+      }
+    },
+    {
+      "id": "UR1D-CORE-N1",
+      "status": "OBSERVED",
+      "charged_seconds": 48,
+      "elapsed_s": 47.938352333032526,
+      "peak_rss_kib": 1890448,
+      "cleanup_complete": true,
+      "ref": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-CORE-N1/worker-result.json",
+        "sha256": "426d9640e17970f67870d3c8a9d17abf0e19823fa6068cbe279ca419c9910b6b"
+      }
+    },
+    {
+      "id": "UR1D-REC-Q1",
+      "status": "PRODUCT_FAILURE_OBSERVED",
+      "charged_seconds": 16,
+      "elapsed_s": 15.410766750050243,
+      "peak_rss_kib": 1882336,
+      "cleanup_complete": true,
+      "ref": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-Q1/worker-result.json",
+        "sha256": "ea5f07e215c0775e7c094ded5b3533b3ea248d5669ec03b3013dcb6f60e096be"
+      }
+    },
+    {
+      "id": "UR1D-REC-N1",
+      "status": "OBSERVED",
+      "charged_seconds": 14,
+      "elapsed_s": 13.682315792015288,
+      "peak_rss_kib": 1765808,
+      "cleanup_complete": true,
+      "ref": {
+        "path": ".aegis/results/G5-UR1d-resource-recovery/local-functional/UR1D-REC-N1/worker-result.json",
+        "sha256": "0c67b083c402eaabdf7ce6554fd097e375004d586fa848349abc5e929afd9cd9"
+      }
+    }
+  ],
+  "cumulative_starts": 58,
+  "cumulative_charged_seconds": 2234,
+  "remaining_cap_seconds": 6136,
+  "remaining_workers": [],
+  "cleanup_complete": true,
+  "remaining": [
+    "U1D-04 actual physical-loss classification; repair and fresh explicit reverification window required.",
+    "Final archive/payload assembly follows this immediate terminal notice; initial finding/source/raw records already materialized."
+  ],
+  "normal_demo_url": "http://127.0.0.1:4288/example.html",
+  "commit_push_performed": false,
+  "UR2_activated": false,
+  "official_Gate_P34_or_performance_PASS": false
+}
