@@ -1,0 +1,82 @@
+{
+  "schema": "g5-moving-preview-regression-plan-v1",
+  "native_keepers": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/build-native",
+    "--output-on-failure",
+    "-R",
+    "^(G5ScaleFixtureContract|G5Ur0Observation|G5GeometryChunkLocality|G4EraserSession|G4EditorHistory|FC01EditorHistoryInverseFamilies|G45PerfectFreehandReference|G5GpuRetirementContract|G5GpuResourceRecovery|G5CanonicalPreparedBody|G5CanonicalPreparedBodyBounded|G5CanonicalPreparedBodyPixels|G5CanonicalPreparedWorkingSet|G5PreparedBodyIndex|G5RenderExecution|G5EraseExactHit|G5RenderCache|G5CanonicalPreparedCompatibility|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5V4CoverageFallback|G5MaskedCanonicalRecovery|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderDamage|G47ImageResource|G5SkiaChunkRangeEntry|G5PreparedGeometry|FC00XFrameCoordinator|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G3DirectReference|G5TransientReference|G3FrameOrchestration|G5SharedScenePayload|G5SharedSceneSnapshot|G5SharedSceneIndex|G5SharedSceneReaders|G5SharedSceneRetention|G5SharedSceneParity|G5Ur0ObservationIdentity|FC00XBrushBatchEvaluation|FC00XBrushBatchSemantics|FC00XFatalProviderFailure|SDKPublicResources|G5Navigation|FC04MSEHistoryFaultUndo|FC04MSEHistoryFaultRedo|FC01InsertHistory|FC00XCanonicalBusyPreviewProgress|FC00XPreviewBusyCanonicalProgress|FC00XBusyCanonicalPendingFeedback|FC00XLiveBrushPreview|SDKPublicDocumentIdentity|SDKPublicDocumentOperations|SDKPublicDocumentSnapshot|SDKPublicOperationIdentity|SDKPublicDocumentBackground|SDKPublicSelectionInput|FC01AxisPublicationTruth|FC01HostPublicationTruth|G45BrushPreviewHandoff|F08FrameQualification|SDKNativeNavigationPreview|G5UR2AReadmissionAcquire|G5UR2AReadmissionPresent|G5UR2ANavigation|G5UR2AHandoff|G5UR2ASceneRecovery|G5UR2AHistory|G5UR2ALifecycle|G5UR2ANavigationSafety|G5UR2ACompositionProof|G5UR2ABrushVisibility|G5UR2AMaskIsolationDirect|G5UR2AMaskIsolationPrepared|G5UR2AMaskIsolationBackdrop|G5UR2AMaskIsolationLegacy|G5UR2BExactParity|G5UR2BExactBodySharing|G5UR2BExactLocality|G5UR2BExactInvalidation|G5UR2BExactPressure|G5UR2BExactInputRuntime|canvas_rf01_scene_atomicity|canvas_rf01_scene_binding|canvas_g2_a0_semantic_generation_binding|canvas_g2_a1_runtime_record_projection|canvas_g2_a2_bounds_system|canvas_g2_a2_reference_geometry|canvas_g2_a2_scene_impact|canvas_g2_a2_dependency_closure|canvas_g2_a3_full_incremental_equivalence|canvas_g2_a4_scene_delta|canvas_g2_a6_incremental_equivalence|canvas_g2_a6_atomic_publication|canvas_g2_a6_recovery|canvas_g2_a5_spatial_index_differential|G5UR2CHistoryPlanReuse|G5UR2CHistoryInvalidation|G5UR2CHistoryExactParity|G5UR2CMaskOnlyScene|G5UR2CMixedMaskScene|G5UR2CAtomicRecovery|G5UR2CContinuousInput|G5UR2CLeaseAccounting|G5UR2CHistoryProgress|G5UR2CHistoryAdmission|G5UR2CHistoryProgressSafety|canvas_rf01_full_rebuild)$"
+  ],
+  "native_reroot": "Replace only old build-native prefix with this task build-native. Do not loosen the regex or drop cases.",
+  "native_display": [
+    "ctest",
+    "--test-dir",
+    "out/G5-UR2c-transient-display-handoff-r2/build-native",
+    "--output-on-failure",
+    "-R",
+    "^G5TransientDisplay"
+  ],
+  "offline": [
+    {
+      "name": "node-tests",
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_render_execution.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+        "verification/tests/g5_prepared_body_index.test.mjs",
+        "verification/tests/g5_transient_reference.test.mjs",
+        "verification/tests/g5_transient_attribution.test.mjs",
+        "verification/tests/g5_canonical_prepared_body.test.mjs",
+        "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+        "verification/tests/g5_resource_recovery.test.mjs",
+        "verification/sdk_controller/controller_test.mjs",
+        "verification/sdk_controller/transport_test.mjs",
+        "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+        "verification/tests/g5_ur2a_handoff.test.mjs",
+        "verification/tests/g5_ur2b_exact_query.test.mjs",
+        "verification/tests/g5_ur2c_mask_history.test.mjs",
+        "verification/tests/g5_transient_display_retry.test.mjs",
+        "verification/tests/g5_webgl_target_readback.test.mjs"
+      ]
+    },
+    {
+      "name": "python-tests",
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+        "verification/tests/test_g5_transient_reference.py",
+        "verification/tests/test_g5_prepared_body_index_reverify.py",
+        "verification/tests/test_g5_render_execution.py",
+        "verification/tests/test_g5_transient_attribution.py",
+        "verification/tests/test_g5_canonical_prepared_body.py",
+        "verification/tests/test_g5_prepared_body_index.py",
+        "verification/tests/test_g5_resource_recovery.py",
+        "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+        "verification/tests/test_g5_ur2a_handoff.py",
+        "verification/tests/test_g5_ur2b_exact_query.py",
+        "verification/tests/test_g5_ur2c_mask_history.py",
+        "verification/tests/test_g5_transient_display_retry.py"
+      ]
+    },
+    {
+      "name": "boundary-tests",
+      "command": [
+        "python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ]
+    }
+  ],
+  "new_tests": "Add native G5MovingEraseProgress* and focused Node/Python tests for the new runner/qualifier and resource/prefix identity. Name/register exact commands in design preflight before running.",
+  "known_native_exception": {
+    "test": "canvas_rf01_full_rebuild",
+    "exact_failure": "line 88: expectation failed: store.find(second.objectId) == &store.records()[0]\n1 RF01-1 full rebuild expectations failed\n"
+  },
+  "reference_kernel": "Reuse the frozen old CPU/reference/exact executables and catalog. If source/kernel/wire authority unchanged, original634+6 remain accepted oracle validation; do not rebuild or modify them as a candidate oracle.",
+  "full_ctest": "The selected117 keeper set,existing five display cases and new tests are blocking. Full project CTest/other pre-existing failures are optional corroboration,not an excuse to silently classify new regressions as old."
+}

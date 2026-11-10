@@ -59,6 +59,10 @@ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const Wor
 }
 void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& surface,std::uint64_t resourceEpoch,foundation::ObjectId activeSource,bool transient){
     const auto& f=plan.frame;
+    movingEraseBodies_=transient&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& entry){
+        const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+        return entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+    });
     if(resourceEpoch_!=resourceEpoch){inkLayers_.clear();work.inkLayerBytes=0;}
     resourceEpoch_=resourceEpoch;
     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
@@ -302,6 +306,14 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBody(const ReferenceTravers
     if(found!=bodyDependencies_.end()&&!sameBodyIdentity(found->second.identity,identity)){
         bodyDependencies_.erase(found);found=bodyDependencies_.end();
     }
+    // Copies share one immutable body. A ready lookup neither builds geometry
+    // nor scans its history. Keep a charged representative dependency alive;
+    // the other aliases do not require a second per-object body reservation.
+    std::shared_ptr<const PreparedNavigationGeometry> resident;
+    if(movingEraseBodies_){
+        resident=preparedGeometry->lookup(entry,PreparedConsumer::kDirect);
+        if(resident&&std::any_of(bodyDependencies_.begin(),bodyDependencies_.end(),[&](const auto& held){return held.second.body==resident;}))return Preparation::kReady;
+    }
     if(found==bodyDependencies_.end()){
         if(bodyDependencies_.size()>=options.maxEntries)return Preparation::kResourcePending;
         constexpr auto charge=sizeof(BodyDependency)+sizeof(foundation::ObjectId)+128;
@@ -309,7 +321,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBody(const ReferenceTravers
         while(budget&&!token&&preparedGeometry->reclaimUnused())token=budget->reserve(resources::ResourceClass::kRecorded,charge,true);
         if(!token)return Preparation::kResourcePending;
         resources::ResourceLease metadata(budget,*token);
-        auto body=preparedGeometry->request(entry,options,budget);
+        auto body=resident?std::move(resident):preparedGeometry->request(entry,options,budget);
         if(!body)return preparedGeometry->requestRejected()?Preparation::kRejected:Preparation::kResourcePending;
         found=bodyDependencies_.emplace(entry.record.objectId,BodyDependency{identity,std::move(body),std::move(metadata)}).first;
     }
@@ -334,10 +346,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
     if(stagedBodies_&&std::size_t(demands)<stagedDemand_){
         stagedBodies_=false;stagedDemand_=0;bodyDependencies_.clear();resetPreparation();
     }
-    if(std::size_t(demands)>options.maxEntries&&!stagedBodies_){
+    if(std::size_t(demands)>options.maxEntries&&!stagedBodies_&&!movingEraseBodies_){
         stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation();
     }
-    if(stagedBodies_)return Preparation::kReady;
+    if(stagedBodies_&&!movingEraseBodies_)return Preparation::kReady;
     for(const auto& entry:plan.referenceDrawList.entries){
         if(!needsPreparedBody(entry)||(hasPixels(entry)&&!entry.presentationEraseActive))continue;
         const auto result=prepareBody(entry,allowance);
@@ -347,6 +359,14 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
             stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation();return Preparation::kReady;
         }
         if(result!=Preparation::kReady)return result;
+    }
+    if(stagedBodies_&&movingEraseBodies_){
+        // Same-demand staging is a pixel-residency decision, not a permanent
+        // veto on an affordable active body set. All current bodies are now
+        // ready and pinned under the existing quota. Use the existing ordered
+        // damage renderer and independent body/history mask tiles. Obsolete
+        // composite pixels cannot represent the new active prefix.
+        stagedBodies_=false;stagedDemand_=0;resetPreparation();
     }
     return Preparation::kReady;
 }

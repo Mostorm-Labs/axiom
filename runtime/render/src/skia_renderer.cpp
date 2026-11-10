@@ -1060,6 +1060,19 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if(presented.code==BackendSubmissionCode::kAccepted){
         ++submissions_;++rasterizations_;
         if(cache)cache->acknowledgeTransient();
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+        std::uint64_t prefix=0,targets=0;
+        for(const auto& entry:plan.referenceDrawList.entries)if(entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()){
+            ++targets;
+            for(const auto& mask:entry.presentationEraseMasks)if(const auto* sweep=std::get_if<semantic::SweptCircleMask>(&mask.geometry)){
+                auto count=static_cast<std::uint64_t>(sweep->segments.size()+1);
+                if(sweep->segments.size()==1){const auto& tap=sweep->segments.front();if(tap.p0==tap.p1&&tap.control1==tap.p0.position&&tap.control2==tap.p0.position)count=1;}
+                prefix=std::max(prefix,count);
+            }
+        }
+        const auto work=renderCacheWork();
+        G5_OBSERVE(g5::Kind::Submit,g5::Tag::moving_erase_progress,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,prefix,targets,work.preparedBodyBuilds,work.preparationCoverageSteps,work.gpuCoverageTiles,work.cpuCoverageTiles);
+#endif
         if(candidate)candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);
     }else partialEraseFrame_.reset();
     return presented;

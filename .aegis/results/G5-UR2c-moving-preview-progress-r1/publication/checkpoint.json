@@ -1,0 +1,156 @@
+{
+  "schema": "axiom-implementation-checkpoint-v1",
+  "task_id": "G5-UR2c-moving-preview-progress-r1",
+  "status": "IN_PROGRESS_CHECKPOINT",
+  "recorded_utc": "2026-11-10T01:09:01.070459+00:00",
+  "base_commit": "a990f280d8a08c5399146f80544299e1dfebe192",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "authorization": {
+    "latest_human_request": "\u5148\u63d0\u4ea4\u5e76\u63a8\u9001\u5427",
+    "effect": "Authorizes a progress checkpoint commit and ordinary push, overriding the earlier package no-commit/no-push instruction for this checkpoint only. Frozen package bytes remain unchanged."
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-moving-preview-progress-r1/package.json",
+    "sha256": "bf40704b5c30477548f0b27b52ca5590177973ab198d893508d491a2839602a2"
+  },
+  "scope": "Reuse resident immutable prepared bodies for changing v4 erase prefixes under the existing Render owner and budgets; qualification-only successful prefix observation. No public SDK/API change.",
+  "verification": {
+    "offline": [
+      {
+        "name": "node-tests",
+        "command": [
+          "node",
+          "--test",
+          "verification/tests/g5_render_execution.test.mjs",
+          "verification/tests/g5_prepared_body_index_reverify_reference.test.mjs",
+          "verification/tests/g5_prepared_body_index.test.mjs",
+          "verification/tests/g5_transient_reference.test.mjs",
+          "verification/tests/g5_transient_attribution.test.mjs",
+          "verification/tests/g5_canonical_prepared_body.test.mjs",
+          "verification/tests/g5_prepared_body_index_reverify.test.mjs",
+          "verification/tests/g5_resource_recovery.test.mjs",
+          "verification/sdk_controller/controller_test.mjs",
+          "verification/sdk_controller/transport_test.mjs",
+          "verification/tests/g5_resource_recovery_loss_reverify.test.mjs",
+          "verification/tests/g5_ur2a_handoff.test.mjs",
+          "verification/tests/g5_ur2b_exact_query.test.mjs",
+          "verification/tests/g5_ur2c_mask_history.test.mjs",
+          "verification/tests/g5_transient_display_retry.test.mjs",
+          "verification/tests/g5_webgl_target_readback.test.mjs",
+          "verification/tests/g5_moving_erase_progress.test.mjs"
+        ],
+        "rc": 0,
+        "elapsed_s": 0.2676703749457374
+      },
+      {
+        "name": "python-tests",
+        "command": [
+          "python3.12",
+          "-m",
+          "unittest",
+          "verification/tests/test_g5_canonical_prepared_body_working_set.py",
+          "verification/tests/test_g5_transient_reference.py",
+          "verification/tests/test_g5_prepared_body_index_reverify.py",
+          "verification/tests/test_g5_render_execution.py",
+          "verification/tests/test_g5_transient_attribution.py",
+          "verification/tests/test_g5_canonical_prepared_body.py",
+          "verification/tests/test_g5_prepared_body_index.py",
+          "verification/tests/test_g5_resource_recovery.py",
+          "verification/tests/test_g5_resource_recovery_loss_reverify.py",
+          "verification/tests/test_g5_ur2a_handoff.py",
+          "verification/tests/test_g5_ur2b_exact_query.py",
+          "verification/tests/test_g5_ur2c_mask_history.py",
+          "verification/tests/test_g5_transient_display_retry.py",
+          "verification/tests/test_g5_moving_erase_progress.py"
+        ],
+        "rc": 0,
+        "elapsed_s": 0.27991045801900327
+      },
+      {
+        "name": "boundary-tests",
+        "command": [
+          "python3.12",
+          "tools/check_runtime_boundaries.py",
+          "--root",
+          "."
+        ],
+        "rc": 0,
+        "elapsed_s": 0.0732509579975158
+      }
+    ],
+    "native_build": [
+      {
+        "name": "native-configure",
+        "rc": 0,
+        "elapsed_s": 3.1516042499570176
+      },
+      {
+        "name": "native-build",
+        "rc": 0,
+        "elapsed_s": 50.47121129091829
+      }
+    ],
+    "native_regressions": {
+      "rc": 0,
+      "elapsed_s": 10.008653459022753
+    },
+    "moving_native": [
+      {
+        "name": "moving-compile",
+        "rc": 0,
+        "elapsed_s": 5.626366792013869
+      },
+      {
+        "name": "moving-link",
+        "rc": 0,
+        "elapsed_s": 0.21680562500841916
+      },
+      {
+        "name": "moving-test",
+        "rc": 0,
+        "elapsed_s": 1.031511417008005
+      }
+    ],
+    "qualification_translation_unit": {
+      "rc": 0,
+      "elapsed_s": 6.211681374930777,
+      "kind": "qualification-only translation-unit compile; not browser qualification"
+    }
+  },
+  "native_moving_summary": {
+    "CPU_tiles": 0,
+    "accepted_during_moves": 60,
+    "body_builds": 1,
+    "changed_during_moves": 60,
+    "fixed_hold_completed": true,
+    "forced_max_entries": 1,
+    "moving_summary": true,
+    "retries": 0
+  },
+  "browser": {
+    "completed": [
+      "UR2CMP1-R1"
+    ],
+    "not_started": [
+      "UR2CMP1-Q1",
+      "UR2CMP1-N1",
+      "UR2CMP1-N2"
+    ],
+    "charged_seconds": 22,
+    "remaining_seconds": 1298,
+    "new_candidate_browser_claim": "NONE"
+  },
+  "remaining": [
+    "Complete and register the remaining native atomic/basis/resources/mixed tests and the full selected keeper matrix.",
+    "Complete qualification prefix correlation, independent pixel validation and metadata-only original R4 matrix adapter.",
+    "Build and freeze matching normal and qualification Web SDKs.",
+    "Run the three remaining one-use candidate browser windows, close receipts/pixels/cleanup and provide a matching new normal Demo.",
+    "Materialize final package evidence and return to independent control review."
+  ],
+  "readiness": "Not READY_FOR_CONTROL_REVIEW; no Gate/P34/performance PASS. Native structural progress is not Web timing evidence.",
+  "source_manifest": {
+    "path": ".aegis/results/G5-UR2c-moving-preview-progress-r1/publication/source-manifest.json",
+    "sha256": "9c3122aa689b9ea00b3c5bf73d126809f92240d57a30159839e624cac5f0094c"
+  }
+}

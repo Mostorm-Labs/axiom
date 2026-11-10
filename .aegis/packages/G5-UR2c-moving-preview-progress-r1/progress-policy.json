@@ -1,0 +1,36 @@
+{
+  "schema": "g5-active-erase-progress-policy-v1",
+  "scope": "Successor repair of active feedback starvation; not full G5 performance or release certification",
+  "normal_timing_pass": {
+    "cold_setup": "Complete initial canonical frame before Down; shader/resource setup and restoration recorded separately.",
+    "input": "Use fixed time schedule and record actual dispatch lateness; never await a display or GPU completion to admit the next Move.",
+    "forbidden_observer_work": [
+      "readPixels/getImageData/screenshot per Move or RAF",
+      "GPU finish/fence waits added by sampler",
+      "per-Move snapshot/export/hash/transport persistence",
+      "adaptive easing, event dropping, geometry simplification or skipping difficult gestures"
+    ],
+    "content_definition": "Normal pass observes actual default-framebuffer content writes and intervals,excluding RAF/offscreen/clear/masked calls. This is a publication-opportunity proxy only,not proof of fresh geometry. MP02+MP03 are accepted jointly with qualification prefix identity and separate active-content pixels; never claim raw normal draw counts alone prove freshness.",
+    "first_fresh_feedback_deadline_ms": 150,
+    "maximum_fresh_content_gap_ms": 150,
+    "maximum_tail_age_at_publication_ms": 150,
+    "steady_window": "Each gesture from Down to Up, with start and end gaps included. No per-gesture hidden warmup or stationary catch-up counts as moving feedback.",
+    "p95_target_ms": 33.4,
+    "p95_role": "Report SDK callback, input dispatch, publication intervals and tail age separately. 33.4ms is the existing phase target, not a newly claimed full SLO; this repair blocks on the 150ms no-starvation ceiling.",
+    "invalid_run": "If the sampler stalls input,mandatory observations are lost or context is unavailable,preserve raw and classify the terminal blocker. Never discard/resample a slow case. Normal counters are intentionally a proxy; do not invent a normal-only prefix API.",
+    "tail_age_evaluation": "Use qualification-only source-consumption/publication prefix identities on the identical fixed schedule; maximum pending sample lag9 at60Hz. Normal SDK gains no private API. Stationary held periods with no new input are evaluated separately."
+  },
+  "active_content_pass": {
+    "separate_from_timing": true,
+    "capture": "Use the unchanged qualified WebGL readback/failure-copy helper in a distinct fixed-schedule correctness pass. Capture fixed active ROIs at planned 0.25, 0.5 and 0.75 gesture fractions; compare a prefix at least 150ms old and assert new erasure before Up. No wait-until-correct/exact polling.",
+    "oracle": "Pinned uncached reference rendering of the baseline snapshot with only that fixed gesture prefix and all earlier committed masks, using existing partialEraseGeometry and object order/opacity. Baseline/ROI/AA guards are fixed from inputs/reference, never candidate differences.",
+    "rule": "Require new erase coverage in each positive active ROI and preserve unaffected content. Match original pairwise2/interior plus independently fixed AA-boundary rules. Do not change old kernel, palette, AA policy or enlarge edge exclusions.",
+    "final": "Before/after/Undo/Redo full canonical/preview captures against the old reference and after/Redo equality; original R4 fixed-ROI preservation and matching receipt remain required."
+  },
+  "native_progress_pass": {
+    "red": "Actual renderer receives at least 60 changing nonempty active prefixes, with per-call work budget unchanged; observe starvation under the old staged route, then hold the same prefix as a progress control.",
+    "force_staging": "A private native test may lower maxEntries only to force the same bounded staged route when Metal completion is too fast. Label this as a structural regression, not default-budget Web evidence.",
+    "green": "During changing demand, accepted display prefixes and actual changed target pixels advance repeatedly; prepared immutable body compile count does not scale with copies times frames; fixed-demand control still finishes. No stale semantic/surface publication."
+  },
+  "proof_join": "MP02 timing proxy,MP03 fixed active-content pixels and qualification immutable prefix identity are a conjunctive oracle. A fake repeated-old-frame writer may pass the normal interval subcheck but must fail the overall oracle. No hidden normal diagnostic export is permitted."
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2c-moving-preview-progress-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 successor active-preview progress repair",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2c-moving-preview-progress-r1",
+    "content_identity": "Exact package.json SHA256 in surface handoff"
+  },
+  "task_anchor": {
+    "revision": "a990f280d8a08c5399146f80544299e1dfebe192",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "implementation_thread": "01a0dacd-61e3-7ac3-a2cb-ab7532f1b28c",
+  "control_thread": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "212a43bc420fad72402f5599c9760f00d85fb13a153851c34c44fa230e4a4a7d",
+    "bytes": 11771
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "49062fa60460480efd67de246003199923bcd9b527df1c76fb042559d42cbbbd",
+    "bytes": 9253
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "81228021c44479461313cf9cc2d47613e74c9cb99bebedd26d005965b4c7739f",
+    "bytes": 10573
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "ec01389fad12aba8414678a957d8004817c6f16d0b9eb3fe748362c7357e9428",
+    "bytes": 3427
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "a91b8da10e7fd5718bac4406a790a99e70f4f880f46bc970920c075cd3fe5ee7",
+    "bytes": 3221
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "6d2fa0890103a6d1bcb70f39a51126c6ecf0d3bb83ad032cb84ddadfb9979079",
+    "bytes": 4534
+  },
+  "progress_policy_ref": {
+    "path": "progress-policy.json",
+    "sha256": "4c7b62ed2bb1f901ce8c306d8361b5abbbc928f780928f42aec700f90adcead6",
+    "bytes": 4405
+  },
+  "regression_plan_ref": {
+    "path": "regression-plan.json",
+    "sha256": "a478008eec2d55780d6dba6fe36e879a05c9bbfe5c9ff8ebe4f180ace6505b5e",
+    "bytes": 6528
+  },
+  "human_authorization": "User: 继续进行后续的步骤吧, explicitly selecting the repair package covering work reuse,active-mask increments and moving feedback/gap verification. No new human approval needed for resolved private implementation choices."
+}

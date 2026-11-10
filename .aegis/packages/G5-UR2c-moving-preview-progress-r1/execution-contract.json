@@ -1,0 +1,177 @@
+{
+  "schema": "g5-moving-preview-execution-contract-v1",
+  "task_id": "G5-UR2c-moving-preview-progress-r1",
+  "implementation": {
+    "required_changes": [
+      "Fix active erase starvation in the existing shared Render pipeline: compatible changing prefixes preserve useful body/history/ordered work or use equivalent correctly qualified regional work; an active pointer must not need to stop moving to receive feedback.",
+      "Retain full identity,atomic last-display protection,cumulative pending damage and eventual latest-prefix convergence under original quota/asynchronous completion.",
+      "Add minimal private observation stamps/counters where needed to correlate actual prepared work,input prefix and visible publication; normal SDK does not gain test/business APIs or diagnostic overhead.",
+      "Add structural RED->GREEN and actual normal Web moving feedback/correctness evidence. Refresh matching final native and twoSDK profiles,finish all MP01..08.",
+      "Use truthful final-source/SDK identity metadata in a new copied legacy-matrix adapter; preserve old16-case functional consumer/oracle code exactly. Exclude only the new self-referential result namespace when hashing the full source."
+    ],
+    "allowed_existing_paths": [
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/transient_display_state.hpp",
+      "runtime/render/src/render_group_manager.cpp",
+      "runtime/render/include/canvas/render/render_group_manager.hpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/tests/transient_display_retry_test.cpp",
+      "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/composition/src/runtime_composition.cpp"
+    ],
+    "restricted_paths": {
+      "runtime/interaction/src/canvas_partial_erase.cpp": "Private qualification-only identity observation; do not change semantic geometry,trace/mutation/admission behavior.",
+      "runtime/interaction/src/canvas_editing_runtime.cpp": "Only private observation/derived Render request identity plumbing; no Up/Down policy,History,Operation orcanonical owner changes.",
+      "runtime/composition/src/runtime_composition.cpp": "Only derived Render request/publication identity or observation plumbing; no new scheduling owner or commands.",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": "Append-only private diagnostic tags/counters; existing numbers/meaning preserved; compiled out in normal."
+    },
+    "allowed_new_paths": [
+      "runtime/render/src/moving_erase_work.hpp",
+      "runtime/render/src/moving_erase_work.cpp",
+      "runtime/render/tests/moving_erase_progress_test.cpp",
+      "verification/runners/g5/moving_erase_progress.mjs",
+      "verification/runners/g5/moving_erase_progress_contract.mjs",
+      "verification/runners/g5/moving_erase_progress_runner.py",
+      "verification/runners/g5/moving_erase_reference.cpp",
+      "verification/tests/g5_moving_erase_progress.test.mjs",
+      "verification/tests/test_g5_moving_erase_progress.py",
+      "verification/runners/g5/moving_erase_regression.mjs"
+    ],
+    "private_helper_policy": "New helpers are optional and remain under existing SkiaRenderer/SkiaRenderCache ownership. Additional private .cpp/.hpp under runtime/render/src serving exactly this owner/scope are allowed when declared in the design-preflight file map before editing; routine helper names do not need another approval. No separate renderer/global owner/cache budget,public API or unrelated existing-file expansion.",
+    "forbidden_changes": [
+      "No public SDK/ABI/exports/version/install/consumer business API changes; no edits to sdk/web, sdk/common or platform semantic/raster paths.",
+      "No BrushPackage/Stroke algorithm/geometry/radius/pressure/sampling schema changes,point thinning,event loss,lower commit counts,semantic/Scene/History authority mutation or async Up redesign.",
+      "No removal of identity checks,publishing stale/mixed-version results,unbudgeted retention,premature GPU quota release,added synchronous GPU/CPU fallback or increased32/96MiB/8ms/maxGroups2/maxCoverageSteps4096.",
+      "No original oracle/AA/ROI/readback helper or R4 driver/policy mutation; add new tests/driver rather than changing old accepted criteria.",
+      "No old result/raw/binary/package/ledger/SDK/Demo mutation,no old browser retry IDs,unrecorded starts or silent resampling.",
+      "No commit/push/merge/stash/reset/clean or extra worktree; no UR2d/scale/other-platform/snapshot UI work; no official Gate/P34/performance PASS."
+    ]
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "not_human_approval_gate": true,
+    "auto_continue_when_resolved": true,
+    "record": [
+      "Actual stable body,committed mask,active prefix,staging/composite/provider owners and source/order/camera/context invalidation matrix",
+      "Exact preparation/resume/publication/abort and resource reservations; justified path out of same-demand staged latch",
+      "MP01..08 mapping to concrete files/tests and frozen inputs/normal timing vs correctness instrumentation",
+      "Unresolved semantic/verification/scope decisions must be empty before mutation"
+    ],
+    "engineering_discretion": "An equivalent small qualified regional bootstrap is permitted. Do not blindly remove resetPreparation; demonstrate pixel/identity correctness. Do not return merely for design approval if no conflict exists."
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "before_production_mutation": true,
+    "basis": "a990f280d8a08c5399146f80544299e1dfebe192",
+    "expected_failure": "Old normal SDK allows input/RAF but violates150ms active feedback during changing DPR4 demand; fixed-prefix hold or Up can recover. New actual renderer structural oracle also fails the old staged implementation.",
+    "existing_red": {
+      "path": ".aegis/results/G5-UR0b/repeated-erase-feedback-analysis-r1/result.json",
+      "sha256": "6c82ed9a8f3831b8937d1de6001954e34b785fdbbfac30101343971e2fbba89c",
+      "bytes": 28387
+    },
+    "new_driver_red": "UR2CMP1-R1 reuses old compiled SDK,freezes initial19-object snapshot and normal driver. If the new test passes old code or cannot prove positive targets,stop EXPECTED_RED_NOT_OBSERVED/VERIFICATION_OR_PACKAGE_DEFECT; do not change input/oracle to fit candidate."
+  },
+  "tests": {
+    "required": [
+      "MP-01",
+      "MP-02",
+      "MP-03",
+      "MP-04",
+      "MP-05",
+      "MP-06",
+      "MP-07",
+      "MP-08"
+    ],
+    "command_plan_ref": {
+      "path": "regression-plan.json",
+      "sha256": "a478008eec2d55780d6dba6fe36e879a05c9bbfe5c9ff8ebe4f180ace6505b5e",
+      "bytes": 6528
+    },
+    "web_plan_ref": {
+      "path": "web-plan.json",
+      "sha256": "6d2fa0890103a6d1bcb70f39a51126c6ecf0d3bb83ad032cb84ddadfb9979079",
+      "bytes": 4534
+    }
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "local_required": {
+      "path": "web-plan.json",
+      "sha256": "6d2fa0890103a6d1bcb70f39a51126c6ecf0d3bb83ad032cb84ddadfb9979079",
+      "bytes": 4534
+    }
+  },
+  "evidence": {
+    "blocking": "All evidence explicitly assigned MP01..08 in evidence-contract.json",
+    "corroborative": "Only evidence-contract corroborative items; no retrospective escalation"
+  },
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-moving-preview-progress-r1/",
+    "out/G5-UR2c-moving-preview-progress-r1/",
+    "verification/evidence/performance/G5-UR2c-moving-preview-progress-r1/"
+  ],
+  "terminal_success": {
+    "all_of": [
+      "All MP01..08 and required final regression/four browser windows satisfied at exact finalsource",
+      "No new keeper regression,budget/receipt/failed-pixel violation or public/normal diagnostic leak",
+      "Exact materialized result/source/delta/raw manifests plus closed ledger/cleanup and new normal Demo",
+      "Return READY_FOR_CONTROL_REVIEW and proactively notify control"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_OR_PACKAGE_DEFECT",
+      "EXPECTED_RED_NOT_OBSERVED",
+      "ACTIVE_PROGRESS_OR_PIXEL_RECEIPT_FAILURE",
+      "GPU_LEASE_LIFETIME_FAILURE",
+      "NEW_KEEPER_REGRESSION",
+      "ENVIRONMENT_BLOCKER",
+      "BROWSER_ALLOWANCE_EXHAUSTED",
+      "WORKER_GUARD_OR_IDENTITY_FAILURE",
+      "MISSING_REVIEW_MATERIALIZATION"
+    ],
+    "action": "Preserve exact failure/source/raw and completed work; stop new worker starts,cleanup only owned PIDs and proactively notify control with remaining items. No extra browser or rewritten criterion.",
+    "scope": "Expected baseline/native RED is not a blocker. Ordinary implementation test failures are debugged before final-source browser starts. A final one-use worker failure,unresolvable authority/scope/input/environment conflict or exhausted allowance is terminal; do not stop at an intermediate fixable unit failure."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "not_terminal": [
+      "design only",
+      "one RED",
+      "code changed",
+      "native green",
+      "first browser complete"
+    ],
+    "notify_control": {
+      "threadId": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "required_on": [
+        "READY_FOR_CONTROL_REVIEW",
+        "any explicit terminal blocker"
+      ],
+      "human_authorization": "Persistent explicit user request that implementation notify this control chat on completion or blocked termination; renewed user request to continue this repair.",
+      "include": [
+        "Exact package/result/source/delta/manifest SHA and materialized_ref",
+        "Old RED/candidate progress,pixel,resource,identity and regression outcomes",
+        "Worker ledger/cleanup/Demo and unrun work"
+      ]
+    }
+  }
+}

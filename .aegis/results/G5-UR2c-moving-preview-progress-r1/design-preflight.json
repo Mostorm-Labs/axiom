@@ -1,0 +1,55 @@
+{
+  "status": "RESOLVED_PRIVATE_DESIGN",
+  "owner": "Existing SkiaRenderCache + SkiaRenderer; no new semantic/global/cache owner",
+  "current_owners": {
+    "body": "PreparedGeometryCache immutable source identities and leases",
+    "history": "EraseMaskPathCache / SkiaInkLayers committed-prefix retention",
+    "active": "Runtime presentationEraseMasks; RenderGroupManager validates append-only damage",
+    "pixels": "SkiaRenderCache ordered preparation/scratch and renderer disposable TransientDisplaySurface",
+    "publication": "Only final provider write after complete validated attempt; existing CanonicalVisible receipts"
+  },
+  "repair_design": {
+    "admission": "Qualify active mask work with full current group/target/camera/resource identity. Reconsider sticky staged admission when immutable bodies are ready/resident; lookup-only reuse must not hide full-history compile. Preserve cooperative prepare/advance on miss.",
+    "local_pixels": "Use existing ordered per-object GPU damage/InkLayers/history route once residency qualifies; no combined-global eraser or change to opacity/z-order. Equivalent bounded local bootstrap allowed if required by measured first-frame progress.",
+    "invalidation": "Body/style/history/order/scene/camera/metrics/surface/context mismatch uses original invalidate/rebuild. Only compatible active mask tails may reuse body/history. Cancel/new session never publishes old pending work.",
+    "publication": "Last successful actual provider pixels unchanged on Retry. Pending dirty bounds retained until accepted present. No fake receipt or partial frame.",
+    "budget": "Existing 32/96MiB, preparation maxGroups2/8ms/4096, actual GPU epoch leases unchanged; never force synchronous product GPU completion."
+  },
+  "file_map": [
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+    "runtime/render/tests/moving_erase_progress_test.cpp",
+    "runtime/render/CMakeLists.txt",
+    "verification/runners/g5/moving_erase_progress.mjs",
+    "verification/runners/g5/moving_erase_progress_contract.mjs",
+    "verification/runners/g5/moving_erase_progress_runner.py",
+    "verification/runners/g5/moving_erase_reference.cpp",
+    "verification/runners/g5/moving_erase_regression.mjs",
+    "verification/tests/g5_moving_erase_progress.test.mjs",
+    "verification/tests/test_g5_moving_erase_progress.py"
+  ],
+  "tests": {
+    "MP01": "G5MovingEraseProgress changing60prefix structural RED/GREEN; fixed hold control",
+    "MP02": "Normal uninterrupted DPR1/2/4 + qualification immutable prefix identities, 150ms ceiling",
+    "MP03": "Separate fixed active ROI pre-Up / unchanged old uncached reference; fake old-frame and after-Up negatives",
+    "MP04": "G5TransientDisplay existing5 + new moving fault/basis/cancel tests",
+    "MP05": "Actual epochs/quota pressure and gpuCoverage CPU0 counters",
+    "MP06": "Moving mixed opaque/translucent/history/order fixture plus existing isolation tests",
+    "MP07": "Exact regression-plan117 + five display + new native + Node/Python/boundary + metadata-only old16 adapter",
+    "MP08": "Four-ID manifest/ledger/cleanup/archive and newHTTPdemo + callback"
+  },
+  "native_new_commands": [
+    "G5MovingEraseProgress",
+    "G5MovingEraseProgressAtomic",
+    "G5MovingEraseProgressBasis",
+    "G5MovingEraseProgressResources",
+    "G5MovingEraseProgressMixed"
+  ],
+  "baseline_driver": "Same fixed workload19 objects and schedule in all windows; first old normal window captures canonical snapshot before erasure. Driver tests include repeated-old-frame and after-Up-only false progress.",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "scope_conflict": false
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "g5-moving-erase-workload-v1",
+  "profile": "round-handdrawn",
+  "package_revision": 4,
+  "brush_overrides": {
+    "size": 16,
+    "thinning": 0.99,
+    "smoothing": 0.61,
+    "streamline": 0.13,
+    "startTaper": 0,
+    "endTaper": 0,
+    "opacity": 1
+  },
+  "creation": {
+    "trace": {
+      "path": "inputs/stroke-trace.json",
+      "sha256": "45993fb37c280f3bb380043a9f9b6aa0de08624b9e3650b21b4c13b97b56198a",
+      "bytes": 91935
+    },
+    "point_count": 1014,
+    "geometry_source": "Normal public PointerInput -> Runtime BrushSession; never construct canonical geometry in JS",
+    "pointer_type": "mouse",
+    "pointer_id": 1,
+    "pressure": 0.5,
+    "predicted": false,
+    "timestamps": "Monotonic; preserve trace relative creation times with a fixed safe native timestamp origin. Later gestures continue that clock; keep integer nanoseconds lossless.",
+    "copies": 18,
+    "duplicate_offset": [
+      4,
+      4
+    ],
+    "final_ink_objects": 19,
+    "snapshot_freeze": "Baseline worker captures the initial 19-object canonical snapshot with public existing captureSnapshot before its first erase; save SHA and metadata before production mutation. All final candidate passes restore the same bytes. No UI import/export capability."
+  },
+  "viewport_css": [
+    590,
+    900
+  ],
+  "browser_viewport_css": [
+    590,
+    1000
+  ],
+  "DPR": [
+    1,
+    2,
+    4
+  ],
+  "camera": {
+    "scale": 1,
+    "x": 0,
+    "y": 0
+  },
+  "eraser": {
+    "mode": 2,
+    "diameter": 32,
+    "radius_world": 16
+  },
+  "known_reproducer": {
+    "gestures": 3,
+    "moves_per_gesture": 60,
+    "nominal_hz": 60,
+    "duration_ms": 1000,
+    "post_up_gap_ms": 1000,
+    "point_formula": "gesture g=0..2, i=0..60: x=145+48*g+10*sin(0.15*i), y=285+15*g+0.8*i. Down i=0; Up repeats i=60."
+  },
+  "sustained_followup": {
+    "gestures": 3,
+    "moves_per_gesture": 180,
+    "nominal_hz": 60,
+    "duration_ms": 3000,
+    "post_up_gap_ms": 0,
+    "point_formula": "gesture g=0..2, i=0..180: x=145+48*g+10*sin(0.15*i), y=355+12*g+0.35*i. Up repeats i=180; next Down dispatched in same DOM task after Up.",
+    "cancel": "Add a separate 60-move cancel after the six commits; no mutation. Then Undo/Redo once; exactly six erase Operations plus two History Operations."
+  },
+  "hold_control": {
+    "use": "Qualification only, separate from uninterrupted primary measurements",
+    "before_up_stationary_ms": 500,
+    "same_trace": true
+  },
+  "baseline_evidence": {
+    "path": ".aegis/results/G5-UR0b/repeated-erase-feedback-analysis-r1/result.json",
+    "sha256": "6c82ed9a8f3831b8937d1de6001954e34b785fdbbfac30101343971e2fbba89c",
+    "bytes": 28387
+  },
+  "input_proof": "Before mutation, independently verify planned active ROIs intersect real surviving pigment after earlier masks on the baseline snapshot. Use the pinned old exact/uncached reference, never select points or lower commit counts from candidate output. A dry construction error is a package/input blocker, not permission to adapt."
+}

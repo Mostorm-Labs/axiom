@@ -1,0 +1,47 @@
+{
+  "schema": "g5-moving-erase-four-window-ledger-v1",
+  "planned_ids": [
+    "UR2CMP1-R1",
+    "UR2CMP1-Q1",
+    "UR2CMP1-N1",
+    "UR2CMP1-N2"
+  ],
+  "max_starts": 4,
+  "cap_seconds": 1320,
+  "attempts": [
+    {
+      "id": "UR2CMP1-R1",
+      "status": "COMPLETED",
+      "reserved_seconds": 120,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/moving_erase_progress.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-moving-preview-progress-r1/UR2CMP1-R1-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/local-web/UR2CMP1-R1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 21.700964457937516,
+        "peak_process_family_rss_kib": 1301312,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 120,
+        "last_stage": {
+          "stage": "moving-worker-closed",
+          "status": "EXPECTED_RED_OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_stable": true,
+      "worker_status": "EXPECTED_RED_OBSERVED",
+      "charged_seconds": 22,
+      "elapsed_trusted": true
+    }
+  ],
+  "charged_seconds": 22,
+  "remaining_status": "PENDING",
+  "remaining_seconds": 1298
+}

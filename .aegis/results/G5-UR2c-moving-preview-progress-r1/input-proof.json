@@ -1,0 +1,604 @@
+{
+  "status": "VERIFIED",
+  "baseline": {
+    "key": "baseline",
+    "sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+    "length": 333297,
+    "documentId": "c7ce129ed9b44bc6b530f2d5f23c7534",
+    "state": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "c7ce129ed9b44bc6b530f2d5f23c7534",
+      "eraserMode": 2,
+      "generation": "19",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "531b7298dd0100f82932dd3331ee7f00",
+        "ordinal": "19",
+        "presentedGeneration": "19",
+        "runtimeEpoch": "1"
+      },
+      "objects": 19,
+      "primary": "631b7298dd0100782932dd3331ee7f4f",
+      "selected": [
+        "631b7298dd0100782932dd3331ee7f4f"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "20",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 900,
+        "width": 590
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 2
+    },
+    "metadata": {
+      "documentRevision": "19",
+      "recoveryFrontier": [
+        8,
+        1,
+        16,
+        1,
+        24,
+        1
+      ],
+      "checkpointDigest": [
+        208,
+        137,
+        60,
+        226,
+        207,
+        97,
+        253,
+        117,
+        195,
+        252,
+        112,
+        171,
+        58,
+        216,
+        96,
+        94,
+        41,
+        10,
+        222,
+        158,
+        119,
+        27,
+        103,
+        216,
+        51,
+        66,
+        67,
+        26,
+        28,
+        156,
+        175,
+        216
+      ],
+      "resourceBinding": "0"
+    }
+  },
+  "oracle": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "adapter": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-moving-preview-progress-r1/moving-reference",
+    "sha256": "e3e8c4b9d9708529e7901db560a0ca03db67f8fa5529fa5874b50b0e797d3465"
+  },
+  "method": "All18 ROIs fixed from input point(prefix i-9),16x16 CSS; original uncached CPU reference with earlier committed masks; positive surviving pigment and fully erased interior. No candidate pixels or AA expansion.",
+  "checks": [
+    {
+      "index": 0,
+      "spec": {
+        "kind": "known",
+        "g": 0,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.25,
+      "i": 15,
+      "prefix": 6,
+      "rect_css": {
+        "x": 144,
+        "y": 281,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-0-prefix-6",
+      "reference_rgba_sha256": "c0839609a2c822a4146108c6c399afb4c81351733e92ddc01479863bfd0657a2",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 0,
+      "spec": {
+        "kind": "known",
+        "g": 0,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.5,
+      "i": 30,
+      "prefix": 21,
+      "rect_css": {
+        "x": 136,
+        "y": 293,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-0-prefix-21",
+      "reference_rgba_sha256": "df0881cbb1c752cff7efe2ccfd83263f26f815d6ac1b81cb88eb6693573454b2",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 0,
+      "spec": {
+        "kind": "known",
+        "g": 0,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.75,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 129,
+        "y": 305,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-0-prefix-36",
+      "reference_rgba_sha256": "1825ed5a47c5e426849a583c67d789603697496c78e720abc4353e73263987fc",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 1,
+      "spec": {
+        "kind": "known",
+        "g": 1,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.25,
+      "i": 15,
+      "prefix": 6,
+      "rect_css": {
+        "x": 192,
+        "y": 296,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "e3dc96ca8187afeab85fe9afd91faf72e0367e8f3e8542caf9e26f9271e10c66",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-1-prefix-6",
+      "reference_rgba_sha256": "921b36efc780132f1f07c20cfba12dbd6f6d9a72e7ddc879af4a00f2172e7ba4",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 1,
+      "spec": {
+        "kind": "known",
+        "g": 1,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.5,
+      "i": 30,
+      "prefix": 21,
+      "rect_css": {
+        "x": 184,
+        "y": 308,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "e3dc96ca8187afeab85fe9afd91faf72e0367e8f3e8542caf9e26f9271e10c66",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-1-prefix-21",
+      "reference_rgba_sha256": "3821df17daf360f582e304de9a3251b7731458207d98458897ab46f26612446d",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 1,
+      "spec": {
+        "kind": "known",
+        "g": 1,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.75,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 177,
+        "y": 320,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "e3dc96ca8187afeab85fe9afd91faf72e0367e8f3e8542caf9e26f9271e10c66",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-1-prefix-36",
+      "reference_rgba_sha256": "dee6fb66e32a7704c3681b77f32d546dd12045b1cf7cc1393a7c0f766d24e1e0",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 2,
+      "spec": {
+        "kind": "known",
+        "g": 2,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.25,
+      "i": 15,
+      "prefix": 6,
+      "rect_css": {
+        "x": 240,
+        "y": 311,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "ab4f06116c1027eb02f8e1f2ac5aca24b040140e65ede7cf4dbc5c0c1af8ec0a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-2-prefix-6",
+      "reference_rgba_sha256": "7956245ac8cf1abb7a5264b5977333e75b55e1c6fd6f9f936801a2909c4b36f6",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 2,
+      "spec": {
+        "kind": "known",
+        "g": 2,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.5,
+      "i": 30,
+      "prefix": 21,
+      "rect_css": {
+        "x": 232,
+        "y": 323,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "ab4f06116c1027eb02f8e1f2ac5aca24b040140e65ede7cf4dbc5c0c1af8ec0a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-2-prefix-21",
+      "reference_rgba_sha256": "f826d1b036b63f18f00b25029792829329b589d332072f25d83955b3563753f8",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 2,
+      "spec": {
+        "kind": "known",
+        "g": 2,
+        "moves": 60,
+        "gap": 1000
+      },
+      "fraction": 0.75,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 225,
+        "y": 335,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "ab4f06116c1027eb02f8e1f2ac5aca24b040140e65ede7cf4dbc5c0c1af8ec0a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-2-prefix-36",
+      "reference_rgba_sha256": "8aef9f162ad6b61f182255a19610e7676e61221e5a0acc5deee16d4236726fb5",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 3,
+      "spec": {
+        "kind": "sustained",
+        "g": 0,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.25,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 129,
+        "y": 359,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "f6d776b4e11cf14357f9c89ba48a12010607452eb66a5af3882e7818507f087a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-3-prefix-36",
+      "reference_rgba_sha256": "42aae0436e199406b1cddfe084801b859ef28ee512314513c799ba7b481b1ef3",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 3,
+      "spec": {
+        "kind": "sustained",
+        "g": 0,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.5,
+      "i": 90,
+      "prefix": 81,
+      "rect_css": {
+        "x": 132,
+        "y": 375,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "f6d776b4e11cf14357f9c89ba48a12010607452eb66a5af3882e7818507f087a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-3-prefix-81",
+      "reference_rgba_sha256": "c78a647a2ed629e383d221c99460fc6a758d47bad9facbe5f6fb530b1612322b",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 3,
+      "spec": {
+        "kind": "sustained",
+        "g": 0,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.75,
+      "i": 135,
+      "prefix": 126,
+      "rect_css": {
+        "x": 137,
+        "y": 391,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "f6d776b4e11cf14357f9c89ba48a12010607452eb66a5af3882e7818507f087a",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-3-prefix-126",
+      "reference_rgba_sha256": "6e683c42a54e08b85114b6d061c54aa22bdbe6360c84974612fb4707fc80941d",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 4,
+      "spec": {
+        "kind": "sustained",
+        "g": 1,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.25,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 177,
+        "y": 371,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "02ff03db89fe1e115d774c679249d7874889b0e3f5ced4cfb8e31eec7bd19c4d",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-4-prefix-36",
+      "reference_rgba_sha256": "19e8ec53c35bf3a1cbcf3c56040cdf88498d6de2e3adc1f488104dca798ce66d",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 4,
+      "spec": {
+        "kind": "sustained",
+        "g": 1,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.5,
+      "i": 90,
+      "prefix": 81,
+      "rect_css": {
+        "x": 180,
+        "y": 387,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "02ff03db89fe1e115d774c679249d7874889b0e3f5ced4cfb8e31eec7bd19c4d",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-4-prefix-81",
+      "reference_rgba_sha256": "9e320e5f457fb346ea75150f3edd42c78cc29ebb518b12f4778346c1f994fabb",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 4,
+      "spec": {
+        "kind": "sustained",
+        "g": 1,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.75,
+      "i": 135,
+      "prefix": 126,
+      "rect_css": {
+        "x": 185,
+        "y": 403,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "02ff03db89fe1e115d774c679249d7874889b0e3f5ced4cfb8e31eec7bd19c4d",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-4-prefix-126",
+      "reference_rgba_sha256": "ef6b929a2cb9c2dc5dadb305cdf280705ad6eb52b5386c82c6491cba71d3b246",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 5,
+      "spec": {
+        "kind": "sustained",
+        "g": 2,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.25,
+      "i": 45,
+      "prefix": 36,
+      "rect_css": {
+        "x": 225,
+        "y": 383,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "2ecf3814789687d28ddd0a04805ff1247e7731ea39a9995ffa71dc0ec5a1653b",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-5-prefix-36",
+      "reference_rgba_sha256": "1953a825821e2fffad047a638e50151a1047fa4a99efd4ff2422c1e8e9feeeb2",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 5,
+      "spec": {
+        "kind": "sustained",
+        "g": 2,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.5,
+      "i": 90,
+      "prefix": 81,
+      "rect_css": {
+        "x": 228,
+        "y": 399,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "2ecf3814789687d28ddd0a04805ff1247e7731ea39a9995ffa71dc0ec5a1653b",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-5-prefix-81",
+      "reference_rgba_sha256": "a92e5ac3559d9cf3d8ea9737d49db0e652f9a8410a57eb762ef62e3373b51ac6",
+      "status": "QUALIFIED"
+    },
+    {
+      "index": 5,
+      "spec": {
+        "kind": "sustained",
+        "g": 2,
+        "moves": 180,
+        "gap": 0
+      },
+      "fraction": 0.75,
+      "i": 135,
+      "prefix": 126,
+      "rect_css": {
+        "x": 233,
+        "y": 415,
+        "width": 16,
+        "height": 16
+      },
+      "pigment_pixels": 256,
+      "erased_pixels": 256,
+      "expected_nonwhite_pixels": 0,
+      "baseline_sha256": "cb8fc92588c98e3c0c02e2d2bbc57f21b367cc787782151c0ec12fec3c8fb3b1",
+      "prior_state_sha256": "2ecf3814789687d28ddd0a04805ff1247e7731ea39a9995ffa71dc0ec5a1653b",
+      "reference_prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-moving-preview-progress-r1/input-proof/gesture-5-prefix-126",
+      "reference_rgba_sha256": "da9c5b0b77d3545a955c1220992abe96085e441e1b334c1fed0f7484060a4309",
+      "status": "QUALIFIED"
+    }
+  ]
+}

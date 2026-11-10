@@ -1,0 +1,71 @@
+{
+  "schema": "g5-moving-preview-evidence-contract-v1",
+  "profile": "Same-host shared independent review; content-addressed exact dirty source/patch and raw artifacts; large raw LOCAL_ONLY_SHARED_HOST is explicit and accepted for this scope. No evidence-only Git commit required.",
+  "result_path": ".aegis/results/G5-UR2c-moving-preview-progress-r1/result.json",
+  "blocking": [
+    {
+      "obligations": [
+        "MP-01",
+        "MP-02",
+        "MP-03"
+      ],
+      "items": [
+        "Exact old RED/candidate moving-progress inputs,initial baseline snapshot,all actual samples/publications/capture identities,CPU/GPU counters and semantic Operation counts",
+        "Separated readback-free timing and fixed active-content correctness results,including all unsuccessful attempts and holds",
+        "Offline old-reference prefix requests and surviving-pigment proof,no candidate-defined ROIs"
+      ]
+    },
+    {
+      "obligations": [
+        "MP-04",
+        "MP-05",
+        "MP-06",
+        "MP-07"
+      ],
+      "items": [
+        "Final-native failure pixels,job reuse/progress/invalidations,lease/epoch/resource-limit and mixed-order results",
+        "Relevant final-source regression raw logs and exact known RF01 exception",
+        "Matching final normal/qualification SDK inventories and original16-case normal Web correctness results"
+      ]
+    },
+    {
+      "obligations": [
+        "MP-08"
+      ],
+      "items": [
+        "Before/after source inventory and deterministic allowlisted patch with preimages/postimages",
+        "Exact manifest/package/result SHA and reviewer-resolvable source/raw/native/SDK artifacts or hash inventories pointing at unchanged accepted baseline dependencies",
+        "Closed four-ID ledger,cleanup proof,new normal Demo HTTP manifest,proactive terminal notification"
+      ]
+    }
+  ],
+  "corroborative": [
+    "Original video and approximate trajectory are context,not original PointerSamples or canonical authority",
+    "CPU profile magnitudes,physical scanout,GPU hardware time,Vibe comparisons and p95target findings",
+    "Full unselected platform/project scale testing"
+  ],
+  "materialization": "Place bounded readable manifests and selected source/tests in new task namespaces; archive changed source and new raw into read-only content-addressed files with member hashes when otherwise not captured by Git/delta. Do not rearchive all unchanged old GB archives. Bind the exact old refs.",
+  "return_fields": [
+    "status",
+    "repository",
+    "package_ref",
+    "starting_revision",
+    "exact_source_tree_sha256",
+    "result_revision_or_patch_identity",
+    "materialized_ref",
+    "obligation_results",
+    "evidence_input_refs",
+    "tests",
+    "ledger",
+    "cleanup",
+    "demo",
+    "unrun_items"
+  ],
+  "reuse": "Keep R4 control/old package outputs immutable. Reuse only exact unaffected facts/oracle inputs; old candidate binaries cannot establish new-candidate correctness.",
+  "not_required": [
+    "Git publication before review",
+    "Hosted CI/platform artifact or independent all-platform/P34/performance PASS",
+    "New snapshot import/export UI",
+    "Proof of every supporting log beyond the stated frozen failure modes"
+  ]
+}

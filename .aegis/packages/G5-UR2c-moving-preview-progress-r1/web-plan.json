@@ -1,0 +1,58 @@
+{
+  "schema": "g5-moving-preview-browser-plan-v1",
+  "ledger": "New independent allowance; old91/6757 and all four control diagnostic runs remain historical. No reuse or rewrite of old ledger/IDs.",
+  "workers": [
+    {
+      "id": "UR2CMP1-R1",
+      "variant": "frozen-old-normal",
+      "timeout_seconds": 120,
+      "purpose": "Build/validate the common fixed driver,materialize19-object baseline snapshot and nonempty input proof,and observe expected active-progress RED before production mutation. Reuse old compiled SDK; do not rebuild baseline."
+    },
+    {
+      "id": "UR2CMP1-Q1",
+      "variant": "candidate-qualification",
+      "timeout_seconds": 240,
+      "purpose": "Same fixed19-object snapshot+DPR4 moving-prefix/hold experiment. Prove active revision/publication/prepared-body/history/resource identity and actual GPU route. No timing SLO inferred from instrumentation."
+    },
+    {
+      "id": "UR2CMP1-N1",
+      "variant": "candidate-normal",
+      "timeout_seconds": 360,
+      "purpose": "First uninterrupted timing pass for the frozen19-object snapshot on DPR1/2/4,then distinct active-content correctness passes. Same matching diagnosticsOFF/developerOFF SDK. No live pixel reads in timing pass."
+    },
+    {
+      "id": "UR2CMP1-N2",
+      "variant": "candidate-normal-regression",
+      "timeout_seconds": 600,
+      "purpose": "Run the original R4 16-case normal correctness matrix on the candidate SDK via a test-only copied adapter,with byte-preserved consumer/case/oracle/AA/readback logic. Adapt only actual compiled-source/SDK identities,self-output source exclusions and task output paths. Old R4 entry has a hardcoded old subject ID and cannot be treated as candidate provenance unchanged."
+    }
+  ],
+  "max_browser_starts": 4,
+  "max_reserved_seconds": 1320,
+  "one_worker_at_a_time": true,
+  "guard": {
+    "process_family_rss_limit_mib": 3072,
+    "immutable_worker_guard": {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    "charge": "Record every actual start and ceil(elapsed seconds); never restart a failed ID or make an unrecorded smoke browser. Worker subpages are enumerated and every SDK owner/page is closed.",
+    "failure": "Stop on wrong source/SDK/input identity,loss/error/failed invariant,timeout or memory guard. Capture failure synchronously before first await or further input using protected helper, persist raw, clean only owned PIDs and return terminal blocker."
+  },
+  "pre_browser": [
+    "Repository/package/design/RED prerequisites applicable to the phase are satisfied; all preimage/protected hashes checked.",
+    "Driver/qualifier/ledger unit negatives pass,including a fake repeated-target writer and an after-Up-only success.",
+    "Freeze exact harness/source/SDK/fixture/plan and worker hash manifests before each one-use window. No candidate-driven input selection.",
+    "Native regressions and new native structural tests pass before candidate windows. Compile final normal/qualification SDKs from the same exact final source."
+  ],
+  "allowance_exhaustion": "Return BROWSER_ALLOWANCE_EXHAUSTED with exact remaining work. No implicit extra run,even if unused wall seconds remain.",
+  "demo": "Serve matching normal candidate on first free port4298..4308,recordchosen URL and verify HTTP member hashes without a fourth smoke browser. Keep4297 and its user document/server untouched.",
+  "purpose": "Four explicit one-use windows: old RED,candidate identity,candidate uninterrupted progress/content,old16-case regression. No harness surgery or browser-launch interception is required to share workers.",
+  "regression_adapter": {
+    "source": "verification/runners/g5/transient_display_retry.mjs",
+    "new_path": "verification/runners/g5/moving_erase_regression.mjs",
+    "allowed_delta": "Metadata/argument/source-identity helper and new output binding only. Preserve original10 cases,continuous6,all consumers/schedules/reference/readback/pixel/receipt helpers and acceptance functions. Freeze adapter delta before N2 and unit-check no kernel/case/policy edits. Do not alter old file or relabel old binaries as candidate.",
+    "source_identity": "New task runner imports existing full dirty source identity and excludes only this task self-output/evidence namespaces plus inherited exact exclusions. Product source,packages,new driver/tests remain in identity; record both actual compiled subject and harness identity."
+  }
+}

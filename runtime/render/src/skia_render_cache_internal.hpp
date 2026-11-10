@@ -86,6 +86,9 @@ class SkiaRenderCache final {
     };
     std::map<foundation::ObjectId,BodyDependency> bodyDependencies_;
     bool stagedBodies_=false;
+    // An active mask may reuse resident immutable bodies without inheriting
+    // the previous whole-frame pixel working-set admission failure.
+    bool movingEraseBodies_=false;
     std::size_t stagedDemand_=0;
     std::optional<semantic::ObjectRecord> stagedCreation_;
     std::optional<scene::ConnectorGeometry> stagedCreationRoute_;

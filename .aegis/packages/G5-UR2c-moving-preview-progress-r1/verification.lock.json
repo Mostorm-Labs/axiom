@@ -1,0 +1,146 @@
+{
+  "schema": "g5-moving-preview-verification-v1",
+  "status": "FROZEN_NEW_SUCCESSOR_OBLIGATIONS",
+  "source_revision": "a990f280d8a08c5399146f80544299e1dfebe192",
+  "obligations": [
+    {
+      "id": "MP-01",
+      "requirement": "Preserve useful body/history and staged progress across compatible changing active erase input.",
+      "oracle": "Old-baseline RED using unchanged normal SDK plus actual-renderer moving-prefix regression, contrasted with fixed-prefix completion; on candidate native work counters/actual pixels and uninterrupted normal Web.",
+      "acceptance": "Old code violates the frozen active-progress floor; candidate advances actual displayed active prefixes during sustained changes. The same immutable body is not fully compiled per copy/frame. Changing only mask tail does not discard all still-valid body/history work.",
+      "evidence_required": [
+        "Baseline source/SDK/input/snapshot SHA and RED raw",
+        "Candidate per-attempt identity/progress/body reuse counters and actual target pixels",
+        "Normal timing and distinct active-content pass"
+      ]
+    },
+    {
+      "id": "MP-02",
+      "requirement": "Fresh feedback continues during the known reproducer and sustained repeated erases.",
+      "oracle": "progress-policy.json normal timing proxy PLUS qualification-only source/publication prefix identity on the same fixed schedule,19-object frozen snapshot,DPR1/2/4,three60-Move known gestures and three180-Move immediate followups.",
+      "acceptance": "All fixed positive gestures meet <=150ms first publication and maximum publication opportunity gap while moving. Qualification identities are nondecreasing with <=9 pending sample lag at60Hz,confirmed by fixed active-content pixels. Normal publication counts alone are not freshness proof. Report p50/p95/max; no live readback,display waits,dropped input or observer catch-up.",
+      "evidence_required": [
+        "Actual scheduled/dispatched samples and SDK RAF activity",
+        "Actual target publication records and active prefix identity",
+        "Intervals including Down/start/last Move/Up boundaries and 33.4ms target findings"
+      ]
+    },
+    {
+      "id": "MP-03",
+      "requirement": "Newly displayed pixels contain the active erasure, not repeated copies of an old image.",
+      "oracle": "Separate fixed-schedule active ROI/prefix check against unchanged uncached reference,plus existing fixed unaffected ROI and final/Undo/Redo checks.",
+      "acceptance": "Each predeclared positive ROI shows correct new erasure before Up. Negative controls reject redraw-old-frame,clear/missing ink,stale prefix,wrong camera,generation mismatch and after-Up-only progress. Original final pixel/reference/receipt rules remain.",
+      "evidence_required": [
+        "Frozen baseline snapshot and offline surviving-pigment/target proof",
+        "Raw before and fixed-prefix active ROI with reference and capture metadata",
+        "Independent reference requests/hashes and final roundtrip"
+      ]
+    },
+    {
+      "id": "MP-04",
+      "requirement": "Keep atomic visible publication and cumulative dirty state under retries, cancellation and basis changes.",
+      "oracle": "Existing five G5TransientDisplay tests plus new actual-renderer changing-input failure/retry/loss/rebind/cancel cases.",
+      "acceptance": "Failed attempts preserve actual target bytes exactly; accepted frames cannot lose old pending damage or blend opacity twice. Wrong semantic/camera/surface/resource/order/history basis is rejected/rebuilt; obsolete work cannot clear or present after cancel/new session.",
+      "evidence_required": [
+        "Original failure-pixel and HO progress results on final candidate",
+        "New generation/cancel/cumulative-damage raw and latest valid outcome"
+      ]
+    },
+    {
+      "id": "MP-05",
+      "requirement": "Respect resource accounting and asynchronous GPU execution at the original limits.",
+      "oracle": "Real async Web and native delayed-completion/path-switch pressure tests; original GPU resource regressions.",
+      "acceptance": "All staging/tiles/history/results are budgeted. In-flight quota is released only on actual completion. A genuine unavailable interval may retain the display, but after release moving demand progresses. Actual v4 GPU path has zero undeclared CPU coverage. No synchronous GPU wait added to product or timing sampler.",
+      "evidence_required": [
+        "Class/owner/epoch reservations,real completion and release counters",
+        "Actual GPU/CPU target/fallback statistics including Direct",
+        "Source inspection and readback-free timing proof"
+      ]
+    },
+    {
+      "id": "MP-06",
+      "requirement": "Preserve composition correctness when mask updates interact with ordering and other object types.",
+      "oracle": "New native moving-prefix mixed fixture plus existing mask isolation/backdrop/mixed navigation tests.",
+      "acceptance": "Opaque and translucent/self-overlapping v4,transforms,overlapping foreground/background Shape/image and historical+active masks preserve ordered composition,pressure/width and tile seams under existing AA policy. Mask affects only its qualified object targets; active object is not moved to top.",
+      "evidence_required": [
+        "Real GPU mixed prefix/terminal pixels with unchanged independent reference",
+        "Object order/transform/history identity and native counter assertions"
+      ]
+    },
+    {
+      "id": "MP-07",
+      "requirement": "Preserve existing native,Node,Python,boundary and normal Web correctness coverage on final source.",
+      "oracle": "Exact reused native/Node/Python commands in regression-plan.json,rerooted only to new build; old R4 original10+continuous6 Web cases on candidate through the metadata-only adapter frozen in web-plan.json.",
+      "acceptance": "No newly failing keeper. Preserve the already documented canvas_rf01_full_rebuild line88 pointer expectation as the sole named native exception; unchanged raw RF01 failure is reported,not fixed or counted PASS. New tests all pass. No public/qualification leak.",
+      "evidence_required": [
+        "Final source/compiler/build/runtime/SDK inventory",
+        "Raw native/Node/Python/boundary logs",
+        "16-case normal Web final pixel/receipt/cancel/History results"
+      ]
+    },
+    {
+      "id": "MP-08",
+      "requirement": "Return an independently reviewable scoped result and notify control.",
+      "oracle": "evidence-contract.json,closed browser ledger and exact source/patch/artifact manifests.",
+      "acceptance": "READY_FOR_CONTROL_REVIEW only when MP01..07 and package evidence are complete; otherwise explicit terminal blocker with preserved failures/cleanup. Producer cannot issue Gate/P34/performance PASS. No intermediate checkpoint return while authorized work remains executable.",
+      "evidence_required": [
+        "Exact package/result/source/delta/manifests and same-host materialized_ref",
+        "Cleanup/ledger and notification receipt",
+        "New normal Demo URL+HTTP member SHA,older4297 untouched"
+      ]
+    }
+  ],
+  "input_ref": {
+    "path": "inputs/workload.json",
+    "sha256": "e84e2efbd05284cb94309343128081ff36e4045a7c1cdfb09827b8d7b0e19ea7",
+    "bytes": 3010
+  },
+  "progress_policy_ref": {
+    "path": "progress-policy.json",
+    "sha256": "4c7b62ed2bb1f901ce8c306d8361b5abbbc928f780928f42aec700f90adcead6",
+    "bytes": 4405
+  },
+  "protected_oracles": [
+    {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    {
+      "path": "verification/runners/g5/live_reference_alignment_runner.py",
+      "sha256": "b71a266fe9fe21956ef6a45141e191f83da9b4ccb1697f70681bdcbaf69826af",
+      "bytes": 8823
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "sha256": "61aa35af9ea287bb20875aaabb14f376d2ae2bfd1030d0d6d4c1e51e38437c2f",
+      "bytes": 27864
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "sha256": "d6ea540d188a05696aea2fe79ea13a320e89c7eef2a341233bee90ab148eab5c",
+      "bytes": 4325
+    },
+    {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+      "bytes": 3316
+    },
+    {
+      "path": "verification/runners/g5/webgl_target_readback.mjs",
+      "sha256": "1086e57c6bab1b0d5a6e9f311e07868b694137308245a7b180da6f1b16909642",
+      "bytes": 8398
+    }
+  ],
+  "reference_basis": {
+    "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/authority-witness.json",
+    "sha256": "990d0845c74c6c3ae9e7a4c0968d91f09bab97f75dabce5760fa930f80014b13",
+    "bytes": 1155
+  },
+  "old_red_witness": {
+    "path": ".aegis/results/G5-UR0b/repeated-erase-feedback-analysis-r1/result.json",
+    "sha256": "6c82ed9a8f3831b8937d1de6001954e34b785fdbbfac30101343971e2fbba89c",
+    "bytes": 28387
+  },
+  "closure_stability": "These are frozen before new production mutation. They do not retroactively add blocking obligations to R4. No extra platforms/100K/1M/Vibe/SLO or proof-of-proof expansion during execution."
+}
