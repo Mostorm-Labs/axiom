@@ -1,0 +1,38 @@
+{
+  "schema": "g5-live-reference-verification-lock-v1",
+  "status": "FROZEN",
+  "parent_verification": {
+    "path": ".aegis/packages/G5-UR2c-web-target-readback-r3/verification.lock.json",
+    "sha256": "8bb879a6869c918fe6874fda7bc2893c405fb0fd720b34894bd8e860f1236754",
+    "bytes": 4998
+  },
+  "obligations": [
+    {
+      "id": "LP01",
+      "requirement": "Liveopaque-regioncomparisonusesthefixedvalidatedreferencebufferwiththealreadyacceptedpairwise2rule.",
+      "oracle": "Beforemutation,oldqualifySentinelfailsrealR3one-pixelcaseandembedded100+pixelcounterexample; unchangedcomparePixelswithoutAA/HUDexclusionqualifiesit. Candidateusesunchangedbaselineselectionandrelativechannelcomparison.",
+      "acceptance": "Onlyreferencechangesfromnominalpalette tofixedbeforebuffer; numeric2,ROI,minimum100andbaseline-onlynear-inkselectionunchanged. Rejectanyselectedpixelwithabs(current-before)>2inanyRGBAchannel. No current-outputmasking,pixellosspercentageallowance,AA/HUDexpansionorrollingbaseline.",
+      "evidence_required": "OldREDraw/unit/sourcebinding; exactfailedpair+102existingpairsreclassifiedofflineinseparatenamespace; newrulecode/version/hash andunitnegatives."
+    },
+    {
+      "id": "LP02",
+      "requirement": "TruecontentlossandstrictRetryprotectionremain detectable.",
+      "oracle": "Clear/fullytransparent/missingchunk/onepixelchannel3/alpha3and0baselinecontrols; fixed-reference0->1->2->3driftsequence. PreserveR2nativefail-pixel/continuity/handofftest identities andR3reader/failurecapture.",
+      "acceptance": "Allnegativecontrolsrejectasappropriate; 2-levelcandidatequantizationacceptedagainstfixedreferenceonly. Failed-attemptnativeRGBAbyteequality0isnotchanged, newreader/actualtarget/capturestate/errorprotocolunchanged.",
+      "evidence_required": "Node/Pythontestresults, unchangedruntime/native/reader/capture/oracle/72SDKhashes; no duplicatednativebuildornewtolerance."
+    },
+    {
+      "id": "LP03",
+      "requirement": "Fullnormalcontinuousmatrixcompletedonthesameproductionfixwithalignedtestreference.",
+      "oracle": "SingleN1original10+all6continuouscasesatDPR1/2/4, actualdefaultFBO-qualifiedfull/ROIreadingandoriginalindependentcoldreference/History/receipts.",
+      "acceptance": "All16casesandremainingS2terminal/cancel/after/UndoRedoproofscomplete; no reinterpretationofoldunrunrows. KeepR2nonemptyplanand8commits+UndoRedo10operations, sameDOMtaskfirstUpDown. Anynewpixel/read/identity/contact/mutationfailurecapturescompleteactualrawbeforeasync/cleanupandreturnsblockedunderfrozenrule.",
+      "evidence_required": "Newall16case/raw/targetmetadata/input/operation/basis/cold/roundtrip/livepredicate-versionrecords,closedledgerandcleanup; exactsubject+harnessartifactbindings."
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "before_harness_mutation": "FreezeoldcodeandrealR3pair. Executeembeddedreference-vs-palettecounterexampleagainstoldqualifierandobservefailureforPRESERVED expectation; confirmsamepairqualifiesunchangedoldpairwiseoracle.",
+    "independent_rule": "Donoteditur0/pixel_oracle.mjs; conservativeallzero-boundaryreviewalreadyexists."
+  },
+  "closure_stability": "LP01..03andoriginalcold/reader/semanticobligationsaretheblockingtarget. No additionalAAfieldgeneration/native/performance/platformstudyunlessgenuinenewhighimpactfailureisobserved."
+}

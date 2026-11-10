@@ -1,0 +1,14 @@
+{
+  "status": "EXPECTED_OLD_RED_OBSERVED",
+  "command": [
+    "node",
+    "--test",
+    ".aegis/results/G5-UR2c-live-reference-alignment-r4/old-reference-red.test.mjs"
+  ],
+  "returncode": 1,
+  "cases": 2,
+  "old_rule": "nominal palette reference",
+  "independent_pairwise2_assertions_passed_before_failed_live_assertions": true,
+  "failure_reason": "actual baseline pairwise2 acceptance rejected by nominal-palette live rule",
+  "new_browser_starts": 0
+}

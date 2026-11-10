@@ -1,0 +1,82 @@
+{
+  "schema": "g5-live-reference-harness-delta-v1",
+  "base_revision": "edcbce188648997e18d53887847f4a9ac6b22f55",
+  "compiled_subject_source_tree_sha256": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "files": [
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "preimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/preimages/verification/runners/g5/transient_display_retry_contract.mjs",
+        "sha256": "cebecdd930941a8772690b2bf69fbd316d70974093fb4b166bfc9ad83cf3f747",
+        "bytes": 4257
+      },
+      "postimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/postimages/verification/runners/g5/transient_display_retry_contract.mjs",
+        "sha256": "d6ea540d188a05696aea2fe79ea13a320e89c7eef2a341233bee90ab148eab5c",
+        "bytes": 4325
+      },
+      "working_sha256": "d6ea540d188a05696aea2fe79ea13a320e89c7eef2a341233bee90ab148eab5c"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "preimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/preimages/verification/runners/g5/transient_display_retry.mjs",
+        "sha256": "e540f67262aee5b24f21909b27aabe7e92974febd96dbe8c6129f219fa211860",
+        "bytes": 27780
+      },
+      "postimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/postimages/verification/runners/g5/transient_display_retry.mjs",
+        "sha256": "61aa35af9ea287bb20875aaabb14f376d2ae2bfd1030d0d6d4c1e51e38437c2f",
+        "bytes": 27864
+      },
+      "working_sha256": "61aa35af9ea287bb20875aaabb14f376d2ae2bfd1030d0d6d4c1e51e38437c2f"
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "preimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/preimages/verification/tests/g5_transient_display_retry.test.mjs",
+        "sha256": "cdbf3066de8e82921a65c5f14bfebb5e5c7a08fbc5e075f78942aec2004f3685",
+        "bytes": 3886
+      },
+      "postimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/postimages/verification/tests/g5_transient_display_retry.test.mjs",
+        "sha256": "47cf1034f01df1e3db50e7fc5f077ecbf5891e365beda35c108ba573e6c078fe",
+        "bytes": 6081
+      },
+      "working_sha256": "47cf1034f01df1e3db50e7fc5f077ecbf5891e365beda35c108ba573e6c078fe"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "preimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/preimages/verification/tests/test_g5_transient_display_retry.py",
+        "sha256": "59b00711e985816f096e26802f9677882707fc57179287ec813fdab7423da234",
+        "bytes": 2541
+      },
+      "postimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/postimages/verification/tests/test_g5_transient_display_retry.py",
+        "sha256": "aa5e395ea2f49d398c575de1e6e9d5ef1828544a1ad9374d56172fdacbbe38d7",
+        "bytes": 4869
+      },
+      "working_sha256": "aa5e395ea2f49d398c575de1e6e9d5ef1828544a1ad9374d56172fdacbbe38d7"
+    },
+    {
+      "path": "verification/runners/g5/live_reference_alignment_runner.py",
+      "preimage": null,
+      "postimage": {
+        "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/postimages/verification/runners/g5/live_reference_alignment_runner.py",
+        "sha256": "b71a266fe9fe21956ef6a45141e191f83da9b4ccb1697f70681bdcbaf69826af",
+        "bytes": 8823
+      },
+      "working_sha256": "b71a266fe9fe21956ef6a45141e191f83da9b4ccb1697f70681bdcbaf69826af"
+    }
+  ],
+  "patch": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/harness.patch",
+    "sha256": "25072287c7f5e8984f28e098b00e09bdde18c63a700be6fd52c5168435b2a94e",
+    "bytes": 20353
+  },
+  "patch_roundtrip_exact": true,
+  "product_delta": [],
+  "numeric_tolerance": 2,
+  "policy": "fixed-validated-before-rgba-pairwise2-v1"
+}

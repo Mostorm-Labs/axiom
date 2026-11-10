@@ -1,0 +1,92 @@
+{
+  "status": "CHECKPOINT_METADATA_PUBLICATION_ONLY",
+  "base_revision": "edcbce188648997e18d53887847f4a9ac6b22f55",
+  "source_preimages": "git parent at base_revision, verified against accepted harness-delta preimage SHA256",
+  "source_postimages": [
+    {
+      "path": "verification/runners/g5/transient_display_retry_contract.mjs",
+      "sha256": "d6ea540d188a05696aea2fe79ea13a320e89c7eef2a341233bee90ab148eab5c"
+    },
+    {
+      "path": "verification/runners/g5/transient_display_retry.mjs",
+      "sha256": "61aa35af9ea287bb20875aaabb14f376d2ae2bfd1030d0d6d4c1e51e38437c2f"
+    },
+    {
+      "path": "verification/tests/g5_transient_display_retry.test.mjs",
+      "sha256": "47cf1034f01df1e3db50e7fc5f077ecbf5891e365beda35c108ba573e6c078fe"
+    },
+    {
+      "path": "verification/tests/test_g5_transient_display_retry.py",
+      "sha256": "aa5e395ea2f49d398c575de1e6e9d5ef1828544a1ad9374d56172fdacbbe38d7"
+    },
+    {
+      "path": "verification/runners/g5/live_reference_alignment_runner.py",
+      "sha256": "b71a266fe9fe21956ef6a45141e191f83da9b4ccb1697f70681bdcbaf69826af"
+    }
+  ],
+  "independent_control": {
+    "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/result.json",
+    "sha256": "fdd33e347076caa057e9195c5cd6ffe13a72486e8d23d697d4af0db7e737bfea",
+    "bytes": 8181
+  },
+  "producer_result": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/result.json",
+    "sha256": "ebfbfddde3efd68b8cd73ad00d2ec25eb8c59e1132b34a799a9e87be531548bd",
+    "bytes": 10913
+  },
+  "archives": {
+    "source": {
+      "archive": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/policy-harness-source-1c798d2818aeb934a67460b327323a82b7747dd09e1ca3a5be625acff830252e.tar.gz",
+        "sha256": "1c798d2818aeb934a67460b327323a82b7747dd09e1ca3a5be625acff830252e",
+        "bytes": 4407780
+      },
+      "members": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/policy-harness-source-members.json",
+        "sha256": "6ef63b26f4a68ecbcc47f54be5af696177b9685546fd254fcb0d09d76265031e",
+        "bytes": 10757
+      },
+      "files": 32,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    },
+    "validation": {
+      "archive": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/verification-6e0039500245c9e0535da6b7cc1304e2b99ef684d195a9a274a167a22919134c.tar.gz",
+        "sha256": "6e0039500245c9e0535da6b7cc1304e2b99ef684d195a9a274a167a22919134c",
+        "bytes": 4439218
+      },
+      "members": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/verification-members.json",
+        "sha256": "8281933af8bd9fe40041c594b89a8d5fda599e4970f535aef4c6465498103de4",
+        "bytes": 11239
+      },
+      "files": 36,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    },
+    "raw": {
+      "archive": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/new-normal-WebGL-raw-2d3dac73a64bb8d3608116a6a950168b1c66e82333a508b8b0550f85523365f1.tar.gz",
+        "sha256": "2d3dac73a64bb8d3608116a6a950168b1c66e82333a508b8b0550f85523365f1",
+        "bytes": 156664231
+      },
+      "members": {
+        "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/new-normal-WebGL-raw-members.json",
+        "sha256": "d4d8e6c60a8070cdf19fb89928e5cc4b706557a25ddbdab1f313e9db63c19aa4",
+        "bytes": 247135
+      },
+      "files": 651,
+      "availability": "LOCAL_ONLY_SHARED_HOST"
+    }
+  },
+  "local_only": [
+    "out/ SDK/native/build/archive payloads",
+    "raw rgba/edge/axsnap buffers",
+    "large source inventories",
+    "worker full raw observations and detailed target/live/pixel proof payloads",
+    "logs and unselected prior evidence",
+    "new recording analysis outputs"
+  ],
+  "no_new_sampling_or_product_changes": true,
+  "original_no_commit_fields_are_prepublication_history": true,
+  "official_whole_G5_P34_performance_PASS": false
+}

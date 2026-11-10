@@ -1,0 +1,69 @@
+{
+  "status": "LIVE_PREDICATE_REFERENCE_MISMATCH_CONFIRMED",
+  "overall_execution": "INCOMPLETE_WEB_MATRIX",
+  "official_Gate_PASS": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "publication_revision": "edcbce188648997e18d53887847f4a9ac6b22f55"
+  },
+  "producer_result": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/result.json",
+    "sha256": "e2b2299ec81d8a86e25ccf886258b1b8706ef0d1ac1ef3d0c4dd577ef9c712fd",
+    "bytes": 12752
+  },
+  "producer_failure": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/qualified-failure.json",
+    "sha256": "3f0a9917a78a8e5be285792c61015477868f1afef1ff38478435b2334826698e",
+    "bytes": 22401
+  },
+  "independent_evidence": {
+    "whole_failure_ROI_pairwise_no_AA_exclusions": {
+      "path": ".aegis/results/G5-UR0b/control-review-web-target-readback-r3/offline-pairwise-review.json",
+      "sha256": "5d5d08081f1aca84b4829cee45548b11bf901ee92443d7a6f3c241219c20f855",
+      "bytes": 3198
+    },
+    "all102recordedlive_readbacks": {
+      "path": ".aegis/results/G5-UR0b/control-review-web-target-readback-r3/offline-all-live-review.json",
+      "sha256": "aef5312073fe4740717bde1166bb9ac4280aabcb7cb60d4f3ec1399b3813511f",
+      "bytes": 32187
+    },
+    "DPR4sixlargerdifferencescheckedwithfrozenCPUedge": {
+      "path": ".aegis/results/G5-UR0b/control-review-web-target-readback-r3/offline-dpr4-edge-review.json",
+      "sha256": "a53280ca4118e74558341d9da0f3651eebf2cf05af31617e96fdf4fc5dafb7a0",
+      "bytes": 5460
+    }
+  },
+  "classification": {
+    "id": "DR05-LIVE-REFERENCE-01",
+    "kind": "TEST_ORACLE_REFERENCE_IMPLEMENTATION_MISMATCH",
+    "owner": "verification/runners/g5/transient_display_retry_contract.mjs::qualifySentinel",
+    "facts": [
+      "TheunchangedfrozencomparePixelsoracleaccepts<=2channeldifferenceoutsideAA; AA/hudexclusionswereallzeroforentire109200pixel failureROI anditmismatched0pixels.",
+      "Onlyonepixelchanged[13,27,51,255]to[13,29,53,255]; alphaunchanged,relativebaselineRGBdelta2.",
+      "Livepredicateusesfixedink[13,26,51,255]asafter-reference,whichmakesgreen29failabsolute3althoughvalidatedbaselinegreen27differsby2.",
+      "All102savedpreviouslysuccessfulliveopaque-selectionsalsopassfixed-baselinepairwise2; oldallzerobuffers/realmissinginkwouldstillfail.",
+      "SixDPR4wholeROIcomparisonswithoutAAhadlargerdifferences; independentoldCPUgeometryboundaryatbeforecameraexplainsallofthose,with0interiormismatchand0interiordelta. No boundarywasgrownfromcandidatedifferences."
+    ],
+    "interpretation": "Thisparticularstopdoesnotdemonstrateproductfailureunderthealreadyacceptedpairwisequantizationcontract. No claimismadeaboutwhetheritsphysicaloriginisAA,quantizationorGPUpathvariation. OldR3blockedresultremainsunchanged; newtest-onlyalignmentmustbefrozenbeforeediting.",
+    "allowed_alignment": "Keeporiginalnear-inkbaseline-onlyselection,ROI/camera/trajectory,minimumcountandnumeric2; comparecurrentchannelsagainstthefixedvalidatedbaselinebuffer, notnominalpalette. No per-framebaseline refresh/cumulativedrift loophole. Failed-attemptDR01RGBAbyteidentityremainsexact0.",
+    "not_allowed": "Do notincrease2, addAA/HUDexclusions, ignorechangedpixelsbycount, changeRuntime/SDK/scene/input/AAoracle/budget orrelabelunfinishedcasesPASS."
+  },
+  "nonblocking_findings": [
+    {
+      "id": "R3-BASELINE-STATE-RECORD-01",
+      "finding": "Someinitial/intermediatebaselineGLstatesnotpersistednumerically. Existingreaderhardchecks,exactcodeidentityand8/8realGLS1alternatesestablishtargetselection; rawbaselineandfailureFULLcropareavailable.",
+      "disposition": "Corroborativemetadataimprovementwheneditingdriver; notanadditionalblockingproof-of-proofchain. Do notfabricatehistoricalnumericobservations."
+    }
+  ],
+  "preserved_failures": "R2allzeroUNKNOWN_TARGETandR3frozenlivepredicatefailurestayimmutablehistory. RemainingS2/DPR1terminal/after/UndoRedoandS2DPR2/4cannotbeinferredfromofflinepixelreclassification.",
+  "next_action": "Oneboundedtest-onlycontinuation: frozenrelative-referencealignmentRED/unitcontrols/offlinereclassification,thennewnormalall16caseworkeronthesameR2compiledsubject. ReuseunchangedrealS1/native/receiptfacts; noextraS1orruntimebuildneeded.",
+  "ledger": {
+    "historical_starts": 90,
+    "historical_charged_seconds": 6251,
+    "original_cap_seconds": 8370,
+    "remaining_seconds": 2119,
+    "control_new_browser_starts": 0
+  },
+  "control_product_changes": false
+}

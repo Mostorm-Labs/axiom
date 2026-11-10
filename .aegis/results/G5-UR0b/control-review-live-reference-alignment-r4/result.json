@@ -1,0 +1,151 @@
+{
+  "schema": "g5-ur2c-live-reference-independent-control-review-v1",
+  "status": "SCOPED_CONTROL_ACCEPTED",
+  "decision": "AcceptthefrozenR4test-referencealignmentanditscompleteactualWebmatrixontheunchangedR2compiledproductionfix. ThisclosesthenameddisplayRetry/continuity/resource-handoff/test-readback/referenceblockersforthisscope; itisnotanoverallG5/P34/performance/releaseorotherplatformverdict.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "HEAD": "edcbce188648997e18d53887847f4a9ac6b22f55",
+    "branch": "codex/geometry-navigation-integration"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-live-reference-alignment-r4/package.json",
+    "sha256": "b377a9506736f6e011884bd4ad26c3a71da994c5564d39d2a0da8e589daea51a",
+    "bytes": 2785
+  },
+  "implementation_result": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/result.json",
+    "sha256": "ebfbfddde3efd68b8cd73ad00d2ec25eb8c59e1132b34a799a9e87be531548bd",
+    "bytes": 10913
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/manifest.json",
+    "sha256": "382b8ebb9cae9c3074cb671ffde13ac2cefa03ba9aa50f3d41e0f86ff88aae85",
+    "bytes": 5269
+  },
+  "harness_delta": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/harness-delta.json",
+    "sha256": "5c54a31aab84594e33e2485336f381d43e0b03088b8ef17b4efa03a247d29e36",
+    "bytes": 3957
+  },
+  "compiled_subject_source_tree_sha256": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "harness_policy_source_tree_sha256": "983b6de3849e9c1ee9d8f0d5c53de92998a547e5da195bfb24d0ea665ed4d59e",
+  "policy": "fixed-validated-before-rgba-pairwise2-v1",
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4",
+    "boundary": "Package/result/manifests+content-addressedsource/validation/rawarchivesandmemberhashesaccessibleonthishost; largearchivesareLOCAL_ONLY_SHARED_HOST,notclaimedGitdownloadable."
+  },
+  "independent_reviews": {
+    "integrity-review": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/integrity-review.json",
+      "sha256": "e0e510bde9bbe54f40752244a6af3a651f221adcde37eb9bad1aeef2e3b4d31d",
+      "bytes": 1119
+    },
+    "raw-review": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/raw-review.json",
+      "sha256": "0c79008a6dfc3f7214657fafbbbef738c059b76ffdc2fc5b0c6a4fc2a1a145ae",
+      "bytes": 3153
+    },
+    "authority-witness": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/authority-witness.json",
+      "sha256": "990d0845c74c6c3ae9e7a4c0968d91f09bab97f75dabce5760fa930f80014b13",
+      "bytes": 1155
+    },
+    "cleanup-demo-review": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/cleanup-demo-review.json",
+      "sha256": "52357d1694fc68dd35bafdd43a4e9b8e57df42fc0b5f4df692842cec2a2daa92",
+      "bytes": 5167
+    },
+    "reference-red-review": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/reference-red-review.json",
+      "sha256": "671ac09b309ef774742996f2e82dcc2687439eeb36fbf02150c3d0e092030d8d",
+      "bytes": 493
+    },
+    "fresh-offline-regressions": {
+      "path": ".aegis/results/G5-UR0b/control-review-live-reference-alignment-r4/fresh-offline-regressions.json",
+      "sha256": "4e02a9797c8217d61986cb46e535c10add2bfb8f3172c273f937ead50c4a67af",
+      "bytes": 2310
+    }
+  },
+  "frozen_obligation_audit": [
+    {
+      "id": "LP01",
+      "status": "SATISFIED",
+      "basis": "IndependentreplayoldmoduleonrealR3pairand101-pixelcounterexample: oldFAILED,newPRESERVED,unchangedoriginalpairwiseoracleQUALIFIED. Sourceinspectconfirmsfixedbeforecomparison,baseline-onlyselection,min100,numeric2. NoexpandedAA/HUDorrollingreference."
+    },
+    {
+      "id": "LP02",
+      "status": "SATISFIED",
+      "basis": "FreshNode/Pythonnegative/drifttestsandsourceverification. Subject/runtime/reader/failurecapture/72SDK/nativebinarybindingsunchanged; strictfailed-attemptRGBA0stillcoveredbyR2nativeandindependentHOreviews."
+    },
+    {
+      "id": "LP03",
+      "status": "SATISFIED",
+      "basis": "Independentrawscanofall16cases: fullcoldcomparisonsandHistoryroundtripsrecomputedwithunchangedoldoracle; all162livepairsevaluatedbyliteralindependentloopagainst18hash-boundfixedbaselines; target/error/restorationmetadataandcontinuous8commit+UndoRedoterminalcontrolsvalidated. Original10qualifiedreceiptjoinsrecomputedfromsame-subjectQ1raw. IndependentCPUrendervalidationonS2DPR4aftermatchesbothRGBAandboundaryfilesexactly."
+    }
+  ],
+  "closed_scoped_findings": [
+    {
+      "id": "G5-RENDER-RETRY-VISIBLE-TARGET-001",
+      "scope": "SharedRenderoffscreenattemptisolatesrecoverablefailedpreparation/drawfromlastactualprovidertarget; strictnativefailureRGBAidentityandnormalWebcontinuityvalidated."
+    },
+    {
+      "id": "G5-RENDER-RETRY-CONTINUITY-002",
+      "scope": "RetaineddisplayproofandaccumulatedpendingdamagepreservedthroughRetries; newerdemand/cancel/Historyandstrictreceipt behaviorvalidatedonfixedsubject."
+    },
+    {
+      "id": "DR04-STAGED-OWNER-RETENTION-01",
+      "scope": "Obsoletedisposableattemptreleasedbeforetransientstagedadmission; actualGPUretirementandstableprogressverifiedinR2native/independentHOtestsatunchangeddefaultbudget."
+    },
+    {
+      "id": "DR05-CONTINUOUS-TRAJECTORY-01",
+      "scope": "Originaltwonoopsseparatelyproven; frozen8-positiveplanactuallyexecutedthroughall6continuouscasesatDPR1/2/4,includingcancelandHistory."
+    },
+    {
+      "id": "DR05-READ-TARGET-01",
+      "scope": "RealS1target/readstate/failurecounterexamplesreusedatreferencedunchangedhelper; allnewrawreadbacksvalidatedagainstactualdefaulttargetanderror/restorationrules."
+    },
+    {
+      "id": "DR05-FAILURE-CAPTURE-02",
+      "scope": "R3synchronouscompletefailurecaptureprovedonactualqualifiedstop; unchangedinR4. No olderbufferwasrelabeledasfailure."
+    },
+    {
+      "id": "DR05-LIVE-REFERENCE-01",
+      "scope": "Referenceisactualvalidatedfixedbeforebuffer,withsamepairwise2acceptedcontract. Historicalpredicatefailurepreserved,notrewritten."
+    }
+  ],
+  "nonblocking_or_out_of_scope": [
+    "Existingcanvas_rf01_full_rebuildline88storepointerexpectationfailureisunchanged; originalnativekeeperaggregate116/117notdeclaredallPASS.",
+    "R2historicalallzeroROIremainsUNKNOWN_TARGET. Newreader/correctnessresultdoesnotretroactivelyproveitscause.",
+    "Thephysicaloriginofthesmall2-levelR3redrawdifferencewasnotdeterminedorrequired; numerical2ruleandstrictRetry0rule remainseparate.",
+    "ThisisnormalWebcorrectnessevidencewithreadbacks,notproductionlatency/SLO/Vibeorall-platformreal-deviceevidence. Long-idlemanualbehaviorbeyondfrozenmatrixnotnewlycertified.",
+    "FiveR4test/harnessfilesremainuncommitted; productsourcewaspublishedatedcbce18. NoGitpublicationwasperformedbythiscontrolreview."
+  ],
+  "ledger": {
+    "source": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/local-web/sampling-ledger.json",
+      "sha256": "a086cb5080ae37ba37f125f18c2c273873047ed9534170461bd4aff394dcf82e",
+      "bytes": 1954
+    },
+    "verified_cumulative_starts": 91,
+    "verified_charged_seconds": 6757,
+    "cap_seconds": 8370,
+    "remaining_seconds": 1613,
+    "control_new_browser_starts": 0,
+    "unused_allowance_does_not_auto_authorize_new_work": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4297/example.html",
+    "normal_HTTP36members_verified": true,
+    "compiled_subject_unchanged": true
+  },
+  "scope_remaining_blockers": [],
+  "next_state": "Thisrepairloopisclosedforthespecifiedscope. Retainnormaldemo/evidence; do notautomaticallyenterUR2d,startnewbrowserwindowsorcommit/push. Futureoptimizationrequiresitsownuserinstruction/taskpackage.",
+  "official_whole_G5_P34_performance_PASS": false,
+  "control_product_changes": false,
+  "control_commit_push_performed": false
+}

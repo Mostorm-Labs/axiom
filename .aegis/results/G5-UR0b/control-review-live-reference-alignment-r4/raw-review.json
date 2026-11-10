@@ -1,0 +1,137 @@
+{
+  "status": "VERIFIED_FROM_RAW",
+  "cases": [
+    "S0-B-brush-erase",
+    "S0-E-reerase",
+    "S0-H-undo-before-present",
+    "S0-P-pan",
+    "S0-Z-zoom-reentry",
+    "S0-continuous-DPR1",
+    "S0-continuous-DPR2",
+    "S0-continuous-DPR4",
+    "S2-B-brush-erase",
+    "S2-E-reerase",
+    "S2-H-undo-before-present",
+    "S2-P-pan",
+    "S2-Z-zoom-reentry",
+    "S2-continuous-DPR1",
+    "S2-continuous-DPR2",
+    "S2-continuous-DPR4"
+  ],
+  "cold_stages": 64,
+  "full_surface_buffers": 128,
+  "live_ROI_buffers": 162,
+  "fixed_baselines": 18,
+  "roundtrips": 16,
+  "validated_readback_records": 308,
+  "continuous_terminal_checks": [
+    {
+      "id": "S0-continuous-DPR1",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    },
+    {
+      "id": "S0-continuous-DPR2",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    },
+    {
+      "id": "S0-continuous-DPR4",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    },
+    {
+      "id": "S2-continuous-DPR1",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    },
+    {
+      "id": "S2-continuous-DPR2",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    },
+    {
+      "id": "S2-continuous-DPR4",
+      "live": 27,
+      "commits": 8,
+      "history_operations": 2,
+      "cancel_generation_preserved": true,
+      "contacts": 0,
+      "presented": "10"
+    }
+  ],
+  "reused_qualified_receipt_joins": [
+    {
+      "file": "S0-B-brush-erase-trace.json",
+      "outcomes": 2,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S0-E-reerase-trace.json",
+      "outcomes": 3,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S0-H-undo-before-present-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S0-P-pan-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S0-Z-zoom-reentry-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S2-B-brush-erase-trace.json",
+      "outcomes": 2,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S2-E-reerase-trace.json",
+      "outcomes": 3,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S2-H-undo-before-present-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S2-P-pan-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "file": "S2-Z-zoom-reentry-trace.json",
+      "outcomes": 1,
+      "status": "OBSERVED"
+    }
+  ],
+  "independence": "Literal fixedbaselineRGBA2 loop (no candidatequalifierimport); unchangedindependentcold/receiptjoinoracles overactualraw. No newbrowserstarts.",
+  "new_browser_starts": 0
+}

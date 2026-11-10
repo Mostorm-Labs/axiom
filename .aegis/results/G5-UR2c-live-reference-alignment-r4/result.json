@@ -1,0 +1,242 @@
+{
+  "schema": "g5-live-reference-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "blocking_class": null,
+  "package": {
+    "path": ".aegis/packages/G5-UR2c-live-reference-alignment-r4/package.json",
+    "sha256": "b377a9506736f6e011884bd4ad26c3a71da994c5564d39d2a0da8e589daea51a",
+    "bytes": 2785
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/manifest.json",
+    "sha256": "382b8ebb9cae9c3074cb671ffde13ac2cefa03ba9aa50f3d41e0f86ff88aae85",
+    "bytes": 5269
+  },
+  "compiled_subject_source_tree_sha256": "d9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc",
+  "harness_source_tree_sha256": "983b6de3849e9c1ee9d8f0d5c53de92998a547e5da195bfb24d0ea665ed4d59e",
+  "policy": "fixed-validated-before-rgba-pairwise2-v1",
+  "numeric_tolerance": 2,
+  "source_repair": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/harness-delta.json",
+    "sha256": "5c54a31aab84594e33e2485336f381d43e0b03088b8ef17b4efa03a247d29e36",
+    "bytes": 3957
+  },
+  "compiled_subject": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/subject-reuse.json",
+    "sha256": "15e4953349932c1a1ce116e67589112fa91ce1248df40b956b756d1d2fbaf878",
+    "bytes": 21561
+  },
+  "evidence": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/target-evidence.json",
+    "sha256": "f53110e1369ba8797791477c41f2d2b8c18d0c27666c8152025ae84e43a67f82",
+    "bytes": 1009316
+  },
+  "independent_live_and_terminal": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/live-policy-proof.json",
+    "sha256": "7146f854c8046ad76e7616d8a79827b8d62f5610e745b6873ef84c5af31d6c1b",
+    "bytes": 104407
+  },
+  "offline_history": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/offline-pairs.json",
+    "sha256": "e8f46f7f936ffaba36a7e726e9513a58a4ed4f4819a42f5b412d6b25628d9c3f",
+    "bytes": 161271
+  },
+  "tests": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/terminal-offline-checks.json",
+    "sha256": "ed4be6da67417fbf52b5c788c0be07c200afd7207930877cb98e790a4497dc74",
+    "bytes": 2287
+  },
+  "obligation_closure": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/obligation-closure.json",
+    "sha256": "95e8dc6bdd2eccb772659024ff8f218e468b5de794d4574ac8361376c0eb40d0",
+    "bytes": 4814
+  },
+  "ledger": {
+    "schema": "g5-live-reference-one-window-ledger-v1",
+    "planned_ids": [
+      "UR2CLP4-N1"
+    ],
+    "historical_starts": 90,
+    "historical_charged_seconds": 6251,
+    "original_cap_seconds": 8370,
+    "attempts": [
+      {
+        "id": "UR2CLP4-N1",
+        "status": "COMPLETED",
+        "reserved_seconds": 600,
+        "charged_seconds": 506,
+        "rss_limit_mib": 3072,
+        "guard": {
+          "command": [
+            "node",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-live-reference-alignment-r4/identity-adapter.mjs",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-live-reference-alignment-r4/local-web/UR2CLP4-N1",
+            "normal",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+            "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+          ],
+          "reason": "completed",
+          "returncode": 0,
+          "elapsed_s": 505.76840416598134,
+          "peak_process_family_rss_kib": 2127616,
+          "rss_limit_kib": 3145728,
+          "timeout_s": 600,
+          "last_stage": {
+            "stage": "worker-closed",
+            "status": "OBSERVED",
+            "error": null
+          },
+          "cleanup_complete": true,
+          "remaining_owned_pids": []
+        },
+        "identity_stable": true,
+        "worker_status": "OBSERVED",
+        "elapsed_trusted": true
+      }
+    ],
+    "remaining_status": "NONE",
+    "cumulative_starts": 91,
+    "cumulative_charged_seconds": 6757,
+    "remaining_seconds": 1613
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/cleanup-audit.json",
+    "sha256": "bee755f611d1c1bfb3eb4f8fb294d6c2ff56dbe258e62f8247771a452a45ffa7",
+    "bytes": 89972
+  },
+  "counts": {
+    "normal_cases": 16,
+    "completed_cases": 16,
+    "cold_stages_qualified": 64,
+    "full_surface_buffers": 128,
+    "live_ROI_buffers": 162,
+    "roundtrips_qualified": 16,
+    "baseline_ROI_buffers": 18
+  },
+  "materialized_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4",
+    "archives": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/policy-harness-source-1c798d2818aeb934a67460b327323a82b7747dd09e1ca3a5be625acff830252e.tar.gz",
+          "sha256": "1c798d2818aeb934a67460b327323a82b7747dd09e1ca3a5be625acff830252e",
+          "bytes": 4407780
+        },
+        "members": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/policy-harness-source-members.json",
+          "sha256": "6ef63b26f4a68ecbcc47f54be5af696177b9685546fd254fcb0d09d76265031e",
+          "bytes": 10757
+        },
+        "files": 32,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      },
+      "validation": {
+        "archive": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/verification-6e0039500245c9e0535da6b7cc1304e2b99ef684d195a9a274a167a22919134c.tar.gz",
+          "sha256": "6e0039500245c9e0535da6b7cc1304e2b99ef684d195a9a274a167a22919134c",
+          "bytes": 4439218
+        },
+        "members": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/verification-members.json",
+          "sha256": "8281933af8bd9fe40041c594b89a8d5fda599e4970f535aef4c6465498103de4",
+          "bytes": 11239
+        },
+        "files": 36,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      },
+      "raw": {
+        "archive": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/new-normal-WebGL-raw-2d3dac73a64bb8d3608116a6a950168b1c66e82333a508b8b0550f85523365f1.tar.gz",
+          "sha256": "2d3dac73a64bb8d3608116a6a950168b1c66e82333a508b8b0550f85523365f1",
+          "bytes": 156664231
+        },
+        "members": {
+          "path": "out/G5-UR2c-live-reference-alignment-r4/review-artifacts/new-normal-WebGL-raw-members.json",
+          "sha256": "d4d8e6c60a8070cdf19fb89928e5cc4b706557a25ddbdab1f313e9db63c19aa4",
+          "bytes": 247135
+        },
+        "files": 651,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      }
+    },
+    "compiled_subject_archives_reused": {
+      "source": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/source-delta-and-inventory-34355f87b34d96b1d662991864c13eb12396fcb3c2da8c916b720f2ff682c0f6.tar.gz",
+          "sha256": "34355f87b34d96b1d662991864c13eb12396fcb3c2da8c916b720f2ff682c0f6",
+          "bytes": 5031792
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/source-delta-and-inventory-members.json",
+          "sha256": "d13c3992e6d9d253df2dc36e876c2984200a2d1ee0f78d7757739e7eb421ef2f",
+          "bytes": 40887
+        },
+        "files": 112,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      },
+      "native": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/native-1691d15569a850c5582bb3c86ec6b9635ec0c7fbb2de341ae3f2029038f34676.tar.gz",
+          "sha256": "1691d15569a850c5582bb3c86ec6b9635ec0c7fbb2de341ae3f2029038f34676",
+          "bytes": 570212825
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/native-members.json",
+          "sha256": "8a36739932eb76b38ad40d9ba5ab31c464f0a60b4a035ac5230a8e3640f14e48",
+          "bytes": 332774
+        },
+        "files": 883,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      },
+      "SDK": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/matched-SDK-ead8cbaa161ad5c5c588f9f906be4bdc40ef2807abfa180ce68d35d66d0b83c7.tar.gz",
+          "sha256": "ead8cbaa161ad5c5c588f9f906be4bdc40ef2807abfa180ce68d35d66d0b83c7",
+          "bytes": 39469894
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/matched-SDK-members.json",
+          "sha256": "274a66ffd695146cbb907d42468255fe9c742629124f0a11b73bb64d100ae118",
+          "bytes": 23613
+        },
+        "files": 72,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      },
+      "raw": {
+        "archive": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/web-raw-cd62adb6b6c9df7d38d7439d7ced6567132c1256f798dd1f478dc05bb44cc3a3.tar.gz",
+          "sha256": "cd62adb6b6c9df7d38d7439d7ced6567132c1256f798dd1f478dc05bb44cc3a3",
+          "bytes": 214104418
+        },
+        "members": {
+          "path": "out/G5-UR2c-transient-display-handoff-r2/review-artifacts/web-raw-members.json",
+          "sha256": "38578a186c75b33c1bfe93de6f75ef338c593a3184147f6d9ba34aba8676f8b1",
+          "bytes": 259470
+        },
+        "files": 684,
+        "availability": "LOCAL_ONLY_SHARED_HOST"
+      }
+    }
+  },
+  "historical_disposition": "R2 UNKNOWN_TARGET and R3 frozen-predicate BLOCKED are unchanged; historical offline pixel-only reclassification never backfills unrun cases.",
+  "review_findings": [
+    "Every new baseline retains the existing persist hash/length plus camera and full readback metadata; original reader/capture/control paths are unchanged. Historical missing baseline numeric metadata is not reconstructed.",
+    "Correctness-only Web window; no performance SLO or physical AA cause is asserted.",
+    "No native rerun/build for this test-only package. Reused native evidence retains the known canvas_rf01_full_rebuild pointer-expectation failure (116/117); no whole native-suite PASS is asserted."
+  ],
+  "remaining": [],
+  "DemoURL": "http://127.0.0.1:4297/example.html",
+  "commit_push_performed": false,
+  "SDK_or_native_rebuilt": false,
+  "official_Gate_P34_performance_PASS": false,
+  "archive_verification": {
+    "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/archive-verification.json",
+    "sha256": "b7d04883cab3821dad8b3d574157ad76d1e82a854d9a0cd11a977f7d48cdfca9",
+    "bytes": 1378
+  }
+}

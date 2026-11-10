@@ -1,0 +1,46 @@
+{
+  "schema": "g5-live-reference-one-normal-window-v1",
+  "historical_result": {
+    "path": ".aegis/results/G5-UR2c-web-target-readback-r3/result.json",
+    "sha256": "e2b2299ec81d8a86e25ccf886258b1b8706ef0d1ac1ef3d0c4dd577ef9c712fd",
+    "bytes": 12752
+  },
+  "historical_starts": 90,
+  "historical_charged_seconds": 6251,
+  "original_cap_seconds": 8370,
+  "remaining_before_seconds": 2119,
+  "workers": [
+    {
+      "id": "UR2CLP4-N1",
+      "variant": "normal",
+      "timeout_seconds": 600,
+      "required_cases": "Original10S0/S2casesDPR2 plusall6continuousS0/S2DPR1/2/4 withunchangedR2positiveplanandnewfixed-baselinepairwise2livepolicy. Alloriginalcold/History/8commits/10ops/receiptsandR3qualifiedtarget/immediatefailurecapture rulesunchanged."
+    }
+  ],
+  "max_new_starts": 1,
+  "max_reserved_seconds": 600,
+  "remaining_after_worst_case_seconds": 1519,
+  "guard": {
+    "process_family_rss_limit_mib": 3072,
+    "immutable_guard": {
+      "path": "verification/runners/g5/bounded_worker.py",
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1",
+      "bytes": 3741
+    },
+    "all_oldIDs_closed": true,
+    "charge": "ceilactualelapsed;fullreservationifguardtimeuntrusted",
+    "on_failure": "FreezeIDandraw,executealreadyvalidatedimmediatefailurecapture,persistthenowner/PIDcleanup,returnblocker; noautomaticretry/extraID."
+  },
+  "prebrowser_requirements": [
+    "ImmutableofflinewholefailureROIreviewandoldpalettepredicateRED recorded beforeharnessmutation.",
+    "Unit/regressioncontrolsforpairwise2/3,clear/alpha-loss/missingsource,insufficientbaseline,immutablebaselinecumulativedrift; all102savedR3liveopaqueselectionpairsandonefailedpairreevaluatedwithoutmodifyingoriginalraw/status.",
+    "Freezepolicy/module/harnessdelta/compiledsubject/72SDK/oracles/plan/newledger; offlineNode/Python/boundarychecks; readerandcapturecodeunchanged."
+  ],
+  "evidence_reuse": [
+    "UnchangedR3realWebGLS1eightcontrols/target+state/error/failurecapture facts maybereusedatreferencedhelperidentity; no newS1orGPUprimitiveexperiment.",
+    "R2native/exact/qualifiedreceiptfacts andR3subjectbindingremainvalidwithunmodifiedruntime. No needtonative/SDKrebuild.",
+    "R3earlierpixelcasesremainhistorical; allnew16normalcasesrequiredonnewpolicy, includingpreviouslyabortedS2DPR1andunrunDPR2/4."
+  ],
+  "no_timing_claims": "Allreadbackrunsarecorrectness-only; thispackagehasnoSLOorperformanceacceptancetarget.",
+  "demo": "Keep4297andallolderdemo/documentsunchanged. VerifyHTTPmemberhasheswithoutanextrasmokebrowser."
+}

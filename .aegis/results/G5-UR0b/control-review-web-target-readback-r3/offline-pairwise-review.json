@@ -1,0 +1,105 @@
+{
+  "status": "OFFLINE_PAIRWISE_RULE_REVIEW",
+  "oracle": {
+    "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+    "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+  },
+  "baseline": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-baseline-18.roi.rgba",
+    "sha256": "5723cf8612b04c6958029011377547a0d48ee69fd5e561fb40b91adfed2e17d3"
+  },
+  "actual": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S2-continuous-DPR1-failure-1-trigger-ROI.rgba",
+    "sha256": "4a1245917ea9c42693f0b688c4aea8bdb3b11b50a1b24f9228203cc4e3e02fc2"
+  },
+  "comparison": {
+    "status": "QUALIFIED",
+    "compared_pixels": 109200,
+    "aa_boundary_pixels": 0,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 2,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "method": "Entire ROI compared with the unchanged old pairwise oracle and an all-zero edge mask: no AA exclusions or HUD exclusions at all. This does not synthesize an independent geometry boundary.",
+  "changed_pixels": 1,
+  "subject_camera": {
+    "scale": 2.61169695854187,
+    "x": -847.61181640625,
+    "y": -504.390869140625
+  },
+  "partial_keys": [
+    "schedule",
+    "live",
+    "frames",
+    "operations",
+    "errors",
+    "cold",
+    "roi",
+    "initial",
+    "observationVersion",
+    "inputEvents",
+    "colorOps",
+    "rafCallbacks",
+    "nativeRecords",
+    "failure",
+    "error",
+    "status",
+    "observationEnded",
+    "final",
+    "activity"
+  ],
+  "baseline_records": [
+    {
+      "kind": "ROI-basis",
+      "stage": "initial",
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "qualifier": {
+        "status": "PRESERVED",
+        "interior": 69651,
+        "lost": 0,
+        "compared_bytes": 436800,
+        "selection": "fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection"
+      }
+    },
+    {
+      "kind": "ROI-basis",
+      "stage": "after-second",
+      "camera": {
+        "scale": 1.616074800491333,
+        "x": -324.0015869140625,
+        "y": -192.8045654296875
+      },
+      "qualifier": {
+        "status": "PRESERVED",
+        "interior": 93971,
+        "lost": 0,
+        "compared_bytes": 436800,
+        "selection": "fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection"
+      }
+    },
+    {
+      "kind": "ROI-basis",
+      "stage": "after-sixth",
+      "camera": {
+        "scale": 2.61169695854187,
+        "x": -847.61181640625,
+        "y": -504.390869140625
+      },
+      "qualifier": {
+        "status": "PRESERVED",
+        "interior": 53925,
+        "lost": 0,
+        "compared_bytes": 436800,
+        "selection": "fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection"
+      }
+    }
+  ],
+  "partial_status": "FAILED",
+  "new_browser_starts": 0
+}

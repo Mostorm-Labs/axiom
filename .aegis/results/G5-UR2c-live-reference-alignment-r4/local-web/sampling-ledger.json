@@ -1,0 +1,50 @@
+{
+  "schema": "g5-live-reference-one-window-ledger-v1",
+  "planned_ids": [
+    "UR2CLP4-N1"
+  ],
+  "historical_starts": 90,
+  "historical_charged_seconds": 6251,
+  "original_cap_seconds": 8370,
+  "attempts": [
+    {
+      "id": "UR2CLP4-N1",
+      "status": "COMPLETED",
+      "reserved_seconds": 600,
+      "charged_seconds": 506,
+      "rss_limit_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-live-reference-alignment-r4/identity-adapter.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-live-reference-alignment-r4/local-web/UR2CLP4-N1",
+          "normal",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 505.76840416598134,
+        "peak_process_family_rss_kib": 2127616,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 600,
+        "last_stage": {
+          "stage": "worker-closed",
+          "status": "OBSERVED",
+          "error": null
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_stable": true,
+      "worker_status": "OBSERVED",
+      "elapsed_trusted": true
+    }
+  ],
+  "remaining_status": "NONE",
+  "cumulative_starts": 91,
+  "cumulative_charged_seconds": 6757,
+  "remaining_seconds": 1613
+}

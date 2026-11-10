@@ -1,0 +1,124 @@
+{
+  "LP01": {
+    "status": "EVIDENCE_COMPLETE",
+    "old_RED": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/red-result.json",
+      "sha256": "c49a5a32cfa78442c1001cf6b7a9ef051a57b8ec2ea6d05af0f9e12aeb6e025b",
+      "bytes": 456
+    },
+    "fixed_baseline_policy": "fixed-validated-before-rgba-pairwise2-v1",
+    "numeric_tolerance": 2,
+    "selection_minimum_ROI_unchanged": true,
+    "separate_103_historical_pixel_pairs": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/offline-pairs.json",
+      "sha256": "e8f46f7f936ffaba36a7e726e9513a58a4ed4f4819a42f5b412d6b25628d9c3f",
+      "bytes": 161271
+    },
+    "no_old_case_status_rewrite": true
+  },
+  "LP02": {
+    "status": "EVIDENCE_COMPLETE",
+    "tests": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/terminal-offline-checks.json",
+      "sha256": "ed4be6da67417fbf52b5c788c0be07c200afd7207930877cb98e790a4497dc74",
+      "bytes": 2287
+    },
+    "negative_controls": [
+      "channel3",
+      "alpha3",
+      "clear",
+      "missing chunk/shape",
+      "no/insufficient baseline",
+      "fixed-reference cumulative drift"
+    ],
+    "native_failed_attempt_RGBA_byte_equality_0_unchanged": true,
+    "subject": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/subject-reuse.json",
+      "sha256": "15e4953349932c1a1ce116e67589112fa91ce1248df40b956b756d1d2fbaf878",
+      "bytes": 21561
+    },
+    "scope": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/scope-integrity.json",
+      "sha256": "33fb43540d19fd76ebc69ea4cd3ff4010a65b3f4d10bd4937a7a55af13039578",
+      "bytes": 583
+    }
+  },
+  "LP03": {
+    "status": "EVIDENCE_COMPLETE",
+    "target": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/target-evidence.json",
+      "sha256": "f53110e1369ba8797791477c41f2d2b8c18d0c27666c8152025ae84e43a67f82",
+      "bytes": 1009316
+    },
+    "independent_live_and_terminal": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/live-policy-proof.json",
+      "sha256": "7146f854c8046ad76e7616d8a79827b8d62f5610e745b6873ef84c5af31d6c1b",
+      "bytes": 104407
+    },
+    "counts": {
+      "normal_cases": 16,
+      "completed_cases": 16,
+      "cold_stages_qualified": 64,
+      "full_surface_buffers": 128,
+      "live_ROI_buffers": 162,
+      "roundtrips_qualified": 16,
+      "baseline_ROI_buffers": 18
+    },
+    "ledger": {
+      "schema": "g5-live-reference-one-window-ledger-v1",
+      "planned_ids": [
+        "UR2CLP4-N1"
+      ],
+      "historical_starts": 90,
+      "historical_charged_seconds": 6251,
+      "original_cap_seconds": 8370,
+      "attempts": [
+        {
+          "id": "UR2CLP4-N1",
+          "status": "COMPLETED",
+          "reserved_seconds": 600,
+          "charged_seconds": 506,
+          "rss_limit_mib": 3072,
+          "guard": {
+            "command": [
+              "node",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-live-reference-alignment-r4/identity-adapter.mjs",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2c-transient-display-handoff-r2/normal-install/js",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-live-reference-alignment-r4/local-web/UR2CLP4-N1",
+              "normal",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json",
+              "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json"
+            ],
+            "reason": "completed",
+            "returncode": 0,
+            "elapsed_s": 505.76840416598134,
+            "peak_process_family_rss_kib": 2127616,
+            "rss_limit_kib": 3145728,
+            "timeout_s": 600,
+            "last_stage": {
+              "stage": "worker-closed",
+              "status": "OBSERVED",
+              "error": null
+            },
+            "cleanup_complete": true,
+            "remaining_owned_pids": []
+          },
+          "identity_stable": true,
+          "worker_status": "OBSERVED",
+          "elapsed_trusted": true
+        }
+      ],
+      "remaining_status": "NONE",
+      "cumulative_starts": 91,
+      "cumulative_charged_seconds": 6757,
+      "remaining_seconds": 1613
+    },
+    "cleanup": {
+      "path": ".aegis/results/G5-UR2c-live-reference-alignment-r4/cleanup-audit.json",
+      "sha256": "bee755f611d1c1bfb3eb4f8fb294d6c2ff56dbe258e62f8247771a452a45ffa7",
+      "bytes": 89972
+    },
+    "remaining": []
+  }
+}

@@ -29,8 +29,8 @@ export function validateTrajectoryPlan(plan,name,snapshotSha,dpr){
 export function qualifySentinel(before,after){
  if(before.length!==after.length||before.length%4)throw Error('sentinel buffer shape');
  let interior=0,lost=0;
- for(let i=0;i<before.length;i+=4){if(!SENTINEL.ink.every((v,c)=>Math.abs(before[i+c]-v)<=2))continue;++interior;if(!SENTINEL.ink.every((v,c)=>Math.abs(after[i+c]-v)<=2))++lost;}
- return {status:interior>=100&&lost===0?'PRESERVED':'FAILED',interior,lost,compared_bytes:before.length,selection:'fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection'};
+ for(let i=0;i<before.length;i+=4){if(!SENTINEL.ink.every((v,c)=>Math.abs(before[i+c]-v)<=2))continue;++interior;if(!SENTINEL.ink.every((_,c)=>Math.abs(after[i+c]-before[i+c])<=2))++lost;}
+ return {status:interior>=100&&lost===0?'PRESERVED':'FAILED',interior,lost,compared_bytes:before.length,selection:'fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection',reference_rule:'fixed-validated-before-rgba-pairwise2-v1'};
 }
 export function qualifyContinuous(row){
  const failures=[];if(row.errors?.length)failures.push('SDK errors');

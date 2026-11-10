@@ -1,0 +1,124 @@
+{
+  "schema": "g5-live-reference-execution-contract-v1",
+  "task_id": "G5-UR2c-live-reference-alignment-r4",
+  "stage": "P32 narrowtestreferencealignment",
+  "implementation": {
+    "required_changes": [
+      "ChangequalifySentinelafter-comparisonfromnominalinkRGBA tofixedvalidatedbeforeRGBA, retainselection/minimum/numeric2andaddclearmeaningfulrulelabel.",
+      "AddRED/Green/unitnegative/cumulativedriftchecksandseparateofflineevaluationofimmutableR3readbacks.",
+      "Addnewone-windowrunnerorstrictprofileusing90/6251historyandnewUR2CLP4-N1ID; runexistingfullnormalmatrixonunchangedR2SDK.",
+      "Materializeexactpolicy/harnessdelta/subject/reusedS1/native/SDK/newraw/ledger/resultandcallback."
+    ],
+    "allowed_existing_paths": [
+      "verification/runners/g5/transient_display_retry_contract.mjs",
+      "verification/runners/g5/transient_display_retry.mjs",
+      "verification/tests/g5_transient_display_retry.test.mjs",
+      "verification/tests/test_g5_transient_display_retry.py"
+    ],
+    "allowed_new_paths": [
+      "verification/runners/g5/live_reference_alignment_runner.py"
+    ],
+    "optional_metadata": "Drivereditsonlyforpolicy/baselinehash+camera+readbackmetadatarecording. No input/trajectory/settle/capture/targetreader/receiptbehaviorchange.",
+    "forbidden_changes": [
+      "No runtime/**,sdk/**,apps/**,CMake/locks/builds/defaultbudgets/AAgeometry/Brush/Scene/History/input/receiptpolicy orUR2d changes.",
+      "Do notincrease2,changeROI/selection/minimum100,useaftertodeselectbadpixels,ignorefailurebycount,orrefreshreferenceeachRAF. DR01failedtargetbyteequalityremains0.",
+      "No modificationtoR3GLreader/failurecapture/realS1/oldpixeloracle/coldcapture/refcatalog/trajectory/guard modules. Theirhashesqualifyreuse.",
+      "No oldresult/raw/SDKrewrite orretroactiveunrunPASS; noextraS1/smoke/ChromeID/oldwindowreuse, commit/push/reset/clean orofficialGate/P34/performancePASS."
+    ]
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "auto_continue_when_resolved": true,
+    "not_human_approval_gate": true,
+    "record": [
+      "Identifyoldpalette-vs-bufferreferenceerrorandexactnewnumericrule; fixedbaselineownership/camera/fixture/hash/resetonlyatqualifiedviewportbasis.",
+      "Mapnegative/driftcontrolsanddistinguishsuccessful-redrawquantizationfromstrictfailed-attemptRGBA0.",
+      "Showreadtarget/capture/subject/72SDK/plan/S1nativefactsunchanged; newrunnerIDs/history/inputharnesspolicybindings."
+    ],
+    "unresolved_semantic_decisions": "Empty; nonewpublicorsemanticpolicydecision. Continuewithoutanotherordinaryapproval."
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "before_harness_mutation": "FreezeoldcodeandrealR3pair. Executeembeddedreference-vs-palettecounterexampleagainstoldqualifierandobservefailureforPRESERVED expectation; confirmsamepairqualifiesunchangedoldpairwiseoracle.",
+    "independent_rule": "Donoteditur0/pixel_oracle.mjs; conservativeallzero-boundaryreviewalreadyexists."
+  },
+  "tests": {
+    "required": [
+      "LP01",
+      "LP02",
+      "LP03"
+    ],
+    "offline": "ExistingNode/Pythondriver+relevantcontracttests withnewcontrols; runtimeboundarychecker; exactsubject/reader/oracle/72SDK/planhashchecks.",
+    "native_reuse": "R2compiledsubjectunchanged andnativefactsalreadyindependentlyverified. No fullnative117rerunrequiredforthistest-onlycomparisonchange."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "local_required": {
+      "path": "web-plan.json",
+      "sha256": "09c24a48b13323193fa28f5049db27bf3e32f151f638aa8d87be0856b4eeb83b"
+    }
+  },
+  "evidence": {
+    "blocking": [
+      "OldRED+newrelative-rule/negative/driftcontrols, immutableofflinepairreclassification.",
+      "Newnormal16casefullclosurewithactualtarget/raw/input/cold/receiptoracles, exactsubject+harnessdelta/manifestsandread-onlyarchives.",
+      "SingleIDclosedledger/guard/ownedcleanup andproactivecallback."
+    ],
+    "corroborative": [
+      "Historicalbaselineper-readnumericGLmetadataenhancement; physicalcauseof2-leveldifference; no needtoestablishAA-versusroundingoriginwhenexistingnon-AApairwise2alreadyaccepts."
+    ]
+  },
+  "allowed_outputs": [
+    ".aegis/results/G5-UR2c-live-reference-alignment-r4/",
+    "out/G5-UR2c-live-reference-alignment-r4/",
+    "verification/evidence/performance/G5-UR2c-live-reference-alignment-r4/"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "callback": {
+      "threadId": "01a1b6f3-e69a-7fe2-8d9b-0222e8741f03",
+      "hostId": "local",
+      "required_when": [
+        "READY_FOR_CONTROL_REVIEW",
+        "anyexplicitterminalBLOCKED"
+      ],
+      "human_authorization": "Persistentdirecthumaninstructionforadjacentimplementationandcompletion/blockernotification.",
+      "include": [
+        "Exactpackage/result/runtime-subject/harness-policy/delta/native+SDK+rawmanifests/hashes/materializedref.",
+        "OldRED/unit/drift/offlinepairandnew16caseoutcomes,remainingrowsandhonestclassification.",
+        "90/6251history+newceilcharge/cap/unrunID/cleanup,4297subjectunchanged,noGatePASS."
+      ]
+    }
+  },
+  "terminal_success": {
+    "all_of": [
+      "LP01..03satisfiedandallfrozencorrectness/input/cold/reader/receiptcheckscomplete.",
+      "N1singleworkercompletesall16casesandownedcleanup.",
+      "Subject/72SDK/protectedhelpersunchanged, reviewedsource+harnessdelta/readonlyrawarchives+memberhashes/resultmaterialized.",
+      "READY_FOR_CONTROL_REVIEWandproactivecallback."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_OR_SCOPE_CONFLICT",
+      "VERIFICATION_DESIGN_OR_PACKAGE_DEFECT",
+      "EXPECTED_OLD_RED_NOT_OBSERVED",
+      "REFERENCE_SELECTION_DRIFT_OR_TOLERANCE_CHANGE",
+      "PRODUCT_PIXEL_FAILURE_UNDER_PAIRWISE_RULE",
+      "GL_TARGET_OR_FAILURE_CAPTURE_INVALID",
+      "INPUT_OPERATION_RECEIPT_OR_COLD_ORACLE_FAILURE",
+      "SUBJECT_OR_PROTECTED_HELPER_DRIFT",
+      "WORKER_GUARD_IDENTITY_OR_ALLOWANCE_FAILURE",
+      "MISSING_REVIEW_MATERIALIZATION"
+    ],
+    "action": "Captureactualfirstfailurebeforeasync/cleanup,preserveexactraw,freezeIDandstop; noretry,newID,Runtimefixortolerancechange."
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "09c24a48b13323193fa28f5049db27bf3e32f151f638aa8d87be0856b4eeb83b"
+  }
+}

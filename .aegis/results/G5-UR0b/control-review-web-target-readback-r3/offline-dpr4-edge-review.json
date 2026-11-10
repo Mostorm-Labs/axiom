@@ -1,0 +1,170 @@
+{
+  "independent_boundary": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-before-reference.edge",
+    "sha256": "ac604b7412d3f263b0238ee42ff5ce10c354a0034cc81d2af6078fffeca007b2",
+    "reference_snapshot": {
+      "request": {
+        "generation": "0",
+        "documentRevision": "16",
+        "recoveryFrontier": [
+          8,
+          1,
+          16,
+          1,
+          24,
+          1
+        ]
+      },
+      "checkpointDigest": [
+        225,
+        140,
+        186,
+        230,
+        112,
+        157,
+        253,
+        171,
+        246,
+        169,
+        193,
+        209,
+        99,
+        5,
+        90,
+        160,
+        41,
+        205,
+        85,
+        244,
+        47,
+        61,
+        161,
+        41,
+        1,
+        190,
+        21,
+        208,
+        132,
+        157,
+        47,
+        185
+      ],
+      "key": "before-snapshot",
+      "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+      "length": 2080135
+    },
+    "oracle": {
+      "status": "QUALIFIED",
+      "compared_pixels": 3610875,
+      "aa_boundary_pixels": 2789125,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "reference": {
+        "boundary": "accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference",
+        "edge_bytes": 6400000,
+        "height": 2000,
+        "method": "accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache",
+        "objects": 16,
+        "private_frame_ids": "oracle-local only; not production receipts",
+        "rgba_bytes": 25600000,
+        "status": "REFERENCE_RENDERED",
+        "width": 3200
+      },
+      "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2c-web-target-readback-r3/local-web/UR2CRB3-N1/S0-continuous-DPR4-before.axsnap",
+      "candidate_geometry_source": "public root SDK WebGL2 framebuffer",
+      "readback": "correctness-only cold worker; not primary performance sampling",
+      "reference_origin": "NEW_ORACLE_ONCE"
+    }
+  },
+  "crop": {
+    "left": 160,
+    "top": 160,
+    "width": 1040,
+    "height": 1680,
+    "derived_from": "FrozenCPUgeometryAAfield atbeforecamera1; a rectangularcrop only, no candidate-difference expansion."
+  },
+  "rows": [
+    {
+      "file": "S0-continuous-DPR4-live-0.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    },
+    {
+      "file": "S0-continuous-DPR4-live-1.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    },
+    {
+      "file": "S0-continuous-DPR4-live-2.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    },
+    {
+      "file": "S0-continuous-DPR4-live-3.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    },
+    {
+      "file": "S0-continuous-DPR4-live-4.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    },
+    {
+      "file": "S0-continuous-DPR4-live-5.roi.rgba",
+      "result": {
+        "status": "QUALIFIED",
+        "compared_pixels": 621118,
+        "aa_boundary_pixels": 1126082,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      }
+    }
+  ],
+  "new_browser_starts": 0
+}

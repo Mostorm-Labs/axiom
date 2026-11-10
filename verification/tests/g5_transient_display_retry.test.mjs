@@ -1,5 +1,27 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {CONTINUOUS_CASES,SENTINEL,qualifySentinel,qualifyContinuous}from '../runners/g5/transient_display_retry_contract.mjs';
+const opaqueBaseline=(count=101)=>{const v=new Uint8Array(count*4);for(let i=0;i<v.length;i+=4)v.set([13,27,51,255],i);return v;};
+test('two-level redraw quantization compares against actual fixed baseline RGBA',()=>{
+ const before=opaqueBaseline(),after=before.slice();for(let i=0;i<after.length;i+=4)after.set([13,29,53,255],i);
+ assert.equal(qualifySentinel(before,after).status,'PRESERVED');
+});
+test('a single selected pixel with a three-level change in any RGBA channel fails',()=>{
+ for(const [channel,value]of [[0,16],[1,30],[2,54],[3,252]]){const before=opaqueBaseline(),after=before.slice();after[channel]=value;const r=qualifySentinel(before,after);assert.equal(r.status,'FAILED');assert.equal(r.lost,1);}
+});
+test('clear, transparent target and a missing opaque chunk fail without candidate-driven selection',()=>{
+ const before=opaqueBaseline();for(const after of [new Uint8Array(before.length),new Uint8Array(before.length).fill(255)])assert.equal(qualifySentinel(before,after).status,'FAILED');
+ const after=before.slice();after.fill(0,16,80);assert.equal(qualifySentinel(before,after).lost,16);
+});
+test('missing, blank, malformed and fewer than 100 baseline pixels cannot qualify',()=>{
+ assert.throws(()=>qualifySentinel(null,opaqueBaseline()));assert.throws(()=>qualifySentinel(opaqueBaseline(),undefined));assert.throws(()=>qualifySentinel(opaqueBaseline(),new Uint8Array(4)));
+ assert.equal(qualifySentinel(new Uint8Array(),new Uint8Array()).status,'FAILED');assert.equal(qualifySentinel(new Uint8Array(404),new Uint8Array(404)).status,'FAILED');
+ assert.equal(qualifySentinel(opaqueBaseline(99),opaqueBaseline(99)).status,'FAILED');assert.equal(qualifySentinel(opaqueBaseline(100),opaqueBaseline(100)).status,'PRESERVED');
+});
+test('cumulative 0 to 1 to 2 to 3 redraw drift is measured against the same immutable baseline',()=>{
+ const before=opaqueBaseline(),original=before.slice();const states=[];
+ for(const delta of [0,1,2,3]){const after=before.slice();for(let i=0;i<after.length;i+=4)after[i+1]+=delta;states.push(qualifySentinel(before,after).status);}
+ assert.deepEqual(states,['PRESERVED','PRESERVED','PRESERVED','FAILED']);assert.deepEqual(before,original);
+});
 test('exact six normal continuous cases preserve DPR and fixture matrix',()=>{assert.equal(CONTINUOUS_CASES.length,6);assert.equal(new Set(CONTINUOUS_CASES.map(x=>x.id)).size,6);assert.deepEqual(CONTINUOUS_CASES.map(x=>x.dpr),[1,2,4,1,2,4]);});
 test('global cleared target is detected even when no present was reported',()=>{const before=new Uint8Array(800);for(let i=0;i<before.length;i+=4)before.set(SENTINEL.ink,i);const after=new Uint8Array(before.length).fill(255);assert.equal(qualifySentinel(before,after).status,'FAILED');assert.equal(qualifySentinel(before,before).status,'PRESERVED');});
 test('partial missing ink and malformed/blank reference cannot qualify',()=>{const before=new Uint8Array(800);for(let i=0;i<before.length;i+=4)before.set(SENTINEL.ink,i);const after=before.slice();after.fill(255,16,20);assert.equal(qualifySentinel(before,after).lost,1);assert.equal(qualifySentinel(after,after).status,'PRESERVED');assert.equal(qualifySentinel(new Uint8Array(800),new Uint8Array(800)).status,'FAILED');assert.throws(()=>qualifySentinel(before,new Uint8Array(4)));});

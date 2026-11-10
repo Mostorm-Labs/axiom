@@ -1,0 +1,280 @@
+diff --git a/verification/runners/g5/transient_display_retry.mjs b/verification/runners/g5/transient_display_retry.mjs
+index abe7cd02..405b6be0 100644
+--- a/verification/runners/g5/transient_display_retry.mjs
++++ b/verification/runners/g5/transient_display_retry.mjs
+@@ -34,7 +34,7 @@ export async function continuousConsumer(){
+   }
+   Object.assign(v,await persist(key,r.bytes));await window.transientMetadata(row);
+  };
+- const resetROI=async stage=>{await settle();const r=readROI('baseline-'+stage);reference=r.bytes;referenceCamera=camera();row.roi={fixture:fixture.sha256,definition:SENTINEL,world_basis:state().camera,readback:r.readback};const q=qualifySentinel(reference,reference);if(q.status!=='PRESERVED'){row.failure=failureNow('baseline-'+stage,{...r,metadata:r.readback});throw Error('PRODUCT_PIXEL_FAILURE: fixture-defined ROI has no valid opaque interior');}await persist('baseline-'+liveIndex,reference);row.schedule.push({kind:'ROI-basis',stage,camera:state().camera,qualifier:q});};
++ const resetROI=async stage=>{await settle();const r=readROI('baseline-'+stage);reference=r.bytes;referenceCamera=camera();row.roi={fixture:fixture.sha256,definition:SENTINEL,world_basis:state().camera,readback:r.readback};const q=qualifySentinel(reference,reference);if(q.status!=='PRESERVED'){row.failure=failureNow('baseline-'+stage,{...r,metadata:r.readback});throw Error('PRODUCT_PIXEL_FAILURE: fixture-defined ROI has no valid opaque interior');}const baseline=await persist('baseline-'+liveIndex,reference);row.schedule.push({kind:'ROI-basis',stage,camera:state().camera,qualifier:q,baseline:{key:'baseline-'+liveIndex,...baseline},readback:r.readback});};
+  const pointer=(phase,x,y)=>{clock+=4000000n;const rect=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:Number(clock)/1e6});const started=performance.now();observer.dispatch(sdk.canvas,e);const r={kind:'pointer',phase,x,y,started,ended:performance.now(),activeContacts:state().activeContacts,generation:state().generation};row.schedule.push(r);return r;};
+  const point=(index,i)=>tracePlan.traces[index].view_points[i];
+  const bindTrace=(index,cancel=false)=>{const trace=tracePlan.traces[index];requireTrajectoryCamera(state().camera,trace);check(BigInt(state().generation)===BigInt(initial)+BigInt(index),'frozen history prefix generation');row.schedule.push({kind:'frozen-trajectory',index,cancel,trajectory_plan_sha256:trajectoryPlanSha,camera:state().camera,generation:state().generation,view_points:trace.view_points,world_points:trace.world_points,expected_target_ids:trace.expected_target_ids,proof:trace.proof[String(devicePixelRatio)]});};
+diff --git a/verification/runners/g5/transient_display_retry_contract.mjs b/verification/runners/g5/transient_display_retry_contract.mjs
+index 3a23924a..66d5de00 100644
+--- a/verification/runners/g5/transient_display_retry_contract.mjs
++++ b/verification/runners/g5/transient_display_retry_contract.mjs
+@@ -29,8 +29,8 @@ export function validateTrajectoryPlan(plan,name,snapshotSha,dpr){
+ export function qualifySentinel(before,after){
+  if(before.length!==after.length||before.length%4)throw Error('sentinel buffer shape');
+  let interior=0,lost=0;
+- for(let i=0;i<before.length;i+=4){if(!SENTINEL.ink.every((v,c)=>Math.abs(before[i+c]-v)<=2))continue;++interior;if(!SENTINEL.ink.every((v,c)=>Math.abs(after[i+c]-v)<=2))++lost;}
+- return {status:interior>=100&&lost===0?'PRESERVED':'FAILED',interior,lost,compared_bytes:before.length,selection:'fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection'};
++ for(let i=0;i<before.length;i+=4){if(!SENTINEL.ink.every((v,c)=>Math.abs(before[i+c]-v)<=2))continue;++interior;if(!SENTINEL.ink.every((_,c)=>Math.abs(after[i+c]-before[i+c])<=2))++lost;}
++ return {status:interior>=100&&lost===0?'PRESERVED':'FAILED',interior,lost,compared_bytes:before.length,selection:'fixture-defined opaque ink interior in fixed unchanged ROI; no candidate difference selection',reference_rule:'fixed-validated-before-rgba-pairwise2-v1'};
+ }
+ export function qualifyContinuous(row){
+  const failures=[];if(row.errors?.length)failures.push('SDK errors');
+diff --git a/verification/tests/g5_transient_display_retry.test.mjs b/verification/tests/g5_transient_display_retry.test.mjs
+index 6deb7286..2e997bce 100644
+--- a/verification/tests/g5_transient_display_retry.test.mjs
++++ b/verification/tests/g5_transient_display_retry.test.mjs
+@@ -1,5 +1,27 @@
+ import test from 'node:test';import assert from 'node:assert/strict';
+ import {CONTINUOUS_CASES,SENTINEL,qualifySentinel,qualifyContinuous}from '../runners/g5/transient_display_retry_contract.mjs';
++const opaqueBaseline=(count=101)=>{const v=new Uint8Array(count*4);for(let i=0;i<v.length;i+=4)v.set([13,27,51,255],i);return v;};
++test('two-level redraw quantization compares against actual fixed baseline RGBA',()=>{
++ const before=opaqueBaseline(),after=before.slice();for(let i=0;i<after.length;i+=4)after.set([13,29,53,255],i);
++ assert.equal(qualifySentinel(before,after).status,'PRESERVED');
++});
++test('a single selected pixel with a three-level change in any RGBA channel fails',()=>{
++ for(const [channel,value]of [[0,16],[1,30],[2,54],[3,252]]){const before=opaqueBaseline(),after=before.slice();after[channel]=value;const r=qualifySentinel(before,after);assert.equal(r.status,'FAILED');assert.equal(r.lost,1);}
++});
++test('clear, transparent target and a missing opaque chunk fail without candidate-driven selection',()=>{
++ const before=opaqueBaseline();for(const after of [new Uint8Array(before.length),new Uint8Array(before.length).fill(255)])assert.equal(qualifySentinel(before,after).status,'FAILED');
++ const after=before.slice();after.fill(0,16,80);assert.equal(qualifySentinel(before,after).lost,16);
++});
++test('missing, blank, malformed and fewer than 100 baseline pixels cannot qualify',()=>{
++ assert.throws(()=>qualifySentinel(null,opaqueBaseline()));assert.throws(()=>qualifySentinel(opaqueBaseline(),undefined));assert.throws(()=>qualifySentinel(opaqueBaseline(),new Uint8Array(4)));
++ assert.equal(qualifySentinel(new Uint8Array(),new Uint8Array()).status,'FAILED');assert.equal(qualifySentinel(new Uint8Array(404),new Uint8Array(404)).status,'FAILED');
++ assert.equal(qualifySentinel(opaqueBaseline(99),opaqueBaseline(99)).status,'FAILED');assert.equal(qualifySentinel(opaqueBaseline(100),opaqueBaseline(100)).status,'PRESERVED');
++});
++test('cumulative 0 to 1 to 2 to 3 redraw drift is measured against the same immutable baseline',()=>{
++ const before=opaqueBaseline(),original=before.slice();const states=[];
++ for(const delta of [0,1,2,3]){const after=before.slice();for(let i=0;i<after.length;i+=4)after[i+1]+=delta;states.push(qualifySentinel(before,after).status);}
++ assert.deepEqual(states,['PRESERVED','PRESERVED','PRESERVED','FAILED']);assert.deepEqual(before,original);
++});
+ test('exact six normal continuous cases preserve DPR and fixture matrix',()=>{assert.equal(CONTINUOUS_CASES.length,6);assert.equal(new Set(CONTINUOUS_CASES.map(x=>x.id)).size,6);assert.deepEqual(CONTINUOUS_CASES.map(x=>x.dpr),[1,2,4,1,2,4]);});
+ test('global cleared target is detected even when no present was reported',()=>{const before=new Uint8Array(800);for(let i=0;i<before.length;i+=4)before.set(SENTINEL.ink,i);const after=new Uint8Array(before.length).fill(255);assert.equal(qualifySentinel(before,after).status,'FAILED');assert.equal(qualifySentinel(before,before).status,'PRESERVED');});
+ test('partial missing ink and malformed/blank reference cannot qualify',()=>{const before=new Uint8Array(800);for(let i=0;i<before.length;i+=4)before.set(SENTINEL.ink,i);const after=before.slice();after.fill(255,16,20);assert.equal(qualifySentinel(before,after).lost,1);assert.equal(qualifySentinel(after,after).status,'PRESERVED');assert.equal(qualifySentinel(new Uint8Array(800),new Uint8Array(800)).status,'FAILED');assert.throws(()=>qualifySentinel(before,new Uint8Array(4)));});
+diff --git a/verification/tests/test_g5_transient_display_retry.py b/verification/tests/test_g5_transient_display_retry.py
+index 631f93e9..ace9eb37 100644
+--- a/verification/tests/test_g5_transient_display_retry.py
++++ b/verification/tests/test_g5_transient_display_retry.py
+@@ -23,4 +23,25 @@ class DisplayLedger(unittest.TestCase):
+  def test_historical_cap_cannot_be_reset(self):
+   l=m.new_ledger();l['cumulative_charged_seconds']=8360
+   with self.assertRaises(ValueError):m.reserve(l,m.IDS[0])
++R4=P.with_name('live_reference_alignment_runner.py');s4=importlib.util.spec_from_file_location('live_reference_runner',R4);r4=importlib.util.module_from_spec(s4);s4.loader.exec_module(r4)
++class LiveReferenceWindow(unittest.TestCase):
++ def observed(self):return {'status':'OBSERVED','cases':[{'status':'COMPLETED'}for _ in range(16)]}
++ def test_one_normal_window_preserves_history_and_ceil_charge(self):
++  l=r4.new_ledger();r4.reserve(l,'UR2CLP4-N1');self.assertEqual(l['attempts'][0]['reserved_seconds'],600);self.assertEqual(l['attempts'][0]['rss_limit_mib'],3072)
++  self.assertTrue(r4.complete(l,{'reason':'completed','cleanup_complete':True,'elapsed_s':1.01},self.observed(),True));self.assertEqual(l['cumulative_starts'],91);self.assertEqual(l['cumulative_charged_seconds'],6253);self.assertEqual(l['remaining_seconds'],2117)
++  with self.assertRaises(ValueError):r4.reserve(l,'UR2CLP4-N1')
++ def test_old_ids_smoke_and_duplicate_window_are_rejected(self):
++  for name in ['UR2CRB3-N1','UR2CLP4-S1','smoke']:
++   with self.assertRaises(ValueError):r4.reserve(r4.new_ledger(),name)
++  l=r4.new_ledger();r4.reserve(l,'UR2CLP4-N1')
++  with self.assertRaises(ValueError):r4.reserve(l,'UR2CLP4-N1')
++ def test_incomplete_cases_identity_cleanup_and_guard_fail_closed(self):
++  for guard,worker,stable in [({'reason':'completed','cleanup_complete':True,'elapsed_s':3},{'status':'OBSERVED','cases':[]},True),({'reason':'rss_limit','cleanup_complete':True,'elapsed_s':3},self.observed(),True),({'reason':'completed','cleanup_complete':False,'elapsed_s':3},self.observed(),True),({'reason':'completed','cleanup_complete':True,'elapsed_s':3},self.observed(),False)]:
++   l=r4.new_ledger();r4.reserve(l,'UR2CLP4-N1');self.assertFalse(r4.complete(l,guard,worker,stable));self.assertEqual(l['remaining_status'],'MISSING')
++ def test_untrusted_elapsed_charges_full_reservation(self):
++  for elapsed in [None,-1,float('nan'),float('inf'),False,99999]:
++   l=r4.new_ledger();r4.reserve(l,'UR2CLP4-N1');r4.complete(l,{'reason':'timeout','cleanup_complete':False,'elapsed_s':elapsed},None,False);self.assertEqual(l['cumulative_charged_seconds'],6851);self.assertEqual(l['remaining_seconds'],1519)
++ def test_cap_cannot_be_reset(self):
++  l=r4.new_ledger();l['cumulative_charged_seconds']=8360
++  with self.assertRaises(ValueError):r4.reserve(l,'UR2CLP4-N1')
+ if __name__=='__main__':unittest.main()
+diff --git a/verification/runners/g5/live_reference_alignment_runner.py b/verification/runners/g5/live_reference_alignment_runner.py
+new file mode 100644
+--- /dev/null
++++ b/verification/runners/g5/live_reference_alignment_runner.py
+@@ -0,0 +1,185 @@
++"""One once-only normal correctness window; frozen R2 product and R3 reader."""
++from pathlib import Path
++import hashlib, importlib.util, json, math, subprocess, sys
++
++ROOT = Path(__file__).resolve().parents[3]
++HERE = Path(__file__).resolve().parent
++TASK = 'G5-UR2c-live-reference-alignment-r4'
++RESULT = ROOT / '.aegis/results' / TASK
++OUTPUT = ROOT / 'out' / TASK
++IDS = ('UR2CLP4-N1',)
++HISTORY = {'starts': 90, 'charged_seconds': 6251, 'cap_seconds': 8370}
++SUBJECT = 'd9bd0a26585a4419ea1a25701f5c42132cbb30e6fb149398a6fe117c1a4154dc'
++
++
++def module(name, path):
++    spec = importlib.util.spec_from_file_location(name, path)
++    value = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(value)
++    return value
++
++
++def sha(path):
++    with Path(path).open('rb') as stream:
++        return hashlib.file_digest(stream, 'sha256').hexdigest()
++
++
++def write(path, value):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(value, indent=2) + '\n')
++
++
++def artifacts(root):
++    return {str(p.relative_to(root)): sha(p) for p in sorted(root.rglob('*')) if p.is_file()}
++
++
++def identity(full=False):
++    owner = module('live_reference_source_identity', HERE / 'ur0/source_identity.py')
++    old = ROOT / '.aegis/results/G5-UR2c-web-target-readback-r3/harness-source-final.json'
++    owner.EXCLUDED = tuple(json.loads(old.read_text())['excluded_self_outputs']) + (
++        f'.aegis/results/{TASK}/', f'verification/evidence/performance/{TASK}/')
++    value = owner.identity(ROOT)
++    value.update(identity_kind='VERIFICATION_HARNESS_REPOSITORY', compiled_subject_source_tree_sha256=SUBJECT)
++    if not full:
++        value.pop('files')
++    return value
++
++
++def new_ledger():
++    return dict(schema='g5-live-reference-one-window-ledger-v1', planned_ids=list(IDS),
++                historical_starts=90, historical_charged_seconds=6251, original_cap_seconds=8370,
++                attempts=[], remaining_status='PENDING', cumulative_starts=90,
++                cumulative_charged_seconds=6251, remaining_seconds=2119)
++
++
++def reserve(ledger, window_id):
++    if window_id != IDS[0] or ledger['attempts'] or ledger['remaining_status'] != 'PENDING':
++        raise ValueError('unplanned/concurrent/repeated window')
++    if ledger['cumulative_charged_seconds'] + 600 > HISTORY['cap_seconds']:
++        raise ValueError('browser allowance exhausted')
++    ledger['attempts'].append(dict(id=window_id, status='STARTED', reserved_seconds=600,
++                                   charged_seconds=600, rss_limit_mib=3072))
++
++
++def complete(ledger, guard, worker, stable):
++    if len(ledger['attempts']) != 1 or ledger['attempts'][0]['status'] != 'STARTED':
++        raise ValueError('no started window')
++    elapsed = guard.get('elapsed_s') if isinstance(guard, dict) else None
++    trusted = (isinstance(elapsed, (int, float)) and not isinstance(elapsed, bool)
++               and math.isfinite(elapsed) and 0 <= elapsed <= 605
++               and guard.get('reason') in ('completed', 'timeout', 'rss_limit', 'nonzero_exit'))
++    charged = math.ceil(elapsed) if trusted else 600
++    good = bool(guard and guard.get('reason') == 'completed' and guard.get('cleanup_complete')
++                and stable and worker and worker.get('status') == 'OBSERVED'
++                and len(worker.get('cases', [])) == 16
++                and all(row.get('status') == 'COMPLETED' for row in worker['cases']))
++    ledger['attempts'][0].update(status='COMPLETED' if good else 'STOPPED', guard=guard,
++                                 identity_stable=stable, worker_status=worker.get('status') if worker else 'MISSING',
++                                 charged_seconds=charged, elapsed_trusted=trusted)
++    ledger.update(cumulative_starts=91, cumulative_charged_seconds=6251 + charged,
++                  remaining_seconds=2119 - charged, remaining_status='NONE' if good else 'MISSING')
++    return good
++
++
++def protected():
++    package = ROOT / '.aegis/packages' / TASK
++    allowed = set(json.loads((package / 'execution-contract.json').read_text())['implementation']['allowed_existing_paths'])
++    previous = json.loads((ROOT / '.aegis/results/G5-UR2c-web-target-readback-r3/worker-freeze.json').read_text())
++    values = {p: h for p, h in previous['protected'].items() if p not in allowed}
++    for p, h in json.loads((RESULT / 'package-preflight.json').read_text())['bindings'].items():
++        if p not in allowed:
++            values[p] = h
++    for row in json.loads((RESULT / 'offline-pairs.json').read_text())['rows']:
++        for key in ('before', 'after'):
++            values[row[key]['path']] = row[key]['sha256']
++    archives = ROOT / '.aegis/results/G5-UR2c-web-target-readback-r3/archives.json'
++    for row in json.loads(archives.read_text()).values():
++        for key in ('archive', 'members'):
++            values[row[key]['path']] = row[key]['sha256']
++    for p in allowed | {'verification/runners/g5/live_reference_alignment_runner.py'}:
++        values[p] = sha(ROOT / p)
++    for name in ['red-result.json', 'old-reference-red.log', 'design-preflight.json', 'other-checks.json', 'offline-pairs.json', 'scope-integrity.json']:
++        p = RESULT / name
++        values[str(p.relative_to(ROOT))] = sha(p)
++    values[str((OUTPUT / 'identity-adapter.mjs').relative_to(ROOT))] = sha(OUTPUT / 'identity-adapter.mjs')
++    for p, expected in values.items():
++        assert sha(ROOT / p) == expected, p
++    return values
++
++
++def freeze():
++    assert not (RESULT / 'local-web/sampling-ledger.json').exists()
++    source = identity(True)
++    write(RESULT / 'harness-source-final.json', source)
++    parent = ROOT / 'out/G5-UR2c-transient-display-handoff-r2'
++    sdks = {str(p): artifacts(p) for p in [parent / 'normal-install/js', parent / 'qualification-sdk']}
++    assert all(len(v) == 36 for v in sdks.values())
++    write(RESULT / 'worker-freeze.json', dict(schema='g5-live-reference-worker-freeze-v1',
++          harness_source_tree_sha256=source['source_tree_sha256'], compiled_subject_source_tree_sha256=SUBJECT,
++          protected=protected(), SDK=sdks, ids=list(IDS), history=HISTORY, SDK_rebuilt=False, native_rebuilt=False))
++
++
++def execute():
++    frozen = json.loads((RESULT / 'worker-freeze.json').read_text())
++    directory = RESULT / 'local-web'
++    directory.mkdir(exist_ok=True)
++    ledger_path = directory / 'sampling-ledger.json'
++    assert not ledger_path.exists()
++    ledger = new_ledger()
++    write(ledger_path, ledger)
++    guard = module('live_reference_guard', HERE / 'bounded_worker.py')
++    prior = module('live_reference_process_owner', HERE / 'ur2a_handoff_runner.py')
++
++    def stable():
++        return (identity()['source_tree_sha256'] == frozen['harness_source_tree_sha256']
++                and all(sha(ROOT / p) == h for p, h in frozen['protected'].items())
++                and all(artifacts(Path(p)) == v for p, v in frozen['SDK'].items()))
++
++    if not stable():
++        ledger.update(remaining_status='MISSING', identity_failure=True)
++        write(ledger_path, ledger)
++        return
++    out = directory / IDS[0]
++    assert not out.exists()
++    reserve(ledger, IDS[0])
++    write(ledger_path, ledger)
++    cmd = ['node', str(OUTPUT / 'identity-adapter.mjs'),
++           str(ROOT / 'out/G5-UR2c-transient-display-handoff-r2/normal-install/js'), str(out), 'normal',
++           str(ROOT / 'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle'),
++           str(ROOT / '.aegis/results/G5-UR1d-physical-loss-repair-r1/reference-catalog.json'),
++           str(ROOT / '.aegis/results/G5-UR2c-transient-display-handoff-r2/trajectory-plan.json')]
++    original = guard.processes
++    owned = {}
++
++    def observed():
++        table = original()
++        prior.observe_owned_processes(table, cmd[1], str(out), owned)
++        return table
++
++    guard.processes = observed
++    outcome = None
++    try:
++        outcome = guard.run(cmd, out, 600, 3072 * 1024)
++    except BaseException as error:
++        outcome = dict(reason='guard-exception', cleanup_complete=False, error=repr(error))
++    finally:
++        guard.processes = original
++        write(directory / (IDS[0] + '-owned-processes.json'), dict(owned_processes=list(owned.values())))
++    path = out / 'worker-result.json'
++    worker = json.loads(path.read_text()) if path.is_file() else None
++    complete(ledger, outcome, worker, stable())
++    write(ledger_path, ledger)
++    write(directory / 'summary.json', dict(ledger=ledger, unrun_ids=[], harness_source_tree_sha256=frozen['harness_source_tree_sha256']))
++    print(json.dumps(ledger['attempts'][0]), flush=True)
++
++
++if __name__ == '__main__':
++    action = sys.argv[1]
++    if action == '--source-identity':
++        print(json.dumps(identity()))
++    elif action == '--freeze':
++        freeze()
++    elif action == '--execute':
++        execute()
++    else:
++        raise ValueError('explicit operation required')
