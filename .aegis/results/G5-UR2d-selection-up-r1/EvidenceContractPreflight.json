@@ -1,0 +1,113 @@
+{
+  "schema": "g5-ur2d-evidence-preflight-v1",
+  "status": "PASS",
+  "obligations": [
+    {
+      "id": "D-A1",
+      "requirement": "Dense masked region selection avoids full body/history preparation per candidate/repeated Move.",
+      "oracle": "Old frozen selection function/binary for Hit/Miss/Invalid/Unsupported; private actual counters on full validations/compile knots/components/mask PathOps/source copies. Structural RED before optimized routing.",
+      "acceptance": "Production region selection consumes renderer-owned prepared/local exact computation; warm identical bodies do not full-compile per copy x Move; query-local intersection/history work shrinks to relevant components. Dense wholly-erased miss does not subtract whole historical masks from every body component. Unknown/unproven source validation is retained.",
+      "evidence_required": [
+        "old-cost-RED.json",
+        "selection-cost-and-parity.json",
+        "source-delta.patch"
+      ]
+    },
+    {
+      "id": "D-A2",
+      "requirement": "Selection semantics and terminal input lifecycle are unchanged.",
+      "oracle": "Prechange exact selection/component callable, hand-authored boundary/sliver/EvenOdd/affine/invalid fixtures, existing FC01ARegionSelection/SelectionBatch2/SelectionInput; actual public mouse route.",
+      "acceptance": "No decision differences across frozen corpus, including tolerance and error behavior. Blank point-tool drag and Up or Cancel/source-lost leave zero active contacts/session; immediate new Down works; late/foreign terminal cannot end another gesture. No synthetic timeout used as a success terminal.",
+      "evidence_required": [
+        "selection-parity.json",
+        "input-lifecycle.json",
+        "native-regression.log",
+        "web-functional.json"
+      ]
+    },
+    {
+      "id": "D-B1",
+      "requirement": "Synchronous partial erase Up eliminates measured repeated exact query/history/mask work.",
+      "oracle": "Before/after on same leased body/history/local query through actual eraserFinish, existing old exact/component oracle, phase CPU durations and work counters.",
+      "acceptance": "At least one measured Up repeated-work source is removed with structural RED/GREEN (e.g. identical local query/history result shared across complete equivalent alias inputs, historical path reuse without repeated value scans/unions, or eliminated redundant trace/preparation copies). Share only with complete source/config/affine/query/history equality. Candidate object targets and mask bytes match old canonical outcome.",
+      "evidence_required": [
+        "up-phase-baseline.json",
+        "up-phase-candidate.json",
+        "up-structural-red-green.json",
+        "exact-oracle-parity.json"
+      ]
+    },
+    {
+      "id": "D-B2",
+      "requirement": "Commit/History/publication/Scene remain atomic and exactly-once through failures and reentry.",
+      "oracle": "Actual canonical operation counts/IDs/mask targets, History Undo/Redo, snapshot/final pixels, Scene full/incremental parity and receipt identity; existing failure injection plus focused allocation/refusal tests for changed path.",
+      "acceptance": "Prepare failure leaves canonical/history/publication unchanged; successful apply finalizes once; derived Scene/render failure preserves accepted Operation and valid recovery; no-op/cancel create no Operation. Immediately next erase/navigation reads current committed state; old completion cannot clear newer feedback.",
+      "evidence_required": [
+        "commit-history-scene.json",
+        "failure-recovery.json",
+        "web-functional.json"
+      ]
+    },
+    {
+      "id": "D-PERF",
+      "requirement": "Demonstrate actual local performance improvement for A and B without masking waits.",
+      "oracle": "Three paired iterations same source-bound workload/normal build and resources; native exact costs plus actual public Web Down/Move/Up and content-write timing, separate readback-free phase. Existing diagnostic ~988ms selection vs7.5ms erase is investigation input, not final baseline qualification.",
+      "acceptance": "Selection dense masked median improves >=4x versus frozen old callable on same7199/two80-segment corpus, exact decisions unchanged; Up stage repeated-work metric decreases and paired Up median improves on the frozen dense-history case, with no new handler failure or material (>20%) median regression in next Down. If browser noise prevents timing conclusion after bounded pairs, return READY_WITH_PERFORMANCE_FINDING only for complete structural/correctness proof, explicitly no performance PASS; any missing required functional result is BLOCKED_EVIDENCE. Do not change budgets, add waits before next action, skip samples, or widen AA to pass.",
+      "evidence_required": [
+        "paired-native-costs.json",
+        "web-timing.json",
+        "performance-classification.json"
+      ]
+    },
+    {
+      "id": "D-REG",
+      "requirement": "Prior accepted behavior and resource/basis boundaries remain intact.",
+      "oracle": "Frozen targeted native suites and applicable focused Node/Python/boundary checks; old finite634+6 witness decisions; static pixels; unchanged r2 product preimages; matching new ordinary Web install.",
+      "acceptance": "No new decision/pixel/receipt/resource leak or target mismatch. Per-query pins/metadata/scratch use existing quota; mask-only/body/transform/history forks validate. Existing8 broad native failures remain separately bound, not passed or auto-ignored if failure fingerprint changes.",
+      "evidence_required": [
+        "regressions.json",
+        "lease-and-basis.json",
+        "normal-artifacts.json",
+        "source-manifest.json",
+        "cleanup.json"
+      ]
+    }
+  ],
+  "required": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "source-before.json",
+    "baseline-oracles.json",
+    "old-cost-RED.json",
+    "milestone-A.json",
+    "milestone-B.json",
+    "selection-parity.json",
+    "selection-cost-and-parity.json",
+    "input-lifecycle.json",
+    "up-phase-baseline.json",
+    "up-phase-candidate.json",
+    "up-structural-red-green.json",
+    "commit-history-scene.json",
+    "lease-and-basis.json",
+    "regressions.json",
+    "web-functional.json",
+    "web-timing.json",
+    "performance-classification.json",
+    "normal-artifacts.json",
+    "source-manifest.json",
+    "source-delta.patch",
+    "new-source-postimages/",
+    "cleanup.json",
+    "result.json"
+  ],
+  "native_roster": 76,
+  "oracle_freeze_required_before_mutation": true,
+  "browser_ids": [
+    "U2D1-OLD-F",
+    "U2D1-A-F",
+    "U2D1-B-F",
+    "U2D1-COMPARE"
+  ],
+  "open_semantic_decisions": []
+}

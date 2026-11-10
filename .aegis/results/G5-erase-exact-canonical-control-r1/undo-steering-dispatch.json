@@ -1,0 +1,12 @@
+{
+  "status": "USER_UNDO_SCENARIO_DISPATCHED",
+  "package": ".aegis/packages/G5-erase-undo-readiness-supplement-r1/package.json",
+  "sha256": "d64195e58ae8796977f9a6a44cd7514a06ee34a61fbd2d95d46f764aec39c68b",
+  "parent": ".aegis/packages/G5-erase-exact-canonical-r1/package.json",
+  "actual_ui_sources": {
+    "sdk/web/example.html:521": "undo.disabled=!state.canUndo",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp:624": "availability gates active traces and historySceneReady",
+    "sdk/web/axiom.mjs:84": "render calls frame before dispatch"
+  },
+  "scope": "Target800/1600MoveactualUIold/candidate;parent160pairedunchanged;nohistorysemanticchange;existingDIAGNOSTIC/STRESSallowanceonly"
+}

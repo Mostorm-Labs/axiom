@@ -1,0 +1,174 @@
+[0/2] Re-checking globbed directories...
+[1/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/damage_tracker.cpp.o
+[2/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_group_manager.cpp.o
+[3/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/visibility_resolver.cpp.o
+[4/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o
+[5/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/frame_plan.cpp.o
+[6/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/editing_overlay.cpp.o
+[7/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/surface_lifecycle.cpp.o
+[8/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_backend.cpp.o
+[9/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_target.cpp.o
+[10/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_frame_coordinator.cpp.o
+[11/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_app_binding.cpp.o
+[12/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/canonical_handoff.cpp.o
+[13/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/presentation_tracker.cpp.o
+[14/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/direct_reference_source.cpp.o
+[15/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/image_resource.cpp.o
+[16/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/preview_surface.cpp.o
+[17/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/image_encode.cpp.o
+[18/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_text_resources.cpp.o
+[19/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/brush_outline_skia_path.cpp.o
+[20/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_headless_backend.cpp.o
+[21/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_scene_renderer.cpp.o
+[22/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_execution.cpp.o
+[23/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_compact_material.cpp.o
+[24/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_backend.cpp.o
+[25/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_surface_provider.cpp.o
+[26/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_layers.cpp.o
+[27/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_mask_history.cpp.o
+[28/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o
+[29/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o
+[30/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/prepared_body_job.cpp.o
+[31/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_prepared_geometry.cpp.o
+[32/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_navigation_tiles.cpp.o
+[33/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_brush_renderer.cpp.o
+[34/37] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/navigation_pixel_validity.cpp.o
+[35/37] Linking CXX static library runtime/render/libcanvas_runtime_render.a
+[36/37] Building CXX object runtime/render/CMakeFiles/axiom_render_memory_budget_tests.dir/tests/render_memory_budget_test.cpp.o
+FAILED: runtime/render/CMakeFiles/axiom_render_memory_budget_tests.dir/tests/render_memory_budget_test.cpp.o 
+/usr/bin/c++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_ENTRY_MIB=8 -DAXIOM_RENDER_SHARED_MIB=96 -DAXIOM_TRANSIENT_DISPLAY_TESTS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -MD -MT runtime/render/CMakeFiles/axiom_render_memory_budget_tests.dir/tests/render_memory_budget_test.cpp.o -MF runtime/render/CMakeFiles/axiom_render_memory_budget_tests.dir/tests/render_memory_budget_test.cpp.o.d -o runtime/render/CMakeFiles/axiom_render_memory_budget_tests.dir/tests/render_memory_budget_test.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/render_memory_budget_test.cpp
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/render_memory_budget_test.cpp:48:7: error: no member named 'cout' in namespace 'std'; did you mean 'count'?
+   48 |  std::cout<<nlohmann::json{{"optional_mib",configured.maxBytes/mib},{"shared_mib",configured.sharedMaxBytes/mib},
+      |       ^~~~
+      |       count
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/count.h:86:1: note: 'count' declared here
+   86 | count(_InputIterator __first, _InputIterator __last, const _Tp& __value) {
+      | ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/render_memory_budget_test.cpp:48:2: error: reference to overloaded function could not be resolved; did you mean to call it?
+   48 |  std::cout<<nlohmann::json{{"optional_mib",configured.maxBytes/mib},{"shared_mib",configured.sharedMaxBytes/mib},
+      |  ^~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/count.h:86:1: note: possible target for call
+   86 | count(_InputIterator __first, _InputIterator __last, const _Tp& __value) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:576:1: note: candidate function [with _CharT = char, _Traits = std::char_traits<char>, _Allocator = std::allocator<char>] not viable: no overload of 'count' matching 'basic_ostream<char, std::char_traits<char>> &' for 1st argument
+  576 | operator<<(basic_ostream<_CharT, _Traits>& __os, const basic_string<_CharT, _Traits, _Allocator>& __str) {
+      | ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:344:55: note: candidate template ignored: couldn't infer template argument '_Traits'
+  344 | _LIBCPP_HIDE_FROM_ABI basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& __os, _CharT __c) {
+      |                                                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:349:55: note: candidate template ignored: couldn't infer template argument '_CharT'
+  349 | _LIBCPP_HIDE_FROM_ABI basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& __os, char __cn) {
+      |                                                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:376:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  376 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:381:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  381 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, signed char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:386:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  386 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, unsigned char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:398:1: note: candidate template ignored: couldn't infer template argument '_CharT'
+  398 | operator<<(basic_ostream<_CharT, _Traits>& __os, const char* __strn) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:437:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  437 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, const char* __str) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:443:1: note: candidate template ignored: couldn't infer template argument '_Traits'
+  443 | operator<<(basic_ostream<char, _Traits>& __os, const signed char* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:450:1: note: candidate template ignored: couldn't infer template argument '_Traits'
+  450 | operator<<(basic_ostream<char, _Traits>& __os, const unsigned char* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:569:33: note: candidate template ignored: couldn't infer template argument '_Stream'
+  569 | _LIBCPP_HIDE_FROM_ABI _Stream&& operator<<(_Stream&& __os, const _Tp& __x) {
+      |                                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:588:1: note: candidate template ignored: couldn't infer template argument '_CharT'
+  588 | operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __ec) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:623:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  623 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, wchar_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:626:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  626 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const wchar_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:629:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  629 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char16_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:632:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  632 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char32_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:635:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  635 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char16_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:638:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  638 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char32_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:644:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  644 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char8_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:647:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  647 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char8_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:650:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  650 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char8_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:653:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  653 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char8_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:657:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  657 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char16_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:660:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  660 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char32_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:663:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  663 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char16_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:666:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  666 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char32_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2837:1: note: candidate template ignored: couldn't infer template argument '_Expr1'
+ 2837 | operator<<(const _Expr1& __x, const _Expr2& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2846:1: note: candidate template ignored: couldn't infer template argument '_Expr'
+ 2846 | operator<<(const _Expr& __x, const typename _Expr::value_type& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__cstddef/byte.h:63:38: note: candidate template ignored: requirement 'is_integral<std::string>::value' was not satisfied [with _Integer = string_t]
+   63 | _LIBCPP_HIDE_FROM_ABI constexpr byte operator<<(byte __lhs, _Integer __shift) noexcept {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__random/uniform_int_distribution.h:234:1: note: candidate template ignored: could not match 'uniform_int_distribution' against 'basic_string'
+  234 | operator<<(basic_ostream<_CharT, _Traits>& __os, const uniform_int_distribution<_IT>& __x) {
+      | ^
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkRefCnt.h:366:6: note: candidate template ignored: could not match 'sk_sp' against 'basic_string'
+  366 | auto operator<<(std::basic_ostream<C, CT>& os, const sk_sp<T>& sp) -> decltype(os << sp.get()) {
+      |      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:392:1: note: candidate template ignored: could not match 'const _CharT *' against 'string_t' (aka 'std::string')
+  392 | operator<<(basic_ostream<_CharT, _Traits>& __os, const _CharT* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:582:1: note: candidate template ignored: could not match 'basic_string_view' against 'basic_string'
+  582 | operator<<(basic_ostream<_CharT, _Traits>& __os, basic_string_view<_CharT, _Traits> __sv) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:594:1: note: candidate template ignored: could not match 'shared_ptr' against 'basic_string'
+  594 | operator<<(basic_ostream<_CharT, _Traits>& __os, shared_ptr<_Yp> const& __p) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:608:1: note: candidate template ignored: could not match 'unique_ptr' against 'basic_string'
+  608 | operator<<(basic_ostream<_CharT, _Traits>& __os, unique_ptr<_Yp, _Dp> const& __p) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:614:1: note: candidate template ignored: could not match 'bitset' against 'basic_string'
+  614 | operator<<(basic_ostream<_CharT, _Traits>& __os, const bitset<_Size>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iomanip:293:1: note: candidate template ignored: could not match '__iom_t8' against 'basic_string'
+  293 | operator<<(basic_ostream<_CharT, _Traits>& __os, const __iom_t8<_MoneyT>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iomanip:390:1: note: candidate template ignored: could not match '__iom_t10' against 'basic_string'
+  390 | operator<<(basic_ostream<_CharT, _Traits>& __os, const __iom_t10<_CharT>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2855:1: note: candidate template ignored: requirement '__is_val_expr<std::string>::value' was not satisfied [with _Expr = string_t]
+ 2855 | operator<<(const typename _Expr::value_type& __x, const _Expr& __y) {
+      | ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/render_memory_budget_test.cpp:51:38: error: no member named 'cerr' in namespace 'std'
+   51 | }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+      |                                      ^~~~
+3 errors generated.
+ninja: build stopped: subcommand failed.

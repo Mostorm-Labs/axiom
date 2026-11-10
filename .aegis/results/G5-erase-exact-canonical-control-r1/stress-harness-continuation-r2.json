@@ -1,0 +1,60 @@
+{
+  "schema": "g5-control-harness-final-continuation-v1",
+  "created_utc": "2026-11-10T14:33:24.907325+00:00",
+  "status": "AUTHORIZED_ONCE_AFTER_OFFLINE_PREFLIGHT",
+  "supersedes_only_unconsumed_continuation_of": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/stress-harness-continuation-r1.json",
+    "sha256": "2b37524a38453990cc95aeccfcdb5a5cbdd507acf0e771ae9175c2105330744e"
+  },
+  "bindings": [
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/offline-driver-preflight.json",
+      "sha256": "e37445b3048c5853b8b899d8e32389615b47c8549bc21436d6a207db49514163"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/http-routes-offline.json",
+      "sha256": "fe5828c23a3efdc9054575584ae289ef7f734e8f7cb885968d96867187b3a04e"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+      "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+    }
+  ],
+  "classification": "Browser cannot import Node host module; verification implementation defect. All prior failures, source/SDK freeze identities and timing observations preserved. Pure browser helper now separated and offline checked.",
+  "windows": [
+    {
+      "id": "G5EC1-STRESS-CONTINUE-R2",
+      "starts": 1,
+      "wall_seconds": 151,
+      "rss_mib": 4096,
+      "cases": [
+        "old actualDemo1600 immediate erase/actual feedback and missing UndoRedo qualification",
+        "candidate actualDemo1600 same",
+        "candidate10continuousrounds/finalindependentpixels"
+      ],
+      "rule": "exact frozen unfinished proof only; original180-27-2 =151s remaining"
+    },
+    {
+      "id": "G5EC1-READINESS-ALL",
+      "starts": 1,
+      "wall_seconds": 300,
+      "rss_mib": 4096,
+      "cases": "original11rowsunchanged"
+    }
+  ],
+  "accounting": {
+    "original_stress_cap": 180,
+    "consumed_failure_windows": 29,
+    "remaining_stress_seconds": 151,
+    "charged_so_far": 418,
+    "combined_cap": 1200
+  },
+  "preconditions": [
+    "Bind complete offline preflight/browser dependencies and expectedgeneration wait tests.",
+    "No source/SDK/tolerance/oracle changes.",
+    "Declare mixed44 reference limitations honestly; fixedexpectedcolor/mathematicalpose/snapshotsemantics and inkprefix proof apply."
+  ],
+  "terminal_policy": "Final controlled continuation, no further repeated stress IDs. Readiness proceeds unless genuine product/highimpactfunctional failure requires classification. Any further evidence deficit returned explicit; no forged completion or discarded failure.",
+  "timing_policy": "3sgoal5sreferencearefindingsonly;notblockingthresholds",
+  "publication": "No commit/push authorized in current task."
+}

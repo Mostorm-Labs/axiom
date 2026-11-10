@@ -1,0 +1,86 @@
+{
+  "status": "PERFORMANCE_FINDINGS",
+  "official_performance_pass": false,
+  "paired_observations": 3,
+  "timing": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/web-timing.json",
+    "sha256": "ca1b40b0c130fc4f824c6e1adea25c18788c31e5aae756c47cf5fe4e9dcf6479",
+    "bytes": 92515
+  },
+  "findings": [
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 0,
+      "fixture": "S0",
+      "repeat": 1,
+      "old_ms": 0.19999992847442627,
+      "candidate_ms": 0.30000007152557373,
+      "change_percent": 50.00008940699914,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 0,
+      "fixture": "S2",
+      "repeat": 0,
+      "old_ms": 0.30000007152557373,
+      "candidate_ms": 0.3999999761581421,
+      "change_percent": 33.33329359691295,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 0,
+      "fixture": "S2",
+      "repeat": 1,
+      "old_ms": 0.30000007152557373,
+      "candidate_ms": 0.3999999761581421,
+      "change_percent": 33.33329359691295,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 0,
+      "fixture": "S2",
+      "repeat": 2,
+      "old_ms": 0.2999999523162842,
+      "candidate_ms": 0.40000009536743164,
+      "change_percent": 33.33338631524823,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 1,
+      "fixture": "S2",
+      "repeat": 1,
+      "old_ms": 0.19999992847442627,
+      "candidate_ms": 0.2999999523162842,
+      "change_percent": 50.000029802333046,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "NEXT_DOWN_OVER_20_PERCENT",
+      "pair": 2,
+      "fixture": "S2",
+      "repeat": 1,
+      "old_ms": 0.20000004768371582,
+      "candidate_ms": 0.30000007152557373,
+      "change_percent": 50.0,
+      "note": "Sub-millisecond dispatch values are quantized; retain rather than discard."
+    },
+    {
+      "kind": "MIXED_ERASE_UP",
+      "description": "All three pairs retained. Selection improves; ordinary-Web eraser Up is mixed, so native mechanism speedups are not a uniform browser Up speedup."
+    },
+    {
+      "kind": "CONTENT_FEEDBACK_WAIT",
+      "description": "Erase content writes arrive hundreds of milliseconds after input; selection phases often have no observed content write. RAF callbacks do not prove visual feedback."
+    }
+  ],
+  "native_mechanism_only": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/B-final-paired-native.json",
+    "sha256": "3b772b8888536dda71ebcf2bcae12b8b1d3fd25fd6f6bbae3e752ef4ced80b06",
+    "bytes": 11014
+  },
+  "no_claim": "No G5, Gate, P34, cross-platform, fullscreen, interaction SLO or release PASS."
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "g5-object-interaction-continuity-result-v1",
+  "status": "IN_PROGRESS_CHECKPOINT",
+  "source_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "object_continuity_exit_code": 0,
+  "object_continuity": {
+    "active_object_draws": 3,
+    "actual_pixel_digest": "12138fe573b8adc7",
+    "direct_groups_delta": 5,
+    "full_transient_scene_draws": 3,
+    "moves": 3,
+    "oracle_pixel_digest": "12138fe573b8adc7",
+    "static_reuse_builds": 1,
+    "static_reuse_hits": 2,
+    "static_reuse_invalidations": 0,
+    "static_reuse_lease_bytes": 262640
+  },
+  "recovery_exit_code": 0,
+  "continuity_exit_code": 0,
+  "first_present_selection": "CONTROL_SIDE_DIAGNOSTIC_REQUIRED",
+  "dense_long_line_historical_mask_fixture": "NOT_YET_MATERIALIZED",
+  "verification_gap": "The current native fixture proves bounded non-ink prefix/suffix reuse and pixel equality, but does not yet reproduce the full user scene with dense long-line historical masks plus Shape/Sticky/Table/Image. No creation fix is claimed.",
+  "browser_starts": 0
+}

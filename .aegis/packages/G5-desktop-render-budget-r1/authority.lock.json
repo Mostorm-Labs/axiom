@@ -1,0 +1,63 @@
+{
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_request": "这个限制搞大一点啊，现在这个也太小的，限制的那么死有什么意义呢",
+  "supersedes_for_this_scope": "Prior32/96no-budget-change constraints applied to UR2d packages only. User now explicitly authorizes larger desktop budgets; keep historical authority/evidence unchanged.",
+  "current_authority": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "accepted_source": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0"
+  },
+  "baseline_sdk": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-normal-artifacts.json",
+    "sha256": "a81ddee2d58a1c27db1d58a0404a6537d975cd7f58849311f9e7b7792f6799d0"
+  },
+  "area_assessment": {
+    "path": ".aegis/results/G5-viewport-area-review-r1/assessment.json",
+    "sha256": "050ff1249f21434dff515d5a22cbf7f31cf507b6a444cb4ba5b252ca058c30b9"
+  },
+  "owners": {
+    "render": "ExistingSkiaRenderer/RenderCacheOptions/ResourceBudgetManager",
+    "semantic": "OperationEngineunchanged",
+    "sdk": "NoJS/DLLAPIchange"
+  },
+  "statements": [
+    "Budget ceilings are per-renderer derived resources, not canonical document or whole browser RSS. No upfront allocation.",
+    "Use desktop256MiBoptional /512MiBshared /64MiBentry. Native mobile retains32/96/8. Web built desktop by default; conservative build profile remains available, no UA guessing.",
+    "Preserve GPU leases until real completion; cache quota cannot force incompletepixels,dropconfirmedinput,bypassreceipt or allocationvalidation.",
+    "No asyncUp/workers/UR3 renderer rewrite. This task changesbudgetpolicy anddirectlynecessaryverification only.",
+    "All oldUR2dsource/results/samplingIDs/normal4316 artifacts remain immutable; newbuildandnewdemo."
+  ]
+}

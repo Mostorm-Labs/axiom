@@ -1,0 +1,144 @@
+Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 45 tests from 11 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from SketchSemantic
+[ RUN      ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips
+[       OK ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips (2 ms)
+[ RUN      ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange
+[       OK ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange (0 ms)
+[ RUN      ] SketchSemantic.PatternRoundtripAndApplicability
+[       OK ] SketchSemantic.PatternRoundtripAndApplicability (0 ms)
+[ RUN      ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision
+[       OK ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision (0 ms)
+[----------] 4 tests from SketchSemantic (2 ms total)
+
+[----------] 7 tests from SketchRuntime
+[ RUN      ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry (7 ms)
+[ RUN      ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory
+[       OK ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory (0 ms)
+[ RUN      ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch
+[       OK ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch (0 ms)
+[ RUN      ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles
+[       OK ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles (0 ms)
+[ RUN      ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds
+[       OK ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds (1 ms)
+[ RUN      ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves
+[       OK ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves (2 ms)
+[ RUN      ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering
+[       OK ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering (14 ms)
+[----------] 7 tests from SketchRuntime (27 ms total)
+
+[----------] 8 tests from SketchGeometry
+[ RUN      ] SketchGeometry.DeterministicAndColorIndependent
+[       OK ] SketchGeometry.DeterministicAndColorIndependent (0 ms)
+[ RUN      ] SketchGeometry.RoughnessZeroExactAndContinuous
+[       OK ] SketchGeometry.RoughnessZeroExactAndContinuous (0 ms)
+[ RUN      ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline
+[       OK ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline (0 ms)
+[ RUN      ] SketchGeometry.ConnectorKeepsEndpointsAndDirections
+[       OK ] SketchGeometry.ConnectorKeepsEndpointsAndDirections (0 ms)
+[ RUN      ] SketchGeometry.HatchCurvesUseIndependentSeededStream
+[       OK ] SketchGeometry.HatchCurvesUseIndependentSeededStream (0 ms)
+[ RUN      ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents
+[       OK ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents (0 ms)
+[ RUN      ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle
+[       OK ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle (0 ms)
+[ RUN      ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable
+[       OK ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable (0 ms)
+[----------] 8 tests from SketchGeometry (0 ms total)
+
+[----------] 5 tests from SketchExtendedGeometry
+[ RUN      ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline
+[       OK ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline (0 ms)
+[ RUN      ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening
+[       OK ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening (0 ms)
+[ RUN      ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise
+[       OK ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise (0 ms)
+[ RUN      ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds
+[       OK ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds (0 ms)
+[ RUN      ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths
+[       OK ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths (0 ms)
+[----------] 5 tests from SketchExtendedGeometry (0 ms total)
+
+[----------] 2 tests from SketchExtendedSemantic
+[ RUN      ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke
+[       OK ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke (0 ms)
+[ RUN      ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle
+[       OK ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle (0 ms)
+[----------] 2 tests from SketchExtendedSemantic (0 ms total)
+
+[----------] 6 tests from SketchExtendedRuntime
+[ RUN      ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership
+[       OK ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership (0 ms)
+[ RUN      ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry
+[axiom] present begin frame=1 objects=0 scene_records=0
+[       OK ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry (0 ms)
+[ RUN      ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox
+[       OK ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody
+[       OK ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody (0 ms)
+[ RUN      ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange
+[       OK ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange (2 ms)
+[----------] 6 tests from SketchExtendedRuntime (4 ms total)
+
+[----------] 2 tests from SketchExtendedRender
+[ RUN      ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches
+[       OK ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches (2 ms)
+[ RUN      ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder
+[       OK ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder (2 ms)
+[----------] 2 tests from SketchExtendedRender (4 ms total)
+
+[----------] 5 tests from CornerGeometry
+[ RUN      ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius
+[       OK ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius (0 ms)
+[ RUN      ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner
+[       OK ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner (0 ms)
+[ RUN      ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary
+[       OK ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary (0 ms)
+[ RUN      ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty
+[       OK ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty (7 ms)
+[ RUN      ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable
+[       OK ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable (1 ms)
+[----------] 5 tests from CornerGeometry (8 ms total)
+
+[----------] 3 tests from HandwritingFont
+[ RUN      ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles
+[       OK ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles (0 ms)
+[ RUN      ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/tests/rounded_font_test.cpp:57: Failure
+Value of: snapshot->diagnostics.empty()
+  Actual: false
+Expected: true
+
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback (43 ms)
+[ RUN      ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects
+[       OK ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects (0 ms)
+[----------] 3 tests from HandwritingFont (43 ms total)
+
+[----------] 2 tests from CornerSemantic
+[ RUN      ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed
+[       OK ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed (0 ms)
+[ RUN      ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability
+[       OK ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability (0 ms)
+[----------] 2 tests from CornerSemantic (0 ms total)
+
+[----------] 1 test from CornerRuntime
+[ RUN      ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable (1 ms)
+[----------] 1 test from CornerRuntime (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 45 tests from 11 test suites ran. (93 ms total)
+[  PASSED  ] 44 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+
+ 1 FAILED TEST

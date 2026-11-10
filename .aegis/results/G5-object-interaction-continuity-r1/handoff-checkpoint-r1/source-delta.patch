@@ -1,0 +1,422 @@
+diff --git a/runtime/render/include/canvas/render/skia_renderer.hpp b/runtime/render/include/canvas/render/skia_renderer.hpp
+index 2baa4e3d..040a7913 100644
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -22,6 +22,7 @@ class SkCanvas;
+ 
+ namespace canvas::render {
+ namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
++namespace internal {struct ObjectInteractionWork;}
+ 
+ struct CanonicalStrokePoint;
+ struct CanonicalViewportTransform;
+@@ -89,6 +90,9 @@ class SkiaRenderer final {
+     void setRenderCacheOptions(RenderCacheOptions options);
+     void clearRenderCache() noexcept;
+     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    [[nodiscard]] internal::ObjectInteractionWork objectInteractionWork() const noexcept;
++#endif
+     // Owner-thread derived exact-query reuse. Returns only a value decision;
+     // canonical target selection still belongs to the interaction owner.
+     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index c40d0c76..34b3b2e3 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -17,6 +17,92 @@ namespace g5 = canvas::foundation::internal::g5;
+ #include <chrono>
+ 
+ namespace canvas::render::internal {
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#define OI_NOTE(...) do { __VA_ARGS__; } while(false)
++#else
++#define OI_NOTE(...) ((void)0)
++#endif
++void SkiaRenderCache::invalidateStaticScene([[maybe_unused]] bool count) noexcept {
++    OI_NOTE(if(count && staticScene_) ++objectWork.invalidations);
++    staticScene_.reset();
++    OI_NOTE(objectWork.leaseBytes=0);
++}
++bool SkiaRenderCache::staticSceneBasisMatches(const FramePlan& plan,
++    std::size_t activeIndex,std::size_t activeEnd) const noexcept {
++    if (!staticScene_ || !staticScene_->valid() || activeIndex>=plan.referenceDrawList.entries.size()) return false;
++    if (staticScene_->target!=target_ || staticScene_->resourceEpoch!=resourceEpoch_ ||
++        staticScene_->targetEpoch!=targetEpoch_ || staticScene_->surface!=surface_ ||
++        staticScene_->context!=surface_->recordingContext() ||
++        staticScene_->frame.viewId!=plan.frame.viewId || staticScene_->frame.camera!=plan.frame.camera ||
++        staticScene_->frame.viewportClip!=plan.frame.viewportClip ||
++        staticScene_->frame.sceneGeneration!=plan.frame.sceneGeneration ||
++        staticScene_->frame.sceneReadToken!=plan.frame.sceneReadToken || staticScene_->frame.metrics!=plan.frame.metrics ||
++        staticScene_->frame.surfaceGeneration!=plan.frame.surfaceGeneration || staticScene_->frame.metricsGeneration!=plan.frame.metricsGeneration ||
++        staticScene_->frame.worldViewport!=plan.frame.worldViewport || staticScene_->transform!=plan.referenceDrawList.worldToView ||
++        staticScene_->background!=plan.background || staticScene_->transparent!=plan.transparentBackground ||
++        staticScene_->isolate!=plan.isolateEraseMasks || staticScene_->active!=activeSource_ ||
++        staticScene_->activeIndex!=activeIndex || staticScene_->activeEnd!=activeEnd ||
++        staticScene_->stamps.size()!=plan.referenceDrawList.entries.size()) return false;
++    for (std::size_t i=0;i<staticScene_->stamps.size();++i) {
++        const auto& entry=plan.referenceDrawList.entries[i];
++        if (staticScene_->stamps[i].id!=entry.record.objectId) return false;
++        if (i>=activeIndex && i<activeEnd) continue;
++        const auto* group=groups_.find(entry.record.objectId);
++        if (!group || staticScene_->stamps[i]!=StaticSceneStamp{entry.record.objectId,group->revisions,
++            entry.presentationOpacity,entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds}) return false;
++    }
++    return true;
++}
++bool SkiaRenderCache::buildStaticScene(SkCanvas& canvas,const FramePlan& plan,
++    std::size_t activeIndex,std::size_t activeEnd,ImageResourceResolver* images,SkiaTextResources* text,
++    const CompactDeviceGrid* grid) {
++    if(!budget || !sourceAdmission_ || plan.referenceDrawList.entries.size()>options.maxEntries) return false;
++    const auto info=surface_->imageInfo(); const auto bytes=std::size_t(info.width())*info.height()*4;
++    const bool needSuffix=activeEnd<plan.referenceDrawList.entries.size();
++    const auto metadataBytes=sizeof(StaticSceneCache)+plan.referenceDrawList.entries.size()*sizeof(StaticSceneStamp)+256U;
++    const auto planes=std::size_t(1+needSuffix);
++    if(metadataBytes>options.maxBytes || bytes>(options.maxBytes-metadataBytes)/planes) {
++        OI_NOTE(++objectWork.denials); return false;
++    }
++    const auto total=bytes*planes;
++    auto metadata=budget->reserve(resources::ResourceClass::kRecorded,metadataBytes,true);
++    if(!metadata){OI_NOTE(++objectWork.denials);return false;}
++    resources::ResourceLease metadataLease(budget,*metadata);
++    auto token=budget->reserve(resources::ResourceClass::kRaster,total,true);
++    if(!token){OI_NOTE(++objectWork.denials);return false;}
++    resources::ResourceLease lease(budget,*token);
++    const bool marked=lease.markGpuUse(); (void)marked; OI_NOTE(objectWork.gpuLeaseMarks+=marked);
++    auto candidate=std::make_shared<StaticSceneCache>(target_,surface_->recordingContext(),resourceEpoch_,targetEpoch_,plan.frame,
++        plan.referenceDrawList.worldToView,plan.background,plan.transparentBackground,plan.isolateEraseMasks,
++        true,activeSource_,activeIndex);
++    candidate->surface=surface_;candidate->activeEnd=activeEnd;
++    candidate->pixelLease=std::move(lease);candidate->metadataLease=std::move(metadataLease);
++    candidate->leaseBytes=total+metadataBytes;
++    candidate->stamps.reserve(plan.referenceDrawList.entries.size());
++    for(const auto& entry:plan.referenceDrawList.entries){
++        const auto* group=groups_.find(entry.record.objectId);if(!group)return false;
++        candidate->stamps.push_back({entry.record.objectId,group->revisions,entry.presentationOpacity,
++            entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds});
++    }
++    // Both ranges retain the original full plan's isolation and device grid.
++    auto prefix=canvas.makeSurface(info);if(!prefix)return false;
++    drawReferenceBackgroundToSkCanvas(*prefix->getCanvas(),plan);
++    drawValidatedReferenceRangeToSkCanvas(*prefix->getCanvas(),plan,0,activeIndex,images,text,true,this,grid);
++    if(damageFailed_)return false;
++    candidate->prefix=prefix->makeImageSnapshot();if(!candidate->prefix)return false;
++    if(needSuffix){
++        auto suffix=canvas.makeSurface(info);if(!suffix)return false;
++        suffix->getCanvas()->clear(SK_ColorTRANSPARENT);
++        drawValidatedReferenceRangeToSkCanvas(*suffix->getCanvas(),plan,activeEnd,
++            plan.referenceDrawList.entries.size(),images,text,true,this,grid);
++        if(damageFailed_)return false;
++        candidate->suffix=suffix->makeImageSnapshot();if(!candidate->suffix)return false;
++    }
++    if(auto* execution=RenderExecutionScope::current();execution&&(execution->pending()||execution->rejected()))return false;
++    staticScene_=std::move(candidate);
++    OI_NOTE(++objectWork.builds;objectWork.leaseBytes=staticScene_->leaseBytes);
++    return true;
++}
+ void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+     if(maskHistory&&!entry.record.eraseMasks.empty()){
+         [[maybe_unused]]const auto before=maskHistory->work().history;
+@@ -45,7 +131,7 @@ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
+     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
+     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+ }
+-void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
++void SkiaRenderCache::clear() noexcept {invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
+     const void* target,std::uint64_t resourceEpoch)noexcept{
+     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
+@@ -63,7 +149,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+         return entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+     });
+-    if(resourceEpoch_!=resourceEpoch){inkLayers_.clear();work.inkLayerBytes=0;}
++    if(resourceEpoch_!=resourceEpoch){invalidateStaticScene();inkLayers_.clear();work.inkLayerBytes=0;}
+     resourceEpoch_=resourceEpoch;
+     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
+     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
+@@ -96,6 +182,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         frame_->surfaceGeneration!=f.surfaceGeneration||frame_->metrics!=f.metrics||
+         frame_->metricsGeneration!=f.metricsGeneration;
+     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
++    if(changed || !transient || activeSource_!=activeSource) invalidateStaticScene();
+     if(changed){inkLayers_.clear();work.inkLayerBytes=0;}
+     else inkLayers_.prune(plan.referenceDrawList.entries);
+     coverageTargets_.budget=budget;
+@@ -846,13 +933,62 @@ bool SkiaRenderCache::compositeRetainedRun(SkCanvas& canvas,const FramePlan& pla
+     }
+     return false;
+ }
+-bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid){
++bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid,bool objectTransform){
+     struct Restore {bool& value;bool old;~Restore(){value=old;}} restore{damageOnly_,damageOnly_};
+     damageOnly_=damageOnly;damageFailed_=false;
+     // A transient source may include permanent masks that cooperative exact
+     // preparation routes Direct. Reuse/build its bounded isolated cache here;
+     // never keep an exact-frame admission that forbids that source reuse.
+     resetPreparation();
++    const auto& entries=plan.referenceDrawList.entries;
++    const auto active=std::find_if(entries.begin(),entries.end(),[&](const auto& e){return e.record.objectId==activeSource_;});
++    const bool supported=active!=entries.end() && active->contributesPixels &&
++        (active->record.kind==semantic::ObjectKind::kShape || active->record.kind==semantic::ObjectKind::kSticky ||
++         active->record.kind==semantic::ObjectKind::kTable || active->record.kind==semantic::ObjectKind::kImage);
++    bool eligible=objectTransform && options.enabled && sourceAdmission_ && !stagedBodies_ &&
++        includeInk && !damageOnly && supported && canvas.getTotalMatrix().isIdentity() && canvas.isClipRect() &&
++        canvas.getDeviceClipBounds()==SkIRect::MakeWH(surface_->width(),surface_->height());
++    std::size_t first=std::size_t(std::distance(entries.begin(),active)),end=first+1;
++    const bool hasNonInk=requiresInkIsolation(plan);
++    if(eligible)for(std::size_t i=0;i<entries.size();++i){
++        const auto& e=entries[i];
++        if(e.presentationEraseActive || !e.presentationEraseMasks.empty())eligible=false;
++        if(i!=first && !e.record.eraseMasks.empty() &&
++           !requiresInkEntryIsolation(e,hasNonInk) && !plan.isolateEraseMasks)eligible=false;
++        if(i!=first && std::find(e.record.directDependencies.begin(),e.record.directDependencies.end(),activeSource_)!=e.record.directDependencies.end())eligible=false;
++        if(e.record.placement.parent_id && *e.record.placement.parent_id==activeSource_){
++            if(i!=end)eligible=false;else ++end;
++        }
++    }
++    if(eligible){
++        const bool hit=staticSceneBasisMatches(plan,first,end);
++        if(!hit){
++            invalidateStaticScene();
++            if(buildStaticScene(canvas,plan,first,end,images,text,grid)){
++                OI_NOTE(++objectWork.fullSceneDraws);
++            }else if(damageFailed_ || (RenderExecutionScope::current() &&
++                (RenderExecutionScope::current()->pending() || RenderExecutionScope::current()->rejected())))return false;
++        }
++        const auto retained=staticScene_;
++        if(retained){
++            const bool marked=retained->pixelLease.markGpuUse();(void)marked;
++            OI_NOTE(objectWork.gpuLeaseMarks+=marked;objectWork.hits+=hit;++objectWork.activeDraws);
++            if(auto* execution=RenderExecutionScope::current())execution->reusePixels();
++            {SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
++             SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
++             canvas.drawImage(retained->prefix,0,0,SkSamplingOptions{},&paint);}
++            drawValidatedReferenceRangeToSkCanvas(canvas,plan,first,end,images,text,true,this,grid);
++            if(damageFailed_)return false;
++            if(retained->suffix){
++                (void)retained->pixelLease.markGpuUse();
++                SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
++                SkPaint paint;paint.setBlendMode(SkBlendMode::kSrcOver);
++                canvas.drawImage(retained->suffix,0,0,SkSamplingOptions{},&paint);
++            }
++            return true;
++        }
++    }else invalidateStaticScene();
++    OI_NOTE(++objectWork.fullSceneDraws);
+     drawReferenceBackgroundToSkCanvas(canvas,plan);
+     std::size_t begin=0;
+     if(includeInk)for(std::size_t i=0;i<plan.referenceDrawList.entries.size();++i){
+diff --git a/runtime/render/src/skia_render_cache_internal.hpp b/runtime/render/src/skia_render_cache_internal.hpp
+index 22262f60..ef8d651f 100644
+--- a/runtime/render/src/skia_render_cache_internal.hpp
++++ b/runtime/render/src/skia_render_cache_internal.hpp
+@@ -15,6 +15,13 @@
+ #include <unordered_map>
+ 
+ namespace canvas::render::internal {
++// Private qualification counters. Updates and observation APIs are compiled
++// out of normal consumers; this value is never part of a consumer DTO.
++struct ObjectInteractionWork final {
++    std::uint64_t builds=0,hits=0,invalidations=0,fullSceneDraws=0,activeDraws=0;
++    std::uint64_t retries=0,gpuLeaseMarks=0,denials=0;
++    std::size_t leaseBytes=0;
++};
+ // Immutable completed pixels shared by exact presentation and navigation.
+ // Both aliases retain this one charged allocation; no framebuffer recapture.
+ struct PreparedFrameImage final {
+@@ -33,6 +40,7 @@ class SkiaRenderCache final {
+     RenderCacheOptions options{};
+     RenderCacheWork work{};
+     RenderDamage damage{};
++    ObjectInteractionWork objectWork{};
+     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {},bool transient=false);
+     CompactCoverageTargets& executionTargets() noexcept {coverageTargets_.budget=budget;return coverageTargets_;}
+     bool canRetainCompact(const SkCanvas&,const ReferenceTraversalEntry&) const noexcept;
+@@ -58,7 +66,7 @@ class SkiaRenderCache final {
+     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
+     // Retained ordered compact runs qualify approximate editing only. Exact
+     // frames still consume per-object/streamed composition in original order.
+-    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
++    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr,bool objectTransform=false);
+     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
+     void acknowledgeTransient() noexcept {pendingErase_={};hasPendingErase_=false;}
+     bool acquireTransientSurface(SkCanvas& canvas,sk_sp<SkSurface>& surface,resources::ResourceLease& lease){return acquireWorkSurface(canvas,surface,lease,true,resources::ResourceClass::kCanonicalFrame);}
+@@ -78,6 +86,42 @@ class SkiaRenderCache final {
+         const void* target,std::uint64_t resourceEpoch)noexcept;
+     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
+   private:
++    struct StaticSceneStamp final {
++        foundation::ObjectId id{};
++        RenderGroupRevisions revisions{};
++        float opacity=1.0F;
++        bool contributes=false;
++        foundation::WorldRect visualBounds{},worldBounds{};
++        bool operator==(const StaticSceneStamp&) const = default;
++    };
++    struct StaticSceneCache final {
++        const void* target=nullptr;
++        const void* context=nullptr;
++        const SkSurface* surface=nullptr;
++        std::uint64_t resourceEpoch=0,targetEpoch=0;
++        FrameState frame{};
++        WorldToViewAffine transform{};
++        foundation::DocumentBackground background{};
++        bool transparent=false,isolate=false,includeInk=true;
++        foundation::ObjectId active{};
++        std::size_t activeIndex=0,activeEnd=0;
++        std::vector<StaticSceneStamp> stamps;
++        sk_sp<SkImage> prefix,suffix;
++        resources::ResourceLease pixelLease,metadataLease;
++        std::size_t leaseBytes=0;
++        StaticSceneCache(const void* t,const void* c,std::uint64_t resource,
++            std::uint64_t epoch, const FrameState& f,const WorldToViewAffine& x,
++            const foundation::DocumentBackground& bg,bool clear,bool isolate,
++            bool ink,foundation::ObjectId id,std::size_t index)
++            :target(t),context(c),resourceEpoch(resource),targetEpoch(epoch),frame(f),
++             transform(x),background(bg),transparent(clear),isolate(isolate),includeInk(ink),
++             active(id),activeIndex(index) {}
++        bool valid() const noexcept { return prefix != nullptr; }
++    };
++    std::shared_ptr<StaticSceneCache> staticScene_;
++    void invalidateStaticScene(bool count=true) noexcept;
++    bool staticSceneBasisMatches(const FramePlan&,std::size_t,std::size_t) const noexcept;
++    bool buildStaticScene(SkCanvas&,const FramePlan&,std::size_t,std::size_t,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
+     struct BodyDependency {
+         ImmutableSourceIdentity identity;
+         std::shared_ptr<const PreparedNavigationGeometry> body;
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index ecd08197..04f701af 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -781,6 +781,11 @@ RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=render
+     if(eraseQueries_){result.maskHistory=eraseQueries_->work().history;const auto s=eraseQueries_->work().exact;result.exactFullValidations=s.fullValidations;result.exactValidationKnots=s.validationKnots;result.exactCompileCalls=s.compileCalls;result.exactCompileInputs=s.compileInputs;result.exactConstructedComponents=s.constructedComponents;result.exactBodyUses=s.bodyUses;}
+     return result;}
+ RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexcept {
++    return renderCache_?renderCache_->objectWork:internal::ObjectInteractionWork{};
++}
++#endif
+ 
+ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     SkiaSurfaceProvider& provider, const FramePlan& plan,
+@@ -998,7 +1003,12 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     try {
+         if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
+             if(staged){if(!cache->completedFrame())scene=BackendSubmissionResult::retry("transient staged frame unavailable");}
+-            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
++            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid,
++                selectionOverlay->active() && selectionOverlay->selectionOutline().visible &&
++                !selectionOverlay->creationPreview() && !selectionOverlay->creationHover() &&
++                !selectionOverlay->textCaret && !selectionOverlay->textBox &&
++                selectionOverlay->readOnlyOutlines.empty() && selectionOverlay->candidateOutlines.empty() &&
++                selectionOverlay->acquisitionOutline.empty()))
+                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
+             else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+         }
+diff --git a/runtime/render/tests/transient_display_retry_test.cpp b/runtime/render/tests/transient_display_retry_test.cpp
+index da998228..0f000200 100644
+--- a/runtime/render/tests/transient_display_retry_test.cpp
++++ b/runtime/render/tests/transient_display_retry_test.cpp
+@@ -73,6 +73,91 @@ FramePlan displayPlan(unsigned tails,std::uint64_t id,unsigned dpr,unsigned bg=0
+  foundation::DocumentBackground background;if(bg==2)background.color={.25F,.5F,.75F,1};
+  return {f,std::move(draw),background,bg==1,true};
+ }
++
++ReferenceTraversalEntry continuityShape(std::uint64_t id, double x, double y,
++    float red, float green, float blue) {
++ auto object=semantic::ObjectRecord{}; object.id=ObjectId::fromUint64(id);
++ object.kind=semantic::ObjectKind::kShape; object.kind_version=1;
++ object.content=semantic::ShapeContent{1,90,52}; object.transform.tx=x; object.transform.ty=y;
++ object.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{red,green,blue,1.0F}}}}};
++ const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
++ return {projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
++}
++
++FramePlan objectContinuityPlan(std::uint64_t id, const ReferenceTraversalEntry& before,
++    const ReferenceTraversalEntry& active, const ReferenceTraversalEntry& after,
++    std::uint64_t surfaceGeneration=1) {
++ const auto base=displayPlan(1,id,1).frame;
++ FrameState frame{base.viewId,base.camera,{0,0,256,128},
++   {256,128,256,128,1,1},semantic::SemanticGeneration{1},SceneRevision{1},
++   SurfaceGeneration{surfaceGeneration},base.metricsGeneration,FrameId{id},{0,0,256,128}};
++ ReferenceDrawList draw{frame}; draw.viewportClip=frame.viewportClip;
++ draw.entries={before,active,after};
++ return {frame,std::move(draw),{},false,false};
++}
++
++std::vector<std::uint8_t> pixels(DisplayTarget&,const FramePlan&);
++std::string pixelDigest(const std::vector<std::uint8_t>& bytes) {
++ std::uint64_t hash=1469598103934665603ULL;
++ for(const auto byte:bytes){hash^=byte;hash*=1099511628211ULL;}
++ std::ostringstream value;value<<std::hex<<hash;return value.str();
++}
++
++void objectContinuityStaticReuse(const std::filesystem::path& out) {
++ std::filesystem::create_directories(out);
++ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++ auto completion=std::make_shared<NativeMetalCompletion>();
++ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++ completion->context=GrDirectContexts::MakeMetal(backend);
++ DisplayTarget target(completion),reference(completion);
++ require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity target");
++ require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity oracle");
++ auto before=continuityShape(41001,8,24,.15F,.25F,.85F);
++ auto active=continuityShape(41002,82,38,.85F,.20F,.15F);
++ auto after=continuityShape(41003,166,60,.15F,.70F,.25F);
++ SkiaRenderer cached,oracle; RenderCacheOptions disabled; disabled.enabled=false; oracle.setRenderCacheOptions(disabled);
++ const auto initial=objectContinuityPlan(100, before, active, after);
++ require(cached.renderFrame(target,initial).code==BackendSubmissionCode::kAccepted,"object continuity canonical warm");
++ require(oracle.renderFrame(reference,initial).code==BackendSubmissionCode::kAccepted,"object continuity oracle warm");
++ EditingOverlay overlay(initial.frame);
++ require(overlay.update({.selectedObject=active.record.objectId,.worldBounds=active.record.worldBounds,
++                         .objectTransform=active.record.transform,.selected=true,.active=true}),
++         "object continuity selection chrome");
++ const auto directBefore=cached.renderCacheWork().directGroups;
++ for(unsigned i=0;i<3;++i){
++   active.record.transform.tx+=7.0;
++   const auto moved=objectContinuityPlan(101+i,before,active,after);
++   require(cached.renderTransientOverlay(target,moved,&overlay).code==BackendSubmissionCode::kAccepted,
++           "object continuity cached move");
++   require(oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted,
++           "object continuity direct move");
++   const auto actual=pixels(target,moved),expected=pixels(reference,moved);
++   saveBuffer(out/(std::to_string(i)+"-actual.rgba"),actual);
++   saveBuffer(out/(std::to_string(i)+"-oracle.rgba"),expected);
++   std::ofstream(out/(std::to_string(i)+"-pixels.json"))<<nlohmann::json{
++     {"actual_digest",pixelDigest(actual)},{"oracle_digest",pixelDigest(expected)},
++     {"oracle_static_builds",oracle.objectInteractionWork().builds},
++     {"oracle_static_hits",oracle.objectInteractionWork().hits}}<<'\n';
++   require(oracle.objectInteractionWork().builds==0&&oracle.objectInteractionWork().hits==0,
++           "disabled independent oracle entered static optimization");
++   require(actual==expected,"object continuity pixel/order mismatch");
++ }
++ const auto directDelta=cached.renderCacheWork().directGroups-directBefore;
++ const auto work=cached.objectInteractionWork();
++ const auto actual=pixels(target,objectContinuityPlan(104,before,active,after));
++ const auto expected=pixels(reference,objectContinuityPlan(104,before,active,after));
++ std::ofstream(out/"old-static-reuse-red.json")
++     << nlohmann::json{{"direct_groups_delta",directDelta},{"moves",3},
++       {"static_reuse_builds",work.builds},{"static_reuse_hits",work.hits},
++       {"static_reuse_invalidations",work.invalidations},
++       {"full_transient_scene_draws",work.fullSceneDraws},{"active_object_draws",work.activeDraws},
++       {"static_reuse_lease_bytes",work.leaseBytes},
++       {"actual_pixel_digest",pixelDigest(actual)},{"oracle_pixel_digest",pixelDigest(expected)}}
++     << '\n';
++ // The old renderer redraws all three non-ink entries on every move. The
++ // production implementation must keep the unchanged prefix/suffix stable.
++ require(directDelta<=5,"static scene redraw was not reduced to active object work");
++}
+ std::vector<std::uint8_t> pixels(DisplayTarget& t,const FramePlan& p){std::vector<std::uint8_t> out(std::size_t(p.frame.metrics.physicalWidth)*p.frame.metrics.physicalHeight*4);require(t.readbackRgba(out).code==BackendSubmissionCode::kAccepted,"actual target capture");return out;}
+ void settle(SkiaRenderer& r,DisplayTarget& t,const FramePlan& p,const std::shared_ptr<NativeMetalCompletion>& c){
+  EditingOverlay overlay{p.frame};
+@@ -163,7 +248,7 @@ void handoffInflight(const std::filesystem::path& out){
+ }
+ int main(int argc,char** argv){try{
+ #if defined(__APPLE__)
+- auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
+ #else
+  (void)argc;(void)argv;
+ #endif

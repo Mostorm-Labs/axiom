@@ -1,0 +1,14 @@
+{
+  "classification": "TEST_ORACLE_BASIS_ERROR",
+  "failed_log": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/native-pixel-regression.log",
+    "sha256": "d5bda3e4c7da528410f6121c4d821340030c28aee33fd7ab7ba6d886660353b7"
+  },
+  "failed_row": {
+    "path": "out/G5-desktop-render-budget-r1/native-area/0-0-2-4/4-pixels.json",
+    "sha256": "7fde7e170d94dac85b834e8e4c3353b7032137464831cc1e40ca85e5fa1db87b"
+  },
+  "root_cause": "Original non-ink active test reused initial ink edge band while only non-ink moved. New stroke-active case moves ink transform, requiring the same independent per-primitive band recomputed at the current plan transform, just as existing camera movement does.",
+  "change": "Recompute original band for stroke-active case. No candidate-derived difference mask, no tolerance or production code change.",
+  "frozen_rule": "2 levels per channel outside independently drawn 2-device-pixel primitive boundary"
+}

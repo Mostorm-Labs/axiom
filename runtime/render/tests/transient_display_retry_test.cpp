@@ -6,6 +6,9 @@
 #include "../src/transient_display_state.hpp"
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include "canvas/text/text_layout.hpp"
+#include "canvas/render/image_resource.hpp"
+#include <chrono>
 namespace {
 ReferenceTraversalEntry displaySource(){
  auto e=source();e.record.kind=semantic::ObjectKind::kVectorStroke;e.record.kindVersion=3;
@@ -72,6 +75,399 @@ FramePlan displayPlan(unsigned tails,std::uint64_t id,unsigned dpr,unsigned bg=0
  for(unsigned i=0;i<copies;++i){auto next=e;next.record.objectId=ObjectId::fromUint64(i+1);next.record.transform.tx=i*3.;draw.entries.push_back(std::move(next));}
  foundation::DocumentBackground background;if(bg==2)background.color={.25F,.5F,.75F,1};
  return {f,std::move(draw),background,bg==1,true};
+}
+
+ReferenceTraversalEntry continuityShape(std::uint64_t id, double x, double y,
+    float red, float green, float blue) {
+ auto object=semantic::ObjectRecord{}; object.id=ObjectId::fromUint64(id);
+ object.kind=semantic::ObjectKind::kShape; object.kind_version=1;
+ object.content=semantic::ShapeContent{1,90,52}; object.transform.tx=x; object.transform.ty=y;
+ object.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{red,green,blue,1.0F}}}}};
+ const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+ return {projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+}
+
+FramePlan objectContinuityPlan(std::uint64_t id, const ReferenceTraversalEntry& before,
+    const ReferenceTraversalEntry& active, const ReferenceTraversalEntry& after,
+    std::uint64_t surfaceGeneration=1) {
+ const auto base=displayPlan(1,id,1).frame;
+ FrameState frame{base.viewId,base.camera,{0,0,256,128},
+   {256,128,256,128,1,1},semantic::SemanticGeneration{1},SceneRevision{1},
+   SurfaceGeneration{surfaceGeneration},base.metricsGeneration,FrameId{id},{0,0,256,128}};
+ ReferenceDrawList draw{frame}; draw.viewportClip=frame.viewportClip;
+ draw.entries={before,active,after};
+ return {frame,std::move(draw),{},false,false};
+}
+
+std::vector<std::uint8_t> pixels(DisplayTarget&,const FramePlan&);
+std::string pixelDigest(const std::vector<std::uint8_t>& bytes) {
+ std::uint64_t hash=1469598103934665603ULL;
+ for(const auto byte:bytes){hash^=byte;hash*=1099511628211ULL;}
+ std::ostringstream value;value<<std::hex<<hash;return value.str();
+}
+
+void objectContinuityStaticReuse(const std::filesystem::path& out) {
+ std::filesystem::create_directories(out);
+ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
+ auto completion=std::make_shared<NativeMetalCompletion>();
+ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
+ completion->context=GrDirectContexts::MakeMetal(backend);
+ DisplayTarget target(completion),reference(completion);
+ require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity target");
+ require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity oracle");
+ auto before=continuityShape(41001,8,24,.15F,.25F,.85F);
+ auto active=continuityShape(41002,82,38,.85F,.20F,.15F);
+ auto after=continuityShape(41003,166,60,.15F,.70F,.25F);
+ SkiaRenderer cached,oracle; RenderCacheOptions disabled; disabled.enabled=false; oracle.setRenderCacheOptions(disabled);
+ const auto initial=objectContinuityPlan(100, before, active, after);
+ require(cached.renderFrame(target,initial).code==BackendSubmissionCode::kAccepted,"object continuity canonical warm");
+ require(oracle.renderFrame(reference,initial).code==BackendSubmissionCode::kAccepted,"object continuity oracle warm");
+ EditingOverlay overlay(initial.frame);
+ require(overlay.update({.selectedObject=active.record.objectId,.worldBounds=active.record.worldBounds,
+                         .objectTransform=active.record.transform,.selected=true,.active=true}),
+         "object continuity selection chrome");
+ const auto directBefore=cached.renderCacheWork().directGroups;
+ for(unsigned i=0;i<3;++i){
+   active.record.transform.tx+=7.0;
+   const auto moved=objectContinuityPlan(101+i,before,active,after);
+   require(cached.renderTransientOverlay(target,moved,&overlay).code==BackendSubmissionCode::kAccepted,
+           "object continuity cached move");
+   require(oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted,
+           "object continuity direct move");
+   const auto actual=pixels(target,moved),expected=pixels(reference,moved);
+   saveBuffer(out/(std::to_string(i)+"-actual.rgba"),actual);
+   saveBuffer(out/(std::to_string(i)+"-oracle.rgba"),expected);
+   std::ofstream(out/(std::to_string(i)+"-pixels.json"))<<nlohmann::json{
+     {"actual_digest",pixelDigest(actual)},{"oracle_digest",pixelDigest(expected)},
+     {"oracle_static_builds",oracle.objectInteractionWork().builds},
+     {"oracle_static_hits",oracle.objectInteractionWork().hits}}<<'\n';
+   require(oracle.objectInteractionWork().builds==0&&oracle.objectInteractionWork().hits==0,
+           "disabled independent oracle entered static optimization");
+   require(actual==expected,"object continuity pixel/order mismatch");
+ }
+ const auto directDelta=cached.renderCacheWork().directGroups-directBefore;
+ const auto work=cached.objectInteractionWork();
+ const auto actual=pixels(target,objectContinuityPlan(104,before,active,after));
+ const auto expected=pixels(reference,objectContinuityPlan(104,before,active,after));
+ std::ofstream(out/"old-static-reuse-red.json")
+     << nlohmann::json{{"direct_groups_delta",directDelta},{"moves",3},
+       {"static_reuse_builds",work.builds},{"static_reuse_hits",work.hits},
+       {"static_reuse_invalidations",work.invalidations},
+       {"full_transient_scene_draws",work.fullSceneDraws},{"active_object_draws",work.activeDraws},
+       {"static_reuse_lease_bytes",work.leaseBytes},
+       {"actual_pixel_digest",pixelDigest(actual)},{"oracle_pixel_digest",pixelDigest(expected)}}
+     << '\n';
+ // The old renderer redraws all three non-ink entries on every move. The
+ // production implementation must keep the unchanged prefix/suffix stable.
+ require(directDelta<=5,"static scene redraw was not reduced to active object work");
+}
+
+semantic::RichTextContent denseLabel(std::uint64_t id,const char* value) {
+ const semantic::TextStyle style{semantic::ResourceId{ObjectId::fromUint64(87000)},16,400,false,false,{.08F,.12F,.18F,1}};
+ return {{{semantic::Paragraph{ObjectId::fromUint64(id),
+     {semantic::ParagraphAlignment::kLeft,1,0,0},{{value,style}}}}}};
+}
+ReferenceTraversalEntry denseObject(unsigned kind,text::RichTextLayoutService& layout) {
+ semantic::ObjectRecord object;object.id=ObjectId::fromUint64(88000+kind);object.kind_version=1;
+ object.transform.tx=140+kind*105;object.transform.ty=100+kind*58;
+ switch(kind){
+ case 0:object.kind=semantic::ObjectKind::kShape;object.kind_version=3;
+   object.content=semantic::ShapeContent{1,150,95,denseLabel(89000,"Shape label")};break;
+ case 1:object.kind=semantic::ObjectKind::kSticky;object.content=semantic::StickyContent{170,110};break;
+ case 2:{object.kind=semantic::ObjectKind::kTable;semantic::TableContent table;
+   table.rows={{{ObjectId::fromUint64(89101)},40},{{ObjectId::fromUint64(89102)},40}};
+   table.columns={{{ObjectId::fromUint64(89103)},85},{{ObjectId::fromUint64(89104)},85}};
+   for(unsigned i=0;i<4;++i)table.cells.push_back({denseLabel(89110+i,"Cell"),{.92F,.96F,1,1}});
+   object.content=std::move(table);break;}
+ case 3:{object.kind=semantic::ObjectKind::kImage;semantic::ImageContent image;
+   image.resource_id.value=ObjectId::fromUint64(87001);image.width=160;image.height=100;
+   image.intrinsic_width=1;image.intrinsic_height=1;object.content=image;break;}
+ default:throw std::runtime_error("dense object kind");
+ }
+ object.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{.35F,.65F,.85F,1}}}},{0x3U,.72F}};
+ const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1},&layout);
+ ReferenceTraversalEntry entry;entry.record=projection.records.front();
+ if(kind==0)entry.command=ShapeReferenceCommand{scene::ImmutableValue<semantic::ShapeContent>::alias(entry.record.content),entry.record.textLayout,true};
+ if(kind==1){entry.record.textLayout=layout.resolveStickyLabel(object.id,denseLabel(89120,"Sticky label"),std::get<semantic::StickyContent>(object.content),true,object.transform);
+   entry.command=StickyReferenceCommand{scene::ImmutableValue<semantic::StickyContent>::alias(entry.record.content),entry.record.textLayout,true};}
+ if(kind==2)entry.command=TableReferenceCommand{scene::ImmutableValue<semantic::TableContent>::alias(entry.record.content),entry.record.textLayout,1};
+ if(kind==3)entry.command=ImageReferenceCommand{scene::ImmutableValue<semantic::ImageContent>::alias(entry.record.content)};
+ return entry;
+}
+FramePlan denseObjectPlan(const ReferenceTraversalEntry& line,std::vector<ReferenceTraversalEntry> objects,
+    unsigned active,unsigned dpr,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false,
+    unsigned logicalWidth=0,unsigned logicalHeight=0) {
+ // The desktop reconstruction is 1431x1010. DPR4 uses an 800x500 logical
+ // viewport so its mandatory complete display and isolation planes can fit
+ // the unchanged 96MiB contract; report both dimensions in every observation.
+ const unsigned width=logicalWidth?logicalWidth:(dpr==4?800:1431),height=logicalHeight?logicalHeight:(dpr==4?500:1010);
+ FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,float(width),float(height)},
+   {float(width),float(height),width*dpr,height*dpr,float(dpr),1},semantic::SemanticGeneration{1},SceneRevision{1},
+   SurfaceGeneration{generation},MetricsGeneration{1},FrameId{frame},{0,0,float(width),float(height)}};
+ ReferenceDrawList draw{state};draw.viewportClip=state.viewportClip;
+ if(active<objects.size()){
+  objects[active].record.transform.tx+=offset;
+  const auto original=objects[active].record.worldBounds;
+  objects[active].record.worldBounds={original.left+float(offset),original.top,original.right+float(offset),original.bottom};
+  objects[active].record.visualBounds=objects[active].record.worldBounds;
+ }
+ for(auto& object:objects)if(object.record.textLayout){
+   object.record.textLayout=std::make_shared<text::TextLayoutSnapshot>(*object.record.textLayout);
+   std::visit([&](auto& command){
+     if constexpr(requires{command.labelLayout;})command.labelLayout=object.record.textLayout;
+     else if constexpr(requires{command.layout;})command.layout=object.record.textLayout;
+   },object.command);
+ }
+ for(unsigned i=0;i<19;++i){
+   auto copy=line;copy.record.objectId=ObjectId::fromUint64(90000+i);
+   copy.record.transform.ty=45+i*13;copy.record.worldBounds={0,float(70+i*13),1440,float(150+i*13)};
+   if(active==4&&i==0){copy.record.transform.tx+=offset;
+     copy.record.worldBounds.left+=float(offset);copy.record.worldBounds.right+=float(offset);}
+   copy.record.visualBounds=copy.record.worldBounds;
+   draw.entries.push_back(std::move(copy));
+   if(i>=3&&i<=15&&i%4==3)draw.entries.push_back(objects[(i-3)/4]);
+ }
+ if(reverse)std::reverse(draw.entries.begin(),draw.entries.end());
+ return {state,std::move(draw),{},false,true};
+}
+std::vector<std::uint8_t> denseIndependentBoundary(const FramePlan& plan) {
+ const auto width=plan.frame.metrics.physicalWidth,height=plan.frame.metrics.physicalHeight;
+ auto surface=SkSurfaces::Raster(SkImageInfo::MakeA8(width,height));
+ auto* canvas=surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
+ SkPaint boundary;boundary.setColor(SK_ColorWHITE);boundary.setStyle(SkPaint::kStroke_Style);
+ boundary.setStrokeWidth(2);boundary.setAntiAlias(true);
+ // Same independent per-primitive, two-device-pixel band as the existing
+ // canonical working-set oracle. Never derive the band from candidate pixels.
+ const auto first=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
+ require(first!=plan.referenceDrawList.entries.end(),"dense independent ink source");
+ const auto& stroke=std::get<CompactStrokeReferenceCommand>(first->command).content.get().stroke;
+ const auto contour=ink::compileCompactContour(stroke.config,stroke.knots);
+ for(const auto& entry:plan.referenceDrawList.entries){
+   if(!std::holds_alternative<CompactStrokeReferenceCommand>(entry.command))continue;
+   const auto& t=entry.record.transform;
+   auto matrix=SkMatrix::Scale(plan.frame.metrics.physicalWidth/plan.frame.metrics.logicalWidth,
+       plan.frame.metrics.physicalHeight/plan.frame.metrics.logicalHeight);
+   const auto& v=plan.referenceDrawList.worldToView;
+   matrix.preConcat(SkMatrix::MakeAll(v.a,v.c,v.tx,v.b,v.d,v.ty,0,0,1));
+   matrix.preConcat(SkMatrix::MakeAll(t.a,t.c,t.tx,t.b,t.d,t.ty,0,0,1));
+   for(std::size_t i=0;i+1<contour.patches.size();++i)
+     canvas->drawPath(compactContourRibbon(std::span(contour.patches).subspan(i,2)).makeTransform(matrix),boundary);
+   for(const auto& cap:contour.caps){SkPathBuilder path;path.addCircle(float(cap.x),float(cap.y),float(cap.radius));canvas->drawPath(path.detach().makeTransform(matrix),boundary);}
+ }
+ std::vector<std::uint8_t> mask(std::size_t(width)*height);
+ require(surface->readPixels(SkImageInfo::MakeA8(width,height),mask.data(),width,0,0),"dense independent boundary readback");
+ return mask;
+}
+void denseObjectContinuity(const std::filesystem::path& out,bool budgetComparison=false) {
+ std::filesystem::create_directories(out);
+ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
+ auto completion=std::make_shared<NativeMetalCompletion>();
+ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
+ completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"dense Metal context");
+ runtime::MemoryResourceProvider resources;
+ std::ifstream font(G47_LATIN_FONT,std::ios::binary);std::vector<std::uint8_t> fontBytes{std::istreambuf_iterator<char>(font),{}};
+ require(!fontBytes.empty(),"dense locked font");resources.publish(ObjectId::fromUint64(87000),fontBytes);
+ resources.publish(ObjectId::fromUint64(87001),{0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,
+   0,0,0,0x0d,0x49,0x48,0x44,0x52,0,0,0,1,0,0,0,1,8,6,0,0,0,0x1f,0x15,0xc4,0x89,
+   0,0,0,0x0d,0x49,0x44,0x41,0x54,0x78,0x9c,0x63,0xf8,0xcf,0xc0,0xf0,0x1f,0,5,0,1,0xff,0x89,0x99,
+   0x3d,0x1d,0,0,0,0,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82});
+ text::RichTextLayoutService layouts(resources,{170,1});layouts.registerFont({{ObjectId::fromUint64(87000)},std::string(text::kRobotoSha256),0});
+ std::vector<ReferenceTraversalEntry> objects;for(unsigned kind=0;kind<4;++kind)objects.push_back(denseObject(kind,layouts));
+ for(unsigned kind=0;kind<3;++kind)require(objects[kind].record.textLayout&&!objects[kind].record.textLayout->fonts.empty(),"dense shaped text layout absent");
+ auto line=source();line.record.kind=semantic::ObjectKind::kVectorStroke;line.record.kindVersion=3;
+ line.record.content.update([](auto& v){auto& stroke=std::get<semantic::CompactStrokeContent>(v).stroke;stroke.config.opacity=.55;});
+ line.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(line.record.content)};
+ for(unsigned h=0;h<2;++h){semantic::SweptCircleMask mask;
+   for(unsigned j=0;j<4;++j){const double x=100+h*140+j*9;mask.segments.push_back({{{x,25},6},{{x+5,105},6},{x,45},{x+5,85}});}
+   line.record.eraseMasks.push_back({ObjectId::fromUint64(91000+h),std::move(mask)});
+ }
+ nlohmann::json observations=nlohmann::json::array();
+ for(unsigned profile=0;profile<(budgetComparison?2U:1U);++profile)
+ for(unsigned area=0;area<(budgetComparison?3U:1U);++area)
+ for(unsigned dpr:(budgetComparison?std::vector<unsigned>{area==2?4U:2U}:std::vector<unsigned>{1U,2U,4U}))
+ for(unsigned kind=0;kind<(budgetComparison?5U:4U);++kind){
+   const bool desktop=budgetComparison&&profile==1;
+   const auto planFor=[&](const ReferenceTraversalEntry& body,std::vector<ReferenceTraversalEntry> content,
+       unsigned active,unsigned ratio,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false){
+     return denseObjectPlan(body,std::move(content),active,ratio,frame,offset,generation,reverse,
+       budgetComparison?(area==0?600U:area==1?1431U:800U):0,
+       budgetComparison?(area==0?900U:area==1?1010U:500U):0);
+   };
+   const auto caseOut=out/(std::to_string(profile)+"-"+std::to_string(area)+"-"+std::to_string(dpr)+"-"+std::to_string(kind));std::filesystem::create_directories(caseOut);
+   auto initial=planFor(line,objects,kind,dpr,1,0);
+   DisplayTarget target(completion),reference(completion);const auto width=initial.frame.metrics.physicalWidth,height=initial.frame.metrics.physicalHeight;
+   require(target.resize(width,height).code==BackendSubmissionCode::kAccepted&&reference.resize(width,height).code==BackendSubmissionCode::kAccepted,"dense targets");
+   SkiaRenderer candidate,oracle;ImageResourceResolver candidateImages(resources),oracleImages(resources);
+   RenderCacheOptions limits;
+   if(desktop){limits.maxBytes=256U*1024U*1024U;limits.sharedMaxBytes=512U*1024U*1024U;limits.maxEntryBytes=64U*1024U*1024U;}
+   if(budgetComparison)candidate.setRenderCacheOptions(limits);
+   candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
+   RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+   auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
+   std::vector<std::uint8_t> last=pixels(target,initial);unsigned retries=0,accepted=0;
+   const auto independentBoundary=denseIndependentBoundary(initial);
+   const auto boundaryPixels=std::count_if(independentBoundary.begin(),independentBoundary.end(),[](auto p){return p!=0;});
+   saveBuffer(caseOut/"independent-boundary.a8",independentBoundary);
+   std::shared_ptr<resources::ResourceBudgetManager> candidateBudget;
+   nlohmann::json timings=nlohmann::json::array();std::size_t peakLeased=0;
+   auto submit=[&](const FramePlan& plan,bool canonical,bool inject=false){
+     const auto started=std::chrono::steady_clock::now();
+     EditingOverlay overlay(plan.frame);
+     const auto activeId=kind==4?ObjectId::fromUint64(90000):objects[kind].record.objectId;
+     const auto active=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.record.objectId==activeId;});
+     require(active!=plan.referenceDrawList.entries.end(),"dense active present");
+     require(overlay.update({.selectedObject=active->record.objectId,.worldBounds=active->record.worldBounds,.objectTransform=active->record.transform,.selected=true,.active=!canonical}),"dense selection");
+     RenderPreparationBudget bounded;BackendSubmissionResult result;unsigned calls=0;
+     do{
+       const auto presents=target.presentCount(),submits=candidate.submissionCount();
+       if(inject)transientDisplayFault.beforePublish=true;
+       result=canonical?candidate.renderFrame(target,plan,&overlay,&bounded):candidate.renderTransientOverlay(target,plan,&overlay);
+       if(!canonical){candidateBudget=transientDisplayBudget.lock();if(candidateBudget)peakLeased=std::max(peakLeased,candidateBudget->used());}
+       completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();++calls;
+       if(result.code==BackendSubmissionCode::kRetry){++retries;auto failed=pixels(target,plan);
+         require(failed==last&&target.presentCount()==presents&&candidate.submissionCount()==submits,"dense Retry modified accepted pixels/receipt");
+         if(inject)return calls;
+       }
+       if(result.code==BackendSubmissionCode::kRejected)std::cerr<<result.message<<'\n';
+       require(result.code!=BackendSubmissionCode::kRejected&&calls<512,"dense finite stable request failed");
+     }while(result.code!=BackendSubmissionCode::kAccepted);
+     timings.push_back({{"frame",plan.frame.frameId.value()},{"canonical",canonical},{"calls",calls},
+       {"submit_and_gpu_completion_ms",std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count()}});
+     ++accepted;last=pixels(target,plan);
+     const auto expected=canonical?oracle.renderFrame(reference,plan,&overlay):oracle.renderTransientOverlay(reference,plan,&overlay);
+     require(expected.code==BackendSubmissionCode::kAccepted,"dense disabled Direct reference");
+     const auto expectedPixels=pixels(reference,plan);
+     const auto cameraBoundary=kind!=4&&plan.referenceDrawList.worldToView==WorldToViewAffine{}?
+       std::vector<std::uint8_t>{}:denseIndependentBoundary(plan);
+     const auto& band=cameraBoundary.empty()?independentBoundary:cameraBoundary;
+     std::size_t changedPixels=0,interiorFailures=0;unsigned maxDifference=0;
+     for(std::size_t i=0;i<last.size();i+=4){bool changed=false;for(unsigned c=0;c<4;++c){
+       const auto difference=unsigned(std::abs(int(last[i+c])-int(expectedPixels[i+c])));
+       changed|=difference!=0;maxDifference=std::max(maxDifference,difference);
+       if(!band[i/4]&&difference>2)++interiorFailures;
+     }changedPixels+=changed;}
+     const auto prefix=caseOut/std::to_string(plan.frame.frameId.value());
+     if(!budgetComparison||plan.frame.frameId.value()==4||interiorFailures){
+       saveBuffer(prefix.string()+"-actual.rgba",last);saveBuffer(prefix.string()+"-oracle.rgba",expectedPixels);}
+     const auto oracleWork=oracle.objectInteractionWork();
+     const nlohmann::json row{{"DPR",dpr},{"kind",kind},{"frame",plan.frame.frameId.value()},{"canonical",canonical},{"calls",calls},
+       {"width",width},{"height",height},{"actual",pixelDigest(last)},{"oracle",pixelDigest(expectedPixels)},
+       {"oracle_static_builds",oracleWork.builds},{"oracle_static_hits",oracleWork.hits},{"pixel_equal",last==expectedPixels},
+       {"changed_pixels",changedPixels},{"max_channel_difference",maxDifference},{"non_aa_failures",interiorFailures}};
+     std::ofstream(prefix.string()+"-pixels.json")<<row.dump(2)<<'\n';
+     require(oracleWork.builds==0&&oracleWork.hits==0,"dense Direct oracle reused candidate static scene");
+     require(interiorFailures==0,"dense static order/mask/opacity/text/image mismatch outside frozen AA band");return calls;
+   };
+   submit(initial,true);
+   for(unsigned move=0;move<3;++move)submit(planFor(line,objects,kind,dpr,2+move,7.5*(move+1)),false);
+   auto changed=planFor(line,objects,kind,dpr,5,28);
+   submit(changed,false,true);submit(changed,false);
+   submit(planFor(line,objects,kind,dpr,6,0),false); // drag cancel
+   submit(planFor(line,objects,kind,dpr,7,0,1,true),false); // order invalidation
+   if(dpr==1&&kind==0){
+     auto changedObjects=objects;
+     changedObjects[1].record.properties.entries.back().value=.4F;
+     submit(denseObjectPlan(line,changedObjects,kind,dpr,8,0),false); // static effect/content basis
+     submit(denseObjectPlan(line,objects,kind,dpr,9,0),false);
+     const auto current=denseObjectPlan(line,objects,kind,dpr,10,0);
+     auto clipped=current.referenceDrawList;clipped.viewportClip={8,8,1400,990};
+     submit(FramePlan{current.frame,std::move(clipped),current.background,false,true},false);
+     submit(denseObjectPlan(line,objects,kind,dpr,11,0),false);
+     auto changedHistory=line;semantic::SweptCircleMask extra;
+     extra.segments.push_back({{{400,30},5},{{400,100},5},{400,45},{400,85}});
+     changedHistory.record.eraseMasks.push_back({ObjectId::fromUint64(91999),extra});
+     submit(denseObjectPlan(changedHistory,objects,kind,dpr,12,0),false);
+     submit(denseObjectPlan(line,objects,kind,dpr,13,0),false);
+     auto camera=denseObjectPlan(line,objects,kind,dpr,14,0);
+     auto translated=camera.referenceDrawList;translated.worldToView.tx=3.5;
+     submit(FramePlan{camera.frame,std::move(translated),camera.background,false,true},false);
+     submit(denseObjectPlan(line,objects,kind,dpr,15,0),false);
+     auto background=denseObjectPlan(line,objects,kind,dpr,16,0);
+     foundation::DocumentBackground blue;blue.color={.88F,.93F,1,1};
+     submit(FramePlan{background.frame,background.referenceDrawList,blue,false,true},false);
+     submit(denseObjectPlan(line,objects,kind,dpr,17,0),false);
+     // An epoch change invalidates source pixels even when the resource owner
+     // pointer is the same. Both independent renderers bind their own resolver.
+     candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
+     completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();oracle.serviceResourceRetirements();
+     submit(denseObjectPlan(line,objects,kind,dpr,18,0),false);
+     require(candidateImages.decodeCount()==1&&oracleImages.decodeCount()==1,"dense image decoded every move");
+   }
+   const auto work=candidate.renderCacheWork();const auto interaction=candidate.objectInteractionWork();
+   require(work.cpuCoverageTiles==0&&work.preparedMaxAdvanceKnots<=32,"dense changed GPU/quantum policy");
+   require(work.preparedBodyBuilds==(dpr==1&&kind==0?2U:1U),"dense equal body prepared more than once per resource epoch");
+   if(dpr==1)require(interaction.builds>0&&interaction.hits>=2,"dense affordable static reuse not reached");
+   if(desktop&&dpr==2&&kind<4)require(interaction.builds>0&&interaction.hits>=2,"DPR2 desktop static reuse not reached");
+   auto liveBudget=transientDisplayBudget.lock();require(bool(liveBudget)&&liveBudget->used()<=96U*1024U*1024U,"dense oracle budget witness");
+   require(candidateBudget&&candidateBudget->used()<=limits.sharedMaxBytes,"dense candidate budget witness");
+   nlohmann::json memory=nlohmann::json::array();
+   for(unsigned resource=0;resource<unsigned(resources::ResourceClass::kCount);++resource){
+     const auto usage=candidateBudget->snapshot(static_cast<resources::ResourceClass>(resource));
+     memory.push_back({{"class",resource},{"used",usage.used},{"staging",usage.staging},{"pending_release",usage.pendingRelease}});}
+   // The last observer is the oracle; it owns a separate default manager.
+   auto rebound=planFor(line,objects,kind,dpr,8,0,target.generation());
+   const auto presents=target.presentCount();require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"dense generation");
+   EditingOverlay stale(rebound.frame);require(candidate.renderTransientOverlay(target,rebound,&stale).code==BackendSubmissionCode::kRejected&&target.presentCount()==presents,"dense stale target presented");
+   if(dpr==1&&kind==0){
+     require(reference.advanceGeneration().code==BackendSubmissionCode::kAccepted,"dense oracle generation");
+     submit(denseObjectPlan(line,objects,kind,dpr,19,0,target.generation()),false);
+   }
+   oracle.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);oracle.serviceResourceRetirements();
+   require(liveBudget->used()==0,"dense oracle lease release");
+   candidate.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();
+   require(candidateBudget&&candidateBudget->used()==0,"dense candidate leases not retired");
+   observations.push_back({{"DPR",dpr},{"kind",kind},{"width",width},{"height",height},{"lines",19},{"knots_per_body",7199},{"historical_masks",2},
+     {"accepted",accepted},{"retries",retries},{"body_builds",work.preparedBodyBuilds},{"body_compile",work.preparedCompileInputs},
+     {"max_advance_knots",work.preparedMaxAdvanceKnots},{"static_builds",interaction.builds},{"static_hits",interaction.hits},
+     {"static_invalidations",interaction.invalidations},{"static_denials",interaction.denials},{"lease_bytes",interaction.leaseBytes},
+     {"gpu_marks",interaction.gpuLeaseMarks},{"cpu_tiles",work.cpuCoverageTiles},{"non_aa_pixels_match",true},
+     {"candidate_clear_bytes",candidateBudget->used()},{"oracle_clear_bytes",liveBudget->used()},
+     {"budget_comparison",budgetComparison},{"profile",desktop?"desktop":"conservative"},
+     {"optional_bytes",limits.maxBytes},{"shared_bytes",limits.sharedMaxBytes},{"entry_bytes",limits.maxEntryBytes},
+     {"cache_hits",work.hits},{"cache_misses",work.misses},{"cache_evictions",work.evictions},
+     {"coverage_builds",work.coverageBuilds},{"coverage_hits",work.coverageHits},{"coverage_steps",work.preparationCoverageSteps},
+     {"lease_peak_bytes",peakLeased},{"memory_before_clear",memory},{"timings",timings}});
+   observations.back()["independent_band_pixels"]=boundaryPixels;
+   observations.back()["independent_band_fraction"]=double(boundaryPixels)/independentBoundary.size();
+   observations.back()["non_aa_channel_tolerance"]=2;
+   std::cout<<observations.back().dump()<<std::endl;
+ }
+ std::ofstream(out/"dense-mixed-counters.json")<<observations.dump(2)<<'\n';
+}
+void canonicalMaskOnly(const std::filesystem::path& out,bool verify){
+ std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
+ auto completion=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
+ completion->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(completion),oracle(completion);
+ require(target.resize(512,256).code==BackendSubmissionCode::kAccepted&&oracle.resize(512,256).code==BackendSubmissionCode::kAccepted,"canonical mask-only targets");
+ SkiaRenderer renderer;RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;renderer.setRenderCacheOptions(options);
+ auto line=source();line.record.kind=semantic::ObjectKind::kVectorStroke;line.record.kindVersion=3;
+ line.record.content.update([](auto& v){std::get<semantic::CompactStrokeContent>(v).stroke.config.opacity=.55;});line.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(line.record.content)};
+ nlohmann::json rows=nlohmann::json::array();
+ for(unsigned round=0;round<4;++round){
+  if(round){semantic::SweptCircleMask mask;const double x=40+round*38;
+   for(unsigned i=0;i<8;++i)mask.segments.push_back({{{x+i,30},3},{{x+i,100},3},{x+i,45},{x+i,85}});
+   // Insert before prior IDs, proving no back()/count-based append assumption.
+   line.record.eraseMasks.push_back({ObjectId::fromUint64(100-round),std::move(mask)});
+   std::sort(line.record.eraseMasks.begin(),line.record.eraseMasks.end(),[](const auto&a,const auto&b){return a.id<b.id;});
+  }
+  auto base=renderPlan(line,round+1,2);auto draw=base.referenceDrawList;draw.entries={line};
+  FramePlan plan{base.frame,std::move(draw),{},false,true};RenderPreparationBudget bounded;
+  const auto before=renderer.renderCacheWork();unsigned attempts=0;
+  for(;;){const auto result=renderer.renderFrame(target,plan,nullptr,&bounded);completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();++attempts;
+   if(result.code==BackendSubmissionCode::kAccepted)break;require(result.code==BackendSubmissionCode::kRetry&&attempts<1024,"canonical mask-only progress");}
+  const auto after=renderer.renderCacheWork();auto a=oracle.acquire();
+  require(drawReferencePlanToSkCanvas(*a.frame.surface->getCanvas(),plan).code==BackendSubmissionCode::kAccepted,"independent canonical mask oracle");oracle.release();require(oracle.present().code==BackendSubmissionCode::kAccepted,"oracle present");
+  const auto actual=pixels(target,plan),expected=pixels(oracle,plan),band=denseIndependentBoundary(plan);std::size_t failures=0;
+  for(std::size_t i=0;i<actual.size();++i)if(!band[i/4]&&std::abs(int(actual[i])-int(expected[i]))>2)++failures;
+  saveBuffer(out/(std::to_string(round)+"-actual.rgba"),actual);saveBuffer(out/(std::to_string(round)+"-oracle.rgba"),expected);
+  rows.push_back({{"round",round},{"attempts",attempts},{"coverage_steps",after.preparationCoverageSteps-before.preparationCoverageSteps},
+   {"body_tiles",after.bodyTileBuilds-before.bodyTileBuilds},{"body_hits",after.bodyTileHits-before.bodyTileHits},
+   {"mask_draws",after.maskPrimitiveDraws-before.maskPrimitiveDraws},{"mask_resets",after.maskTileResets-before.maskTileResets},{"non_aa_failures",failures}});
+  std::ofstream(out/"canonical.json")<<rows.dump(2)<<'\n';require(failures==0,"canonical mask-only pixels");
+  if(verify&&round)require(after.preparationCoverageSteps==before.preparationCoverageSteps,"mask-only canonical replayed unchanged body coverage");
+ }
+ renderer.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();
+ for(const auto& row:rows)std::cout<<row.dump()<<'\n';
 }
 std::vector<std::uint8_t> pixels(DisplayTarget& t,const FramePlan& p){std::vector<std::uint8_t> out(std::size_t(p.frame.metrics.physicalWidth)*p.frame.metrics.physicalHeight*4);require(t.readbackRgba(out).code==BackendSubmissionCode::kAccepted,"actual target capture");return out;}
 void settle(SkiaRenderer& r,DisplayTarget& t,const FramePlan& p,const std::shared_ptr<NativeMetalCompletion>& c){
@@ -163,7 +559,7 @@ void handoffInflight(const std::filesystem::path& out){
 }
 int main(int argc,char** argv){try{
 #if defined(__APPLE__)
- auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
+ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--ec-canonical"||mode=="--ec-canonical-probe")canonicalMaskOnly(out,mode=="--ec-canonical");else if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects"||mode=="--desktop-budget")denseObjectContinuity(out,mode=="--desktop-budget");else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
 #else
  (void)argc;(void)argv;
 #endif

@@ -1,0 +1,100 @@
+{
+  "schema": "g5-erase-exact-canonical-result-v1",
+  "status": "BLOCKED_EVIDENCE",
+  "verification_state": "NOT_FULLY_VERIFIED",
+  "package": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/package.json",
+    "sha256": "c7683d087fc3d8bb30629b90967257ea97ad748346c059b5f2e9627a0feb220b",
+    "bytes": 2163
+  },
+  "supplements": [
+    {
+      "path": ".aegis/packages/G5-erase-undo-readiness-supplement-r1/package.json",
+      "sha256": "d64195e58ae8796977f9a6a44cd7514a06ee34a61fbd2d95d46f764aec39c68b",
+      "bytes": 2468
+    },
+    {
+      "path": ".aegis/packages/G5-post-erase-interaction-readiness-r1/package.json",
+      "sha256": "3810f315f31823a4a8693a32a170b649b552ea2708ebed8076de602568cac39d",
+      "bytes": 2516
+    }
+  ],
+  "result_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-erase-exact-canonical-r1"
+  },
+  "source": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/source-manifest.json",
+    "sha256": "d389654c14caa69c3e7025b03cfa4f3ca3a85f17395360e4bdd568172982d8be",
+    "bytes": 15988
+  },
+  "delta": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/source-delta.patch",
+    "sha256": "68f6a5d9b34bc7832f693153cb98c121cf8271d1b90531a367623c591cb7c165",
+    "bytes": 112025
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/artifact-manifest.json",
+    "sha256": "7d8bfbc52815a4c37e82164bab3bc9c3538b6174f4640aa7b9a4f2e4c44e27bc",
+    "bytes": 114623
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/final-normal-artifacts.json",
+    "sha256": "c3df6e9d7ad1c67fe8b73b70425748b2c5e369b48a64de5272eaab11494cd168",
+    "bytes": 3738
+  },
+  "driver": {
+    "path": "verification/runners/g5/erase_exact_canonical.mjs",
+    "sha256": "2279fa04cceb661f65cbdba1ade8b33f16b2253b3e5d1b8d9d606a3782e158a4",
+    "bytes": 11842
+  },
+  "readiness_driver": {
+    "path": "verification/runners/g5/erase_undo_readiness.mjs",
+    "sha256": "5e430d7ef01ab4042668555b06eebc42864b5dbf92871a8ac219552a217101d9",
+    "bytes": 21741
+  },
+  "obligation_index": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/obligation-index.json",
+    "sha256": "5e0355a3893a17b245bcb4823d705a8831d766d87c1dd2e2887dd2a60d8dccfa",
+    "bytes": 7660
+  },
+  "blocking_items": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/blocking-items.json",
+    "sha256": "9fc23be37fece6f75f60d8aa81adc4c722fb4327d0acb51c1aa610d80a65adfb",
+    "bytes": 917
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/sampling-ledger.json",
+    "sha256": "adbbbf66d743e041e1a89f9ed7b21d99e88dcf82db91cd0141c0efdd19257ded",
+    "bytes": 10432
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/cleanup.json",
+    "sha256": "5712c265c831793002a8963bde99c77a0ed7aada16ab685eb74bd45878c1f106",
+    "bytes": 2288
+  },
+  "performance": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/performance-classification.json",
+    "sha256": "b366134ce98b369a641f8050fb7084ab2815b1eda983077cc0acdb1cedd0385e",
+    "bytes": 12407
+  },
+  "final_normalDemoURL": "http://127.0.0.1:4319/example.html",
+  "native_checkpoint_tests": 56,
+  "final_source_affected_tests": 10,
+  "final_native_binding": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/final-native-source-binding.json",
+    "sha256": "3a4532c5fb15bb3d5a82f4e0c81ad177e00a36955637e60521e9184c20e94b52",
+    "bytes": 1258
+  },
+  "primary_pairs": 3,
+  "readiness_qualified_unique_rows": 8,
+  "readiness_required_rows": 11,
+  "continuous_rounds_observed": 8,
+  "continuous_rounds_required": 10,
+  "allrawfailures_retained": true,
+  "no_commit_push": true,
+  "official_G5_P34_performance_PASS": false
+}

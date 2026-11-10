@@ -62,6 +62,9 @@ target_include_directories(canvas_runtime_editor PUBLIC
 target_link_libraries(canvas_runtime_editor PUBLIC canvas_runtime_interaction
     canvas_runtime_render canvas_runtime_ink canvas_runtime_scene)
 target_compile_features(canvas_runtime_editor PUBLIC cxx_std_20)
+if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION)
+    target_compile_definitions(canvas_runtime_editor PRIVATE AXIOM_UR2D_TESTS=1)
+endif()
 if(MSVC)
     target_compile_options(canvas_runtime_editor PRIVATE /W4 /permissive- /WX /EHsc)
 else()

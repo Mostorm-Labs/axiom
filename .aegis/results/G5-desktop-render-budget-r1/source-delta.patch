@@ -1,0 +1,772 @@
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -21,21 +21,8 @@
+     src/preview_surface.cpp)
+ target_link_libraries(canvas_runtime_render PUBLIC canvas_runtime_scheduling canvas_runtime_resources)
+ 
+-# Private source-build comparison profiles. These do not add a consumer API or
+-# alter the installed JS/DLL contract. Keep the accepted default at32/96MiB.
+-set(AXIOM_RENDER_CACHE_MIB "32" CACHE STRING "Optional derived render cache MiB")
+-set(AXIOM_RENDER_SHARED_MIB "96" CACHE STRING "Shared derived resource hard cap MiB")
+-foreach(_budget AXIOM_RENDER_CACHE_MIB AXIOM_RENDER_SHARED_MIB)
+-    if(NOT "${${_budget}}" MATCHES "^[1-9][0-9]*$" OR ${${_budget}} GREATER 4096)
+-        message(FATAL_ERROR "${_budget} must be an integer from1 to4096")
+-    endif()
+-endforeach()
+-if(AXIOM_RENDER_CACHE_MIB GREATER AXIOM_RENDER_SHARED_MIB)
+-    message(FATAL_ERROR "Optional render capacity cannot exceed the shared hard cap")
+-endif()
+-target_compile_definitions(canvas_runtime_render PRIVATE
+-    AXIOM_RENDER_CACHE_MIB=${AXIOM_RENDER_CACHE_MIB}
+-    AXIOM_RENDER_SHARED_MIB=${AXIOM_RENDER_SHARED_MIB})
++include("${PROJECT_SOURCE_DIR}/cmake/AxiomRenderMemoryBudget.cmake")
++axiom_render_memory_compile_definitions(canvas_runtime_render)
+ 
+ if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
+                    CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
+@@ -789,6 +776,14 @@
+  add_executable(axiom_transient_display_retry_tests tests/transient_display_retry_test.cpp)
+  target_compile_definitions(axiom_transient_display_retry_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
+  target_compile_definitions(axiom_transient_display_retry_tests PRIVATE G47_LATIN_FONT="${CanvasSkia_FONT_PATH}")
++ add_executable(axiom_render_memory_budget_tests tests/render_memory_budget_test.cpp)
++ target_compile_definitions(axiom_render_memory_budget_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
++ axiom_render_memory_compile_definitions(axiom_render_memory_budget_tests)
++ target_link_libraries(axiom_render_memory_budget_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++ if(APPLE)
++  target_link_libraries(axiom_render_memory_budget_tests PRIVATE "-framework Foundation" objc)
++ endif()
++ add_test(NAME G5RenderMemoryBudget COMMAND axiom_render_memory_budget_tests)
+  target_link_libraries(axiom_transient_display_retry_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+  if(APPLE)
+   target_link_libraries(axiom_transient_display_retry_tests PRIVATE "-framework Foundation" objc)
+@@ -798,6 +793,7 @@
+  add_test(NAME G5TransientDisplayRecovery COMMAND axiom_transient_display_retry_tests --recovery "${CMAKE_CURRENT_BINARY_DIR}/transient-display-recovery")
+  add_test(NAME G5ObjectInteractionStaticOracle COMMAND axiom_transient_display_retry_tests --object-continuity "${CMAKE_CURRENT_BINARY_DIR}/object-continuity")
+  add_test(NAME G5ObjectInteractionDenseMixed COMMAND axiom_transient_display_retry_tests --dense-objects "${CMAKE_CURRENT_BINARY_DIR}/object-continuity-dense")
++ add_test(NAME G5DesktopRenderBudgetArea COMMAND axiom_transient_display_retry_tests --desktop-budget "${CMAKE_CURRENT_BINARY_DIR}/desktop-budget-area")
+ endif()
+ 
+ if(CANVAS_RENDER_BUILD_TESTS AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSCRIPTEN)
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -4,6 +4,7 @@
+ #include "canvas/render/skia_renderer.hpp"
+ #include "resource_reclaim.hpp"
+ #include "render_execution.hpp"
++#include "render_memory_budget.hpp"
+ 
+ #include "canvas/render/skia_brush_renderer.hpp"
+ #include "canvas/render/brush_outline_skia_path.hpp"
+@@ -46,10 +47,7 @@
+ }
+ #endif
+ 
+-SkiaRenderer::SkiaRenderer(){
+-    renderCacheOptions_.maxBytes=std::size_t(AXIOM_RENDER_CACHE_MIB)*1024*1024;
+-    renderCacheOptions_.sharedMaxBytes=std::size_t(AXIOM_RENDER_SHARED_MIB)*1024*1024;
+-}
++SkiaRenderer::SkiaRenderer():renderCacheOptions_(internal::configuredRenderCacheOptions()){}
+ SkiaRenderer::~SkiaRenderer(){
+     // Seal quota before old contexts can abandon their completion callbacks.
+     if(resourceBudget_)resourceBudget_->close();
+--- a/runtime/render/include/canvas/render/render_cache.hpp
++++ b/runtime/render/include/canvas/render/render_cache.hpp
+@@ -6,6 +6,9 @@
+ namespace canvas::render {
+ struct RenderCacheOptions final {
+     bool enabled=true;
++    // Explicit value profile stays conservative for tests/tools. The ordinary
++    // SkiaRenderer constructor applies the private CMake desktop/mobile policy
++    // to all three limits; these ceilings do not preallocate memory.
+     std::size_t maxBytes=32U*1024U*1024U;
+     // Shared derived-resource hard cap, independent of optional cache capacity.
+     // Mandatory cooperative work buffers use this same manager, not a new pool.
+--- a/runtime/render/tests/transient_display_retry_test.cpp
++++ b/runtime/render/tests/transient_display_retry_test.cpp
+@@ -8,6 +8,7 @@
+ #include <iostream>
+ #include "canvas/text/text_layout.hpp"
+ #include "canvas/render/image_resource.hpp"
++#include <chrono>
+ namespace {
+ ReferenceTraversalEntry displaySource(){
+  auto e=source();e.record.kind=semantic::ObjectKind::kVectorStroke;e.record.kindVersion=3;
+@@ -194,19 +195,22 @@
+  return entry;
+ }
+ FramePlan denseObjectPlan(const ReferenceTraversalEntry& line,std::vector<ReferenceTraversalEntry> objects,
+-    unsigned active,unsigned dpr,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false) {
++    unsigned active,unsigned dpr,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false,
++    unsigned logicalWidth=0,unsigned logicalHeight=0) {
+  // The desktop reconstruction is 1431x1010. DPR4 uses an 800x500 logical
+  // viewport so its mandatory complete display and isolation planes can fit
+  // the unchanged 96MiB contract; report both dimensions in every observation.
+- const unsigned width=dpr==4?800:1431,height=dpr==4?500:1010;
++ const unsigned width=logicalWidth?logicalWidth:(dpr==4?800:1431),height=logicalHeight?logicalHeight:(dpr==4?500:1010);
+  FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,float(width),float(height)},
+    {float(width),float(height),width*dpr,height*dpr,float(dpr),1},semantic::SemanticGeneration{1},SceneRevision{1},
+    SurfaceGeneration{generation},MetricsGeneration{1},FrameId{frame},{0,0,float(width),float(height)}};
+  ReferenceDrawList draw{state};draw.viewportClip=state.viewportClip;
+- objects[active].record.transform.tx+=offset;
+- const auto original=objects[active].record.worldBounds;
+- objects[active].record.worldBounds={original.left+float(offset),original.top,original.right+float(offset),original.bottom};
+- objects[active].record.visualBounds=objects[active].record.worldBounds;
++ if(active<objects.size()){
++  objects[active].record.transform.tx+=offset;
++  const auto original=objects[active].record.worldBounds;
++  objects[active].record.worldBounds={original.left+float(offset),original.top,original.right+float(offset),original.bottom};
++  objects[active].record.visualBounds=objects[active].record.worldBounds;
++ }
+  for(auto& object:objects)if(object.record.textLayout){
+    object.record.textLayout=std::make_shared<text::TextLayoutSnapshot>(*object.record.textLayout);
+    std::visit([&](auto& command){
+@@ -217,6 +221,8 @@
+  for(unsigned i=0;i<19;++i){
+    auto copy=line;copy.record.objectId=ObjectId::fromUint64(90000+i);
+    copy.record.transform.ty=45+i*13;copy.record.worldBounds={0,float(70+i*13),1440,float(150+i*13)};
++   if(active==4&&i==0){copy.record.transform.tx+=offset;
++     copy.record.worldBounds.left+=float(offset);copy.record.worldBounds.right+=float(offset);}
+    copy.record.visualBounds=copy.record.worldBounds;
+    draw.entries.push_back(std::move(copy));
+    if(i>=3&&i<=15&&i%4==3)draw.entries.push_back(objects[(i-3)/4]);
+@@ -252,7 +258,7 @@
+  require(surface->readPixels(SkImageInfo::MakeA8(width,height),mask.data(),width,0,0),"dense independent boundary readback");
+  return mask;
+ }
+-void denseObjectContinuity(const std::filesystem::path& out) {
++void denseObjectContinuity(const std::filesystem::path& out,bool budgetComparison=false) {
+  std::filesystem::create_directories(out);
+  auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
+  auto completion=std::make_shared<NativeMetalCompletion>();
+@@ -276,12 +282,25 @@
+    line.record.eraseMasks.push_back({ObjectId::fromUint64(91000+h),std::move(mask)});
+  }
+  nlohmann::json observations=nlohmann::json::array();
+- for(unsigned dpr:{1U,2U,4U})for(unsigned kind=0;kind<4;++kind){
+-   const auto caseOut=out/(std::to_string(dpr)+"-"+std::to_string(kind));std::filesystem::create_directories(caseOut);
+-   auto initial=denseObjectPlan(line,objects,kind,dpr,1,0);
++ for(unsigned profile=0;profile<(budgetComparison?2U:1U);++profile)
++ for(unsigned area=0;area<(budgetComparison?3U:1U);++area)
++ for(unsigned dpr:(budgetComparison?std::vector<unsigned>{area==2?4U:2U}:std::vector<unsigned>{1U,2U,4U}))
++ for(unsigned kind=0;kind<(budgetComparison?5U:4U);++kind){
++   const bool desktop=budgetComparison&&profile==1;
++   const auto planFor=[&](const ReferenceTraversalEntry& body,std::vector<ReferenceTraversalEntry> content,
++       unsigned active,unsigned ratio,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false){
++     return denseObjectPlan(body,std::move(content),active,ratio,frame,offset,generation,reverse,
++       budgetComparison?(area==0?600U:area==1?1431U:800U):0,
++       budgetComparison?(area==0?900U:area==1?1010U:500U):0);
++   };
++   const auto caseOut=out/(std::to_string(profile)+"-"+std::to_string(area)+"-"+std::to_string(dpr)+"-"+std::to_string(kind));std::filesystem::create_directories(caseOut);
++   auto initial=planFor(line,objects,kind,dpr,1,0);
+    DisplayTarget target(completion),reference(completion);const auto width=initial.frame.metrics.physicalWidth,height=initial.frame.metrics.physicalHeight;
+    require(target.resize(width,height).code==BackendSubmissionCode::kAccepted&&reference.resize(width,height).code==BackendSubmissionCode::kAccepted,"dense targets");
+    SkiaRenderer candidate,oracle;ImageResourceResolver candidateImages(resources),oracleImages(resources);
++   RenderCacheOptions limits;
++   if(desktop){limits.maxBytes=256U*1024U*1024U;limits.sharedMaxBytes=512U*1024U*1024U;limits.maxEntryBytes=64U*1024U*1024U;}
++   if(budgetComparison)candidate.setRenderCacheOptions(limits);
+    candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
+@@ -290,9 +309,12 @@
+    const auto boundaryPixels=std::count_if(independentBoundary.begin(),independentBoundary.end(),[](auto p){return p!=0;});
+    saveBuffer(caseOut/"independent-boundary.a8",independentBoundary);
+    std::shared_ptr<resources::ResourceBudgetManager> candidateBudget;
++   nlohmann::json timings=nlohmann::json::array();std::size_t peakLeased=0;
+    auto submit=[&](const FramePlan& plan,bool canonical,bool inject=false){
++     const auto started=std::chrono::steady_clock::now();
+      EditingOverlay overlay(plan.frame);
+-     const auto active=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.record.objectId==objects[kind].record.objectId;});
++     const auto activeId=kind==4?ObjectId::fromUint64(90000):objects[kind].record.objectId;
++     const auto active=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.record.objectId==activeId;});
+      require(active!=plan.referenceDrawList.entries.end(),"dense active present");
+      require(overlay.update({.selectedObject=active->record.objectId,.worldBounds=active->record.worldBounds,.objectTransform=active->record.transform,.selected=true,.active=!canonical}),"dense selection");
+      RenderPreparationBudget bounded;BackendSubmissionResult result;unsigned calls=0;
+@@ -300,7 +322,7 @@
+        const auto presents=target.presentCount(),submits=candidate.submissionCount();
+        if(inject)transientDisplayFault.beforePublish=true;
+        result=canonical?candidate.renderFrame(target,plan,&overlay,&bounded):candidate.renderTransientOverlay(target,plan,&overlay);
+-       if(!canonical)candidateBudget=transientDisplayBudget.lock();
++       if(!canonical){candidateBudget=transientDisplayBudget.lock();if(candidateBudget)peakLeased=std::max(peakLeased,candidateBudget->used());}
+        completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();++calls;
+        if(result.code==BackendSubmissionCode::kRetry){++retries;auto failed=pixels(target,plan);
+          require(failed==last&&target.presentCount()==presents&&candidate.submissionCount()==submits,"dense Retry modified accepted pixels/receipt");
+@@ -309,11 +331,13 @@
+        if(result.code==BackendSubmissionCode::kRejected)std::cerr<<result.message<<'\n';
+        require(result.code!=BackendSubmissionCode::kRejected&&calls<512,"dense finite stable request failed");
+      }while(result.code!=BackendSubmissionCode::kAccepted);
++     timings.push_back({{"frame",plan.frame.frameId.value()},{"canonical",canonical},{"calls",calls},
++       {"submit_and_gpu_completion_ms",std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count()}});
+      ++accepted;last=pixels(target,plan);
+      const auto expected=canonical?oracle.renderFrame(reference,plan,&overlay):oracle.renderTransientOverlay(reference,plan,&overlay);
+      require(expected.code==BackendSubmissionCode::kAccepted,"dense disabled Direct reference");
+      const auto expectedPixels=pixels(reference,plan);
+-     const auto cameraBoundary=plan.referenceDrawList.worldToView==WorldToViewAffine{}?
++     const auto cameraBoundary=kind!=4&&plan.referenceDrawList.worldToView==WorldToViewAffine{}?
+        std::vector<std::uint8_t>{}:denseIndependentBoundary(plan);
+      const auto& band=cameraBoundary.empty()?independentBoundary:cameraBoundary;
+      std::size_t changedPixels=0,interiorFailures=0;unsigned maxDifference=0;
+@@ -323,7 +347,8 @@
+        if(!band[i/4]&&difference>2)++interiorFailures;
+      }changedPixels+=changed;}
+      const auto prefix=caseOut/std::to_string(plan.frame.frameId.value());
+-     saveBuffer(prefix.string()+"-actual.rgba",last);saveBuffer(prefix.string()+"-oracle.rgba",expectedPixels);
++     if(!budgetComparison||plan.frame.frameId.value()==4||interiorFailures){
++       saveBuffer(prefix.string()+"-actual.rgba",last);saveBuffer(prefix.string()+"-oracle.rgba",expectedPixels);}
+      const auto oracleWork=oracle.objectInteractionWork();
+      const nlohmann::json row{{"DPR",dpr},{"kind",kind},{"frame",plan.frame.frameId.value()},{"canonical",canonical},{"calls",calls},
+        {"width",width},{"height",height},{"actual",pixelDigest(last)},{"oracle",pixelDigest(expectedPixels)},
+@@ -334,11 +359,11 @@
+      require(interiorFailures==0,"dense static order/mask/opacity/text/image mismatch outside frozen AA band");return calls;
+    };
+    submit(initial,true);
+-   for(unsigned move=0;move<3;++move)submit(denseObjectPlan(line,objects,kind,dpr,2+move,7.5*(move+1)),false);
+-   auto changed=denseObjectPlan(line,objects,kind,dpr,5,28);
++   for(unsigned move=0;move<3;++move)submit(planFor(line,objects,kind,dpr,2+move,7.5*(move+1)),false);
++   auto changed=planFor(line,objects,kind,dpr,5,28);
+    submit(changed,false,true);submit(changed,false);
+-   submit(denseObjectPlan(line,objects,kind,dpr,6,0),false); // drag cancel
+-   submit(denseObjectPlan(line,objects,kind,dpr,7,0,1,true),false); // order invalidation
++   submit(planFor(line,objects,kind,dpr,6,0),false); // drag cancel
++   submit(planFor(line,objects,kind,dpr,7,0,1,true),false); // order invalidation
+    if(dpr==1&&kind==0){
+      auto changedObjects=objects;
+      changedObjects[1].record.properties.entries.back().value=.4F;
+@@ -372,9 +397,15 @@
+    require(work.cpuCoverageTiles==0&&work.preparedMaxAdvanceKnots<=32,"dense changed GPU/quantum policy");
+    require(work.preparedBodyBuilds==(dpr==1&&kind==0?2U:1U),"dense equal body prepared more than once per resource epoch");
+    if(dpr==1)require(interaction.builds>0&&interaction.hits>=2,"dense affordable static reuse not reached");
+-   auto liveBudget=transientDisplayBudget.lock();require(bool(liveBudget)&&liveBudget->used()<=96U*1024U*1024U,"dense budget witness");
++   if(desktop&&dpr==2&&kind<4)require(interaction.builds>0&&interaction.hits>=2,"DPR2 desktop static reuse not reached");
++   auto liveBudget=transientDisplayBudget.lock();require(bool(liveBudget)&&liveBudget->used()<=96U*1024U*1024U,"dense oracle budget witness");
++   require(candidateBudget&&candidateBudget->used()<=limits.sharedMaxBytes,"dense candidate budget witness");
++   nlohmann::json memory=nlohmann::json::array();
++   for(unsigned resource=0;resource<unsigned(resources::ResourceClass::kCount);++resource){
++     const auto usage=candidateBudget->snapshot(static_cast<resources::ResourceClass>(resource));
++     memory.push_back({{"class",resource},{"used",usage.used},{"staging",usage.staging},{"pending_release",usage.pendingRelease}});}
+    // The last observer is the oracle; it owns a separate default manager.
+-   auto rebound=denseObjectPlan(line,objects,kind,dpr,8,0,target.generation());
++   auto rebound=planFor(line,objects,kind,dpr,8,0,target.generation());
+    const auto presents=target.presentCount();require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"dense generation");
+    EditingOverlay stale(rebound.frame);require(candidate.renderTransientOverlay(target,rebound,&stale).code==BackendSubmissionCode::kRejected&&target.presentCount()==presents,"dense stale target presented");
+    if(dpr==1&&kind==0){
+@@ -390,7 +421,12 @@
+      {"max_advance_knots",work.preparedMaxAdvanceKnots},{"static_builds",interaction.builds},{"static_hits",interaction.hits},
+      {"static_invalidations",interaction.invalidations},{"static_denials",interaction.denials},{"lease_bytes",interaction.leaseBytes},
+      {"gpu_marks",interaction.gpuLeaseMarks},{"cpu_tiles",work.cpuCoverageTiles},{"non_aa_pixels_match",true},
+-     {"candidate_clear_bytes",candidateBudget->used()},{"oracle_clear_bytes",liveBudget->used()}});
++     {"candidate_clear_bytes",candidateBudget->used()},{"oracle_clear_bytes",liveBudget->used()},
++     {"budget_comparison",budgetComparison},{"profile",desktop?"desktop":"conservative"},
++     {"optional_bytes",limits.maxBytes},{"shared_bytes",limits.sharedMaxBytes},{"entry_bytes",limits.maxEntryBytes},
++     {"cache_hits",work.hits},{"cache_misses",work.misses},{"cache_evictions",work.evictions},
++     {"coverage_builds",work.coverageBuilds},{"coverage_hits",work.coverageHits},{"coverage_steps",work.preparationCoverageSteps},
++     {"lease_peak_bytes",peakLeased},{"memory_before_clear",memory},{"timings",timings}});
+    observations.back()["independent_band_pixels"]=boundaryPixels;
+    observations.back()["independent_band_fraction"]=double(boundaryPixels)/independentBoundary.size();
+    observations.back()["non_aa_channel_tolerance"]=2;
+@@ -488,7 +524,7 @@
+ }
+ int main(int argc,char** argv){try{
+ #if defined(__APPLE__)
+- auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects")denseObjectContinuity(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects"||mode=="--desktop-budget")denseObjectContinuity(out,mode=="--desktop-budget");else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
+ #else
+  (void)argc;(void)argv;
+ #endif
+--- /dev/null
++++ b/cmake/AxiomRenderMemoryBudget.cmake
+@@ -0,0 +1,45 @@
++# Internal build policy. Limits are ceilings, never preallocated memory.
++if(ANDROID OR IOS OR CMAKE_SYSTEM_NAME MATCHES "^(Android|iOS)$")
++    set(_axiom_render_default_profile CONSERVATIVE)
++else()
++    set(_axiom_render_default_profile DESKTOP)
++endif()
++set(AXIOM_RENDER_MEMORY_PROFILE "${_axiom_render_default_profile}" CACHE STRING
++    "Internal render working set: DESKTOP or CONSERVATIVE")
++set_property(CACHE AXIOM_RENDER_MEMORY_PROFILE PROPERTY STRINGS DESKTOP CONSERVATIVE)
++if(AXIOM_RENDER_MEMORY_PROFILE STREQUAL "DESKTOP")
++    set(_axiom_render_defaults 256 512 64)
++elseif(AXIOM_RENDER_MEMORY_PROFILE STREQUAL "CONSERVATIVE")
++    set(_axiom_render_defaults 32 96 8)
++else()
++    message(FATAL_ERROR "AXIOM_RENDER_MEMORY_PROFILE must be DESKTOP or CONSERVATIVE")
++endif()
++list(GET _axiom_render_defaults 0 _axiom_render_cache)
++list(GET _axiom_render_defaults 1 _axiom_render_shared)
++list(GET _axiom_render_defaults 2 _axiom_render_entry)
++set(AXIOM_RENDER_CACHE_MIB "${_axiom_render_cache}" CACHE STRING "Optional derived render cache MiB")
++set(AXIOM_RENDER_SHARED_MIB "${_axiom_render_shared}" CACHE STRING "Shared derived resource hard cap MiB")
++# Preserve older configured 32/96 builds which have no entry override yet.
++# An explicit entry value is never clamped silently.
++if(AXIOM_RENDER_CACHE_MIB MATCHES "^[1-9][0-9]*$" AND
++   AXIOM_RENDER_CACHE_MIB LESS _axiom_render_entry)
++    set(_axiom_render_entry "${AXIOM_RENDER_CACHE_MIB}")
++endif()
++set(AXIOM_RENDER_ENTRY_MIB "${_axiom_render_entry}" CACHE STRING "Maximum individual derived cache entry MiB")
++foreach(_axiom_render_budget AXIOM_RENDER_CACHE_MIB AXIOM_RENDER_SHARED_MIB AXIOM_RENDER_ENTRY_MIB)
++    if(NOT "${${_axiom_render_budget}}" MATCHES "^[1-9][0-9]*$" OR
++       "${${_axiom_render_budget}}" GREATER 4096)
++        message(FATAL_ERROR "${_axiom_render_budget} must be an integer from 1 to 4096")
++    endif()
++endforeach()
++if(AXIOM_RENDER_ENTRY_MIB GREATER AXIOM_RENDER_CACHE_MIB OR
++   AXIOM_RENDER_CACHE_MIB GREATER AXIOM_RENDER_SHARED_MIB)
++    message(FATAL_ERROR "Render limits require entry <= optional cache <= shared hard cap")
++endif()
++
++function(axiom_render_memory_compile_definitions target)
++    target_compile_definitions(${target} PRIVATE
++        AXIOM_RENDER_CACHE_MIB=${AXIOM_RENDER_CACHE_MIB}
++        AXIOM_RENDER_SHARED_MIB=${AXIOM_RENDER_SHARED_MIB}
++        AXIOM_RENDER_ENTRY_MIB=${AXIOM_RENDER_ENTRY_MIB})
++endfunction()
+--- /dev/null
++++ b/runtime/render/src/render_memory_budget.hpp
+@@ -0,0 +1,15 @@
++#pragma once
++#include "canvas/render/render_cache.hpp"
++
++namespace canvas::render::internal {
++// Build policy stays private. Explicit RenderCacheOptions retain their own
++// conservative defaults and may request smaller budgets in tests/tools.
++inline RenderCacheOptions configuredRenderCacheOptions() noexcept {
++    RenderCacheOptions options;
++    constexpr std::size_t mib = 1024U * 1024U;
++    options.maxBytes = std::size_t(AXIOM_RENDER_CACHE_MIB) * mib;
++    options.sharedMaxBytes = std::size_t(AXIOM_RENDER_SHARED_MIB) * mib;
++    options.maxEntryBytes = std::size_t(AXIOM_RENDER_ENTRY_MIB) * mib;
++    return options;
++}
++}
+--- /dev/null
++++ b/runtime/render/tests/render_memory_budget_test.cpp
+@@ -0,0 +1,52 @@
++#define main g5OriginalCanonicalTestMain
++#include "canonical_prepared_body_test.cpp"
++#undef main
++#include "../src/render_memory_budget.hpp"
++#include "../src/transient_display_state.hpp"
++#include <nlohmann/json.hpp>
++#include <iostream>
++
++int main(){try{
++ const auto configured=internal::configuredRenderCacheOptions();
++ constexpr std::size_t mib=1024U*1024U;
++ require(configured.maxBytes==std::size_t(AXIOM_RENDER_CACHE_MIB)*mib&&
++     configured.sharedMaxBytes==std::size_t(AXIOM_RENDER_SHARED_MIB)*mib&&
++     configured.maxEntryBytes==std::size_t(AXIOM_RENDER_ENTRY_MIB)*mib,"configured limits");
++ const RenderCacheOptions conservative;
++ require(conservative.maxBytes==32*mib&&conservative.sharedMaxBytes==96*mib&&conservative.maxEntryBytes==8*mib,"explicit conservative profile changed");
++#if defined(__APPLE__)
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");
++ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++ auto completion=std::make_shared<NativeMetalCompletion>();
++ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++ completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"actual budget Metal context");
++ {
++ NativeMetalTarget target(completion);require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"actual budget surface");
++ auto entry=source();entry.record.kind=semantic::ObjectKind::kVectorStroke;entry.record.kindVersion=3;
++ entry.record.content.update([](auto& value){std::get<semantic::CompactStrokeContent>(value).stroke.knots.resize(16);});
++ entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
++ const auto plan=renderPlan(entry,1,1);EditingOverlay overlay{plan.frame};
++ SkiaRenderer renderer;
++ for(unsigned i=0;;++i){require(i<512,"default budget preparation progress");
++  const auto result=renderer.renderTransientOverlay(target,plan,&overlay);
++  completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();
++  if(result.code==BackendSubmissionCode::kAccepted)break;
++  require(result.code==BackendSubmissionCode::kRetry,"default budget render rejected");
++ }
++ auto budget=internal::transientDisplayBudget.lock();require(bool(budget),"actual renderer budget witness");
++ const auto used=budget->used();require(used<configured.maxBytes,"default renderer cache already exhausted");
++ auto soft=budget->reserve(resources::ResourceClass::kRecorded,configured.maxBytes-used,false);
++ require(bool(soft)&&!budget->reserve(resources::ResourceClass::kRecorded,1,false),"actual renderer optional limit");
++ budget->release(*soft);
++ auto hard=budget->reserve(resources::ResourceClass::kRecorded,configured.sharedMaxBytes-used,true);
++ require(bool(hard)&&!budget->reserve(resources::ResourceClass::kRecorded,1,true),"actual renderer shared limit");
++ budget->release(*hard);
++ renderer.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();
++ require(budget->used()==0,"default budget resource retirement");
++ }
++ message(pool,"drain");
++#endif
++ std::cout<<nlohmann::json{{"optional_mib",configured.maxBytes/mib},{"shared_mib",configured.sharedMaxBytes/mib},
++     {"entry_mib",configured.maxEntryBytes/mib},{"actual_renderer_admission_checked",true},{"leases_after_clear",0}}.dump()<<'\n';
++ return 0;
++}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+--- /dev/null
++++ b/verification/runners/g5/desktop_render_budget.mjs
+@@ -0,0 +1,135 @@
++import {chromium} from '../../node_modules/playwright/index.mjs';
++import fs from 'node:fs/promises';
++import path from 'node:path';
++import http from 'node:http';
++import {createHash} from 'node:crypto';
++import {qualifyPersistedRoundtrip} from './ur2d_selection_up.mjs';
++import {validateChunk} from './ur2d_selection_up_contract.mjs';
++
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export function budgetCases(){
++ return [600,1431].flatMap(width=>['shape','stroke'].flatMap(kind=>['old','candidate'].map(variant=>({
++  width,height:width===600?900:1010,dpr:2,kind,variant,id:`${width}-${kind}-${variant}`}))));
++}
++export function validateBudgetRequest(request){
++ if(request.id!=='G5MB1-AREA-COMPARE'||request.variants?.length!==2||
++    request.variants[0].name!=='old'||request.variants[1].name!=='candidate'||
++    request.variants[0].sdk===request.variants[1].sdk||request.fixture?.name!=='S2'||
++    !/^[0-9a-f]{64}$/.test(request.fixture.sha256)||
++    request.oracle?.sha256!=='ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105')
++  throw Error('invalid frozen area comparison request');
++ return budgetCases();
++}
++
++export async function budgetConsumer(config){
++ const {createRuntime}=await import('/sdk/axiom.mjs');
++ const {installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++ const {boundedDisplayOpportunity}=await import('/g5/prepared_body_index_reverify_pacing.mjs');
++ const {readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++ const {sendBinaryChunks}=await import('/g5/ur2d_selection_up_contract.mjs');
++ const digest=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
++ const pause=ms=>new Promise(r=>setTimeout(r,ms)),check=(ok,msg)=>{if(!ok)throw Error(msg);};
++ const row={...config.spec,errors:[],operations:[],events:[],captures:{}};window.areaPartial=row;
++ let sdk,clock=90000000000,observer;const state=()=>sdk.readState();
++ const pointer=(phase,x,y)=>{
++  clock+=16666667;const rect=sdk.canvas.getBoundingClientRect();
++  const e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,
++   button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});
++  Object.defineProperty(e,'timeStamp',{value:clock/1e6});const start=performance.now();observer.dispatch(sdk.canvas,e);
++  const event={phase,x,y,start,end:performance.now(),contacts:state().activeContacts};row.events.push(event);return event;
++ };
++ const settle=async()=>{const start=performance.now();for(;;){
++  const s=state();if(!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending)return performance.now()-start;
++  check(performance.now()-start<20000,'canonical settle bound');await pause(10);
++ }};
++ const clearSelection=async()=>{pointer('down',30,850);pointer('up',30,850);await settle();check(sdk.readSelection().count===0,'blank click did not clear selection');};
++ const snapshot=async stage=>{
++  const s=state(),value=await sdk.captureSnapshot({generation:s.generation,documentRevision:(BigInt(config.fixture.metadata.documentRevision)+BigInt(s.generation)).toString(),recoveryFrontier:config.fixture.metadata.recoveryFrontier});
++  await sendBinaryChunks('S2-'+stage+'.axsnap',value.bytes,window.areaPersist);
++  const image=readWebGLTarget(sdk.canvas,{role:'canonical'});check(image.metadata.status==='VALID'&&image.bytes,'qualified target unavailable');
++  await sendBinaryChunks('S2-'+stage+'.rgba',image.bytes,window.areaPersist);
++  const result={sha256:await digest(value.bytes),byteLength:value.bytes.length,state:s,rgba_sha256:await digest(image.bytes),readback:image.metadata};row.captures[stage]=result;return result;
++ };
++ try{
++  const bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());check(await digest(bytes)===config.fixture.sha256,'fixture identity');
++  observer=installNavigationObserver(()=>sdk?.canvas);
++  sdk=await createRuntime({mount:document.getElementById('mount'),documentId:config.fixture.documentId,
++   restore:{bytes,metadata:config.fixture.metadata},builtinFonts:false,permission:'localSingleUser',
++   onError:e=>row.errors.push({code:e.code,message:String(e.message??e)}),onOperation:b=>row.operations.push({at:performance.now(),bytes:b.length})});
++  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settle();row.build=sdk.readBuildInfo();
++  await sdk.selectShape('rectangle');pointer('move',400,650);pointer('down',400,650);pointer('up',400,650);await settle();
++  const shape=sdk.readSelection();check(shape.count===1,'shape creation selection');row.shape_id=shape.primary;
++  await sdk.selectTool('select');await sdk.setSelectionMode('point');
++  pointer('down',400,120);pointer('up',400,120);await settle();const stroke=sdk.readSelection();
++  check(stroke.count===1&&stroke.primary!==row.shape_id,'frozen stroke point selection');
++  await sdk.duplicateSelection({offset:[0,0]});await settle();row.stroke_id=sdk.readSelection().primary;
++  check(state().objects===18,'fixed mixed fixture cardinality');
++  const [x,y]=config.spec.kind==='shape'?[450,690]:[400,120];
++  pointer('down',x,y);pointer('up',x,y);await settle();
++  const selected=sdk.readSelection();check(selected.count===1&&selected.primary===(config.spec.kind==='shape'?row.shape_id:row.stroke_id),'actual active object identity');
++  row.initial={state:state(),selection:selected};const count=row.operations.length;
++  const observation={};observer.begin(observation);row.down=pointer('down',x,y);check(state().activeContacts===1,'drag Down rejected');
++  row.moves=[];for(const [dx,dy]of [[4,2],[11,4],[18,6]]){row.moves.push(pointer('move',x+dx,y+dy));await boundedDisplayOpportunity({timeoutMs:5000});}
++  row.up=pointer('up',x+18,y+6);row.completion_wait_ms=await settle();observer.end(observation);row.observation=observation;
++  row.after={state:state(),selection:sdk.readSelection()};
++  check(row.operations.length-count===1&&BigInt(row.after.state.generation)===BigInt(row.initial.state.generation)+1n,'drag did not commit exactly once');
++  check(JSON.stringify(row.after.selection.transform)!==JSON.stringify(selected.transform),'drag transform unchanged');
++  check(row.after.state.activeContacts===0&&row.after.state.lastCommit.presentedGeneration===row.after.state.generation,'drag receipt/contact');
++  const prior=state().generation;pointer('down',x+18,y+6);pointer('move',x+24,y+8);pointer('cancel',x+24,y+8);await settle();
++  check(state().generation===prior&&state().activeContacts===0,'drag cancel mutated document');row.cancel_generation=prior;
++  await clearSelection();row.final=await snapshot('final');
++  await sdk.undo();await settle();row.undo=await snapshot('undo');
++  await sdk.redo();await settle();row.redo=await snapshot('redo');
++  row.pixel_basis={width:sdk.canvas.width,height:sdk.canvas.height,logical_width:config.spec.width,logical_height:config.spec.height,
++   camera:state().camera,final:row.final,redo:row.redo};
++  check(row.errors.length===0,'public handler errors');row.status='OBSERVED';return row;
++ }catch(error){row.status='FAILED';row.error=String(error.stack??error);throw error;}
++ finally{if(observer)observer.restore();if(sdk)await sdk.close();await window.areaMetadata(row);}
++}
++
++export async function worker(requestPath,out){
++ const request=JSON.parse(await fs.readFile(requestPath,'utf8')),cases=validateBudgetRequest(request);
++ await fs.mkdir(out,{recursive:true});const root=path.resolve(new URL('../../..',import.meta.url).pathname);
++ let browser,server,page,activeSdk;const result={id:request.id,status:'STARTED',rows:[],errors:[]};
++ const write=(name,value)=>fs.writeFile(path.join(out,name),JSON.stringify(value,null,2)+'\n');
++ try{
++  server=http.createServer(async(req,res)=>{try{
++   const u=new URL(req.url,'http://localhost'),name=decodeURIComponent(u.pathname);let file;
++   if(name==='/'){const width=Number(u.searchParams.get('width')),height=Number(u.searchParams.get('height'));
++    res.setHeader('Content-Type','text/html');res.end(`<body style="margin:0"><div id="mount" style="width:${width}px;height:${height}px"></div><script type="module">import{budgetConsumer}from'/driver.mjs';window.run=budgetConsumer;</script>`);return;}
++   if(name==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+budgetConsumer.toString());return;}
++   if(name.startsWith('/sdk/'))file=path.join(activeSdk,name.slice(5));
++   else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));
++   else if(name==='/fixture.axsnap')file=request.fixture.path;
++   if(!file)throw Error('not found');res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));
++  }catch(error){res.statusCode=404;res.end(String(error));}});
++  await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const spec of cases){
++   activeSdk=request.variants.find(v=>v.name===spec.variant).sdk;const directory=path.join(out,spec.id);await fs.mkdir(directory);
++   page=await browser.newPage({viewport:{width:spec.width,height:spec.height},deviceScaleFactor:2});
++   page.on('pageerror',e=>result.errors.push(String(e)));page.on('crash',()=>result.errors.push('browser page crash'));
++   const transfers=new Map();await page.exposeFunction('areaPersist',async chunk=>{
++    const previous=transfers.get(chunk.name);if(previous?.complete)throw Error('completed buffer replay');
++    const next=validateChunk(chunk,previous),bytes=Buffer.from(chunk.base64,'base64'),temporary=path.join(directory,chunk.name+'.partial');
++    const handle=await fs.open(temporary,chunk.offset?'r+':'wx');try{const written=await handle.write(bytes,0,bytes.length,chunk.offset);if(written.bytesWritten!==bytes.length)throw Error('short persistence');}finally{await handle.close();}
++    if(next.complete)await fs.rename(temporary,path.join(directory,chunk.name));transfers.set(chunk.name,next);return{nextOffset:next.nextOffset};
++   });
++   await page.exposeFunction('areaMetadata',async row=>fs.writeFile(path.join(directory,'raw-row.json'),JSON.stringify(row,null,2)+'\n'));
++   console.log(JSON.stringify({stage:'case-start',id:spec.id}));
++   await page.goto(`http://127.0.0.1:${server.address().port}/?width=${spec.width}&height=${spec.height}`);await page.waitForFunction(()=>typeof window.run==='function');
++   const row=await page.evaluate(config=>window.run(config),{spec,fixture:request.fixture});
++   // All timing and cold buffers persist before independent qualification.
++   await page.close();page=null;
++   row.roundtrip=await qualifyPersistedRoundtrip({directory,name:'S2',basis:row.pixel_basis,oracle:request.oracle});
++   await fs.writeFile(path.join(directory,'qualified-row.json'),JSON.stringify(row,null,2)+'\n');result.rows.push(row);
++   if(row.roundtrip.status!=='QUALIFIED')throw Error('actual canonical pixel obligation failed');
++   console.log(JSON.stringify({stage:'case-complete',id:spec.id,status:row.roundtrip.status}));
++  }
++  if(result.errors.length)throw Error('page errors');result.status='OBSERVED';
++ }catch(error){result.status='FAILED';result.error=String(error.stack??error);if(page&&!page.isClosed())try{result.partial=await page.evaluate(()=>window.areaPartial);}catch{}}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await write('worker-result.json',result);
++  console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}
++ return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const result=await worker(process.argv[2],path.resolve(process.argv[3]));if(result.status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/desktop_render_budget_runner.py
+@@ -0,0 +1,112 @@
++"""Single bounded, serial desktop-area observation; existing user pages untouched."""
++from pathlib import Path
++import hashlib
++import importlib.util
++import json
++import math
++import subprocess
++import sys
++
++ROOT = Path(__file__).resolve().parents[3]
++RESULT = ROOT / '.aegis/results/G5-desktop-render-budget-r1'
++WINDOW = 'G5MB1-AREA-COMPARE'
++
++
++def sha(p):
++    h = hashlib.sha256()
++    with Path(p).open('rb') as stream:
++        for chunk in iter(lambda: stream.read(1048576), b''):
++            h.update(chunk)
++    return h.hexdigest()
++
++
++def read(p):
++    return json.loads(Path(p).read_text())
++
++
++def write(p, value):
++    Path(p).parent.mkdir(parents=True, exist_ok=True)
++    Path(p).write_text(json.dumps(value, indent=2) + '\n')
++
++
++def artifacts(root):
++    root = Path(root)
++    return {str(p.relative_to(root)): sha(p) for p in sorted(root.rglob('*')) if p.is_file()}
++
++
++def source():
++    names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
++    return {p: sha(ROOT / p) for p in sorted(set(names)) if p and (ROOT / p).is_file() and
++            p.startswith(('runtime/', 'sdk/', 'cmake/', 'verification/runners/g5/', 'verification/tests/')) and
++            Path(p).suffix in ('.cpp', '.hpp', '.h', '.cmake', '.mjs', '.py', '.json', '.txt')}
++
++
++def reserve(ledger, request):
++    variants = request.get('variants', [])
++    if request.get('id') != WINDOW or ledger.get('attempts') or [v.get('name') for v in variants] != ['old', 'candidate']:
++        raise ValueError('one ordered budget comparison only')
++    if Path(variants[0]['sdk']).resolve() == Path(variants[1]['sdk']).resolve():
++        raise ValueError('distinct SDK identities required')
++    ledger['attempts'] = [{'id': WINDOW, 'status': 'STARTED', 'reserved_seconds': 300, 'rss_mib': 4096}]
++
++
++def charge(guard):
++    v = guard.get('elapsed_s')
++    return math.ceil(v) if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and 0 <= v <= 305 else 300
++
++
++def classify(guard, worker, stable):
++    if not (stable and guard.get('reason') == 'completed' and guard.get('cleanup_complete') is True and
++            guard.get('returncode') == 0 and guard.get('remaining_owned_pids') == [] and
++            worker.get('status') == 'OBSERVED' and not worker.get('errors')):
++        return 'STOPPED'
++    expected = [(w, kind, v) for w in (600, 1431) for kind in ('shape', 'stroke') for v in ('old', 'candidate')]
++    rows = worker.get('rows', [])
++    if [(r.get('width'), r.get('kind'), r.get('variant')) for r in rows] != expected:
++        return 'STOPPED'
++    if any(r.get('status') != 'OBSERVED' or r.get('errors') or r.get('roundtrip', {}).get('status') != 'QUALIFIED' for r in rows):
++        return 'STOPPED'
++    return 'COMPLETED'
++
++
++def inputs(request):
++    old = read(ROOT / '.aegis/results/G5-UR2d-selection-up-continue-r1/final-normal-artifacts.json')
++    new = read(RESULT / 'normal-artifacts.json')
++    maps = {v['name']: artifacts(v['sdk']) for v in request['variants']}
++    if maps != {'old': old['files'], 'candidate': new['files']}:
++        raise ValueError('SDK mismatch')
++    for value in (request['fixture'], request['oracle']):
++        if sha(value['path']) != value['sha256']:
++            raise ValueError('fixture/oracle mismatch')
++    return {'SDK': maps, 'source': source(), 'fixture': request['fixture'], 'oracle': request['oracle']}
++
++
++def execute(request_path):
++    request = read(request_path)
++    ledger_path = RESULT / 'sampling-ledger.json'
++    ledger = read(ledger_path) if ledger_path.exists() else {'schema': 'g5-desktop-memory-ledger-v1', 'attempts': [], 'charged_seconds': 0}
++    reserve(ledger, request)
++    out = RESULT / 'local-web' / WINDOW
++    if out.exists():
++        raise ValueError('existing output; no rerun')
++    before = inputs(request)
++    out.mkdir(parents=True)
++    write(out / 'freeze.json', {'request': request, 'request_sha256': sha(request_path), 'inputs': before})
++    write(ledger_path, ledger)
++    spec = importlib.util.spec_from_file_location('guard', Path(__file__).with_name('bounded_worker.py'))
++    guard_module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(guard_module)
++    guard = guard_module.run(['node', str(Path(__file__).with_name('desktop_render_budget.mjs')), str(request_path), str(out)], out, 300, 4096 * 1024)
++    worker = read(out / 'worker-result.json') if (out / 'worker-result.json').exists() else {}
++    after = inputs(request)
++    write(out / 'inputs-after.json', after)
++    ledger['attempts'][0].update(status=classify(guard, worker, before == after), guard=guard,
++                                 source_artifact_stable=before == after, charged_seconds=charge(guard))
++    ledger['charged_seconds'] = charge(guard)
++    write(ledger_path, ledger)
++    print(json.dumps(ledger), flush=True)
++    return 0 if ledger['attempts'][0]['status'] == 'COMPLETED' else 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/tests/test_desktop_render_budget.py
+@@ -0,0 +1,92 @@
++from pathlib import Path
++import json
++import importlib.util
++import subprocess
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++class MemoryProfileTests(unittest.TestCase):
++    def configure(self, definitions=(), system=None):
++        with tempfile.TemporaryDirectory() as directory:
++            root = Path(directory)
++            source = '' if system is None else f'set(CMAKE_SYSTEM_NAME "{system}")\n'
++            source += f'include("{ROOT}/cmake/AxiomRenderMemoryBudget.cmake")\n'
++            source += 'file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/effective.json" "[${AXIOM_RENDER_CACHE_MIB},${AXIOM_RENDER_SHARED_MIB},${AXIOM_RENDER_ENTRY_MIB}]")\n'
++            script = root / 'profile.cmake'
++            script.write_text(source)
++            cp = subprocess.run(['cmake', *definitions, '-P', str(script)], cwd=root, capture_output=True, text=True)
++            output = root / 'effective.json'
++            return cp, json.loads(output.read_text()) if output.exists() else None
++
++    def test_desktop_default_and_native_mobile_conservative(self):
++        for system, expected in [(None, [256, 512, 64]), ('Emscripten', [256, 512, 64]),
++                                 ('Android', [32, 96, 8]), ('iOS', [32, 96, 8])]:
++            with self.subTest(system=system):
++                cp, actual = self.configure(system=system)
++                self.assertEqual(cp.returncode, 0, cp.stderr)
++                self.assertEqual(actual, expected)
++
++    def test_explicit_conservative_and_legacy_cache_override(self):
++        cp, values = self.configure(['-DAXIOM_RENDER_MEMORY_PROFILE=CONSERVATIVE'])
++        self.assertEqual(cp.returncode, 0, cp.stderr)
++        self.assertEqual(values, [32, 96, 8])
++        cp, values = self.configure(['-DAXIOM_RENDER_CACHE_MIB=32', '-DAXIOM_RENDER_SHARED_MIB=96'])
++        self.assertEqual(cp.returncode, 0, cp.stderr)
++        self.assertEqual(values, [32, 96, 32])
++        cp, values = self.configure(['-DAXIOM_RENDER_CACHE_MIB=3', '-DAXIOM_RENDER_SHARED_MIB=5'])
++        self.assertEqual(cp.returncode, 0, cp.stderr)
++        self.assertEqual(values, [3, 5, 3])
++
++    def test_rejects_invalid_or_incoherent_explicit_values(self):
++        for key in ['CACHE', 'SHARED', 'ENTRY']:
++            for value in ['0', '-1', '1.5', 'abc', '4097', '1;2']:
++                with self.subTest(key=key, value=value):
++                    cp, _ = self.configure([f'-DAXIOM_RENDER_{key}_MIB={value}'])
++                    self.assertNotEqual(cp.returncode, 0)
++        for flags in [
++            ['-DAXIOM_RENDER_MEMORY_PROFILE=unknown'],
++            ['-DAXIOM_RENDER_CACHE_MIB=513'],
++            ['-DAXIOM_RENDER_CACHE_MIB=32', '-DAXIOM_RENDER_ENTRY_MIB=64'],
++            ['-DAXIOM_RENDER_SHARED_MIB=32'],
++        ]:
++            with self.subTest(flags=flags):
++                cp, _ = self.configure(flags)
++                self.assertNotEqual(cp.returncode, 0)
++
++
++class BudgetWindowTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        p = ROOT / 'verification/runners/g5/desktop_render_budget_runner.py'
++        spec = importlib.util.spec_from_file_location('memory_window', p)
++        cls.runner = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(cls.runner)
++
++    def test_no_retry_foreign_id_same_sdk_or_incomplete_matrix(self):
++        m = self.runner
++        request = {'id': m.WINDOW, 'variants': [{'name': 'old', 'sdk': '/old'}, {'name': 'candidate', 'sdk': '/candidate'}]}
++        ledger = {'attempts': []}
++        m.reserve(ledger, request)
++        with self.assertRaises(ValueError):
++            m.reserve(ledger, request)
++        for patch in [{'id': 'smoke'}, {'variants': [request['variants'][0]]},
++                      {'variants': [{'name': 'old', 'sdk': '/old'}, {'name': 'candidate', 'sdk': '/old'}]}]:
++            with self.assertRaises(ValueError):
++                m.reserve({'attempts': []}, request | patch)
++        guard = {'reason': 'completed', 'returncode': 0, 'cleanup_complete': True, 'remaining_owned_pids': []}
++        worker = {'status': 'OBSERVED', 'errors': [], 'rows': [
++            {'width': w, 'kind': k, 'variant': v, 'status': 'OBSERVED', 'errors': [], 'roundtrip': {'status': 'QUALIFIED'}}
++            for w in (600, 1431) for k in ('shape', 'stroke') for v in ('old', 'candidate')]}
++        self.assertEqual(m.classify(guard, worker, True), 'COMPLETED')
++        self.assertEqual(m.classify(guard, worker, False), 'STOPPED')
++        self.assertEqual(m.classify(guard | {'reason': 'rss_limit'}, worker, True), 'STOPPED')
++        self.assertEqual(m.classify(guard, worker | {'rows': worker['rows'][:-1]}, True), 'STOPPED')
++        self.assertEqual(m.charge({'elapsed_s': 163.2}), 164)
++        self.assertEqual(m.charge({'elapsed_s': float('nan')}), 300)
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ b/docs/planning/G5_DESKTOP_RENDER_MEMORY_PROFILE_2026_11_10.md
+@@ -0,0 +1,26 @@
++# Internal render memory profiles
++
++The ordinary SkiaRenderer uses the existing RenderCacheOptions,
++ResourceBudgetManager and GPU retirement owner. Desktop and Web builds default to
++256 MiB optional cache, 512 MiB shared derived resources and 64 MiB per cache entry.
++Android and iOS builds default to the conservative 32/96/8 MiB profile. These are
++ceilings per renderer, not upfront allocations, document storage limits or total
++browser/GPU memory measurements.
++
++Select a build profile with `AXIOM_RENDER_MEMORY_PROFILE=DESKTOP` or
++`CONSERVATIVE`. The internal overrides `AXIOM_RENDER_CACHE_MIB`,
++`AXIOM_RENDER_SHARED_MIB` and `AXIOM_RENDER_ENTRY_MIB` accept integers 1–4096,
++with entry <= cache <= shared. Existing explicit 32/96 builds keep those values;
++when entry is absent its profile default is clamped to the effective cache limit.
++Explicitly inconsistent overrides fail configuration. Existing CMake cache values
++persist: select all three overrides when changing a previously configured build.
++
++Explicitly constructed RenderCacheOptions retain their conservative defaults.
++Tests and tools can still set lower quotas. The normal renderer applies all three
++configured limits; consumer JS/DLL APIs have no new budget fields.
++
++The larger working set permits two full viewport RGBA layers at desktop DPR2.
++It does not change object eligibility for static reuse, geometry, AA, masks,
++preparation work limits, receipt rules or GPU completion. Leases remain charged
++until actual GPU completion. Unaffordable work retains its existing retry policy.
++Old 32/96/8 evidence and Demo 4316 stay frozen and are not reclassified.

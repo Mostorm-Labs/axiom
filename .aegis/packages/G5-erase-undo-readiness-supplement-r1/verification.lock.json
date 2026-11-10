@@ -1,0 +1,32 @@
+{
+  "status": "FROZEN_ADDITIONAL_USER_SCENARIO",
+  "parent_verification": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/verification.lock.json",
+    "sha256": "1e44da392deb27f0b93ec30788e47a8c3106f845973ae96f5d837361c5521db1"
+  },
+  "requirements": [
+    {
+      "id": "EC-UNDO-LONG",
+      "requirement": "Reproduce/localizevisible Undo disabled latency after a long partial-erasegesture, including >=10s symptomwhenpresent.",
+      "oracle": "ActualordinaryDemo markup/script#undo withmatchedSDK/rootpubliccallbacks, runtimepubliccanUndo/activeContacts/generation/lastCommit, confirmedacceptedMovecount, monoticclock; independentlysavedCPUexact/pixelhistoryproof inherited.",
+      "acceptance": "Usefrozen40bodyfixture and800confirmedMoveslonggesturethen1600if800doesnotshow>=10s, withsameDPR2/profile/size. Before/Down/lastMove/Updispatchstart/Upreturn/firstpubliccanUndoTrue/firstonChangeTrue/firstDOMenabled/firstactualcontent/qualifiedcanonical timesallrecorded. ObserveUndoafterUpwithoutimmediateartificialsecondDown for thisreadinesscase; originalimmediateinputtestunchanged. FollowseparatefreshnextDownandUndo/Redo/cancel, prove same latest document. Atleastoldonecase andfinalcandidate matchingmaxlengthcase. Performancegoal reduceoldblockedUndoifobserved; actual10snotmandatory fabricatedfailure. If1600alsounder10sclassifyexactpartialreproandretainusercaseoutstanding.",
+      "evidence_required": [
+        "undo-readiness-baseline.json",
+        "undo-readiness-candidate.json",
+        "undo-readiness-localization.json"
+      ]
+    },
+    {
+      "id": "EC-UNDO-STATE",
+      "requirement": "UndoavailabilityprojectionsemanticandUIparity after terminalinput.",
+      "oracle": "DirectrootSDKreadState vs actualDemo.onChange/DOM attribute withsamestate; ownerreadback/History snapshotbeforeafter.",
+      "acceptance": "Idleafterhitcommitnofalsecontact/session/Scene-unstale state. canUndo/DOMreturnedwithoutwaitingcloud/localdurability; donotforcecanUndo=true basedonlyUp. No fakeenabledhistorystate, nochangesinunderlyingHistoryavailabilitycontract. IfseparateUI-onlybugfoundclassifybeforemutationandfixonlyexistingnotification/readstateprojectionwithreentrancyregressionproof; no API expansion.",
+      "evidence_required": [
+        "undo-readiness-localization.json",
+        "web-functional.json"
+      ]
+    }
+  ],
+  "pixel_policy": "ParentfrozenCPUAApolicyunchanged; diagnosticfinalsnapshots/pixelsoutsideprimarytiming.",
+  "no_full_matrix_extension": true
+}

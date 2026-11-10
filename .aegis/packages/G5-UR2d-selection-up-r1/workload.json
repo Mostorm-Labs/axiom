@@ -1,0 +1,84 @@
+{
+  "schema": "g5-ur2d-workload-v1",
+  "default_brush": {
+    "profile": "round-handdrawn",
+    "revision": 4,
+    "size": 16,
+    "thinning": 0.99,
+    "smoothing": 0.61,
+    "streamline": 0.13,
+    "simulated_pressure": true
+  },
+  "native": {
+    "source": "current native source() fixture / private diagnostic baseline in inputs/selection-cost-baseline.cpp",
+    "knots": [
+      512,
+      2048,
+      7199
+    ],
+    "copies": [
+      1,
+      8,
+      16,
+      32
+    ],
+    "histories": [
+      0,
+      2,
+      5,
+      10
+    ],
+    "mask_segments_typical": 80,
+    "selection_regions": [
+      "wholly erased/no hit",
+      "visible positive sliver",
+      "boundary/tangent tolerance",
+      "sparse bounding-box overlap without true intersection",
+      "rectangle and EvenOdd freeform"
+    ],
+    "matrix": "Do not full-cartesian all sizes. 1/8/16/32 dense7199/two histories core; other sizes/history counts sampled in focused correctness/property corpus. Include one independent content body and mask/transform/Undo fork."
+  },
+  "normal_web": {
+    "main_css": [
+      1431,
+      1010
+    ],
+    "main_dpr": 2,
+    "safety_dpr4_css": [
+      800,
+      500
+    ],
+    "safety_dpr4_note": "Explicit bounded-dimension recovery/correctness, not full desktop DPR4 performance.",
+    "initial_snapshot_catalog": {
+      "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/fixtures.json",
+      "sha256": "8c43a354609bf7ae778a477c1907af2187ab842819240cedc3c1ef64da4d16d5",
+      "bytes": 58547
+    },
+    "snapshots": [
+      {
+        "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S0.axsnap",
+        "sha256": "44504ec01584711097d172c28644b668f95404dea87e35b3bc84c73f1ce47404",
+        "bytes": 2080135
+      },
+      {
+        "path": ".aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S2.axsnap",
+        "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+        "bytes": 2187559
+      }
+    ],
+    "trace": {
+      "path": "inputs/stroke-trace.json",
+      "sha256": "45993fb37c280f3bb380043a9f9b6aa0de08624b9e3650b21b4c13b97b56198a"
+    },
+    "fixture_rule": "Use identical opaque baseline snapshots/resources or generate once through existing public input then hash-freeze. Capture metadata from existing catalog. Never build candidate stroke geometry in JS or mutate a user demo.",
+    "required_sequences": [
+      "Restore dense erased S2 -> place rectangle -> blank point-tool mouse Down/Move drag -> Up -> immediately fresh Down/Up; separate Cancel, lostpointercapture/source-lost and pointer ID reuse controls.",
+      "Existing partial erase -> Up -> same-task next Down without waiting for receipt or settle -> next erase -> Up; another case Up -> immediate wheel pan/zoom; final Undo/Redo.",
+      "32-copy native safety and DPR4 bounded display recovery are native; primary Web uses matched16-copy S0/S2 plus19-line trace reconstruction only if needed to reproduce selection entry.",
+      "Read state/selection/final document/qualified receipt after timed input. Readbacks/snapshots only outside primary timing. Cancel produces no Operation; exactly one erase Operation per non-noop Up; no-op changes neither document nor History."
+    ],
+    "pacing": "Actual DOM events / public SDK. Immediately means next task opportunity or <=one refresh period; never await settle between Up and subsequent action. Record planned time/handler start/end and event lateness. Initial fixture warm-up and final correctness settling are separate."
+  },
+  "baseline_rules": "Freeze old selection callable/kernel or binary and unchanged CPU exact/component oracle before production edit. Hash baseline ordinary SDK/assets. No relabel/rebuild baseline as candidate; record r2 dirty source identity.",
+  "classification": "Local performance observations with exact independent correctness; no physical input-to-photon or general SLO claim."
+}

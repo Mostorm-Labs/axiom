@@ -1,0 +1,85 @@
+TAP version 13
+# Subtest: nearest rank reports all tails and missing observations honestly
+ok 1 - nearest rank reports all tails and missing observations honestly
+  ---
+  duration_ms: 0.632375
+  ...
+# Subtest: dispatch durations and Up-to-Down gaps come from actual events
+ok 2 - dispatch durations and Up-to-Down gaps come from actual events
+  ---
+  duration_ms: 0.300417
+  ...
+# Subtest: performance admission rejects capture, missing cases and stale exact state
+ok 3 - performance admission rejects capture, missing cases and stale exact state
+  ---
+  duration_ms: 0.088917
+  ...
+# Subtest: prepared consumer requires actual source body and exact job association
+ok 4 - prepared consumer requires actual source body and exact job association
+  ---
+  duration_ms: 0.141833
+  ...
+# Subtest: paired findings never turn mixed timing into performance PASS
+ok 5 - paired findings never turn mixed timing into performance PASS
+  ---
+  duration_ms: 0.184042
+  ...
+# Subtest: actual Up and published Scene join required for history reuse
+ok 6 - actual Up and published Scene join required for history reuse
+  ---
+  duration_ms: 0.580417
+  ...
+# Subtest: unpublished preparation, foreign Up and zero history cannot qualify
+ok 7 - unpublished preparation, foreign Up and zero history cannot qualify
+  ---
+  duration_ms: 0.103792
+  ...
+# Subtest: decimal source/job identities stay lossless
+ok 8 - decimal source/job identities stay lossless
+  ---
+  duration_ms: 0.320291
+  ...
+# Subtest: DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+ok 9 - DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+  ---
+  duration_ms: 584.269708
+  ...
+# Subtest: transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+ok 10 - transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+  ---
+  duration_ms: 2.950125
+  ...
+# Subtest: guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+ok 11 - guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+  ---
+  duration_ms: 0.089667
+  ...
+# Subtest: performance needs every correct paired sample and does not hide missing or failed observations
+ok 12 - performance needs every correct paired sample and does not hide missing or failed observations
+  ---
+  duration_ms: 0.116917
+  ...
+# Subtest: original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+ok 13 - original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+  ---
+  duration_ms: 0.253167
+  ...
+# Subtest: driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+ok 14 - driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+  ---
+  duration_ms: 1.111667
+  ...
+# Subtest: COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+ok 15 - COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+  ---
+  duration_ms: 0.450292
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 633.011208

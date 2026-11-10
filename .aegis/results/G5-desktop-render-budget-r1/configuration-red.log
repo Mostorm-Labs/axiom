@@ -1,0 +1,77 @@
+test_desktop_default_and_native_mobile_conservative (test_desktop_render_budget.MemoryProfileTests) ... test_explicit_conservative_and_legacy_cache_override (test_desktop_render_budget.MemoryProfileTests) ... FAIL
+test_rejects_invalid_or_incoherent_explicit_values (test_desktop_render_budget.MemoryProfileTests) ... ok
+
+======================================================================
+FAIL: test_desktop_default_and_native_mobile_conservative (test_desktop_render_budget.MemoryProfileTests) (system=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_desktop_render_budget.py", line 28, in test_desktop_default_and_native_mobile_conservative
+    self.assertEqual(cp.returncode, 0, cp.stderr)
+AssertionError: 1 != 0 : CMake Error at /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/tmpqbw8m53o/profile.cmake:1 (include):
+  include could not find requested file:
+
+    /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/cmake/AxiomRenderMemoryBudget.cmake
+
+
+
+
+======================================================================
+FAIL: test_desktop_default_and_native_mobile_conservative (test_desktop_render_budget.MemoryProfileTests) (system='Emscripten')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_desktop_render_budget.py", line 28, in test_desktop_default_and_native_mobile_conservative
+    self.assertEqual(cp.returncode, 0, cp.stderr)
+AssertionError: 1 != 0 : CMake Error at /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/tmpibctn1r1/profile.cmake:2 (include):
+  include could not find requested file:
+
+    /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/cmake/AxiomRenderMemoryBudget.cmake
+
+
+
+
+======================================================================
+FAIL: test_desktop_default_and_native_mobile_conservative (test_desktop_render_budget.MemoryProfileTests) (system='Android')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_desktop_render_budget.py", line 28, in test_desktop_default_and_native_mobile_conservative
+    self.assertEqual(cp.returncode, 0, cp.stderr)
+AssertionError: 1 != 0 : CMake Error at /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/tmpqexz11g5/profile.cmake:2 (include):
+  include could not find requested file:
+
+    /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/cmake/AxiomRenderMemoryBudget.cmake
+
+
+
+
+======================================================================
+FAIL: test_desktop_default_and_native_mobile_conservative (test_desktop_render_budget.MemoryProfileTests) (system='iOS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_desktop_render_budget.py", line 28, in test_desktop_default_and_native_mobile_conservative
+    self.assertEqual(cp.returncode, 0, cp.stderr)
+AssertionError: 1 != 0 : CMake Error at /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/tmpdhveum82/profile.cmake:2 (include):
+  include could not find requested file:
+
+    /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/cmake/AxiomRenderMemoryBudget.cmake
+
+
+
+
+======================================================================
+FAIL: test_explicit_conservative_and_legacy_cache_override (test_desktop_render_budget.MemoryProfileTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_desktop_render_budget.py", line 33, in test_explicit_conservative_and_legacy_cache_override
+    self.assertEqual(cp.returncode, 0, cp.stderr)
+AssertionError: 1 != 0 : CMake Error at /var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/tmpsgfil6gt/profile.cmake:1 (include):
+  include could not find requested file:
+
+    /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/cmake/AxiomRenderMemoryBudget.cmake
+
+
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.202s
+
+FAILED (failures=5)

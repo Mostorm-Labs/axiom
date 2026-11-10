@@ -1,0 +1,1662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="199"
+	failures="8"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="166"
+	timestamp="2026-11-10T16:14:49"
+	>
+	<testcase name="G47TextLayout" classname="G47TextLayout" time="0.594273" status="run">
+		<properties/>
+		<system-out>---- failed to open &lt;0&gt; as a font
+G47 corrupt-font/unavailable-emoji/exact-variable-weight PASS
+G47 layout/font/resource/paragraph-locality PASS
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionGeometry" classname="FC08SectionGeometry" time="0.600707" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+[       OK ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[ RUN      ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren (0 ms)
+[----------] 3 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_scene_atomicity" classname="canvas_rf01_scene_atomicity" time="0.468497" status="run">
+		<properties/>
+		<system-out>RF01-0 Scene atomicity tests passed
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_full_rebuild" classname="canvas_rf01_full_rebuild" time="0.462356" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>line 88: expectation failed: store.find(second.objectId) == &amp;store.records()[0]
+1 RF01-1 full rebuild expectations failed
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_scene_binding" classname="canvas_rf01_scene_binding" time="0.472405" status="run">
+		<properties/>
+		<system-out>RF01-2 SceneBinding tests passed
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a0_semantic_generation_binding" classname="canvas_g2_a0_semantic_generation_binding" time="0.474248" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a1_runtime_record_projection" classname="canvas_g2_a1_runtime_record_projection" time="0.49632" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5GeometryChunkLocality" classname="G5GeometryChunkLocality" time="0.299336" status="run">
+		<properties/>
+		<system-out>{"geometry_chunk_population":100,"chunk_count":4,"selected_chunks":1}
+{"geometry_chunk_population":500,"chunk_count":4,"selected_chunks":1}
+{"geometry_chunk_population":1000,"chunk_count":4,"selected_chunks":1}
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a2_bounds_system" classname="canvas_g2_a2_bounds_system" time="0.258873" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05Route" classname="FC05Route" time="0.35988" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 16 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 16 tests from FC05Route
+[ RUN      ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum
+[       OK ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum (0 ms)
+[ RUN      ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape
+[       OK ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape (0 ms)
+[ RUN      ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle
+[       OK ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle (0 ms)
+[ RUN      ] FC05Route.AlignedTriangleVerticalPortsPreferStraightAcrossEscapeAlternatives
+[       OK ] FC05Route.AlignedTriangleVerticalPortsPreferStraightAcrossEscapeAlternatives (0 ms)
+[ RUN      ] FC05Route.CollinearEndpointsDetourAroundBlockingObject
+[       OK ] FC05Rou...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="canvas_fc02_shape_label_scene" classname="canvas_fc02_shape_label_scene" time="0.583098" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>Assertion failed: (projected.records[0].referenceGeometryDigest != digest), function operator(), file shape_label_scene_test.cpp, line 64.
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a2_reference_geometry" classname="canvas_g2_a2_reference_geometry" time="0.260153" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a2_scene_impact" classname="canvas_g2_a2_scene_impact" time="0.259748" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC03ImageScene" classname="FC03ImageScene" time="0.486966" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a2_dependency_closure" classname="canvas_g2_a2_dependency_closure" time="0.259219" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a3_full_incremental_equivalence" classname="canvas_g2_a3_full_incremental_equivalence" time="0.451667" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a4_scene_delta" classname="canvas_g2_a4_scene_delta" time="0.388183" status="run">
+		<properties/>
+		<system-out>locality population=1000 localized_mutations=3
+locality population=10000 localized_mutations=3
+locality population=100000 localized_mutations=3
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_incremental_equivalence" classname="canvas_g2_a6_incremental_equivalence" time="0.531193" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_atomic_publication" classname="canvas_g2_a6_atomic_publication" time="0.513662" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_recovery" classname="canvas_g2_a6_recovery" time="0.467772" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a5_spatial_index_differential" classname="canvas_g2_a5_spatial_index_differential" time="0.00621229" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a5_d6_spatial_index_benchmark" classname="canvas_g2_a5_d6_spatial_index_benchmark" time="1.16921" status="run">
+		<properties/>
+		<system-out>D6 scale 1000
+D6 scale 10000
+D6 scale 50000
+D6 scale 100000
+D6 scale 1000000
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_damage_view" classname="canvas_rf01_damage_view" time="0.265264" status="run">
+		<properties/>
+		<system-out>RF01-3 Damage/View tests passed
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_module_boundaries" classname="canvas_rf01_module_boundaries" time="0.10779" status="run">
+		<properties/>
+		<system-out>Runtime module boundary check passed (120 contract files)
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_public_abi_manifest" classname="canvas_rf01_public_abi_manifest" time="0.0399204" status="run">
+		<properties/>
+		<system-out>Runtime C ABI manifest passed (54 functions, 49 structs, 163 enum constants)
+</system-out>
+	</testcase>
+	<testcase name="canvas_fc01_derived_geometry" classname="canvas_fc01_derived_geometry" time="0.467228" status="run">
+		<properties/>
+		<system-out>PASS SH2 frozen geometry, resized/None and affine hit probes: 2100
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CMaskOnlyScene" classname="G5UR2CMaskOnlyScene" time="0.474991" status="run">
+		<properties/>
+		<system-out>{"mixed":0,"mask_only_prepares":24,"materialization_delta":0,"body_clone_bytes_delta":0,"full_projection_parity":24,"body_comparison_knots":172776}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CMixedMaskScene" classname="G5UR2CMixedMaskScene" time="0.348247" status="run">
+		<properties/>
+		<system-out>{"mixed":1,"mask_only_prepares":24,"materialization_delta":0,"body_clone_bytes_delta":0,"full_projection_parity":24,"body_comparison_knots":172776}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CAtomicRecovery" classname="G5UR2CAtomicRecovery" time="0.019338" status="run">
+		<properties/>
+		<system-out>{"mask_only_checkpoint_sweep":9,"canonical_mutations_preserved":true,"old_snapshots_immutable":true}
+</system-out>
+	</testcase>
+	<testcase name="F08FrameQualificationBoundary" classname="F08FrameQualificationBoundary" time="0.0319931" status="run">
+		<properties/>
+		<system-out>F08 GREEN
+</system-out>
+	</testcase>
+	<testcase name="G4InteractionSessionManager" classname="G4InteractionSessionManager" time="0.328319" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.265091" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4TransformSession" classname="G4TransformSession" time="0.281594" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.253755" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4EraserSession" classname="G4EraserSession" time="0.267961" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4EditorHistory" classname="G4EditorHistory" time="0.320568" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01EditorHistoryInverseFamilies" classname="FC01EditorHistoryInverseFamilies" time="0.0691624" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SessionConflict" classname="G4SessionConflict" time="0.390196" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SessionLifecycle" classname="G4SessionLifecycle" time="0.265889" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4GestureArbiter" classname="G4GestureArbiter" time="0.349497" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4MultiContactCoordinator" classname="G4MultiContactCoordinator" time="0.27139" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4ViewportGesture" classname="G4ViewportGesture" time="0.28739" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="C0CanvasInteractionCoordinator" classname="C0CanvasInteractionCoordinator" time="0.29526" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="C0ViewportInteractionController" classname="C0ViewportInteractionController" time="0.264918" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46BViewportConstraints" classname="G46BViewportConstraints" time="0.265481" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XContentRevisionStyle" classname="FC00XContentRevisionStyle" time="0.607301" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="0.347024" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SelectionBatch2Coverage" classname="SelectionBatch2Coverage" time="0.328112" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 13 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 13 tests from SelectionCoverage
+[ RUN      ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds
+[       OK ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds (0 ms)
+[ RUN      ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb
+[       OK ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb (0 ms)
+[ RUN      ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry
+[       OK ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry (0 ms)
+[ RUN      ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke
+[       OK ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke (0 ms)
+[ RUN      ] SelectionCoverage.LegacyDabsAreSe...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5GpuRetirementContract" classname="G5GpuRetirementContract" time="0.311915" status="run">
+		<properties/>
+		<system-out>{"case":"webgl_loss_quota_admitted","pass":true}
+{"case":"registered_lost_context_with_zero_buffer_is_physical_loss","pass":true}
+{"case":"physical_loss_releases_affected_lifetime_without_owner_close","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"logical_resize_and_zero_dimensions_do_not_imply_context_loss","pass":true}
+{"case":"healthy_context_keeps_normal_callback_completion","pass":tru...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5GpuResourceRecovery" classname="G5GpuResourceRecovery" time="0.629391" status="run">
+		<properties/>
+		<system-out>{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_target_pixels","pass":true}
+{"case":"idle_retirement_converges_without_edit","pass":true}
+{"case":"actual_navigation_retained_world_preparation","pass":true}
+{"case":"temporary_target_denial","pass":true}
+{"case":"temporary_target_denial_keeps_navigation_owner","pass":true}
+{"case":"logical_resize_preserves_context_lifetime","pass":true}
+{"case":"old_surface_generation_never_presents","pass":true}
+{"case":"rebind_draws_current_generation","pass":true}
+{"case":"resize_preserves_canonical_pixels","pass":true}
+{"case":"present_failure_not_success","pass":true}
+{"case":"preview_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_transparent_pixels","pass":true}
+{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBody" classname="G5CanonicalPreparedBody" time="0.64789" status="run">
+		<properties/>
+		<system-out>{"copies":1,"knots":7199,"canonical_attempts":1,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":2}
+{"actual_consumers":true,"copies":1,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":4,"direct_draws":1}
+{"copies":8,"knots":7199,"canonical_attempts":4,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":16}
+{"actual_consumers":true,"copies":8,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":32,"direct_draws":8}
+{"copies":16,"knots":7199,"canonical_attempts":8,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":32}
+{"actual_consumers":true,"copies":16,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":64,"direct_draws":1...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyBounded" classname="G5CanonicalPreparedBodyBounded" time="0.116499" status="run">
+		<properties/>
+		<system-out>{"visible_checkpoint_replay_inputs":1376,"maximum_build_quantum":32}
+{"bounded_service":true,"advances":675,"unique_support":7199,"unique_length":7198,"unique_compile":7199,"maximum_advance_knots":32}
+{"independent_cpu_geometry_variants":["tapers","caps-disabled","self-intersection","marker-nib"],"pixel_parity":true}
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyPixels" classname="G5CanonicalPreparedBodyPixels" time="0.540088" status="run">
+		<properties/>
+		<system-out>pixel mismatch dpr=2 variant=1 channels=12 max=22
+pixel mismatch dpr=2 variant=2 channels=12 max=22
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":0,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":1,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":2,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":0,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":1,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":2,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":0,"one_step_attempts":696}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":1,"one_step_attempts":696}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":2,"one_step_attempts":696}
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedWorkingSet" classname="G5CanonicalPreparedWorkingSet" time="3.71215" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>libc++abi: terminating due to uncaught exception of type std::runtime_error: working-set Direct failed stable demand
+{"held_ready_bodies":513,"pending_job_survived_retirement":true,"last_release":true}
+{"reclaimable_bytes_before":79060192,"resident_before_release":60024591,"actual_staged_calls":257,"reclaimed":true,"last_release":true}
+</system-out>
+	</testcase>
+	<testcase name="G5PreparedBodyIndex" classname="G5PreparedBodyIndex" time="0.793345" status="run">
+		<properties/>
+		<system-out>{"distinct_allocations":false,"knots":7199,"copies":1,"warm_rounds":48,"cold_ns":603667,"warm_ns":1958,"builds":1,"warm_retention_lookups":0,"cold_lookups":1,"cold_fingerprint_bytes":70,"cold_content_comparisons":0,"cold_candidate_checks":0,"cold_source_footprint_evaluations":2,"cold_source_admissions":1,"fingerprint_bytes":0,"content_comparisons":0,"candidate_checks":0,"identity_hits":48,"source_footprint_evaluations":0,"known_footprint_hits":0}
+{"distinct_allocations":false,"knots":7199,"copies":8,"warm_rounds":48,"cold_ns":236667,"warm_ns":13958,"builds":1,"warm_retention_lookups":0,"cold_lookups":8,"cold_fingerprint_bytes":70,"cold_content_comparisons":0,"cold_candidate_checks":0,"cold_source_footprint_evaluations":2,"cold_source_admissions":1,"fingerprint_bytes":0,"content_comparisons":0,"candidate_checks":0,"identity_hits":384,"source_footprint_evaluations":0,"known_footprint_hits":0}
+{"distinct_allocations":false,"knots":7199,"copies":16,"warm_rounds":48,"cold_ns":231333,"warm_ns":24917,"builds":1,"war...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5RenderExecution" classname="G5RenderExecution" time="0.606597" status="run">
+		<properties/>
+		<system-out>requested_compatible=1 actual_gpu=0 cpu_reused_same_target=1 allocations=1 reuses=1
+declared_gpu=1 actual_root_gpu=0 rejected=1 presents=0
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactHit" classname="G5EraseExactHit" time="0.353327" status="run">
+		<properties/>
+		<system-out>exact erase intersection/no-op/old-mask/object-local/selection parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5RenderCache" classname="G5RenderCache" time="90.0257" status="fail">
+		<failure message="Timeout"/>
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedCompatibility" classname="G5CanonicalPreparedCompatibility" time="0.0218528" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5LiveEraseGpuMiss" classname="G5LiveEraseGpuMiss" time="0.0170649" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5LiveEraseDpr" classname="G5LiveEraseDpr" time="0.0165254" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5TranslatedV4Drag" classname="G5TranslatedV4Drag" time="0.182017" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5InkBodyMaskReuse" classname="G5InkBodyMaskReuse" time="0.0356412" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5RegionalMaskValidity" classname="G5RegionalMaskValidity" time="0.0731861" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5MaskedNavigationProgress" classname="G5MaskedNavigationProgress" time="0.0198616" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5V4CoverageFallback" classname="G5V4CoverageFallback" time="0.0173135" status="run">
+		<properties/>
+		<system-out>CPU default coverage retains pinned Lighten bytes PASS
+v4 raster fallback remains CPU A8 PASS
+</system-out>
+	</testcase>
+	<testcase name="G5MaskedCanonicalRecovery" classname="G5MaskedCanonicalRecovery" time="0.395588" status="run">
+		<properties/>
+		<system-out>masked v4 cooperative yield,strict Direct parity,mask invalidation and bounded source admission PASS
+</system-out>
+	</testcase>
+	<testcase name="G5ErasedMixedNavigation" classname="G5ErasedMixedNavigation" time="0.227723" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5RetainedZoomReentry" classname="G5RetainedZoomReentry" time="0.048549" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5MixedNavigationReentry" classname="G5MixedNavigationReentry" time="0.0410261" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5TileWork" classname="G5TileWork" time="0.357355" status="run">
+		<properties/>
+		<system-out>tile local validity, dirty-lazy work, scheduler dependency and budget guards
+</system-out>
+	</testcase>
+	<testcase name="G5RenderDamage" classname="G5RenderDamage" time="0.381359" status="run">
+		<properties/>
+		<system-out>Render-owned old/new damage and dependency revisions agree
+</system-out>
+	</testcase>
+	<testcase name="G5ObjectInteractionLayoutIdentity" classname="G5ObjectInteractionLayoutIdentity" time="0.0107726" status="run">
+		<properties/>
+		<system-out>{"kind":0,"case":"equal-0","expected_change":0,"damage":0,"revision_before":1,"revision_after":1}
+{"kind":0,"case":"digest-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"content-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"profile-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"context-width-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"context-revision-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"context-height-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"context-lines-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"bounds-0","expected_change":1,"damage":1,"revision_before":1,"revision_after":2}
+{"kind":0,"case":"shape-label-0","expected_change":1,"damage":1,"revision_before":1,"revision_after"...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G47ImageResource" classname="G47ImageResource" time="0.433793" status="run">
+		<properties/>
+		<system-out>G47-IMAGE-000 image modes/render parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G47TextPipeline" classname="G47TextPipeline" time="0.624716" status="run">
+		<properties/>
+		<system-out>G47 scene/resource/edit/transform/render pipeline PASS
+</system-out>
+	</testcase>
+	<testcase name="G45BrushOutlineSkiaPath" classname="G45BrushOutlineSkiaPath" time="0.306367" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4WindowsSkiaInkViewport" classname="G4WindowsSkiaInkViewport" time="0.3804" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SkiaBrushPrimitiveDab" classname="G4SkiaBrushPrimitiveDab" time="0.38428" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SkiaChalkTexture" classname="G4SkiaChalkTexture" time="0.333446" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SkiaChalkContinuousTexture" classname="G4SkiaChalkContinuousTexture" time="0.383484" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="InkV2Work" classname="InkV2Work" time="50.7094" status="run">
+		<properties/>
+		<system-out>profile=round-handdrawn N=512 geometry_knots=1151 input_visits=512 simplification_visits=767 copied_knots=1280 retained_bytes=24576 tile_bytes=24576
+profile=round-handdrawn N=2048 geometry_knots=4607 input_visits=2048 simplification_visits=3071 copied_knots=5120 retained_bytes=24576 tile_bytes=24576
+profile=round-handdrawn N=8192 geometry_knots=18431 input_visits=8192 simplification_visits=12287 copied_knots=20480 retained_bytes=24576 tile_bytes=24576
+profile=marker-compact-v1 N=512 geometry_knots=1151 input_visits=512 simplification_visits=767 copied_knots=1280 retained_bytes=24576 tile_bytes=24576
+profile=marker-compact-v1 N=2048 geometry_knots=4607 input_visits=2048 simplification_visits=3071 copied_knots=5120 retained_bytes=24576 tile_bytes=24576
+profile=marker-compact-v1 N=8192 geometry_knots=18431 input_visits=8192 simplification_visits=12287 copied_knots=20480 retained_bytes=24576 tile_bytes=24576
+profile=chalk-compact-v1 N=512 geometry_knots=1151 input_visits=512 simplification_visits=767 copied_knots...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="InkV2RetinaPreview" classname="InkV2RetinaPreview" time="49.8349" status="run">
+		<properties/>
+		<system-out>retina rendered_knots=951 retained_bytes=10400000 temporary_bytes=10400000
+retina rendered_knots=236 retained_bytes=10400000 temporary_bytes=10400000
+retina rendered_knots=236 retained_bytes=10400000 temporary_bytes=10400000
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-marker" classname="InkV2Material-marker" time="0.58541" status="run">
+		<properties/>
+		<system-out>InkV2Material marker passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-chalk" classname="InkV2Material-chalk" time="0.0113581" status="run">
+		<properties/>
+		<system-out>InkV2Material chalk passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-crayon" classname="InkV2Material-crayon" time="0.0109236" status="run">
+		<properties/>
+		<system-out>InkV2Material crayon passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-water" classname="InkV2Material-water" time="0.00829983" status="run">
+		<properties/>
+		<system-out>InkV2Material water passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-parity" classname="InkV2Material-parity" time="0.273981" status="run">
+		<properties/>
+		<system-out>InkV2Material parity passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-presets" classname="InkV2Material-presets" time="0.00683037" status="run">
+		<properties/>
+		<system-out>InkV2Material presets passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-sampling" classname="InkV2Material-sampling" time="0.0304579" status="run">
+		<properties/>
+		<system-out>InkV2Material sampling passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-cache" classname="InkV2Material-cache" time="2.85012" status="run">
+		<properties/>
+		<system-out>cache_retained_bytes=8388608 temporary_bytes=1048576
+InkV2Material cache passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-scene-mask" classname="InkV2Material-scene-mask" time="0.00877908" status="run">
+		<properties/>
+		<system-out>compact scene bounds + FramePlan + Skia mask accepted
+InkV2Material scene-mask passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-visual" classname="InkV2Material-visual" time="0.0103347" status="run">
+		<properties/>
+		<system-out>chalk dry pores=951 watercolor holes=0 edge/body=1.99693
+InkV2Material visual passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-tuning" classname="InkV2Material-tuning" time="1.97638" status="run">
+		<properties/>
+		<system-out>InkV2Material tuning passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-quality" classname="InkV2Material-quality" time="0.185071" status="run">
+		<properties/>
+		<system-out>quality edge roughness=47.3454
+oracle roughness=54.5541
+quality preview diff=0 max=0
+quality preview diff=0 max=0
+quality preview diff=0 max=0
+quality preview diff=0 max=0
+InkV2Material quality passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-wax" classname="InkV2Material-wax" time="2.70633" status="run">
+		<properties/>
+		<system-out>crayon-wax-v1 light/firm=411789/745498 translucent=3200 edge/body=0.29892
+InkV2Material wax passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-wax-mask" classname="InkV2Material-wax-mask" time="0.00934771" status="run">
+		<properties/>
+		<system-out>compact scene bounds + FramePlan + Skia mask accepted
+InkV2Material wax-mask passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-drywet" classname="InkV2Material-drywet" time="0.0937012" status="run">
+		<properties/>
+		<system-out>chalk-compact-v1 pigment=346758/907895 holes=193 mean=149.25 variance=3154.9 correlation=0.694514 edge/body=0.73725
+watercolor-lite-v1 pigment=354420/733400 holes=0 mean=126.661 variance=77.8687 correlation=0.245143 edge/body=0.575686
+watercolor pressure-ramp sample error=0.00078125
+InkV2Material drywet passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-drywet-parity" classname="InkV2Material-drywet-parity" time="1.97035" status="run">
+		<properties/>
+		<system-out>chalk-compact-v1 light/firm=252137/662441 translucent=2976 edge/body=0.457418
+watercolor-lite-v1 light/firm=259985/538608 translucent=3200 edge/body=0.365335
+InkV2Material drywet-parity passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-drywet-mask" classname="InkV2Material-drywet-mask" time="0.0122613" status="run">
+		<properties/>
+		<system-out>compact scene bounds + FramePlan + Skia mask accepted
+compact scene bounds + FramePlan + Skia mask accepted
+InkV2Material drywet-mask passed
+</system-out>
+	</testcase>
+	<testcase name="InkV2Material-chunk-range" classname="InkV2Material-chunk-range" time="0.044087" status="run">
+		<properties/>
+		<system-out>InkV2Material chunk-range passed
+</system-out>
+	</testcase>
+	<testcase name="G3RuntimeAppBinding" classname="G3RuntimeAppBinding" time="0.319135" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeIsolation" classname="FC00XRuntimeIsolation" time="0.316843" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3HeadlessCanvasDemo" classname="G3HeadlessCanvasDemo" time="1.16728" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>Assertion failed: (field(evidence, "visibility_ids") == "[501,502,503,504,505,506,507,508]"), function assertStageCorrelation, file headless_canvas_demo_test.cpp, line 191.
+</system-out>
+	</testcase>
+	<testcase name="G3HeadlessSkia" classname="G3HeadlessSkia" time="0.419441" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05ConnectorPendingRaster" classname="FC05ConnectorPendingRaster" time="0.00740625" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05StickyFractionalProduction" classname="FC05StickyFractionalProduction" time="0.00649817" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01TriangleConnectorRaster" classname="FC01TriangleConnectorRaster" time="0.00765458" status="run">
+		<properties/>
+		<system-out>PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity
+</system-out>
+	</testcase>
+	<testcase name="G5SkiaChunkRangeEntry" classname="G5SkiaChunkRangeEntry" time="0.525954" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5PreparedGeometry" classname="G5PreparedGeometry" time="0.82238" status="run">
+		<properties/>
+		<system-out>exact locality softDenied=0 steps=183 fallback=768 record_replays=111
+exact locality softDenied=1 steps=183 fallback=768 record_replays=0
+local contour primitives drawn=558 complete=4922
+prepared geometry parity/locality/lifetime PASS
+</system-out>
+	</testcase>
+	<testcase name="FC00XFrameCoordinator" classname="FC00XFrameCoordinator" time="0.294811" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3RenderTargetSwitching" classname="G3RenderTargetSwitching" time="0.33941" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3SkiaSurfaceProvider" classname="G3SkiaSurfaceProvider" time="0.390553" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3PreviewSurface" classname="G3PreviewSurface" time="0.422127" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3SurfacePresentation" classname="G3SurfacePresentation" time="0.308678" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3FrameState" classname="G3FrameState" time="0.269542" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46EditingOverlay" classname="G46EditingOverlay" time="0.00449867" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3Visibility" classname="G3Visibility" time="0.710245" status="run">
+		<properties/>
+		<system-out>{"total_scene_records":100000,"visible_records":500,"candidates_examined":500,"semantic_object_iterations":0}
+{"chunk_visibility_population":100,"candidates_examined":1,"visible_records":1,"selected_chunks":1}
+{"chunk_visibility_population":500,"candidates_examined":1,"visible_records":1,"selected_chunks":1}
+{"chunk_visibility_population":1000,"candidates_examined":1,"visible_records":1,"selected_chunks":1}
+</system-out>
+	</testcase>
+	<testcase name="G3DirectReference" classname="G3DirectReference" time="0.799072" status="run">
+		<properties/>
+		<system-out>{"nine_kind_entries":9,"group_zero_pixels":true,"order_exact":true,"canonical_bytes":2932,"digest":"fnv1a64:e6bc41c591b52e08","world_to_view":[1.93782,-0.494808,0.494808,1.93782,396.166,309.236]}
+{"digest_replay":true,"mutation_sensitivity":true,"identity":true,"order":true,"transform":true,"property":true,"content":true,"dependency":true,"erase_mask":true,"camera":true,"clip":true}
+{"total_scene_records":100000,"visible_ids":500,"find_lookups":500,"record_iterations":0,"semantic_iterations":0}
+PASS Shape label changes canonical reference bytes
+PASS navigation GeometryChunk hints
+</system-out>
+	</testcase>
+	<testcase name="G5TransientReference" classname="G5TransientReference" time="0.621603" status="run">
+		<properties/>
+		<system-out>{"complete_command_pixel_cases":9,"dpr":[1,2,4],"exact_pixels":true,"shared_payloads":true}
+{"negative_identity_cases":5,"navigation_independent":true}
+</system-out>
+	</testcase>
+	<testcase name="G3FrameOrchestration" classname="G3FrameOrchestration" time="0.35264" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4CanonicalHandoff" classname="G4CanonicalHandoff" time="0.259586" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5SharedScenePayload" classname="G5SharedScenePayload" time="0.558391" status="run">
+		<properties/>
+		<system-out>shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5SharedSceneSnapshot" classname="G5SharedSceneSnapshot" time="0.424859" status="run">
+		<properties/>
+		<system-out>shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5SharedSceneIndex" classname="G5SharedSceneIndex" time="0.023585" status="run">
+		<properties/>
+		<system-out>{"knots":65536,"chunk_candidates":8,"index_nodes":11}
+{"knots":262144,"chunk_candidates":8,"index_nodes":15}
+shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5SharedSceneReaders" classname="G5SharedSceneReaders" time="0.0147" status="run">
+		<properties/>
+		<system-out>shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5SharedSceneRetention" classname="G5SharedSceneRetention" time="0.0148395" status="run">
+		<properties/>
+		<system-out>{"first_recorded_bytes":2130175,"second_recorded_bytes":2130990}
+{"reclaimed_idle_bytes":262144,"soft_limit":1048576}
+shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5SharedSceneParity" classname="G5SharedSceneParity" time="0.0149205" status="run">
+		<properties/>
+		<system-out>shared Scene/source PASS
+</system-out>
+	</testcase>
+	<testcase name="G5Ur0ObservationIdentity" classname="G5Ur0ObservationIdentity" time="0.285315" status="run">
+		<properties/>
+		<system-out>strong Id128/scoped job/leaf/early-reentrancy PASS
+actual quota-denial observation preserves rejected admission PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ACompositionProof" classname="G5UR2ACompositionProof" time="0.575719" status="run">
+		<properties/>
+		<system-out>{"dpr":1,"current_composition_without_exact":true,"independent_canonical_pixels":true,"transparent_and_wrong_frame_rejected":true}
+{"dpr":2,"current_composition_without_exact":true,"independent_canonical_pixels":true,"transparent_and_wrong_frame_rejected":true}
+{"dpr":4,"current_composition_without_exact":true,"independent_canonical_pixels":true,"transparent_and_wrong_frame_rejected":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AMaskIsolationDirect" classname="G5UR2AMaskIsolationDirect" time="0.686114" status="run">
+		<properties/>
+		<system-out>{"stage":"causal-mask-destination","mode":"direct","dpr":1,"translated":false,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"causal-mask-destination","mode":"direct","dpr":1,"translated":true,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"causal-mask-destination","mode":"direct","dpr":1,"translated":true,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"causal-mask-destination","mode":"direct","dpr":1,"translated":true,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"causal-mask-destination","mode":"direct","dpr":2,"translated":false,"actual_gpu":true,"classifier_isolates":true,"mask_ex...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AMaskIsolationPrepared" classname="G5UR2AMaskIsolationPrepared" time="0.426132" status="run">
+		<properties/>
+		<system-out>{"stage":"actual-preparation","gpu_tiles":1,"cpu_tiles":0,"scratch_allocations":1,"body_builds":1}
+{"stage":"causal-mask-destination","mode":"prepared","dpr":1,"translated":false,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"actual-preparation","gpu_tiles":1,"cpu_tiles":0,"scratch_allocations":1,"body_builds":1}
+{"stage":"causal-mask-destination","mode":"prepared","dpr":1,"translated":true,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"actual-preparation","gpu_tiles":1,"cpu_tiles":0,"scratch_allocations":1,"body_builds":1}
+{"stage":"causal-mask-destination","mode":"prepared","dpr":1,"translated":true,"actual_gpu":true,"classifier_isolates":true,"mask_extends_beyond_body":true,"mask_probe_alpha":255,"independent_expected_alpha":255,"pass":true}
+{"stage":"actual-preparation","gpu_tiles":1,"cpu_ti...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AMaskIsolationBackdrop" classname="G5UR2AMaskIsolationBackdrop" time="0.307799" status="run">
+		<properties/>
+		<system-out>{"stage":"backdrop-order-pressure","dpr":1,"variant":0,"actual_gpu":true,"gpu_tiles":5,"default_shared_budget":true,"per_entry_pressure_test_only":false,"pass":true}
+{"stage":"backdrop-order-pressure","dpr":1,"variant":1,"actual_gpu":true,"gpu_tiles":5,"default_shared_budget":true,"per_entry_pressure_test_only":false,"pass":true}
+{"stage":"backdrop-order-pressure","dpr":1,"variant":2,"actual_gpu":true,"gpu_tiles":5,"default_shared_budget":true,"per_entry_pressure_test_only":false,"pass":true}
+{"stage":"backdrop-order-pressure","dpr":1,"variant":3,"actual_gpu":true,"gpu_tiles":8,"default_shared_budget":true,"per_entry_pressure_test_only":true,"pass":true}
+{"stage":"backdrop-order-pressure","dpr":2,"variant":0,"actual_gpu":true,"gpu_tiles":10,"default_shared_budget":true,"per_entry_pressure_test_only":false,"pass":true}
+{"stage":"backdrop-order-pressure","dpr":2,"variant":1,"actual_gpu":true,"gpu_tiles":10,"default_shared_budget":true,"per_entry_pressure_test_only":false,"pass":true}
+{"stage":"backdrop-order-pr...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AMaskIsolationLegacy" classname="G5UR2AMaskIsolationLegacy" time="0.1852" status="run">
+		<properties/>
+		<system-out>{"stage":"legacy-unchanged","kind":0,"dpr":1,"pass":true}
+{"stage":"legacy-unchanged","kind":0,"dpr":2,"pass":true}
+{"stage":"legacy-unchanged","kind":0,"dpr":4,"pass":true}
+{"stage":"legacy-unchanged","kind":1,"dpr":1,"pass":true}
+{"stage":"legacy-unchanged","kind":1,"dpr":2,"pass":true}
+{"stage":"legacy-unchanged","kind":1,"dpr":4,"pass":true}
+{"stage":"legacy-unchanged","kind":2,"dpr":1,"pass":true}
+{"stage":"legacy-unchanged","kind":2,"dpr":2,"pass":true}
+{"stage":"legacy-unchanged","kind":2,"dpr":4,"pass":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactParity" classname="G5UR2BExactParity" time="0.707689" status="run">
+		<properties/>
+		<system-out>{"bounds_tests":29,"full_primitives":461,"index_groups":16,"local_components":11,"variant":0}
+{"bounds_tests":41,"full_primitives":442,"index_groups":15,"local_components":10,"variant":1}
+{"bounds_tests":25,"full_primitives":458,"index_groups":15,"local_components":9,"variant":2}
+{"bounds_tests":37,"full_primitives":439,"index_groups":14,"local_components":8,"variant":3}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":4}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":5}
+{"bounds_tests":2,"full_primitives":12,"index_groups":2,"local_components":0,"variant":6}
+{"bounds_tests":2,"full_primitives":13,"index_groups":2,"local_components":0,"variant":7}
+{"checkpoint_replay_knots":1024,"index_groups":782,"materialized_paths":30}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactBodySharing" classname="G5UR2BExactBodySharing" time="0.633303" status="run">
+		<properties/>
+		<system-out>{"actual_draw_builds":1,"body_uses":2,"canonical_draws":0,"compile_inputs":0,"constructed_components":0,"copies":1,"direct_draws":2,"queries":2,"structural_red":false,"validation_calls":0,"validation_knots":0}
+{"actual_draw_builds":1,"body_uses":16,"canonical_draws":0,"compile_inputs":0,"constructed_components":0,"copies":8,"direct_draws":16,"queries":16,"structural_red":false,"validation_calls":0,"validation_knots":0}
+{"actual_draw_builds":1,"body_uses":32,"canonical_draws":0,"compile_inputs":0,"constructed_components":0,"copies":16,"direct_draws":32,"queries":32,"structural_red":false,"validation_calls":0,"validation_knots":0}
+{"actual_draw_builds":1,"body_uses":64,"canonical_draws":0,"compile_inputs":0,"constructed_components":0,"copies":32,"direct_draws":64,"queries":64,"structural_red":false,"validation_calls":0,"validation_knots":0}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactLocality" classname="G5UR2BExactLocality" time="0.106975" status="run">
+		<properties/>
+		<system-out>{"bounds_tests":29,"full_primitives":461,"index_groups":16,"local_components":11,"variant":0}
+{"bounds_tests":41,"full_primitives":442,"index_groups":15,"local_components":10,"variant":1}
+{"bounds_tests":25,"full_primitives":458,"index_groups":15,"local_components":9,"variant":2}
+{"bounds_tests":37,"full_primitives":439,"index_groups":14,"local_components":8,"variant":3}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":4}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":5}
+{"bounds_tests":2,"full_primitives":12,"index_groups":2,"local_components":0,"variant":6}
+{"bounds_tests":2,"full_primitives":13,"index_groups":2,"local_components":0,"variant":7}
+{"checkpoint_replay_knots":1024,"index_groups":782,"materialized_paths":30}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInvalidation" classname="G5UR2BExactInvalidation" time="0.012618" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactPressure" classname="G5UR2BExactPressure" time="0.0109749" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryPlanReuse" classname="G5UR2CHistoryPlanReuse" time="1.28918" status="run">
+		<properties/>
+		<system-out>{"copies":1,"exact_history":0,"path_builds":0,"path_primitive_checks":10,"path_value_checks":2}
+{"body_builds":2,"body_hits":4,"compared":0,"copied_bytes":0,"copies":1,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":2}
+{"copies":8,"exact_history":0,"path_builds":0,"path_primitive_checks":80,"path_value_checks":16}
+{"body_builds":16,"body_hits":32,"compared":0,"copied_bytes":0,"copies":8,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":16}
+{"copies":16,"exact_history":0,"path_builds":0,"path_primitive_checks":160,"path_value_checks":32}
+{"body_builds":32,"body_hits":64,"compared":0,"copied_bytes":0,"copies":16,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":32}
+{"copies":32,"exact_history":0,"path_builds":0,"path_primitive_checks":320,"path_value_checks":64}
+{"body_builds":64,"body_hits":128,"compared":0,"copied_bytes":0,"copies":32,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":64}
+{"copies":1,"exact_hi...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryInvalidation" classname="G5UR2CHistoryInvalidation" time="1.691" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryExactParity" classname="G5UR2CHistoryExactParity" time="0.639473" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"copies":1,"exact_history":0,"path_builds":0,"path_primitive_checks":10,"path_value_checks":2}
+{"body_builds":2,"body_hits":4,"compared":0,"copied_bytes":0,"copies":1,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":2}
+{"copies":8,"exact_history":0,"path_builds":0,"path_primitive_checks":80,"path_value_checks":16}
+{"body_builds":16,"body_hits":32,"compared":0,"copied_bytes":0,"copies":8,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":16}
+{"copies":16,"exact_history":0,"path_builds":0,"path_primitive_checks":160,"path_value_checks":32}
+{"body_builds":32,"body_hits":64,"compared":0,"copied_bytes":0,"copies":16,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":32}
+{"copies":32,"exact_history":0,"path_builds":0,"path_primitive_checks":320,"path_value_checks":64}
+{"body_builds":64...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CLeaseAccounting" classname="G5UR2CLeaseAccounting" time="0.0165337" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryProgress" classname="G5UR2CHistoryProgress" time="1.81902" status="run">
+		<properties/>
+		<system-out>{"attempt":0,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":1,"present_count":1,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":574215}
+{"attempt":1,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":0,"present_count":2,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":574215}
+{"attempt":2,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":0,"present_count":3,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":574215}
+{"attempt":0,"body_tile_builds":0,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":1,"history_denials":2,"history_primitive_builds":0,"present_count":1,"production_caller":"drawDamagedInk","retry":false,"segments":40000,"used_bytes":3475446}
+{"attempt":1,"body_tile_builds":0,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryAdmission" classname="G5UR2CHistoryAdmission" time="0.0302112" status="run">
+		<properties/>
+		<system-out>{"permanent_local_not_pending":true,"structural_prefix_builds":0,"partial_refusal_reused":true,"sameID_mutation_COW":true,"truncate_recovery":true,"global_release_recovery":true,"owner_pool_reset":true,"bounded_refusals":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryProgressSafety" classname="G5UR2CHistoryProgressSafety" time="0.140329" status="run">
+		<properties/>
+		<system-out>{"budget_kib":288,"caller":false,"direct_replay":false,"painted_failure":true,"provider_present":0,"retired_bytes":0}
+{"budget_kib":416,"caller":true,"direct_replay":false,"painted_failure":true,"provider_present":0,"retired_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRetryPixels" classname="G5TransientDisplayRetryPixels" time="0.191513" status="run">
+		<properties/>
+		<system-out>{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayContinuity" classname="G5TransientDisplayContinuity" time="0.408137" status="run">
+		<properties/>
+		<system-out>{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"after-one-object","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"after-one-tile","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"","pixels_preserved":true,"presents":1,"stage":"acquire-unavailable","status":1}
+{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"before-first-object","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"transient publication refused before target write","pixels_preserved":true,"presents":1,"stage":"prepublication-refusal","status":2}
+{"DPR":1,"background":0,"body_builds":1,"damage_frames":5,"latest_equals_independent_full_gpu":true,"original_AA_reference":true}
+{"DPR":1,"background":1,"body_builds":1,"message":"erase feedback allocation un...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRecovery" classname="G5TransientDisplayRecovery" time="0.42205" status="run">
+		<properties/>
+		<system-out>{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":0,"used_bytes":74794432}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":1,"used_bytes":100406528}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":2,"used_bytes":100411200}
+{"DPR4_default96_progress":true,"after_clear_bytes":0,"no_fake_present":true,"retries":3}
+{"CPU_tiles":0,"actual_renderer_40000_history_progress":true,"history_denials":2,"used_bytes":7668528}
+</system-out>
+	</testcase>
+	<testcase name="G5ObjectInteractionStaticOracle" classname="G5ObjectInteractionStaticOracle" time="0.147946" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5ObjectInteractionDenseMixed" classname="G5ObjectInteractionDenseMixed" time="27.3473" status="run">
+		<properties/>
+		<system-out>{"DPR":1,"accepted":7,"body_builds":1,"body_compile":7199,"candidate_clear_bytes":0,"cpu_tiles":0,"gpu_marks":9,"height":1010,"historical_masks":2,"kind":0,"knots_per_body":7199,"lease_bytes":11565696,"lines":19,"max_advance_knots":32,"non_aa_pixels_match":true,"oracle_clear_bytes":0,"retries":10,"static_builds":2,"static_denials":0,"static_hits":5,"static_invalidations":1,"width":1431}
+{"DPR":1,"accepted":7,"body_builds":1,"body_compile":7199,"candidate_clear_bytes":0,"cpu_tiles":0,"gpu_marks":9,"height":1010,"historical_masks":2,"kind":1,"knots_per_body":7199,"lease_bytes":11565696,"lines":19,"max_advance_knots":32,"non_aa_pixels_match":true,"oracle_clear_bytes":0,"retries":10,"static_builds":2,"static_denials":0,"static_hits":5,"static_invalidations":1,"width":1431}
+{"DPR":1,"accepted":7,"body_builds":1,"body_compile":7199,"candidate_clear_bytes":0,"cpu_tiles":0,"gpu_marks":9,"height":1010,"historical_masks":2,"kind":2,"knots_per_body":7199,"lease_bytes":11565696,"lines":19,"max_advance_knots":32,"non_aa_p...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayHandoff" classname="G5TransientDisplayHandoff" time="6.88771" status="run">
+		<properties/>
+		<system-out>{"GPU_epochs":0,"attempt":0,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78142959,"warm":false}
+{"GPU_epochs":0,"attempt":1,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78143583,"warm":false}
+{"GPU_epochs":0,"attempt":2,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78144207,"warm":false}
+{"GPU_epochs":0,"attempt":3,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78144831,"warm":false}
+{"GPU_epochs":0,"attempt":4,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78145455,"warm":false}
+{"GPU_epochs":0,"attempt":5,"body_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayHandoffInflight" classname="G5TransientDisplayHandoffInflight" time="2.1266" status="run">
+		<properties/>
+		<system-out>{"GPU_epoch":2,"actual_pixels_preserved":true,"pending_release":37748736,"physical_finished":true,"stage":"delayed-completion","used":78133103}
+{"CPU_tiles":0,"cycles":2,"generation":2,"stage":"switches-complete","used":0}
+</system-out>
+	</testcase>
+	<testcase name="InkV2Runtime" classname="InkV2Runtime" time="0.716881" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=3
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=4
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=3
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=4
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 ob...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="InkV2Storage" classname="InkV2Storage" time="0.917781" status="run">
+		<properties/>
+		<system-out>storage profile=marker-compact-v1 revision=1 knots=514 bytes=9653
+{"profile":"marker-compact-v1","revision":1,"samples":2048,"knots":514,"operation_bytes":9653,"snapshot_delta_bytes":9622,"legacy_operation_bytes":255687,"legacy_snapshot_delta_bytes":255635,"diagnostic_operation_bytes":74117,"diagnostic_snapshot_delta_bytes":74084,"resource_delta_bytes":0,"persisted_dabs":0,"persisted_raw":0,"persisted_outline":0}
+storage profile=chalk-compact-v1 revision=1 knots=514 bytes=9653
+{"profile":"chalk-compact-v1","revision":1,"samples":2048,"knots":514,"operation_bytes":9653,"snapshot_delta_bytes":9622,"legacy_operation_bytes":255687,"legacy_snapshot_delta_bytes":255635,"diagnostic_operation_bytes":74117,"diagnostic_snapshot_delta_bytes":74084,"resource_delta_bytes":0,"persisted_dabs":0,"persisted_raw":0,"persisted_outline":0}
+storage profile=chalk-compact-v1 revision=3 knots=510 bytes=9643
+{"profile":"chalk-compact-v1","revision":3,"samples":2048,"knots":510,"operation_bytes":9643,"snapshot_delta_bytes":9612,"legac...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SelectionBatch3Summary" classname="SelectionBatch3Summary" time="0.683486" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 13 tests from Summary
+[ RUN      ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection
+[       OK ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection (1 ms)
+[ RUN      ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds
+[       OK ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds (0 ms)
+[ RUN      ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants
+[       OK ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants (0 ms)
+[ RUN      ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead
+[       OK ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead (0 ms)
+[ RUN      ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions
+[       OK ] Summary.StaleSceneCannotPublishAuthorit...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="0.793574" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 31 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 29 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (4 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (3 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (1 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (0 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsO...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="0.762478" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 25 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 17 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (3 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (0 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancel...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.700428" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="24.6413" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 107 tests from 16 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (0 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (1 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchEvaluation" classname="FC00XBrushBatchEvaluation" time="0.60856" status="run">
+		<properties/>
+		<system-out>64 confirmed points: appendEvaluations=1 maxInput=64
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushPressureCapability" classname="FC00XBrushPressureCapability" time="0.00660483" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+unavailable device pressure: expected brush missing-pressure policy=0.5 actual=0.500
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchSemantics" classname="FC00XBrushBatchSemantics" time="0.0138956" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=3 obj...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XCanonicalBusyPreviewProgress" classname="FC00XCanonicalBusyPreviewProgress" time="0.00677321" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+busy=canonical boundary=acquire progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture present busy framegen=1 providergen=1
+busy=canonical boundary=present progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XPreviewBusyCanonicalProgress" classname="FC00XPreviewBusyCanonicalProgress" time="0.00608521" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=acquire progressed=1 canonical=1 preview=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=present progressed=1 canonical=1 preview=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XBusyCanonicalPendingFeedback" classname="FC00XBusyCanonicalPendingFeedback" time="0.0061385" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XFatalProviderFailure" classname="FC00XFatalProviderFailure" time="0.00600792" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device lost framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device failure framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicResources" classname="SDKPublicResources" time="0.59597" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicDocumentIdentity" classname="SDKPublicDocumentIdentity" time="0.616605" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SDKPublicDocumentOperations" classname="SDKPublicDocumentOperations" time="0.689945" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=3
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicDocumentSnapshot" classname="SDKPublicDocumentSnapshot" time="0.614116" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=2 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=3 scene_gen=1
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicOperationIdentity" classname="SDKPublicOperationIdentity" time="0.71454" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+[axiom] present begin frame=4 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicDocumentBackground" classname="SDKPublicDocumentBackground" time="0.641025" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SDKPublicImageExport" classname="SDKPublicImageExport" time="0.654443" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SDKPublicObjectIdentity" classname="SDKPublicObjectIdentity" time="0.652884" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 18 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from GeneratedObjectIdentity
+[ RUN      ] GeneratedObjectIdentity.LegacyNumericSnapshotRetainsIdentityAndAllowsNewRectangle
+[       OK ] GeneratedObjectIdentity.LegacyNumericSnapshotRetainsIdentityAndAllowsNewRectangle (4 ms)
+[ RUN      ] GeneratedObjectIdentity.AutomaticConnectorTargetsAreIndependentAcrossWriters
+[       OK ] GeneratedObjectIdentity.AutomaticConnectorTargetsAreIndependentAcrossWriters (1 ms)
+[ RUN      ] GeneratedObjectIdentity.RichTextObjectsAndParagraphsAreIndependentAcrossWriters
+[       OK ] GeneratedObjectIdentity.RichTextObjectsAndParagraphsAreIndependentAcrossWriters (0 ms)
+[ RUN      ] GeneratedObjectIdentity.StickyRichTextChildrenAreIndependentAcrossWriters
+[       OK ] GeneratedObjectIdentity.StickyRichTextChildrenAreIndependentAcrossWriters (...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicObjectIdentityProcessIsolation" classname="SDKPublicObjectIdentityProcessIsolation" time="0.118184" status="run">
+		<properties/>
+		<system-out>Verified 21 distinct ObjectIds across three fresh processes
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicSelectionInput" classname="SDKPublicSelectionInput" time="0.6118" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeComposition" classname="FC00XRuntimeComposition" time="0.799072" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+Assertion failed: (a.previewActive() &amp;&amp; a.qualificationRuntime().pendingCanonicalHandoffCount() == 1U), function canonicalFeedbackCannotQualifyAnotherInstance, file runtime_composition_test.cpp, line 519.
+</system-out>
+	</testcase>
+	<testcase name="FC00XLiveBrushPreview" classname="FC00XLiveBrushPreview" time="0.00733558" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="SDKNativeNavigationPreview" classname="SDKNativeNavigationPreview" time="0.00612408" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XCancelKeepsViewport" classname="FC00XCancelKeepsViewport" time="0.00823725" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XFitFullScene" classname="FC00XFitFullScene" time="0.0070465" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeFacade" classname="FC00XRuntimeFacade" time="0.674931" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.61809" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+	<testcase name="TableSemantic" classname="TableSemantic" time="0.697381" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 8 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 6 tests from TableV1
+[ RUN      ] TableV1.RecognizesAcceptedObjectAndOperation
+[       OK ] TableV1.RecognizesAcceptedObjectAndOperation (0 ms)
+[ RUN      ] TableV1.WirePreservesStableAxesStylesAndSizes
+[       OK ] TableV1.WirePreservesStableAxesStylesAndSizes (1 ms)
+[ RUN      ] TableV1.InvalidGeometryIdentityAndVersionRejectBeforeEncoding
+[       OK ] TableV1.InvalidGeometryIdentityAndVersionRejectBeforeEncoding (0 ms)
+[ RUN      ] TableV1.ConditionalEditsAreAtomicAndDuplicatesDoNotAdvance
+[       OK ] TableV1.ConditionalEditsAreAtomicAndDuplicatesDoNotAdvance (0 ms)
+[ RUN      ] TableV1.TextAndPaintOperationsCannotSmuggleStructuralChanges
+[       OK ] TableV1.TextAndPaintOperationsCannotSmuggleStructuralChanges (0 ms)
+[ RUN      ] TableV1.PreparedTableIntentIsAtomicAndDoesNot...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SketchSemantic" classname="SketchSemantic" time="0.714771" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 45 tests from 11 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from SketchSemantic
+[ RUN      ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips
+[       OK ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips (1 ms)
+[ RUN      ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange
+[       OK ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange (0 ms)
+[ RUN      ] SketchSemantic.PatternRoundtripAndApplicability
+[       OK ] SketchSemantic.PatternRoundtripAndApplicability (0 ms)
+[ RUN      ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision
+[       OK ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision (0 ms)
+[----------] 4 tests from SketchSemantic (1 ms total)
+
+[----------] 7 tests from SketchRuntime
+[ RUN      ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry (4 ms)
+[ RUN      ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory
+[       OK ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory (0 ms)
+[ RUN      ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch
+[       OK ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch (0 ms)
+[ RUN      ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles
+[       OK ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles (0 ms)
+[ RUN      ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds
+[       OK ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds (0 ms)
+[ RUN      ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves
+[       OK ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves (1 ms)
+[ RUN      ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering
+[       OK ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering (11 ms)
+[----------] 7 tests from SketchRuntime (20 ms total)
+
+[----------] 8 tests from SketchGeometry
+[ RUN      ] SketchGeometry.DeterministicAndColorIndependent
+[       OK ] SketchGeometry.DeterministicAndColorIndependent (0 ms)
+[ RUN      ] SketchGeometry.RoughnessZeroExactAndContinuous
+[       OK ] SketchGeometry.RoughnessZeroExactAndContinuous (0 ms)
+[ RUN      ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline
+[       OK ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline (0 ms)
+[ RUN      ] SketchGeometry.ConnectorKeepsEndpointsAndDirections
+[       OK ] SketchGeometry.ConnectorKeepsEndpointsAndDirections (0 ms)
+[ RUN      ] SketchGeometry.HatchCurvesUseIndependentSeededStream
+[       OK ] SketchGeometry.HatchCurvesUseIndependentSeededStream (0 ms)
+[ RUN      ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents
+[       OK ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents (0 ms)
+[ RUN      ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle
+[       OK ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle (0 ms)
+[ RUN      ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable
+[       OK ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable (0 ms)
+[----------] 8 tests from SketchGeometry (0 ms total)
+
+[----------] 5 tests from SketchExtendedGeometry
+[ RUN      ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline
+[       OK ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline (0 ms)
+[ RUN      ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening
+[       OK ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening (0 ms)
+[ RUN      ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise
+[       OK ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise (0 ms)
+[ RUN      ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds
+[       OK ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds (0 ms)
+[ RUN      ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths
+[       OK ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths (0 ms)
+[----------] 5 tests from SketchExtendedGeometry (0 ms total)
+
+[----------] 2 tests from SketchExtendedSemantic
+[ RUN      ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke
+[       OK ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke (0 ms)
+[ RUN      ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle
+[       OK ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle (0 ms)
+[----------] 2 tests from SketchExtendedSemantic (0 ms total)
+
+[----------] 6 tests from SketchExtendedRuntime
+[ RUN      ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership
+[       OK ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership (0 ms)
+[ RUN      ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry
+[axiom] present begin frame=1 objects=0 scene_records=0
+[       OK ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry (0 ms)
+[ RUN      ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox
+[       OK ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody
+[       OK ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody (0 ms)
+[ RUN      ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange
+[       OK ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange (1 ms)
+[----------] 6 tests from SketchExtendedRuntime (3 ms total)
+
+[----------] 2 tests from SketchExtendedRender
+[ RUN      ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches
+[       OK ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches (2 ms)
+[ RUN      ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder
+[       OK ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder (1 ms)
+[----------] 2 tests from SketchExtendedRender (4 ms total)
+
+[----------] 5 tests from CornerGeometry
+[ RUN      ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius
+[       OK ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius (0 ms)
+[ RUN      ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner
+[       OK ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner (0 ms)
+[ RUN      ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary
+[       OK ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary (0 ms)
+[ RUN      ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty
+[       OK ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty (6 ms)
+[ RUN      ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable
+[       OK ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable (0 ms)
+[----------] 5 tests from CornerGeometry (7 ms total)
+
+[----------] 3 tests from HandwritingFont
+[ RUN      ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles
+[       OK ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles (0 ms)
+[ RUN      ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/tests/rounded_font_test.cpp:57: Failure
+Value of: snapshot-&gt;diagnostics.empty()
+  Actual: false
+Expected: true
+
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback (45 ms)
+[ RUN      ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects
+[       OK ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects (0 ms)
+[----------] 3 tests from HandwritingFont (45 ms total)
+
+[----------] 2 tests from CornerSemantic
+[ RUN      ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed
+[       OK ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed (0 ms)
+[ RUN      ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability
+[       OK ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability (0 ms)
+[----------] 2 tests from CornerSemantic (0 ms total)
+
+[----------] 1 test from CornerRuntime
+[ RUN      ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable (0 ms)
+[----------] 1 test from CornerRuntime (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 45 tests from 11 test suites ran. (84 ms total)
+[  PASSED  ] 44 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="G5Navigation" classname="G5Navigation" time="1.44428" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+[axiom] finish begin pointer=3 objects=2 scene_gen=2
+[axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=3
+[axiom] finish begin pointer=4 objects=3 scene_gen=3
+[axiom] scene apply pointer=4 ok=1 objects=4 scene_gen=4
+[axiom] finish begin pointer=5 objects=4 scene_gen=4
+[axiom] scene apply pointer=5 ok=1 objects=5 scene_gen=5
+[axiom] finish begin pointer=6 objects=5 scene_gen=5
+[axiom] scene apply pointer=6 ok=1 objects=6 scene_gen=6
+[axiom] finish begin pointer=7 objects=6 scene_gen=6
+[axiom] scene apply pointer=7 ok=1 objects=7 scene_gen=7
+[axiom] finish begin pointer=8 objects=7 scene_gen=7
+[axiom] scene apply pointer=8 ok=1 objects=8 scene_gen=8
+[axiom] finish begin pointer=9 objects=8 scene_gen=8
+[axiom] scene apply pointer=9 ok=1 ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AReadmissionAcquire" classname="G5UR2AReadmissionAcquire" time="0.637904" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present skia failed: labelled test backbuffer busy framegen=1 providergen=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-readmission","denial":"acquire","accepted":true,"canonical_acquire":0,"canonical_present":0,"preview_acquire":0,"preview_present":0,"preview_visibility_calls":0,"semantic_unchanged":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AReadmissionPresent" classname="G5UR2AReadmissionPresent" time="0.304992" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present skia failed: labelled test present busy framegen=1 providergen=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-readmission","denial":"present","accepted":true,"canonical_acquire":0,"canonical_present":0,"preview_acquire":0,"preview_present":0,"preview_visibility_calls":0,"semantic_unchanged":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ANavigation" classname="G5UR2ANavigation" time="0.0149008" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-postUp-navigation","navigation_pending":true,"navigation_presented":true,"canonical_requested":false,"canonical_work":false,"semantic":2}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AHandoff" classname="G5UR2AHandoff" time="0.0149806" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":0,"pending_brush":1,"preview_active":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ASceneRecovery" classname="G5UR2ASceneRecovery" time="0.0133297" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":1,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AHistory" classname="G5UR2AHistory" time="0.0141175" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ALifecycle" classname="G5UR2ALifecycle" time="0.0135536" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ANavigationSafety" classname="G5UR2ANavigationSafety" time="0.122283" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ABrushVisibility" classname="G5UR2ABrushVisibility" time="0.0126685" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":0,"pending_brush":1,"preview_active":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInputRuntime" classname="G5UR2BExactInputRuntime" time="0.631808" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"actual_Runtime_Up_prepared_uses":1,"full_validation_calls":0,"source_unchanged":true,"exactly_once_history":true,"cancel_undo_redo":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CContinuousInput" classname="G5UR2CContinuousInput" time="0.631697" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"scene_materializations":0,"scene_records":0,"body_clone_bytes":0,"mask_only_hits":1}
+{"actual_Runtime_Up_prepared_uses":1,"full_validation_calls":0,"source_unchanged":true,"exactly_once_history":true,"cancel_undo_redo":true}
+</system-out>
+	</testcase>
+	<testcase name="FC01CreationControlBinding" classname="FC01CreationControlBinding" time="0.0260348" status="run">
+		<properties/>
+		<system-out>PASS FC01 control scenario: one-gesture
+</system-out>
+	</testcase>
+	<testcase name="G45BrushRuntimePipeline" classname="G45BrushRuntimePipeline" time="0.735444" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1812 objects=1 scene_gen=1
+[axiom] scene apply pointer=1812 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=2 scene_records=2
+Assertion failed: (host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0)), function canonicalPixels, file brush_runtime_pipeline_test.cpp, line 12.
+</system-out>
+	</testcase>
+</testsuite>

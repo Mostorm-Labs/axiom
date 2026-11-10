@@ -1,0 +1,37 @@
+{
+  "schema": "g5-object-interaction-continuity-result-v1",
+  "status": "BLOCKED_EVIDENCE",
+  "source_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "source_hashes": {
+    "runtime/render/include/canvas/render/skia_renderer.hpp": "85c129643be7f8a42fcddbd2062222302fbcca444e6d846e8501914554de3d2e",
+    "runtime/render/src/skia_render_cache.cpp": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+    "runtime/render/src/skia_render_cache_internal.hpp": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+    "runtime/render/src/skia_renderer.cpp": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+    "runtime/render/tests/transient_display_retry_test.cpp": "825c9d3fb2c1de2729726e94054e08cbe0ecc7bf1504c6cddd092468722b37dc"
+  },
+  "fresh_verification": {
+    "build_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "continuity_exit_code": 0,
+    "recovery_exit_code": 0,
+    "oracle_exit_code": 0,
+    "oracle": {
+      "active_object_draws": 3,
+      "actual_pixel_digest": "3b8837ebbe447d6b",
+      "direct_groups_delta": 5,
+      "full_transient_scene_draws": 1,
+      "moves": 3,
+      "oracle_pixel_digest": "3b8837ebbe447d6b",
+      "static_reuse_builds": 1,
+      "static_reuse_hits": 2,
+      "static_reuse_invalidations": 0,
+      "static_reuse_lease_bytes": 263120
+    }
+  },
+  "first_present_selection": "CONTROL_DIAGNOSTIC_NOT_REPRODUCED_COMPLEX_TEXT_LIMITATION",
+  "dense_long_line_historical_mask_fixture": "NOT_MATERIALIZED",
+  "web_build": "BLOCKED_ENVIRONMENT_EMSCRIPTEN_SYSTEM_PYTHON_3_9_AND_MISSING_NINJA",
+  "next_action": "R2 successor required for layout digest identity and staged preparation starvation; r1 must not be marked READY",
+  "browser_starts": 0,
+  "evidence_note": "Independent oracle is disabled/staticReuse=0; actual and oracle pixel digests match on the bounded non-ink fixture. This does not cover the full user scene with dense long line historical masks plus Shape/Sticky/Table/Image."
+}

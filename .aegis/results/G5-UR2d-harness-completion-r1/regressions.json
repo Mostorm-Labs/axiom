@@ -1,0 +1,96 @@
+{
+  "status": "SCOPED_REGRESSIONS_QUALIFIED_WITH_HISTORICAL_FINDINGS",
+  "new_offline_tests": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_ur2d_selection_up.test.mjs"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/offline-node-final.log",
+        "sha256": "5a84191c3ca82d08fa4bcab2882cb32609c84fc62211f32d3ec3c92512eb4091",
+        "bytes": 2494
+      }
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "verification/tests",
+        "-p",
+        "test_g5_ur2d_pair_completion.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/offline-python-final.log",
+        "sha256": "61b7ecee4044421540ba644f1b1ecb0b487ef8c699d0b297567d38cf411a0577",
+        "bytes": 595
+      }
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/diff-check-final.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "frozen_native": {
+    "junit": {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-keeper-junit.xml",
+      "sha256": "4a6e402cf783dc9ad0aa373c0bd6d210d83350c1c2121007404a910c96b98e6c",
+      "bytes": 49957
+    },
+    "cases": 78,
+    "failures": 0
+  },
+  "old634": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/original634-final-comparison.json",
+    "sha256": "411bf983d8fb466dcf458629f9b6bd7993cfdb700c502027462932ef5be29226",
+    "bytes": 739
+  },
+  "finite6": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/finite-six-final.log",
+    "sha256": "efb934a162d48dbd41fc0a701afdd36734f3c1904cd20881c02c4a3b03aa5414",
+    "bytes": 67
+  },
+  "selection55": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/selection-parity.json",
+    "sha256": "7eb5adca7a2f5d5ae62ebd34387c31581c326733a5955f0c577827ded4848af3",
+    "bytes": 11875
+  },
+  "independent172": {
+    "path": ".aegis/results/G5-UR2d-control-r1/independent-A-parity.json",
+    "sha256": "a86c30519b36d754c584165a476edd171ca19a8c43617d87f37145fd1b060cca",
+    "bytes": 561
+  },
+  "old_focused_node": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-node-keepers.log",
+    "sha256": "37d2ec43f6cae227040a95b82a98389e5ba357b7dc1f0105106d4651105b96c6",
+    "bytes": 10149
+  },
+  "old_focused_python": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-python-keepers.log",
+    "sha256": "74c3b17855000bfadf21683529f9cd89c0cfce9083eb6b6c1359587f69d330e5",
+    "bytes": 134
+  },
+  "boundary120": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/checkpoint-boundary.log",
+    "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+    "bytes": 58
+  },
+  "prior_broad_8_failures": "Historical baseline retained, not rerun, fixed, or waived.",
+  "no_new_broad_native_run": true
+}

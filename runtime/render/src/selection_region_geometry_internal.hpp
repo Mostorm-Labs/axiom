@@ -22,12 +22,15 @@ struct ExactQueryWork final {
 class EraseMaskPathCache final {
  public:
     struct Entry;
-    struct Work {std::uint64_t builds=0,hits=0,denied=0,pathValueComparisons=0,pathPrimitiveComparisons=0;std::size_t bytes=0;ExactQueryWork exact;MaskHistoryWork history;std::uint64_t localRefusals=0,refusalHits=0,resourceWaits=0;};
+    struct Work {std::uint64_t builds=0,hits=0,denied=0,pathValueComparisons=0,pathPrimitiveComparisons=0;std::size_t bytes=0;ExactQueryWork exact;MaskHistoryWork history;std::uint64_t localRefusals=0,refusalHits=0,resourceWaits=0,equivalentQueryHits=0;};
     EraseMaskPathCache();
     ~EraseMaskPathCache();
     SelectionGeometryHit query(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         PreparedGeometryCache* prepared=nullptr,const RenderCacheOptions* options=nullptr)noexcept;
+    SelectionGeometryHit selectionQuery(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+        PreparedGeometryCache*,const RenderCacheOptions*)noexcept;
     void setRetentionPool(std::shared_ptr<SourceRetentionPool>);
     std::shared_ptr<MaskHistoryPlan> history(const scene::SharedVector<semantic::EraseMaskRecord>&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
@@ -35,6 +38,11 @@ class EraseMaskPathCache final {
     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
     // Private Render translation units only; returned pins retain their quota.
     std::shared_ptr<const Entry> get(const semantic::EraseMaskGeometry&,bool historical=false);
+    // Optional sequential PathOps prefix advanced by the existing live frame.
+    // A final query still verifies the entire input and finishes any remainder.
+    void prepareQueryPrefix(const semantic::EraseMaskGeometry&,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+        std::size_t maxSegments=8)noexcept;
     void clear()noexcept;
     Work work()const noexcept;
  private:

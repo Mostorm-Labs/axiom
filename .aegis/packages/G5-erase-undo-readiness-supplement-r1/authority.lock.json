@@ -1,0 +1,33 @@
+{
+  "status": "CURRENT_USER_STEERING_SUPPLEMENT",
+  "human_request": "长长的擦除线后 undo 按钮持续灰色约10s才恢复，把这个情况一起考虑复现测试定位。",
+  "parent_package": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/package.json",
+    "sha256": "c7683d087fc3d8bb30629b90967257ea97ad748346c059b5f2e9627a0feb220b"
+  },
+  "parent_authority": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/authority.lock.json",
+    "sha256": "56a27fd905e505441cba03a56eed381ecdfebbb23ddc4cf87d17b46543a3f27d"
+  },
+  "unchanged_authority": "Parent A+Bproductscope/owners/atomicUp/budget/receipt constraintsunchanged. This adds explicitlyrequestedlongdurationUndo-readiness observation, notanotherfullperformancegate.",
+  "source_facts": [
+    {
+      "path": "sdk/web/example.html",
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "ad3d74905171f4a9e6d17a0511d9f1e72d4c2006a9879072c35ccee79c5cc8cd"
+    }
+  ],
+  "statements": [
+    "RuntimecanUndo requireshistorySceneReadyandnoactiveeraser/brush/viewport/transform; do notforceUndoenabledwhileuncommittedgestureactive.",
+    "ActualDemo #undo.disabled is assigned !state.canUndo in syncContext. onChange is stateprojection deliveredaftercall(frame), so distinguish stateavailable,callbackdelivered,DOMenabledandactualdisplay.",
+    "DuringblockingUp JavaScripttimersandMutationObservercannotrun. Capturebefore/afterboundaryplusexternalwall/longtask/eventloopgaps, do notassumeheartbeatobservesmidblockingstate.",
+    "SDK/publicAPI/schema/version/History/admissionunchanged;noextraSemantic/historyowner. Test-onlyhostmaywrapcreateRuntimefromrootexporttoinjectdocumentfixture/observeonChangeandreadpublicstate,notprivatewasm/Runtimeaccess."
+  ]
+}

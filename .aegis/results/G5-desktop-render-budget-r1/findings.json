@@ -1,0 +1,102 @@
+{
+  "classification": "LOCAL_SCOPED_CORRECTNESS_QUALIFIED_NOT_PERFORMANCE_PASS",
+  "desktop_budget_actual": [
+    256,
+    512,
+    64
+  ],
+  "mobile_conservative": [
+    32,
+    96,
+    8
+  ],
+  "area_summary": "All four native nonink kinds reuse static content at fullscreen DPR2 with desktop budget. Stroke active remains its original nonstatic path, reusing prepared/cached body. Thirty explicit-profile cases and210 pixel comparisons passed.",
+  "web_pairs": [
+    {
+      "width": 600,
+      "kind": "shape",
+      "old_completion_ms": 624.7999999523163,
+      "candidate_completion_ms": 33.89999997615814,
+      "old_first_content_ms": 40.09999990463257,
+      "candidate_first_content_ms": 14.899999976158142,
+      "old_raf_js_wall_ms": 354.700000166893,
+      "candidate_raf_js_wall_ms": 15.100000023841858,
+      "old": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/600-shape-old/qualified-row.json",
+        "sha256": "2c0bb61cbf1c885d953896d848853a99c69772bcee3f602c6378d5090b68a48d",
+        "bytes": 62818
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/600-shape-candidate/qualified-row.json",
+        "sha256": "9666bccf3e07671cf167942ec716c1e93d676bfcba3301ac02aff7a1534401d7",
+        "bytes": 61014
+      }
+    },
+    {
+      "width": 600,
+      "kind": "stroke",
+      "old_completion_ms": 357.5,
+      "candidate_completion_ms": 26.600000023841858,
+      "old_first_content_ms": 57.5,
+      "candidate_first_content_ms": 20.199999928474426,
+      "old_raf_js_wall_ms": 423.3000000715256,
+      "candidate_raf_js_wall_ms": 30.899999976158142,
+      "old": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/600-stroke-old/qualified-row.json",
+        "sha256": "811f408c58c0709af7c591e2c538f2d70b7a1320e547a158cad34d4e6c7a45cc",
+        "bytes": 59930
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/600-stroke-candidate/qualified-row.json",
+        "sha256": "1cd41436080cc22c4922049666afba88f5f1e203b02b089b05c14fa911c87e6b",
+        "bytes": 61056
+      }
+    },
+    {
+      "width": 1431,
+      "kind": "shape",
+      "old_completion_ms": 234.89999997615814,
+      "candidate_completion_ms": 33.39999997615814,
+      "old_first_content_ms": 258.10000002384186,
+      "candidate_first_content_ms": 17.200000047683716,
+      "old_raf_js_wall_ms": 153.19999969005585,
+      "candidate_raf_js_wall_ms": 13.899999976158142,
+      "old": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/1431-shape-old/qualified-row.json",
+        "sha256": "a329571fa79b2dfebf82aba6bd30d161fab99fc1122fc4165f310fc305a19198",
+        "bytes": 59124
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/1431-shape-candidate/qualified-row.json",
+        "sha256": "12d7a105c2d004ff2a5cf3c3fbc4a9df4e31471f51fbd9a65eadf000beda6605",
+        "bytes": 60916
+      }
+    },
+    {
+      "width": 1431,
+      "kind": "stroke",
+      "old_completion_ms": 234.09999990463257,
+      "candidate_completion_ms": 27.100000023841858,
+      "old_first_content_ms": 17.199999928474426,
+      "candidate_first_content_ms": 20.0,
+      "old_raf_js_wall_ms": 142.10000002384186,
+      "candidate_raf_js_wall_ms": 28.399999856948853,
+      "old": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/1431-stroke-old/qualified-row.json",
+        "sha256": "cd0850d71fa008edb120e9f74e4b9b9438ca4820a8e706e765495ced225f4e3a",
+        "bytes": 59578
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-desktop-render-budget-r1/local-web/G5MB1-AREA-COMPARE/1431-stroke-candidate/qualified-row.json",
+        "sha256": "c9b97c31bab2c77652130b967c7066a677f2e7a36abd906554954a25e669e306",
+        "bytes": 61068
+      }
+    }
+  ],
+  "remaining": [
+    "New user erase CPU saturation and next-stroke wait require independent diagnosis; no erase production change in this budget package.",
+    "One local process and synthetic short moves do not establish physical input-to-photon, global performance SLO, mobile platform or G5/P34 PASS.",
+    "Untargeted native semantic differential test compile failure is preserved separately."
+  ],
+  "official_gate_p34_performance_pass": false
+}

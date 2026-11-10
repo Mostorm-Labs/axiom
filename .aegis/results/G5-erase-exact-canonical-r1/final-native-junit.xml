@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="56"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="108"
+	timestamp="2026-11-10T21:53:11"
+	>
+	<testcase name="canvas_rf01_scene_atomicity" classname="canvas_rf01_scene_atomicity" time="0.00748988" status="run">
+		<properties/>
+		<system-out>RF01-0 Scene atomicity tests passed
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a3_full_incremental_equivalence" classname="canvas_g2_a3_full_incremental_equivalence" time="0.00686388" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_atomic_publication" classname="canvas_g2_a6_atomic_publication" time="0.00700983" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_recovery" classname="canvas_g2_a6_recovery" time="0.00688054" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5UR2CMaskOnlyScene" classname="G5UR2CMaskOnlyScene" time="0.0149957" status="run">
+		<properties/>
+		<system-out>{"mixed":0,"mask_only_prepares":24,"materialization_delta":0,"body_clone_bytes_delta":0,"full_projection_parity":24,"body_comparison_knots":172776}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CMixedMaskScene" classname="G5UR2CMixedMaskScene" time="0.0136213" status="run">
+		<properties/>
+		<system-out>{"mixed":1,"mask_only_prepares":24,"materialization_delta":0,"body_clone_bytes_delta":0,"full_projection_parity":24,"body_comparison_knots":172776}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CAtomicRecovery" classname="G5UR2CAtomicRecovery" time="0.0161567" status="run">
+		<properties/>
+		<system-out>{"mask_only_checkpoint_sweep":9,"canonical_mutations_preserved":true,"old_snapshots_immutable":true}
+</system-out>
+	</testcase>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="0.528538" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5GpuRetirementContract" classname="G5GpuRetirementContract" time="0.361648" status="run">
+		<properties/>
+		<system-out>{"case":"webgl_loss_quota_admitted","pass":true}
+{"case":"registered_lost_context_with_zero_buffer_is_physical_loss","pass":true}
+{"case":"physical_loss_releases_affected_lifetime_without_owner_close","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"logical_resize_and_zero_dimensions_do_not_imply_context_loss","pass":true}
+{"case":"healthy_context_keeps_normal_callback_completion","pass":tru...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5GpuResourceRecovery" classname="G5GpuResourceRecovery" time="0.64089" status="run">
+		<properties/>
+		<system-out>{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_target_pixels","pass":true}
+{"case":"idle_retirement_converges_without_edit","pass":true}
+{"case":"actual_navigation_retained_world_preparation","pass":true}
+{"case":"temporary_target_denial","pass":true}
+{"case":"temporary_target_denial_keeps_navigation_owner","pass":true}
+{"case":"logical_resize_preserves_context_lifetime","pass":true}
+{"case":"old_surface_generation_never_presents","pass":true}
+{"case":"rebind_draws_current_generation","pass":true}
+{"case":"resize_preserves_canonical_pixels","pass":true}
+{"case":"present_failure_not_success","pass":true}
+{"case":"preview_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_transparent_pixels","pass":true}
+{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBody" classname="G5CanonicalPreparedBody" time="0.599752" status="run">
+		<properties/>
+		<system-out>{"copies":1,"knots":7199,"canonical_attempts":1,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":3}
+{"actual_consumers":true,"copies":1,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":8,"direct_draws":1}
+{"copies":8,"knots":7199,"canonical_attempts":4,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":24}
+{"actual_consumers":true,"copies":8,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":64,"direct_draws":8}
+{"copies":16,"knots":7199,"canonical_attempts":8,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":48}
+{"actual_consumers":true,"copies":16,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":128,"direct_draws":...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyBounded" classname="G5CanonicalPreparedBodyBounded" time="0.0210704" status="run">
+		<properties/>
+		<system-out>{"visible_checkpoint_replay_inputs":1376,"maximum_build_quantum":32}
+{"bounded_service":true,"advances":675,"unique_support":7199,"unique_length":7198,"unique_compile":7199,"maximum_advance_knots":32}
+{"independent_cpu_geometry_variants":["tapers","caps-disabled","self-intersection","marker-nib"],"pixel_parity":true}
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyPixels" classname="G5CanonicalPreparedBodyPixels" time="0.243224" status="run">
+		<properties/>
+		<system-out>pixel mismatch dpr=1 variant=2 channels=1 max=1
+pixel mismatch dpr=2 variant=1 channels=12 max=22
+pixel mismatch dpr=2 variant=2 channels=12 max=22
+pixel mismatch dpr=4 variant=2 channels=2 max=1
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":0,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":1,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":2,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":0,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":1,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":2,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":0,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":1,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":2,"one_step_attempts":790}
+</system-out>
+	</testcase>
+	<testcase name="G5PreparedBodyIndex" classname="G5PreparedBodyIndex" time="0.742121" status="run">
+		<properties/>
+		<system-out>{"distinct_allocations":false,"knots":7199,"copies":1,"warm_rounds":48,"cold_ns":1481959,"warm_ns":5459,"builds":1,"warm_retention_lookups":0,"cold_lookups":1,"cold_fingerprint_bytes":70,"cold_content_comparisons":0,"cold_candidate_checks":0,"cold_source_footprint_evaluations":2,"cold_source_admissions":1,"fingerprint_bytes":0,"content_comparisons":0,"candidate_checks":0,"identity_hits":48,"source_footprint_evaluations":0,"known_footprint_hits":0}
+{"distinct_allocations":false,"knots":7199,"copies":8,"warm_rounds":48,"cold_ns":646000,"warm_ns":36958,"builds":1,"warm_retention_lookups":0,"cold_lookups":8,"cold_fingerprint_bytes":70,"cold_content_comparisons":0,"cold_candidate_checks":0,"cold_source_footprint_evaluations":2,"cold_source_admissions":1,"fingerprint_bytes":0,"content_comparisons":0,"candidate_checks":0,"identity_hits":384,"source_footprint_evaluations":0,"known_footprint_hits":0}
+{"distinct_allocations":false,"knots":7199,"copies":16,"warm_rounds":48,"cold_ns":627000,"warm_ns":68291,"builds":1,"wa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5RenderExecution" classname="G5RenderExecution" time="0.577068" status="run">
+		<properties/>
+		<system-out>requested_compatible=1 actual_gpu=0 cpu_reused_same_target=1 allocations=1 reuses=1
+declared_gpu=1 actual_root_gpu=0 rejected=1 presents=0
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactHit" classname="G5EraseExactHit" time="0.485845" status="run">
+		<properties/>
+		<system-out>exact erase intersection/no-op/old-mask/object-local/selection parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5InkBodyMaskReuse" classname="G5InkBodyMaskReuse" time="0.519227" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5MaskedCanonicalRecovery" classname="G5MaskedCanonicalRecovery" time="0.305119" status="run">
+		<properties/>
+		<system-out>masked v4 cooperative yield,strict Direct parity,mask invalidation and bounded source admission PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2DSelectionLocality" classname="G5UR2DSelectionLocality" time="0.654568" status="run">
+		<properties/>
+		<system-out>{"copies":1,"ms":[0.33125,0.326208,0.351459]}
+{"copies":8,"ms":[2.4775,2.430125,2.4537079999999998]}
+{"copies":16,"ms":[4.891917,4.9835,5.1315]}
+{"copies":32,"ms":[9.742709,10.002333,10.142625]}
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactCanonical" classname="G5EraseExactCanonical" time="1.00426" status="run">
+		<properties/>
+		<system-out>{"copies":1,"decisions":[0],"difference_ns":0,"history_builds":160,"history_path_ns":14631250,"history_unions":160,"intersect_ns":1099417,"memo_hits":0,"moves":160,"ms":72.142042,"query_path_ns":54874583,"query_unions":160,"round":0}
+{"copies":1,"decisions":[0],"difference_ns":1925292,"history_builds":160,"history_path_ns":0,"history_unions":0,"intersect_ns":3762002,"memo_hits":0,"moves":160,"ms":43.229333,"query_path_ns":37487000,"query_unions":160,"round":1}
+{"copies":1,"decisions":[0],"difference_ns":1826042,"history_builds":160,"history_path_ns":0,"history_unions":0,"intersect_ns":618084,"memo_hits":0,"moves":160,"ms":39.415042,"query_path_ns":36921000,"query_unions":160,"round":2}
+{"copies":16,"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"difference_ns":0,"history_builds":160,"history_path_ns":13524750,"history_unions":160,"intersect_ns":1042166,"memo_hits":15,"moves":160,"ms":53.010667,"query_path_ns":37890750,"query_unions":160,"round":0}
+{"copies":16,"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"dif...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5PreparedGeometry" classname="G5PreparedGeometry" time="0.744802" status="run">
+		<properties/>
+		<system-out>exact locality softDenied=0 steps=183 fallback=768 record_replays=111
+exact locality softDenied=1 steps=183 fallback=768 record_replays=0
+local contour primitives drawn=558 complete=4922
+prepared geometry parity/locality/lifetime PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactLocality" classname="G5UR2BExactLocality" time="0.690063" status="run">
+		<properties/>
+		<system-out>{"bounds_tests":29,"full_primitives":461,"index_groups":16,"local_components":11,"variant":0}
+{"bounds_tests":41,"full_primitives":442,"index_groups":15,"local_components":10,"variant":1}
+{"bounds_tests":25,"full_primitives":458,"index_groups":15,"local_components":9,"variant":2}
+{"bounds_tests":37,"full_primitives":439,"index_groups":14,"local_components":8,"variant":3}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":4}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":5}
+{"bounds_tests":2,"full_primitives":12,"index_groups":2,"local_components":0,"variant":6}
+{"bounds_tests":2,"full_primitives":13,"index_groups":2,"local_components":0,"variant":7}
+{"checkpoint_replay_knots":1024,"index_groups":782,"materialized_paths":30}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInvalidation" classname="G5UR2BExactInvalidation" time="0.0114871" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactPressure" classname="G5UR2BExactPressure" time="0.00993117" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryPlanReuse" classname="G5UR2CHistoryPlanReuse" time="1.09464" status="run">
+		<properties/>
+		<system-out>{"copies":1,"exact_history":0,"path_builds":0,"path_primitive_checks":10,"path_value_checks":2}
+{"body_builds":2,"body_hits":4,"compared":0,"copied_bytes":0,"copies":1,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":2}
+{"copies":8,"exact_history":0,"path_builds":0,"path_primitive_checks":80,"path_value_checks":16}
+{"body_builds":16,"body_hits":32,"compared":0,"copied_bytes":0,"copies":8,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":16}
+{"copies":16,"exact_history":0,"path_builds":0,"path_primitive_checks":160,"path_value_checks":32}
+{"body_builds":32,"body_hits":64,"compared":0,"copied_bytes":0,"copies":16,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":32}
+{"copies":32,"exact_history":0,"path_builds":0,"path_primitive_checks":320,"path_value_checks":64}
+{"body_builds":64,"body_hits":128,"compared":0,"copied_bytes":0,"copies":32,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":64}
+{"copies":1,"exact_hi...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryInvalidation" classname="G5UR2CHistoryInvalidation" time="0.652135" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryExactParity" classname="G5UR2CHistoryExactParity" time="0.52388" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"copies":1,"exact_history":0,"path_builds":0,"path_primitive_checks":10,"path_value_checks":2}
+{"body_builds":2,"body_hits":4,"compared":0,"copied_bytes":0,"copies":1,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":2}
+{"copies":8,"exact_history":0,"path_builds":0,"path_primitive_checks":80,"path_value_checks":16}
+{"body_builds":16,"body_hits":32,"compared":0,"copied_bytes":0,"copies":8,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":16}
+{"copies":16,"exact_history":0,"path_builds":0,"path_primitive_checks":160,"path_value_checks":32}
+{"body_builds":32,"body_hits":64,"compared":0,"copied_bytes":0,"copies":16,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":32}
+{"copies":32,"exact_history":0,"path_builds":0,"path_primitive_checks":320,"path_value_checks":64}
+{"body_builds":64...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CLeaseAccounting" classname="G5UR2CLeaseAccounting" time="0.014622" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryProgress" classname="G5UR2CHistoryProgress" time="1.52611" status="run">
+		<properties/>
+		<system-out>{"attempt":0,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":1,"present_count":1,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":576191}
+{"attempt":1,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":0,"present_count":2,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":576191}
+{"attempt":2,"body_tile_builds":2,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":2,"history_denials":0,"history_primitive_builds":0,"present_count":3,"production_caller":"drawDamagedInk","retry":false,"segments":1,"used_bytes":576191}
+{"attempt":0,"body_tile_builds":0,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles":1,"history_denials":2,"history_primitive_builds":0,"present_count":1,"production_caller":"drawDamagedInk","retry":false,"segments":40000,"used_bytes":3475446}
+{"attempt":1,"body_tile_builds":0,"cpu_tiles":0,"dpr":1,"drawn":true,"gpu_tiles...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryAdmission" classname="G5UR2CHistoryAdmission" time="0.0271457" status="run">
+		<properties/>
+		<system-out>{"permanent_local_not_pending":true,"structural_prefix_builds":0,"partial_refusal_reused":true,"sameID_mutation_COW":true,"truncate_recovery":true,"global_release_recovery":true,"owner_pool_reset":true,"bounded_refusals":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryProgressSafety" classname="G5UR2CHistoryProgressSafety" time="0.0708655" status="run">
+		<properties/>
+		<system-out>{"budget_kib":288,"caller":false,"direct_replay":false,"painted_failure":true,"provider_present":0,"retired_bytes":0}
+{"budget_kib":432,"caller":true,"direct_replay":false,"painted_failure":true,"provider_present":0,"retired_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5RenderMemoryBudget" classname="G5RenderMemoryBudget" time="0.51406" status="run">
+		<properties/>
+		<system-out>{"actual_renderer_admission_checked":true,"entry_mib":8,"leases_after_clear":0,"optional_mib":32,"shared_mib":96}
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRetryPixels" classname="G5TransientDisplayRetryPixels" time="0.625394" status="run">
+		<properties/>
+		<system-out>{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayContinuity" classname="G5TransientDisplayContinuity" time="0.341405" status="run">
+		<properties/>
+		<system-out>{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"after-one-object","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"after-one-tile","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"","pixels_preserved":true,"presents":1,"stage":"acquire-unavailable","status":1}
+{"DPR":1,"background":0,"body_builds":1,"message":"erase feedback allocation unavailable","pixels_preserved":true,"presents":1,"stage":"before-first-object","status":2}
+{"DPR":1,"background":0,"body_builds":1,"message":"transient publication refused before target write","pixels_preserved":true,"presents":1,"stage":"prepublication-refusal","status":2}
+{"DPR":1,"background":0,"body_builds":1,"damage_frames":5,"latest_equals_independent_full_gpu":true,"original_AA_reference":true}
+{"DPR":1,"background":1,"body_builds":1,"message":"erase feedback allocation un...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRecovery" classname="G5TransientDisplayRecovery" time="0.364595" status="run">
+		<properties/>
+		<system-out>{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":0,"used_bytes":74794432}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":1,"used_bytes":100407012}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":2,"used_bytes":100411926}
+{"DPR4_default96_progress":true,"after_clear_bytes":0,"no_fake_present":true,"retries":3}
+{"CPU_tiles":0,"actual_renderer_40000_history_progress":true,"history_denials":2,"used_bytes":7669154}
+</system-out>
+	</testcase>
+	<testcase name="G5ObjectInteractionStaticOracle" classname="G5ObjectInteractionStaticOracle" time="0.06669" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5ObjectInteractionDenseMixed" classname="G5ObjectInteractionDenseMixed" time="25.5105" status="run">
+		<properties/>
+		<system-out>{"DPR":1,"accepted":19,"body_builds":2,"body_compile":14398,"budget_comparison":false,"cache_evictions":0,"cache_hits":133,"cache_misses":152,"candidate_clear_bytes":0,"coverage_builds":0,"coverage_hits":0,"coverage_steps":644,"cpu_tiles":0,"entry_bytes":8388608,"gpu_marks":31,"height":1010,"historical_masks":2,"independent_band_fraction":0.26252568653091723,"independent_band_pixels":379431,"kind":0,"knots_per_body":7199,"lease_bytes":11565696,"lease_peak_bytes":38294884,"lines":19,"max_advance_knots":32,"memory_before_clear":[{"class":0,"pending_release":0,"staging":0,"used":571389},{"class":1,"pending_release":0,"staging":0,"used":19827936},{"class":2,"pending_release":0,"staging":0,"used":6198008},{"class":3,"pending_release":0,"staging":0,"used":0},{"class":4,"pending_release":0,"staging":0,"used":0},{"class":5,"pending_release":0,"staging":0,"used":0},{"class":6,"pending_release":0,"staging":0,"used":0},{"class":7,"pending_release":0,"staging":0,"used":5781240}],"non_aa_channel_tolerance":2,"non_aa_pixel...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5DesktopRenderBudgetArea" classname="G5DesktopRenderBudgetArea" time="54.9971" status="run">
+		<properties/>
+		<system-out>{"DPR":2,"accepted":7,"body_builds":1,"body_compile":7199,"budget_comparison":true,"cache_evictions":0,"cache_hits":57,"cache_misses":19,"candidate_clear_bytes":0,"coverage_builds":0,"coverage_hits":0,"coverage_steps":499,"cpu_tiles":0,"entry_bytes":8388608,"gpu_marks":9,"height":1800,"historical_masks":2,"independent_band_fraction":0.22013611111111112,"independent_band_pixels":475494,"kind":0,"knots_per_body":7199,"lease_bytes":17283216,"lease_peak_bytes":57546858,"lines":19,"max_advance_knots":32,"memory_before_clear":[{"class":0,"pending_release":0,"staging":0,"used":588786},{"class":1,"pending_release":0,"staging":0,"used":30595200},{"class":2,"pending_release":0,"staging":0,"used":9082368},{"class":3,"pending_release":0,"staging":0,"used":8640000},{"class":4,"pending_release":0,"staging":0,"used":0},{"class":5,"pending_release":0,"staging":0,"used":0},{"class":6,"pending_release":0,"staging":0,"used":0},{"class":7,"pending_release":0,"staging":0,"used":8640000}],"non_aa_channel_tolerance":2,"non_aa_pixel...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayHandoff" classname="G5TransientDisplayHandoff" time="4.76894" status="run">
+		<properties/>
+		<system-out>{"GPU_epochs":0,"attempt":0,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78142959,"warm":false}
+{"GPU_epochs":0,"attempt":1,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78143583,"warm":false}
+{"GPU_epochs":0,"attempt":2,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78144207,"warm":false}
+{"GPU_epochs":0,"attempt":3,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78144831,"warm":false}
+{"GPU_epochs":0,"attempt":4,"body_builds":1,"canonical_frame_bytes":37748736,"message":"transient working set pending","presents":1,"scratch_bytes":38010880,"status":2,"used":78145455,"warm":false}
+{"GPU_epochs":0,"attempt":5,"body_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayHandoffInflight" classname="G5TransientDisplayHandoffInflight" time="1.54455" status="run">
+		<properties/>
+		<system-out>{"GPU_epoch":2,"actual_pixels_preserved":true,"pending_release":37748736,"physical_finished":true,"stage":"delayed-completion","used":78133103}
+{"CPU_tiles":0,"cycles":2,"generation":2,"stage":"switches-complete","used":0}
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="0.846404" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 32 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 30 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (8 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (3 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (2 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (1 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsO...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicDocumentSnapshot" classname="SDKPublicDocumentSnapshot" time="0.617577" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=2 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=3 scene_gen=1
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicSelectionInput" classname="SDKPublicSelectionInput" time="0.605436" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5UR2AReadmissionAcquire" classname="G5UR2AReadmissionAcquire" time="0.647872" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present skia failed: labelled test backbuffer busy framegen=1 providergen=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-readmission","denial":"acquire","accepted":true,"canonical_acquire":0,"canonical_present":0,"preview_acquire":0,"preview_present":0,"preview_visibility_calls":0,"semantic_unchanged":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AReadmissionPresent" classname="G5UR2AReadmissionPresent" time="0.0160003" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present skia failed: labelled test present busy framegen=1 providergen=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-readmission","denial":"present","accepted":true,"canonical_acquire":0,"canonical_present":0,"preview_acquire":0,"preview_present":0,"preview_visibility_calls":0,"semantic_unchanged":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ANavigation" classname="G5UR2ANavigation" time="0.0131795" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"baseline-postUp-navigation","navigation_pending":true,"navigation_presented":true,"canonical_requested":false,"canonical_work":false,"semantic":2}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AHandoff" classname="G5UR2AHandoff" time="0.0128828" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":0,"pending_brush":1,"preview_active":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ASceneRecovery" classname="G5UR2ASceneRecovery" time="0.0107527" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":1,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2AHistory" classname="G5UR2AHistory" time="0.0110699" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ALifecycle" classname="G5UR2ALifecycle" time="0.00992671" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ANavigationSafety" classname="G5UR2ANavigationSafety" time="0.120678" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ABrushVisibility" classname="G5UR2ABrushVisibility" time="0.0162975" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":0,"pending_brush":1,"preview_active":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInputRuntime" classname="G5UR2BExactInputRuntime" time="0.639761" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"actual_Runtime_Up_prepared_uses":1,"full_validation_calls":0,"source_unchanged":true,"exactly_once_history":true,"cancel_undo_redo":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2DUpRuntime" classname="G5UR2DUpRuntime" time="1.20943" status="run">
+		<properties/>
+		<system-out>{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[25000083,2125,166,66584,417,208,412458],"repeat":0,"scene_materializations":0,"up_ms":25.49625}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[17944333,2083,41,15000,291,125,32833],"repeat":1,"scene_materializations":0,"up_ms":18.004542}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[15554917,625,42,11708,125,125,19417],"repeat":2,"scene_materializations":0,"up_ms":15.594458}
+{"canonical_mask_bytes_equal":true,"copies":8,"equivalent_hits":7,"exact_calls":8,"history_exactly_once":true,"masks_built":8,"noop_cancel_undo_redo":true,"phase_nanoseconds":[14222667,1542,0,80583,167,208,36670...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactCanonicalRuntime" classname="G5EraseExactCanonicalRuntime" time="2.20445" status="run">
+		<properties/>
+		<system-out>{"body_builds":1,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":160,"history_path_builds":2,"history_value_primitives":0,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.20725,"new_query_builds":1,"phase_ns":[74473708,15417,0,114000,292,208,976375],"round":0,"trace_samples":161,"up_ms":75.611833}
+{"body_builds":0,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":320,"history_path_builds":0,"history_value_primitives":0,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.061125,"new_query_builds":1,"phase_ns":[44571125,2291,42,29333,208,208,1366458],"round":1,"trace_samples":161,"up_ms":45.982708}
+{"body_builds":0,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":480,"history_path_builds":0,"history_value_primitives":1,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.056542,"new_query_builds":1,"phase_ns":[4156320...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CContinuousInput" classname="G5UR2CContinuousInput" time="0.699484" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"scene_materializations":0,"scene_records":0,"body_clone_bytes":0,"mask_only_hits":1}
+{"actual_Runtime_Up_prepared_uses":1,"full_validation_calls":0,"source_unchanged":true,"exactly_once_history":true,"cancel_undo_redo":true}
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,109 @@
+{
+  "schema": "g5-ur2d-continuation-ledger-v1",
+  "attempts": [
+    {
+      "id": "U2D1-A-F",
+      "status": "COMPLETED",
+      "reserved_seconds": 240,
+      "rss_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/A-F-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-A-F"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 5.974624166963622,
+        "peak_process_family_rss_kib": 1754736,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "OBSERVED",
+      "source_stable": true,
+      "charged_seconds": 6
+    },
+    {
+      "id": "U2D1-B-F",
+      "status": "STOPPED",
+      "reserved_seconds": 240,
+      "rss_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/B-F-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-B-F"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 6.354188208002597,
+        "peak_process_family_rss_kib": 1669488,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FUNCTIONAL_OR_HARNESS_FAILURE",
+          "error": "page.evaluate: Error: Undo/Redo final pixels differ\n    at check (http://127.0.0.1:63311/driver.mjs:8:34)\n    at consumer (http://127.0.0.1:63311/driver.mjs:71:210)\n    at async <anonymous>:337:30\n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:127:28)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:136:56"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "FUNCTIONAL_OR_HARNESS_FAILURE",
+      "source_stable": true,
+      "charged_seconds": 7
+    },
+    {
+      "id": "U2D1-COMPARE",
+      "status": "STOPPED",
+      "reserved_seconds": 240,
+      "rss_mib": 3072,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/COMPARE-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 51.940357667044736,
+        "peak_process_family_rss_kib": 1813664,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FUNCTIONAL_OR_HARNESS_FAILURE",
+          "error": "page.evaluate: Error: Undo/Redo pixel policy failed\n    at check (http://127.0.0.1:63937/driver.mjs:8:34)\n    at consumer (http://127.0.0.1:63937/driver.mjs:74:62)\n    at async <anonymous>:337:30\n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:137:28)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:146:56"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "worker_status": "FUNCTIONAL_OR_HARNESS_FAILURE",
+      "source_stable": true,
+      "charged_seconds": 52
+    }
+  ],
+  "charged_seconds": 105,
+  "cap_seconds": 960,
+  "prior_closed": {
+    "id": "U2D1-OLD-F",
+    "status": "FAIL_CLOSED_RSS_GUARD",
+    "charged_seconds": 40,
+    "ledger": ".aegis/results/G5-UR2d-selection-up-r1/sampling-ledger.json"
+  },
+  "compare_continuation": {
+    "status": "AUTHORIZED_SINGLE_REMAINING_COMPARE",
+    "package": ".aegis/packages/G5-UR2d-compare-resume-r1/package.json",
+    "package_sha256": "bfba6c26a05685acb94cfadc2903c6b3abf85c19aaea020537c0881cb875be1a",
+    "control_decision_sha256": "7a409ed258b5fa53849edaa96bf063367402b37512fa47cb92b43ca9ef6c25bf",
+    "prior_STOPPED_row_preserved": true
+  }
+}

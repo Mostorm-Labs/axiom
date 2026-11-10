@@ -1,0 +1,61 @@
+{
+  "schema": "g5-object-interaction-continuity-r2-verification-v1",
+  "status": "FROZEN_NEW_SUCCESSOR_OBLIGATIONS",
+  "source_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "prior_evidence": {
+    "r1_result": ".aegis/results/G5-object-interaction-continuity-r1/result-final-checkpoint.json",
+    "independent_red": ".aegis/results/G5-object-interaction-continuity-r1/independent-red/0-pixels.json",
+    "web_repro": ".aegis/results/G5-object-interaction-control-diagnostic-r1/summary-r5.json",
+    "layout_probe": ".aegis/results/G5-object-interaction-control-diagnostic-r1/layout-identity-probe.jsonl"
+  },
+  "obligations": [
+    {
+      "id": "LI-01",
+      "requirement": "Equal derived text layout snapshots do not invalidate render content solely due to pointer identity.",
+      "oracle": "Existing layout digest plus native probe: same digest/context/font identity must produce no RenderGroup content contribution; changed digest/context/font generation must contribute.",
+      "acceptance": "RED old behavior is observed and GREEN candidate distinguishes equal from changed layouts."
+    },
+    {
+      "id": "OI2-01",
+      "requirement": "Compatible text/object transient frames make progress and publish latest canonical generation.",
+      "oracle": "Native staged publication fixture plus OI-CD5 readback-free Web diagnostic.",
+      "acceptance": "No unbounded working-set pending loop; presented generation catches up under continuous hover/drag with preserved receipts and no stale basis."
+    },
+    {
+      "id": "OI2-02",
+      "requirement": "Static reuse is independent-oracle correct.",
+      "oracle": "Candidate with cache enabled versus Direct reference with options.enabled=false; active range remains in original traversal position.",
+      "acceptance": "RGBA digest/pixel order/opacity/AA match; candidate has reuse hits and Direct oracle has zero static reuse counters."
+    },
+    {
+      "id": "OI2-03",
+      "requirement": "Dense long-line historical-mask mixed fixture is covered.",
+      "oracle": "19 compact v4 lines, historical masks, active Shape/Sticky/Table/Image where existing owners permit, DPR1/2/4 and resource pressure.",
+      "acceptance": "Counters/lease/budget and independent pixels are recorded; unsupported object construction is explicitly classified."
+    },
+    {
+      "id": "OI2-04",
+      "requirement": "Existing erase/recovery/navigation/selection regressions remain green.",
+      "oracle": "Existing CTest/Node/Python/boundary suites and r1 frozen evidence unchanged.",
+      "acceptance": "No regression."
+    }
+  ],
+  "browser_policy": {
+    "formal_ur2c_windows": 0,
+    "manual_normal_web": {
+      "optional": true,
+      "must_use_fresh_port": true,
+      "must_not_touch_4298": true
+    }
+  },
+  "evidence_required": [
+    "result.json",
+    "source-manifest.json",
+    "native-regression.log",
+    "layout-identity-red-green.json",
+    "oracle-pixel.json",
+    "dense-mixed-counters.json",
+    "web-diagnostic.json or explicit BLOCKED_EVIDENCE",
+    "cleanup.json"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "clip1": {
+    "duration_seconds": 123.948333,
+    "observations": [
+      {
+        "time_seconds": [
+          0,
+          24
+        ],
+        "observation": "Long ink stroke is drawn then changes from amber preview to dark canonical."
+      },
+      {
+        "time_seconds": [
+          24,
+          48
+        ],
+        "observation": "Dense overlapping copies and an individual stroke drag."
+      },
+      {
+        "time_seconds": [
+          48,
+          78
+        ],
+        "observation": "Multiple visible local erasures and viewport scale change."
+      },
+      {
+        "time_seconds": [
+          82,
+          90
+        ],
+        "observation": "Rectangle placement and drag; selection remains point mode."
+      },
+      {
+        "time_seconds": [
+          90,
+          123.9
+        ],
+        "observation": "Main content remains in substantially the same pose while cursor moves; multiple object actions appear disabled. No raw event or profiler trace in recording."
+      }
+    ]
+  },
+  "clip2": {
+    "duration_seconds": 31.916667,
+    "observations": [
+      {
+        "time_seconds": [
+          0,
+          10
+        ],
+        "observation": "Image import followed by image transform in same dense erased ink scene."
+      },
+      {
+        "time_seconds": [
+          12,
+          23
+        ],
+        "observation": "Table and shape transforms."
+      },
+      {
+        "time_seconds": [
+          24,
+          31.9
+        ],
+        "observation": "Sticky placement and transform."
+      }
+    ]
+  },
+  "user_confirmed_gesture": "macOS accessibility three-finger drag (mouse primary-button drag), not viewport wheel/pinch or three touch contacts",
+  "limitations": [
+    "Video cannot distinguish one long synchronous handler, multiple queued handlers, resource pending, missing terminal input, or render starvation without correlated event/stack data.",
+    "No claim that region query is the sole cause of the specific browser freeze.",
+    "Recording dimensions are not a verified canvas device pixel ratio or GPU surface dimensions."
+  ]
+}

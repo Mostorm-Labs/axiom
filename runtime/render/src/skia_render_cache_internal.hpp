@@ -15,6 +15,13 @@
 #include <unordered_map>
 
 namespace canvas::render::internal {
+// Private qualification counters. Updates and observation APIs are compiled
+// out of normal consumers; this value is never part of a consumer DTO.
+struct ObjectInteractionWork final {
+    std::uint64_t builds=0,hits=0,invalidations=0,fullSceneDraws=0,activeDraws=0;
+    std::uint64_t retries=0,gpuLeaseMarks=0,denials=0;
+    std::size_t leaseBytes=0;
+};
 // Immutable completed pixels shared by exact presentation and navigation.
 // Both aliases retain this one charged allocation; no framebuffer recapture.
 struct PreparedFrameImage final {
@@ -33,6 +40,7 @@ class SkiaRenderCache final {
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
+    ObjectInteractionWork objectWork{};
     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {},bool transient=false);
     CompactCoverageTargets& executionTargets() noexcept {coverageTargets_.budget=budget;return coverageTargets_;}
     bool canRetainCompact(const SkCanvas&,const ReferenceTraversalEntry&) const noexcept;
@@ -58,7 +66,7 @@ class SkiaRenderCache final {
     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
     // frames still consume per-object/streamed composition in original order.
-    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
+    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr,bool objectTransform=false);
     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
     void acknowledgeTransient() noexcept {pendingErase_={};hasPendingErase_=false;}
     bool acquireTransientSurface(SkCanvas& canvas,sk_sp<SkSurface>& surface,resources::ResourceLease& lease){return acquireWorkSurface(canvas,surface,lease,true,resources::ResourceClass::kCanonicalFrame);}
@@ -78,6 +86,42 @@ class SkiaRenderCache final {
         const void* target,std::uint64_t resourceEpoch)noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
+    struct StaticSceneStamp final {
+        foundation::ObjectId id{};
+        RenderGroupRevisions revisions{};
+        float opacity=1.0F;
+        bool contributes=false;
+        foundation::WorldRect visualBounds{},worldBounds{};
+        bool operator==(const StaticSceneStamp&) const = default;
+    };
+    struct StaticSceneCache final {
+        const void* target=nullptr;
+        const void* context=nullptr;
+        const SkSurface* surface=nullptr;
+        std::uint64_t resourceEpoch=0,targetEpoch=0;
+        FrameState frame{};
+        WorldToViewAffine transform{};
+        foundation::DocumentBackground background{};
+        bool transparent=false,isolate=false,includeInk=true;
+        foundation::ObjectId active{};
+        std::size_t activeIndex=0,activeEnd=0;
+        std::vector<StaticSceneStamp> stamps;
+        sk_sp<SkImage> prefix,suffix;
+        resources::ResourceLease pixelLease,metadataLease;
+        std::size_t leaseBytes=0;
+        StaticSceneCache(const void* t,const void* c,std::uint64_t resource,
+            std::uint64_t epoch, const FrameState& f,const WorldToViewAffine& x,
+            const foundation::DocumentBackground& bg,bool clear,bool isolate,
+            bool ink,foundation::ObjectId id,std::size_t index)
+            :target(t),context(c),resourceEpoch(resource),targetEpoch(epoch),frame(f),
+             transform(x),background(bg),transparent(clear),isolate(isolate),includeInk(ink),
+             active(id),activeIndex(index) {}
+        bool valid() const noexcept { return prefix != nullptr; }
+    };
+    std::shared_ptr<StaticSceneCache> staticScene_;
+    void invalidateStaticScene(bool count=true) noexcept;
+    bool staticSceneBasisMatches(const FramePlan&,std::size_t,std::size_t) const noexcept;
+    bool buildStaticScene(SkCanvas&,const FramePlan&,std::size_t,std::size_t,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     struct BodyDependency {
         ImmutableSourceIdentity identity;
         std::shared_ptr<const PreparedNavigationGeometry> body;

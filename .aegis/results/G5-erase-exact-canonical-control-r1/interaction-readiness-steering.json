@@ -1,0 +1,25 @@
+{
+  "schema": "g5-user-steering-interaction-readiness-v1",
+  "status": "USER_CORRECTION_APPLIES_TO_ONGOING_SUPPLEMENT",
+  "created_utc": "2026-11-10T13:24:31.974955+00:00",
+  "user_statement": "Undo不恢复的期间再画擦除也无法跟手；只有Undo恢复后下一笔才能用。Undo是其它也不能用的信号，不是按钮本身体验问题。",
+  "supplement": {
+    "path": ".aegis/packages/G5-erase-undo-readiness-supplement-r1/package.json",
+    "sha256": "d64195e58ae8796977f9a6a44cd7514a06ee34a61fbd2d95d46f764aec39c68b"
+  },
+  "priority": "Actual next-stroke feedback is primary; Undo disabled/runtimecanUndo/onChange/DOM are correlated diagnostic signals.",
+  "overrides": [
+    "Supplementno-inputreadinessmeasurementmustnotbeonlycase. Long800/1600mainUp immediatelynextdistincteraserDownandfirstMove withnoawait/settle orwaitUndoenabled. KeepsameownedDIAGNOSTICwindowandcandidateSTRESSwindow;noadditionalfullmatrix/process.",
+    "RecordlongUpblockingandwhichsuccessoreventsareadmitted/queued/rejected, acceptedconfirmedprefix andactualvisibleerasurebeforeitsUp. A nonzero RAF or generic FBO write alone doesnotqualifynextstrokeprogress.",
+    "Useknownink ROI or existingmoving-erase independentprefixpixel oracle in correctness-only phase toprove successor mask actually removes ink; exclude repaintofpredecessor/clear/HUD-only writes. Keep readback/profile outoforiginal160Move primary timing.",
+    "After successorUp (orCancelforseparatecontrol), observe zeroactivecontacts/Latestcommit/canonical/progresstail + finalUndoDOMrecovery. Any intermediatecanUndofalsewhilefreshgestureactiveisexpected, notHistory-notreadyfailure.",
+    "No button-enabling workaround or prematurecanUndo. IfcanUndoTrue/DOMtruebutnextstrokepixelsstalled, preserveactualfeedbackfailure; do notacceptUIstatealone.",
+    "ExistingparentA+B productandtesting scopecontinues; this is directuserclarification of EC-B2+EC-UNDO-LONG,notnewperformanceSLO. Ifoldlongcaseunder10sreportmeasuredfailure/partialreprobutstilloptimizesharedcriticalpath."
+  ],
+  "evidence_required": [
+    "longUp/nextDown/nextMove/actualprefixfeedbacklatencydistinct",
+    "inputadmission/semanticcommit/canonical/Undo readiness separate",
+    "actual successor pixel witness or explicitMISSING, neverinferfromgenericpresent"
+  ],
+  "no_new_sampling_allowance": true
+}

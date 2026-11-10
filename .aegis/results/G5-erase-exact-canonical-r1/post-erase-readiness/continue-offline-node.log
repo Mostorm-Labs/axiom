@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: separates blocked Up, stale DOM and real busy history without inventing readiness
+ok 1 - separates blocked Up, stale DOM and real busy history without inventing readiness
+  ---
+  duration_ms: 0.432875
+  ...
+# Subtest: browser wait helper executes without host imports or runtime dependencies
+ok 2 - browser wait helper executes without host imports or runtime dependencies
+  ---
+  duration_ms: 0.884834
+  ...
+# Subtest: actual UI asynchronous Undo must advance generation before settle and capture metadata
+ok 3 - actual UI asynchronous Undo must advance generation before settle and capture metadata
+  ---
+  duration_ms: 0.271584
+  ...
+# Subtest: candidate operation roster and three baseline families are complete
+ok 4 - candidate operation roster and three baseline families are complete
+  ---
+  duration_ms: 0.4395
+  ...
+# Subtest: feedback observer records delayed correct pixels instead of failing a fixed early probe
+ok 5 - feedback observer records delayed correct pixels instead of failing a fixed early probe
+  ---
+  duration_ms: 0.168709
+  ...
+# Subtest: T0 includes blocked Up; timings remain findings while actual positive pixels are required
+ok 6 - T0 includes blocked Up; timings remain findings while actual positive pixels are required
+  ---
+  duration_ms: 0.214125
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 247.900459

@@ -38,7 +38,7 @@ void SkiaInkLayers::drawMask(SkCanvas& c,const MaskPrimitive& primitive){
 bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry& entry,
     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
-    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories){
+    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories,PreparationAllowance* allowance){
     if(prepared)geometry_=std::move(prepared);
     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
@@ -52,8 +52,11 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     const auto maxResult=std::size_t(tileSize+2*maskGuard)*(std::min(tileSize,scratch.height())+2*maskGuard)*4;
     if(limits.maxEntryBytes<std::max(maxBody,maxResult)||limits.maxBytes<maxBody+maxResult)return false;
     const auto id=entry.record.objectId;
+    const std::array<int,4> gridBasis=originalGrid?std::array<int,4>{originalGrid->left,originalGrid->top,originalGrid->right,originalGrid->bottom}:
+        std::array<int,4>{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
     auto found=sources_.find(id);
-    if(found!=sources_.end()&&(found->second.command!=entry.command||found->second.matrix!=matrix||found->second.viewport!=viewport)){
+    if(found!=sources_.end()&&(found->second.command!=entry.command||found->second.matrix!=matrix||found->second.viewport!=viewport||
+       found->second.context!=destination.recordingContext()||found->second.grid!=gridBasis)){
         eraseSource(id);found=sources_.end();
     }
     if(found==sources_.end()){
@@ -61,6 +64,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         if(!geometry_)return false;
         geometry_->setRetentionPool(pool);auto prepared=ready?std::move(ready):geometry_->get(entry,limits,budget,true,PreparedConsumer::kRetainedInk);if(!prepared)return false;
         Source source;source.command=entry.command;source.geometry=std::move(prepared);source.matrix=matrix;source.viewport=viewport;
+        source.context=destination.recordingContext();source.grid=gridBasis;
         found=sources_.emplace(id,std::move(source)).first;
     }
     auto& source=found->second;
@@ -98,6 +102,23 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     const bool sameHistory=source.history==history;
     const bool historyPrefix=!source.history||(history&&history->prefixIdentity==source.history->identity&&
         history->prefixPrimitives>=source.history->primitives.size());
+    // Canonical IDs are sorted, so a newly committed mask may be inserted
+    // before an old record. Prove the complete old ordered subsequence, then
+    // retain result pixels only on tiles untouched by every inserted shape.
+    // Intersecting tiles replay the original full clear order from body pixels.
+    std::vector<const PreparedMaskPrimitive*> inserted;
+    bool insertionOnly=!sameHistory&&source.history&&history&&source.masks.empty()&&masks.empty();
+    if(insertionOnly){
+        const auto& old=std::as_const(source.history->records);const auto& next=std::as_const(history->records);
+        std::size_t previous=0;
+        for(std::size_t i=0;i<next.size();++i){
+            if(previous<old.size()&&old[previous]==next[i]){++previous;continue;}
+            const auto begin=i?history->primitiveEnds[i-1]:0;
+            for(auto j=begin;j<history->primitiveEnds[i];++j)inserted.push_back(history->primitives[j].get());
+        }
+        insertionOnly=previous==old.size();
+    }
+    const auto previousEpoch=source.epoch;
     if((!sameHistory&&(!historyPrefix||!source.masks.empty()))||source.masks.size()>masks.size()||
         !std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
     source.history=history;source.masks=std::move(masks);source.metadata=std::move(metadataLease);
@@ -110,8 +131,9 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         auto crop=SkIRect::MakeLTRB(x,y,std::min(x+tileSize,grid.right),std::min(y+tileSize,grid.bottom));
         if(!SkIRect::Intersects(crop,demand))continue;
         const Key key{id,x,y};auto tile=tiles_.find(key);const auto bytes=std::size_t(crop.width())*crop.height()*4;
+        if(allowance&&allowance->exhausted())return pending();
         if(tile==tiles_.end()){
-            constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+128;
+            constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+sizeof(CompactStrokeRasterJob)+128;
             resources::ResourceLease lease;if(!reserve(bytes+metadataBytes,key,limits,budget,lease))return pending();
             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width(),crop.height()));if(!target)return pending();
             G5_TARGET(target,true);
@@ -121,14 +143,47 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             // coordinates. A body target is one physical tile, never a subset
             // image retaining a full-frame scratch allocation.
             const CompactDeviceGrid localGrid{grid.left-x,grid.top-y,grid.right-x,grid.bottom-y};
-            CompactRasterWork raster;drawCompactStrokeToSkCanvas(*canvas,stroke.config,stroke.knots,stroke.seed,&raster,nullptr,&localGrid,limits.gpuCoverageCandidate,&targets,nullptr,source.geometry.get(),true);
-            if(raster.resourcePending)return pending();
-            work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
-            Image body{target->makeImageSnapshot(),std::move(lease)};if(!body.pixels)return pending();
-            Tile candidate;candidate.body=std::move(body);candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
-            tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;++work.bodyTileBuilds;
+            CompactRasterWork raster;
+            if(allowance){
+                // Canonical preparation consumes the same ready body through
+                // the existing cooperative raster leaf; its prepared-use and
+                // 32-primitive progress remain visible to the owner contract.
+                Tile candidate;candidate.building=std::move(target);candidate.body.lease=std::move(lease);
+                candidate.raster=std::make_unique<CompactStrokeRasterJob>(*canvas,stroke.config,stroke.knots,&localGrid,
+                    limits.gpuCoverageCandidate,budget,limits.maxEntryBytes,std::function<void(std::size_t)>{},true,source.geometry);
+                candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
+                tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;
+            }else drawCompactStrokeToSkCanvas(*canvas,stroke.config,stroke.knots,stroke.seed,&raster,nullptr,&localGrid,limits.gpuCoverageCandidate,&targets,nullptr,source.geometry.get(),true);
+            if(!allowance){
+                if(raster.resourcePending)return pending();
+                work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
+                Image body{target->makeImageSnapshot(),std::move(lease)};if(!body.pixels)return pending();
+                Tile candidate;candidate.body=std::move(body);candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
+                tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;++work.bodyTileBuilds;
+            }
         }else ++work.bodyTileHits;
         auto& t=tile->second;t.used=++tick_;
+        if(t.raster){
+            bool complete=false;
+            do{
+                if(allowance&&allowance->exhausted())return pending();
+                CompactRasterWork raster;complete=t.raster->step(*t.building->getCanvas(),stroke.config,stroke.knots,
+                    stroke.seed,targets,limits.gpuCoverageCandidate,&raster);
+                work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;
+                work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
+                ++work.preparationCoverageSteps;if(allowance)++allowance->steps;
+                if(t.raster->resourcePending())return pending();
+            }while(!complete);
+            t.body.pixels=t.building->makeImageSnapshot();if(!t.body.pixels)return pending();
+            t.raster.reset();t.building.reset();++work.bodyTileBuilds;
+        }
+        if(insertionOnly&&t.result.pixels&&t.epoch==previousEpoch){
+            const bool unaffected=std::none_of(inserted.begin(),inserted.end(),[&](const auto* primitive){
+                auto bounds=matrix.mapRect(primitive->bounds);bounds.outset(3,3);
+                return !bounds.isFinite()||SkRect::Intersects(bounds,SkRect::Make(crop));
+            });
+            if(unaffected){t.epoch=source.epoch;t.applied=maskCount;}
+        }
         if(!t.result.pixels||t.epoch!=source.epoch||t.applied!=maskCount){
             const bool prefix=t.result.pixels&&t.epoch==source.epoch;
             const auto first=prefix?t.applied:0;auto base=prefix?t.result.pixels:t.body.pixels;
@@ -164,6 +219,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             Image result{target->makeImageSnapshot(),std::move(lease)};if(!result.pixels)return pending();
             if(!t.result.pixels){t.bytes+=resultBytes;bytes_+=resultBytes;}
             t.result=std::move(result);t.epoch=source.epoch;t.applied=maskCount;++work.maskTileUpdates;if(!prefix)++work.maskTileResets;
+            if(allowance)++allowance->steps;
         }
         (void)t.result.lease.markGpuUse();SkPaint opacity;opacity.setAlphaf(std::clamp(entry.presentationOpacity,0.F,1.F));
         painted=true;destination.save();destination.resetMatrix();destination.clipIRect(crop);destination.drawImage(t.result.pixels,float(x-maskGuard),float(y-maskGuard),SkSamplingOptions{},&opacity);destination.restore();

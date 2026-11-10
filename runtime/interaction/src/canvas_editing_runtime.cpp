@@ -3288,7 +3288,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   std::optional<std::vector<semantic::EraseMaskAddItem>> partial;
   if(!objectEraser) {
     G5_SCOPE(g5Exact,g5::Tag::exact_prepare,g5::Purpose::none);
+    UR2D_PHASE(upExact,exact);
     partial=partialEraseTargets(it->second);
+    UR2D_END(upExact);
     G5_SCOPE_END(g5Exact);
     if(!partial){AXIOM_ERASE_REJECT("exact_targets");(void)eraserCancel(pointerId);return false;}
     for(const auto& item:*partial)hit.insert(item.object_id);
@@ -3358,27 +3360,37 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   }
   auto* display=findDisplay(pointerId,DisplayKind::kErase);
   if(!display){(void)eraserCancel(pointerId);return false;}
+  UR2D_PHASE(upHistory,history);
   auto historyEntry=history_.prepareRecord(operation,{std::move(inverse)},{},{});
+  UR2D_END(upHistory);
   if(!historyEntry){(void)eraserCancel(pointerId);return false;}
+  UR2D_PHASE(upPublication,publication);
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
   PublicationReservation publication(localOperationSink_, operation);
   G5_SCOPE_END(g5Publication);
+  UR2D_END(upPublication);
   if (!publication) {
       AXIOM_ERASE_REJECT("publication_reservation");
       (void)eraserCancel(pointerId);
       return false;
   }
+  UR2D_PHASE(upApply,apply);
   G5_SCOPE(g5Apply,g5::Tag::semantic_apply,g5::Purpose::none);
   auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   G5_SCOPE_END(g5Apply);
+  UR2D_END(upApply);
   eraserTraces_.erase(it);
   eraserPreviewRevisions_.erase(pointerId);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
   committed=true;
+  UR2D_PHASE(upFinalize,finalize);
   history_.commitPrepared(std::move(*historyEntry));
   sealDisplay(*display,*applied.commit_record);
+  UR2D_END(upFinalize);
+  UR2D_PHASE(upObserver,observer);
   observeApplied(operation,std::move(applied));
+  UR2D_END(upObserver);
   ++submittedOperationCount_;
   if (lastAppliedCommit_.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
@@ -3387,7 +3399,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
                                    &lastAppliedCommit_->change_set);
     // Semantic acceptance is final. Scene is derived and can recover at the
     // next frame; a failed projection must not lose the accepted history.
+    UR2D_PHASE(upScene,scene);
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    UR2D_END(upScene);
   }
   canonicalPresentationDirty_ = true;
   if (!platformPresentationDeferred_) {

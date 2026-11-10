@@ -1,0 +1,22 @@
+{
+  "schema": "axiom-execution-authority-lock-v1",
+  "source": {
+    "path": "docs/notion/manifest.yaml",
+    "snapshot_date": "2026-08-28",
+    "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+  },
+  "current_authority": {
+    "architecture": {
+      "version": "v0.4",
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "status": "current"
+    }
+  },
+  "trusted_statements": [
+    "SemanticDocument and OperationEngine remain canonical; RuntimeScene, render groups, text layout snapshots, caches and GPU resources are derived state.",
+    "The existing Runtime/Render owners control preparation, publication, resource leases and selection presentation.",
+    "Derived cache reuse must remain basis-bound and may not publish stale or mixed-order pixels; consumer SDK/ABI boundaries stay unchanged."
+  ],
+  "supersession": "none",
+  "scope": "r2 successor for object interaction continuity; does not supersede UR2c erase authority"
+}

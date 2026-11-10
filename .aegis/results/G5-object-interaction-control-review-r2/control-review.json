@@ -1,0 +1,51 @@
+{
+  "schema": "g5-object-interaction-control-review-v1",
+  "created_utc": "2026-11-10T08:35:12.361258+00:00",
+  "status": "SCOPED_CONTROL_REVIEW_ACCEPTED_WITH_FINDINGS",
+  "reviewed_executor_status": "READY_FOR_CONTROL_REVIEW",
+  "result_sha256": "1eebc484835dbff0c063fe66bc75b1a6a1d3afab8adcc4fb2c0b536ac54d0c4b",
+  "source_manifest_sha256": "ddc9a58d99eb1416a9f80fbc843d8da12ad732b18196ba87ae334b53adb4435f",
+  "scope": "LI-01 stable derived layout identity plus preserved r1 non-ink static scene reuse, existing Render owner; no SDK or canonical changes",
+  "checks": {
+    "source_and_package_hashes": "MATCH",
+    "current_tracked_diff": "MATCH",
+    "final_oracle_pixel_records": 96,
+    "independent_native": {
+      "passed": 12,
+      "failed": 0,
+      "source_stable": true,
+      "log": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-control-review-r2/final-focused-native.log"
+    },
+    "independent_node": {
+      "passed": 43,
+      "failed": 0,
+      "log": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-control-review-r2/node-focused.log"
+    },
+    "independent_python": {
+      "passed": 31,
+      "failed": 0,
+      "log": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-control-review-r2/python-focused.log"
+    },
+    "independent_boundary_contracts": 120,
+    "executor_broad_native": {
+      "passed": 191,
+      "total": 199,
+      "baseline_reproduced_failures": 8,
+      "baseline": "accepted r1 checkpoint with HEAD pre-LI-01 RenderGroupManager.o"
+    },
+    "executor_node_serial": 209,
+    "executor_python_discover": 157,
+    "normal_web_bytes_match": true,
+    "normal_web_runtime_source_stable": true,
+    "demo_url": "http://127.0.0.1:4315/example.html"
+  },
+  "findings": [
+    "Nondefault maxEntries=1 moving synthetic demand still retries; stable hold recovers.",
+    "DPR4 dense fixture has 800x500 logical viewport; full desktop DPR4 performance is not established.",
+    "Dense oracle permits independent AA bands plus channel<=2 outside; simple static oracle is exact RGBA.",
+    "8 broad native failures reproduce on pre-LI-01 r1 checkpoint baseline and remain unresolved."
+  ],
+  "commit_push_performed": false,
+  "official_gate_or_platform_pass": false,
+  "next_action": "User test at 4315; preserve current source and reviewed evidence; no new implementation scope automatically authorized."
+}

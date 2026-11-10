@@ -1,0 +1,50 @@
+{
+  "status": "SCOPED_BUDGET_CHANGE_ACCEPTED_WITH_PERFORMANCE_FINDINGS",
+  "result": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/result.json",
+    "sha256": "3a965f5191bd03bfd5861391b02afbb8a9c1547be5433f4bbe5b263abbae551e"
+  },
+  "source": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/source-manifest.json",
+    "sha256": "b3c0245c8f1f4e1f0979a993462f8ecc1f22f1eaf9345191f10f63535f3d35e1"
+  },
+  "artifact_check": {
+    "path": ".aegis/results/G5-desktop-render-budget-control-r1/artifact-check.json",
+    "sha256": "0b6e3c5a25c5d87f71a2d063514162503f41c9329dd83dcc045db44b4d05fbd1"
+  },
+  "independentpixel": {
+    "path": ".aegis/results/G5-desktop-render-budget-control-r1/independent-pixel.json",
+    "sha256": "bd2d68da8fd5a605a03baf0ad6f1e8cd92f3a8d90c1757ab061b384f5875a5b9"
+  },
+  "native_independent_log": {
+    "path": ".aegis/results/G5-desktop-render-budget-control-r1/independent-native.log",
+    "sha256": "fde37be3aae172fae3246df18c76b3ecdb795d6b5043fe6873894347e3d14a47"
+  },
+  "profiletests": {
+    "path": ".aegis/results/G5-desktop-render-budget-control-r1/profile-tests.json",
+    "sha256": "d1d4a27428cb65c409efeb6b7a2c5c8dee894e1536b2c4b92e028397d1ec77af"
+  },
+  "demo_sdk": {
+    "path": ".aegis/results/G5-desktop-render-budget-control-r1/demo-sdk-check.json",
+    "sha256": "3d38752631ecae59de117a83b7b54b9120ab1bd3d1761903a9bebc61f3284aaf"
+  },
+  "effective_desktop_mib": [
+    256,
+    512,
+    64
+  ],
+  "conservative_mib": [
+    32,
+    96,
+    8
+  ],
+  "scope": "Memory policy only; existing owners/leases/AA/semantics and pressure fallback retained",
+  "limitations": [
+    "8shortWebcases not newcontinuousdragSLO",
+    "Longtermidleanddensemulti-eraseCPU not coveredbybudgettask",
+    "ExistingfullbuildSemanticdifferentialtestmissingkSectionkTablecase remainsseparate"
+  ],
+  "next": "ReadonlyeraseCPUdiagnosis",
+  "commitpush": false,
+  "officialGateP34": false
+}

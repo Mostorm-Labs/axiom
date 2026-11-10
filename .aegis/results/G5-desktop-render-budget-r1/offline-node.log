@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+ok 1 - DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+  ---
+  duration_ms: 740.630083
+  ...
+# Subtest: transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+ok 2 - transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+  ---
+  duration_ms: 3.012667
+  ...
+# Subtest: guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+ok 3 - guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+  ---
+  duration_ms: 0.170042
+  ...
+# Subtest: performance needs every correct paired sample and does not hide missing or failed observations
+ok 4 - performance needs every correct paired sample and does not hide missing or failed observations
+  ---
+  duration_ms: 0.121917
+  ...
+# Subtest: original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+ok 5 - original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+  ---
+  duration_ms: 0.26925
+  ...
+# Subtest: roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+ok 6 - roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+  ---
+  duration_ms: 0.47025
+  ...
+# Subtest: missing, malformed, blank or incompatible independent references cannot qualify
+ok 7 - missing, malformed, blank or incompatible independent references cannot qualify
+  ---
+  duration_ms: 0.186125
+  ...
+# Subtest: driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+ok 8 - driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+  ---
+  duration_ms: 2.089334
+  ...
+# Subtest: pair completion binds ordered SDKs and runs only missing repetitions with fresh pages
+ok 9 - pair completion binds ordered SDKs and runs only missing repetitions with fresh pages
+  ---
+  duration_ms: 2.304833
+  ...
+# Subtest: oracle identity and incompatible public camera fail before spawning a reference
+ok 10 - oracle identity and incompatible public camera fail before spawning a reference
+  ---
+  duration_ms: 3.982542
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1052.724417

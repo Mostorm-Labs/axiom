@@ -1,0 +1,16 @@
+E
+======================================================================
+ERROR: setUpClass (verification.tests.test_g5_erase_exact_canonical.WindowTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_erase_exact_canonical.py", line 12, in setUpClass
+    spec.loader.exec_module(cls.runner)
+  File "<frozen importlib._bootstrap_external>", line 846, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 982, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1039, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_exact_canonical_runner.py'
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.001s
+
+FAILED (errors=1)

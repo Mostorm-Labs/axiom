@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/stress-request.json",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 26.847569666000002,
+  "peak_process_family_rss_kib": 1692880,
+  "rss_limit_kib": 4194304,
+  "timeout_s": 180,
+  "last_stage": {
+    "stage": "closed",
+    "status": "FAILED",
+    "error": "page.evaluate: AxiomError: SNAPSHOT_REJECTED\n    at call (http://127.0.0.1:60808/real/axiom.mjs:50:29)\n    at http://127.0.0.1:60808/real/axiom.mjs:360:59\n    at http://127.0.0.1:60808/real/axiom.mjs:99:129\n    at undoWorker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:128:25)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:141:123"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

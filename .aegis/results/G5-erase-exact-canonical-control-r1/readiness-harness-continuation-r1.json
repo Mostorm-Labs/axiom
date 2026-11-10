@@ -1,0 +1,44 @@
+{
+  "schema": "g5-controlled-final-readiness-continuation-v1",
+  "created_utc": "2026-11-10T14:46:17.823337+00:00",
+  "status": "AUTHORIZED_FINAL_UNFINISHED_PROOF_ONLY",
+  "bindings": [
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/readiness-probe-classification.json",
+      "sha256": "557f2181cafc74e3c98ad42b7d27fe365f82263970e17d809b54ff1515a24cfd"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+      "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+    }
+  ],
+  "id": "G5EC1-READINESS-CONTINUE-R1",
+  "starts": 1,
+  "wall_seconds": 240,
+  "rss_mib": 4096,
+  "cases": [
+    "candidate zoom observation",
+    "candidate rectangle",
+    "candidate sticky",
+    "candidate table",
+    "candidate image"
+  ],
+  "budget": {
+    "consumed_seconds": 762,
+    "combined_cap_seconds": 1200,
+    "reserved_seconds": 240,
+    "reallocation": "108s unused originalREADINESS plus132s unused parent pool; no new total allowance"
+  },
+  "required_repair": [
+    "Observe correct declared witness at intervals after immediate input, until first correct content or finite15s no-progress; never await Undo/settle before successor.",
+    "For drag retain active gesture during bounded observation and end/cancel normally; still report large Move/feedback gaps.",
+    "Qualify final public actual state/mathematical pose/semantic UndoRedo and saved pixels under declared independent/analytic reference, not mere color activity.",
+    "Offline test delayedfeedback, missingfeedback, nonfinite clocks and staticoldpixels cannotfalsegreen; browser import closure remains pure."
+  ],
+  "forbidden": [
+    "No changes production/SDK/oldraw/legacyoracle/tolerance/budgets.",
+    "No rerun already-qualified rows.",
+    "No further stress or readiness IDs; any remaining missing proof must be explicit."
+  ],
+  "return": "Finish result/evidence bundle with stress8of10missing and long-tail findings. No READY claim unless all blocking frozen proof met; no claim user10sresolved; no commit/push."
+}

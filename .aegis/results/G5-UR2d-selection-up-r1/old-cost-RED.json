@@ -1,0 +1,123 @@
+{
+  "status": "EXPECTED_STRUCTURAL_RED_OBSERVED",
+  "raw": [
+    {
+      "stage": "selection-start",
+      "knots": 512,
+      "historical_masks": 0
+    },
+    {
+      "stage": "selection-result",
+      "knots": 512,
+      "historical_masks": 0,
+      "query_ms": 2.35354,
+      "result": 0
+    },
+    {
+      "stage": "erase-result",
+      "knots": 512,
+      "historical_masks": 0,
+      "query_ms": 0.161958,
+      "result": 0
+    },
+    {
+      "stage": "selection-start",
+      "knots": 512,
+      "historical_masks": 2
+    },
+    {
+      "stage": "selection-result",
+      "knots": 512,
+      "historical_masks": 2,
+      "query_ms": 107.253,
+      "result": 1
+    },
+    {
+      "stage": "erase-result",
+      "knots": 512,
+      "historical_masks": 2,
+      "query_ms": 6.899,
+      "result": 1
+    },
+    {
+      "stage": "selection-start",
+      "knots": 2048,
+      "historical_masks": 0
+    },
+    {
+      "stage": "selection-result",
+      "knots": 2048,
+      "historical_masks": 0,
+      "query_ms": 0.754167,
+      "result": 0
+    },
+    {
+      "stage": "erase-result",
+      "knots": 2048,
+      "historical_masks": 0,
+      "query_ms": 0.175,
+      "result": 0
+    },
+    {
+      "stage": "selection-start",
+      "knots": 2048,
+      "historical_masks": 2
+    },
+    {
+      "stage": "selection-result",
+      "knots": 2048,
+      "historical_masks": 2,
+      "query_ms": 281.049,
+      "result": 1
+    },
+    {
+      "stage": "erase-result",
+      "knots": 2048,
+      "historical_masks": 2,
+      "query_ms": 7.08804,
+      "result": 1
+    },
+    {
+      "stage": "selection-start",
+      "knots": 7199,
+      "historical_masks": 0
+    },
+    {
+      "stage": "selection-result",
+      "knots": 7199,
+      "historical_masks": 0,
+      "query_ms": 1.07633,
+      "result": 0
+    },
+    {
+      "stage": "erase-result",
+      "knots": 7199,
+      "historical_masks": 0,
+      "query_ms": 0.490625,
+      "result": 0
+    },
+    {
+      "stage": "selection-start",
+      "knots": 7199,
+      "historical_masks": 2
+    },
+    {
+      "stage": "selection-result",
+      "knots": 7199,
+      "historical_masks": 2,
+      "query_ms": 953.417,
+      "result": 1
+    },
+    {
+      "stage": "erase-result",
+      "knots": 7199,
+      "historical_masks": 2,
+      "query_ms": 7.55071,
+      "result": 1
+    }
+  ],
+  "mechanism": "oldgeometrybuildallcontourdecorations then subtract all historical masks per component; repeatedcandidatecallsrepeat",
+  "frozen_old_source": "baseline-oracles/selection_region_geometry.cpp",
+  "dense7199twohistory_selection_ms": 953.417,
+  "is_browser_timing": false
+}

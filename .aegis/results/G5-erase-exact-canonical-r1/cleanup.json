@@ -1,0 +1,91 @@
+{
+  "status": "ALL8_OWNED_ATTEMPTS_CLEAN_USER_DEMOS_PRESERVED",
+  "attempts": [
+    {
+      "id": "G5EC1-BASELINE",
+      "status": "COMPLETED",
+      "charged_seconds": 54,
+      "reason": "completed",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "charged_seconds": 18,
+      "reason": "completed",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-FINAL-PAIRS",
+      "status": "COMPLETED",
+      "charged_seconds": 317,
+      "reason": "completed",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-STRESS",
+      "status": "STOPPED",
+      "charged_seconds": 27,
+      "reason": "nonzero_exit",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-STRESS-CONTINUE-R1",
+      "status": "STOPPED",
+      "charged_seconds": 2,
+      "reason": "nonzero_exit",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-STRESS-CONTINUE-R2",
+      "status": "STOPPED",
+      "charged_seconds": 152,
+      "reason": "timeout",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-READINESS-ALL",
+      "status": "STOPPED",
+      "charged_seconds": 192,
+      "reason": "nonzero_exit",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5EC1-READINESS-CONTINUE-R1",
+      "status": "STOPPED",
+      "charged_seconds": 89,
+      "reason": "nonzero_exit",
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    }
+  ],
+  "charged_seconds": 851,
+  "combined_cap_seconds": 1200,
+  "no_more_sampling_IDs": true,
+  "final_demo": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/final-demo.json",
+    "sha256": "7b97e88a5c8d677e6e8a66d82037012817a2ed02449c439b9d48ba978dc8f0b6",
+    "bytes": 1640
+  },
+  "preserved_demo_ports": [
+    4318,
+    4317,
+    4316,
+    4298,
+    4297
+  ],
+  "user_documents_untouched": true,
+  "no_commit_push": true,
+  "index_empty": true,
+  "live_logs_excluded": [
+    "out/G5-erase-exact-canonical-r1/demo-server.log",
+    "out/G5-erase-exact-canonical-r1/final-demo-server.log"
+  ]
+}

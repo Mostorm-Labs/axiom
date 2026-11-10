@@ -1,0 +1,62 @@
+{
+  "schema": "g5-ur2d-harness-repair-execution-v1",
+  "continue_until_terminal_state": true,
+  "scope": {
+    "allowed_existing": [
+      "verification/runners/g5/ur2d_selection_up.mjs",
+      "verification/tests/g5_ur2d_selection_up.test.mjs"
+    ],
+    "allowed_new": [
+      "verification/runners/g5/ur2d_pair_completion_runner.py",
+      "verification/tests/test_g5_ur2d_pair_completion.py"
+    ],
+    "result_root": ".aegis/results/G5-UR2d-harness-completion-r1",
+    "output_root": "out/G5-UR2d-harness-completion-r1"
+  },
+  "forbidden": [
+    "All original product forbiddens; production sources and normal SDK remain exact frozen.",
+    "No edits to old packages/results/ledgers/runs/manifest. Preserve prior result BLOCKED_EVIDENCE as history.",
+    "Do not add waits before next Down/wheel or change fixture/camera/input formulas, skip samples, widen AA or forge completion.",
+    "No browser until offline RED/GREEN and package preflight; no extra start after one specified new process.",
+    "No broad CTest or GPU diagnostics during sampling. No restart/close/reload user pages; no commit/push."
+  ],
+  "steps": [
+    "Resolve repository first, validate all exact bindings and current frozen source/SDK. Preserve old driver preimage in new result.",
+    "Repair compareRoundtrip to consume original independent oracle/band when fullviewport sufficient check fails; validate final/redo outputs against oldCPUreference. Pass request oracle/exact camera/fixture paths explicitly; enforce oracle 10s timeout per invocation, bounded files. Do not retain full RGBA arrays in browser JSON.",
+    "Use persisted COMPARE S2 raw as RED: zeroedge false failure, original independent band qualifies. Add offline tests for edge-only delta4 acceptance through old independent band, nonAA delta3 rejection, malformed/missing oracle/band/blank refusal. No candidate geometry band.",
+    "New runner/new ledger reserves only U2D1-PAIR-COMPLETE-R1 once; separate result root, exact two SDK/fixture/source/runner maps; cumulative105+ceil elapsed <=960, 240s/3GiB guard. Explicit pair repetitions [1,2]; same consumer workload, sequential old/candidate fresh pages.",
+    "Before new browser run verify completed pair0 compatibility with unchanged product and exact same fixtures/commands. Run all timing first per existing phases; final readback/oracle correctness remains outside timed phase. During browser source/runner/SDK frozen.",
+    "After process ends preserve guard and raw even on error. Compile all 3 paired observations from original pair0 and new1/2; verify same source SDK fixture identities. Retain old failures separately.",
+    "Complete original evidence-index mapping for named D-A/D-B inputs, canonical mask/History/Scene checks and failure recovery using existing raw keepers, not rerun all tests. Hash-map aliases rather than broken/floating refs.",
+    "Prepare final new result/source manifests, raw/evidence files, ordinary Demo4316 check (no restart/rebuild) with live demo log excluded. Callback exact result to control."
+  ],
+  "required_tests": [
+    "offline Node harness tests + new runner Python tests",
+    "full saved S0/S2 candidate buffers vs original independent CPU pixel oracle",
+    "source/SDK/old-ledger equality and owned cleanup",
+    "new real browser 2 missing paired repetitions under bounded guard"
+  ],
+  "terminal_success": "READY_FOR_CONTROL_REVIEW or READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS: original functional obligations verified and 3 actual pairs compiled; no official Gate/P34/performance PASS.",
+  "terminal_blockers": [
+    "AUTHORITY_OR_SOURCE_CONFLICT",
+    "ACTUAL_DECISION_PIXEL_COMMIT_RECEIPT_FAILURE",
+    "MISSING_ORACLE",
+    "GUARD_TIMEOUT_RSS_OR_CLEANUP_FAILURE",
+    "BROWSER_ALLOWANCE_EXHAUSTED"
+  ],
+  "return_policy": {
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "executor_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "proactive_callback": "completion or classified actual blocker; do not wait on intermediate checkpoints"
+  },
+  "additional_allowance": {
+    "id": "U2D1-PAIR-COMPLETE-R1",
+    "starts": 1,
+    "wall_seconds": 240,
+    "rss_mib": 3072,
+    "completed_starts_before": 4,
+    "charged_seconds_before": 105,
+    "original_total_seconds_cap": 960,
+    "maximum_cumulative_seconds_after": 345
+  }
+}

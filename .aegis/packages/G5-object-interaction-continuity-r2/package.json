@@ -1,0 +1,35 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-object-interaction-continuity-r2",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 successor: layout identity and staged publication starvation",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-object-interaction-continuity-r2"
+  },
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "exact-current"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "execution_contract_ref": "execution-contract.json",
+  "authority_lock_ref": "authority.lock.json",
+  "verification_lock_ref": "verification.lock.json",
+  "implementation_context_ref": "implementation-context.md",
+  "evidence_contract_ref": "evidence-contract.json",
+  "preserved_prior_r1": ".aegis/results/G5-object-interaction-continuity-r1/result-final-checkpoint.json",
+  "human_authorization": "User authorized continued paired development and completion callbacks."
+}

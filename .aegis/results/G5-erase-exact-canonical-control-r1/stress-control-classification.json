@@ -1,0 +1,113 @@
+{
+  "schema": "g5-control-stress-classification-v1",
+  "created_utc": "2026-11-10T14:40:15.781136+00:00",
+  "status": "INCOMPLETE_STRESS_TIMEOUT_WITH_PERFORMANCE_FINDINGS",
+  "classification": "BOUNDED_WORKER_TIMEOUT_NOT_PROVEN_PRODUCT_CRASH",
+  "proofs": {
+    ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2.worker.json": "31770b792dac1043602e3d4a44b014d37e961b11bf04d27198f6a887263e514c",
+    ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2/worker-result.json": "67fb6bc9a385926610d6ae7703430084e6ce9056727c0761535f54cd1d9f20ba",
+    ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2/candidate-10round/raw-row.json": "808c97b09a990d27e4d6f8776a47869c7fcadbf69148e27a59b2506b7b52760d",
+    ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+  },
+  "guard": {
+    "command": [
+      "node",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/stress-continue2-request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2"
+    ],
+    "reason": "timeout",
+    "returncode": 1,
+    "elapsed_s": 151.28058279200002,
+    "peak_process_family_rss_kib": 1974160,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 151,
+    "last_stage": {
+      "stage": "closed",
+      "status": "FAILED",
+      "error": "page.evaluate: Target crashed \n    at undoWorker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:145:142)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:152:123"
+    },
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "completed_long_case_observations": [
+    {
+      "variant": "old",
+      "main_up_ms": 4162.600000023842,
+      "successor_down_ms": 1.2999999523162842,
+      "successor_up_ms": 9219.299999952316,
+      "feedback_upper_bound_from_upstart_ms": 6158.600000023842,
+      "actual_dark_to_white": 256,
+      "undo_generation": "27",
+      "redo_generation": "28"
+    },
+    {
+      "variant": "candidate",
+      "main_up_ms": 4130.5,
+      "successor_down_ms": 1.399999976158142,
+      "successor_up_ms": 9125.5,
+      "feedback_upper_bound_from_upstart_ms": 6114.5,
+      "actual_dark_to_white": 256,
+      "undo_generation": "27",
+      "redo_generation": "28"
+    }
+  ],
+  "continuous_saved_rounds": [
+    {
+      "round": 0,
+      "main_up_ms": 898.5999999046326,
+      "tiny_up_ms": 68.5,
+      "generation_delta": 2
+    },
+    {
+      "round": 1,
+      "main_up_ms": 907.5,
+      "tiny_up_ms": 110.0,
+      "generation_delta": 2
+    },
+    {
+      "round": 2,
+      "main_up_ms": 926.6000000238419,
+      "tiny_up_ms": 75.90000009536743,
+      "generation_delta": 1
+    },
+    {
+      "round": 3,
+      "main_up_ms": 912.3999999761581,
+      "tiny_up_ms": 148.70000004768372,
+      "generation_delta": 2
+    },
+    {
+      "round": 4,
+      "main_up_ms": 2080.7999999523163,
+      "tiny_up_ms": 790.0,
+      "generation_delta": 2
+    },
+    {
+      "round": 5,
+      "main_up_ms": 5814.899999976158,
+      "tiny_up_ms": 5594.0,
+      "generation_delta": 2
+    },
+    {
+      "round": 6,
+      "main_up_ms": 7506.200000047684,
+      "tiny_up_ms": 7298.200000047684,
+      "generation_delta": 2
+    },
+    {
+      "round": 7,
+      "main_up_ms": 9451.299999952316,
+      "tiny_up_ms": 9208.100000023842,
+      "generation_delta": 2
+    }
+  ],
+  "limitations": [
+    "Only8of10rounds durable, no final canonical pixel or UndoRedo proof for continuous case",
+    "Candidate long1600Up and successorUp close to old; no demonstrated resolution of user long tail",
+    "Readiness all-operation matrix remains pending",
+    "Targetcrashed may result from guard terminating browser at151s; no independent crash or OOM assertion"
+  ],
+  "next": "Continue already-authorized READINESS11rows/300s; no new STRESS starts. No change product/SDK/oracles. Preserve timings as findings, not 3/5 hardblock.",
+  "publication": "none"
+}

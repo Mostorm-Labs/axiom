@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2d-compare-resume-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P33 sameUR2dA+B finalsingleCOMPARE",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "completed_through": [
+      "Aacceptednative+publicmilestone",
+      "Bnative12cases",
+      "76keepers",
+      "BF-S0immediate2Upsequences+offlineoldCPUroundtriprequalification"
+    ],
+    "next_action": "CorrectfullSHAasserttomatchingoriginalpixeloraclethenoneCOMPAREandfinalclosure"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2d-compare-resume-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "0dbbc3a96f5c828742cf1164cc53d20eef8b984383f636edf5070da177b94c3c"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "111b3feefde7895168a99d596ca4064e90c8e6220851842521ba1bdadd07bb63"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "bdc7bdd03472af54070160593c1f938e62ae5c3f026f3e2bb5c0fb5ec60a3043"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "1240983443c5255ebc48507be92b768574a0b0ba7974975c379396294eda74ae"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "5d5f4827ecd928c750c15883c80a9d8450de95caafb47777f0e5119dfa350018"
+  },
+  "control_decision_ref": {
+    "path": "control-decision.json",
+    "sha256": "7a409ed258b5fa53849edaa96bf063367402b37512fa47cb92b43ca9ef6c25bf"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

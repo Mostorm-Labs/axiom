@@ -1,0 +1,74 @@
+{
+  "status": "QUALIFIED",
+  "before": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "after": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "roundtrip": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "fullViewport": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5781240,
+    "aa_boundary_pixels": 0,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+  "oracle": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "request": {
+    "width": 2862,
+    "height": 2020,
+    "logical_width": 1431,
+    "logical_height": 1010,
+    "camera": {
+      "scale": 1,
+      "x": -24,
+      "y": -15
+    },
+    "hud_bounds": []
+  },
+  "samples": [
+    {
+      "snapshot_sha256": "3241d2196f7169a3f7482a69bd55835d0bae8b8873469d4d4456b1d87cfe31e7",
+      "actual_sha256": "84455cf02272dab36f6a3a628432e92a851cee4f57c04660922114c0e68c1549",
+      "reference_sha256": "18fd80801093b12ad2f09a371d1b74ff2840bac715ee29f1e8233d110e479561",
+      "band_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    },
+    {
+      "snapshot_sha256": "748def55c8b6fba98a95b55a7f10da3ce726b8c33086a8e927a04cb828640d35",
+      "actual_sha256": "84455cf02272dab36f6a3a628432e92a851cee4f57c04660922114c0e68c1549",
+      "reference_sha256": "18fd80801093b12ad2f09a371d1b74ff2840bac715ee29f1e8233d110e479561",
+      "band_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    }
+  ]
+}

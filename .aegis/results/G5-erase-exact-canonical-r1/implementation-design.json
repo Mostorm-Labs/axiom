@@ -1,0 +1,15 @@
+{
+  "owners": {
+    "Interaction": "confirmed trace -> exact targets -> per-object canonical mask IDs -> History prepare/publication -> OperationEngine -> Scene",
+    "Render": "existing EraseMaskPathCache/MaskHistoryPlan/PreparedGeometryCache and SkiaRenderCache/SkiaInkLayers/ResourceBudgetManager"
+  },
+  "A_design": "First measure sequential erasePath union, ordered-history/value proof, difference/intersection, source/Scene phases. Share only fully geometry-equal derived histories while retaining each canonical record source and quota; canonical IDs and order untouched. Retain original exact independent fallback. Query optimization preserves original sequential operations via qualified prefix reuse if dominant, no alternate approximate PathOps rule.",
+  "B_design": "Measure actual canonical preparation after mask-only change, route through existing retained body/history layers only with full context/grid/transform/material/mask proof. Full ordered back-to-front composition and last-frame Retry preserved. Live tail -> canonical history transfer must be geometrically proven, including sorted inserted IDs rather than back()/count assumptions.",
+  "resources": "No profile/cap increase; local history8MiB, pinned aliases/source/metadata charged. GPU leases release at actual completion.",
+  "public_API_impact": "none; any new private render seam remains under existing internal Runtime owners.",
+  "oracles": "frozen full prechange archives plus componentOracle634/finite6/55/172 and new real-commit diverged histories; independent original CPU AA/pixels.",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "scope_conflict": false,
+  "next": "baseline-normal-Web single frozenwindow and native phase baseline before implementation"
+}

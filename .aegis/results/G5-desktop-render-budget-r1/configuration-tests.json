@@ -1,0 +1,23 @@
+{
+  "status": "CONFIGURATION_GREEN",
+  "test_file": "verification/tests/test_desktop_render_budget.py",
+  "red": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/configuration-red.log",
+    "sha256": "19878ce734abe7a8842602c0df0057c4869af4f5e376fd52e3004f52795091a2"
+  },
+  "green": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/offline-python.log",
+    "sha256": "84daa7360ba383ecdf7519cdbba9c4dfc7997b6e02e5a4f8c8f80369514f320a"
+  },
+  "cases": "desktop/Web/mobile/conservative, explicit legacy32/96entryclamp, <=4096positiveinteger, incoherentlimitsreject, singlewindowguard",
+  "new_normal": {
+    "optional": 256,
+    "shared": 512,
+    "entry": 64
+  },
+  "existing_native_keepers": {
+    "optional": 32,
+    "shared": 96,
+    "entry": 8
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "classification": "VERIFICATION_DRIVER_BROWSER_IMPORT_CLOSURE_DEFECT",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R1/worker-result.json",
+    "sha256": "c23830208803c5b5b3f4caa9cecb4d22eae25ae9c45b3c4664d4a1531bf741af"
+  },
+  "no_gesture_executed": true,
+  "charged_seconds": 2,
+  "root": "Pure generationwait imported from hostmodule withnode:fs/playwright; browser resolvesnodeimports and rejectsbeforeconsumerinput.",
+  "repair": "Move pure helper into existing dependencyfree browsercontract, host reexports; VM execution and direct importclosure/HTTProute tests.",
+  "product_and_SDK_changed": false,
+  "all_prior_stopped_preserved": true,
+  "regression_test": "verification/tests/g5_erase_undo_readiness.test.mjs browser wait helper executes without hostimports"
+}

@@ -1,0 +1,235 @@
+TAP version 13
+# Subtest: frozen long trace and explicit window bounds
+ok 1 - frozen long trace and explicit window bounds
+  ---
+  duration_ms: 1.48275
+  ...
+# Subtest: stress intermediate rounds need admission/decision proof while only final tail requires idle
+ok 2 - stress intermediate rounds need admission/decision proof while only final tail requires idle
+  ---
+  duration_ms: 0.274083
+  ...
+# Subtest: completion requires actual per-round commits, closed contacts and tail quiescence
+ok 3 - completion requires actual per-round commits, closed contacts and tail quiescence
+  ---
+  duration_ms: 0.484917
+  ...
+# Subtest: separates blocked Up, stale DOM and real busy history without inventing readiness
+ok 4 - separates blocked Up, stale DOM and real busy history without inventing readiness
+  ---
+  duration_ms: 0.470625
+  ...
+# Subtest: browser wait helper executes without host imports or runtime dependencies
+ok 5 - browser wait helper executes without host imports or runtime dependencies
+  ---
+  duration_ms: 0.84325
+  ...
+# Subtest: actual UI asynchronous Undo must advance generation before settle and capture metadata
+ok 6 - actual UI asynchronous Undo must advance generation before settle and capture metadata
+  ---
+  duration_ms: 0.28425
+  ...
+# Subtest: fixed workload preserves all six gesture counts and formulas
+ok 7 - fixed workload preserves all six gesture counts and formulas
+  ---
+  duration_ms: 1.451041
+  ...
+# Subtest: no write, offscreen surrogate, masked/clear or only-after-Up progress fails
+ok 8 - no write, offscreen surrogate, masked/clear or only-after-Up progress fails
+  ---
+  duration_ms: 2.349708
+  ...
+# Subtest: start/end gaps and a gap over150 remain blocking
+ok 9 - start/end gaps and a gap over150 remain blocking
+  ---
+  duration_ms: 0.510583
+  ...
+# Subtest: repeated-old-frame writer cannot pass conjunctive freshness and actual pixels
+ok 10 - repeated-old-frame writer cannot pass conjunctive freshness and actual pixels
+  ---
+  duration_ms: 0.388
+  ...
+# Subtest: foreign, regressing and after-Up prefixes reject independently of timing
+ok 11 - foreign, regressing and after-Up prefixes reject independently of timing
+  ---
+  duration_ms: 0.930375
+  ...
+# Subtest: candidate operation roster and three baseline families are complete
+ok 12 - candidate operation roster and three baseline families are complete
+  ---
+  duration_ms: 0.468041
+  ...
+# Subtest: feedback observer records delayed correct pixels instead of failing a fixed early probe
+ok 13 - feedback observer records delayed correct pixels instead of failing a fixed early probe
+  ---
+  duration_ms: 0.164125
+  ...
+# Subtest: T0 includes blocked Up; timings remain findings while actual positive pixels are required
+ok 14 - T0 includes blocked Up; timings remain findings while actual positive pixels are required
+  ---
+  duration_ms: 0.195958
+  ...
+# Subtest: UR1b frozen endpoints exclude suspended UR2 flow
+ok 15 - UR1b frozen endpoints exclude suspended UR2 flow
+  ---
+  duration_ms: 0.764291
+  ...
+# Subtest: cold transaction preserves all available stages before a failed pixel predicate
+ok 16 - cold transaction preserves all available stages before a failed pixel predicate
+  ---
+  duration_ms: 0.300459
+  ...
+# Subtest: cold capture failure preserves its completed prefix
+ok 17 - cold capture failure preserves its completed prefix
+  ---
+  duration_ms: 0.207333
+  ...
+# Subtest: two-level redraw quantization compares against actual fixed baseline RGBA
+ok 18 - two-level redraw quantization compares against actual fixed baseline RGBA
+  ---
+  duration_ms: 1.986625
+  ...
+# Subtest: a single selected pixel with a three-level change in any RGBA channel fails
+ok 19 - a single selected pixel with a three-level change in any RGBA channel fails
+  ---
+  duration_ms: 1.7355
+  ...
+# Subtest: clear, transparent target and a missing opaque chunk fail without candidate-driven selection
+ok 20 - clear, transparent target and a missing opaque chunk fail without candidate-driven selection
+  ---
+  duration_ms: 0.305083
+  ...
+# Subtest: missing, blank, malformed and fewer than 100 baseline pixels cannot qualify
+ok 21 - missing, blank, malformed and fewer than 100 baseline pixels cannot qualify
+  ---
+  duration_ms: 0.317958
+  ...
+# Subtest: cumulative 0 to 1 to 2 to 3 redraw drift is measured against the same immutable baseline
+ok 22 - cumulative 0 to 1 to 2 to 3 redraw drift is measured against the same immutable baseline
+  ---
+  duration_ms: 0.786625
+  ...
+# Subtest: exact six normal continuous cases preserve DPR and fixture matrix
+ok 23 - exact six normal continuous cases preserve DPR and fixture matrix
+  ---
+  duration_ms: 0.067875
+  ...
+# Subtest: global cleared target is detected even when no present was reported
+ok 24 - global cleared target is detected even when no present was reported
+  ---
+  duration_ms: 0.247042
+  ...
+# Subtest: partial missing ink and malformed/blank reference cannot qualify
+ok 25 - partial missing ink and malformed/blank reference cannot qualify
+  ---
+  duration_ms: 1.889917
+  ...
+# Subtest: semantic/contact/oracle gaps fail regardless of reported frame success
+ok 26 - semantic/contact/oracle gaps fail regardless of reported frame success
+  ---
+  duration_ms: 1.562458
+  ...
+# Subtest: frozen trajectory rejects foreign fixture, camera, missing proof and swept sentinel overlap
+ok 27 - frozen trajectory rejects foreign fixture, camera, missing proof and swept sentinel overlap
+  ---
+  duration_ms: 3.464333
+  ...
+# Subtest: nearest rank reports all tails and missing observations honestly
+ok 28 - nearest rank reports all tails and missing observations honestly
+  ---
+  duration_ms: 2.061541
+  ...
+# Subtest: dispatch durations and Up-to-Down gaps come from actual events
+ok 29 - dispatch durations and Up-to-Down gaps come from actual events
+  ---
+  duration_ms: 0.625292
+  ...
+# Subtest: performance admission rejects capture, missing cases and stale exact state
+ok 30 - performance admission rejects capture, missing cases and stale exact state
+  ---
+  duration_ms: 0.110125
+  ...
+# Subtest: prepared consumer requires actual source body and exact job association
+ok 31 - prepared consumer requires actual source body and exact job association
+  ---
+  duration_ms: 0.158917
+  ...
+# Subtest: paired findings never turn mixed timing into performance PASS
+ok 32 - paired findings never turn mixed timing into performance PASS
+  ---
+  duration_ms: 0.453459
+  ...
+# Subtest: actual Up and published Scene join required for history reuse
+ok 33 - actual Up and published Scene join required for history reuse
+  ---
+  duration_ms: 0.622167
+  ...
+# Subtest: unpublished preparation, foreign Up and zero history cannot qualify
+ok 34 - unpublished preparation, foreign Up and zero history cannot qualify
+  ---
+  duration_ms: 0.113708
+  ...
+# Subtest: decimal source/job identities stay lossless
+ok 35 - decimal source/job identities stay lossless
+  ---
+  duration_ms: 0.480209
+  ...
+# Subtest: DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+ok 36 - DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+  ---
+  duration_ms: 589.633166
+  ...
+# Subtest: transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+ok 37 - transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+  ---
+  duration_ms: 2.796917
+  ...
+# Subtest: guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+ok 38 - guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+  ---
+  duration_ms: 0.151042
+  ...
+# Subtest: performance needs every correct paired sample and does not hide missing or failed observations
+ok 39 - performance needs every correct paired sample and does not hide missing or failed observations
+  ---
+  duration_ms: 0.112084
+  ...
+# Subtest: original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+ok 40 - original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+  ---
+  duration_ms: 0.256083
+  ...
+# Subtest: roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+ok 41 - roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+  ---
+  duration_ms: 0.433209
+  ...
+# Subtest: missing, malformed, blank or incompatible independent references cannot qualify
+ok 42 - missing, malformed, blank or incompatible independent references cannot qualify
+  ---
+  duration_ms: 0.178166
+  ...
+# Subtest: driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+ok 43 - driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+  ---
+  duration_ms: 1.41175
+  ...
+# Subtest: pair completion binds ordered SDKs and runs only missing repetitions with fresh pages
+ok 44 - pair completion binds ordered SDKs and runs only missing repetitions with fresh pages
+  ---
+  duration_ms: 0.783417
+  ...
+# Subtest: oracle identity and incompatible public camera fail before spawning a reference
+ok 45 - oracle identity and incompatible public camera fail before spawning a reference
+  ---
+  duration_ms: 1.72875
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 940.532708

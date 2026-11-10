@@ -1,0 +1,37 @@
+{
+  "status": "FROZEN_USER_REQUESTED_READINESS_ACCEPTANCE",
+  "requirements": [
+    {
+      "id": "EC-READY-ALL",
+      "requirement": "Longpartialerase→immediatesuccessors across editingandviewportoperations.",
+      "oracle": "PublicrootSDKcontrols + actualmouse/wheeladapterpath; actualpixel/prefix/originalCPUAAqualification or properindependentreferenceandstate. Readbacksoutsideprimarynormal160Moveperformance.",
+      "acceptance": "Targetedcandidatecasesafter1600Move40copieslongUp: nextpartialerase, wheelpan, ctrlwheelzoom, rectanglecreate+drag, stickycreate+drag, tablecreate+drag, imageexistingdrag. EachstartswithoutwaitingcanUndo/canonicalsettle; toolselect is publiccontrolawaitonlyasnecessaryanditslatencycounts. Preseednonink/image/resourcesbeforelongerase. Recordcorrectnextcontent/geometryposebeforeupduringMove,noinputreject/sessionleak/lostlateststate. Onebaselineoldmatchingdensegestureforeachbroadfamily(erase/navigation/nonink)minimum; fulloldtypesoptional. No CartesianofeveryDPR/objectcount.",
+      "evidence_required": [
+        "post-erase-action-matrix.json",
+        "active-feedback-pixel-proof.json",
+        "admission-commit-presentation.json"
+      ]
+    },
+    {
+      "id": "EC-READY-3S",
+      "requirement": "Large-scene eraser tail/recovery ≤3000ms, target≤2000ms.",
+      "oracle": "Browsermonotonicdispatch+actualpublicRuntime/DOM/content/GPU-qualifiedframe identities, originalsource/SDKboundfixtures.",
+      "acceptance": "T0=predecessorlongUpdispatchstart (includes blockinginsideUp; do notstartclockonlyafterreturn). ReportUpreturn,firsteligibleSDKstate,firstactualsuccessorcorrectfeedback,lateststablecanonicalfinishseparately. Forno-successorreadinesscase allapplicablereadyaxes/canonicalsettle mustbe≤3000ms. Foractive-successorcase firstcorrectsuccessorfeedbackmustbe≤3000msfromT0; itsowncompletionfromitsUpalso≤3000msifinputthenstops. p50/p95/maxduringMoves/gapsallreported; do notinterpret3sasallowedcontinuousdraglag. >3000msmeansREMAINS_BLOCKED_PERFORMANCEandtasknotclaimcomplete. Benchmarkhas40×7199/1600Moves/DPR2desktop;user42privatehistorymaydiffer,limitsmuststayexplicit.",
+      "evidence_required": [
+        "interaction-recovery-timing.json",
+        "performance-classification.json"
+      ]
+    },
+    {
+      "id": "EC-READY-CORRECT",
+      "requirement": "Fullchainlatestdocumentstate/History/Scene/feedbackcorrectness.",
+      "oracle": "FrozenfullCPUexact/pixels/actualOperationHistory/contacts plusparentkeepers.",
+      "acceptance": "Pan/zoommutatesonlyviewport;objecttransformandcreatecommitexactonce;eraserIDs/masks/UndoRedoexact,sourcecancel/noop/oldcompletionpreservesnewfeedback,frontbackorder/background/images/textandmasksvalid. Busycontroladmissionalone/sameoldpixelcontent/RAF/Undotruecannotqualify.",
+      "evidence_required": [
+        "post-erase-action-matrix.json",
+        "active-feedback-pixel-proof.json",
+        "regressions.json"
+      ]
+    }
+  ]
+}

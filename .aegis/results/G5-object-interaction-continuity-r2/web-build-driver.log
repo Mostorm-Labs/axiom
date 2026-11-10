@@ -1,0 +1,9 @@
+{"name": "web-normal-environment-offline", "returncode": 0, "elapsed_seconds": 0.3844073750078678}
+{"name": "web-normal-configure", "returncode": 0, "elapsed_seconds": 4.095523415948264}
+{"name": "web-normal-build", "returncode": 0, "elapsed_seconds": 151.29870179202408}
+{"name": "web-normal-install", "returncode": 0, "elapsed_seconds": 0.02009187499061227}
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/build-normal-demo.py", line 99, in <module>
+    assert after['source_tree_sha256'] == before['source_tree_sha256'], 'Source changed during build'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Source changed during build

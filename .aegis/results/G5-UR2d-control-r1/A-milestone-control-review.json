@@ -1,0 +1,53 @@
+{
+  "status": "A_MILESTONE_SUPPORTING_REVIEW_WITH_FINAL_CHECK_PENDING",
+  "selection_decisions": 55,
+  "mismatches": [],
+  "costs": [
+    {
+      "copies": 1,
+      "old_median_ms": 969.830875,
+      "candidate_median_ms": 0.328834,
+      "ratio": 2949.302307547273
+    },
+    {
+      "copies": 8,
+      "old_median_ms": 7828.387625,
+      "candidate_median_ms": 3.200333,
+      "ratio": 2446.1165838054976
+    },
+    {
+      "copies": 16,
+      "old_median_ms": 15702.440208,
+      "candidate_median_ms": 6.541792,
+      "ratio": 2400.3270369953675
+    },
+    {
+      "copies": 32,
+      "old_median_ms": 32258.957791,
+      "candidate_median_ms": 10.46375,
+      "ratio": 3082.925126364831
+    }
+  ],
+  "candidate_lease_after_clear": 0,
+  "old_file_sha256": "6ec29a9f83edb54f84e982f567c47a6b9a8709760d689d0d519b3ff0027badbb",
+  "candidate_file_sha256": "9738337daf2a59f4a8c5ee54d3a170f8b2c7ac6475ed9a738030c8793034f6cd",
+  "limits": [
+    "Test corpus currentlysmall55decisions, widerfinite/contact/fork checks stillrequired.",
+    "Candidate work aggregate includeswarmup; noallwarmzero assertionhere.",
+    "NoactualcurrentUR2dWebfunctional yet.",
+    "Fullold32copytiming32sperpass isnotphysicalbrowserlatency."
+  ],
+  "supporting_independent_oracle": {
+    "status": "SUPPORTING_NATIVE_A_PARITY_VERIFIED",
+    "rows": 172,
+    "mismatches": 0,
+    "leases_after_clear": 0,
+    "actual_log": "extra-independent-result.log",
+    "source": "selection-extra-independent.cpp",
+    "oracle": "frozen-selection-kernel.cpp",
+    "old_source": ".aegis/results/G5-UR2d-selection-up-r1/baseline-oracles/selection_region_geometry.cpp",
+    "old_source_sha256": "44ea582c5294e6f0f8d39a24cfcc17afeb6076b47a188a891fd9efffb167e2da",
+    "limitation": "Supplement tooriginalfrozenAcorpus; nativeonly, noWeb/SLOclaim; no writes toproduction/test."
+  },
+  "public_functional_stage": "A-F OBSERVEDwithcoldS2Move90msandwarm7ms;finalsource mayincludenarrowSectioncomposedtransformfixbeforeCOMPARE"
+}

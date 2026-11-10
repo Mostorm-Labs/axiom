@@ -1,0 +1,21 @@
+{
+  "schema": "g5-ur2d-continuation-evidence-v1",
+  "parent_evidence": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/evidence-contract.json",
+    "sha256": "3c0319f7b218b5c2128ec7ad8823c5c51723bf0e36560aeb6df200dc6202c868"
+  },
+  "verification_ref": {
+    "path": "verification.lock.json",
+    "sha256": "1e89fc689bee2c8e66bf5760ebcf068652b6d4e9ebb087f2e73c5ec2e579b5db"
+  },
+  "result_root": ".aegis/results/G5-UR2d-selection-up-continue-r1",
+  "required_additional_mechanics": [
+    "driver-repair-tests.json",
+    "continuation-ledger.json",
+    "driver-stage-checkpoints.json"
+  ],
+  "original_obligations_unchanged": true,
+  "prior_result_is_history": "Referenceoriginalr1failedresult+manifest/guardhashes,donotoverwrite. Finalindex explicitlyrecords whichparent itemsreusedexactly andwhich newlyproduced.",
+  "review_materialization": "Hashboundlocalpostimages+delta+raw+build/source/SDK/runnerids insharedtree; localcontrolreviewonly,noremoteP34claim.",
+  "notify_control": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+}

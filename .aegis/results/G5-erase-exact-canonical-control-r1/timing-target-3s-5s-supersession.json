@@ -1,0 +1,38 @@
+{
+  "schema": "g5-local-user-acceptance-supersession-v1",
+  "status": "CURRENT_USER_DIRECTIVE",
+  "created_utc": "2026-11-10T13:54:20.331735+00:00",
+  "human_request": "这个也不用做这么死，先定个3s/5s的，看看能优化到什么程度吧",
+  "superseded_clause": {
+    "package": ".aegis/packages/G5-post-erase-interaction-readiness-r1/package.json",
+    "sha256": "3810f315f31823a4a8693a32a170b649b552ea2708ebed8076de602568cac39d",
+    "clauses": [
+      "EC-READY-3S hard3000ms/goal2000ms",
+      ">3scannotreadywithperformancefindings",
+      "REMAINS_BLOCKED_PERFORMANCE_OVER_3S terminalblocker"
+    ]
+  },
+  "current_timing_policy": {
+    "goal_ms": 3000,
+    "provisional_reference_ceiling_ms": 5000,
+    "start": "PredecessorlongUpdispatchstart;includeallblockingtime",
+    "threshold_role": "Engineeringtargets/referenceclassification,notnewhardstopcriterion",
+    "reporting": [
+      "within3s",
+      "3to5s",
+      "over5s"
+    ],
+    "over_goal_behavior": "Retainallactualslowcases,phaseattributionandperformancefindings;continuesafeauthorizedA+Boptimization. Crossing3/5salonecannotdeclaretaskblocked orforceuserapproval.",
+    "not_general_move_SLO": true
+  },
+  "unchanged_requirements": [
+    "Actualsuccessorpartialerase/wheelpan/ctrlzoom/shape-sticky-tablecreateanddrag/imageexistingdragmatrix",
+    "Noawaitsettle/Undoenabledwaitbeforebusytesting",
+    "Actualcorrectactivepixels/poseproofnotonlyadmission/RAF/Undotrue",
+    "Semanticatomicity/history/maskIDs/normalpixels/resources/receiptinvariantsblocking",
+    "Budgets256/512/64andold4317/Demos/oldrawimmutable",
+    "Parentfrozen160Move3pairsandfiniteownedbrowserwindows",
+    "NoasyncUp/workers/publicAPI/schema/AA/Gitpublicationexpansion"
+  ],
+  "execution": "Thisdirectusersteeringoverridesstricteroldpackageclauses. No newpackageorpermissioncycle required; bindthisrecordinimplementationresult/acceptanceindex."
+}

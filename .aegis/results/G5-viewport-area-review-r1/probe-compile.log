@@ -1,0 +1,166 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:21:36: error: use of undeclared identifier 'work'; did you mean 'fork'?
+   21 |      internal::RenderExecutionWork work;internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,*t.frame.surface,&target,0,true,cache.options.sharedMaxBytes,work,target.describe().kind);
+      |                                    ^~~~
+      |                                    fork
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h:459:8: note: 'fork' declared here
+  459 | pid_t    fork(void) __WATCHOS_PROHIBITED __TVOS_PROHIBITED;
+      |          ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:21:16: error: no member named 'RenderExecutionWork' in namespace 'canvas::render::internal'; did you mean 'RenderExecutionScope'?
+   21 |      internal::RenderExecutionWork work;internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,*t.frame.surface,&target,0,true,cache.options.sharedMaxBytes,work,target.describe().kind);
+      |                ^~~~~~~~~~~~~~~~~~~
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/../src/render_execution.hpp:37:7: note: 'RenderExecutionScope' declared here
+   37 | class RenderExecutionScope final {
+      |       ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:21:195: error: use of undeclared identifier 'work'; did you mean 'fork'?
+   21 |      internal::RenderExecutionWork work;internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,*t.frame.surface,&target,0,true,cache.options.sharedMaxBytes,work,target.describe().kind);
+      |                                                                                                                                                                                                   ^~~~
+      |                                                                                                                                                                                                   fork
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h:459:8: note: 'fork' declared here
+  459 | pid_t    fork(void) __WATCHOS_PROHIBITED __TVOS_PROHIBITED;
+      |          ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:21:72: error: no matching constructor for initialization of 'internal::RenderExecutionScope'
+   21 |      internal::RenderExecutionWork work;internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,*t.frame.surface,&target,0,true,cache.options.sharedMaxBytes,work,target.describe().kind);
+      |                                                                        ^         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/../src/render_execution.hpp:39:5: note: candidate constructor not viable: no known conversion from 'pid_t ()' (aka 'int ()') to 'RenderCacheWork &' for 8th argument
+   39 |     RenderExecutionScope(ExecutionPurpose,const FramePlan&,SkSurface&,
+      |     ^
+   40 |         const void* provider,std::uint64_t resource,bool gpuEnabled,
+   41 |         std::size_t capacity,RenderCacheWork&,RenderTargetKind declared=RenderTargetKind::kExternal) noexcept;
+      |                              ~~~~~~~~~~~~~~~~
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/../src/render_execution.hpp:43:5: note: candidate constructor not viable: requires 1 argument, but 9 were provided
+   43 |     RenderExecutionScope(const RenderExecutionScope&)=delete;
+      |     ^                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:27:33: error: no member named 'cout' in namespace 'std'; did you mean 'count'?
+   27 |    auto v=cache.objectWork;std::cout<<nlohmann::json{{"logical_width",w},{"logical_height",h},{"DPR",2},{"large_budget",large},{"optionalMiB",large?256:32},{"sharedMiB",large?512:96},{"entryMiB",large?64:8},{"static_builds",v.builds},{"static_hits",v.hits},{"static_denials",v.denials},{"full_scene_draws",v.fullSceneDraws},{"active_draws",v.activeDraws},{"leased_bytes",v.leaseBytes},{"draw_present_sync_ms",timings}}.dump()<<std::endl;
+      |                                 ^~~~
+      |                                 count
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/count.h:86:1: note: 'count' declared here
+   86 | count(_InputIterator __first, _InputIterator __last, const _Tp& __value) {
+      | ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:27:28: error: reference to overloaded function could not be resolved; did you mean to call it?
+   27 |    auto v=cache.objectWork;std::cout<<nlohmann::json{{"logical_width",w},{"logical_height",h},{"DPR",2},{"large_budget",large},{"optionalMiB",large?256:32},{"sharedMiB",large?512:96},{"entryMiB",large?64:8},{"static_builds",v.builds},{"static_hits",v.hits},{"static_denials",v.denials},{"full_scene_draws",v.fullSceneDraws},{"active_draws",v.activeDraws},{"leased_bytes",v.leaseBytes},{"draw_present_sync_ms",timings}}.dump()<<std::endl;
+      |                            ^~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/count.h:86:1: note: possible target for call
+   86 | count(_InputIterator __first, _InputIterator __last, const _Tp& __value) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:576:1: note: candidate function [with _CharT = char, _Traits = std::char_traits<char>, _Allocator = std::allocator<char>] not viable: no overload of 'count' matching 'basic_ostream<char, std::char_traits<char>> &' for 1st argument
+  576 | operator<<(basic_ostream<_CharT, _Traits>& __os, const basic_string<_CharT, _Traits, _Allocator>& __str) {
+      | ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:344:55: note: candidate template ignored: couldn't infer template argument '_Traits'
+  344 | _LIBCPP_HIDE_FROM_ABI basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& __os, _CharT __c) {
+      |                                                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:349:55: note: candidate template ignored: couldn't infer template argument '_CharT'
+  349 | _LIBCPP_HIDE_FROM_ABI basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& __os, char __cn) {
+      |                                                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:376:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  376 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:381:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  381 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, signed char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:386:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  386 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, unsigned char __c) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:398:1: note: candidate template ignored: couldn't infer template argument '_CharT'
+  398 | operator<<(basic_ostream<_CharT, _Traits>& __os, const char* __strn) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:437:53: note: candidate template ignored: couldn't infer template argument '_Traits'
+  437 | _LIBCPP_HIDE_FROM_ABI basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>& __os, const char* __str) {
+      |                                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:443:1: note: candidate template ignored: couldn't infer template argument '_Traits'
+  443 | operator<<(basic_ostream<char, _Traits>& __os, const signed char* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:450:1: note: candidate template ignored: couldn't infer template argument '_Traits'
+  450 | operator<<(basic_ostream<char, _Traits>& __os, const unsigned char* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:569:33: note: candidate template ignored: couldn't infer template argument '_Stream'
+  569 | _LIBCPP_HIDE_FROM_ABI _Stream&& operator<<(_Stream&& __os, const _Tp& __x) {
+      |                                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:588:1: note: candidate template ignored: couldn't infer template argument '_CharT'
+  588 | operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __ec) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:623:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  623 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, wchar_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:626:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  626 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const wchar_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:629:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  629 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char16_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:632:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  632 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char32_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:635:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  635 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char16_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:638:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  638 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char32_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:644:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  644 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char8_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:647:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  647 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, char8_t) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:650:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  650 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char8_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:653:34: note: candidate template ignored: couldn't infer template argument '_Traits'
+  653 | basic_ostream<wchar_t, _Traits>& operator<<(basic_ostream<wchar_t, _Traits>&, const char8_t*) = delete;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:657:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  657 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char16_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:660:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  660 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, char32_t) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:663:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  663 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char16_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:666:31: note: candidate template ignored: couldn't infer template argument '_Traits'
+  666 | basic_ostream<char, _Traits>& operator<<(basic_ostream<char, _Traits>&, const char32_t*) = delete;
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2837:1: note: candidate template ignored: couldn't infer template argument '_Expr1'
+ 2837 | operator<<(const _Expr1& __x, const _Expr2& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2846:1: note: candidate template ignored: couldn't infer template argument '_Expr'
+ 2846 | operator<<(const _Expr& __x, const typename _Expr::value_type& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__cstddef/byte.h:63:38: note: candidate template ignored: requirement 'is_integral<std::string>::value' was not satisfied [with _Integer = string_t]
+   63 | _LIBCPP_HIDE_FROM_ABI constexpr byte operator<<(byte __lhs, _Integer __shift) noexcept {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__random/uniform_int_distribution.h:234:1: note: candidate template ignored: could not match 'uniform_int_distribution' against 'basic_string'
+  234 | operator<<(basic_ostream<_CharT, _Traits>& __os, const uniform_int_distribution<_IT>& __x) {
+      | ^
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkRefCnt.h:366:6: note: candidate template ignored: could not match 'sk_sp' against 'basic_string'
+  366 | auto operator<<(std::basic_ostream<C, CT>& os, const sk_sp<T>& sp) -> decltype(os << sp.get()) {
+      |      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:392:1: note: candidate template ignored: could not match 'const _CharT *' against 'string_t' (aka 'std::string')
+  392 | operator<<(basic_ostream<_CharT, _Traits>& __os, const _CharT* __str) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:582:1: note: candidate template ignored: could not match 'basic_string_view' against 'basic_string'
+  582 | operator<<(basic_ostream<_CharT, _Traits>& __os, basic_string_view<_CharT, _Traits> __sv) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:594:1: note: candidate template ignored: could not match 'shared_ptr' against 'basic_string'
+  594 | operator<<(basic_ostream<_CharT, _Traits>& __os, shared_ptr<_Yp> const& __p) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:608:1: note: candidate template ignored: could not match 'unique_ptr' against 'basic_string'
+  608 | operator<<(basic_ostream<_CharT, _Traits>& __os, unique_ptr<_Yp, _Dp> const& __p) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h:614:1: note: candidate template ignored: could not match 'bitset' against 'basic_string'
+  614 | operator<<(basic_ostream<_CharT, _Traits>& __os, const bitset<_Size>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iomanip:293:1: note: candidate template ignored: could not match '__iom_t8' against 'basic_string'
+  293 | operator<<(basic_ostream<_CharT, _Traits>& __os, const __iom_t8<_MoneyT>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/iomanip:390:1: note: candidate template ignored: could not match '__iom_t10' against 'basic_string'
+  390 | operator<<(basic_ostream<_CharT, _Traits>& __os, const __iom_t10<_CharT>& __x) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2855:1: note: candidate template ignored: requirement '__is_val_expr<std::string>::value' was not satisfied [with _Expr = string_t]
+ 2855 | operator<<(const typename _Expr::value_type& __x, const _Expr& __y) {
+      | ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-viewport-area-review-r1/budget-area-probe.cpp:32:32: error: no member named 'cerr' in namespace 'std'
+   32 | }catch(std::exception& e){std::cerr<<e.what()<<std::endl;return 1;}}
+      |                                ^~~~
+7 errors generated.

@@ -1,0 +1,37 @@
+{
+  "schema": "g5-ur2d-implementation-design-v1",
+  "owner_command_path": {
+    "Interaction": "CanvasEditingRuntime owns region pointer/session, candidate roots and eraser traces; all canonical masks apply through prepareRecord/publication reservation/OperationEngine/commitPrepared/observer/Scene",
+    "Render": "existing SkiaRenderer preparedGeometry_/eraseQueries_ own source-bound derived exact query and leases; no SDK owner or public consumer exports"
+  },
+  "A": {
+    "flow": "world polygon -> existing render exact owner -> object-local EvenOdd selection + original2e-4contact -> local history subtraction once -> bounds-cull prepared components -> originalRoot publication",
+    "eligible": "valid compactv4 round/marker; keep free independent selection fallback for noncompact/unsupported/pathops optional failure; no AABB positive hit",
+    "copy": "Interaction passes published immutable RuntimeSceneRecord with composed world transform; no full canonical stroke clone just to override transform",
+    "identity": "complete immutable content owner+pointee identity and validated content/config; source/context epoch via renderer; history via existing retained SharedVector/MaskHistoryPlan complete equality; polygon exactlocalfloat/EvenOdd/contact basis; noObjectId/hash-only key",
+    "leases": "body/source/index via PreparedGeometryCache; query path/history via EraseMaskPathCache local8MiB and existing32/96manager; any retained new key/result charged; query-scope pins bounded and clear on epoch/cache teardown",
+    "tests": [
+      "frozen independent old selection CLI/kernel/archive",
+      "paired3 native7199/two80history1/8/16/32; short/history/affine/EvenOdd/tangent/sliver/invalid/propertycorpus",
+      "existing76keepers; publicOLD-F/A-F lifecycle"
+    ]
+  },
+  "B": {
+    "flow": "actual eraserFinish timing per exactquery/newmask/historyprepare/publicationreserve/apply/observe/Scene before optimization",
+    "candidate": "remove only measured repeated equivalent transform/query/history work using scoped leased preparation and completebasis; do not change semantic validation/atomicity/order",
+    "tests": [
+      "pairedUp baseline/candidate phases through realRuntime",
+      "oldcomponent oracle/targets/maskbytes/UndoRedo/no-op/cancel/refusal recovery",
+      "B-F andCOMPARE same-tasknextDown immediate navigation"
+    ]
+  },
+  "conditional_semantic_edits": null,
+  "public_API_impact": "none, existing private sourceRender/helper seam may extend; publicJS/CABI untouched",
+  "unresolved_semantic_decisions": [],
+  "budgets": {
+    "optionalMiB": 32,
+    "sharedMiB": 96,
+    "queryMiB": 8
+  },
+  "browser_policy": "4serialnewIDs240seceach; no source writes/heavyGPU tests duringworkers; userpagesuntouched"
+}

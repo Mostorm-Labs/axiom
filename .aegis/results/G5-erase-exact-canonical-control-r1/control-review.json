@@ -1,0 +1,96 @@
+{
+  "schema": "g5-control-scoped-execution-review-v1",
+  "created_utc": "2026-11-10T14:59:57.719861+00:00",
+  "status": "INCOMPLETE_EVIDENCE_LONG_TAIL_REMAINS",
+  "official_gate": false,
+  "result": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/result.json",
+    "sha256": "12b5d7cd1ef09f9302a8a9f35c37d547174bc719ebae38620bddd1094529b8a0"
+  },
+  "source": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/source-manifest.json",
+    "sha256": "d389654c14caa69c3e7025b03cfa4f3ca3a85f17395360e4bdd568172982d8be"
+  },
+  "obligations": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/obligation-index.json",
+    "sha256": "5e0355a3893a17b245bcb4823d705a8831d766d87c1dd2e2887dd2a60d8dccfa"
+  },
+  "artifact_verification": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/final-artifact-check.json",
+    "sha256": "c8972919a733eef2f7ac0f0d555b04ad81429e5936942e28c128b82d25d1b4ed"
+  },
+  "native_finalsource": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/independent-final-source.json",
+    "sha256": "21a47e991cf8db64d95a3edfe1cef613fcdb2c1b96d40569fd0ed5e0d4582582"
+  },
+  "finalDemoHTTP": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/final-demo-http.json",
+    "sha256": "efd04899ddae622ea6d587a9bf4e1d7b68673ab4c87d57b40d5368f867a34d27"
+  },
+  "timing_user_supersession": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+    "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+  },
+  "independent_classifications": [
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/stress-control-classification.json",
+      "sha256": "ec68fd0dda7ad62207d78ef74e272dfafcd63a726ad041b6d9f2295a894246c1"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/readiness-probe-classification.json",
+      "sha256": "557f2181cafc74e3c98ad42b7d27fe365f82263970e17d809b54ff1515a24cfd"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/sticky-harness-classification.json",
+      "sha256": "201ba8731e2f9e6386cf06f7d829b0c0f5f491f0c24e113d93c779b36873d086"
+    }
+  ],
+  "observed": {
+    "primary_pairs": "3old/candidatepairs6rows9mainUppervariant; independentfullCPU/AAfinalRedo proofs and rawhashes verified",
+    "native": "56 earliercheckpoint; finalchangedsource affected10producerpass and6controlpass.9Node3Pythonfocusedcontrolpass, producer63Node37Python120boundariesread.",
+    "primary_mainUp_median_ms": {
+      "old": 1012.6,
+      "candidate": 967.3
+    },
+    "long1600Move": {
+      "old_mainUp_ms": 4162.6,
+      "candidate_mainUp_ms": 4130.5,
+      "old_successorUp_ms": 9219.3,
+      "candidate_successorUp_ms": 9125.5,
+      "candidate_actualsuccessorfeedback_upperbound_frompredecessorUp_ms": 6114.5
+    },
+    "continuous_candidate_mainUp_ms": [
+      898.6,
+      907.5,
+      926.6,
+      912.4,
+      2080.8,
+      5814.9,
+      7506.2,
+      9451.3
+    ],
+    "readiness_qualified_unique_rows": 8,
+    "readiness_required_rows": 11,
+    "source_SDK_stability": "All sampled freeze==after; production current same asfinalSDKsampledsource; final4319sixHTTPfilesindependentlymatchinstall"
+  },
+  "blocking_evidence_deficits": [
+    "Only8of10continuousrounds durable, finalstresspixels/History/receipt proof missing after boundedtimeout",
+    "Stickyactivewitnessinvalidfromshape-onlywidth0andwrongmaterial; finalcorrecttransformcannotreplaceactivepixelproof",
+    "CandidateTable/Image neverrunafterlastsamplerstop"
+  ],
+  "performance_findings_not_blocking_thresholds": [
+    "3sgoal5sreferenceperlatestuser, retainedallover5s; no hardtimePASS",
+    "Long1600Up/nextUp nearlyunchanged; no claimuser10sresolved",
+    "SynchronousUpandhistorygrowthstillprimaryobservedproblem; exactWebphasecausependingmeasurement",
+    "100mszoomnegativeproveddelayedactualfeedback; later5.112s witnessqualified",
+    "Sticky19.825s invalidwitness is not product performancemeasurement"
+  ],
+  "root_cause_status": "Cachehistory8MiB/cardinality/prefix-progress constraints are source hypotheses; do not claim measured Web root. Need exactsamebuild phase attribution before furtherproductionchange.",
+  "next_scope_recommendation": [
+    "RepairverificationROIwithtypedappearance/publicbounds/resourcebasisandnegativecases beforeanynextmatrix",
+    "Measure exact matching WASM longUp/cumulativehistory phases; distinguish newqueryunion/historyprepare/differences/serializationScene/canonicalrender costs",
+    "Optimize dominant bounded history/query work underexistingowner; usefresh controlled proofonlyafter rootconfirmed; workersdeferred"
+  ],
+  "demo_url": "http://127.0.0.1:4319/example.html",
+  "preservation": "Allhistoricalraw/failedattempts/userDemosanddocumentskept; no commit/push; no publicSDK/schema/AA/budgetchangesbythisA+Bscope."
+}

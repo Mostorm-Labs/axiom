@@ -1,0 +1,62 @@
+{
+  "schema": "g5-ur2d-continuation-execution-v1",
+  "status": "FROZEN_AUTHORIZED",
+  "parent_closure": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/execution-contract.json",
+    "sha256": "69b3a8ee285977bde8e9f8db6d0833c7f46fc7002126d0b1aa57dc2de590b2fe"
+  },
+  "continue_until_terminal_state": true,
+  "scope_unchanged": true,
+  "continuation_decision": {
+    "path": "continuation-decision.json",
+    "sha256": "d0c0dec186b28863e18e2f3e8720600d4ca90e1860eff27a6b13338084a2a710"
+  },
+  "result_root": ".aegis/results/G5-UR2d-selection-up-continue-r1",
+  "output_root": "out/G5-UR2d-selection-up-continue-r1",
+  "old_result_root_immutable": ".aegis/results/G5-UR2d-selection-up-r1",
+  "steps": [
+    "Offline driverrepair (activeverificationrunners allowedparentpaths); unitvalidate andreportHARNESS_READY; noawaitexternalapproval.",
+    "PreservefrozenoldSDK/oracles/RED andrunpreflightacceptedproductsource; implementA andnativeregressions; runA-Fifofflinerepairclear.",
+    "NotifyMILESTONE_A_READYthencontinueBmeasureoptimizevalidate withinparent scope; noextraapprovalwait.",
+    "Run B-F thenfinalCOMPARE withfrozenoldordinarySDK andfinalcandidate; threepairediterationsinsideoneprocess withboundedtransferandsequentialcases.",
+    "Completeparentrequiredkeepers/evidence/newnormaldemo; returnexactbundle andproactivelycallbackcontrol."
+  ],
+  "driver_requirements": [
+    "RetainUint8Arraybuffer andmetadata only; stream max256KiB chunks (base64 acceptable) toNodeandpersistperstage, thenrelease before nextsurface/fixture. NeverreturnallRGBA asnumberarrays in oneevaluate.",
+    "Mark timing phase; no readbacks/snapshots/transfers mixed with primary timing. Console/fullrawlogs stream outsidepage tofile orbounded ringpluscount; no unbounded Browserprotocolaccumulation.",
+    "Report stage before/afterSDKrestore,canonicalsettle,creation,selectionmoves,Up,nextDown,pixel/snapshot,transfer,close forcrashattribution; eachstage durable enough toidentifylastactivity.",
+    "Worker result nonOBSERVED meansfailure/nonzero; guard successrequiresreasoncompleted+returncode0+workerOBSERVED+source/artifactstable+cleanup. appendonlycontinuationledger referencesoriginalOLD-FwithFAIL_CLOSED.",
+    "Restore observer beforeclosingSDK. Correct terminal/lifecycle facts, noforgedlost/cancel success; immediate nextDown no wait.",
+    "FinalCOMPARE acceptsrequest foroldandcandidateSDKs andrecordsdistinct source/artifactidentity for each. No oldfile mutation orrebuildbaseline."
+  ],
+  "browser_allowance": {
+    "newprocessstarts": 3,
+    "ids": [
+      "U2D1-A-F",
+      "U2D1-B-F",
+      "U2D1-COMPARE"
+    ],
+    "perprocess_seconds": 240,
+    "additional_max_seconds": 720,
+    "prior_charged_seconds": 40,
+    "overall_cap_seconds": 960,
+    "rss_limit_mib": 3072,
+    "new_ids_permitted": false
+  },
+  "forbidden": "Allparentforbiddenchanges; noA/Brangeexpansion, noUR3/workers/budgets/semantics/Gitpublication.",
+  "terminal_success": "BothA+B meetallparentclosure requirements; local performancefindings allowedonlyasfrozen; noformalP34.",
+  "terminal_blockers": [
+    "UNRESOLVED_AUTHORITY_OR_SCOPE",
+    "NEW_EXACT_PIXEL_COMMIT_RECEIPT_REGRESSION",
+    "RESOURCE_LIFETIME_FAILURE",
+    "REPAIRED_DRIVER_HARD_GUARD",
+    "REQUIRED_FUNCTIONAL_EVIDENCE_MISSING"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "active_callback_required": true,
+    "do_not_wait_after": "HARNESS_READYorAcheckpoint if clear; continueoriginalBscope.",
+    "commit_push": false
+  }
+}

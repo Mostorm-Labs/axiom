@@ -1,0 +1,97 @@
+{
+  "schema": "g5-r2-layout-identity-stage-result-v1",
+  "task": "G5-object-interaction-continuity-r2",
+  "obligation": "LI-01",
+  "status": "LI_01_IMPLEMENTED_VERIFIED",
+  "overall_r2_status": "IN_PROGRESS",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "source_files": [
+    {
+      "path": "runtime/render/src/render_group_manager.cpp",
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "bytes": 9051
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "7e8d1b50aa434e5ebc8ad074e1ea97125f2d10c7bb7ef5e580bcd323fdef1f69",
+      "bytes": 47874
+    },
+    {
+      "path": "runtime/render/tests/object_interaction_continuity_r2_test.cpp",
+      "sha256": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b",
+      "bytes": 8735
+    }
+  ],
+  "red_green": {
+    "old_control_probe_compile_exit": 0,
+    "old_control_probe_exit": 0,
+    "old_assertion_compile_exit": 0,
+    "old_assertion_exit": 1,
+    "old_assertion_expected_red": true,
+    "candidate_probe_compile_exit": 0,
+    "candidate_probe_exit": 0,
+    "candidate_probe_rows": [
+      {
+        "kind": 0,
+        "layout_digest_equal": 1,
+        "distinct_pointer": 1,
+        "equal_values_produce_damage": 0,
+        "content_revision_before": 1,
+        "content_revision_after": 1
+      },
+      {
+        "kind": 1,
+        "layout_digest_equal": 1,
+        "distinct_pointer": 1,
+        "equal_values_produce_damage": 0,
+        "content_revision_before": 1,
+        "content_revision_after": 1
+      },
+      {
+        "kind": 2,
+        "layout_digest_equal": 1,
+        "distinct_pointer": 1,
+        "equal_values_produce_damage": 0,
+        "content_revision_before": 1,
+        "content_revision_after": 1
+      }
+    ],
+    "old_source_sha256": "83d9cfcb60a7f06cb2c621b98659f67c1f7d58e05410b094d891fc6e8ef88a6f"
+  },
+  "candidate_assertions": 428,
+  "equal_layout_cases": 16,
+  "invalidation_cases": 412,
+  "candidate_test_exit_code": 0,
+  "regressions": [
+    {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native",
+        "-R",
+        "^(G5ObjectInteractionLayoutIdentity|G5RenderDamage)$",
+        "--output-on-failure"
+      ],
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/layout-identity/ctest-green.log",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--object-continuity",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/layout-identity/static-pixels"
+      ],
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/layout-identity/static-regression.log",
+      "exit_code": 0
+    }
+  ],
+  "diff_check_exit_code": 0,
+  "next_action": "OI2-01 native staged publication fixture and compatible preparation progress; dense mixed pixels remain required",
+  "browser_starts": 0,
+  "commit_push": false,
+  "preserved": [
+    "r1 package/results",
+    "UR2c package/results/ledger",
+    "4298 demo and user document"
+  ]
+}

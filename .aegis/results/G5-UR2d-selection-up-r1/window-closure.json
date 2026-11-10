@@ -1,0 +1,40 @@
+{
+  "schema": "g5-ur2d-window-hard-stop-audit-v1",
+  "id": "U2D1-OLD-F",
+  "effective_status": "FAIL_CLOSED_RSS_GUARD",
+  "raw_ledger_status": "COMPLETED",
+  "raw_ledger_note": "Runner used cleanup-only completion label. That label is not functional acceptance; guard rss_limit and worker Targetcrashed are authoritative. Rawledgerpreserved.",
+  "guard": {
+    "command": [
+      "node",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-r1/OLD-F-request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-r1/local-web/U2D1-OLD-F"
+    ],
+    "reason": "rss_limit",
+    "returncode": 0,
+    "elapsed_s": 39.99468554195482,
+    "peak_process_family_rss_kib": 3331328,
+    "rss_limit_kib": 3145728,
+    "timeout_s": 240,
+    "last_stage": {
+      "stage": "closed",
+      "status": "FUNCTIONAL_OR_HARNESS_FAILURE",
+      "error": "page.evaluate: Target crashed \n    at main (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:92:26)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs:98:56"
+    },
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "charged_seconds": 40,
+  "remaining_ids": {
+    "U2D1-A-F": "NOT_RUN_HARD_STOP",
+    "U2D1-B-F": "NOT_RUN_HARD_STOP",
+    "U2D1-COMPARE": "NOT_RUN_HARD_STOP"
+  },
+  "new_starts_performed": 1,
+  "reuse_or_retry_performed": false,
+  "source_stable": true,
+  "oldfunctionalbaseline_satisfied": false,
+  "production_edit_authorized_after_this_failure": false,
+  "driver_failure_hypothesis": "Unconfirmed: driver stores full DPR2RGBA and snapshots in JSnumber arrays then serializes to Node alongside GPU/WASM. No rerunperformed; exactphase unavailable after crash. Do not attributeRSS solely to product."
+}

@@ -436,6 +436,20 @@ TEST_F(SelectionInput, SectionAreaPrefersContentAndWholeBoundaryProducesNonredun
     rectangle(40,40,560,260);EXPECT_EQ(selected(),roots);
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
 }
+TEST_F(SelectionInput, ParentedSectionBackgroundUsesComposedWorldTransform) {
+    const auto group=foundation::ObjectId::fromUint64(9910),section=foundation::ObjectId::fromUint64(9911);
+    semantic::ObjectRecord parent;parent.id=group;parent.kind=semantic::ObjectKind::kGroup;parent.kind_version=1;
+    parent.content=semantic::GroupContent{};parent.transform.tx=100;parent.transform.ty=100;parent.placement.order_key=semantic::OrderKey({4});
+    semantic::ObjectRecord container;container.id=section;container.kind=semantic::ObjectKind::kSection;container.kind_version=1;
+    container.content=semantic::SectionContent{{0,0,200,140},"",0,0};container.placement={group,semantic::OrderKey({1})};
+    semantic::ObjectRecord child;child.id=foundation::ObjectId::fromUint64(9912);child.kind=semantic::ObjectKind::kShape;child.kind_version=1;
+    child.content=semantic::ShapeContent{1,20,20};child.placement.order_key=semantic::OrderKey({5});child.transform.tx=115;child.transform.ty=115;
+    semantic::Operation operation{semantic::OperationId{foundation::ObjectId::fromUint64(9913)},semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{parent,container,child}}};
+    ASSERT_EQ(c.applyExternalOperation(operation,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    mode(runtime::CanvasSelectionMode::kRectangle);rectangle(110,110,140,140);
+    auto roots=selected();EXPECT_NE(std::find(roots.begin(),roots.end(),child.id),roots.end());
+    EXPECT_EQ(std::find(roots.begin(),roots.end(),group),roots.end());
+}
 TEST_F(SelectionInput, ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership) {
     runtime::ImageImportRequest image;image.objectId=foundation::ObjectId::fromUint64(9902);
     image.bytes={137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,4,0,0,0,181,28,12,2,0,0,0,11,73,68,65,84,120,218,99,100,248,15,0,1,5,1,1,39,24,227,102,0,0,0,0,73,69,78,68,174,66,96,130};

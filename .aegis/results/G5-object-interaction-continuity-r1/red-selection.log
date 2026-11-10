@@ -1,0 +1,92 @@
+Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 31 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 29 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (7 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (3 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (2 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (1 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt (4 ms)
+[ RUN      ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult (10 ms)
+[ RUN      ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion
+[axiom] present begin frame=3 objects=4 scene_records=4
+[       OK ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion (5 ms)
+[ RUN      ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion
+[       OK ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion (2 ms)
+[ RUN      ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=4 scene_records=4
+[       OK ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome (3 ms)
+[ RUN      ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity
+[axiom] present begin frame=3 objects=2 scene_records=2
+[       OK ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity (2 ms)
+[ RUN      ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels (2 ms)
+[ RUN      ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver
+[       OK ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver (1 ms)
+[ RUN      ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent
+[       OK ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent (2 ms)
+[ RUN      ] SelectionInput.SurfaceResizeKeepsCameraAndViewCoordinates
+[axiom] present begin frame=1 objects=3 scene_records=3
+[       OK ] SelectionInput.SurfaceResizeKeepsCameraAndViewCoordinates (1 ms)
+[ RUN      ] SelectionInput.UnsupportedTextureKeepsSupportedRectangleAndLassoSelection
+[axiom] finish begin pointer=1 objects=3 scene_gen=1
+[axiom] scene apply pointer=1 ok=1 objects=4 scene_gen=2
+[       OK ] SelectionInput.UnsupportedTextureKeepsSupportedRectangleAndLassoSelection (5 ms)
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[       OK ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (0 ms)
+[ RUN      ] SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration
+[       OK ] SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration (0 ms)
+[ RUN      ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+[       OK ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts (0 ms)
+[ RUN      ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument
+[axiom] present begin frame=2 objects=3 scene_records=3
+[       OK ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument (1 ms)
+[ RUN      ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget
+[       OK ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget (0 ms)
+[ RUN      ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject
+[       OK ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject (1 ms)
+[ RUN      ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+[       OK ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent (2 ms)
+[ RUN      ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[       OK ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement (2 ms)
+[ RUN      ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+[       OK ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation (0 ms)
+[ RUN      ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+[       OK ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable (7 ms)
+[ RUN      ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+[axiom] finish begin pointer=1 objects=3 scene_gen=1
+[axiom] scene apply pointer=1 ok=1 objects=4 scene_gen=2
+[       OK ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites (2 ms)
+[ RUN      ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots
+[       OK ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots (3 ms)
+[ RUN      ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership
+[       OK ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership (1 ms)
+[ RUN      ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery
+[       OK ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery (0 ms)
+[----------] 29 tests from SelectionInput (85 ms total)
+
+[----------] 1 test from SelectionBatch2Runtime
+[ RUN      ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+[       OK ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible (2 ms)
+[----------] 1 test from SelectionBatch2Runtime (2 ms total)
+
+[----------] 1 test from SelectionGroupScope
+[ RUN      ] SelectionGroupScope.KeepsAndUpdatesGroupOutlineDuringChildDrag
+[       OK ] SelectionGroupScope.KeepsAndUpdatesGroupOutlineDuringChildDrag (1 ms)
+[----------] 1 test from SelectionGroupScope (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 31 tests from 3 test suites ran. (89 ms total)
+[  PASSED  ] 31 tests.

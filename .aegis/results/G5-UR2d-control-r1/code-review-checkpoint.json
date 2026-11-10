@@ -1,0 +1,75 @@
+{
+  "schema": "g5-ur2d-control-code-review-checkpoint-v1",
+  "status": "PRODUCT_CODE_REVIEW_ACCEPTED_PENDING_ORIGINAL_WEB_MATRIX",
+  "reviewed_utc": "2026-11-10T11:30:41.725770+00:00",
+  "source": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0"
+  },
+  "result_checkpoint": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/result.json",
+    "sha256": "5574116193e3b76d87451b35962bdd6381cc62189c1dff639c4db6ee7c725511"
+  },
+  "scope": "UR2dA selection locality and UR2dB synchronousUp repeat exact preparation; noUR3/threads",
+  "product_findings": [],
+  "verification_finding": {
+    "file": "verification/runners/g5/ur2d_selection_up.mjs",
+    "line": 111,
+    "severity": "P2",
+    "description": "All-zero boundary supplied as necessary pixel test rejects allowed independent-AA differences. Preserve failed run; repair existing oracle integration before missing pairs1/2.",
+    "classification": "TASK_PACKAGE_DEFECT/harness omitted implementation of frozen AA obligation",
+    "repair_package": {
+      "path": ".aegis/packages/G5-UR2d-harness-completion-r1/package.json",
+      "sha256": "d55bf3e4cecdba6f85afa6a627fe470b0e4220b49cf9774acff64520e86685de"
+    }
+  },
+  "independent_checks": [
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-final-native.json",
+      "sha256": "6c1850f3e5e488908a0ba750fafaf0ed3f02cc31d9f7b49a2d64d94713c89496"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-current-55-comparison.json",
+      "sha256": "23f52473fc16b3b4432ab54f3d3f7b76d9f132296106cde9b829536ac9f767fa"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-A-parity.json",
+      "sha256": "a86c30519b36d754c584165a476edd171ca19a8c43617d87f37145fd1b060cca"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/memo-result.log",
+      "sha256": "5e57c76e9e6c4c07f005e3b289f8ad2c2eca35b3bfdbeec4c906022381df5104"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json",
+      "sha256": "99b46a3a40173fdaab43abb4fe0b29e81aeb62a785d3b248741a18b9fbbff9b9"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/snapshot-review.json",
+      "sha256": "71e9746bea1a600d3fc487c27571c4e7f83c60cac9a69660e41eab0c745b4de0"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/functional-input-review.json",
+      "sha256": "b26e2fd8f0b091cf64a137ee00c4e6af73f6ea3e2416fe4540b53fb46a296489"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/source-artifact-checks.json",
+      "sha256": "5bd69068f21e99ba5071d08fff2218f6ef14d0e6e686f6f52d610d408155d611"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-harness-checks.json",
+      "sha256": "96bbf84bac344ee00f706fc7e14fbf4fdfd6b67ebd7d1ecc9c33e3f03774789f"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-boundary.json",
+      "sha256": "2806b05cb8aaaaf5c1f8fdff49f6d2ab415c6c120163b841d84152a2679820d1"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-symbol-check.json",
+      "sha256": "16e0d843a18799d288eeddda9505654b68bfb2da0de127329a018c0c97ec7400"
+    }
+  ],
+  "evidence_status": "Original3browserpairs:1available,2requiredmissing;notnoise. RemainBLOCKED_EVIDENCE until corrected boundedrun completes.",
+  "no_official_gate_or_performance_pass": true,
+  "commit_push": false
+}

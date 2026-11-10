@@ -1,0 +1,28 @@
+{
+  "schema": "g5-ur2d-continuation-verification-v1",
+  "status": "FROZEN_CONTINUATION",
+  "parent_verification": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/verification.lock.json",
+    "sha256": "90a172ba999c82483f64b3f3f16910d48ae15af2f8a16cc1d25487d23147db10"
+  },
+  "parent_regressions": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/regression-plan.json",
+    "sha256": "4580e0b6f972a7f74bf40d0b9cab3f1010ebfe8dbd4c1df9ad2ec6d509562c8d"
+  },
+  "parent_workload": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/workload.json",
+    "sha256": "b252d812da776a98ae58a05b3120c9000f85564baa9e2ae2dd8b6541eb1fd8ce"
+  },
+  "obligation_ids": [
+    "D-A1",
+    "D-A2",
+    "D-B1",
+    "D-B2",
+    "D-PERF",
+    "D-REG"
+  ],
+  "acceptance_unchanged": true,
+  "dependency_repair": "Old native selectionRED+exactoracle and frozenordinarySDK are sufficient before productionmutation. Requiredold publicfunctional result iscollectedinsidefinalCOMPAREafterofflineharnessrepair, separatelyrecorded; old failed OLD-F staysfailed.",
+  "oracle": "Freezeoldkernel/archiveSDKbytes remainindependent anduntouched; candidate neveroracle. Matchscenarios, selectiontolerance andfailuresemantics unchanged.",
+  "driver_proof": "Before anyremainingbrowserrun, offline testsverifychunktransferdigest/length/limit, no bulk numberarrays, source/SDK identity mismatch, actualguard+workerfailure classifications, immutablepriorledger andpartialcapture. Theseensureparentrequiredproof works, notnewproducttests."
+}

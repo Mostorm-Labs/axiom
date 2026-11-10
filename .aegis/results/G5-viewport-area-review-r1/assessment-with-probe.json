@@ -1,0 +1,400 @@
+{
+  "schema": "g5-viewport-area-readonly-diagnosis-v1",
+  "status": "SOURCE_AND_EXISTING_COUNTERS_CORROBORATE_AREA_DEPENDENT_PATH_CLIFF",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "product_source": {
+    "runtime/render/src/skia_render_cache.cpp": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+    "runtime/render/src/skia_renderer.cpp": "68597803c1230f44c5c16c5db5c6e515416f01a37c6927e85e2a867788fa75dd",
+    "runtime/render/include/canvas/render/render_cache.hpp": "8b2bf98b5767ec0ca8f8ef7a08d8d5d4cb890859626fd23e6a0b84626dc226f2",
+    "runtime/render/tests/transient_display_retry_test.cpp": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485"
+  },
+  "observation": "User same-document smallcanvas smooth / fullscreen janky; 2videos show mixed objects and dense longlines, both nonink and stroke drag. Video cannot establish backingbufferDPR or exactframelatency.",
+  "code_findings": [
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "lines": [
+        56,
+        65
+      ],
+      "fact": "Static prefix/suffix allocations use full backing surface area times four bytes; one/two planes must fit optional32MiB. Cache build failure drops to full ordered scene traversal."
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "lines": [
+        941,
+        947
+      ],
+      "fact": "Static-scene optimization active kinds only shape/sticky/table/image; moving compactstroke excluded."
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "lines": [
+        1151,
+        1152,
+        1180
+      ],
+      "fact": "Per-object clipped support is refused beyond8MiB entry and global perobjectcache32MiB usesLRU; overlap/copy entries charged separately by object transform pixels."
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "lines": [
+        1026,
+        1047
+      ],
+      "fact": "Fullviewport work/scratch/display surfaces share96MiB with resident preparedframes/geometry/coverage; larger backingbuffers leave lessroom and may switchstagedwork."
+    },
+    {
+      "path": "runtime/render/tests/transient_display_retry_test.cpp",
+      "lines": [
+        374,
+        376
+      ],
+      "fact": "Existing dense correctness regression asserts staticreuse onlyDPR1; DPR2/4 fallback remainsaccepted; fullsizing was not performanceclosure."
+    }
+  ],
+  "budget_examples": [
+    {
+      "logical_width": 600,
+      "logical_height": 900,
+      "DPR": 2,
+      "physical_pixels": 2160000,
+      "rgba_plane_MiB": 8.23974609375,
+      "prefix_suffix_MiB": 16.4794921875,
+      "two_planes_fit_static_optional32MiB_before_metadata": true,
+      "one_full_crop_fit_entry8MiB": false,
+      "three_planes_MiB": 24.71923828125,
+      "four_planes_MiB": 32.958984375
+    },
+    {
+      "logical_width": 800,
+      "logical_height": 500,
+      "DPR": 2,
+      "physical_pixels": 1600000,
+      "rgba_plane_MiB": 6.103515625,
+      "prefix_suffix_MiB": 12.20703125,
+      "two_planes_fit_static_optional32MiB_before_metadata": true,
+      "one_full_crop_fit_entry8MiB": true,
+      "three_planes_MiB": 18.310546875,
+      "four_planes_MiB": 24.4140625
+    },
+    {
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "DPR": 1,
+      "physical_pixels": 1445310,
+      "rgba_plane_MiB": 5.513420104980469,
+      "prefix_suffix_MiB": 11.026840209960938,
+      "two_planes_fit_static_optional32MiB_before_metadata": true,
+      "one_full_crop_fit_entry8MiB": true,
+      "three_planes_MiB": 16.540260314941406,
+      "four_planes_MiB": 22.053680419921875
+    },
+    {
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "DPR": 2,
+      "physical_pixels": 5781240,
+      "rgba_plane_MiB": 22.053680419921875,
+      "prefix_suffix_MiB": 44.10736083984375,
+      "two_planes_fit_static_optional32MiB_before_metadata": false,
+      "one_full_crop_fit_entry8MiB": false,
+      "three_planes_MiB": 66.16104125976562,
+      "four_planes_MiB": 88.2147216796875
+    },
+    {
+      "logical_width": 800,
+      "logical_height": 500,
+      "DPR": 4,
+      "physical_pixels": 6400000,
+      "rgba_plane_MiB": 24.4140625,
+      "prefix_suffix_MiB": 48.828125,
+      "two_planes_fit_static_optional32MiB_before_metadata": false,
+      "one_full_crop_fit_entry8MiB": false,
+      "three_planes_MiB": 73.2421875,
+      "four_planes_MiB": 97.65625
+    },
+    {
+      "logical_width": 1920,
+      "logical_height": 1080,
+      "DPR": 2,
+      "physical_pixels": 8294400,
+      "rgba_plane_MiB": 31.640625,
+      "prefix_suffix_MiB": 63.28125,
+      "two_planes_fit_static_optional32MiB_before_metadata": false,
+      "one_full_crop_fit_entry8MiB": false,
+      "three_planes_MiB": 94.921875,
+      "four_planes_MiB": 126.5625
+    }
+  ],
+  "thresholds": {
+    "two_static_planes_max_device_pixels_before_metadata": 4194304,
+    "DPR2_logical_pixels_two_static_planes_before_metadata": 1048576,
+    "one8MiB_crop_max_device_pixels": 2097152
+  },
+  "existing_evidence": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/dense-mixed-r2/dense-mixed-counters.json",
+    "sha256": "5e6901c3baa5d5852fae742681eec9c043bc190be3d8a6187685d91fbd1dbf8f",
+    "rows": [
+      {
+        "DPR": 1,
+        "kind": 0,
+        "width": 1431,
+        "height": 1010,
+        "lines": 19,
+        "static_builds": 2,
+        "static_hits": 5,
+        "static_denials": 0,
+        "retries": 10,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 1,
+        "kind": 1,
+        "width": 1431,
+        "height": 1010,
+        "lines": 19,
+        "static_builds": 2,
+        "static_hits": 5,
+        "static_denials": 0,
+        "retries": 10,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 1,
+        "kind": 2,
+        "width": 1431,
+        "height": 1010,
+        "lines": 19,
+        "static_builds": 2,
+        "static_hits": 5,
+        "static_denials": 0,
+        "retries": 10,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 1,
+        "kind": 3,
+        "width": 1431,
+        "height": 1010,
+        "lines": 19,
+        "static_builds": 2,
+        "static_hits": 5,
+        "static_denials": 0,
+        "retries": 10,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 2,
+        "kind": 0,
+        "width": 2862,
+        "height": 2020,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 77,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 2,
+        "kind": 1,
+        "width": 2862,
+        "height": 2020,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 77,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 2,
+        "kind": 2,
+        "width": 2862,
+        "height": 2020,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 77,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 2,
+        "kind": 3,
+        "width": 2862,
+        "height": 2020,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 77,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 4,
+        "kind": 0,
+        "width": 3200,
+        "height": 2000,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 79,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 4,
+        "kind": 1,
+        "width": 3200,
+        "height": 2000,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 79,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 4,
+        "kind": 2,
+        "width": 3200,
+        "height": 2000,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 79,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      },
+      {
+        "DPR": 4,
+        "kind": 3,
+        "width": 3200,
+        "height": 2000,
+        "lines": 19,
+        "static_builds": 0,
+        "static_hits": 0,
+        "static_denials": 0,
+        "retries": 79,
+        "cpu_tiles": 0,
+        "body_builds": 1
+      }
+    ]
+  },
+  "limits": [
+    "Cannot assert actualuserpath or actualDPR fromvideo alone.",
+    "Existingcountercases are nativeMetal not userWebGL runtime.",
+    "PreparedGPU pathcanstill rerasterize every object; cpuCoverageTiles0 doesnotproveboundedwork or smoothness.",
+    "New finite diagnostic afterUR2dbrowserwindow should holdsameScene/camera and varyonly backingarea; captureactualbranches anddefaultFBwrites."
+  ],
+  "recommended_next_scope": [
+    "Confirm same fixture at small/large logicalviewport andDPR1/2 with actual staticreuse/perobjectevictions/workset/retries counters.",
+    "Retain inactive ordered segments with bounded cropped/tiled targets ratherthan viewportsize prerequisite; include compactstroke active semantic ordering.",
+    "Keep geometry/body/history reuse separate frompixelresidency; avoid perframefullscene geometry/coverage oncachemiss.",
+    "Tests require warm moveworkboundedand actualdisplayprogress atDPR2fullscreen; preservefinalpixel/order/mask/receipt andallocationfailurelastsuccessframe."
+  ],
+  "production_changes": false,
+  "current_UR2d_scope_unchanged": true,
+  "control_native_probe": {
+    "result_path": ".aegis/results/G5-viewport-area-review-r1/probe-result.json",
+    "sha256": "3c4d8eef474b28466defb374aadac808d26077e40115fa00a4a06cb20287416b",
+    "exit_code": 0,
+    "purpose": "ActualfullstaticSceneallocationatDPR2 acrossonlyviewportareaandbudget. Three-shapeprobeprovesbranchchange, notdenseperformance.",
+    "rows": [
+      {
+        "DPR": 2,
+        "active_draws": 3,
+        "draw_present_sync_ms": [
+          107.47775,
+          0.829708,
+          0.767125
+        ],
+        "entryMiB": 8,
+        "full_scene_draws": 1,
+        "large_budget": false,
+        "leased_bytes": 17280976,
+        "logical_height": 900,
+        "logical_width": 600,
+        "optionalMiB": 32,
+        "sharedMiB": 96,
+        "static_builds": 1,
+        "static_denials": 0,
+        "static_hits": 2
+      },
+      {
+        "DPR": 2,
+        "active_draws": 3,
+        "draw_present_sync_ms": [
+          1.407792,
+          0.659959,
+          0.667625
+        ],
+        "entryMiB": 64,
+        "full_scene_draws": 1,
+        "large_budget": true,
+        "leased_bytes": 17280976,
+        "logical_height": 900,
+        "logical_width": 600,
+        "optionalMiB": 256,
+        "sharedMiB": 512,
+        "static_builds": 1,
+        "static_denials": 0,
+        "static_hits": 2
+      },
+      {
+        "DPR": 2,
+        "active_draws": 0,
+        "draw_present_sync_ms": [
+          4.781875,
+          2.132916,
+          2.685375
+        ],
+        "entryMiB": 8,
+        "full_scene_draws": 3,
+        "large_budget": false,
+        "leased_bytes": 0,
+        "logical_height": 900,
+        "logical_width": 1431,
+        "optionalMiB": 32,
+        "sharedMiB": 96,
+        "static_builds": 0,
+        "static_denials": 3,
+        "static_hits": 0
+      },
+      {
+        "DPR": 2,
+        "active_draws": 3,
+        "draw_present_sync_ms": [
+          6.067584,
+          1.229,
+          1.186917
+        ],
+        "entryMiB": 64,
+        "full_scene_draws": 1,
+        "large_budget": true,
+        "leased_bytes": 41213776,
+        "logical_height": 900,
+        "logical_width": 1431,
+        "optionalMiB": 256,
+        "sharedMiB": 512,
+        "static_builds": 1,
+        "static_denials": 0,
+        "static_hits": 2
+      }
+    ],
+    "resource_clear_assertion": "all4casesbudgetused0afterclearingandactualGPUcompletion"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "g5-object-interaction-continuity-r2-result-v1",
+  "task": "G5-object-interaction-continuity-r2",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "classification": "SCOPED_IMPLEMENTATION_VERIFIED_WITH_FINDINGS",
+  "gate_pass_issued": false,
+  "finished_utc": "2026-11-10T08:33:51.933340+00:00",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "package": {
+    "path": ".aegis/packages/G5-object-interaction-continuity-r2/package.json",
+    "sha256": "be190a086db5287d4a3ce3416b3ed1a52a9b5f851037fbc4c500f73023a11d84"
+  },
+  "source": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/source-manifest.json",
+    "sha256": "ddc9a58d99eb1416a9f80fbc843d8da12ad732b18196ba87ae334b53adb4435f",
+    "content_sha256": "e5211899a5a26420846d4e071e77b40032972cc8e663048076b87f74caba3b79",
+    "tracked_delta_sha256": "6a551a28af2f9c85dd94460c3b01ae65e9651db687bd43f32149d0a4e13f2655",
+    "new_test_separately_archived": true
+  },
+  "obligations": [
+    {
+      "id": "LI-01",
+      "status": "VERIFIED",
+      "evidence": "layout-identity-red-green.json",
+      "facts": "Oldnativeassertionexit1;candidate428cases16equal/412invalidating; record+fivecommands; noAPIoperatorchange"
+    },
+    {
+      "id": "OI2-01",
+      "status": "DEFAULT_SCENE_VERIFIED_PRESSURE_FINDING_RETAINED",
+      "evidence": [
+        "web-diagnostic.json",
+        "dense-mixed-counters.json",
+        "staged-publication/run/summary.json"
+      ],
+      "facts": "LI-01removesfalsecontentreset; defaultcontrolWeb canonicalpending272\u21920; no stagedmechanism added;stable dense nativeframescomplete"
+    },
+    {
+      "id": "OI2-02",
+      "status": "VERIFIED_WITH_EXISTING_AA_POLICY",
+      "evidence": [
+        "oracle-pixel.json",
+        "final-focused-native.log"
+      ],
+      "facts": "96independentDirectframes withstatic0/0;prefix/activerange/suffix,cancel/order/basis; firstexactRGBA REDretained"
+    },
+    {
+      "id": "OI2-03",
+      "status": "VERIFIED_WITH_REPORTED_DIMENSIONS",
+      "evidence": [
+        "dense-mixed-counters.json",
+        "dense-mixed-basis-invocation.json"
+      ],
+      "facts": "19x7199sharedv4body+2historymasks,ShapeStickyTableImage,DPR1/2/4;1compileperepoch; max32;CPUtiles0;leases0;DPR4bounded800x500logical"
+    },
+    {
+      "id": "OI2-04",
+      "status": "NO_NEW_REGRESSION_BASELINE_FAILURES_RETAINED",
+      "evidence": [
+        "native-regression.log",
+        "keeper-baseline-comparison.json",
+        "final-focused-native.log",
+        "node-g5-serial.log",
+        "python-g5-discover.log",
+        "normal-diagnostics-compiled-out.json"
+      ],
+      "facts": "Focused12/12+finaldenseexit0;wide191/199all8baseline-reproduced;Node209/209;Python157/157;120contracts"
+    }
+  ],
+  "normal_web": {
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/normal-install/js",
+    "manifest": "normal-artifact-manifest.json",
+    "sha256": "f67141f10d479e87513dc6682d9c92f457c2747a85bfe251ed14096781cd1e35",
+    "members": 36,
+    "wasm_sha256": "2ec3e5935e4021dcf6b8b5f824f742a9c4d21609809cc50eff83ab794336bd09",
+    "diagnostics": "OFF",
+    "matching_control_demo_url": "http://127.0.0.1:4315/example.html",
+    "normalAPI_changed": false
+  },
+  "control_evidence": "web-diagnostic.json",
+  "findings": [
+    {
+      "id": "F1",
+      "classification": "RETAINED_PRESSURE_BOUNDARY",
+      "evidence": "staged-publication/run/summary.json",
+      "detail": "Nondefault maxEntries=1 synthetic19shared7199-knot lines/two historicalmasks,60continuously changing transforms:0movingaccepted/60Retry; fixed hold recovered9calls. Raw harness ended-6 while throwing expected RED, retained. No staged scheduler fix in r2; default user reconstruction is covered separately."
+    },
+    {
+      "id": "F2",
+      "classification": "BASELINE_FAILURES_NOT_REPAIRED",
+      "evidence": "keeper-baseline-comparison.json",
+      "detail": "191/199 wide selected native tests pass. All8failures reproduced against pre-LI-01 acceptedr1checkpoint baseline by replacing only RenderGroupManager.o and separately relinking. Includes G5CanonicalPreparedWorkingSet stable-demand failure and G5RenderCache90secondtimeout; no claim that censored test passed."
+    },
+    {
+      "id": "F3",
+      "classification": "EVIDENCE_LIMITATION",
+      "evidence": "oracle-pixel.json",
+      "detail": "IndependentDirect comparison permits preexistingtwo-devicepixel per-primitiveAA band and channel<=2 outside; not fullRGBA exact equality. Band covers26.2526%/19.6388%/24.7730% forDPR1/2/4. Initial exactRGBA RED preserved. DPR4 is800x500logical3200x2000physical, not full1431x1010desktop performanceevidence."
+    },
+    {
+      "id": "F4",
+      "classification": "HARNESS_RUN_RETAINED",
+      "evidence": "non-native-regressions.json",
+      "detail": "First allNode run blocked inmetricsstdin child and was stopped; serial209/209 passed and isolatedcompiler10/10 passed. First Python invocation usedwrongimportpath; discover157/157 passed. Original logs retained."
+    },
+    {
+      "id": "F5",
+      "classification": "BUILD_IDENTITY_RECONCILED",
+      "evidence": "web-build-identity-difference.json",
+      "detail": "ReusedUR2crunnerfullidentityincluded successor/controlresultlogs,causingpostbuildassertionafterconfigure/build/installall0. Exact16-memberdiffisresultlogsonly; allproductinputsunchanged.36normalmembers andcontrolSDKbinarymatching verified; failedassertionlogpreserved."
+    }
+  ],
+  "blocking_new_regressions": [],
+  "cleanup": "cleanup.json",
+  "commit_push": "NOT_PERFORMED",
+  "preserved": [
+    "4298 user demo and document",
+    "r1 package/results",
+    "UR2c package/results/ledger",
+    "oldREDs,rawbuffers,failedharnessruns"
+  ],
+  "next_action": "Independent control review of scoped r2 and findings; no UR2c candidate sampling, UR2nextscope, overallGate, P34orperformancePASSissued"
+}

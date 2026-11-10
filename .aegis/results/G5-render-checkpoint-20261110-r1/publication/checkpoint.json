@@ -1,0 +1,224 @@
+{
+  "schema": "axiom-render-checkpoint-publication-v1",
+  "created_utc": "2026-11-10T15:49:25.333646+00:00",
+  "base_commit": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "user_authorization": "\u5f00\u59cb\u524d\u5148\u63d0\u4ea4\u5e76\u63a8\u9001\u5df2\u6709\u6539\u52a8\uff1b\u63091\u20134\u7ee7\u7eed\uff1b\u7b2c5\u6b65\u540e\u53f0\u8ba1\u7b97\u8bc4\u4f30\u505c\u4e0b\u4e0e\u7528\u6237\u5bf9\u7167",
+  "prior_package_no_commit_superseded_for": "This explicit checkpoint commit/push only. Frozen old package bytes preserved.",
+  "source_files": {
+    "runtime/composition/CMakeLists.txt": {
+      "sha256": "11149c2ceb26a6b92c63da90a85e9551d6b2c7ecc2f1d69a5dbc617f7adf4d12",
+      "bytes": 22208
+    },
+    "runtime/composition/tests/selection_input_integration_test.cpp": {
+      "sha256": "423f8bf9f3ac7f54c5a042b66baaed0c771a28c39e39b4c112bcf9d9cccf8308",
+      "bytes": 48644
+    },
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": {
+      "sha256": "5f912b0a2fe390879f4b41118a8ca972be68ddd9fbc0a0888ed41917d066e30d",
+      "bytes": 8164
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "sha256": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "bytes": 14086
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "04da5c51be16ab6d02ac7d9d1ac6c9f7e7d64730f97cb1a3ce6c88b7f9a52ff9",
+      "bytes": 321043
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "sha256": "f543af86927b449765b0fe878254a529faf6206e0fa42389b6193ae59345139f",
+      "bytes": 4367
+    },
+    "runtime/interaction/src/canvas_region_selection.cpp": {
+      "sha256": "5a6d88adb57fad783191c5703b17997f6ab65b4f2ff1d564a9b07caddb3176db",
+      "bytes": 25636
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "5309dfbd77584c17354dc18a626bf94a3c332dea4c3ad93fe51041cc84ae9994",
+      "bytes": 49060
+    },
+    "runtime/render/include/canvas/render/render_cache.hpp": {
+      "sha256": "75ba8b660c69e163b5b918dfc24bbd10ee761da6ac1d23a5c589d14424da9cea",
+      "bytes": 6878
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "sha256": "298ec30c292fbd1e54ec95a0ce399b586d24fac90ee9fa1a4046204f1b79be2d",
+      "bytes": 6919
+    },
+    "runtime/render/src/render_group_manager.cpp": {
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "bytes": 9051
+    },
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "44ba3818b43d6d461d9c64d760ef7dc2f4911df5f6c0ab4e422949cdb9cd30dc",
+      "bytes": 66088
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "sha256": "ff8d1a5c9edcf4a0906dfc6ecfb7de9d49344de8b9120dd0c57853237bee4de7",
+      "bytes": 3169
+    },
+    "runtime/render/src/skia_ink_layers.cpp": {
+      "sha256": "776605c182296d3e52ae14ae3843b953c1baea6ff4ac33609904798d9a5e89d0",
+      "bytes": 17442
+    },
+    "runtime/render/src/skia_ink_layers.hpp": {
+      "sha256": "101df4968f6d9a78605bb7342143da960b21639a527119b6e506bce2ebaa0ebf",
+      "bytes": 2669
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "2e6c507bdc3fb07bda7714e6d27a94b94822ea9136a45081f20d92aa0edb3084",
+      "bytes": 88358
+    },
+    "runtime/render/src/skia_render_cache_internal.hpp": {
+      "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "bytes": 12609
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "413df6fbb21eb753f8c4d5386b557f266397e4be8a636a34cb89de7fa5dd62a7",
+      "bytes": 101186
+    },
+    "runtime/render/tests/transient_display_retry_test.cpp": {
+      "sha256": "b3c05a150379c761e5244ff07bb6f795b5b3331be9264531175d31f4f418d081",
+      "bytes": 57707
+    },
+    "cmake/AxiomRenderMemoryBudget.cmake": {
+      "sha256": "5c8e43db2472a3bd6988058e9b7751c24920dff7faddbce8239c8a6b67e94423",
+      "bytes": 2405
+    },
+    "docs/planning/G5_DESKTOP_RENDER_MEMORY_PROFILE_2026_11_10.md": {
+      "sha256": "3feef8da7c6be332cd3b4d81f97a0539d5e0aedc19c7c739d84f8d8da94031da",
+      "bytes": 1623
+    },
+    "runtime/composition/tests/erase_exact_canonical_runtime_test.cpp": {
+      "sha256": "b2dc6b576191c0cef9d14704609323cc0009170203fcabf4b9cbbd17dce06190",
+      "bytes": 6661
+    },
+    "runtime/composition/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "9960a1b52f00a8e67d8ac7691ad03e9ef1d4f03e71e5937db8234e356b13b054",
+      "bytes": 7690
+    },
+    "runtime/render/src/render_memory_budget.hpp": {
+      "sha256": "d800ad4c65fa42ad0267d4b28057399e87a2ec691df0651a8b88bcb93a749a41",
+      "bytes": 623
+    },
+    "runtime/render/tests/erase_exact_canonical_test.cpp": {
+      "sha256": "556bc5a8188d8601deb568eeac094bfc88a89636a61ab64a17a1624f9f2290f9",
+      "bytes": 5767
+    },
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": {
+      "sha256": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b",
+      "bytes": 8735
+    },
+    "runtime/render/tests/render_memory_budget_test.cpp": {
+      "sha256": "9c8b82621a9c47f7c63ab5d5e8337455dc03c9e8c160e42abeff72363462fa2a",
+      "bytes": 3502
+    },
+    "runtime/render/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "d15cd4abfb09ed4c53396bed8af85bb73f4cc5adc54d0ff0fced59309f0e9de1",
+      "bytes": 7943
+    },
+    "verification/runners/g5/desktop_render_budget.mjs": {
+      "sha256": "7034e18dae6cec3b75786a7d4e7426c5c3fe5104407dd41989cc1215f96526f4",
+      "bytes": 11906
+    },
+    "verification/runners/g5/desktop_render_budget_runner.py": {
+      "sha256": "70882f389d9dbb25ba6a31686e7d509542e4af5426b5216d595c7efedec8385c",
+      "bytes": 4992
+    },
+    "verification/runners/g5/erase_exact_canonical.mjs": {
+      "sha256": "2279fa04cceb661f65cbdba1ade8b33f16b2253b3e5d1b8d9d606a3782e158a4",
+      "bytes": 11842
+    },
+    "verification/runners/g5/erase_exact_canonical_contract.mjs": {
+      "sha256": "d15a7652bb93fd50c34e46dd233cfa7300b3daeb356b0eae1b61407f312fcc9b",
+      "bytes": 2063
+    },
+    "verification/runners/g5/erase_exact_canonical_runner.py": {
+      "sha256": "92945eff3b2e51041475c901ed661e424487099a1815535e76c15c351cf7415d",
+      "bytes": 6179
+    },
+    "verification/runners/g5/erase_undo_readiness.mjs": {
+      "sha256": "5e430d7ef01ab4042668555b06eebc42864b5dbf92871a8ac219552a217101d9",
+      "bytes": 21741
+    },
+    "verification/runners/g5/post_erase_interaction_readiness.mjs": {
+      "sha256": "4c10890c9e7253fc3f0590638ec220e3962fad7b96b911157c9702df5ac0a7fb",
+      "bytes": 6177
+    },
+    "verification/runners/g5/post_erase_interaction_readiness_runner.py": {
+      "sha256": "d7b4e07909775cdc7319810b6079a76eed224bd1056ad4ceb52604e3f116110e",
+      "bytes": 3114
+    },
+    "verification/runners/g5/ur2d_pair_completion_runner.py": {
+      "sha256": "f46769df165909fc324a64bc819cc0b57a208d9167ef123622056218f24394bd",
+      "bytes": 8081
+    },
+    "verification/runners/g5/ur2d_selection_up.mjs": {
+      "sha256": "f77efd42cac3a983b067546eafce403c28894759c2c8b5514d791bd2e4e26bc9",
+      "bytes": 19620
+    },
+    "verification/runners/g5/ur2d_selection_up_contract.mjs": {
+      "sha256": "d8f639495926cd748ee74f184dd61c455cf25cbc1c30983d9d5cb123d131458c",
+      "bytes": 2767
+    },
+    "verification/runners/g5/ur2d_selection_up_runner.py": {
+      "sha256": "ac6c27be1ec13e005888232c3c174e97c50588b1e33c2ba6f98542117509909d",
+      "bytes": 4849
+    },
+    "verification/tests/g5_erase_exact_canonical.test.mjs": {
+      "sha256": "d7278abc180894c998e61ebd3ba92c91c33b74217307a6da5d7b3a6a52fd00f6",
+      "bytes": 1912
+    },
+    "verification/tests/g5_erase_undo_readiness.test.mjs": {
+      "sha256": "334e8aa77fd7652d2622d7a68fa5447d0ac11d9e95a3093c2c9a58e367642f7c",
+      "bytes": 2484
+    },
+    "verification/tests/g5_post_erase_interaction_readiness.test.mjs": {
+      "sha256": "5cfe86f0aab912d25b9be493de3db81ef55356a52f192222fce7e96875f83ecf",
+      "bytes": 1755
+    },
+    "verification/tests/g5_ur2d_selection_up.test.mjs": {
+      "sha256": "b1f4ab99153d180d5f7b1e67e7495af520f4266db8b858e6a6ddcc264ef04a74",
+      "bytes": 8796
+    },
+    "verification/tests/test_desktop_render_budget.py": {
+      "sha256": "b219e4d2d97dde86d9bb37fbfa96f160e3216320bd1992fdced6f825cf715a81",
+      "bytes": 4818
+    },
+    "verification/tests/test_g5_erase_exact_canonical.py": {
+      "sha256": "d39ffa5a302f906b92d2e02e4fe631f99cfea185b2f788ba36048f7766195373",
+      "bytes": 1618
+    },
+    "verification/tests/test_g5_post_erase_interaction_readiness.py": {
+      "sha256": "61294b9fa8816d295b1f4321d0cd26fa22a58762df9846d202728c39f61ad97b",
+      "bytes": 636
+    },
+    "verification/tests/test_g5_ur2d_pair_completion.py": {
+      "sha256": "701d870ac6df7eeef0ccb47b26e1a50f851564dd53a858ec8962e22c784bdd07",
+      "bytes": 3107
+    },
+    "verification/tests/test_g5_ur2d_selection_up.py": {
+      "sha256": "0b75251d4ab8a87b8410723613ba8cdaf72ab36b2ed494a765a795ba5e18f8e9",
+      "bytes": 3565
+    },
+    ".gitattributes": {
+      "sha256": "73c5c7a86867a9602bce77b1bafa2765c2293d63d8a21e57dbf8a23da2ce9068",
+      "bytes": 179
+    }
+  },
+  "fresh_checks": {
+    "native": 14,
+    "node": 45,
+    "python": 26,
+    "boundary_contracts": 120
+  },
+  "known_status": "BLOCKED_EVIDENCE_WITH_LONG_TAIL_FINDINGS",
+  "local_only": {
+    "path": ".aegis/results/G5-render-checkpoint-20261110-r1/publication/local-only-boundary.json",
+    "sha256": "1b2dc58c1c3ac51b40bbb05aa27d640907cf54c4888d84fc18c1cde9ca3a67e3"
+  },
+  "no_public_SDK_or_semantic_change": true,
+  "no_hidden_approval": true,
+  "evidence_byte_preservation": ".aegis/** -text preserves original captured line endings and content-addressed evidence blobs; native logs retain original whitespace."
+}

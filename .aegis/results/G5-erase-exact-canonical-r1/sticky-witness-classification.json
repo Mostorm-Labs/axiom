@@ -1,0 +1,65 @@
+{
+  "classification": "INVALID_ROI_AND_EXPECTED_MATERIAL",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-CONTINUE-R1/candidate-sticky.json",
+    "sha256": "6e9a78a29cdaa46da94f8129f7662aa05071580be79415d2c29ce405fd92675e"
+  },
+  "source_readback": "RuntimeCanvasControl only sets selectedWidth/Height forShape; Sticky size0 fromprojection notcanonicalextent. Publicboundsare202x202/actualcontent200x200.",
+  "initial_transform": [
+    1,
+    0,
+    0,
+    1,
+    900,
+    300
+  ],
+  "reported_size": [
+    0,
+    0
+  ],
+  "initial_bounds": [
+    899,
+    299,
+    1101,
+    501
+  ],
+  "final_bounds": [
+    979,
+    329,
+    1181,
+    531
+  ],
+  "incorrectROI": {
+    "x": 1864,
+    "y": 684,
+    "width": 16,
+    "height": 16
+  },
+  "incorrect_blue_expectation": "Stickyselectedappearanceyellow[1,1,.5,1], notfutureblue; testmustusetypedappearanceandcanonical/boundsgeometry.",
+  "actual_final_samples": {
+    "world1010_350": [
+      255,
+      255,
+      128,
+      255
+    ],
+    "world1050_380": [
+      255,
+      255,
+      128,
+      255
+    ]
+  },
+  "actual_translation": [
+    80,
+    30
+  ],
+  "original_MISSING_preserved": true,
+  "qualification": "finalcorrectpose/color doesnotreplacemissingactivebeforeUppixelwitness",
+  "unrun": [
+    "candidateTable",
+    "candidateImage"
+  ],
+  "no_more_sampling_IDs": true,
+  "no_product_mutation": true
+}

@@ -1,0 +1,31 @@
+{
+  "classification": "VERIFICATION_FIXED_PROBE_WINDOW_TOO_EARLY",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/candidate-zoom.json",
+    "sha256": "3758ce0f50ac40e5e305155a006c41b7b09e8f5aa71df3acd02f0742ee21fc63"
+  },
+  "early_time": 9991.5,
+  "ready_time": 10862.800000071526,
+  "early_expected_sentinal_correct": 0,
+  "final_expected_sentinel_correct": 16,
+  "camera_expected": {
+    "scale": 1.2712491503214047,
+    "x": -162.7494901928428,
+    "y": -108.49966012856191
+  },
+  "camera_actual": {
+    "scale": 1.2712491750717163,
+    "x": -162.74945068359375,
+    "y": -108.4996337890625
+  },
+  "original_MISSING_preserved": true,
+  "repair": "ObservefixedROIuntilcorrector15swithoutsettle/Undowait;retainsameT0longUpstart. ObjectsremainactivebeforeUpduringobservation.",
+  "missing": [
+    "candidatezoomfirstcorrectfeedback",
+    "candidateRectangle",
+    "candidateSticky",
+    "candidateTable",
+    "candidateImage"
+  ],
+  "no_product_changes": true
+}

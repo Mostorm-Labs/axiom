@@ -1,0 +1,71 @@
+{
+  "schema": "g5-control-harness-material-region-defect-v1",
+  "created_utc": "2026-11-10T14:51:41.730192+00:00",
+  "status": "INVALID_STICKY_ROI_AND_EXPECTED_MATERIAL_NOT_PRODUCT_NO_FEEDBACK",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-CONTINUE-R1/candidate-sticky.json",
+    "sha256": "6e9a78a29cdaa46da94f8129f7662aa05071580be79415d2c29ce405fd92675e"
+  },
+  "facts": {
+    "selection_kind": 8,
+    "reported_shape_only_width": 0,
+    "reported_shape_only_height": 0,
+    "initial_bounds": [
+      899,
+      299,
+      1101,
+      501
+    ],
+    "final_bounds": [
+      979,
+      329,
+      1181,
+      531
+    ],
+    "fill": [
+      1,
+      1,
+      0.5,
+      1
+    ],
+    "selected_transform": [
+      1,
+      0,
+      0,
+      1,
+      900,
+      300
+    ],
+    "after_transform": [
+      1,
+      0,
+      0,
+      1,
+      980,
+      330
+    ],
+    "ROI_physical": {
+      "x": 1864,
+      "y": 684,
+      "width": 16,
+      "height": 16
+    },
+    "ROI_logical": [
+      932.0,
+      342.0,
+      940.0,
+      350.0
+    ],
+    "ROI_disjoint_from_new_object": true,
+    "script_color_expectation": [
+      51,
+      128,
+      204,
+      255
+    ]
+  },
+  "classification": "Script incorrectly assumes shape-only width/height fields apply to sticky; derives ROI outside new footprint and assumes blue even though actual canonical sticky appearance is yellow. Observed white is expected outside object. Do not count as actual product missing feedback or 19s performance measurement.",
+  "preserved": "Original failure raw/status immutable. No reconstructing unrecorded beforeUp pixels.",
+  "proof_status": "Sticky active-feedback proof MISSING; table/image not sampled;10round stress only8durable.",
+  "next": "No further sample IDs under current finalcontinuation. Return honest incomplete-proof checkpoint and finalmatchingordinaryDemo."
+}

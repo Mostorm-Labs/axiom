@@ -1,0 +1,15 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/transient_display_retry_test.cpp:445:2: error: unknown type name 'json'; did you mean 'nlohmann::json'?
+  445 |  json rows=json::array();RenderCacheWork warm;
+      |  ^~~~
+      |  nlohmann::json
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include/nlohmann/json.hpp:3549:11: note: 'nlohmann::json' declared here
+ 3549 |     using json = basic_json<>;
+      |           ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/transient_display_retry_test.cpp:445:12: error: use of undeclared identifier 'json'; did you mean 'nlohmann::json'?
+  445 |  json rows=json::array();RenderCacheWork warm;
+      |            ^~~~
+      |            nlohmann::json
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include/nlohmann/json.hpp:3549:11: note: 'nlohmann::json' declared here
+ 3549 |     using json = basic_json<>;
+      |           ^
+2 errors generated.

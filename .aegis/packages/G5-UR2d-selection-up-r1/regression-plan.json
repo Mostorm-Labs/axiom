@@ -1,0 +1,542 @@
+{
+  "schema": "g5-ur2d-regression-plan-v1",
+  "existing_native": [
+    {
+      "name": "FC01ARegionSelection",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_region_selection_tests"
+      ]
+    },
+    {
+      "name": "SelectionBatch2Coverage",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_selection_coverage_tests"
+      ]
+    },
+    {
+      "name": "FC01ASelectionInputIntegration",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_selection_input_integration_tests"
+      ]
+    },
+    {
+      "name": "G4SelectionSession",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_selection_session_tests"
+      ]
+    },
+    {
+      "name": "G4TransformSession",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_transform_session_tests"
+      ]
+    },
+    {
+      "name": "G46TransformHandleDrag",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_transform_handle_drag_tests"
+      ]
+    },
+    {
+      "name": "G4EraserSession",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_eraser_session_tests"
+      ]
+    },
+    {
+      "name": "G4EditorHistory",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_editor_history_tests"
+      ]
+    },
+    {
+      "name": "FC01EditorHistoryInverseFamilies",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_editor_history_tests",
+        "fc01"
+      ]
+    },
+    {
+      "name": "G4SessionConflict",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_session_conflict_tests"
+      ]
+    },
+    {
+      "name": "G4SessionLifecycle",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_session_lifecycle_tests"
+      ]
+    },
+    {
+      "name": "G4MultiContactCoordinator",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_multi_contact_coordinator_tests"
+      ]
+    },
+    {
+      "name": "G4GestureArbiter",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/interaction/axiom_gesture_arbiter_tests"
+      ]
+    },
+    {
+      "name": "FC01CreationControlBinding",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/verification/runtime_qualification/axiom_fc01_creation_control_binding_tests"
+      ]
+    },
+    {
+      "name": "G5EraseExactHit",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_erase_hit_tests"
+      ]
+    },
+    {
+      "name": "G5GpuRetirementContract",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+      ]
+    },
+    {
+      "name": "G5GpuResourceRecovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_gpu_resource_recovery_tests"
+      ]
+    },
+    {
+      "name": "G5PreparedBodyIndex",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_prepared_body_index_tests"
+      ]
+    },
+    {
+      "name": "G5PreparedGeometry",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_prepared_geometry_tests"
+      ]
+    },
+    {
+      "name": "G5CanonicalPreparedBody",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_canonical_prepared_body_tests"
+      ]
+    },
+    {
+      "name": "G5CanonicalPreparedBodyBounded",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+        "--bounded"
+      ]
+    },
+    {
+      "name": "G5CanonicalPreparedBodyPixels",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_canonical_prepared_body_tests",
+        "--pixels"
+      ]
+    },
+    {
+      "name": "G5RenderExecution",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_render_execution_tests"
+      ]
+    },
+    {
+      "name": "G5RenderDamage",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_render_damage_tests"
+      ]
+    },
+    {
+      "name": "G5ObjectInteractionLayoutIdentity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_object_interaction_continuity_r2_tests"
+      ]
+    },
+    {
+      "name": "G5ObjectInteractionStaticOracle",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--object-continuity",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/object-continuity"
+      ]
+    },
+    {
+      "name": "G5ObjectInteractionDenseMixed",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--dense-objects",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/object-continuity-dense"
+      ]
+    },
+    {
+      "name": "G4CanonicalHandoff",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_canonical_handoff_tests"
+      ]
+    },
+    {
+      "name": "G5UR2ACompositionProof",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2a_current_composition_tests"
+      ]
+    },
+    {
+      "name": "G5UR2AMaskIsolationDirect",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+        "direct"
+      ]
+    },
+    {
+      "name": "G5UR2AMaskIsolationPrepared",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+        "prepared"
+      ]
+    },
+    {
+      "name": "G5UR2AMaskIsolationBackdrop",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+        "backdrop"
+      ]
+    },
+    {
+      "name": "G5UR2AMaskIsolationLegacy",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2a_mask_isolation_tests",
+        "legacy"
+      ]
+    },
+    {
+      "name": "G5UR2BExactParity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+        "Parity"
+      ]
+    },
+    {
+      "name": "G5UR2BExactBodySharing",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+        "BodySharing"
+      ]
+    },
+    {
+      "name": "G5UR2BExactLocality",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+        "Locality"
+      ]
+    },
+    {
+      "name": "G5UR2BExactInvalidation",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+        "Invalidation"
+      ]
+    },
+    {
+      "name": "G5UR2BExactPressure",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2b_exact_query_tests",
+        "Pressure"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryPlanReuse",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--reuse"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryInvalidation",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--invalidation"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryExactParity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--exact"
+      ]
+    },
+    {
+      "name": "G5UR2CLeaseAccounting",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--lease"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryProgress",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryAdmission",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--admission"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryProgressSafety",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress-safety"
+      ]
+    },
+    {
+      "name": "G5UR2CMaskOnlyScene",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests"
+      ]
+    },
+    {
+      "name": "G5UR2CMixedMaskScene",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests",
+        "--mixed"
+      ]
+    },
+    {
+      "name": "G5UR2CAtomicRecovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/axiom_ur2c_mask_scene_tests",
+        "--atomic"
+      ]
+    },
+    {
+      "name": "G5UR2CContinuousInput",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2c_mask_pipeline_tests"
+      ]
+    },
+    {
+      "name": "G5UR2BExactInputRuntime",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2b_exact_runtime_tests"
+      ]
+    },
+    {
+      "name": "G5UR2AReadmissionAcquire",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "acquire"
+      ]
+    },
+    {
+      "name": "G5UR2AReadmissionPresent",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "present"
+      ]
+    },
+    {
+      "name": "G5UR2ANavigation",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation"
+      ]
+    },
+    {
+      "name": "G5UR2AHandoff",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "handoff"
+      ]
+    },
+    {
+      "name": "G5UR2ASceneRecovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "scene"
+      ]
+    },
+    {
+      "name": "G5UR2AHistory",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "history"
+      ]
+    },
+    {
+      "name": "G5UR2ALifecycle",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "lifecycle"
+      ]
+    },
+    {
+      "name": "G5UR2ANavigationSafety",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation-safety"
+      ]
+    },
+    {
+      "name": "G5UR2ABrushVisibility",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "brush"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayRetryPixels",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--pixels",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-pixels"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayContinuity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--continuity",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-continuity"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayRecovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--recovery",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-recovery"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayHandoff",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--handoff",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-handoff"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayHandoffInflight",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--handoff-inflight",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-handoff-inflight"
+      ]
+    },
+    {
+      "name": "G47TextLayout",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/text/axiom_text_layout_tests"
+      ]
+    },
+    {
+      "name": "G47TextPipeline",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_text_pipeline_tests"
+      ]
+    },
+    {
+      "name": "G47ImageResource",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_image_resource_tests"
+      ]
+    },
+    {
+      "name": "canvas_rf01_scene_atomicity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/canvas_rf01_scene_atomicity_test"
+      ]
+    },
+    {
+      "name": "canvas_rf01_scene_binding",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/canvas_rf01_scene_binding_test"
+      ]
+    },
+    {
+      "name": "canvas_g2_a3_full_incremental_equivalence",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/canvas_g2_a3_full_incremental_equivalence"
+      ]
+    },
+    {
+      "name": "canvas_g2_a6_atomic_publication",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/canvas_g2_a6_atomic_publication"
+      ]
+    },
+    {
+      "name": "canvas_g2_a6_recovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/scene/tests/canvas_g2_a6_recovery"
+      ]
+    },
+    {
+      "name": "SDKPublicSelectionInput",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_sdk_public_selection_input_tests"
+      ]
+    },
+    {
+      "name": "SDKPublicDocumentOperations",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_sdk_public_document_operations_tests"
+      ]
+    },
+    {
+      "name": "SDKPublicOperationIdentity",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_sdk_public_operation_identity_tests"
+      ]
+    },
+    {
+      "name": "SDKPublicDocumentSnapshot",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/composition/axiom_sdk_public_document_snapshot_tests"
+      ]
+    }
+  ],
+  "run_policy": "Build required executables first; reroot paths into task build or reuse matching current build with exact before/after source hashes. CTest timeout90, max two concurrent tests; GPU performance runs serial. Do not invoke missing executables then label NotRun a product failure.",
+  "known_baseline_findings": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/keeper-baseline-comparison.json",
+    "sha256": "b307ac9b4cb271351294ee5dd84d99f07faa3576a17c4cfe7122052fb288c7a4",
+    "bytes": 9647
+  },
+  "broad_ctest_optional": "199 selected/fullCTests optional corroboration. The8 named fingerprints are known baseline; cannot waive changed/new failures. G5RenderCache90s timeout stays censored.",
+  "focused_node": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "verification/tests/g5_ur2a_handoff.test.mjs",
+    "verification/tests/g5_ur2b_exact_query.test.mjs",
+    "verification/tests/g5_ur2c_mask_history.test.mjs",
+    "verification/tests/g5_transient_display_retry.test.mjs",
+    "verification/tests/g5_moving_erase_progress.test.mjs",
+    "verification/tests/g5_render_execution.test.mjs",
+    "verification/tests/g5_webgl_target_readback.test.mjs"
+  ],
+  "focused_python": [
+    "python3.12",
+    "-m",
+    "unittest",
+    "verification.tests.test_g5_ur2a_handoff",
+    "verification.tests.test_g5_ur2b_exact_query",
+    "verification.tests.test_g5_ur2c_mask_history",
+    "verification.tests.test_g5_transient_display_retry",
+    "verification.tests.test_g5_moving_erase_progress",
+    "verification.tests.test_g5_render_execution"
+  ],
+  "boundary": [
+    "python3.12",
+    "tools/check_runtime_boundaries.py",
+    "--root",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom"
+  ],
+  "new_tests": "Add native UR2d A exact selection semantic/locality/lifecycle tests and B actual Up work/commit/recovery tests. Add focused runner tests for immediate input and timeout/identity if new runner logic is written. Register names before first production mutation. Do not test implementation by cloning its helper into the expected result."
+}

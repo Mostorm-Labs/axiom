@@ -1,0 +1,641 @@
+{
+  "status": "SCOPED_NATIVE_PIXELS_AND_PRIMARY_WEB_QUALIFIED",
+  "newmask_only": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/B-bounded-work.log",
+    "sha256": "f4d7f94e9845119dc15417256f022e5ae68976546290010e1ac8fdfd277b20dc",
+    "bytes": 500
+  },
+  "mask_sorted_insertion_locality": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/B-region-work.log",
+    "sha256": "e004689779613fd115c778cddc1f7acdc983f8ee136e6cf598938f2a587dce15",
+    "bytes": 499
+  },
+  "native56": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/final-native-junit.xml",
+    "sha256": "1930fa3a865bc520c93cff1548571cf17837d2c57fdb2c2a1b9095bce9e7f6cd",
+    "bytes": 40233
+  },
+  "desktop_area30": "out/G5-object-interaction-continuity-r2/build-native/runtime/render/desktop-budget-area/dense-mixed-counters.json",
+  "primary6pixels": [
+    {
+      "variant": "old",
+      "pair": 0,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-0/qualified-row.json",
+        "sha256": "f7fbeda0272dfe9aea897371e1c0e67b850189567ba3f18e6ad26b329f21e711",
+        "bytes": 294920
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 1,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "8a5b112a7fde38960588d45cbcdc25ae9f59886102aa4766fb44090adfa7e8da",
+            "actual_sha256": "2cd1bf7cd123cfddc7c77cd7e54c2ccdb5f8c9817088eac9b5ee481cccebce6a",
+            "reference_sha256": "f7f92bc7d328af3567093868b10f06ad61b916c66b0ac8f2381338831cadd00c",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "d1b931e14d22ee1fb5d9d600471f150849b8f999315f29649d2d588dacd3adde",
+            "actual_sha256": "d697cfba8c86884883b99d9eb2a8af442e2ce2e669b8f39eeaa165de5233b3a4",
+            "reference_sha256": "f7f92bc7d328af3567093868b10f06ad61b916c66b0ac8f2381338831cadd00c",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-0/S2-final.axsnap",
+        "sha256": "8a5b112a7fde38960588d45cbcdc25ae9f59886102aa4766fb44090adfa7e8da",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-0/S2-redo.axsnap",
+        "sha256": "d1b931e14d22ee1fb5d9d600471f150849b8f999315f29649d2d588dacd3adde",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-0/S2-final.rgba",
+        "sha256": "2cd1bf7cd123cfddc7c77cd7e54c2ccdb5f8c9817088eac9b5ee481cccebce6a",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-0/S2-redo.rgba",
+        "sha256": "d697cfba8c86884883b99d9eb2a8af442e2ce2e669b8f39eeaa165de5233b3a4",
+        "bytes": 23124960
+      }
+    },
+    {
+      "variant": "candidate",
+      "pair": 0,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-0/qualified-row.json",
+        "sha256": "0fb7498cd2922ef36a8ea5d11287f5956f3c2dd5b730e9676bf3e56dfb046fc9",
+        "bytes": 295663
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 1,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "1d344821abda7684fb4695bc811f1630e097b3855cb21eabe47e368645085be2",
+            "actual_sha256": "da9db6e83a9efb41d006f6126c55c8f74fd3d30feb5450e03395da34395fb1b4",
+            "reference_sha256": "9baa209b2c54c2d105d8984e9a1ec1b9ebf4e025c74bfdc3ca31f293172c11d4",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "30d6ac02dd294cb24259e8646300251f65c077e393eec9047f05a07de3e0cbd1",
+            "actual_sha256": "dc9f5af83292bba8512e971c178e20159cbbad0fe86b523e35e74b3d933b9eb8",
+            "reference_sha256": "9baa209b2c54c2d105d8984e9a1ec1b9ebf4e025c74bfdc3ca31f293172c11d4",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-0/S2-final.axsnap",
+        "sha256": "1d344821abda7684fb4695bc811f1630e097b3855cb21eabe47e368645085be2",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-0/S2-redo.axsnap",
+        "sha256": "30d6ac02dd294cb24259e8646300251f65c077e393eec9047f05a07de3e0cbd1",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-0/S2-final.rgba",
+        "sha256": "da9db6e83a9efb41d006f6126c55c8f74fd3d30feb5450e03395da34395fb1b4",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-0/S2-redo.rgba",
+        "sha256": "dc9f5af83292bba8512e971c178e20159cbbad0fe86b523e35e74b3d933b9eb8",
+        "bytes": 23124960
+      }
+    },
+    {
+      "variant": "old",
+      "pair": 1,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-1/qualified-row.json",
+        "sha256": "166284060e21f5ed06ea68acb07cda40924f53d24aab18d646dab4d11dbcde41",
+        "bytes": 295546
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "d77c40c648c6c4ae87d6c8b509a47006b64e61c3668bb2b821109ece9e3969cb",
+            "actual_sha256": "d1d3988c4086bd7b98a4d304284c8dcc2d9c69ba97ead7ae30de3bdcb8243d1f",
+            "reference_sha256": "26ebec547e56177e650bb4d10b85f2c67e8b4578660dbb33bc23a24f6236b891",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "3f5146e80b8639318ab6ed55b4d94b6109401963f995732ebcd03a3f915f28ac",
+            "actual_sha256": "d1d3988c4086bd7b98a4d304284c8dcc2d9c69ba97ead7ae30de3bdcb8243d1f",
+            "reference_sha256": "26ebec547e56177e650bb4d10b85f2c67e8b4578660dbb33bc23a24f6236b891",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-1/S2-final.axsnap",
+        "sha256": "d77c40c648c6c4ae87d6c8b509a47006b64e61c3668bb2b821109ece9e3969cb",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-1/S2-redo.axsnap",
+        "sha256": "3f5146e80b8639318ab6ed55b4d94b6109401963f995732ebcd03a3f915f28ac",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-1/S2-final.rgba",
+        "sha256": "d1d3988c4086bd7b98a4d304284c8dcc2d9c69ba97ead7ae30de3bdcb8243d1f",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-1/S2-redo.rgba",
+        "sha256": "d1d3988c4086bd7b98a4d304284c8dcc2d9c69ba97ead7ae30de3bdcb8243d1f",
+        "bytes": 23124960
+      }
+    },
+    {
+      "variant": "candidate",
+      "pair": 1,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-1/qualified-row.json",
+        "sha256": "935022e1b42282437b8c8dfbd73bb35185ee50da0d3508797dabb1fc2a7e0213",
+        "bytes": 295918
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "dc068ab320a4226f5c651dbc95b77c0fadd5a04b94f61f1b86d677ee71e5c9c7",
+            "actual_sha256": "a7a7253b6b4ab60b248f54828547ce72eed5a9f465aebf744e45967811160126",
+            "reference_sha256": "3ef7eee79cbd33321460399bd6da14e4e9a949b3b8d1ef84b3006668b6e37398",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "26c803a185515edcbccb399f8948fd0ff95e8ce5791bfdd0ee787a61d2edfc4a",
+            "actual_sha256": "a7a7253b6b4ab60b248f54828547ce72eed5a9f465aebf744e45967811160126",
+            "reference_sha256": "3ef7eee79cbd33321460399bd6da14e4e9a949b3b8d1ef84b3006668b6e37398",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-1/S2-final.axsnap",
+        "sha256": "dc068ab320a4226f5c651dbc95b77c0fadd5a04b94f61f1b86d677ee71e5c9c7",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-1/S2-redo.axsnap",
+        "sha256": "26c803a185515edcbccb399f8948fd0ff95e8ce5791bfdd0ee787a61d2edfc4a",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-1/S2-final.rgba",
+        "sha256": "a7a7253b6b4ab60b248f54828547ce72eed5a9f465aebf744e45967811160126",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-1/S2-redo.rgba",
+        "sha256": "a7a7253b6b4ab60b248f54828547ce72eed5a9f465aebf744e45967811160126",
+        "bytes": 23124960
+      }
+    },
+    {
+      "variant": "old",
+      "pair": 2,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-2/qualified-row.json",
+        "sha256": "1c23457153660c089e7f9f1872cc855e019cbce65258fae02c8a7b68fbd04b6b",
+        "bytes": 296466
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 1,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "6ad92adfe49a1d79cc44b736fc286d6527d780df705caa66f2e723ad737df5d6",
+            "actual_sha256": "17ca412c752f63c6e8b16f3670e84ad3f7db01694a6408f680c0b8e27fdece34",
+            "reference_sha256": "92ed6c5f50b2d3cdf3deffbdb1e9011084b27bd43b0126688feed7429f0a241d",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "ba7c12a3ed9d1efb564725ffb985d09ae61c38323386ba5ef4308058b3b79851",
+            "actual_sha256": "0ab2bbc7be90e1a1e16c968b94d0ebb10c276b17b7c633aac7cfb70cc32e80b7",
+            "reference_sha256": "92ed6c5f50b2d3cdf3deffbdb1e9011084b27bd43b0126688feed7429f0a241d",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-2/S2-final.axsnap",
+        "sha256": "6ad92adfe49a1d79cc44b736fc286d6527d780df705caa66f2e723ad737df5d6",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-2/S2-redo.axsnap",
+        "sha256": "ba7c12a3ed9d1efb564725ffb985d09ae61c38323386ba5ef4308058b3b79851",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-2/S2-final.rgba",
+        "sha256": "17ca412c752f63c6e8b16f3670e84ad3f7db01694a6408f680c0b8e27fdece34",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/old-2/S2-redo.rgba",
+        "sha256": "0ab2bbc7be90e1a1e16c968b94d0ebb10c276b17b7c633aac7cfb70cc32e80b7",
+        "bytes": 23124960
+      }
+    },
+    {
+      "variant": "candidate",
+      "pair": 2,
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-2/qualified-row.json",
+        "sha256": "7b7519fcd13762ba2e400d9cd93b8b394c683aea1c1ecc2572ead9d5fae56926",
+        "bytes": 295443
+      },
+      "qualification": {
+        "status": "QUALIFIED",
+        "before": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "after": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "roundtrip": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5051061,
+          "aa_boundary_pixels": 730179,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "fullViewport": {
+          "status": "QUALIFIED",
+          "compared_pixels": 5781240,
+          "aa_boundary_pixels": 0,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 1,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+        },
+        "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+        "oracle": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+        },
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1.020201325416565,
+            "x": -20.28240966796875,
+            "y": -12.161346435546875
+          },
+          "hud_bounds": []
+        },
+        "samples": [
+          {
+            "snapshot_sha256": "17a3a66d6f1fcd9e968564bd17cd445bb58b3d4c25dc290599ccfc729ea7f26a",
+            "actual_sha256": "67cb7b10f2598aa11c8806a47a008dacbd66802aa8f3cde0be51df13b538b00e",
+            "reference_sha256": "83360a20ebeadc0d806a0866e5ec356c44065cc1bf145b0a9a1787132b48d0de",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          },
+          {
+            "snapshot_sha256": "5b22f9593f4a8ea2fb408d79de09258e57802c0eab776411489682622f76361d",
+            "actual_sha256": "7cb60ff4cd0227c814833ec91c98612dcc20e182b829071487661eadda5e646d",
+            "reference_sha256": "83360a20ebeadc0d806a0866e5ec356c44065cc1bf145b0a9a1787132b48d0de",
+            "band_sha256": "e39712b9f878299588c179fdb5ad012486796597c1f2ddba778ec76f865eeaa2"
+          }
+        ]
+      },
+      "final_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-2/S2-final.axsnap",
+        "sha256": "17a3a66d6f1fcd9e968564bd17cd445bb58b3d4c25dc290599ccfc729ea7f26a",
+        "bytes": 7485031
+      },
+      "redo_snapshot": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-2/S2-redo.axsnap",
+        "sha256": "5b22f9593f4a8ea2fb408d79de09258e57802c0eab776411489682622f76361d",
+        "bytes": 7485031
+      },
+      "final_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-2/S2-final.rgba",
+        "sha256": "67cb7b10f2598aa11c8806a47a008dacbd66802aa8f3cde0be51df13b538b00e",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-FINAL-PAIRS/candidate-2/S2-redo.rgba",
+        "sha256": "7cb60ff4cd0227c814833ec91c98612dcc20e182b829071487661eadda5e646d",
+        "bytes": 23124960
+      }
+    }
+  ],
+  "no_candidate_difference_band": true,
+  "whole_readiness": "Partial; table/image andstickyactive notqualified."
+}

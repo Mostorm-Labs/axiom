@@ -1,0 +1,134 @@
+{
+  "schema": "g5-ur2d-final-local-review-result-v1",
+  "task": "G5-UR2d-selection-up-continue-r1",
+  "active_package": "G5-UR2d-compare-resume-r1",
+  "status": "BLOCKED_EVIDENCE",
+  "blocking_obligation": "D-PERF_THREE_BROWSER_PAIRS_INCOMPLETE",
+  "classification": "IMPLEMENTED_CODE_AND_OBSERVED_FUNCTIONAL_CHECKPOINT_NOT_PRODUCT_FAILURE",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "code_checkpoint": {
+    "A": "implemented and native/actualpublicinputverified",
+    "B": "implemented,native12actualUpphases/history/maskbytesgreen,publicS0/S2factsofflinerequalified",
+    "renderer_owners": "existing SkiaRenderer/PreparedGeometryCache/EraseMaskPathCache;normalpublicSDKunchanged",
+    "Sectioncomposedworld": "originalnoncompactSectionworldtransformrestored;parentedtestgreen"
+  },
+  "obligations": [
+    {
+      "id": "D-A1",
+      "status": "VERIFIED_NATIVE_STRUCTURAL",
+      "refs": [
+        "old-cost-RED (parentexactref)",
+        "selection-cost-and-parity-final.json",
+        "paired-native-costs-A.json",
+        "source-delta.patch"
+      ]
+    },
+    {
+      "id": "D-A2",
+      "status": "OBSERVED_NATIVE_AND_PUBLIC",
+      "refs": [
+        "selection-parity.json",
+        "input-lifecycle-A.json",
+        "Section-fix.log",
+        "web-functional.json"
+      ]
+    },
+    {
+      "id": "D-B1",
+      "status": "VERIFIED_NATIVE_STRUCTURAL",
+      "refs": [
+        "up-phase-baseline.json",
+        "up-phase-candidate-final.json",
+        "B-final-paired-native.json",
+        "up-structural-red-green.json"
+      ],
+      "limits": "maskpayloadstillbuilt/copiedperobject;onlymeasuredexactworkshareandcoldqueryownerinitializationchanged"
+    },
+    {
+      "id": "D-B2",
+      "status": "OBSERVED_WITH_OFFLINE_PIXEL_REQUALIFICATION",
+      "refs": [
+        "final-native-regression.log",
+        "web-functional.json",
+        "B-F-offline-pixel/classification.json",
+        "COMPARE-offline-pixel/classification.json",
+        "COMPARE-snapshot-roundtrip.json"
+      ]
+    },
+    {
+      "id": "D-PERF",
+      "status": "BLOCKED_EVIDENCE",
+      "refs": [
+        "performance-classification.json",
+        "partial-paired-Web-timing.json"
+      ],
+      "reason": "threepairsrequired,onlyfirstold/candidatesamefixturesobserved;2missing;cannotrelabelmissingasnoise"
+    },
+    {
+      "id": "D-REG",
+      "status": "SCOPED_REGRESSIONS_GREEN",
+      "refs": [
+        "regressions.json",
+        "normal-test-hooks-absent-final.json",
+        "original634-final-comparison.json",
+        "finite-six-final.log",
+        "cleanup.json"
+      ]
+    }
+  ],
+  "evidence": {
+    "source": {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+      "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0",
+      "content_sha256": "dc16e9cbf97c936f57217f9a22a71384f4a9c215a99298dfe43822784a1595b1"
+    },
+    "tracked_delta": {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-delta.patch",
+      "sha256": "3c9065cca1f162bce32970e2ac711a253b65eedcd079b4042b105c85938c9ddb"
+    },
+    "newfiles_count": 7,
+    "postimages": "new-source-postimages/",
+    "normalSDK": {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-normal-artifacts.json",
+      "sha256": "a81ddee2d58a1c27db1d58a0404a6537d975cd7f58849311f9e7b7792f6799d0",
+      "members": 36,
+      "wasm": "7b5f1f1e4c57dd49e86a6ba11daf1ca2703c35bf45bb54ba4f6aabbe2e0458d6"
+    },
+    "browserledger": "continuation-ledger.json",
+    "rawfailures": "unmodifiedsourceboundOLD-F,B-F,COMPARErecords",
+    "parent_reuse": "parent-evidence-reuse.json"
+  },
+  "browser_allowance": {
+    "actual_total_starts": 4,
+    "total_charged_seconds": 105,
+    "overall_cap": 960,
+    "remainingIDs": [],
+    "cleanup_complete": true
+  },
+  "findings": [
+    "OLD-F3GiBguard:crashphaseunknown;badbulktransportprovenbutnotsolescause;rawfailurepreserved.",
+    "B-FdriverfullGPUhashstrictness:2pixelsdelta1,objects96maskscompleteequal,oldCPUoriginalpolicyQUALIFIED;rawexit1preserved.",
+    "COMPAREdriverzeroedgenecessarytestincorrect:oneS2pixelmax4insideindependentoldCPUband;objects128maskscompleteequalandnonAA0difference;rawexit1preserved;driverAAfallbackstillincomplete.",
+    "Missingsecond/thirdWebpair remainsmissing;noWebrelativeperformancePASS. Productfailure not established by the stoppedharness.",
+    "Memo128KiBrealemptyhit/deniedhistorygreen andcontrol24forkproofretained. IsolatedremovingguardalonefailedtoreproduceREDbecauseevictfirstremovesmemo;negativeexperimentexit0preservednotmislabelled.",
+    "NativewarmAandactualUpimprovements scopedtolocalinputandcompleteidentity;notcrossplatformorphysicalinput-to-photon.",
+    "Prior8broadr2baselinefailuresremainknownhistory,noUR2dwaiverofchangedfailurefingerprints."
+  ],
+  "normal_demo": "http://127.0.0.1:4316/example.html",
+  "prohibited_claims_not_issued": [
+    "G5PASS",
+    "P34PASS",
+    "platformPASS",
+    "formalperformancePASS"
+  ],
+  "commit_push": false,
+  "userdemos_preserved": [
+    "4315",
+    "4298",
+    "4297"
+  ],
+  "next_action": "Controlreviewofverifiedcode/functionalfactsandD-PERFevidenceblocker;nofurtherbrowser/scopeauthorized;usercaninspectordinary4316checkpoint",
+  "finished_utc": "2026-11-10T11:18:12.884782+00:00"
+}

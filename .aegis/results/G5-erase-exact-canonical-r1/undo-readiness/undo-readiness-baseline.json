@@ -1,0 +1,34 @@
+{
+  "status": "PARTIAL_USER_SYMPTOM_REPRODUCED_SYNC_UP",
+  "rows": [
+    {
+      "moves": 800,
+      "localization": {
+        "up_ms": 1895.8999999761581,
+        "firstRuntimeTrue": 4400.600000023842,
+        "firstOnChangeTrue": 4432.100000023842,
+        "firstDOMEnabled": 4433.399999976158,
+        "classification": "SYNC_UP_BLOCK",
+        "limitation": "Owner state cannot be read synchronously inside a blocked Up; first public observation is an upper bound."
+      },
+      "raw": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-DIAGNOSTIC/undo-800.json"
+    },
+    {
+      "moves": 1600,
+      "localization": {
+        "up_ms": 4178.100000023842,
+        "firstRuntimeTrue": 7334.700000047684,
+        "firstOnChangeTrue": 7374.700000047684,
+        "firstDOMEnabled": 7376.800000071526,
+        "classification": "SYNC_UP_BLOCK",
+        "limitation": "Owner state cannot be read synchronously inside a blocked Up; first public observation is an upper bound."
+      },
+      "raw": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-DIAGNOSTIC/undo-1600.json"
+    }
+  ],
+  "actualDemo": true,
+  "no_UI_force_enabled": true,
+  "ten_second_delay_reproduced": false,
+  "next_input_in_busy_window": "NOT_OBSERVED in supplemental r1 no-input readiness case; separate candidate functional required",
+  "hypothesis": "Owner trace remains active through synchronous exact/Scene work. Public canUndo true immediately atUp return; actualDOM31\u201342mslater."
+}

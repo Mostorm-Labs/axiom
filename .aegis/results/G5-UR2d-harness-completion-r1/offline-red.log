@@ -1,0 +1,99 @@
+TAP version 13
+# Subtest: DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+ok 1 - DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+  ---
+  duration_ms: 631.559792
+  ...
+# Subtest: transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+ok 2 - transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+  ---
+  duration_ms: 3.019792
+  ...
+# Subtest: guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+ok 3 - guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+  ---
+  duration_ms: 0.179292
+  ...
+# Subtest: performance needs every correct paired sample and does not hide missing or failed observations
+ok 4 - performance needs every correct paired sample and does not hide missing or failed observations
+  ---
+  duration_ms: 0.115541
+  ...
+# Subtest: original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+ok 5 - original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+  ---
+  duration_ms: 0.263917
+  ...
+# Subtest: roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+not ok 6 - roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3
+  ---
+  duration_ms: 0.6545
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur2d_selection_up.test.mjs:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    roundtrip must use the frozen independent band
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur2d_selection_up.test.mjs:59:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: missing, malformed, blank or incompatible independent references cannot qualify
+not ok 7 - missing, malformed, blank or incompatible independent references cannot qualify
+  ---
+  duration_ms: 0.193792
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur2d_selection_up.test.mjs:66:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur2d_selection_up.test.mjs:67:9)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+ok 8 - driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+  ---
+  duration_ms: 2.087167
+  ...
+# Subtest: COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+ok 9 - COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+  ---
+  duration_ms: 0.669417
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 7
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 901.439584

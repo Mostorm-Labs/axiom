@@ -1,0 +1,142 @@
+{
+  "schema": "g5-ur2d-authority-lock-v1",
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "human_authorization": "按照这个顺序开始优化吧，先做1和2两个ur2d的任务",
+  "current_authority": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "bytes": 11364
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "bytes": 11224
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "bytes": 4508
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114",
+      "bytes": 8337
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c",
+      "bytes": 5338
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428",
+      "bytes": 4050
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+      "bytes": 4598
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "bytes": 349
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "bytes": 39842
+    }
+  ],
+  "scoped_design_inputs": [
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "bytes": 17316
+    },
+    {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_CONTRACTS_2026_11_08_R3.md",
+      "sha256": "2f8951eabb87e809ba9991c68e5f0ea36f7bdddbe487461de14dc79c50b7f016",
+      "bytes": 22744
+    }
+  ],
+  "trusted_basis": {
+    "repository": {
+      "provider": "github",
+      "full_name": "Mostorm-Labs/axiom"
+    },
+    "anchor": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "branch": "codex/geometry-navigation-integration",
+    "accepted_dirty_source": {
+      "path": ".aegis/results/G5-object-interaction-continuity-r2/source-manifest.json",
+      "sha256": "ddc9a58d99eb1416a9f80fbc843d8da12ad732b18196ba87ae334b53adb4435f",
+      "bytes": 3422
+    },
+    "accepted_control_review": {
+      "path": ".aegis/results/G5-object-interaction-control-review-r2/control-review.json",
+      "sha256": "4f27d7ea2e42c2177aa39d4b9d3f976be6ef1e3ccba0d4b704182b49915fdd3a",
+      "bytes": 2496
+    },
+    "UR2b_finite_control": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2b-finite-p36-r1/result.json",
+      "sha256": "b50aa710a446be50d176c09574a3559d4494dc6d996e592496b2578d4199c88c",
+      "bytes": 8921
+    },
+    "UR2c_history_control": {
+      "path": ".aegis/results/G5-UR0b/control-review-ur2c-history-progress-p36-r1/result.json",
+      "sha256": "2c8dca5773c6667d6909ac35cb3919b3491d054c638f4201750c5161442ac3b7",
+      "bytes": 5226
+    },
+    "assessment": {
+      "path": ".aegis/results/G5-continuous-actions-assessment-r1/result.json",
+      "sha256": "7cb2f98f6a48e78d1bb3eb51a9cc7339f4f4e6d15118e3ae759a81934446ae0b",
+      "bytes": 6572
+    },
+    "observed_production_files": {
+      "runtime/render/CMakeLists.txt": {
+        "sha256": "24b0795a044332ab4a0d4b861f9cc6f81e7642fe072f0deda4ebc8b137dccc82",
+        "bytes": 48308
+      },
+      "runtime/render/include/canvas/render/skia_renderer.hpp": {
+        "sha256": "85c129643be7f8a42fcddbd2062222302fbcca444e6d846e8501914554de3d2e",
+        "bytes": 6737
+      },
+      "runtime/render/src/render_group_manager.cpp": {
+        "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+        "bytes": 9051
+      },
+      "runtime/render/src/skia_render_cache.cpp": {
+        "sha256": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+        "bytes": 85268
+      },
+      "runtime/render/src/skia_render_cache_internal.hpp": {
+        "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+        "bytes": 12609
+      },
+      "runtime/render/src/skia_renderer.cpp": {
+        "sha256": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+        "bytes": 98604
+      },
+      "runtime/render/tests/object_interaction_continuity_r2_test.cpp": {
+        "sha256": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b",
+        "bytes": 8735
+      },
+      "runtime/render/tests/transient_display_retry_test.cpp": {
+        "sha256": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+        "bytes": 50655
+      }
+    },
+    "important": "The accepted uncommitted r2 delta is part of the starting source, not unrelated edits to discard. Anchor ancestry plus exact preimage hashes; do not require clean HEAD."
+  },
+  "statements": [
+    "SemanticDocument/OperationEngine remains sole canonical owner; History and current Scene/receipt paths stay ordered and atomic.",
+    "Interaction owns region session, candidate/final selection and erase commit; Render owns existing PreparedGeometryCache/EraseMaskPathCache and local exact derived-query reuse. No extra cache/document owner in SDK, platform or demo.",
+    "UR2d-A preserves existing selection EvenOdd polygon, object affine inversion, visible geometry, historical-mask subtraction, narrow contact tolerance, unsupported/invalid/error rules and group/locked/text behavior. A shared erase query is not automatically a valid selection oracle.",
+    "UR2d-B shortens actual synchronous Up cost through exact query reuse, query/history preparation amortization, and measured internal copy reductions. Existing prepareRecord/publication reservation -> atomic apply -> commitPrepared/observe -> derived Scene order is preserved.",
+    "Accepted inputs, confirmed Move and Up/Cancel/source-lost are not dropped or coalesced away. Pure derived candidate display requests may be coalesced only within existing selection semantics with exact final Up and correct current basis; no async Up or admission changes.",
+    "No workers, no mutable prepared scratch concurrency, no UR3 rendering scheduling/preview rollout, no GPU policy/AA/brush/canonical schema change, no budget increase.",
+    "R3 design is a scoped engineering input; historical descriptions of already fixed UR2a/b/c are not current defects or permission to reimplement them.",
+    "This is local controlled implementation and independent source review, not an official Gate/P34, release or other-platform acceptance. No commit/push requested."
+  ]
+}

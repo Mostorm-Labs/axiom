@@ -1,0 +1,106 @@
+{
+  "native": {
+    "body_knots": 7199,
+    "copies": [
+      1,
+      16,
+      40
+    ],
+    "trace_moves": [
+      80,
+      160,
+      400
+    ],
+    "real_rounds": 3,
+    "history": "Seed two80segment histories, then actual successfulUp produces distinct perobjectcanonicalmaskIDs eachround; do notresetIDsbetweenrounds",
+    "core": "40copies×160/400moves×3rounds; 1/16comparisons sampled, notfullCartesian. Include oneuniquegeometryandtransformfork,unknownowner,marker/filledaffine/sliver/invalid/finite6.",
+    "timers": [
+      "Upquerymaskconstruction/union",
+      "history lookup/valueproof/primitivebuild",
+      "querybodyintersection/difference",
+      "History/publication/apply/Scene",
+      "postUpbodycoverage/maskreplay/compose",
+      "immediatenextDownandactualnextfeedback"
+    ],
+    "baseline": {
+      "path": ".aegis/results/G5-erase-cpu-review-r1/runtime-result.json",
+      "sha256": "f1941ff8df03e59eae04b1054418b73ca567f118748dba925c8a25252476adee"
+    }
+  },
+  "web": {
+    "fixture": {
+      "name": "S2",
+      "sha256": "864e66ee4a07f2f63050a0b4d8299a92250dc2ccbe2eb713231a6191a81bdda0",
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR1a-attribution-r2/local-comparison/fixtures/S2.axsnap",
+      "documentId": "99999999999999999999999999999999",
+      "metadata": {
+        "documentRevision": "18",
+        "recoveryFrontier": [
+          8,
+          1,
+          16,
+          1,
+          24,
+          1
+        ],
+        "checkpointDigest": [
+          151,
+          57,
+          132,
+          105,
+          48,
+          131,
+          242,
+          136,
+          21,
+          100,
+          7,
+          121,
+          161,
+          26,
+          94,
+          99,
+          88,
+          47,
+          42,
+          93,
+          102,
+          215,
+          242,
+          51,
+          48,
+          30,
+          42,
+          82,
+          24,
+          128,
+          105,
+          242
+        ],
+        "resourceBinding": "1"
+      }
+    },
+    "restore_strokes": 16,
+    "duplicate_extra": 24,
+    "duplicate_offset": [
+      0,
+      0
+    ],
+    "normal_size_css": [
+      1431,
+      1010
+    ],
+    "dpr": 2,
+    "brush": "frozenS2round-handdrawnv4",
+    "primary": "Exactlypriorbrowserdiagnostic waveform: x=420-round*18+7sin(i*.17), y=160+170*i/160, 160acceptedMoves, originaldeliveryevery8Movespause0; mainUp thenimmediatetinyDown/Move/Up; rounds3; interroundidle6srecordsactualquiescence (notbeforeimmediateinput). Preserveallrounds/noopthirdtinyallowed.",
+    "repeat": "Threepairediterations oneold/candidateeach atfinal stage; noCPUprofiling/readback duringprimaryinputphase. CPUprofile separateboundedattributioncaseifneeded.",
+    "functional": "Final/cancel/UndoRedo actualcanonical snapshot/pixels original independent CPU AA; actualinputscontacts/latestgeneration/readbackoutsideprimarytiming. Include immediatepan/zoom betweenlastUpandsettleonlyinfunctionalcase; preserveownoriginal timingcaseforpairedcomparison.",
+    "stress": "Onecandidateconsecutive10eraserounds/noartificialsettlebetweengestures, alternateerase/navigation/noop/cancel; boundedtailwatch<=15sidle. User42objectmaskhistorycontentnotavailable; prolongedCPU100notautomaticallyclosed.",
+    "safety_dpr4": "Nativebounded800x500DPR4 correctness/resource case; nofullCartesianWebmatrix."
+  },
+  "prior_normal_diagnostic": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/browser-result.json",
+    "sha256": "8992b3b1a975a09d227759d74634f46af2d056d086076b9c42873a9148bf80b0"
+  },
+  "old_profile_attribution": "Function6789stripindexunresolved;emit-symbol-maprelinkmappingrejected. Re-identifyviaexactmatchingbinaryorprivatephasecounters,notdirectforeignindices."
+}

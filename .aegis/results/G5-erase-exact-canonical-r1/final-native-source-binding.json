@@ -1,0 +1,25 @@
+{
+  "final_source_rebuild_command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native",
+    "-R",
+    "^(G5EraseExactCanonical|G5EraseExactCanonicalRuntime|G5UR2DSelectionLocality|G5UR2DUpRuntime|G5UR2BExactInvalidation|G5UR2BExactPressure|G5CanonicalPreparedBodyPixels|G5TransientDisplayRetryPixels|G5UR2CHistoryExactParity|G5UR2CLeaseAccounting)$",
+    "--output-on-failure",
+    "--parallel",
+    "1",
+    "--timeout",
+    "180",
+    "--output-junit",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/final-source-focused-junit.xml"
+  ],
+  "final_focused_count": 10,
+  "test_exit": 0,
+  "source": {
+    "runtime/render/src/selection_region_geometry.cpp": "44ba3818b43d6d461d9c64d760ef7dc2f4911df5f6c0ab4e422949cdb9cd30dc",
+    "runtime/render/src/skia_renderer.cpp": "413df6fbb21eb753f8c4d5386b557f266397e4be8a636a34cb89de7fa5dd62a7"
+  },
+  "original56_scope": "B/context/retainedcoldjob beforelastAcommontransformprefix/temporaryreservation. Preservedoriginal56; finalaffected10incrementallyrelinkedandrun.",
+  "log": "final-source-focused.log",
+  "junit": "final-source-focused-junit.xml"
+}

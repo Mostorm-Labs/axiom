@@ -1,0 +1,22 @@
+{
+  "schema": "axiom-execution-authority-lock-v1",
+  "source": {
+    "path": "docs/notion/manifest.yaml",
+    "snapshot_date": "2026-08-28",
+    "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+  },
+  "current_authority": {
+    "architecture_baseline": {
+      "version": "v0.4",
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "status": "current"
+    }
+  },
+  "trusted_statements": [
+    "Runtime interaction owns selection and transform sessions; semantic OperationEngine remains canonical mutation owner.",
+    "Runtime render owns FramePlan/Skia presentation and may retain derived pixels only with basis/resource validation.",
+    "Consumer SDK boundaries remain unchanged."
+  ],
+  "supersession": "none",
+  "scope": "private Runtime/Render interaction continuity repair only"
+}

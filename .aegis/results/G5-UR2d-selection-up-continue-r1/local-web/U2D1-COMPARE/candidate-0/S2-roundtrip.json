@@ -1,0 +1,26 @@
+{
+  "status": "FAILED",
+  "compared_pixels": 5781240,
+  "aa_boundary_pixels": 0,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 1,
+  "max_interior_delta": 4,
+  "witnesses": [
+    {
+      "pixel": 1623325,
+      "actual": [
+        138,
+        144,
+        154,
+        255
+      ],
+      "reference": [
+        134,
+        141,
+        152,
+        255
+      ]
+    }
+  ],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+}

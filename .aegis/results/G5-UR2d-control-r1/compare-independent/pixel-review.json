@@ -1,0 +1,130 @@
+{
+  "status": "ORIGINAL_PIXEL_OBLIGATION_QUALIFIED",
+  "rows": [
+    {
+      "fixture": "S0",
+      "whole_target": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 1,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "final_vs_old_cpu": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "redo_vs_old_cpu": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "roundtrip_original_band": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "witness": []
+    },
+    {
+      "fixture": "S2",
+      "whole_target": {
+        "status": "FAILED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1,
+        "max_interior_delta": 4,
+        "witnesses": [
+          {
+            "pixel": 1623325,
+            "actual": [
+              138,
+              144,
+              154,
+              255
+            ],
+            "reference": [
+              134,
+              141,
+              152,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "final_vs_old_cpu": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "redo_vs_old_cpu": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "roundtrip_original_band": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5076225,
+        "aa_boundary_pixels": 705015,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "witness": [
+        {
+          "pixel": 1623325,
+          "actual": [
+            138,
+            144,
+            154,
+            255
+          ],
+          "reference": [
+            134,
+            141,
+            152,
+            255
+          ],
+          "independent_band": 1
+        }
+      ]
+    }
+  ],
+  "S2_references_equal": true,
+  "independent_oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+  "no_product_or_tolerance_change": true,
+  "raw_original_stop_preserved": true
+}

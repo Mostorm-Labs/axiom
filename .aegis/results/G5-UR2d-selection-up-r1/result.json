@@ -1,0 +1,69 @@
+{
+  "schema": "g5-ur2d-selection-up-result-v1",
+  "task": "G5-UR2d-selection-up-r1",
+  "status": "BLOCKED_EVIDENCE",
+  "terminal_blocker": "REQUIRED_OLD_FUNCTIONAL_BASELINE_RSS_GUARD",
+  "classification": "ENVIRONMENT_OR_HARNESS_GUARD_NOT_PRODUCT_VERDICT",
+  "package": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/package.json",
+    "sha256": "09a8f3d1c2e927f3943838d543327df7f30a6b09c9d9281f0ad0e6797d4154a8"
+  },
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "completed": [
+    "PackageBindingPreflightPASS",
+    "EvidenceContractPreflightPASS",
+    "implementationdesignrecorded",
+    "acceptedr2preimagesverified",
+    "oldordinary36memberSDKfrozen",
+    "oldselectionkernel/source/archiveandoldexactbinariesfrozen",
+    "oldnativecostREDobserved",
+    "oneOLD-Fwindowattemptedandguardcleanupcomplete"
+  ],
+  "not_completed": [
+    "Aproductionimplementation/nativeparity",
+    "Apublicfunctionalgate",
+    "BUpmeasurement/optimization",
+    "Bpublicfunctional",
+    "pairedCOMPARE",
+    "newordinaryUR2dDemo"
+  ],
+  "A_milestone_ready": false,
+  "B_milestone_ready": false,
+  "UR2d_production_changes": false,
+  "new_runner_files": [
+    "verification/runners/g5/ur2d_selection_up.mjs",
+    "verification/runners/g5/ur2d_selection_up_runner.py"
+  ],
+  "source_preserved": {
+    "runtime/render/CMakeLists.txt": true,
+    "runtime/render/include/canvas/render/skia_renderer.hpp": true,
+    "runtime/render/src/render_group_manager.cpp": true,
+    "runtime/render/src/skia_render_cache.cpp": true,
+    "runtime/render/src/skia_render_cache_internal.hpp": true,
+    "runtime/render/src/skia_renderer.cpp": true,
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": true,
+    "runtime/render/tests/transient_display_retry_test.cpp": true
+  },
+  "blocked_window": "window-closure.json",
+  "guard_refs": [
+    "local-web/U2D1-OLD-F.worker.json",
+    "local-web/U2D1-OLD-F/worker-result.json",
+    "OLD-F-run.log"
+  ],
+  "allowance": {
+    "starts_used": 1,
+    "charged_seconds": 40,
+    "remaining_nominal_seconds": 920,
+    "remaining_windows": "HARD_STOP_NOT_AUTHORIZED_TO_RUN_UNTIL_CONTROL_CONTINUATION"
+  },
+  "keeper_and_pixel_claims": "NotrunforUR2dcandidate; oldr2evidencepreservedandnotrelabelled",
+  "next_action": "Controlreviewofguardraw anddriverharness; explicitcontinuation/newbaselineverificationwindowrequired. NoSDKbudgetorproductlimitschanged.",
+  "commit_push": false,
+  "user_demos_preserved": [
+    "4315",
+    "4298",
+    "4297"
+  ],
+  "finished_utc": "2026-11-10T10:23:03.634811+00:00"
+}

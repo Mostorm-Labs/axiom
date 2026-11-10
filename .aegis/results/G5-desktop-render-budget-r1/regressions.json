@@ -1,0 +1,74 @@
+{
+  "status": "SCOPED_REGRESSIONS_QUALIFIED",
+  "native": {
+    "tests": 18,
+    "failures": 0,
+    "junit": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/keeper-junit.xml",
+      "sha256": "4bbba8573f1c4ad5088d7f571a793ce882f0305551dd66a54b3314c095048279",
+      "bytes": 14589
+    },
+    "command": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/keeper-command.json",
+      "sha256": "f3aad2cf3549c55d12949b69a80fb4ca048717374e6d0e385eee0e8b034d0cf6",
+      "bytes": 844
+    },
+    "log": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/keeper-tests.log",
+      "sha256": "fe1ff012d0c59b24108da8d20d9d585236bc4a345969d24e2b96efa1eb111778",
+      "bytes": 2307
+    },
+    "profile_mib": [
+      32,
+      96,
+      8
+    ]
+  },
+  "new_actual_area": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/native-area-budget-comparison.json",
+    "sha256": "3faab0f55961d0e1c1aa1adbe4b495784a5861ca91dcf21851329458595387ac",
+    "bytes": 94907
+  },
+  "actual_constructor_limits": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/effective-budget.json",
+    "sha256": "f0c859a0d71846f779dbab2ee99b007bbff67375d0900c9f7bd5af7bf0bd7453",
+    "bytes": 811
+  },
+  "configuration_and_guard_python": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/offline-python-final.log",
+    "sha256": "d7f346b6324a85e01d9042bce21c9830dd71f27a8a3289e6b240686b00bbcb48",
+    "bytes": 528
+  },
+  "original_aa_Node10": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/offline-node.log",
+    "sha256": "9a0fc57d4a99db6e7a7b9953f48e44911f87986388b589da3bbaf33fdfa1a9fa",
+    "bytes": 2498
+  },
+  "boundary120": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/boundary-final.log",
+    "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+    "bytes": 58
+  },
+  "diff_check": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/diff-check.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  "newly_observed_unrelated_build_failure": {
+    "test": "canvas_semantic_object_store_differential_test",
+    "source": "runtime/semantic/tests/object_store_differential_test.cpp:18",
+    "reason": "Existing switch omits kSection/kTable under -Werror; accidentally invoked untargeted all-build. No dependency source build or semantic edit.",
+    "log": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/keeper-build.log",
+      "sha256": "159ab8996e30bcd6aa91705d75d3a00ada3a338ce3e8ad8da6df14cb5c7b9755",
+      "bytes": 15650
+    },
+    "followup": "Exact scoped targets compiled and passed18/18; broader repository build remains a separate blocker."
+  },
+  "first_new_stroke_test_oracle_basis_error_preserved": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/native-stroke-band-correction.json",
+    "sha256": "8187e1f8f77cda24cd144b91b0af8a8b225e95e0d4f98100b9bfe7fa4b82010a",
+    "bytes": 947
+  },
+  "no_broad_ctest": true
+}

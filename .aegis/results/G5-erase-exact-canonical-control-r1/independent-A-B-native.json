@@ -1,0 +1,17 @@
+{
+  "command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native",
+    "-R",
+    "^(G5CanonicalPreparedBody|G5CanonicalPreparedBodyPixels|G5UR2CHistoryInvalidation|G5UR2CLeaseAccounting|G5EraseExactCanonical|G5EraseExactCanonicalRuntime)$",
+    "--output-on-failure",
+    "--parallel",
+    "1",
+    "--timeout",
+    "60",
+    "--output-junit",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-control-r1/independent-A-B-native.xml"
+  ],
+  "exit_code": 0
+}

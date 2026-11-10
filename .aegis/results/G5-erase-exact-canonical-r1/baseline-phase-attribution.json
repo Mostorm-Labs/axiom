@@ -1,0 +1,25 @@
+{
+  "status": "PRECHANGE_PHASES_MEASURED",
+  "actual_runtime_Up": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/baseline-native-run.log",
+    "sha256": "4f70c9be89ded02d212dcd7d3fb977ae6cf05915686e47a52989fb3cce563aab"
+  },
+  "exact_only_timed": {
+    "path": "out/G5-erase-exact-canonical-r1/exact-old-timed-results/exact.json",
+    "sha256": "30a5ed9aaa71ababf2cc365b28feb3331257df37882b9edc95e38ef87b01d5de"
+  },
+  "ordinary_Web": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-BASELINE/worker-result.json",
+    "sha256": "7462d5ec5b02feb0a9aece515b9c9c5417efe67c40b469c9b2edcb180d1f94f5"
+  },
+  "instrumentation": "Frozen exact source copy changes only timer guards to AXIOM_UR2D_TESTS; linked before frozen oldarchive. No live source instrumentation beforebaseline.",
+  "findings": "40x160 round0 queryunion~39ms/history~14ms; round1 repeated PathOps difference~77ms+intersect~151ms, history6400primitives, memo0. Long query union remains separate ~37ms. Runtime Scene and complete Up also measured; no claimhistoryID solecause.",
+  "old_exact_binary": {
+    "path": "out/G5-erase-exact-canonical-r1/exact-baseline",
+    "sha256": "3db20728aec101afec7f12065b76ad319fba1472e3d37e6e05038eef196a68a6"
+  },
+  "mechanism_RED": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/exact-baseline-red.log",
+    "sha256": "b67733e70ca03dbf46d6557f679858bc631c6a89b7ae49246bc8f1961c0ffd23"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "g5-r2-cleanup-v1",
+  "executor_browser_starts": 0,
+  "executor_persistent_servers_created": 0,
+  "executor_active_measurement_processes": [],
+  "preserved_user_demo": "http://127.0.0.1:4298/example.html",
+  "control_owned_new_demo": "http://127.0.0.1:4315/example.html",
+  "user_document_touched": false,
+  "r1_UR2c_evidence_mutated": false,
+  "commit_push": false,
+  "old_abort_raw_and_buffers": "preserved; no result cleanup/deletion",
+  "gpu_lease_release": "candidate and oracle0 after clear+realGPUcompletion for12densecases; native keeper recovery/inflight also passed",
+  "control_guards": {
+    ".aegis/results/G5-object-interaction-r2-web-diagnostic/guard.worker.json": {
+      "command": [
+        "node",
+        ".aegis/results/G5-object-interaction-r2-web-diagnostic/run.mjs"
+      ],
+      "reason": "completed",
+      "returncode": 0,
+      "elapsed_s": 25.86848595889751,
+      "peak_process_family_rss_kib": 1616528,
+      "rss_limit_kib": 3145728,
+      "timeout_s": 180.0,
+      "last_stage": {
+        "stage": "closed",
+        "status": "RECORDED"
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    ".aegis/results/G5-object-interaction-r2-image-move-diagnostic/guard.worker.json": {
+      "command": [
+        "node",
+        ".aegis/results/G5-object-interaction-r2-image-move-diagnostic/run.mjs"
+      ],
+      "reason": "completed",
+      "returncode": 0,
+      "elapsed_s": 29.27662966598291,
+      "peak_process_family_rss_kib": 1568048,
+      "rss_limit_kib": 3145728,
+      "timeout_s": 180.0,
+      "last_stage": {
+        "stage": "closed",
+        "status": "RECORDED"
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    }
+  }
+}

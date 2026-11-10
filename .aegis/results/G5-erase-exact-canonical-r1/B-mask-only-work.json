@@ -1,0 +1,92 @@
+{
+  "status": "BOUNDED_CANONICAL_BODY_AND_LOCAL_MASK_REUSE",
+  "old": [
+    {
+      "attempts": 1,
+      "body_hits": 0,
+      "body_tiles": 0,
+      "coverage_steps": 6,
+      "mask_draws": 0,
+      "mask_resets": 0,
+      "non_aa_failures": 0,
+      "round": 0
+    },
+    {
+      "attempts": 1,
+      "body_hits": 0,
+      "body_tiles": 0,
+      "coverage_steps": 6,
+      "mask_draws": 0,
+      "mask_resets": 0,
+      "non_aa_failures": 0,
+      "round": 1
+    },
+    {
+      "attempts": 1,
+      "body_hits": 0,
+      "body_tiles": 0,
+      "coverage_steps": 6,
+      "mask_draws": 0,
+      "mask_resets": 0,
+      "non_aa_failures": 0,
+      "round": 2
+    },
+    {
+      "attempts": 1,
+      "body_hits": 0,
+      "body_tiles": 0,
+      "coverage_steps": 6,
+      "mask_draws": 0,
+      "mask_resets": 0,
+      "non_aa_failures": 0,
+      "round": 3
+    }
+  ],
+  "candidate": [
+    {
+      "attempts": 1,
+      "body_hits": 0,
+      "body_tiles": 8,
+      "coverage_steps": 28,
+      "mask_draws": 0,
+      "mask_resets": 8,
+      "non_aa_failures": 0,
+      "round": 0
+    },
+    {
+      "attempts": 1,
+      "body_hits": 8,
+      "body_tiles": 0,
+      "coverage_steps": 0,
+      "mask_draws": 16,
+      "mask_resets": 0,
+      "non_aa_failures": 0,
+      "round": 1
+    },
+    {
+      "attempts": 1,
+      "body_hits": 8,
+      "body_tiles": 0,
+      "coverage_steps": 0,
+      "mask_draws": 32,
+      "mask_resets": 2,
+      "non_aa_failures": 0,
+      "round": 2
+    },
+    {
+      "attempts": 1,
+      "body_hits": 8,
+      "body_tiles": 0,
+      "coverage_steps": 0,
+      "mask_draws": 16,
+      "mask_resets": 2,
+      "non_aa_failures": 0,
+      "round": 3
+    }
+  ],
+  "actual_canonical_leaf": "CompactStrokeRasterJob retained per tile, sharedframeallowance; readybody immutable; canonical doesnotusepreviewreceipts",
+  "pressure_fallback": "capacity and maxEntries demandgate keeps original rasterjob path",
+  "progress_limitation": "insertion invalidation metadata may reset unvisited oldepoch tiles acrossYield; correctness preserved, reuse may degrade",
+  "source_context_basis": "cachebegin clears InkLayers on target/surface/metrics/worldToView/resource changes; Source command/matrix/viewport perentry checked.",
+  "seedBody_removed": "Never captures fullscratch body; original actualtile surfaces own snapshots and GPUleases."
+}

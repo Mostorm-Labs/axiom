@@ -1,0 +1,66 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2d-selection-up-continue-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 verificationdependency repair -> P33resume sameUR2dA+B",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "completed_through": [
+      "parentpreflight",
+      "oldnativeRED+oraclefreeze",
+      "oldordinarySDK36membersfreeze",
+      "onefailedOLD-Fguardclosed40sec"
+    ],
+    "next_action": "Offlineboundeddriverrepair thennativeA,publicA,thenB andfinalcompare withinremainingIDs"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2d-selection-up-continue-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "baf8c484f3cf01a3bbc20951a789333d6b0fde8b89cfc45889989bdd8748eeab"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "1e89fc689bee2c8e66bf5760ebcf068652b6d4e9ebb087f2e73c5ec2e579b5db"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "8ae660b3c32ac7d282fc917cf64de3937706c2225506643c87ee9d98d70a0989"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "29d7b25ba8ed7ddf3de5e3e8b43cbaf65e755cad604e04b135e3ffe366f9f04b"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "5ae3e600dd4f61c703a6517ad67ffbbb5c3582671bd39643ce34d0505aca205f"
+  },
+  "continuation_decision_ref": {
+    "path": "continuation-decision.json",
+    "sha256": "d0c0dec186b28863e18e2f3e8720600d4ca90e1860eff27a6b13338084a2a710"
+  },
+  "parent_package": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/package.json",
+    "sha256": "09a8f3d1c2e927f3943838d543327df7f30a6b09c9d9281f0ad0e6797d4154a8"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

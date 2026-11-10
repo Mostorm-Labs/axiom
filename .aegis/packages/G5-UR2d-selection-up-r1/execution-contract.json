@@ -1,0 +1,195 @@
+{
+  "schema": "g5-ur2d-execution-closure-v1",
+  "status": "FROZEN_AUTHORIZED",
+  "task_id": "G5-UR2d-selection-up-r1",
+  "continue_until_terminal_state": true,
+  "stages": [
+    {
+      "id": "UR2d-A",
+      "order": 1,
+      "title": "Selection local exact reuse and input terminal closure",
+      "required_changes": [
+        "Freeze and reproduce old dense masked selection structural/cost RED before optimized routing; keep prechange exact callable/binary as independent expected result.",
+        "Route compact-v4 selection through existing renderer-owned prepared geometry/history machinery; avoid copying full canonical long stroke into selection-local ObjectRecord just to override transform. Preserve noncompact routes and all selection semantics.",
+        "Factor exact queries so the local polygon/historical removal is prepared once per truly equivalent basis; visit only relevant components of immutable body. Avoid full history subtraction on every whole-body component. Reuse only proven complete input identity, charge all new retained structures.",
+        "Verify blank-space point-mode mouse drag, Up, Cancel/source lost, repeated pointer ID and immediate fresh Down; if current input terminal lifecycle is already correct, prove it rather than inventing a new timeout/reset policy."
+      ],
+      "checkpoint": "Record milestone-A.json+source hashes, native parity/locality/lifecycle and bounded public functional result. Proactively notify control as MILESTONE_A_READY; continueB automatically if no new failure/conflict, no wait for extra permission."
+    },
+    {
+      "id": "UR2d-B",
+      "order": 2,
+      "title": "Partial erase Up exact/prepare/apply/Scene critical path",
+      "depends_on": "A verified local tests and no new correctness regression",
+      "required_changes": [
+        "Baseline-phase time actual eraserFinish across exact target/query/history/new-mask construction, History.prepare, publication reservation, Operation apply, observer and Scene. Reuse existing private timing seams; add tests-only counters for missing phases, compiled out from ordinary consumers.",
+        "Remove measured repeated query/mask/history preparation across shared equivalent copies/queries; use existing owner caches/query-scoped leased results, retain cache invalidation for differing masks, geometry, affine, resources and document lifetime. Work may be precomputed during accepted Move only as derived preparation with exact full-basis revalidation at Up.",
+        "Reduce redundant pure copying/encoding/Scene projection only when tied to measured Up cost and existingowner; preserve canonical mask payload bytes/order, exactly-oneOperation, precommit History/publication reservation, no-op and failure behavior. Do not rewrite all Semantic storage or algorithms.",
+        "Run same-task Up->nextDown and immediate navigation with no settle gap; final History/document/pixel/receipt checks. Preserve correctness failures as failures, never equate input admission with visible feedback."
+      ],
+      "checkpoint": "Record milestone-B.json and final paired result; return full scoped review bundle and matching ordinary demo."
+    }
+  ],
+  "scope": {
+    "allowed_existing": [
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp",
+      "runtime/render/src/skia_mask_history.hpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/interaction/src/canvas_region_selection.cpp",
+      "runtime/interaction/src/region_selection_geometry.cpp",
+      "runtime/interaction/include/canvas/interaction/region_selection_geometry.hpp",
+      "runtime/interaction/src/region_selection_session.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/interaction/src/partial_erase_geometry.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "runtime/scene/src/runtime_scene_projection.cpp",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/interaction/CMakeLists.txt",
+      "runtime/composition/CMakeLists.txt",
+      "runtime/render/tests/erase_hit_test.cpp",
+      "runtime/render/tests/ur2b_exact_query_test.cpp",
+      "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "runtime/interaction/tests/region_selection_session_test.cpp",
+      "runtime/composition/tests/ur2a_handoff_test.cpp",
+      "verification/runtime_qualification/tests/creation_control_binding_test.cpp",
+      "verification/runners/g5/ur2d_selection_up.mjs",
+      "verification/runners/g5/ur2d_selection_up_runner.py",
+      "verification/runners/g5/ur2d_selection_up_contract.mjs",
+      "verification/runners/g5/ur2d_selection_oracle.cpp",
+      "verification/tests/g5_ur2d_selection_up.test.mjs",
+      "verification/tests/test_g5_ur2d_selection_up.py",
+      "runtime/composition/tests/ur2b_exact_query_runtime_test.cpp",
+      "runtime/composition/tests/ur2c_mask_pipeline_test.cpp",
+      "runtime/composition/tests/selection_input_integration_test.cpp",
+      "runtime/composition/tests/public_selection_input_test.cpp"
+    ],
+    "allowed_new": [
+      "runtime/render/tests/ur2d_selection_up_test.cpp",
+      "runtime/composition/tests/ur2d_selection_up_test.cpp",
+      "runtime/interaction/tests/ur2d_selection_up_test.cpp"
+    ],
+    "result_root": ".aegis/results/G5-UR2d-selection-up-r1",
+    "output_root": "out/G5-UR2d-selection-up-r1",
+    "conditional_semantic_internal": [
+      "runtime/semantic/src/operation_specific_validation.cpp",
+      "runtime/semantic/src/apply_plan.cpp",
+      "runtime/semantic/src/atomic_apply.cpp",
+      "runtime/semantic/src/object_store_mutator.hpp",
+      "runtime/semantic/src/change_set_builder.cpp"
+    ],
+    "conditional_rule": "OnlyB measured existing internal redundant storage/copy changes with unchanged public/data/atomic contracts are permitted. Before editing record exact measured cause/design/test map. If it requires a new public/API/storage schema or validation bypass, stop affected step with AUTHORITY_OR_SCOPE_CONFLICT. Do not bypass semantic validation to win timing."
+  },
+  "forbidden_changes": [
+    "No UR3/GPU staging/navigation scheduling redesign, workers, pthreads/OffscreenCanvas, asyncUp, new input admission, publicSDK/API/ABI/DTO/transport exports/version/schema/brush algorithms/AA/descriptor locks/budget increases.",
+    "No semantic/History/document/viewport state owner duplication; no bounds or GPU pixels used as positive exact selection/erase oracle; no dropped confirmed input or Up/Cancel; no false terminal/receipt.",
+    "Do not edit old package/result/ledger/oracle/baseline bytes. Preserve accepted r2 dirty source anduser pages4315/4298/4297. No commit/push/merge/reset/clean/stash/newworktree.",
+    "Do not rebuild locked Semantic/Skia source dependencies. Resolve accepted SDK Store/toolchain (python3.12/ninja explicit for Web). Do not silently use missing-executable test output as product result."
+  ],
+  "implementation_design_preflight": {
+    "required": true,
+    "record": "implementation-design.json",
+    "must_include": [
+      "current owner/command/commit paths",
+      "A/B target flow and affected types",
+      "complete identity/invalidation/leases",
+      "obligation-to-code/test mapping",
+      "conditional semantic edits if any",
+      "unresolved_semantic_decisions:[] or exact blocker"
+    ],
+    "automatic_continue_on_clear": true
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "A_expected_failure": "Current production region selection rebuilds complete masked body for a local query; baseline diagnostic 7199/two80-segment histories is about1s. Structural warm per-copy repeated preparation must be observed.",
+    "B_expected_failure": "Choose measured repeated-work phase on actual Up before optimizing it; record exact counter/time baseline and old oracle. Timing noise alone is not correctness RED.",
+    "oracle_freeze": "BeforeA route mutation, retain unmodified selection callable in separate oracle archive plus old exact-component binary/kernel; no candidate code in expected results."
+  },
+  "tests": {
+    "required_obligations": [
+      "D-A1",
+      "D-A2",
+      "D-B1",
+      "D-B2",
+      "D-PERF",
+      "D-REG"
+    ],
+    "verification_ref": {
+      "path": "verification.lock.json",
+      "sha256": "90a172ba999c82483f64b3f3f16910d48ae15af2f8a16cc1d25487d23147db10"
+    },
+    "regressions_ref": {
+      "path": "regression-plan.json",
+      "sha256": "4580e0b6f972a7f74bf40d0b9cab3f1010ebfe8dbd4c1df9ad2ec6d509562c8d"
+    },
+    "workload_ref": {
+      "path": "workload.json",
+      "sha256": "b252d812da776a98ae58a05b3120c9000f85564baa9e2ae2dd8b6541eb1fd8ce"
+    },
+    "web_plan_ref": {
+      "path": "web-plan.json",
+      "sha256": "427f57a5d77d10b40d1256e9c0d0726f66d21c79e543eae2ef3979fba9f97fee"
+    },
+    "hosted_required": [],
+    "hosted_optional": [
+      "remoteCI when later requested"
+    ],
+    "local_web": "Required bounded real normal Web functional coverage and matching final ordinary build/demo; timing and trace separation per webplan."
+  },
+  "evidence": {
+    "blocking": [
+      "exact source/preimage/delta and package bindings",
+      "independent exact selection/erase decisions",
+      "actual publicinput lifecycle and Up reentry correctness",
+      "local structural work improvement for bothA andB",
+      "matchingordinaryWebinstall",
+      "requiredkeeper regressions and resource/basis",
+      "paired performance classification including findings"
+    ],
+    "corroborative": [
+      "manual user screen latency",
+      "full Cartesian100K/1M/otherplatform",
+      "qualification all-path trace matrix",
+      "overallG5/P34"
+    ]
+  },
+  "terminal_success": [
+    "All frozen functional/semantic/pixel/lease/receipt obligations satisfied and bothA+B implemented.",
+    "Required local Web coverage completed or explicit terminal evidence blocker, no fakePASS.",
+    "Performance reports retain all pairs/failures; missing/noisytiming cannot become a new requirement or hide functionalfailure.",
+    "Return READY_FOR_CONTROL_REVIEW (or READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS) with reviewer-accessible hashbound local bundle; no officialGate verdict."
+  ],
+  "terminal_blockers": [
+    "BLOCKED_REPOSITORY_IDENTITY",
+    "BLOCKED_EXECUTION_DIVERGENCE",
+    "AUTHORITY_OR_SCOPE_CONFLICT",
+    "VERIFICATION_DESIGN_DEFECT",
+    "NEW_DECISION_PIXEL_COMMIT_OR_RECEIPT_REGRESSION",
+    "RESOURCE_LIFETIME_FAILURE",
+    "ENVIRONMENT_BLOCKER",
+    "BLOCKED_EVIDENCE",
+    "BROWSER_ALLOWANCE_EXHAUSTED"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "do_not_stop_at": "plan/probe/native-only/halfA orB intermediatecheckpoint; do remainingauthorized work",
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "notify_required": [
+      "MILESTONE_A_READY (nonblocking continueB)",
+      "READY_FOR_CONTROL_REVIEW",
+      "terminalblocker"
+    ],
+    "user_authorized_completion_callback": true
+  },
+  "materialization": {
+    "mode": "shared controlled local artifact for this nonGate source review; user did notauthorizecommit/push",
+    "requirement": "Hashbound sourcepostimages+dirtydelta+newfiles+binary/artifactmanifest+rawlogs and result in sharedresultroot, independently readable bycontrol. ExternallydurableP34/PRmaterialization remains pending and is not claimed."
+  }
+}

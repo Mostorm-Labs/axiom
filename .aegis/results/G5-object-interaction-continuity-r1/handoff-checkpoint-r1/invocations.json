@@ -1,0 +1,66 @@
+[
+  {
+    "name": "build",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native",
+      "--parallel",
+      "4",
+      "--target",
+      "axiom_transient_display_retry_tests"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "exit_code": 0,
+    "elapsed_seconds": 0.07855933299288154,
+    "log": ".aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/build.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "exit_code": 0,
+    "elapsed_seconds": 0.03798720904160291,
+    "log": ".aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/diff-check.log"
+  },
+  {
+    "name": "object-oracle",
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+      "--object-continuity",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/object-oracle"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "exit_code": 0,
+    "elapsed_seconds": 0.07524724991526455,
+    "log": ".aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/object-oracle.log"
+  },
+  {
+    "name": "continuity",
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+      "--continuity",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/continuity"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "exit_code": 0,
+    "elapsed_seconds": 0.31510104099288583,
+    "log": ".aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/continuity.log"
+  },
+  {
+    "name": "recovery",
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+      "--recovery",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/recovery"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "exit_code": 0,
+    "elapsed_seconds": 0.34624770807567984,
+    "log": ".aegis/results/G5-object-interaction-continuity-r1/handoff-checkpoint-r1/recovery.log"
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "schema": "g5-ur2d-driver-continuation-decision-v1",
+  "status": "CONTROL_AUTHORIZED_CONTINUATION",
+  "human_scope": "User authorized bothUR2dAandB; samegoal continues, noadditionaluserapprovalrequired.",
+  "closed_attempt": {
+    "id": "U2D1-OLD-F",
+    "result": {
+      "path": ".aegis/results/G5-UR2d-selection-up-r1/result.json",
+      "sha256": "1604912bfe96c9c39de630ba1ae439ba2387dc2c9d1e600b06ffbc62ad139b78"
+    },
+    "closure": {
+      "path": ".aegis/results/G5-UR2d-selection-up-r1/window-closure.json",
+      "sha256": "afa453db5930a128b075801c2c7bbba59ddc4c18e618e15ecc8c7e1b91962c34"
+    },
+    "status": "FAIL_CLOSED_RSS_GUARD",
+    "reason": "Guardrss_limit after39.995seconds,3331328KiB; source stable; productionnotmodified; trace lacks exactfailurestage."
+  },
+  "classification": "VERIFICATION_DRIVER_DEFECT_WITH_UNRESOLVED_PRODUCT_VS_HARNESS_RSS_ATTRIBUTION",
+  "observed_harness_defects": [
+    "Array.from(typedRGBA/axsnap) plus one-shot evaluate result JSONtransfer amplifies memory; definitelybad harness representation, notproven solecrashcause.",
+    "observer.dispose optionalcall doesnotrestore observer.",
+    "runner labelsCOMPLETED bycleanup alone and child exit0 evenfunctional failure.",
+    "stagecheckpoint absent atcrash so exactfailurephase unknown."
+  ],
+  "decision": [
+    "Repairdriver within existingallowedpaths withofflineunitproof, noextra browserstarts.",
+    "NativeAandB mayproceed afteroldnativeRED+oraclefreeze and acceptedpreimagecheck; successfuloldbrowser functional baseline is deferred tofinalcomparison ratherthanpre-editglobalblocker. Thisfixes the originalpackage/provider-hard-stop verificationdependency, no change toproducttruth.",
+    "A functionalwindowafterAnativegreen, BwindowafterBnativegreen, finalCOMPARE validatesoldfrozenSDKandcandidate withsameharness+fixture. Immediateinputsequence unchanged.",
+    "Preserveoldraw/ID/ledger/result/manifest; newresultroot andappend-onlycontinuationledger reference old40secondscharged. No oldresult overwritten."
+  ],
+  "remaining_allowance": {
+    "newprocessstarts": 3,
+    "ids": [
+      "U2D1-A-F",
+      "U2D1-B-F",
+      "U2D1-COMPARE"
+    ],
+    "perprocess_seconds": 240,
+    "additional_max_seconds": 720,
+    "prior_charged_seconds": 40,
+    "overall_cap_seconds": 960,
+    "rss_limit_mib": 3072,
+    "new_ids_permitted": false
+  },
+  "no_new_obligations": "OriginalD-A1/A2/B1/B2/PERF/REG unchanged. Driver tests prove alreadyrequiredreal-evidence validity. No newmatrix/platform/SLO/Gatework.",
+  "stop": "If repairedwindow hitsRSS/timeout/unsafeproductfailure, cleanupandreturnexactcheckpoint; nofurtherbrowserstartswithoutcontrolclassification. Native implementation/debug maycontinueonlyifsafeandscope permits; nevercallmissingWebcoveragepassed."
+}

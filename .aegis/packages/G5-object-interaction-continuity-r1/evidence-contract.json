@@ -1,0 +1,36 @@
+{
+  "schema": "g5-object-interaction-continuity-evidence-v1",
+  "classification": "CONTROL_REVIEW_REQUIRED",
+  "blocking": [
+    "OI-01",
+    "OI-02",
+    "OI-03",
+    "OI-04",
+    "OI-05"
+  ],
+  "required_files": [
+    "design-preflight.json",
+    "native-regression.log",
+    "native-counters.json",
+    "web-build.json",
+    "web-trace.json",
+    "source-manifest.json",
+    "result.json"
+  ],
+  "must_report": [
+    "exact source revision",
+    "static cache build/hit counts",
+    "full transient draw count",
+    "active draw count",
+    "first-selection overlay revision/state",
+    "pixel/order checks",
+    "resource/budget counters",
+    "tests and any known exception"
+  ],
+  "prohibited_claims": [
+    "G5 PASS",
+    "P34 PASS",
+    "platform PASS",
+    "formal browser qualification PASS"
+  ]
+}

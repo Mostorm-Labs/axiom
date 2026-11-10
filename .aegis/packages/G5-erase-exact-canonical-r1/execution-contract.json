@@ -1,0 +1,183 @@
+{
+  "schema": "g5-erase-exact-canonical-execution-closure-v1",
+  "continue_until_terminal_state": true,
+  "stages": [
+    {
+      "id": "A",
+      "title": "Longtrace exactUp query/history geometry reuse",
+      "required_changes": [
+        "Beforemutationfreezeactualold3round40copylongtrace andcompleteoldexactarchive. Runprivatephaseattributionthatseparatesqueryunion/history/remainingdifference/bodyintersect/semanticScene; noforeignWASMsymbolassumption.",
+        "Extendexisting Render exact/query/history owner with completegeometryequivalence independentofcanonicalmaskIDs; preservegeometrysource/config/affine/recordversionorderedshapeproofs. Usechargedboundedleases/indexes; neverreplacecanonicalIDs.",
+        "Amortize dominantnewquerymaskpath preparation. IfincrementalconfirmedMovepreparation used, isolatepurederivedcache, boundallCPUworkperMove/owneropportunity, revalidatefulltrace/config/transform/historybasis atUp andmeasuretotalCPUandMove tail. NoasyncUp orchangedadmission.",
+        "Batched/balancedunion ornewpathassemblyallowedonlywith exactoldgeometry/finiteerrororacles anddeclaredscope; ifPathOpsnumericdecisionsdifferkeepoldfallback ratherthanweakeninggeometry.",
+        "RecordAwork/parity/source milestone andproactivelycallbackcontrol; continueB automaticallyunlessactualregression."
+      ]
+    },
+    {
+      "id": "B",
+      "title": "Canonical mask-only body and pixel reuse",
+      "required_changes": [
+        "Measureoldcanonicalmask-onlycoverage/maskreplay/resourceprogressRED throughactualSkiaRenderer, afterrealmaskcommit. Bodygeometryunchangedisnotproofpixelcachevalidafterviewortransformchanges.",
+        "UseexistingSkiaRenderCache/SkiaInkLayers/MaskHistoryservices toretainunchangedbodycoverage andvalidmaskresults acrossliveerase→canonicalhandoff. Reduceworktolocalmaskregions/provenorderedprefix; reuseonlyqualifiedtargets andcompletebasis. No separatereplica renderer ornewdocumentowner.",
+        "Regionalredrawmustincludeallintersectingobjectsinoriginalbacktofrontorder,includingtranslucentoverlaps/selfcrossings/nonink andtransparentbackground. Do notpatchonlyselectedobject orreuseunqualifiedpreviewascannonicalreceipt.",
+        "RetainlastsuccessfulframeandvalidpreparationprogressonRetry; no repeatedfullresetfromnewMoveunlessbasisactuallychanges. Permanentunsupportedminimumcapacitymayrejectexplicitly, noendlessretry.",
+        "Runoriginalcontinuousinputno-op/cancel/history/scene/pixel/leasekeepers, finalnormalpairedWeb andnewordinaryDemo."
+      ]
+    }
+  ],
+  "scope": {
+    "allowed_existing": [
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp",
+      "runtime/render/src/skia_mask_history.hpp",
+      "runtime/render/src/skia_mask_history.cpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/skia_prepared_geometry.hpp",
+      "runtime/render/src/source_retention.cpp",
+      "runtime/render/src/source_retention.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/include/canvas/render/render_cache.hpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/skia_ink_layers.hpp",
+      "runtime/render/src/render_group_manager.cpp",
+      "runtime/render/include/canvas/render/render_group_manager.hpp",
+      "runtime/render/src/compact_raster_internal.hpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/interaction/src/partial_erase_geometry.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/composition/CMakeLists.txt",
+      "runtime/interaction/CMakeLists.txt",
+      "runtime/render/tests/ur2b_exact_query_test.cpp",
+      "runtime/render/tests/ur2c_mask_history_test.cpp",
+      "runtime/render/tests/ur2d_selection_up_test.cpp",
+      "runtime/render/tests/transient_display_retry_test.cpp",
+      "runtime/composition/tests/ur2d_selection_up_test.cpp"
+    ],
+    "allowed_new": [
+      "runtime/render/tests/erase_exact_canonical_test.cpp",
+      "runtime/composition/tests/erase_exact_canonical_runtime_test.cpp",
+      "verification/runners/g5/erase_exact_canonical.mjs",
+      "verification/runners/g5/erase_exact_canonical_runner.py",
+      "verification/runners/g5/erase_exact_canonical_contract.mjs",
+      "verification/tests/g5_erase_exact_canonical.test.mjs",
+      "verification/tests/test_g5_erase_exact_canonical.py"
+    ],
+    "result_root": ".aegis/results/G5-erase-exact-canonical-r1",
+    "output_root": "out/G5-erase-exact-canonical-r1",
+    "conditional_scene": [
+      "runtime/scene/src/runtime_scene_projection.cpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp"
+    ],
+    "conditional_rule": "Onlyifmeasuredremainingmask-onlyderivedSceneprojectionunnecessarilyrebuildsbody/chunks; recordcause/testmapbeforeedit. NoSemanticstore/schema/OperationEnginecontractchange."
+  },
+  "forbidden": [
+    "No workers/pthreads/OffscreenCanvas/asyncUp/newinputadmission orpublicAPI/ABI/schema/version/Brush/pressure/AA/descriptorlocks/thirdpartysourcebuild/budgetincrease.",
+    "No headreset/stash/clean/merge/commit/push/newworktree. Preserveaccepteduncommitteddeltas,alloldpackages/resultsraw and4316/4317/olderuserdocs.",
+    "Do notmutateoriginalindependentoracles orblessfailedpixels/tolerance/nonfinitecase. NoGPU/boundspositiveexactselectionoracle.",
+    "No arbitrarysamplingretry/skipfailedpairs,noCPUprofilereadbackinprimarytiming, noheavyGPUTestduringbrowserwindow."
+  ],
+  "design_preflight": {
+    "required": true,
+    "unresolved_semantic_decisions": "[]oractualscopeblocker",
+    "record": "implementation-design.json",
+    "auto_continue_when_clear": true
+  },
+  "tests": {
+    "required_obligations": [
+      "EC-A1",
+      "EC-A2",
+      "EC-B1",
+      "EC-B2",
+      "EC-PERF",
+      "EC-REG"
+    ],
+    "regressions_ref": {
+      "path": "verification.lock.json",
+      "sha256": "1e44da392deb27f0b93ec30788e47a8c3106f845973ae96f5d837361c5521db1"
+    },
+    "workload_ref": {
+      "path": "workload.json",
+      "sha256": "b377e139840fc97faa4744fc765bd4d82f6169f934d711dfe74aec8487a7bb4e"
+    },
+    "required_native": "Useexactnamedkeepersfromregression-plan.json;buildexactexecutables first, no all-projectbuild.",
+    "hosted_required": []
+  },
+  "sampling": {
+    "result_namespace": "newtaskonly",
+    "windows": [
+      {
+        "id": "G5EC1-BASELINE",
+        "starts": 1,
+        "wall_seconds": 180,
+        "rss_mib": 4096,
+        "purpose": "Beforeproductmutation:normal4317longtrace3round40copiesonebaselinefunctional/timingcase; frozenoldCPUoracles andSDK. Existing26sprofilediagnosticnotprimarybaseline."
+      },
+      {
+        "id": "G5EC1-DIAGNOSTIC",
+        "starts": 1,
+        "wall_seconds": 180,
+        "rss_mib": 4096,
+        "purpose": "OptionalprivatephaseattributionONLYwhenneededandbeforecorrespondingfix; cannotreplaceordinaryfunctionalproof. Maychooseoffline/nativephasecounts andleavethisunused."
+      },
+      {
+        "id": "G5EC1-FINAL-PAIRS",
+        "starts": 1,
+        "wall_seconds": 360,
+        "rss_mib": 4096,
+        "purpose": "Finalcandidatefrozen:oneChromeprocessold/candidatethreepairediterations; actual40copy160Moves3rounds/originalinterroundidle6s, immediateinput, readback/oracleaftertimedphase. Noearlier-windowevidenceoverwrites."
+      },
+      {
+        "id": "G5EC1-STRESS",
+        "starts": 1,
+        "wall_seconds": 180,
+        "rss_mib": 4096,
+        "purpose": "Candidatecontinuous10roundstress/no-settlegapbetweenlastUpnextDown,navigation/cancel/no-op/UndoRedo/tailquiescence nativeGPUorWebonce; canruninseparatepagesinFINAL-PAIRS ifoverallguardpermits andleaveIDunused."
+      }
+    ],
+    "max_process_starts": 4,
+    "max_cumulative_wall_seconds": 900,
+    "hard_stop": "Anyunexpectedpixel/decision/receipt/timeout/RSSfailurepersistrawandcleanupthenclassifybeforefurtherallowedwindow. Offlineharnessbugrepairallowedwithin samefrozenrequirements; neveradjusttolerance. IDsunique, oldledgersimmutable.",
+    "demonstration": "NewnormalmatchingSDKfreshfreeport>=4318 afterAorfinalbuild; old4317keep. ApreviewDemooptionalbutfinalordinaryrequired. Noautomaticuserpageactions."
+  },
+  "evidence": {
+    "blocking": [
+      "A+B structuralworkreduction",
+      "Independentexact/finite/pixel/History/Scene/receiptproof",
+      "Actualpubliccontinuousinputswithcompletepairedobservationsandhonesttimingclassification",
+      "Quotapin/clear/completion/invalidation",
+      "MatchingordinarynewSDK/Demo",
+      "Exactsourcepostimages/newfiles/oldpreimage/hashboundrawbundle"
+    ],
+    "corroborative": [
+      "Matchinguser42objectprivatehistory",
+      "FormalG5/P34/platformSLO/Vibeparity",
+      "Physicalinput-to-photon",
+      "Workers"
+    ]
+  },
+  "terminal_success": "READY_FOR_CONTROL_REVIEW[_WITH_PERFORMANCE_FINDINGS] onlyafterbothA+Bimplementedandrequiredproofcomplete. NoofficialGate. Productperformancefindingscanremainbutnothalffunctional/native-onlycheckpoints.",
+  "terminal_blockers": [
+    "AUTHORITY_SCOPE_CONFLICT",
+    "MISSING_ORACLE",
+    "NEW_DECISION_PIXEL_COMMIT_RECEIPT_REGRESSION",
+    "RESOURCE_LIFETIME_FAILURE",
+    "ENVIRONMENT_BLOCKER",
+    "BLOCKED_EVIDENCE",
+    "BROWSER_ALLOWANCE_EXHAUSTED"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "executor_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "milestoneA": "callback+continueBwithoutwaitingapproval",
+    "notify": "Aready,newDemo,finaloractualblockerproactivecallback",
+    "materialization": "Hashboundcontrolledlocalfilesadequateforscopedreview;notcommit/push. ExcludeliveDemoaccesslogorfreezeitscutoff."
+  }
+}

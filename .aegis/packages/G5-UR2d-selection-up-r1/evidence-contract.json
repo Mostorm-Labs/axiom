@@ -1,0 +1,53 @@
+{
+  "schema": "g5-ur2d-evidence-contract-v1",
+  "classification": "LOCAL_SCOPED_CONTROL_REVIEW_NOT_GATE",
+  "verification_ref": {
+    "path": "verification.lock.json",
+    "sha256": "90a172ba999c82483f64b3f3f16910d48ae15af2f8a16cc1d25487d23147db10"
+  },
+  "obligation_ids": [
+    "D-A1",
+    "D-A2",
+    "D-B1",
+    "D-B2",
+    "D-PERF",
+    "D-REG"
+  ],
+  "required": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "source-before.json",
+    "baseline-oracles.json",
+    "old-cost-RED.json",
+    "milestone-A.json",
+    "milestone-B.json",
+    "selection-parity.json",
+    "selection-cost-and-parity.json",
+    "input-lifecycle.json",
+    "up-phase-baseline.json",
+    "up-phase-candidate.json",
+    "up-structural-red-green.json",
+    "commit-history-scene.json",
+    "lease-and-basis.json",
+    "regressions.json",
+    "web-functional.json",
+    "web-timing.json",
+    "performance-classification.json",
+    "normal-artifacts.json",
+    "source-manifest.json",
+    "source-delta.patch",
+    "new-source-postimages/",
+    "cleanup.json",
+    "result.json"
+  ],
+  "materialization": "Every obligation may cite multiple raw files through exact SHArefs. Resultindexes ownfacts, never manually type fake totals. Preserve baseline/kernel/testhashes, oldREDs, partialtimeouts, perrun IDs andguards. Archive privateoracles but do notinstallthem inSDK.",
+  "timing": "Raw perphase/perinput samples with units, source/build/DPR/points/masks/copycount; normal3pair summariesallretained; instrumentationphase explicitlyseparate.",
+  "functional": "Finalexactselection roots, zeroactivecontacts, canonicalmask/operation/History/Scene/pixel/receipt equality. CPU selection/erase oracle exact; pixel tolerances existingonly.",
+  "return_policy": {
+    "local_review_ready": "BothA+B scopedclosure with currenthashboundpostimages and raw proof; sharedworktree artifactsaccepted forlocalindependentreviewonly. RemoteGate/releasestatusremainpending.",
+    "notify_control": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "commits_pushes": "notauthorized",
+    "automatic_followup": "nonebeyondA+B"
+  }
+}

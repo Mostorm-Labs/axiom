@@ -35,7 +35,7 @@ namespace {
 using Hit=SelectionGeometryHit;
 float f(double v){return static_cast<float>(v);}
 std::optional<SkPath> timedQueryOp(const SkPath& a,const SkPath& b,SkPathOp op,std::uint64_t* nanoseconds){
-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
     const auto started=std::chrono::steady_clock::now();const auto result=Op(a,b,op);
     if(nanoseconds)*nanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();return result;
 #else
@@ -372,6 +372,25 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
 }
 namespace internal {
 struct EraseMaskPathCache::Impl {
+    std::shared_ptr<Entry> queryPrefix;
+    std::size_t queryPrefixSegments=0;
+    struct QueryResult {
+        std::shared_ptr<const PreparedNavigationGeometry> body;
+        std::shared_ptr<const Entry> query;
+        std::shared_ptr<MaskHistoryPlan> history;
+        semantic::Transform2D transform{};
+        std::uint32_t version=0;
+        Hit result=Hit::kInvalid;
+        resources::ResourceLease metadata;
+        std::shared_ptr<ErasePathUsage> usage;
+        std::size_t bytes=0;
+        ~QueryResult(){if(usage)usage->bytes-=bytes;}
+        QueryResult(std::shared_ptr<const PreparedNavigationGeometry> b,std::shared_ptr<const Entry> q,
+            std::shared_ptr<MaskHistoryPlan> h,semantic::Transform2D t,std::uint32_t v,Hit r,
+            resources::ResourceLease lease,std::shared_ptr<ErasePathUsage> u,std::size_t n)
+            :body(std::move(b)),query(std::move(q)),history(std::move(h)),transform(t),version(v),result(r),metadata(std::move(lease)),usage(std::move(u)),bytes(n){usage->bytes+=bytes;}
+    };
+    std::optional<QueryResult> lastQuery;
     struct Refusal {
         std::weak_ptr<const std::vector<semantic::EraseMaskRecord>> owner;
         const void* pointee=nullptr;
@@ -389,9 +408,13 @@ struct EraseMaskPathCache::Impl {
     std::vector<std::shared_ptr<Refusal>> refusals;
     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
-    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size();}
+    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size()+std::size_t(lastQuery.has_value())+std::size_t(bool(queryPrefix));}
     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
     bool evict(){
+        // A one-query memo is optional and can pin paths/body/history. Drop it
+        // first on actual quota pressure so existing work remains reclaimable.
+        if(lastQuery){lastQuery.reset();return true;}
+        if(queryPrefix){queryPrefix.reset();queryPrefixSegments=0;return true;}
         auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
             if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
         auto plan=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
@@ -405,11 +428,71 @@ struct EraseMaskPathCache::Impl {
 };
 EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
 EraseMaskPathCache::~EraseMaskPathCache()=default;
-void EraseMaskPathCache::clear()noexcept{std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+void EraseMaskPathCache::clear()noexcept{impl_->queryPrefix.reset();impl_->queryPrefixSegments=0;impl_->lastQuery.reset();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
 void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
 EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& geometry,
+    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,std::size_t maxSegments)noexcept {
+    try{
+        auto& s=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+        if(s.budget!=budget||s.capacity!=capacity){clear();s.usage=std::make_shared<ErasePathUsage>();s.budget=std::move(budget);s.capacity=capacity;}
+        const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
+        if(!sweep||!s.budget||!maxSegments)return;
+        // Unknown/forked inputs must prove their full prefix, including every
+        // coordinate/radius. No owner pointer or mask ID qualifies this cache.
+        for(const auto& p:sweep->segments)if(!std::isfinite(p.p0.position.x)||!std::isfinite(p.p0.position.y)||
+            !std::isfinite(p.p1.position.x)||!std::isfinite(p.p1.position.y)||!std::isfinite(p.control1.x)||
+            !std::isfinite(p.control1.y)||!std::isfinite(p.control2.x)||!std::isfinite(p.control2.y)||
+            !std::isfinite(p.p0.radius)||!std::isfinite(p.p1.radius))return;
+        auto old=s.queryPrefix;std::size_t completed=0;SkPath path;
+        if(old){const auto* prefix=std::get_if<semantic::SweptCircleMask>(&old->geometry);
+            if(prefix&&prefix->segments.size()<=sweep->segments.size()&&
+               std::equal(prefix->segments.begin(),prefix->segments.end(),sweep->segments.begin())){
+                completed=s.queryPrefixSegments;path=old->path;
+            }
+        }
+        const auto base=sizeof(Entry)+sweep->segments.size()*sizeof(semantic::EraseCubicSegment)+65536U;
+        const auto temporary=old?2*old->path.approximateBytesUsed():0U;
+        if(base>capacity||temporary>capacity-base||sweep->segments.size()>(capacity-base-temporary)/4096U)return;
+        const auto estimate=base+sweep->segments.size()*4096U+temporary;
+        // Account old and new allocations during replacement. Optional work
+        // simply declines when its current quota cannot hold both generations.
+        if(s.usage->bytes>capacity-estimate)return;
+        auto token=s.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);if(!token)return;
+        resources::ResourceLease lease(s.budget,*token);
+        const auto end=std::min(sweep->segments.size(),completed+maxSegments);
+        const auto started=std::chrono::steady_clock::now();
+        for(;completed<end;++completed){const auto& p=sweep->segments[completed];SkPathBuilder b;
+            b.moveTo(f(p.p0.position.x),f(p.p0.position.y));b.cubicTo(f(p.control1.x),f(p.control1.y),f(p.control2.x),f(p.control2.y),f(p.p1.position.x),f(p.p1.position.y));
+            ++s.stats.history.queryUnionOps;
+            if(!unite(path,stroke(b.detach(),2*std::max(p.p0.radius,p.p1.radius),SkPaint::kRound_Cap)))return;
+            if(completed+1<end&&std::chrono::steady_clock::now()-started>=std::chrono::microseconds(2000)){++completed;break;}
+        }
+        auto value=std::make_shared<Entry>();value->geometry=geometry;value->path=std::move(path);
+        const auto bytes=sizeof(Entry)+sweep->segments.size()*sizeof(semantic::EraseCubicSegment)+256+value->path.approximateBytesUsed();
+        if(bytes>estimate||!lease.shrink(bytes))return;
+        value->lease=std::move(lease);value->usage=s.usage;value->bytes=bytes;value->used=++s.tick;
+        s.usage->bytes+=bytes;s.queryPrefix=std::move(value);s.queryPrefixSegments=completed;
+    }catch(const std::bad_alloc&){}
+}
 std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
     auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
+    if(!historical&&state.queryPrefix){
+        const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
+        const auto* prefix=std::get_if<semantic::SweptCircleMask>(&state.queryPrefix->geometry);
+        if(sweep&&prefix&&prefix->segments.size()<=sweep->segments.size()&&
+           std::equal(prefix->segments.begin(),prefix->segments.end(),sweep->segments.begin())){
+            while(state.queryPrefixSegments<sweep->segments.size()){
+                const auto before=state.queryPrefixSegments;
+                prepareQueryPrefix(geometry,state.budget,state.capacity,sweep->segments.size()-before);
+                if(state.queryPrefixSegments<=before)break;
+            }
+        }
+        if(const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);sweep&&state.queryPrefix&&
+           state.queryPrefix->geometry==geometry&&state.queryPrefixSegments==sweep->segments.size()){
+            auto ready=std::move(state.queryPrefix);state.queryPrefixSegments=0;state.entries.push_back(ready);++state.stats.builds;return ready;
+        }
+    }
     for(auto& entry:state.entries)if((++state.stats.pathValueComparisons,state.stats.pathPrimitiveComparisons+=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry),entry->geometry==geometry)){entry->used=++state.tick;++state.stats.hits;return entry;}
     const auto units=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry);
     const auto raw=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
@@ -423,12 +506,12 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
         if(token)break;if(!state.evict())return denied();
     }
     resources::ResourceLease lease(state.budget,*token);
-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
     const auto started=std::chrono::steady_clock::now();
 #endif
     auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;
     const auto path=erasePath(geometry,&unions);
-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
     (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
 #endif
@@ -442,7 +525,9 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
 }
 namespace {
 bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
-    ++work.valueRecords;if(a.id!=b.id||a.geometry.index()!=b.geometry.index())return false;
+    // This proves derived geometry only. Each plan retains its own complete
+    // canonical records/source lease; mask IDs never alias canonical payloads.
+    ++work.valueRecords;if(a.geometry.index()!=b.geometry.index())return false;
     return std::visit([&](const auto& x){
         using T=std::decay_t<decltype(x)>;const auto& y=std::get<T>(b.geometry);
         if constexpr(requires{x.segments;}) {
@@ -641,7 +726,33 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
             }else cost.fallbackReason=prepared&&options?(options->enabled?2:7):1;
             if(body){++cost.bodyUses;cost.bodyIdentity=body->identity();}
             else ++cost.fallbacks;
-            return eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
+            // The one retained decision pins its validated complete body and
+            // canonical query path/history, plus charged metadata. IDs alone
+            // never qualify equality. Unknown allocations still go through
+            // PreparedGeometryCache's complete body comparison above.
+            auto queryPath=body?get(mask):nullptr;
+            const auto sameHistory=[&](const auto& old){
+                if(bool(old)!=bool(historyPlan))return false;
+                if(!old)return true;
+                const auto& a=std::as_const(old->records);const auto& b=std::as_const(historyPlan->records);
+                return a.size()==b.size()&&std::equal(a.begin(),a.end(),b.begin(),[&](const auto& x,const auto& y){
+                    return equalMask(x,y,impl_->stats.history);});
+            };
+            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&impl_->lastQuery){const auto& old=*impl_->lastQuery;
+                if(old.body==body&&old.query==queryPath&&old.transform==record.transform&&old.version==record.kindVersion&&sameHistory(old.history)){
+                    ++impl_->stats.equivalentQueryHits;UR2D_COUNT(equivalentHits);return old.result;
+                }
+            }
+            const auto result=eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
+            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
+                impl_->lastQuery.reset();
+                constexpr auto bytes=sizeof(Impl::QueryResult)+256;
+                const auto token=impl_->usage->bytes<=impl_->capacity&&bytes<=impl_->capacity-impl_->usage->bytes?
+                    impl_->budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
+                if(token)impl_->lastQuery.emplace(body,queryPath,historyPlan,record.transform,record.kindVersion,result,
+                    resources::ResourceLease(impl_->budget,*token),impl_->usage,bytes);
+            }
+            return result;
         }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost);}
     };
     const auto result=run();
@@ -667,6 +778,81 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
 }
 SelectionGeometryHit intersectEraseGeometryComponentOracle(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
     return eraseGeometryQuery(record,mask,nullptr,false);
+}
+SelectionGeometryHit EraseMaskPathCache::selectionQuery(const RuntimeSceneRecord& record,
+    std::span<const foundation::WorldPoint> region,std::shared_ptr<resources::ResourceBudgetManager> budget,
+    std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options)noexcept {
+    const auto fallback=[&]{return intersectVisibleSelectionGeometry(record,region);};
+    const auto* compact=std::get_if<semantic::CompactStrokeContent>(&record.content.get());
+    if(!budget||!prepared||!options||!options->enabled||record.kind!=semantic::ObjectKind::kVectorStroke||!compact||
+       compact->stroke.config.algorithmVersion!=4||
+       (compact->stroke.config.family!=foundation::InkFamily::kRound&&compact->stroke.config.family!=foundation::InkFamily::kMarker)||
+       compact->stroke.config.opacity*compact->stroke.config.color[3]<=0)return fallback();
+    try {
+        const auto& t=record.transform;const double determinant=t.a*t.d-t.b*t.c;
+        if(region.size()<3||!std::isfinite(determinant)||std::abs(determinant)<1e-12)return Hit::kInvalid;
+        SkPathBuilder builder(SkPathFillType::kEvenOdd);
+        for(std::size_t i=0;i<region.size();++i){
+            const double x=region[i].x-t.tx,y=region[i].y-t.ty;
+            const float lx=f((t.d*x-t.c*y)/determinant),ly=f((-t.b*x+t.a*y)/determinant);
+            if(!std::isfinite(lx)||!std::isfinite(ly))return Hit::kInvalid;
+            if(i)builder.lineTo(lx,ly);else builder.moveTo(lx,ly);
+        }
+        builder.close();auto selection=builder.detach();auto contact=stroke(selection,2e-4);
+        auto plan=history(record.eraseMasks,budget,std::min<std::size_t>(capacity,8*1024*1024));
+        ReferenceTraversalEntry entry;entry.record.content=record.content;
+        entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
+        auto& work=impl_->stats.exact;++work.queries;
+        const auto before=prepared->statistics();
+        auto body=prepared->get(entry,*options,budget,true,PreparedConsumer::kExact,true,true);
+        if(!body){
+            ++work.fullValidations;const bool valid=semantic::validCompactStroke(compact->stroke);
+            if(!valid)return fallback();work.validationKnots+=compact->stroke.knots.size();
+            body=prepared->get(entry,*options,budget,true,PreparedConsumer::kExact);
+        }
+        const auto after=prepared->statistics();
+        work.preparedCompileCalls+=after.syncCompileCalls-before.syncCompileCalls;
+        work.preparedCompileInputs+=after.syncCompileInputs-before.syncCompileInputs;
+        work.preparedValidationKnots+=after.validationKnots-before.validationKnots;
+        work.contentComparisonKnots+=after.contentComparisonKnots-before.contentComparisonKnots;
+        if(!body||!body->ready()||!body->exactValidated())return fallback();
+        auto token=budget->reserve(resources::ResourceClass::kScratch,4096,true);
+        if(!token)return fallback();resources::ResourceLease scratch(budget,*token);
+        ++work.bodyUses;work.bodyIdentity=body->identity();
+        // Validate every historical path before an empty/disjoint shortcut.
+        // The old selection evaluates the entire source/history, unlike erase.
+        std::vector<std::shared_ptr<const Entry>> pins;pins.reserve(record.eraseMasks.size());
+        std::vector<SkPath> paths;paths.reserve(record.eraseMasks.size());
+        for(std::size_t i=0;i<record.eraseMasks.size();++i){
+            auto path=plan?historicalPath(plan,i):get(record.eraseMasks[i].geometry,true);
+            if(!path||!path->path.isFinite())return fallback();
+            paths.push_back(path->path);pins.push_back(std::move(path));
+        }
+        // Preserve both original tests separately. The contact outline is a
+        // stroke of the original selection, never a stroke of query-minus-mask.
+        for(const auto& path:paths){
+            auto remaining=Op(selection,path,kDifference_SkPathOp);
+            auto remainingContact=Op(contact,path,kDifference_SkPathOp);
+            impl_->stats.history.historicalDifferences+=2;
+            if(!remaining||!remainingContact)return fallback();
+            selection=*remaining;contact=*remainingContact;
+        }
+        bool invalid=false,hit=false;SkRect demand=selection.getBounds();demand.join(contact.getBounds());
+        if(selection.isEmpty()&&contact.isEmpty())return Hit::kMiss;
+        ExactComponentWork local;
+        body->visitExact(demand,[&](const SkPath& part){
+            for(const auto* query:{&selection,&contact}){
+                if(part.isEmpty()||query->isEmpty()||!SkRect::Intersects(part.getBounds(),query->getBounds()))continue;
+                ++impl_->stats.history.componentIntersections;
+                const auto overlap=Op(part,*query,kIntersect_SkPathOp);
+                if(!overlap){invalid=true;return false;}
+                if(!overlap->isEmpty()){hit=true;return false;}
+            }return true;
+        },local);
+        work.indexNodes+=local.groups;work.boundsTests+=local.boundsTests;work.componentChecks+=local.components;
+        work.replayKnots+=local.replayKnots;work.materializedPaths+=local.materializedPaths;
+        return invalid?fallback():hit?Hit::kHit:Hit::kMiss;
+    }catch(const std::bad_alloc&){return fallback();}
 }
 }
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {

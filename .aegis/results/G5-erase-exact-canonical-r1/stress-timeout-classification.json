@@ -1,0 +1,42 @@
+{
+  "classification": "GUARD_TIMEOUT_WITH_INCOMPLETE_CONTINUOUS_STRESS",
+  "guard": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2.worker.json",
+    "sha256": "31770b792dac1043602e3d4a44b014d37e961b11bf04d27198f6a887263e514c"
+  },
+  "elapsed_s": 151.28058279200002,
+  "charged_seconds": 152,
+  "cleanup_complete": true,
+  "remaining_owned_pids": [],
+  "observed_completed_rounds": 8,
+  "required_rounds": 10,
+  "independent_browser_crash_proven": false,
+  "target_crashed_note": "LastTargetcrashedobservedonownedfamilytimeouttermination, notindependentproductcrashproof.",
+  "mainUp_ms": [
+    898.5999999046326,
+    907.5,
+    926.6000000238419,
+    912.3999999761581,
+    2080.7999999523163,
+    5814.899999976158,
+    7506.200000047684,
+    9451.299999952316
+  ],
+  "tinyUp_ms": [
+    68.5,
+    110.0,
+    75.90000009536743,
+    148.70000004768372,
+    790.0,
+    5594.0,
+    7298.200000047684,
+    9208.100000023842
+  ],
+  "actual_sourceSDK_stable": true,
+  "missing": [
+    "round9/10terminalstate",
+    "10roundfinalpixels",
+    "10roundUndoRedo"
+  ],
+  "remaining_bounded_work": "READINESS11cases300s remains authorized. Do notrepeatstressID."
+}

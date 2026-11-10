@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="8"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="1"
+	timestamp="2026-11-10T20:31:56"
+	>
+	<testcase name="G5GpuRetirementContract" classname="G5GpuRetirementContract" time="0.0184186" status="run">
+		<properties/>
+		<system-out>{"case":"webgl_loss_quota_admitted","pass":true}
+{"case":"registered_lost_context_with_zero_buffer_is_physical_loss","pass":true}
+{"case":"physical_loss_releases_affected_lifetime_without_owner_close","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"logical_resize_and_zero_dimensions_do_not_imply_context_loss","pass":true}
+{"case":"healthy_context_keeps_normal_callback_completion","pass":tru...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5GpuResourceRecovery" classname="G5GpuResourceRecovery" time="0.102653" status="run">
+		<properties/>
+		<system-out>{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_target_pixels","pass":true}
+{"case":"idle_retirement_converges_without_edit","pass":true}
+{"case":"actual_navigation_retained_world_preparation","pass":true}
+{"case":"temporary_target_denial","pass":true}
+{"case":"temporary_target_denial_keeps_navigation_owner","pass":true}
+{"case":"logical_resize_preserves_context_lifetime","pass":true}
+{"case":"old_surface_generation_never_presents","pass":true}
+{"case":"rebind_draws_current_generation","pass":true}
+{"case":"resize_preserves_canonical_pixels","pass":true}
+{"case":"present_failure_not_success","pass":true}
+{"case":"preview_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_transparent_pixels","pass":true}
+{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyPixels" classname="G5CanonicalPreparedBodyPixels" time="0.17833" status="run">
+		<properties/>
+		<system-out>pixel mismatch dpr=2 variant=1 channels=12 max=22
+pixel mismatch dpr=2 variant=2 channels=12 max=22
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":0,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":1,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":2,"one_step_attempts":678}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":0,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":1,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":2,"one_step_attempts":680}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":0,"one_step_attempts":696}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":1,"one_step_attempts":696}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":2,"one_step_attempts":696}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CLeaseAccounting" classname="G5UR2CLeaseAccounting" time="0.0288117" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5RenderMemoryBudget" classname="G5RenderMemoryBudget" time="0.0678181" status="run">
+		<properties/>
+		<system-out>{"actual_renderer_admission_checked":true,"entry_mib":8,"leases_after_clear":0,"optional_mib":32,"shared_mib":96}
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRetryPixels" classname="G5TransientDisplayRetryPixels" time="0.168107" status="run">
+		<properties/>
+		<system-out>{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5TransientDisplayRecovery" classname="G5TransientDisplayRecovery" time="0.347888" status="run">
+		<properties/>
+		<system-out>{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":0,"used_bytes":74794432}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":1,"used_bytes":100406528}
+{"GPU_epochs":0,"hard_bytes":100663296,"pixels_preserved":true,"pressure_attempt":2,"used_bytes":100411200}
+{"DPR4_default96_progress":true,"after_clear_bytes":0,"no_fake_present":true,"retries":3}
+{"CPU_tiles":0,"actual_renderer_40000_history_progress":true,"history_denials":2,"used_bytes":7668528}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2DUpRuntime" classname="G5UR2DUpRuntime" time="0.398652" status="run">
+		<properties/>
+		<system-out>{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[16630334,1833,125,546750,458,1750,48583],"repeat":0,"scene_materializations":0,"up_ms":17.248291}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[13970500,3000,42,11375,125,250,533209],"repeat":1,"scene_materializations":0,"up_ms":14.526667}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[13627458,917,42,11500,83,83,20542],"repeat":2,"scene_materializations":0,"up_ms":13.66775}
+{"canonical_mask_bytes_equal":true,"copies":8,"equivalent_hits":7,"exact_calls":8,"history_exactly_once":true,"masks_built":8,"noop_cancel_undo_redo":true,"phase_nanoseconds":[13676750,2541,42,80375,84,250,11150...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

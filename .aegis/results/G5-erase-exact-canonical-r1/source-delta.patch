@@ -1,0 +1,1231 @@
+--- a/runtime/composition/CMakeLists.txt
++++ b/runtime/composition/CMakeLists.txt
+@@ -321,6 +321,11 @@
+  target_compile_definitions(axiom_ur2d_up_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1)
+  target_compile_features(axiom_ur2d_up_runtime_tests PRIVATE cxx_std_20)
+  add_test(NAME G5UR2DUpRuntime COMMAND axiom_ur2d_up_runtime_tests "${CMAKE_CURRENT_BINARY_DIR}/ur2d-up")
++ add_executable(axiom_erase_exact_canonical_runtime_tests tests/erase_exact_canonical_runtime_test.cpp)
++ target_link_libraries(axiom_erase_exact_canonical_runtime_tests PRIVATE canvas_runtime_composition)
++ target_compile_definitions(axiom_erase_exact_canonical_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1)
++ target_compile_features(axiom_erase_exact_canonical_runtime_tests PRIVATE cxx_std_20)
++ add_test(NAME G5EraseExactCanonicalRuntime COMMAND axiom_erase_exact_canonical_runtime_tests)
+  add_executable(axiom_ur2c_mask_pipeline_tests tests/ur2c_mask_pipeline_test.cpp)
+  target_link_libraries(axiom_ur2c_mask_pipeline_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_ur2c_mask_pipeline_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+--- /dev/null
++++ b/runtime/composition/tests/erase_exact_canonical_runtime_test.cpp
+@@ -0,0 +1,57 @@
++#include "canvas/runtime/internal/runtime_composition_core.hpp"
++#include "canvas/foundation/internal/g5_observation.hpp"
++#include "canvas/render/selection_region_geometry.hpp"
++#include "../../interaction/src/partial_erase_geometry.hpp"
++#include "canvas/scene/incremental_runtime_coordinator.hpp"
++#include <nlohmann/json.hpp>
++#include <filesystem>
++#include <fstream>
++#include <chrono>
++#include <cmath>
++#include <iostream>
++namespace canvas::ink_playground {
++class InkPlaygroundHistoryTestAccess {public:
++ static auto render(const interaction::CanvasEditingRuntime& r){return r.skiaRenderer_.renderCacheWork();}
++ static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
++ static std::size_t history(const interaction::CanvasEditingRuntime& r){return r.history_.size();}
++ static auto scene(const interaction::CanvasEditingRuntime& r){return r.sceneCoordinator_->runtimeScene().publicationWork();}
++ static const auto& objects(const interaction::CanvasEditingRuntime& r){return r.semanticObjects_;}
++ static const auto& traces(const interaction::CanvasEditingRuntime& r){return r.eraserTraces_;}
++};}
++using namespace canvas;using json=nlohmann::json;
++namespace {
++void require(bool v,const char* m){if(!v)throw std::runtime_error(m);}
++struct Host {
++ runtime::RuntimeCompositionCore core;std::uint64_t sequence=0,request=0;
++ Host(unsigned copies){
++  require(core.open(),"UR2dopen");auto c=std::make_unique<render::RasterSkiaSurfaceProvider>();auto p=std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
++  require(c->resize(800,500).code==render::BackendSubmissionCode::kAccepted&&p->resize(800,500).code==render::BackendSubmissionCode::kAccepted,"UR2dtargets");
++  require(core.registerSurfaceProvider("ur2dcanonical",std::move(c))&&core.registerPreviewSurfaceProvider("ur2dpreview",std::move(p))&&core.bindSurface(800,500)&&core.registerSource(71)&&core.setPlatformPresentationDeferred(true),"UR2dproviders");
++  semantic::InsertObjectsOp insert;
++  semantic::CompactStrokeContent content;content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;content.stroke.config.size=16;content.stroke.seed=42;
++  for(unsigned i=0;i<7199;++i)content.stroke.knots.push_back({250+180*std::sin(i*.037),220+150*std::cos(i*.053),std::uint16_t(20000+(i%100)*300)});
++  std::vector<semantic::EraseMaskRecord> history;
++  for(unsigned h=0;h<2;++h){semantic::SweptCircleMask mask;for(unsigned i=1;i<=80;++i){semantic::Vec2 a{240+70*std::sin((i-1)*.17+h*.1),210+65*std::cos((i-1)*.11)},b{240+70*std::sin(i*.17+h*.1),210+65*std::cos(i*.11)};mask.segments.push_back({{a,15},{b,15},{a.x+(b.x-a.x)/3,a.y+(b.y-a.y)/3},{a.x+2*(b.x-a.x)/3,a.y+2*(b.y-a.y)/3}});}history.push_back({ObjectId::fromUint64(9000+h),mask});}
++  for(unsigned i=0;i<copies;++i){semantic::ObjectRecord o;o.id=ObjectId::fromUint64(100+i);o.kind=semantic::ObjectKind::kVectorStroke;o.kind_version=3;o.content=content;o.erase_masks=history;o.placement.order_key=semantic::OrderKey({std::uint8_t(i+1)});insert.objects.push_back(std::move(o));}
++  semantic::Operation op{semantic::OperationId{ObjectId::fromUint64(8000)},semantic::DocumentId{ObjectId::fromUint64(1)},1,1,std::move(insert)};
++  require(core.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition==semantic::ApplyDisposition::kApplied,"UR2dseedcanonical");
++  runtime::CanvasControlPayload tool{};tool.kind=runtime::CanvasControlPayloadKind::kSelectTool;tool.tool=runtime::CanvasToolKind::kEraser;control(tool);
++  runtime::CanvasControlPayload opts{};opts.kind=runtime::CanvasControlPayloadKind::kEraserOptions;opts.eraser.mode=runtime::OptionPatch<std::uint32_t>::set(2);opts.eraser.diameterLogicalPx=runtime::OptionPatch<float>::set(12);control(opts);
++ }
++ void control(runtime::CanvasControlPayload p){auto& f=core.controlFacade();runtime::CanvasControlRequest req{};req.clientId=72;req.requestId=++request;req.target=f.mountedCanvasTargets().front();req.payload=std::move(p);require(f.submitCanvasControl(req).state==runtime::ProductControlState::kQueued&&core.ownerPump(),"UR2dcontrol");}
++ bool pointer(input::PointerPhase phase,float x,float y){input::PlatformPointerSample p{};p.source=71;p.pointer=1;p.sequence=++sequence;p.timestampNs=sequence*8000000;p.x=x;p.y=y;p.phase=phase;p.pressure=.5;return core.submit({{p}});}
++};
++}
++int main(){try{
++ for(unsigned copies:{1U,16U,40U})for(unsigned traceSize:{160U,400U}){
++  Host host(copies);auto& runtime=host.core.qualificationRuntime();ink_playground::InkPlaygroundHistoryTestAccess::profile(runtime);
++  for(unsigned round=0;round<3;++round){
++   const auto generation=runtime.semanticGeneration().value();const auto workBefore=ink_playground::InkPlaygroundHistoryTestAccess::render(runtime);double x=395-round*18,y=150;auto start=std::chrono::steady_clock::now();require(host.pointer(input::PointerPhase::kDown,x,y),"Down");
++   for(unsigned i=1;i<=traceSize;++i){const double phase=i*.19;x=395-round*18+4*std::sin(phase);y=150.+80.*i/traceSize;require(host.pointer(input::PointerPhase::kMove,x,y),"Move");}
++   const auto moveMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
++   foundation::internal::g5::ur2dUpWork={};start=std::chrono::steady_clock::now();require(host.pointer(input::PointerPhase::kUp,x,y),"Up");const auto upMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();const auto u=foundation::internal::g5::ur2dUpWork;const auto work=ink_playground::InkPlaygroundHistoryTestAccess::render(runtime);
++   std::cout<<json{{"copies",copies},{"knots",7199},{"trace_samples",traceSize+1},{"round",round},{"move_dispatch_sum_ms",moveMs},{"up_ms",upMs},{"phase_ns",u.nanoseconds},{"equivalent_hits",u.equivalentHits},{"exact_calls",u.exactCalls},{"masks_built",u.masksBuilt},{"generation_delta",runtime.semanticGeneration().value()-generation},{"history_new_primitives",work.maskHistory.primitiveBuilds-workBefore.maskHistory.primitiveBuilds},{"history_value_primitives",work.maskHistory.valuePrimitives-workBefore.maskHistory.valuePrimitives},{"history_denied",work.maskHistory.denied-workBefore.maskHistory.denied},{"history_path_builds",work.maskHistory.historyPathBuilds-workBefore.maskHistory.historyPathBuilds},{"new_query_builds",work.maskHistory.queryPathBuilds-workBefore.maskHistory.queryPathBuilds},{"body_builds",work.preparedBodyBuilds-workBefore.preparedBodyBuilds}}.dump()<<std::endl;
++  }
++ }
++ return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<std::endl;return 1;}}
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -259,6 +259,9 @@
+     add_executable(axiom_ur2d_selection_up_tests tests/ur2d_selection_up_test.cpp)
+     target_link_libraries(axiom_ur2d_selection_up_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     add_test(NAME G5UR2DSelectionLocality COMMAND axiom_ur2d_selection_up_tests --candidate "${CMAKE_CURRENT_BINARY_DIR}/ur2d-selection")
++    add_executable(axiom_erase_exact_canonical_tests tests/erase_exact_canonical_test.cpp)
++    target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
+     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
+     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -35,7 +35,7 @@
+ using Hit=SelectionGeometryHit;
+ float f(double v){return static_cast<float>(v);}
+ std::optional<SkPath> timedQueryOp(const SkPath& a,const SkPath& b,SkPathOp op,std::uint64_t* nanoseconds){
+-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     const auto started=std::chrono::steady_clock::now();const auto result=Op(a,b,op);
+     if(nanoseconds)*nanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();return result;
+ #else
+@@ -372,6 +372,8 @@
+ }
+ namespace internal {
+ struct EraseMaskPathCache::Impl {
++    std::shared_ptr<Entry> queryPrefix;
++    std::size_t queryPrefixSegments=0;
+     struct QueryResult {
+         std::shared_ptr<const PreparedNavigationGeometry> body;
+         std::shared_ptr<const Entry> query;
+@@ -406,12 +408,13 @@
+     std::vector<std::shared_ptr<Refusal>> refusals;
+     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+-    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size()+std::size_t(lastQuery.has_value());}
++    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size()+std::size_t(lastQuery.has_value())+std::size_t(bool(queryPrefix));}
+     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
+     bool evict(){
+         // A one-query memo is optional and can pin paths/body/history. Drop it
+         // first on actual quota pressure so existing work remains reclaimable.
+         if(lastQuery){lastQuery.reset();return true;}
++        if(queryPrefix){queryPrefix.reset();queryPrefixSegments=0;return true;}
+         auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
+             if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
+         auto plan=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
+@@ -425,11 +428,71 @@
+ };
+ EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
+ EraseMaskPathCache::~EraseMaskPathCache()=default;
+-void EraseMaskPathCache::clear()noexcept{impl_->lastQuery.reset();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
++void EraseMaskPathCache::clear()noexcept{impl_->queryPrefix.reset();impl_->queryPrefixSegments=0;impl_->lastQuery.reset();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+ void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+ EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
++void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& geometry,
++    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,std::size_t maxSegments)noexcept {
++    try{
++        auto& s=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
++        if(s.budget!=budget||s.capacity!=capacity){clear();s.usage=std::make_shared<ErasePathUsage>();s.budget=std::move(budget);s.capacity=capacity;}
++        const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
++        if(!sweep||!s.budget||!maxSegments)return;
++        // Unknown/forked inputs must prove their full prefix, including every
++        // coordinate/radius. No owner pointer or mask ID qualifies this cache.
++        for(const auto& p:sweep->segments)if(!std::isfinite(p.p0.position.x)||!std::isfinite(p.p0.position.y)||
++            !std::isfinite(p.p1.position.x)||!std::isfinite(p.p1.position.y)||!std::isfinite(p.control1.x)||
++            !std::isfinite(p.control1.y)||!std::isfinite(p.control2.x)||!std::isfinite(p.control2.y)||
++            !std::isfinite(p.p0.radius)||!std::isfinite(p.p1.radius))return;
++        auto old=s.queryPrefix;std::size_t completed=0;SkPath path;
++        if(old){const auto* prefix=std::get_if<semantic::SweptCircleMask>(&old->geometry);
++            if(prefix&&prefix->segments.size()<=sweep->segments.size()&&
++               std::equal(prefix->segments.begin(),prefix->segments.end(),sweep->segments.begin())){
++                completed=s.queryPrefixSegments;path=old->path;
++            }
++        }
++        const auto base=sizeof(Entry)+sweep->segments.size()*sizeof(semantic::EraseCubicSegment)+65536U;
++        const auto temporary=old?2*old->path.approximateBytesUsed():0U;
++        if(base>capacity||temporary>capacity-base||sweep->segments.size()>(capacity-base-temporary)/4096U)return;
++        const auto estimate=base+sweep->segments.size()*4096U+temporary;
++        // Account old and new allocations during replacement. Optional work
++        // simply declines when its current quota cannot hold both generations.
++        if(s.usage->bytes>capacity-estimate)return;
++        auto token=s.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);if(!token)return;
++        resources::ResourceLease lease(s.budget,*token);
++        const auto end=std::min(sweep->segments.size(),completed+maxSegments);
++        const auto started=std::chrono::steady_clock::now();
++        for(;completed<end;++completed){const auto& p=sweep->segments[completed];SkPathBuilder b;
++            b.moveTo(f(p.p0.position.x),f(p.p0.position.y));b.cubicTo(f(p.control1.x),f(p.control1.y),f(p.control2.x),f(p.control2.y),f(p.p1.position.x),f(p.p1.position.y));
++            ++s.stats.history.queryUnionOps;
++            if(!unite(path,stroke(b.detach(),2*std::max(p.p0.radius,p.p1.radius),SkPaint::kRound_Cap)))return;
++            if(completed+1<end&&std::chrono::steady_clock::now()-started>=std::chrono::microseconds(2000)){++completed;break;}
++        }
++        auto value=std::make_shared<Entry>();value->geometry=geometry;value->path=std::move(path);
++        const auto bytes=sizeof(Entry)+sweep->segments.size()*sizeof(semantic::EraseCubicSegment)+256+value->path.approximateBytesUsed();
++        if(bytes>estimate||!lease.shrink(bytes))return;
++        value->lease=std::move(lease);value->usage=s.usage;value->bytes=bytes;value->used=++s.tick;
++        s.usage->bytes+=bytes;s.queryPrefix=std::move(value);s.queryPrefixSegments=completed;
++    }catch(const std::bad_alloc&){}
++}
+ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
+     auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
++    if(!historical&&state.queryPrefix){
++        const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
++        const auto* prefix=std::get_if<semantic::SweptCircleMask>(&state.queryPrefix->geometry);
++        if(sweep&&prefix&&prefix->segments.size()<=sweep->segments.size()&&
++           std::equal(prefix->segments.begin(),prefix->segments.end(),sweep->segments.begin())){
++            while(state.queryPrefixSegments<sweep->segments.size()){
++                const auto before=state.queryPrefixSegments;
++                prepareQueryPrefix(geometry,state.budget,state.capacity,sweep->segments.size()-before);
++                if(state.queryPrefixSegments<=before)break;
++            }
++        }
++        if(const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);sweep&&state.queryPrefix&&
++           state.queryPrefix->geometry==geometry&&state.queryPrefixSegments==sweep->segments.size()){
++            auto ready=std::move(state.queryPrefix);state.queryPrefixSegments=0;state.entries.push_back(ready);++state.stats.builds;return ready;
++        }
++    }
+     for(auto& entry:state.entries)if((++state.stats.pathValueComparisons,state.stats.pathPrimitiveComparisons+=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry),entry->geometry==geometry)){entry->used=++state.tick;++state.stats.hits;return entry;}
+     const auto units=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry);
+     const auto raw=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
+@@ -443,12 +506,12 @@
+         if(token)break;if(!state.evict())return denied();
+     }
+     resources::ResourceLease lease(state.budget,*token);
+-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     const auto started=std::chrono::steady_clock::now();
+ #endif
+     auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;
+     const auto path=erasePath(geometry,&unions);
+-#if defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
+         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+ #endif
+@@ -462,7 +525,9 @@
+ }
+ namespace {
+ bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
+-    ++work.valueRecords;if(a.id!=b.id||a.geometry.index()!=b.geometry.index())return false;
++    // This proves derived geometry only. Each plan retains its own complete
++    // canonical records/source lease; mask IDs never alias canonical payloads.
++    ++work.valueRecords;if(a.geometry.index()!=b.geometry.index())return false;
+     return std::visit([&](const auto& x){
+         using T=std::decay_t<decltype(x)>;const auto& y=std::get<T>(b.geometry);
+         if constexpr(requires{x.segments;}) {
+@@ -668,7 +733,10 @@
+             auto queryPath=body?get(mask):nullptr;
+             const auto sameHistory=[&](const auto& old){
+                 if(bool(old)!=bool(historyPlan))return false;
+-                return !old||std::as_const(old->records)==std::as_const(historyPlan->records);
++                if(!old)return true;
++                const auto& a=std::as_const(old->records);const auto& b=std::as_const(historyPlan->records);
++                return a.size()==b.size()&&std::equal(a.begin(),a.end(),b.begin(),[&](const auto& x,const auto& y){
++                    return equalMask(x,y,impl_->stats.history);});
+             };
+             if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&impl_->lastQuery){const auto& old=*impl_->lastQuery;
+                 if(old.body==body&&old.query==queryPath&&old.transform==record.transform&&old.version==record.kindVersion&&sameHistory(old.history)){
+--- a/runtime/render/src/selection_region_geometry_internal.hpp
++++ b/runtime/render/src/selection_region_geometry_internal.hpp
+@@ -38,6 +38,11 @@
+     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
+     // Private Render translation units only; returned pins retain their quota.
+     std::shared_ptr<const Entry> get(const semantic::EraseMaskGeometry&,bool historical=false);
++    // Optional sequential PathOps prefix advanced by the existing live frame.
++    // A final query still verifies the entire input and finishes any remainder.
++    void prepareQueryPrefix(const semantic::EraseMaskGeometry&,
++        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
++        std::size_t maxSegments=8)noexcept;
+     void clear()noexcept;
+     Work work()const noexcept;
+  private:
+--- a/runtime/render/src/skia_ink_layers.cpp
++++ b/runtime/render/src/skia_ink_layers.cpp
+@@ -38,7 +38,7 @@
+ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry& entry,
+     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
+     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+-    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories){
++    const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories,PreparationAllowance* allowance){
+     if(prepared)geometry_=std::move(prepared);
+     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
+     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
+@@ -52,8 +52,11 @@
+     const auto maxResult=std::size_t(tileSize+2*maskGuard)*(std::min(tileSize,scratch.height())+2*maskGuard)*4;
+     if(limits.maxEntryBytes<std::max(maxBody,maxResult)||limits.maxBytes<maxBody+maxResult)return false;
+     const auto id=entry.record.objectId;
++    const std::array<int,4> gridBasis=originalGrid?std::array<int,4>{originalGrid->left,originalGrid->top,originalGrid->right,originalGrid->bottom}:
++        std::array<int,4>{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
+     auto found=sources_.find(id);
+-    if(found!=sources_.end()&&(found->second.command!=entry.command||found->second.matrix!=matrix||found->second.viewport!=viewport)){
++    if(found!=sources_.end()&&(found->second.command!=entry.command||found->second.matrix!=matrix||found->second.viewport!=viewport||
++       found->second.context!=destination.recordingContext()||found->second.grid!=gridBasis)){
+         eraseSource(id);found=sources_.end();
+     }
+     if(found==sources_.end()){
+@@ -61,6 +64,7 @@
+         if(!geometry_)return false;
+         geometry_->setRetentionPool(pool);auto prepared=ready?std::move(ready):geometry_->get(entry,limits,budget,true,PreparedConsumer::kRetainedInk);if(!prepared)return false;
+         Source source;source.command=entry.command;source.geometry=std::move(prepared);source.matrix=matrix;source.viewport=viewport;
++        source.context=destination.recordingContext();source.grid=gridBasis;
+         found=sources_.emplace(id,std::move(source)).first;
+     }
+     auto& source=found->second;
+@@ -98,6 +102,23 @@
+     const bool sameHistory=source.history==history;
+     const bool historyPrefix=!source.history||(history&&history->prefixIdentity==source.history->identity&&
+         history->prefixPrimitives>=source.history->primitives.size());
++    // Canonical IDs are sorted, so a newly committed mask may be inserted
++    // before an old record. Prove the complete old ordered subsequence, then
++    // retain result pixels only on tiles untouched by every inserted shape.
++    // Intersecting tiles replay the original full clear order from body pixels.
++    std::vector<const PreparedMaskPrimitive*> inserted;
++    bool insertionOnly=!sameHistory&&source.history&&history&&source.masks.empty()&&masks.empty();
++    if(insertionOnly){
++        const auto& old=std::as_const(source.history->records);const auto& next=std::as_const(history->records);
++        std::size_t previous=0;
++        for(std::size_t i=0;i<next.size();++i){
++            if(previous<old.size()&&old[previous]==next[i]){++previous;continue;}
++            const auto begin=i?history->primitiveEnds[i-1]:0;
++            for(auto j=begin;j<history->primitiveEnds[i];++j)inserted.push_back(history->primitives[j].get());
++        }
++        insertionOnly=previous==old.size();
++    }
++    const auto previousEpoch=source.epoch;
+     if((!sameHistory&&(!historyPrefix||!source.masks.empty()))||source.masks.size()>masks.size()||
+         !std::equal(source.masks.begin(),source.masks.end(),masks.begin()))++source.epoch;
+     source.history=history;source.masks=std::move(masks);source.metadata=std::move(metadataLease);
+@@ -110,8 +131,9 @@
+         auto crop=SkIRect::MakeLTRB(x,y,std::min(x+tileSize,grid.right),std::min(y+tileSize,grid.bottom));
+         if(!SkIRect::Intersects(crop,demand))continue;
+         const Key key{id,x,y};auto tile=tiles_.find(key);const auto bytes=std::size_t(crop.width())*crop.height()*4;
++        if(allowance&&allowance->exhausted())return pending();
+         if(tile==tiles_.end()){
+-            constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+128;
++            constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+sizeof(CompactStrokeRasterJob)+128;
+             resources::ResourceLease lease;if(!reserve(bytes+metadataBytes,key,limits,budget,lease))return pending();
+             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width(),crop.height()));if(!target)return pending();
+             G5_TARGET(target,true);
+@@ -121,14 +143,47 @@
+             // coordinates. A body target is one physical tile, never a subset
+             // image retaining a full-frame scratch allocation.
+             const CompactDeviceGrid localGrid{grid.left-x,grid.top-y,grid.right-x,grid.bottom-y};
+-            CompactRasterWork raster;drawCompactStrokeToSkCanvas(*canvas,stroke.config,stroke.knots,stroke.seed,&raster,nullptr,&localGrid,limits.gpuCoverageCandidate,&targets,nullptr,source.geometry.get(),true);
+-            if(raster.resourcePending)return pending();
+-            work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
+-            Image body{target->makeImageSnapshot(),std::move(lease)};if(!body.pixels)return pending();
+-            Tile candidate;candidate.body=std::move(body);candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
+-            tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;++work.bodyTileBuilds;
++            CompactRasterWork raster;
++            if(allowance){
++                // Canonical preparation consumes the same ready body through
++                // the existing cooperative raster leaf; its prepared-use and
++                // 32-primitive progress remain visible to the owner contract.
++                Tile candidate;candidate.building=std::move(target);candidate.body.lease=std::move(lease);
++                candidate.raster=std::make_unique<CompactStrokeRasterJob>(*canvas,stroke.config,stroke.knots,&localGrid,
++                    limits.gpuCoverageCandidate,budget,limits.maxEntryBytes,std::function<void(std::size_t)>{},true,source.geometry);
++                candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
++                tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;
++            }else drawCompactStrokeToSkCanvas(*canvas,stroke.config,stroke.knots,stroke.seed,&raster,nullptr,&localGrid,limits.gpuCoverageCandidate,&targets,nullptr,source.geometry.get(),true);
++            if(!allowance){
++                if(raster.resourcePending)return pending();
++                work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
++                Image body{target->makeImageSnapshot(),std::move(lease)};if(!body.pixels)return pending();
++                Tile candidate;candidate.body=std::move(body);candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
++                tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;++work.bodyTileBuilds;
++            }
+         }else ++work.bodyTileHits;
+         auto& t=tile->second;t.used=++tick_;
++        if(t.raster){
++            bool complete=false;
++            do{
++                if(allowance&&allowance->exhausted())return pending();
++                CompactRasterWork raster;complete=t.raster->step(*t.building->getCanvas(),stroke.config,stroke.knots,
++                    stroke.seed,targets,limits.gpuCoverageCandidate,&raster);
++                work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;
++                work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
++                ++work.preparationCoverageSteps;if(allowance)++allowance->steps;
++                if(t.raster->resourcePending())return pending();
++            }while(!complete);
++            t.body.pixels=t.building->makeImageSnapshot();if(!t.body.pixels)return pending();
++            t.raster.reset();t.building.reset();++work.bodyTileBuilds;
++        }
++        if(insertionOnly&&t.result.pixels&&t.epoch==previousEpoch){
++            const bool unaffected=std::none_of(inserted.begin(),inserted.end(),[&](const auto* primitive){
++                auto bounds=matrix.mapRect(primitive->bounds);bounds.outset(3,3);
++                return !bounds.isFinite()||SkRect::Intersects(bounds,SkRect::Make(crop));
++            });
++            if(unaffected){t.epoch=source.epoch;t.applied=maskCount;}
++        }
+         if(!t.result.pixels||t.epoch!=source.epoch||t.applied!=maskCount){
+             const bool prefix=t.result.pixels&&t.epoch==source.epoch;
+             const auto first=prefix?t.applied:0;auto base=prefix?t.result.pixels:t.body.pixels;
+@@ -164,6 +219,7 @@
+             Image result{target->makeImageSnapshot(),std::move(lease)};if(!result.pixels)return pending();
+             if(!t.result.pixels){t.bytes+=resultBytes;bytes_+=resultBytes;}
+             t.result=std::move(result);t.epoch=source.epoch;t.applied=maskCount;++work.maskTileUpdates;if(!prefix)++work.maskTileResets;
++            if(allowance)++allowance->steps;
+         }
+         (void)t.result.lease.markGpuUse();SkPaint opacity;opacity.setAlphaf(std::clamp(entry.presentationOpacity,0.F,1.F));
+         painted=true;destination.save();destination.resetMatrix();destination.clipIRect(crop);destination.drawImage(t.result.pixels,float(x-maskGuard),float(y-maskGuard),SkSamplingOptions{},&opacity);destination.restore();
+--- a/runtime/render/src/skia_ink_layers.hpp
++++ b/runtime/render/src/skia_ink_layers.hpp
+@@ -16,7 +16,7 @@
+     bool draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry&,
+         const SkMatrix&,const SkIRect& viewport,const CompactDeviceGrid*,
+         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
+-        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={});
++        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={},PreparationAllowance* allowance=nullptr);
+     void clear()noexcept;
+     void prune(std::span<const ReferenceTraversalEntry>);
+  private:
+@@ -27,12 +27,15 @@
+         SkMatrix matrix;SkIRect viewport;
+         std::vector<MaskPrimitive> masks; // Active transient tail only.
+         std::shared_ptr<MaskHistoryPlan> history;
++        const void* context=nullptr;
++        std::array<int,4> grid{};
+         resources::ResourceLease metadata;
+         std::uint64_t epoch=1;
+     };
+     struct Key {foundation::ObjectId id;int x,y;bool operator<(const Key& b)const{return std::tie(id,x,y)<std::tie(b.id,b.x,b.y);}};
+     struct Image {sk_sp<SkImage> pixels;resources::ResourceLease lease;};
+-    struct Tile {Image body,result;std::uint64_t epoch=0,used=0;std::size_t applied=0,bytes=0;};
++    struct Tile {Image body,result;sk_sp<SkSurface> building;std::unique_ptr<CompactStrokeRasterJob> raster;
++        std::uint64_t epoch=0,used=0;std::size_t applied=0,bytes=0;};
+     std::map<foundation::ObjectId,Source> sources_;
+     std::map<Key,Tile> tiles_;
+     std::shared_ptr<PreparedGeometryCache> geometry_;
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -705,6 +705,42 @@
+             continue;
+         }
+         if(exhausted())return yield();
++        // Reuse the existing device body/history tiles for canonical isolated
++        // v4 sources too. Partial work stays on disposable scratch; each retry
++        // clears scratch and resumes already qualified tiles, never a provider.
++        const auto* layered=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
++        const auto layerBytes=std::uint64_t(admission->second.crop.width()+2*SkiaInkLayers::tileSize)*
++            (admission->second.crop.height()+2*SkiaInkLayers::tileSize)*10;
++        const auto inkCount=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
++        const auto tileCount=std::size_t((admission->second.crop.width()+SkiaInkLayers::tileSize-1)/SkiaInkLayers::tileSize+1)*
++            ((admission->second.crop.height()+SkiaInkLayers::tileSize-1)/SkiaInkLayers::tileSize+1);
++        const bool layerFits=inkCount&&layerBytes<=options.maxBytes/std::size_t(inkCount)&&
++            tileCount<=options.maxEntries/std::size_t(inkCount);
++        if(raster&&!pending_&&layered&&layered->content.get().stroke.config.algorithmVersion==4&&
++           options.gpuCoverageCandidate&&canvas.recordingContext()&&layerFits&&
++           (plan.isolateEraseMasks||requiresInkEntryIsolation(entry,requiresInkIsolation(plan)))){
++            if(!ensureScratch(canvas,true))return allocationFailure_;
++            auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
++            const auto& clip=plan.referenceDrawList.viewportClip;const auto& metrics=plan.frame.metrics;
++            SkIRect viewport;SkMatrix scale=SkMatrix::Scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
++            scale.mapRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom)).roundOut(&viewport);
++            viewport.intersect(SkIRect::MakeWH(surface_->width(),surface_->height()));
++            target->save();target->clipIRect(admission->second.crop);
++            bool painted=false,resourcePending=false;
++            const bool complete=inkLayers_.draw(*target,*scratch_,entry,entryMatrix(canvas,plan,entry),viewport,nullptr,
++                options,budget,sourcePool,coverageTargets_,work,painted,resourcePending,preparedGeometry,
++                readyBody(entry,PreparedConsumer::kCanonical),maskHistory,&allowance);
++            target->restore();
++            if(!complete){if(resourcePending)return yield();}
++            else {
++                const bool stored=store(canvas,entry,validity,admission->second.crop,false,true);
++                if(!stored)return yield();
++                const auto& resident=entries_.at(entry.record.objectId);
++                captureRunEntry(plan,preparationCursor_,resident.image,resident.bounds.left(),resident.bounds.top());
++                if(streamFrame_)composite_->getCanvas()->drawImage(resident.image,float(resident.bounds.left()),float(resident.bounds.top()));
++                ++built;continue;
++            }
++        }
+         if(!pending_){
+             if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
+             const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -905,6 +905,19 @@
+         provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
+     }
+     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
++    if(gpuLiveV4&&eraseQueries_){
++        // One optional owner-frame advance, shared across all affected copies.
++        // Keep the original sequential union order; final exact Up validates
++        // the complete local geometry and finishes any unprepared remainder.
++        const ReferenceTraversalEntry* common=nullptr;std::size_t aliases=0;
++        for(const auto& entry:plan.referenceDrawList.entries)if(entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()){
++            const auto count=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& other){
++                return other.presentationEraseActive&&!other.presentationEraseMasks.empty()&&other.record.transform==entry.record.transform;});
++            if(std::size_t(count)>aliases){common=&entry;aliases=count;}
++        }
++        if(common)eraseQueries_->prepareQueryPrefix(common->presentationEraseMasks.back().geometry,resourceBudget_,
++            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),8);
++    }
+     internal::PreparationAllowance allowance;
+     if(cache){
+         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
+--- /dev/null
++++ b/runtime/render/tests/erase_exact_canonical_test.cpp
+@@ -0,0 +1,63 @@
++#define main ecExistingSelectionMain
++#include "ur2d_selection_up_test.cpp"
++#undef main
++#include "../src/skia_mask_history.hpp"
++
++int main(int argc,char**argv){try{
++ const bool verify=argc>1&&std::string_view(argv[1])=="--verify";
++ const auto out=std::filesystem::path(argc>2?argv[2]:"out/erase-exact-canonical");std::filesystem::create_directories(out);
++ if(verify){
++  auto budget=std::make_shared<resources::ResourceBudgetManager>();EraseMaskPathCache cache;
++  semantic::SweptCircleMask sweep;
++  for(unsigned i=0;i<160;++i)sweep.segments.push_back({{{double(i),100},5},{{double(i+1),100},5},{i+.3,100},{i+.6,100}});
++  for(unsigned i=0;i<21;++i)cache.prepareQueryPrefix(sweep,budget,8U*1024U*1024U,8);
++  const auto before=cache.work();require(bool(cache.get(sweep)),"prepared sequential query");
++  const auto after=cache.work();require(after.history.queryUnionOps==before.history.queryUnionOps,"Up rebuilt complete prepared query prefix");
++  require(before.history.queryUnionOps==160,"query prefix changed sequential union count");cache.clear();require(budget->used()==0,"query prefix quota leaked");
++ }
++ if(argc>1&&std::string_view(argv[1])=="--prefix-cost"){
++  json samples=json::array();
++  for(unsigned length:{800U,1600U}){
++   auto budget=std::make_shared<resources::ResourceBudgetManager>();EraseMaskPathCache cache;semantic::SweptCircleMask sweep;
++   std::size_t peak=0;std::uint64_t total=0,copied=0;double maxMs=0;
++   for(unsigned i=1;i<=length;++i){const double y=160+170.*i/length,oldy=160+170.*(i-1)/length;
++    sweep.segments.push_back({{{420+7*std::sin((i-1)*.17),oldy},16},{{420+7*std::sin(i*.17),y},16},{420,oldy},{420,y}});
++    if(i%8)continue;const auto start=std::chrono::steady_clock::now();cache.prepareQueryPrefix(sweep,budget,8U*1024U*1024U,8);
++    const auto ns=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();total+=ns;maxMs=std::max(maxMs,ns/1.e6);copied+=sweep.segments.size()*sizeof(semantic::EraseCubicSegment);peak=std::max(peak,budget->used());
++   }
++   auto record=source(7199,0);PreparedGeometryCache bodies;RenderCacheOptions options;const auto t=std::chrono::steady_clock::now();const auto hit=cache.query(record,sweep,budget,8U*1024U*1024U,&bodies,&options);const auto end=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-t).count();
++   const auto expected=intersectEraseGeometryComponentOracle(record,sweep);require(hit==expected,"long prefix changed independent exact result");cache.clear();bodies.clear();require(budget->used()==0,"long prefix leases");
++   samples.push_back({{"moves",length},{"frame_total_ns",total},{"frame_max_ms",maxMs},{"geometry_copy_bytes",copied},{"retained_peak_bytes",peak},{"final_exact_ms",end},{"decision",unsigned(hit)}});
++  }
++  std::ofstream(out/"prefix-cost.json")<<samples.dump(2)<<'\n';for(const auto& row:samples)std::cout<<row.dump()<<'\n';return 0;
++ }
++ json rows=json::array();
++ for(unsigned copies:{1U,16U,40U})for(unsigned length:{80U,160U,400U}){
++  if(copies!=40&&length!=160)continue;
++  auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});
++  PreparedGeometryCache bodies;EraseMaskPathCache cache;RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;
++  auto original=source(7199,2);
++  for(unsigned round=0;round<3;++round){
++   semantic::SweptCircleMask query;
++   for(unsigned i=1;i<=length;++i){const double x=395-round*18;
++    semantic::Vec2 a{x+4*std::sin((i-1)*.19),150+80.*(i-1)/length},b{x+4*std::sin(i*.19),150+80.*i/length};
++    query.segments.push_back({{a,6},{b,6},{a.x+(b.x-a.x)/3,a.y+(b.y-a.y)/3},{a.x+2*(b.x-a.x)/3,a.y+2*(b.y-a.y)/3}});}
++   const auto before=cache.work();const auto started=std::chrono::steady_clock::now();json decisions=json::array();
++   for(unsigned copy=0;copy<copies;++copy){auto record=original;record.objectId=ObjectId::fromUint64(100+copy);
++    // Match the canonical identity divergence produced by a real per-object Up.
++    for(unsigned j=2;j<record.eraseMasks.size();++j)record.eraseMasks[j].id=ObjectId::fromUint64(20000+copy*100+j);
++    decisions.push_back(unsigned(cache.query(record,query,budget,8U*1024U*1024U,&bodies,&options)));
++   }
++   const auto elapsed=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();const auto after=cache.work();
++   if(verify&&round>0&&copies>1)require(after.equivalentQueryHits-before.equivalentQueryHits>=copies-1,"geometry-equivalent canonical-ID forks repeated exact decision");
++   rows.push_back({{"copies",copies},{"moves",length},{"round",round},{"decisions",decisions},{"ms",elapsed},
++    {"memo_hits",after.equivalentQueryHits-before.equivalentQueryHits},{"history_builds",after.history.primitiveBuilds-before.history.primitiveBuilds},
++    {"query_unions",after.history.queryUnionOps-before.history.queryUnionOps},{"history_unions",after.history.historyUnionOps-before.history.historyUnionOps},
++    {"query_path_ns",after.history.queryPathNanoseconds-before.history.queryPathNanoseconds},{"history_path_ns",after.history.historyPathNanoseconds-before.history.historyPathNanoseconds},
++    {"difference_ns",after.history.differenceNanoseconds-before.history.differenceNanoseconds},{"intersect_ns",after.history.intersectionNanoseconds-before.history.intersectionNanoseconds}});
++   original.eraseMasks.push_back({ObjectId::fromUint64(50000+round),query});
++  }
++  cache.clear();bodies.clear();require(budget->used()==0,"exact history lease release");
++ }
++ std::ofstream(out/"exact.json")<<rows.dump(2)<<'\n';for(const auto& row:rows)std::cout<<row.dump()<<'\n';return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
+--- a/runtime/render/tests/transient_display_retry_test.cpp
++++ b/runtime/render/tests/transient_display_retry_test.cpp
+@@ -434,6 +434,41 @@
+  }
+  std::ofstream(out/"dense-mixed-counters.json")<<observations.dump(2)<<'\n';
+ }
++void canonicalMaskOnly(const std::filesystem::path& out,bool verify){
++ std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++ auto completion=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++ completion->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(completion),oracle(completion);
++ require(target.resize(512,256).code==BackendSubmissionCode::kAccepted&&oracle.resize(512,256).code==BackendSubmissionCode::kAccepted,"canonical mask-only targets");
++ SkiaRenderer renderer;RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;renderer.setRenderCacheOptions(options);
++ auto line=source();line.record.kind=semantic::ObjectKind::kVectorStroke;line.record.kindVersion=3;
++ line.record.content.update([](auto& v){std::get<semantic::CompactStrokeContent>(v).stroke.config.opacity=.55;});line.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(line.record.content)};
++ nlohmann::json rows=nlohmann::json::array();
++ for(unsigned round=0;round<4;++round){
++  if(round){semantic::SweptCircleMask mask;const double x=40+round*38;
++   for(unsigned i=0;i<8;++i)mask.segments.push_back({{{x+i,30},3},{{x+i,100},3},{x+i,45},{x+i,85}});
++   // Insert before prior IDs, proving no back()/count-based append assumption.
++   line.record.eraseMasks.push_back({ObjectId::fromUint64(100-round),std::move(mask)});
++   std::sort(line.record.eraseMasks.begin(),line.record.eraseMasks.end(),[](const auto&a,const auto&b){return a.id<b.id;});
++  }
++  auto base=renderPlan(line,round+1,2);auto draw=base.referenceDrawList;draw.entries={line};
++  FramePlan plan{base.frame,std::move(draw),{},false,true};RenderPreparationBudget bounded;
++  const auto before=renderer.renderCacheWork();unsigned attempts=0;
++  for(;;){const auto result=renderer.renderFrame(target,plan,nullptr,&bounded);completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();++attempts;
++   if(result.code==BackendSubmissionCode::kAccepted)break;require(result.code==BackendSubmissionCode::kRetry&&attempts<1024,"canonical mask-only progress");}
++  const auto after=renderer.renderCacheWork();auto a=oracle.acquire();
++  require(drawReferencePlanToSkCanvas(*a.frame.surface->getCanvas(),plan).code==BackendSubmissionCode::kAccepted,"independent canonical mask oracle");oracle.release();require(oracle.present().code==BackendSubmissionCode::kAccepted,"oracle present");
++  const auto actual=pixels(target,plan),expected=pixels(oracle,plan),band=denseIndependentBoundary(plan);std::size_t failures=0;
++  for(std::size_t i=0;i<actual.size();++i)if(!band[i/4]&&std::abs(int(actual[i])-int(expected[i]))>2)++failures;
++  saveBuffer(out/(std::to_string(round)+"-actual.rgba"),actual);saveBuffer(out/(std::to_string(round)+"-oracle.rgba"),expected);
++  rows.push_back({{"round",round},{"attempts",attempts},{"coverage_steps",after.preparationCoverageSteps-before.preparationCoverageSteps},
++   {"body_tiles",after.bodyTileBuilds-before.bodyTileBuilds},{"body_hits",after.bodyTileHits-before.bodyTileHits},
++   {"mask_draws",after.maskPrimitiveDraws-before.maskPrimitiveDraws},{"mask_resets",after.maskTileResets-before.maskTileResets},{"non_aa_failures",failures}});
++  std::ofstream(out/"canonical.json")<<rows.dump(2)<<'\n';require(failures==0,"canonical mask-only pixels");
++  if(verify&&round)require(after.preparationCoverageSteps==before.preparationCoverageSteps,"mask-only canonical replayed unchanged body coverage");
++ }
++ renderer.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();
++ for(const auto& row:rows)std::cout<<row.dump()<<'\n';
++}
+ std::vector<std::uint8_t> pixels(DisplayTarget& t,const FramePlan& p){std::vector<std::uint8_t> out(std::size_t(p.frame.metrics.physicalWidth)*p.frame.metrics.physicalHeight*4);require(t.readbackRgba(out).code==BackendSubmissionCode::kAccepted,"actual target capture");return out;}
+ void settle(SkiaRenderer& r,DisplayTarget& t,const FramePlan& p,const std::shared_ptr<NativeMetalCompletion>& c){
+  EditingOverlay overlay{p.frame};
+@@ -524,7 +559,7 @@
+ }
+ int main(int argc,char** argv){try{
+ #if defined(__APPLE__)
+- auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects"||mode=="--desktop-budget")denseObjectContinuity(out,mode=="--desktop-budget");else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--ec-canonical"||mode=="--ec-canonical-probe")canonicalMaskOnly(out,mode=="--ec-canonical");else if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects"||mode=="--desktop-budget")denseObjectContinuity(out,mode=="--desktop-budget");else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
+ #else
+  (void)argc;(void)argv;
+ #endif
+--- /dev/null
++++ b/verification/runners/g5/erase_exact_canonical.mjs
+@@ -0,0 +1,71 @@
++import fs from 'node:fs/promises';import path from 'node:path';import http from 'node:http';
++import {chromium} from '../../node_modules/playwright/index.mjs';import {createHash}from'node:crypto';
++import{qualifyPersistedRoundtrip}from'./ur2d_selection_up.mjs';import{validateChunk}from'./ur2d_selection_up_contract.mjs';
++import{WINDOWS,qualifyRounds}from'./erase_exact_canonical_contract.mjs';
++export async function consumer(c){
++ const{createRuntime}=await import('/sdk/axiom.mjs');const{installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++ const{tracePoint,qualifyRounds}=await import('/g5/erase_exact_canonical_contract.mjs');
++ const{sendBinaryChunks}=await import('/g5/ur2d_selection_up_contract.mjs');const{readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++ const row={variant:c.variant,repetition:c.repetition,rounds:[],errors:[],operations:[],frames:[],functional:[],captures:{}};
++ let sdk,clock=90000000000;const pause=ms=>new Promise(r=>setTimeout(r,ms)),check=(v,m)=>{if(!v)throw Error(m);};
++ const digest=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
++ const observer=installNavigationObserver(()=>sdk?.canvas);const state=()=>sdk.readState();window.partial=row;
++ const pointer=(phase,x,y)=>{clock+=8000000;const rect=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:clock/1e6});const start=performance.now();observer.dispatch(sdk.canvas,e);return{phase,x,y,start,end:performance.now(),contacts:state().activeContacts,generation:state().generation};};
++ const settle=async()=>{const start=performance.now();for(;;){const s=state();if(!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending)return performance.now()-start;check(performance.now()-start<20000,'stable exact demand did not converge');await pause(20);}};
++ const capture=async stage=>{await settle();const s=state();const snap=await sdk.captureSnapshot({generation:s.generation,documentRevision:(BigInt(c.fixture.metadata.documentRevision)+BigInt(s.generation)).toString(),recoveryFrontier:c.fixture.metadata.recoveryFrontier});await sendBinaryChunks('S2-'+stage+'.axsnap',snap.bytes,window.persistChunk);const pixels=readWebGLTarget(sdk.canvas,{role:'canonical'});check(pixels.metadata.status==='VALID'&&pixels.bytes,'canonical readback unavailable');await sendBinaryChunks('S2-'+stage+'.rgba',pixels.bytes,window.persistChunk);return{sha256:await digest(snap.bytes),byteLength:snap.bytes.length,state:s,rgba_sha256:await digest(pixels.bytes),readback:pixels.metadata};};
++ try{
++  const bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());check(await digest(bytes)===c.fixture.sha256,'fixture hash');
++  sdk=await createRuntime({mount:document.getElementById('mount'),documentId:c.fixture.documentId,restore:{bytes,metadata:c.fixture.metadata},builtinFonts:false,permission:'localSingleUser',onError:e=>row.errors.push({code:e.code,message:String(e.message??e)}),onOperation:b=>row.operations.push({at:performance.now(),bytes:b.length}),onFrame:f=>{if(row.frames.length<4096)row.frames.push({at:performance.now(),presented:f.presented});}});
++  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settle();await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',400,120);pointer('up',400,120);await settle();check(sdk.readSelection().count===1,'select original stroke');
++  for(let i=0;i<24;++i)await sdk.duplicateSelection({offset:[0,0]});await settle();await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();check(state().objects===40,'40 same bodies');row.initial=state();row.build=sdk.readBuildInfo();
++  console.log(JSON.stringify({stage:'ready',variant:c.variant,repetition:c.repetition}));
++  const count=c.stress?10:3;
++  for(let round=0;round<count;++round){
++   const observation={round};observer.begin(observation);const before=state(),op=row.operations.length,events=[];let[x,y]=tracePoint(round,0);events.push(pointer('down',x,y));check(events.at(-1).contacts===1,'main Down reject');
++   for(let i=1;i<=160;++i){[x,y]=tracePoint(round,i);events.push(pointer('move',x,y));if(i%8===0)await pause(0);}
++   const main=pointer('up',x,y);events.push(main);const next=pointer('down',x+1,y+1);events.push(next);events.push(pointer('move',x+2,y+3));const tiny=pointer('up',x+2,y+3);events.push(tiny);
++   const lastUp=performance.now();if(!c.stress||round===count-1)await pause(6000);
++   const after=state(),activity=observer.activity();observer.end(observation);
++   const r={round,before,events,main,mainCommitted:BigInt(main.generation)===BigInt(before.generation)+1n,mainContacts:main.contacts,immediateDownContacts:next.contacts,tinyContacts:tiny.contacts,lastUp,after,activity,operationDelta:c.stress?Number(BigInt(after.generation)-BigInt(before.generation)):row.operations.length-op,operationCallbacksObserved:row.operations.length-op,generationDelta:Number(BigInt(after.generation)-BigInt(before.generation)),observation};row.rounds.push(r);await window.persistMetadata(row);console.log(JSON.stringify({stage:'round',variant:c.variant,repetition:c.repetition,round,main_ms:main.end-main.start,state:after,activity}));
++  }
++  row.qualification=qualifyRounds(row.rounds,count,{stress:!!c.stress});check(row.qualification.status==='QUALIFIED','round operation/contact/idle proof');
++  // Separate functional gesture: actual Up immediately followed by pan/zoom,
++  // cancellation and no-op. The primary paired waveform above stays exact.
++  const functionalBefore=state().generation;
++  row.functional.push(pointer('down',300,230),pointer('move',300,245),pointer('up',300,260));
++  row.functionalHit=BigInt(state().generation)===BigInt(functionalBefore)+1n;
++  const immediateWheel=new WheelEvent('wheel',{clientX:600,clientY:400,deltaX:4,deltaY:2,bubbles:true,cancelable:true});sdk.canvas.dispatchEvent(immediateWheel);
++  const prior=state().generation;row.functional.push(pointer('down',1300,850),pointer('move',1310,855),pointer('cancel',1310,855));check(state().generation===prior&&state().activeContacts===0,'cancel mutation');
++  row.functional.push(pointer('down',1300,900),pointer('up',1300,900));check(state().generation===prior,'blank no-op committed');
++  for(const ctrlKey of[false,true]){const wheel=new WheelEvent('wheel',{clientX:600,clientY:400,ctrlKey,deltaX:ctrlKey?0:4,deltaY:ctrlKey?-2:2,bubbles:true,cancelable:true});sdk.canvas.dispatchEvent(wheel);}
++  row.functional_settle_ms=await settle();
++  // HUD is explicitly absent for independent CPU comparison.
++  await sdk.selectTool('select');pointer('down',1300,900);pointer('up',1300,900);await settle();check(sdk.readSelection().count===0,'empty HUD basis');
++  row.final=await capture('final');await sdk.undo();await settle();row.undo=await capture('undo');await sdk.redo();await settle();row.redo=await capture('redo');
++  row.pixel_basis={width:sdk.canvas.width,height:sdk.canvas.height,logical_width:1431,logical_height:1010,camera:state().camera,final:row.final,redo:row.redo};check(row.errors.length===0,'handler errors');row.status='QUALIFIED';return row;
++ }catch(error){row.status='FAILED';row.error=String(error.stack??error);throw error;}
++ finally{observer.restore();if(sdk)await sdk.close();await window.persistMetadata(row);}
++}
++export async function worker(request,out){
++ if(!WINDOWS[request.id])throw Error('foreign window');await fs.mkdir(out,{recursive:true});const root=path.resolve(new URL('../../..',import.meta.url).pathname);let browser,server,page,activeSdk;
++ const result={id:request.id,status:'STARTED',errors:[],rows:[]};
++ try{
++  server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://local').pathname);let file;
++   if(name==='/'){res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}</style><div id="mount" style="width:1431px;height:1010px"></div><script type="module">import{consumer}from"/driver.mjs";window.run=consumer;</script>');return;}
++   if(name==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+consumer.toString());return;}
++   if(name.startsWith('/sdk/'))file=path.join(activeSdk,name.slice(5));else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));else if(name==='/fixture.axsnap')file=request.fixture.path;
++   if(!file)throw Error('missing');res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  const runs=request.id==='G5EC1-FINAL-PAIRS'?[0,1,2].flatMap(repetition=>request.variants.map(v=>({...v,repetition}))):request.variants.map(v=>({...v,repetition:0}));
++  for(const run of runs){activeSdk=run.sdk;const directory=path.join(out,run.name+'-'+run.repetition);await fs.mkdir(directory);page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});page.on('pageerror',e=>result.errors.push(String(e)));page.on('crash',()=>result.errors.push('crash'));page.on('console',m=>{try{const x=JSON.parse(m.text());if(x.stage)console.log(JSON.stringify(x));}catch{}});
++   await page.exposeFunction('persistMetadata',r=>fs.writeFile(path.join(directory,'raw-row.json'),JSON.stringify(r,null,2)+'\n'));const transfers=new Map();
++   await page.exposeFunction('persistChunk',async chunk=>{const previous=transfers.get(chunk.name);if(previous?.complete)throw Error('transfer replay');const next=validateChunk(chunk,previous),bytes=Buffer.from(chunk.base64,'base64'),temporary=path.join(directory,chunk.name+'.partial');const h=await fs.open(temporary,chunk.offset?'r+':'wx');try{const r=await h.write(bytes,0,bytes.length,chunk.offset);if(r.bytesWritten!==bytes.length)throw Error('shortwrite');}finally{await h.close();}if(next.complete)await fs.rename(temporary,path.join(directory,chunk.name));transfers.set(chunk.name,next);return{nextOffset:next.nextOffset};});
++   await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>typeof window.run==='function');const row=await page.evaluate(c=>window.run(c),{fixture:request.fixture,variant:run.name,repetition:run.repetition,stress:request.id==='G5EC1-STRESS'});await page.close();page=null;
++   row.roundtrip=await qualifyPersistedRoundtrip({directory,name:'S2',basis:row.pixel_basis,oracle:request.oracle});if(row.roundtrip.status!=='QUALIFIED')throw Error('pixel qualification failed');await fs.writeFile(path.join(directory,'qualified-row.json'),JSON.stringify(row,null,2)+'\n');result.rows.push(row);
++  }
++  if(result.errors.length)throw Error('browser errors');result.status='OBSERVED';
++ }catch(error){result.status='FAILED';result.error=String(error.stack??error);if(page)try{result.partial=await page.evaluate(()=>window.partial);}catch{}}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}
++ return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const request=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await worker(request,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/erase_exact_canonical_contract.mjs
+@@ -0,0 +1,31 @@
++export const WINDOWS=Object.freeze({
++ 'G5EC1-BASELINE':{seconds:180,rows:1},'G5EC1-DIAGNOSTIC':{seconds:180,rows:1},
++ 'G5EC1-FINAL-PAIRS':{seconds:360,rows:6},'G5EC1-STRESS':{seconds:180,rows:1}
++});
++export function tracePoint(round,i){
++ if(!Number.isSafeInteger(round)||round<0||!Number.isSafeInteger(i)||i<0||i>160)throw Error('invalid frozen trace index');
++ return [420-round*18+(i?7*Math.sin(i*.17):0),160+170*i/160];
++}
++export function qualifyRounds(rounds,count=3,{stress=false}={}){
++ const failures=[];
++ if(rounds?.length!==count)failures.push('missing rounds');
++ for(const [index,r]of(rounds??[]).entries()){
++  if((!r.mainCommitted&&!(stress&&r.noopProven))||r.mainContacts!==0||r.immediateDownContacts!==1||r.tinyContacts!==0)failures.push('contact/commit '+index);
++  if(!(stress?[0,1,2]:[1,2]).includes(r.generationDelta)||r.operationDelta!==r.generationDelta)failures.push('operation '+index);
++  if((!stress||index===count-1)&&(r.after?.activeContacts!==0||r.after?.generation!==r.after?.lastCommit?.presentedGeneration||r.activity?.pending!==0))failures.push('idle convergence '+index);
++ }
++ return{status:failures.length?'FAILED':'QUALIFIED',failures};
++}
++export async function waitForTerminalGeneration({expected,read,pause,now,timeoutMs=25000}){
++ const start=now(),want=BigInt(expected);for(;;){const s=read(),actual=BigInt(s.generation);
++  if(actual>want)throw Error('unexpected generation after actual UI command');
++  if(actual===want&&s.activeContacts===0&&s.lastCommit.presentedGeneration===s.generation)return s;
++  if(now()-start>timeoutMs)throw Error('actual UI command generation timeout');await pause(10);
++ }
++}
++export async function observeCorrectFeedback({probe,pause,now,timeoutMs=15000,onProbe=()=>{}}){
++ const start=now(),observations=[];for(;;){const value=probe(),at=now();observations.push({at,positive:value.positive});onProbe(value,at);
++  if(value.positive>0)return{status:'QUALIFIED',firstCorrectAt:at,observations,value};
++  if(at-start>=timeoutMs)return{status:'MISSING',firstCorrectAt:null,observations,value};await pause(16);
++ }
++}
+--- /dev/null
++++ b/verification/runners/g5/erase_exact_canonical_runner.py
+@@ -0,0 +1,123 @@
++"""Frozen-window guard for erase exact/canonical work. Never touches user tabs."""
++from pathlib import Path
++import hashlib
++import importlib.util
++import json
++import math
++import subprocess
++import sys
++
++ROOT = Path(__file__).resolve().parents[3]
++RESULT = ROOT / '.aegis/results/G5-erase-exact-canonical-r1'
++WINDOWS = {'G5EC1-BASELINE': (180, 1), 'G5EC1-DIAGNOSTIC': (180, 1),
++           'G5EC1-FINAL-PAIRS': (360, 6), 'G5EC1-STRESS': (180, 1),
++           'G5EC1-STRESS-CONTINUE-R1': (153, 3), 'G5EC1-STRESS-CONTINUE-R2': (151, 3)}
++
++
++def sha(p):
++    h = hashlib.sha256()
++    with Path(p).open('rb') as f:
++        for b in iter(lambda: f.read(1048576), b''):
++            h.update(b)
++    return h.hexdigest()
++
++
++def read(p):
++    return json.loads(Path(p).read_text())
++
++
++def write(p, v):
++    Path(p).parent.mkdir(parents=True, exist_ok=True)
++    Path(p).write_text(json.dumps(v, indent=2) + '\n')
++
++
++def reserve(ledger, name):
++    if name not in WINDOWS or any(x['id'] == name for x in ledger['attempts']) or any(x['status'] == 'STARTED' for x in ledger['attempts']):
++        raise ValueError('foreign, repeated or concurrent window')
++    if ledger['charged_seconds'] + WINDOWS[name][0] > 900:
++        raise ValueError('cumulative allowance exhausted')
++    ledger['attempts'].append({'id': name, 'status': 'STARTED', 'reserved_seconds': WINDOWS[name][0], 'rss_mib': 4096})
++
++
++def charge(guard, limit):
++    t = guard.get('elapsed_s')
++    return math.ceil(t) if isinstance(t, (int, float)) and not isinstance(t, bool) and math.isfinite(t) and 0 <= t <= limit + 5 else limit
++
++
++def classify(guard, worker, stable, expected):
++    ok = stable and guard.get('reason') == 'completed' and guard.get('returncode') == 0 and guard.get('cleanup_complete') is True and guard.get('remaining_owned_pids') == []
++    ok = ok and worker.get('status') == 'OBSERVED' and len(worker.get('rows', [])) == expected
++    ok = ok and all(x.get('status') == 'QUALIFIED' for x in worker.get('rows', []))
++    return 'COMPLETED' if ok else 'STOPPED'
++
++
++def inputs(request):
++    files = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
++    source = {f: sha(ROOT / f) for f in sorted(set(files)) if f and (ROOT / f).is_file() and
++              f.startswith(('runtime/', 'sdk/', 'cmake/', 'verification/runners/g5/', 'verification/tests/')) and
++              Path(f).suffix in ('.cpp', '.hpp', '.h', '.mjs', '.py', '.cmake', '.json', '.txt')}
++    sdk = {}
++    for v in request['variants']:
++        p = Path(v['sdk'])
++        sdk[v['name']] = {str(q.relative_to(p)): sha(q) for q in sorted(p.rglob('*')) if q.is_file()}
++        if len(sdk[v['name']]) != 36:
++            raise ValueError('normal SDK inventory mismatch')
++    for v in (request['fixture'], request['oracle']):
++        if sha(v['path']) != v['sha256']:
++            raise ValueError('fixture/oracle mismatch')
++    old = read(ROOT / '.aegis/results/G5-desktop-render-budget-r1/normal-artifacts.json')
++    if 'old' in sdk and sdk['old'] != old['files']:
++        raise ValueError('frozen4317 normal SDK changed')
++    return {'source': source, 'SDK': sdk, 'fixture': request['fixture'], 'oracle': request['oracle']}
++
++
++def execute(request_path):
++    request = read(request_path)
++    if request['id'] == 'G5EC1-STRESS-CONTINUE-R1':
++        authorization = ROOT / '.aegis/results/G5-erase-exact-canonical-control-r1/stress-harness-continuation-r1.json'
++        if sha(authorization) != '2b37524a38453990cc95aeccfcdb5a5cbdd507acf0e771ae9175c2105330744e':
++            raise ValueError('continuation authorization mismatch')
++    if request['id'] == 'G5EC1-STRESS-CONTINUE-R2':
++        authorization = ROOT / '.aegis/results/G5-erase-exact-canonical-control-r1/stress-harness-continuation-r2.json'
++        if sha(authorization) != 'eaa87b66af8a3cc4c0e1bcf7e0897127e4262dc7b944bc8814becfdbe5394aad':
++            raise ValueError('final continuation authorization mismatch')
++    p = RESULT / 'sampling-ledger.json'
++    ledger = read(p) if p.exists() else {'schema': 'g5-erase-exact-canonical-ledger-v1', 'charged_seconds': 0, 'cap_seconds': 900, 'attempts': []}
++    reserve(ledger, request['id'])
++    before = inputs(request)
++    out = RESULT / 'local-web' / request['id']
++    if out.exists():
++        raise ValueError('existing output; window cannot restart')
++    out.mkdir(parents=True)
++    write(out / 'freeze.json', {'inputs': before, 'request': request, 'request_sha256': sha(request_path)})
++    write(p, ledger)
++    spec = importlib.util.spec_from_file_location('guard', Path(__file__).with_name('bounded_worker.py'))
++    guard_module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(guard_module)
++    driver = 'erase_undo_readiness.mjs' if request.get('undoReadiness') else 'erase_exact_canonical.mjs'
++    guard = guard_module.run(['node', str(Path(__file__).with_name(driver)), str(request_path), str(out)],
++                             out, WINDOWS[request['id']][0], 4096 * 1024)
++    try:
++        after = inputs(request)
++    except Exception as e:
++        after = {'error': repr(e)}
++    write(out / 'inputs-after.json', after)
++    worker = read(out / 'worker-result.json') if (out / 'worker-result.json').exists() else {}
++    expected = WINDOWS[request['id']][1]
++    if request.get('undoReadiness') and worker.get('rows'):
++        lengths = [v.get('moves') for v in worker['rows']]
++        if request.get('stressCandidate') and lengths == [1600, 1600, None]:
++            expected = 3
++        if lengths == [800, 1600] or lengths == request.get('undoLengths') or (lengths == [800] and worker['rows'][0]['localization']['up_ms'] >= 10000):
++            expected = len(lengths)
++    n = charge(guard, WINDOWS[request['id']][0])
++    ledger['attempts'][-1].update(status=classify(guard, worker, before == after, expected),
++                                  guard=guard, source_stable=before == after, charged_seconds=n)
++    ledger['charged_seconds'] += n
++    write(p, ledger)
++    print(json.dumps(ledger), flush=True)
++    return 0 if ledger['attempts'][-1]['status'] == 'COMPLETED' else 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/runners/g5/erase_undo_readiness.mjs
+@@ -0,0 +1,161 @@
++import fs from'node:fs/promises';import path from'node:path';import http from'node:http';
++import{chromium}from'../../node_modules/playwright/index.mjs';
++import{consumer as stressConsumer}from'./erase_exact_canonical.mjs';
++import{validateChunk}from'./ur2d_selection_up_contract.mjs';
++import{qualifyPersistedRoundtrip}from'./ur2d_selection_up.mjs';
++export function localizeUndo(row){
++ const first=rows=>rows?.find(x=>x.at>=row.up.start&&(x.canUndo||x.enabled))?.at??null;
++ const runtime=first(row.runtime),change=first(row.changes),dom=first(row.dom),up=row.up.end-row.up.start;
++ return{up_ms:up,firstRuntimeTrue:runtime,firstOnChangeTrue:change,firstDOMEnabled:dom,
++  classification:runtime===null?'HISTORY_NOT_READY':up>=1000?'SYNC_UP_BLOCK':dom!==null&&dom-row.up.end>=1000?'DOM_NOTIFICATION_LAG':'OBSERVED_READY',
++  limitation:'Owner state cannot be read synchronously inside a blocked Up; first public observation is an upper bound.'};
++}
++export{waitForTerminalGeneration}from'./erase_exact_canonical_contract.mjs';
++const wrapper=`import{createRuntime as original}from'/real/axiom.mjs';export *from'/real/axiom.mjs';
++export async function createRuntime(options){const fixture=window.undoFixture;const bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());
++let runtime;const userChange=options.onChange;const value=await original({...options,assetBaseURL:new URL('/real/',location.href),builtinFonts:false,documentId:fixture.documentId,restore:{bytes,metadata:fixture.metadata},onChange(state){const actual=runtime?.readState()??state;window.undoChanges.push({at:performance.now(),canUndo:actual.canUndo,generation:actual.generation,activeContacts:actual.activeContacts});userChange?.(state);}});
++runtime=value;window.rootRuntime=value;return value;}`;
++export async function longConsumer({moves,busySuccessor=false,action='erase',mixed=false}){
++ const sdk=window.rootRuntime;const{installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++ const{readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++ const{sendBinaryChunks}=await import('/g5/ur2d_selection_up_contract.mjs');
++ const{waitForTerminalGeneration,observeCorrectFeedback}=await import('/g5/erase_exact_canonical_contract.mjs');
++ const observer=installNavigationObserver(()=>sdk.canvas),pause=ms=>new Promise(r=>setTimeout(r,ms));let clock=90000000000;
++ const row={moves,runtime:[],changes:[],dom:[],heartbeats:[],events:[]};window.undoPartial=row;
++ const check=(v,m)=>{if(!v)throw Error(m);};const state=()=>sdk.readState();
++ const pointer=(phase,x,y)=>{clock+=8000000;const rect=sdk.canvas.getBoundingClientRect();const e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:clock/1e6});const start=performance.now();observer.dispatch(sdk.canvas,e);const end=performance.now(),s=state();row.runtime.push({at:end,canUndo:s.canUndo,generation:s.generation,activeContacts:s.activeContacts,presented:s.lastCommit.presentedGeneration});const v={phase,start,end,contacts:s.activeContacts};row.events.push(v);return v;};
++ const settle=async()=>{const begin=performance.now();for(;;){const s=state();if(!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending)return;check(performance.now()-begin<25000,'stable demand deadline');await pause(20);}};
++ const snapshot=async label=>{const s=state();const value=await sdk.captureSnapshot({generation:s.generation,documentRevision:(BigInt(window.undoFixture.metadata.documentRevision)+BigInt(s.generation)).toString(),recoveryFrontier:window.undoFixture.metadata.recoveryFrontier});
++  if(window.persistChunk)await sendBinaryChunks(label+'.axsnap',value.bytes,window.persistChunk);
++  const image=readWebGLTarget(sdk.canvas,{role:'canonical'});check(image.metadata.status==='VALID','final readiness pixels');
++  if(window.persistChunk)await sendBinaryChunks(label+'.rgba',image.bytes,window.persistChunk);
++  const digest=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
++  return{sha256:await digest(value.bytes),byteLength:value.bytes.length,state:s,rgba_sha256:await digest(image.bytes),readback:image.metadata};};
++ sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settle();await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',400,120);pointer('up',400,120);await settle();check(sdk.readSelection().count===1,'source selection');
++ for(let i=0;i<24;++i)await sdk.duplicateSelection({offset:[0,0]});await settle();await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();check(state().objects===40,'40copies');
++ if(mixed){
++  row.preseed=[];
++  for(const [kind,x,y]of[['rectangle',850,500],['sticky',1050,500],['table',850,750]]){
++   if(kind==='rectangle')await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});
++   await sdk.selectShape(kind);pointer('move',x,y);pointer('down',x,y);pointer('up',x,y);await settle();row.preseed.push({kind,id:sdk.readSelection().primary,selection:sdk.readSelection()});
++  }
++  const bytes=Uint8Array.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0,0,0,0x0d,0x49,0x48,0x44,0x52,0,0,0,1,0,0,0,1,8,6,0,0,0,0x1f,0x15,0xc4,0x89,0,0,0,0x0d,0x49,0x44,0x41,0x54,0x78,0x9c,0x63,0xf8,0xcf,0xc0,0xf0,0x1f,0,5,0,1,0xff,0x89,0x99,0x3d,0x1d,0,0,0,0,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82]);
++  const image=await sdk.importImage(bytes,'image/png');await sdk.resizeImage(image.objectId,80,80,true);await sdk.transformSelection([1,0,0,1,1150,750]);await settle();row.preseed.push({kind:'image',id:image.objectId,selection:sdk.readSelection()});
++  await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();check(state().objects===44,'mixed44objects');
++ }
++ const button=document.getElementById('undo');check(button,'actual demo undo');const mutations=new MutationObserver(()=>row.dom.push({at:performance.now(),enabled:!button.disabled}));mutations.observe(button,{attributes:true,attributeFilter:['disabled']});
++ const heartbeat=setInterval(()=>{const s=state();row.heartbeats.push({at:performance.now()});row.runtime.push({at:performance.now(),canUndo:s.canUndo,generation:s.generation,activeContacts:s.activeContacts,presented:s.lastCommit.presentedGeneration});},50);
++ const successorRect={x:592,y:482,width:16,height:16};
++ const captureSuccessor=()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:successorRect});check(p.metadata.status==='VALID','successor ROI readback');return p;};
++ if(busySuccessor&&action==='erase'){const p=captureSuccessor();row.successorBaseline={at:performance.now(),rect:successorRect,readback:p.metadata,rgba:Array.from(p.bytes),basis:state()};}
++ const actionRect={x:1640,y:960,width:280,height:220};
++ let actionBaseline;
++ if(busySuccessor&&action!=='erase'){
++  const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:actionRect});check(p.metadata.status==='VALID','action baseline capture');actionBaseline=Array.from(p.bytes);row.actionBaseline={at:performance.now(),rect:actionRect,rgba:actionBaseline};
++  const object=row.preseed?.find(x=>x.kind==='rectangle')?.selection;
++  if(object){const x=object.transform[4]+object.width/2,y=object.transform[5]+object.height/2;row.navigationSentinel={world:[x,y],physicalBefore:[Math.round(x*2),Math.round(y*2)],expectedColor:[51,128,204,255]};}
++ }
++ if(window.persistChunk)row.initialSnapshot=await snapshot('initial');
++ observer.begin(row.observation={});row.before=state();row.initialDOM={at:performance.now(),enabled:!button.disabled};let x=420,y=160;pointer('down',x,y);await pause(60);
++ for(let i=1;i<=moves;++i){x=420+7*Math.sin(i*.17);y=160+170*i/moves;pointer('move',x,y);if(i%8===0)await pause(0);}
++ row.lastMove=performance.now();row.up=pointer('up',x,y);
++ if(busySuccessor&&action==='erase'){
++  // Correctness-only fixed known-ink ROI, disjoint from the predecessor's
++  // x≈420 trace. Readback never belongs to the 160-Move paired timing phase.
++  // main Up -> next Down and first Move are deliberately the same DOM task.
++  const down=pointer('down',300,230),first=pointer('move',300,242);row.successor={down,first,rect:successorRect,events:[],captures:[],beforeUp:true};
++  for(let i=1;i<=8;++i){row.successor.events.push(pointer('move',300,242+i*3));await pause(16);
++   if(i===4||i===8){const p=captureSuccessor();row.successor.captures.push({at:performance.now(),readback:p.metadata,rgba:Array.from(p.bytes)});}}
++  const last=row.successor.captures.at(-1);let positive=0,baselineInk=0;for(let i=0;i<last.rgba.length;i+=4){
++   const before=row.successorBaseline.rgba;const ink=before[i]<100&&before[i+1]<100&&before[i+2]<150&&before[i+3]===255;
++   if(ink)++baselineInk;if(ink&&last.rgba[i]>=250&&last.rgba[i+1]>=250&&last.rgba[i+2]>=250&&last.rgba[i+3]===255)++positive;
++  }
++  row.successor.positiveInteriorPixels=positive;row.successor.baselineInkPixels=baselineInk;
++  row.successor.pixelWitness=positive?'OBSERVED_DARK_TO_WHITE_BEFORE_UP':'MISSING';row.successor.up=pointer('up',300,266);check(down.contacts===1&&first.contacts===1&&row.successor.up.contacts===0,'successor contact lifecycle');
++  row.actionAdmitted=down.contacts===1&&first.contacts===1;row.actionPoseCorrect=true;row.actionPositivePixels=positive;row.actionFeedbackAt=last.at;
++ }else if(busySuccessor&&(action==='pan'||action==='zoom')){
++  row.successor={kind:action,events:[],captures:[]};const before=state().camera;
++  for(let i=0;i<3;++i){const rect=sdk.canvas.getBoundingClientRect(),event=new WheelEvent('wheel',{clientX:rect.left+600,clientY:rect.top+400,ctrlKey:action==='zoom',deltaX:action==='pan'?8:0,deltaY:action==='pan'?4:-8,bubbles:true,cancelable:true});const start=performance.now();sdk.canvas.dispatchEvent(event);row.successor.events.push({start,end:performance.now(),camera:state().camera});await pause(32);}
++  const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:actionRect});check(p.metadata.status==='VALID','navigation active pixels');
++  let positive=0;for(let i=0;i<p.bytes.length;i+=4)if(Math.max(...[0,1,2,3].map(c=>Math.abs(p.bytes[i+c]-actionBaseline[i+c])))>2)++positive;
++  const expected=action==='pan'?{scale:before.scale,x:before.x-24,y:before.y-12}:
++   {scale:before.scale*Math.exp(.24),x:600-Math.exp(.24)*(600-before.x),y:400-Math.exp(.24)*(400-before.y)};
++  row.successor.expectedCamera=expected;row.actionAdmitted=true;row.actionPoseCorrect=['scale','x','y'].every(k=>Math.abs(state().camera[k]-expected[k])<.01);row.actionPositivePixels=positive;row.actionFeedbackAt=performance.now();row.successor.capture={rect:actionRect,rgba:Array.from(p.bytes),at:row.actionFeedbackAt,camera:state().camera};
++  const world=row.navigationSentinel.world,sx=Math.round(2*(world[0]*expected.scale+expected.x)),sy=Math.round(2*(world[1]*expected.scale+expected.y));
++  const sentinelRect={x:sx-2,y:sy-2,width:4,height:4};
++  const feedback=await observeCorrectFeedback({probe:()=>{
++   const sentinel=readWebGLTarget(sdk.canvas,{role:'canonical',rect:sentinelRect});check(sentinel.metadata.status==='VALID','navigation sentinel capture');
++   let positive=0;for(let i=0;i<sentinel.bytes.length;i+=4)if([0,1,2,3].every(c=>Math.abs(sentinel.bytes[i+c]-row.navigationSentinel.expectedColor[c])<=2))++positive;
++   return{positive,rgba:Array.from(sentinel.bytes),readback:sentinel.metadata};},pause,now:()=>performance.now()});
++  row.successor.feedbackObservations=feedback.observations;row.successor.expectedSentinel={rect:sentinelRect,rgba:feedback.value.rgba,correctInteriorPixels:feedback.value.positive};
++  row.actionPositivePixels=feedback.value.positive;row.actionFeedbackAt=feedback.firstCorrectAt??performance.now();
++ }else if(busySuccessor){
++  row.successor={kind:action,events:[],captures:[]};
++  if(action==='image'){
++   await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',1190,790);pointer('up',1190,790);
++   check(sdk.readSelection().primary===row.preseed.find(x=>x.kind==='image').id,'image selection identity');
++  }else{
++   await sdk.selectShape(action);await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});pointer('move',900,300);pointer('down',900,300);pointer('up',900,300);
++   check(sdk.readSelection().count===1,'created selected object');
++  }
++  const selected=sdk.readSelection(),x=action==='image'?1190:930,y=action==='image'?790:330;
++  row.successor.selected=selected;const down=pointer('down',x,y);row.successor.down=down;
++  for(const[dx,dy]of[[8,4],[40,16],[80,30]]){row.successor.events.push(pointer('move',x+dx,y+dy));await pause(32);}
++  const activeSelection=sdk.readSelection();const rect=action==='image'?{x:2500,y:1620,width:24,height:24}:
++   action==='table'?{x:2*Math.floor(selected.transform[4]+selected.width+30),y:2*Math.floor(selected.transform[5]+78)-2,width:20,height:4}:
++   {x:2*Math.floor(selected.transform[4]+selected.width+32),y:2*Math.floor(selected.transform[5]+42),width:16,height:16};
++  const feedback=await observeCorrectFeedback({probe:()=>{
++   const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect});check(p.metadata.status==='VALID','active object pixels');let positive=0;
++   for(let i=0;i<p.bytes.length;i+=4){if(action==='image'){if(p.bytes[i]>200&&p.bytes[i+1]<80&&p.bytes[i+2]<80)++positive;}else if(action==='table'){
++     if(p.bytes[i]<160&&p.bytes[i+1]<160&&p.bytes[i+2]<160)++positive;
++    }else if(Math.abs(p.bytes[i]-51)<=2&&Math.abs(p.bytes[i+1]-128)<=2&&Math.abs(p.bytes[i+2]-204)<=2)++positive;}
++   return{positive,rgba:Array.from(p.bytes),readback:p.metadata};},pause,now:()=>performance.now()});
++  row.actionAdmitted=down.contacts===1&&row.successor.events.every(x=>x.contacts===1);
++  row.actionPoseCorrect=activeSelection.primary===selected.primary;
++  row.successor.expectedPose={dx:80,dy:30,initialTransform:selected.transform,initialBounds:selected.bounds};
++  row.actionPositivePixels=feedback.value.positive;row.actionFeedbackAt=feedback.firstCorrectAt??performance.now();row.successor.feedbackObservations=feedback.observations;
++  row.successor.capture={rect,rgba:feedback.value.rgba,at:row.actionFeedbackAt,beforeUp:true,selection:activeSelection};
++  row.successor.up=pointer('up',x+80,y+30);row.successor.afterSelection=sdk.readSelection();
++  row.actionPoseCorrect&&=Math.abs(row.successor.afterSelection.transform[4]-selected.transform[4]-80)<.1&&Math.abs(row.successor.afterSelection.transform[5]-selected.transform[5]-30)<.1;
++ }
++ await settle();row.readyAt=performance.now();await pause(1000);row.after=state();row.dom.push({at:performance.now(),enabled:!button.disabled});row.changes=window.undoChanges.slice();row.activity=observer.activity();
++ // Readiness is observed before an independent next gesture, then real UI Undo/Redo.
++ pointer('down',1300,900);pointer('up',1300,900);await settle();
++ if(window.persistChunk)row.finalSnapshot=await snapshot('final');
++ const beforeUndo=state().generation;button.click();await waitForTerminalGeneration({expected:(BigInt(beforeUndo)+1n).toString(),read:state,pause,now:()=>performance.now()});await settle();row.undo=state();
++ if(window.persistChunk)row.undoSnapshot=await snapshot('undo');
++ document.getElementById('redo').click();await waitForTerminalGeneration({expected:(BigInt(beforeUndo)+2n).toString(),read:state,pause,now:()=>performance.now()});await settle();row.redo=state();
++ if(window.persistChunk)row.redoSnapshot=await snapshot('redo');
++ check(BigInt(row.undo.generation)===BigInt(beforeUndo)+1n&&BigInt(row.redo.generation)===BigInt(beforeUndo)+2n,'actual Demo Undo/Redo generations');
++ row.canonicalRoundtrip={finalGeneration:beforeUndo,undoGeneration:row.undo.generation,redoGeneration:row.redo.generation};
++ pointer('down',1300,900);pointer('cancel',1301,901);await settle();check(state().activeContacts===0,'terminal contacts');
++ observer.end(row.observation);clearInterval(heartbeat);mutations.disconnect();observer.restore();row.status='OBSERVED';return row;
++}
++export async function undoWorker(request,out){
++ await fs.mkdir(out,{recursive:true});const root=path.resolve(new URL('../../..',import.meta.url).pathname);let sdk=request.variants[0].sdk,browser,server,page;const result={id:request.id,status:'STARTED',rows:[],errors:[]};
++ try{
++  server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://local').pathname);let file;
++   if(name==='/example.html'){res.setHeader('Content-Type','text/html');res.end(await fs.readFile(path.join(sdk,'example.html')));return;}
++   if(name==='/stress.html'){res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}</style><div id="mount" style="width:1431px;height:1010px"></div><script type="module">import{consumer}from"/stress-driver.mjs";window.run=consumer;</script>');return;}
++   if(name==='/stress-driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+stressConsumer.toString());return;}
++   if(name==='/axiom.mjs'){res.setHeader('Content-Type','text/javascript');res.end(wrapper);return;}
++   if(name==='/fixture.axsnap')file=request.fixture.path;else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));else if(name.startsWith('/sdk/'))file=path.join(sdk,name.slice(5));else file=path.join(sdk,name.startsWith('/real/')?name.slice(6):name.slice(1));
++   res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const variant of request.variants){sdk=variant.sdk;
++  for(const moves of request.undoLengths??[800,1600]){page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});page.on('pageerror',e=>result.errors.push(String(e)));await page.addInitScript(fixture=>{window.undoFixture=fixture;window.undoChanges=[];},request.fixture);await page.goto('http://127.0.0.1:'+server.address().port+'/example.html');await page.waitForFunction(()=>window.rootRuntime&&document.getElementById('undo'));
++   const directory=path.join(out,variant.name+'-'+moves);await fs.mkdir(directory);const transfers=new Map();
++   await page.exposeFunction('persistChunk',async chunk=>{const previous=transfers.get(chunk.name);if(previous?.complete)throw Error('buffer replay');const next=validateChunk(chunk,previous),bytes=Buffer.from(chunk.base64,'base64'),file=path.join(directory,chunk.name+'.partial');const h=await fs.open(file,chunk.offset?'r+':'wx');try{await h.write(bytes,0,bytes.length,chunk.offset);}finally{await h.close();}if(next.complete)await fs.rename(file,path.join(directory,chunk.name));transfers.set(chunk.name,next);return{nextOffset:next.nextOffset};});
++   const row=await page.evaluate(longConsumer,{moves,busySuccessor:!!request.busySuccessor});row.localization=localizeUndo(row);row.variant=variant.name;row.status='QUALIFIED';result.rows.push(row);await fs.writeFile(path.join(out,variant.name+'-undo-'+moves+'.json'),JSON.stringify(row,null,2)+'\n');console.log(JSON.stringify({stage:'undo-case',variant:variant.name,moves,localization:row.localization}));await page.close();page=null;if(row.localization.up_ms>=10000)break;
++  }}
++  if(request.stressCandidate){
++   sdk=request.variants.find(x=>x.name==='candidate').sdk;const directory=path.join(out,'candidate-10round');await fs.mkdir(directory);page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});const transfers=new Map();
++   await page.exposeFunction('persistMetadata',row=>fs.writeFile(path.join(directory,'raw-row.json'),JSON.stringify(row,null,2)+'\n'));
++   await page.exposeFunction('persistChunk',async chunk=>{const next=validateChunk(chunk,transfers.get(chunk.name)),file=path.join(directory,chunk.name+'.partial'),h=await fs.open(file,chunk.offset?'r+':'wx');try{await h.write(Buffer.from(chunk.base64,'base64'),0,undefined,chunk.offset);}finally{await h.close();}if(next.complete)await fs.rename(file,path.join(directory,chunk.name));transfers.set(chunk.name,next);return{nextOffset:next.nextOffset};});
++   await page.goto('http://127.0.0.1:'+server.address().port+'/stress.html');await page.waitForFunction(()=>window.run);const row=await page.evaluate(config=>window.run(config),{fixture:request.fixture,variant:'candidate',repetition:0,stress:true});await page.close();page=null;
++   row.roundtrip=await qualifyPersistedRoundtrip({directory,name:'S2',basis:row.pixel_basis,oracle:request.oracle});if(row.roundtrip.status!=='QUALIFIED')throw Error('stress pixel failure');result.rows.push(row);await fs.writeFile(path.join(directory,'qualified-row.json'),JSON.stringify(row,null,2)+'\n');
++  }
++  if(result.errors.length)throw Error('actual Demo errors');result.status='OBSERVED';
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);if(page)try{result.partial=await page.evaluate(()=>window.undoPartial);}catch{}}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const r=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await undoWorker(r,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/post_erase_interaction_readiness.mjs
+@@ -0,0 +1,40 @@
++import fs from'node:fs/promises';import path from'node:path';import http from'node:http';
++import{chromium}from'../../node_modules/playwright/index.mjs';
++import{longConsumer,localizeUndo}from'./erase_undo_readiness.mjs';
++import{validateChunk}from'./ur2d_selection_up_contract.mjs';
++import{execFileSync}from'node:child_process';
++export function caseRoster(){return[
++ ...['erase','pan','rectangle'].map(kind=>({kind,variant:'old'})),
++ ...['ready','erase','pan','zoom','rectangle','sticky','table','image'].map(kind=>({kind,variant:'candidate'}))];}
++export function classifyTiming(start,feedback){if(!Number.isFinite(start)||!Number.isFinite(feedback)||feedback<start)throw Error('invalid timing basis');const ms=feedback-start;return{ms,category:ms<=3000?'within3s':ms<=5000?'3to5s':'over5s',goal_ms:3000,reference_ms:5000};}
++export function qualifyFeedback({admitted,positivePixels,correctPose}){return{status:!admitted||!correctPose?'FAILED':positivePixels>0?'QUALIFIED':'MISSING'};}
++const facade=`import{createRuntime as original}from'/real/axiom.mjs';export *from'/real/axiom.mjs';export async function createRuntime(options){let sdk;const originalChange=options.onChange;const f=window.undoFixture,bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());const result=await original({...options,assetBaseURL:new URL('/real/',location.href),builtinFonts:false,documentId:f.documentId,restore:{bytes,metadata:f.metadata},onChange(s){const v=sdk?.readState()??s;window.undoChanges.push({at:performance.now(),canUndo:v.canUndo,generation:v.generation,activeContacts:v.activeContacts});originalChange?.(s);}});sdk=result;window.rootRuntime=sdk;return sdk;}`;
++export async function readinessWorker(request,out){
++ await fs.mkdir(out,{recursive:true});const root=path.resolve(new URL('../../..',import.meta.url).pathname);let server,browser,page,sdk;
++ const result={id:request.id,status:'STARTED',rows:[],errors:[]};
++ try{
++  server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://local').pathname);let file;
++   if(name==='/axiom.mjs'){res.setHeader('Content-Type','text/javascript');res.end(facade);return;}
++   if(name==='/fixture.axsnap')file=request.fixture.path;else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));else file=path.join(sdk,name.startsWith('/real/')?name.slice(6):name.slice(1));
++   res.setHeader('Content-Type',file.endsWith('.html')?'text/html':file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const spec of request.cases??caseRoster()){
++   sdk=request.variants.find(x=>x.name===spec.variant).sdk;page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});page.on('pageerror',e=>result.errors.push(String(e)));await page.addInitScript(f=>{window.undoFixture=f;window.undoChanges=[];},request.fixture);await page.goto('http://127.0.0.1:'+server.address().port+'/example.html');await page.waitForFunction(()=>window.rootRuntime&&document.getElementById('undo'));
++   const directory=path.join(out,spec.variant+'-'+spec.kind);await fs.mkdir(directory);const transfers=new Map();
++   await page.exposeFunction('persistChunk',async c=>{const old=transfers.get(c.name);if(old?.complete)throw Error('replayed buffer');const next=validateChunk(c,old),bytes=Buffer.from(c.base64,'base64'),file=path.join(directory,c.name+'.partial');const h=await fs.open(file,c.offset?'r+':'wx');try{await h.write(bytes,0,bytes.length,c.offset);}finally{await h.close();}if(next.complete)await fs.rename(file,path.join(directory,c.name));transfers.set(c.name,next);return{nextOffset:next.nextOffset};});
++   console.log(JSON.stringify({stage:'readiness-start',...spec}));
++   const row=await page.evaluate(longConsumer,{moves:1600,busySuccessor:spec.kind!=='ready',action:spec.kind,mixed:true});
++   row.variant=spec.variant;row.kind=spec.kind;row.localization=localizeUndo(row);
++   row.timing=classifyTiming(row.up.start,row.actionFeedbackAt??row.readyAt);
++   row.feedback=spec.kind==='ready'?{status:row.after.activeContacts===0&&row.after.canUndo&&row.after.generation===row.after.lastCommit.presentedGeneration&&row.activity.pending===0?'QUALIFIED':'FAILED'}:qualifyFeedback({admitted:row.actionAdmitted,positivePixels:row.actionPositivePixels??0,correctPose:row.actionPoseCorrect});
++   row.snapshotRoundtrip=JSON.parse(execFileSync(path.join(root,'.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip'),[path.join(directory,'final.axsnap'),path.join(directory,'redo.axsnap')],{encoding:'utf8',timeout:10000}));
++   if(!row.snapshotRoundtrip.objects_equal||!row.snapshotRoundtrip.document_digest_equal)throw Error('readiness UndoRedo canonical mismatch');
++   row.status=row.feedback.status==='QUALIFIED'?'QUALIFIED':'FAILED';
++   await fs.writeFile(path.join(out,spec.variant+'-'+spec.kind+'.json'),JSON.stringify(row,null,2)+'\n');result.rows.push(row);await page.close();page=null;
++   if(row.status!=='QUALIFIED')throw Error('successor actual feedback '+row.feedback.status+' '+spec.kind);
++   console.log(JSON.stringify({stage:'readiness-complete',...spec,timing:row.timing}));
++  }
++  if(result.errors.length)throw Error('actual Demo errors');result.status='OBSERVED';
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);if(page)try{result.partial=await page.evaluate(()=>window.undoPartial);}catch{}}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const request=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await readinessWorker(request,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/post_erase_interaction_readiness_runner.py
+@@ -0,0 +1,58 @@
++from pathlib import Path
++import importlib.util
++import json
++import sys
++
++HERE = Path(__file__).resolve().parent
++spec = importlib.util.spec_from_file_location('parent', HERE / 'erase_exact_canonical_runner.py')
++parent = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(parent)
++ID = 'G5EC1-READINESS-ALL'
++
++
++def admit(attempts, charged):
++    return charged + 300 <= 1200 and not any(v['id'] == ID or v['status'] == 'STARTED' for v in attempts)
++
++
++def execute(request_path):
++    request = parent.read(request_path)
++    continuation = request['id'] == 'G5EC1-READINESS-CONTINUE-R1'
++    if request['id'] != ID and not continuation:
++        raise ValueError('foreign readiness window')
++    seconds = 240 if continuation else 300
++    if continuation:
++        authorization = parent.ROOT / '.aegis/results/G5-erase-exact-canonical-control-r1/readiness-harness-continuation-r1.json'
++        if parent.sha(authorization) != '5f6c01699df327bc4ab03fcdb4fdcfd43eaf5d08ea294792d1b32bbc811dd04b':
++            raise ValueError('readiness continuation authority mismatch')
++        if request.get('cases') != [dict(kind=k, variant='candidate') for k in ('zoom', 'rectangle', 'sticky', 'table', 'image')]:
++            raise ValueError('only exact missing five cases authorized')
++    ledger_path = parent.RESULT / 'sampling-ledger.json'
++    ledger = parent.read(ledger_path)
++    if (not continuation and not admit(ledger['attempts'], ledger['charged_seconds'])) or (continuation and (
++            ledger['charged_seconds'] + seconds > 1200 or any(v['id'] == request['id'] or v['status'] == 'STARTED' for v in ledger['attempts']))):
++        raise ValueError('repeated or exhausted readiness allowance')
++    out = parent.RESULT / 'local-web' / request['id']
++    out.mkdir(parents=True, exist_ok=False)
++    before = parent.inputs(request)
++    parent.write(out / 'freeze.json', {'request': request, 'inputs': before})
++    ledger['attempts'].append(dict(id=request['id'], status='STARTED', reserved_seconds=seconds, rss_mib=4096))
++    ledger['combined_cap_seconds'] = 1200
++    parent.write(ledger_path, ledger)
++    spec = importlib.util.spec_from_file_location('guard', HERE / 'bounded_worker.py')
++    guard = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(guard)
++    result = guard.run(['node', str(HERE / 'post_erase_interaction_readiness.mjs'), str(request_path), str(out)], out, seconds, 4096 * 1024)
++    after = parent.inputs(request)
++    parent.write(out / 'inputs-after.json', after)
++    worker = parent.read(out / 'worker-result.json') if (out / 'worker-result.json').exists() else {}
++    charge = parent.charge(result, seconds)
++    ledger['attempts'][-1].update(status=parent.classify(result, worker, before == after, 5 if continuation else 11),
++        guard=result, source_stable=before == after, charged_seconds=charge)
++    ledger['charged_seconds'] += charge
++    parent.write(ledger_path, ledger)
++    print(json.dumps(ledger), flush=True)
++    return 0 if ledger['attempts'][-1]['status'] == 'COMPLETED' else 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/tests/g5_erase_exact_canonical.test.mjs
+@@ -0,0 +1,27 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {tracePoint,WINDOWS,qualifyRounds} from '../runners/g5/erase_exact_canonical_contract.mjs';
++
++test('frozen long trace and explicit window bounds',()=>{
++ assert.deepEqual(tracePoint(0,0),[420,160]);
++ assert.deepEqual(tracePoint(2,160),[384+7*Math.sin(160*.17),330]);
++ assert.equal(WINDOWS['G5EC1-BASELINE'].seconds,180);
++ assert.equal(WINDOWS['G5EC1-FINAL-PAIRS'].seconds,360);
++ assert.equal(WINDOWS['G5EC1-STRESS'].seconds,180);
++ assert.throws(()=>tracePoint(0,161));
++});
++test('stress intermediate rounds need admission/decision proof while only final tail requires idle',()=>{
++ const r={mainCommitted:false,mainContacts:0,immediateDownContacts:1,tinyContacts:0,generationDelta:0,operationDelta:0,noopProven:true,after:{activeContacts:0,generation:'1',lastCommit:{presentedGeneration:'0'}},activity:{pending:1}};
++ const final={...r,after:{activeContacts:0,generation:'1',lastCommit:{presentedGeneration:'1'}},activity:{pending:0}};
++ assert.equal(qualifyRounds([r,final],2,{stress:true}).status,'QUALIFIED');
++ assert.equal(qualifyRounds([r,{...final,noopProven:false}],2,{stress:true}).status,'FAILED');
++});
++test('completion requires actual per-round commits, closed contacts and tail quiescence',()=>{
++ const round={mainCommitted:true,mainContacts:0,immediateDownContacts:1,tinyContacts:0,
++  generationDelta:2,operationDelta:2,after:{activeContacts:0,generation:'26',lastCommit:{presentedGeneration:'26'}},activity:{pending:0}};
++ const rows=[{...round},{...round},{...round,generationDelta:1,operationDelta:1}];
++ assert.equal(qualifyRounds(rows,3).status,'QUALIFIED');
++ assert.equal(qualifyRounds(rows.slice(1),3).status,'FAILED');
++ assert.equal(qualifyRounds([{...round,mainCommitted:false},...rows.slice(1)],3).status,'FAILED');
++ assert.equal(qualifyRounds([{...round,activity:{pending:1}},...rows.slice(1)],3).status,'FAILED');
++});
+--- /dev/null
++++ b/verification/tests/g5_erase_undo_readiness.test.mjs
+@@ -0,0 +1,28 @@
++import test from 'node:test';import assert from'node:assert/strict';
++import{localizeUndo,waitForTerminalGeneration}from'../runners/g5/erase_undo_readiness.mjs';
++import fs from'node:fs';import vm from'node:vm';
++test('separates blocked Up, stale DOM and real busy history without inventing readiness',()=>{
++ const base={up:{start:100,end:12100},runtime:[{at:12100,canUndo:true}],changes:[{at:12105,canUndo:true}],dom:[{at:12107,enabled:true}],heartbeats:[{at:100},{at:12110}]};
++ assert.equal(localizeUndo(base).classification,'SYNC_UP_BLOCK');
++ assert.equal(localizeUndo({...base,up:{start:100,end:200},dom:[{at:12000,enabled:true}]}).classification,'DOM_NOTIFICATION_LAG');
++ assert.equal(localizeUndo({...base,up:{start:100,end:200},runtime:[{at:12100,canUndo:false}],changes:[],dom:[]}).classification,'HISTORY_NOT_READY');
++ assert.equal(localizeUndo({...base,runtime:[]}).firstRuntimeTrue,null);
++});
++test('browser wait helper executes without host imports or runtime dependencies',async()=>{
++ const source=fs.readFileSync(new URL('../runners/g5/erase_exact_canonical_contract.mjs',import.meta.url),'utf8');
++ assert(!/\bimport\s/.test(source));
++ const browser=source.replaceAll('export ','')+';globalThis.wait=waitForTerminalGeneration;';const context=vm.createContext({});vm.runInContext(browser,context);
++ const result=await context.wait({expected:'27',read:()=>({generation:'27',activeContacts:0,lastCommit:{presentedGeneration:'27'}}),pause:async()=>{},now:()=>0});
++ assert.equal(result.generation,'27');
++ const driver=fs.readFileSync(new URL('../runners/g5/erase_undo_readiness.mjs',import.meta.url),'utf8');
++ assert(driver.includes("import('/g5/erase_exact_canonical_contract.mjs')"));
++ assert(!driver.includes("import('/g5/erase_undo_readiness.mjs')"));
++});
++test('actual UI asynchronous Undo must advance generation before settle and capture metadata',async()=>{
++ let current={generation:'26',activeContacts:0,lastCommit:{presentedGeneration:'26'}};let n=0;
++ const result=await waitForTerminalGeneration({expected:'27',read:()=>current,
++  pause:async()=>{++n;if(n===1)current={generation:'27',activeContacts:0,lastCommit:{presentedGeneration:'26'}};
++    else current={generation:'27',activeContacts:0,lastCommit:{presentedGeneration:'27'}};},now:()=>n,timeoutMs:10});
++ assert.equal(result.generation,'27');assert.equal(n,2);
++ await assert.rejects(waitForTerminalGeneration({expected:'27',read:()=>({...current,generation:'28'}),pause:async()=>{},now:()=>0}),/unexpected/);
++});
+--- /dev/null
++++ b/verification/tests/g5_post_erase_interaction_readiness.test.mjs
+@@ -0,0 +1,21 @@
++import test from'node:test';import assert from'node:assert/strict';
++import{caseRoster,classifyTiming,qualifyFeedback}from'../runners/g5/post_erase_interaction_readiness.mjs';
++import{observeCorrectFeedback}from'../runners/g5/erase_exact_canonical_contract.mjs';
++test('candidate operation roster and three baseline families are complete',()=>{
++ const c=caseRoster();assert.equal(c.filter(x=>x.variant==='old').length,3);
++ for(const kind of['erase','pan','zoom','rectangle','sticky','table','image'])assert(c.some(x=>x.variant==='candidate'&&x.kind===kind));
++ assert(c.some(x=>x.kind==='ready'&&x.variant==='candidate'));
++});
++test('feedback observer records delayed correct pixels instead of failing a fixed early probe',async()=>{
++ let t=0;
++ const r=await observeCorrectFeedback({probe:()=>({positive:t>=160?16:0}),pause:async()=>{t+=16;},now:()=>t,timeoutMs:15000});
++ assert.equal(r.status,'QUALIFIED');assert.equal(r.firstCorrectAt,160);assert.equal(r.observations[0].positive,0);
++ t=0;const missing=await observeCorrectFeedback({probe:()=>({positive:0}),pause:async()=>{t+=16;},now:()=>t,timeoutMs:32});assert.equal(missing.status,'MISSING');
++});
++test('T0 includes blocked Up; timings remain findings while actual positive pixels are required',()=>{
++ assert.equal(classifyTiming(100,4200).category,'3to5s');assert.equal(classifyTiming(100,6200).category,'over5s');
++ for(const value of[NaN,Infinity,99])assert.throws(()=>classifyTiming(100,value));
++ assert.equal(qualifyFeedback({admitted:true,positivePixels:0,correctPose:true}).status,'MISSING');
++ assert.equal(qualifyFeedback({admitted:true,positivePixels:5,correctPose:true}).status,'QUALIFIED');
++ assert.equal(qualifyFeedback({admitted:false,positivePixels:5,correctPose:true}).status,'FAILED');
++});
+--- /dev/null
++++ b/verification/tests/test_g5_erase_exact_canonical.py
+@@ -0,0 +1,34 @@
++from pathlib import Path
++import importlib.util
++import unittest
++
++
++class WindowTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        path = Path(__file__).resolve().parents[1] / 'runners/g5/erase_exact_canonical_runner.py'
++        spec = importlib.util.spec_from_file_location('ec_runner', path)
++        cls.runner = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(cls.runner)
++
++    def test_unique_window_and_total_reservation(self):
++        m = self.runner
++        ledger = {'attempts': [], 'charged_seconds': 0}
++        m.reserve(ledger, 'G5EC1-BASELINE')
++        with self.assertRaises(ValueError):
++            m.reserve(ledger, 'G5EC1-BASELINE')
++        with self.assertRaises(ValueError):
++            m.reserve(ledger, 'smoke')
++        with self.assertRaises(ValueError):
++            m.reserve({'attempts': [], 'charged_seconds': 800}, 'G5EC1-BASELINE')
++        self.assertEqual(m.charge({'elapsed_s': 16.01}, 180), 17)
++        self.assertEqual(m.charge({'elapsed_s': float('nan')}, 180), 180)
++
++    def test_failed_guard_or_source_never_qualifies(self):
++        m = self.runner
++        guard = dict(reason='completed', returncode=0, cleanup_complete=True, remaining_owned_pids=[])
++        worker = dict(status='OBSERVED', rows=[dict(status='QUALIFIED')])
++        self.assertEqual(m.classify(guard, worker, True, 1), 'COMPLETED')
++        self.assertEqual(m.classify(guard, worker, False, 1), 'STOPPED')
++        self.assertEqual(m.classify(guard | dict(reason='timeout'), worker, True, 1), 'STOPPED')
++        self.assertEqual(m.classify(guard, worker, True, 6), 'STOPPED')
+--- /dev/null
++++ b/verification/tests/test_g5_post_erase_interaction_readiness.py
+@@ -0,0 +1,15 @@
++from pathlib import Path
++import importlib.util
++import unittest
++
++
++class ReadinessTests(unittest.TestCase):
++    def test_additional_window_is_single_bounded_with_shared_cap(self):
++        path = Path(__file__).resolve().parents[1] / 'runners/g5/post_erase_interaction_readiness_runner.py'
++        spec = importlib.util.spec_from_file_location('ready', path)
++        m = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(m)
++        for used in [0, 72, 900]:
++            self.assertTrue(m.admit([], used))
++        self.assertFalse(m.admit([{'id': 'G5EC1-READINESS-ALL'}], 72))
++        self.assertFalse(m.admit([], 901))

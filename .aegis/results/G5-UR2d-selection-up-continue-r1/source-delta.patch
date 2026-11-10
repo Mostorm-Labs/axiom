@@ -1,0 +1,1237 @@
+diff --git a/runtime/composition/CMakeLists.txt b/runtime/composition/CMakeLists.txt
+index 611c6cfc..8fade3f4 100644
+--- a/runtime/composition/CMakeLists.txt
++++ b/runtime/composition/CMakeLists.txt
+@@ -316,6 +316,11 @@ if(BUILD_TESTING)
+ endif()
+ 
+ if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION)
++ add_executable(axiom_ur2d_up_runtime_tests tests/ur2d_selection_up_test.cpp)
++ target_link_libraries(axiom_ur2d_up_runtime_tests PRIVATE canvas_runtime_composition)
++ target_compile_definitions(axiom_ur2d_up_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1)
++ target_compile_features(axiom_ur2d_up_runtime_tests PRIVATE cxx_std_20)
++ add_test(NAME G5UR2DUpRuntime COMMAND axiom_ur2d_up_runtime_tests "${CMAKE_CURRENT_BINARY_DIR}/ur2d-up")
+  add_executable(axiom_ur2c_mask_pipeline_tests tests/ur2c_mask_pipeline_test.cpp)
+  target_link_libraries(axiom_ur2c_mask_pipeline_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_ur2c_mask_pipeline_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+diff --git a/runtime/composition/tests/selection_input_integration_test.cpp b/runtime/composition/tests/selection_input_integration_test.cpp
+index e09b4a52..f3fb39db 100644
+--- a/runtime/composition/tests/selection_input_integration_test.cpp
++++ b/runtime/composition/tests/selection_input_integration_test.cpp
+@@ -436,6 +436,20 @@ TEST_F(SelectionInput, SectionAreaPrefersContentAndWholeBoundaryProducesNonredun
+     rectangle(40,40,560,260);EXPECT_EQ(selected(),roots);
+     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
+ }
++TEST_F(SelectionInput, ParentedSectionBackgroundUsesComposedWorldTransform) {
++    const auto group=foundation::ObjectId::fromUint64(9910),section=foundation::ObjectId::fromUint64(9911);
++    semantic::ObjectRecord parent;parent.id=group;parent.kind=semantic::ObjectKind::kGroup;parent.kind_version=1;
++    parent.content=semantic::GroupContent{};parent.transform.tx=100;parent.transform.ty=100;parent.placement.order_key=semantic::OrderKey({4});
++    semantic::ObjectRecord container;container.id=section;container.kind=semantic::ObjectKind::kSection;container.kind_version=1;
++    container.content=semantic::SectionContent{{0,0,200,140},"",0,0};container.placement={group,semantic::OrderKey({1})};
++    semantic::ObjectRecord child;child.id=foundation::ObjectId::fromUint64(9912);child.kind=semantic::ObjectKind::kShape;child.kind_version=1;
++    child.content=semantic::ShapeContent{1,20,20};child.placement.order_key=semantic::OrderKey({5});child.transform.tx=115;child.transform.ty=115;
++    semantic::Operation operation{semantic::OperationId{foundation::ObjectId::fromUint64(9913)},semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{parent,container,child}}};
++    ASSERT_EQ(c.applyExternalOperation(operation,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
++    mode(runtime::CanvasSelectionMode::kRectangle);rectangle(110,110,140,140);
++    auto roots=selected();EXPECT_NE(std::find(roots.begin(),roots.end(),child.id),roots.end());
++    EXPECT_EQ(std::find(roots.begin(),roots.end(),group),roots.end());
++}
+ TEST_F(SelectionInput, ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership) {
+     runtime::ImageImportRequest image;image.objectId=foundation::ObjectId::fromUint64(9902);
+     image.bytes={137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,4,0,0,0,181,28,12,2,0,0,0,11,73,68,65,84,120,218,99,100,248,15,0,1,5,1,1,39,24,227,102,0,0,0,0,73,69,78,68,174,66,96,130};
+diff --git a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+index f4f909f5..60a967e2 100644
+--- a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
++++ b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+@@ -1,6 +1,26 @@
+ #pragma once
+ // Private qualification observations. No canonical owner or consumer SDK API.
+ #include <cstdint>
++#if defined(AXIOM_UR2D_TESTS)
++#include <array>
++#include <chrono>
++namespace canvas::foundation::internal::g5 {
++enum class UpPhase : unsigned { exact,history,publication,apply,finalize,observer,scene,count };
++struct Ur2dUpWork {std::array<std::uint64_t,unsigned(UpPhase::count)> nanoseconds{};std::uint64_t masksBuilt=0,exactCalls=0,equivalentHits=0;};
++inline thread_local Ur2dUpWork ur2dUpWork;
++struct UpTimer {UpPhase phase;std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();bool active=true;
++ explicit UpTimer(UpPhase p):phase(p){}~UpTimer(){finish();}
++ void finish(){if(active){ur2dUpWork.nanoseconds[unsigned(phase)]+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();active=false;}}
++};
++}
++#define UR2D_PHASE(name,phase) ::canvas::foundation::internal::g5::UpTimer name{::canvas::foundation::internal::g5::UpPhase::phase}
++#define UR2D_END(name) name.finish()
++#define UR2D_COUNT(field) (++::canvas::foundation::internal::g5::ur2dUpWork.field)
++#else
++#define UR2D_PHASE(...) ((void)0)
++#define UR2D_END(...) ((void)0)
++#define UR2D_COUNT(...) ((void)0)
++#endif
+ namespace canvas::foundation::internal::g5 {
+ enum class Kind : unsigned { Stage=1, Begin, End, Admission, Basis, Commit, Scene, Decision, Leaf, Counter, Submit, Complete, GpuSubmit, GpuComplete, GpuRetire, Terminal };
+ enum class Tag : unsigned { input=1, eraser_begin, eraser_up, exact_prepare, publication_prepare, semantic_apply, observer, history, scene_apply, canonical, transient, navigation, preview, reference_build, reference_encode, reference_digest, coverage, material, provider, lookup, geometry_build, geometry_replay, copy, target, pointer_identity, canonical_basis, canonical_commit, input_result, canonical_receipt, cached_pixels, erase_damage, mask, prepare, render_direct, record_commands, routed_sample, eraser_revision, history_prepare, history_finalize, pathops, navigation_basis, brush_revision, resource_lease, control_result, display_record, display_roster, composition_proof, exact_body, mask_history, mask_scene, moving_erase_progress };
+diff --git a/runtime/interaction/CMakeLists.txt b/runtime/interaction/CMakeLists.txt
+index 59529a4f..adeb3853 100644
+--- a/runtime/interaction/CMakeLists.txt
++++ b/runtime/interaction/CMakeLists.txt
+@@ -62,6 +62,9 @@ target_include_directories(canvas_runtime_editor PUBLIC
+ target_link_libraries(canvas_runtime_editor PUBLIC canvas_runtime_interaction
+     canvas_runtime_render canvas_runtime_ink canvas_runtime_scene)
+ target_compile_features(canvas_runtime_editor PUBLIC cxx_std_20)
++if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION)
++    target_compile_definitions(canvas_runtime_editor PRIVATE AXIOM_UR2D_TESTS=1)
++endif()
+ if(MSVC)
+     target_compile_options(canvas_runtime_editor PRIVATE /W4 /permissive- /WX /EHsc)
+ else()
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index ab3be157..6ce021f2 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -3288,7 +3288,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   std::optional<std::vector<semantic::EraseMaskAddItem>> partial;
+   if(!objectEraser) {
+     G5_SCOPE(g5Exact,g5::Tag::exact_prepare,g5::Purpose::none);
++    UR2D_PHASE(upExact,exact);
+     partial=partialEraseTargets(it->second);
++    UR2D_END(upExact);
+     G5_SCOPE_END(g5Exact);
+     if(!partial){AXIOM_ERASE_REJECT("exact_targets");(void)eraserCancel(pointerId);return false;}
+     for(const auto& item:*partial)hit.insert(item.object_id);
+@@ -3358,27 +3360,37 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   }
+   auto* display=findDisplay(pointerId,DisplayKind::kErase);
+   if(!display){(void)eraserCancel(pointerId);return false;}
++  UR2D_PHASE(upHistory,history);
+   auto historyEntry=history_.prepareRecord(operation,{std::move(inverse)},{},{});
++  UR2D_END(upHistory);
+   if(!historyEntry){(void)eraserCancel(pointerId);return false;}
++  UR2D_PHASE(upPublication,publication);
+   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
+   PublicationReservation publication(localOperationSink_, operation);
+   G5_SCOPE_END(g5Publication);
++  UR2D_END(upPublication);
+   if (!publication) {
+       AXIOM_ERASE_REJECT("publication_reservation");
+       (void)eraserCancel(pointerId);
+       return false;
+   }
++  UR2D_PHASE(upApply,apply);
+   G5_SCOPE(g5Apply,g5::Tag::semantic_apply,g5::Purpose::none);
+   auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
+       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+   G5_SCOPE_END(g5Apply);
++  UR2D_END(upApply);
+   eraserTraces_.erase(it);
+   eraserPreviewRevisions_.erase(pointerId);
+   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
+   committed=true;
++  UR2D_PHASE(upFinalize,finalize);
+   history_.commitPrepared(std::move(*historyEntry));
+   sealDisplay(*display,*applied.commit_record);
++  UR2D_END(upFinalize);
++  UR2D_PHASE(upObserver,observer);
+   observeApplied(operation,std::move(applied));
++  UR2D_END(upObserver);
+   ++submittedOperationCount_;
+   if (lastAppliedCommit_.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+     semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
+@@ -3387,7 +3399,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+                                    &lastAppliedCommit_->change_set);
+     // Semantic acceptance is final. Scene is derived and can recover at the
+     // next frame; a failed projection must not lose the accepted history.
+-    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
++    UR2D_PHASE(upScene,scene);
++    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
++    UR2D_END(upScene);
+   }
+   canonicalPresentationDirty_ = true;
+   if (!platformPresentationDeferred_) {
+diff --git a/runtime/interaction/src/canvas_partial_erase.cpp b/runtime/interaction/src/canvas_partial_erase.cpp
+index 110d38e0..d373649f 100644
+--- a/runtime/interaction/src/canvas_partial_erase.cpp
++++ b/runtime/interaction/src/canvas_partial_erase.cpp
+@@ -28,10 +28,12 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
+         const auto& b=record.worldBounds;
+         if(b.right<left-radius||b.left>right+radius||b.bottom<top-radius||b.top>bottom+radius)continue;
+         auto mask=partialEraseGeometry(trace,record.transform,radius);
++        UR2D_COUNT(masksBuilt);
+         if(!mask)return std::nullopt;
+         if(exactHit) {
+             G5_SCOPE(g5Path,g5::Tag::pathops,g5::Purpose::none);
+             const auto hit=skiaRenderer_.intersectEraseGeometry(record,*mask);
++            UR2D_COUNT(exactCalls);
+             G5_SCOPE_END(g5Path);
+             if(hit==render::SelectionGeometryHit::kInvalid){
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+diff --git a/runtime/interaction/src/canvas_region_selection.cpp b/runtime/interaction/src/canvas_region_selection.cpp
+index 093e116e..7c9862b5 100644
+--- a/runtime/interaction/src/canvas_region_selection.cpp
++++ b/runtime/interaction/src/canvas_region_selection.cpp
+@@ -249,22 +249,40 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
+         if (root.isZero()) continue;
+         const auto* projection=projected.find(id);
+         if (!projection) {result.status=Status::kStale;return result;}
+-        auto object=*canonical;object.transform=projection->transform;
+-        const auto intersection=intersectSelectionRegion(object,world,projection);
++        RegionIntersection intersection;
++        if(canonical->kind==semantic::ObjectKind::kVectorStroke&&
++           std::holds_alternative<semantic::CompactStrokeContent>(projection->content.get())){
++            std::vector<foundation::WorldPoint> query;query.reserve(world.size());
++            for(const auto p:world)query.push_back({float(p.x),float(p.y)});
++            switch(skiaRenderer_.intersectSelectionGeometry(*projection,query)){
++            case render::SelectionGeometryHit::kHit:intersection=RegionIntersection::kHit;break;
++            case render::SelectionGeometryHit::kMiss:intersection=RegionIntersection::kMiss;break;
++            case render::SelectionGeometryHit::kUnsupported:intersection=RegionIntersection::kUnsupported;break;
++            case render::SelectionGeometryHit::kInvalid:intersection=RegionIntersection::kInvalid;break;
++            }
++        }else{
++            auto object=*canonical;object.transform=projection->transform;
++            intersection=intersectSelectionRegion(object,world,projection);
++        }
+         if (intersection==RegionIntersection::kInvalid) {result.status=Status::kFailed;return result;}
+         if (intersection==RegionIntersection::kUnsupported) {
+             // Only intentionally unsupported brush coverage may be skipped.
+             // Missing layout/routes/resources still preserve the old selection.
+-            const bool brush=object.kind==semantic::ObjectKind::kDabStroke ||
+-                (object.kind==semantic::ObjectKind::kVectorStroke&&
+-                 std::holds_alternative<semantic::CompactStrokeContent>(object.content));
++            const bool brush=canonical->kind==semantic::ObjectKind::kDabStroke ||
++                (canonical->kind==semantic::ObjectKind::kVectorStroke&&
++                 std::holds_alternative<semantic::CompactStrokeContent>(canonical->content));
+             result.publishable&=brush;
+             result.status=Status::kPartial;
+-            const auto kind=static_cast<std::uint32_t>(object.kind);
++            const auto kind=static_cast<std::uint32_t>(canonical->kind);
+             if (std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())
+                 result.unsupportedKinds.push_back(kind);
+         } else if(intersection==RegionIntersection::kHit) {
+-            auto& targets=object.kind==semantic::ObjectKind::kSection&&selectionRegionInsideSection(object,world)?sectionBackgrounds:result.roots;
++            bool sectionBackground=false;
++            if(canonical->kind==semantic::ObjectKind::kSection){
++                auto section=*canonical;section.transform=projection->transform;
++                sectionBackground=selectionRegionInsideSection(section,world);
++            }
++            auto& targets=sectionBackground?sectionBackgrounds:result.roots;
+             if(std::find(targets.begin(),targets.end(),root)==targets.end())targets.push_back(root);
+         }
+     }
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 307def2f..893f4ebf 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -264,6 +264,14 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+     add_executable(axiom_render_damage_tests tests/damage_ownership_test.cpp)
+     target_link_libraries(axiom_render_damage_tests PRIVATE canvas_runtime_render)
+     add_test(NAME G5RenderDamage COMMAND axiom_render_damage_tests)
++    add_executable(axiom_object_interaction_continuity_r2_tests
++        tests/object_interaction_continuity_r2_test.cpp)
++    target_link_libraries(axiom_object_interaction_continuity_r2_tests PRIVATE canvas_runtime_render)
++    add_test(NAME G5ObjectInteractionLayoutIdentity
++        COMMAND axiom_object_interaction_continuity_r2_tests)
++    add_executable(axiom_ur2d_selection_up_tests tests/ur2d_selection_up_test.cpp)
++    target_link_libraries(axiom_ur2d_selection_up_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    add_test(NAME G5UR2DSelectionLocality COMMAND axiom_ur2d_selection_up_tests --candidate "${CMAKE_CURRENT_BINARY_DIR}/ur2d-selection")
+     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
+     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
+     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)
+@@ -775,8 +783,12 @@ endif()
+ # Private native fault injection is never compiled into ordinary Web consumers.
+ if(CANVAS_RENDER_BUILD_TESTS AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSCRIPTEN)
+  target_compile_definitions(canvas_runtime_render PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
++ if(AXIOM_BUILD_RUNTIME_QUALIFICATION)
++  target_compile_definitions(canvas_runtime_render PRIVATE AXIOM_UR2D_TESTS=1)
++ endif()
+  add_executable(axiom_transient_display_retry_tests tests/transient_display_retry_test.cpp)
+  target_compile_definitions(axiom_transient_display_retry_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
++ target_compile_definitions(axiom_transient_display_retry_tests PRIVATE G47_LATIN_FONT="${CanvasSkia_FONT_PATH}")
+  target_link_libraries(axiom_transient_display_retry_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+  if(APPLE)
+   target_link_libraries(axiom_transient_display_retry_tests PRIVATE "-framework Foundation" objc)
+@@ -784,6 +796,8 @@ if(CANVAS_RENDER_BUILD_TESTS AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSC
+  add_test(NAME G5TransientDisplayRetryPixels COMMAND axiom_transient_display_retry_tests --pixels "${CMAKE_CURRENT_BINARY_DIR}/transient-display-pixels")
+  add_test(NAME G5TransientDisplayContinuity COMMAND axiom_transient_display_retry_tests --continuity "${CMAKE_CURRENT_BINARY_DIR}/transient-display-continuity")
+  add_test(NAME G5TransientDisplayRecovery COMMAND axiom_transient_display_retry_tests --recovery "${CMAKE_CURRENT_BINARY_DIR}/transient-display-recovery")
++ add_test(NAME G5ObjectInteractionStaticOracle COMMAND axiom_transient_display_retry_tests --object-continuity "${CMAKE_CURRENT_BINARY_DIR}/object-continuity")
++ add_test(NAME G5ObjectInteractionDenseMixed COMMAND axiom_transient_display_retry_tests --dense-objects "${CMAKE_CURRENT_BINARY_DIR}/object-continuity-dense")
+ endif()
+ 
+ if(CANVAS_RENDER_BUILD_TESTS AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSCRIPTEN)
+diff --git a/runtime/render/include/canvas/render/skia_renderer.hpp b/runtime/render/include/canvas/render/skia_renderer.hpp
+index 2baa4e3d..ab78b40f 100644
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -22,6 +22,7 @@ class SkCanvas;
+ 
+ namespace canvas::render {
+ namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
++namespace internal {struct ObjectInteractionWork;}
+ 
+ struct CanonicalStrokePoint;
+ struct CanonicalViewportTransform;
+@@ -89,10 +90,15 @@ class SkiaRenderer final {
+     void setRenderCacheOptions(RenderCacheOptions options);
+     void clearRenderCache() noexcept;
+     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++    [[nodiscard]] internal::ObjectInteractionWork objectInteractionWork() const noexcept;
++#endif
+     // Owner-thread derived exact-query reuse. Returns only a value decision;
+     // canonical target selection still belongs to the interaction owner.
+     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
+         const semantic::EraseMaskGeometry&) const noexcept;
++    [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
++        std::span<const foundation::WorldPoint>) const noexcept;
+     [[nodiscard]] RenderDamage renderDamage() const;
+ 
+   private:
+@@ -104,10 +110,10 @@ class SkiaRenderer final {
+     struct NavigationCache;
+     std::shared_ptr<NavigationCache> navigationCache_;
+     std::shared_ptr<NavigationCache> navigationFallback_;
+-    std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
++    mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
+     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
+-    std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
+-    std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
++    mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
++    mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
+     ImageResourceResolver* images_ = nullptr;
+     SkiaTextResources textResources_;
+     std::uint64_t submissions_ = 0;
+diff --git a/runtime/render/src/render_group_manager.cpp b/runtime/render/src/render_group_manager.cpp
+index 1ac4e0db..d12cdfae 100644
+--- a/runtime/render/src/render_group_manager.cpp
++++ b/runtime/render/src/render_group_manager.cpp
+@@ -1,9 +1,54 @@
+ #include "canvas/render/render_group_manager.hpp"
++#include "canvas/text/text_layout.hpp"
+ #include <unordered_set>
+ #include <cmath>
++#include <tuple>
++#include <type_traits>
+ 
+ namespace canvas::render {
+ namespace {
++bool sameLayout(const std::shared_ptr<const text::TextLayoutSnapshot>& before,
++    const std::shared_ptr<const text::TextLayoutSnapshot>& after) {
++    if(before==after)return true;
++    if(!before||!after||before->digest.empty()||after->digest.empty())return false;
++    const auto& a=*before;const auto& b=*after;
++    // Layout wrappers are derived per frame. Their addresses are not painted
++    // content identity. Keep the external paint basis explicit: table digests,
++    // in particular, contain child digests but not the table's own bounds.
++    if(std::tie(a.digest,a.contentDigest,a.profile,a.context,a.localBounds,
++        a.shapeLabel,a.placeholder,a.overflow,a.labelScaleX,a.labelScaleY,
++        a.labelViewport,a.expandButton,a.labelOffsetX,a.labelOffsetY,a.diagnostics)!=
++       std::tie(b.digest,b.contentDigest,b.profile,b.context,b.localBounds,
++        b.shapeLabel,b.placeholder,b.overflow,b.labelScaleX,b.labelScaleY,
++        b.labelViewport,b.expandButton,b.labelOffsetX,b.labelOffsetY,b.diagnostics))return false;
++    if(a.fonts.size()!=b.fonts.size()||a.tableCells.size()!=b.tableCells.size())return false;
++    for(std::size_t i=0;i<a.fonts.size();++i){
++        const auto& x=a.fonts[i];const auto& y=b.fonts[i];
++        if(std::tie(x.resourceId,x.generation,x.sha256,x.collectionIndex,x.weight,x.italic,x.syntheticStyle)!=
++           std::tie(y.resourceId,y.generation,y.sha256,y.collectionIndex,y.weight,y.italic,y.syntheticStyle))return false;
++    }
++    for(std::size_t i=0;i<a.tableCells.size();++i)
++        if(!sameLayout(a.tableCells[i],b.tableCells[i]))return false;
++    return true;
++}
++bool sameCommand(const ReferenceCommand& before,const ReferenceCommand& after) {
++    if(before.index()!=after.index())return false;
++    return std::visit([&](const auto& a){
++        using Command=std::remove_cvref_t<decltype(a)>;
++        const auto& b=std::get<Command>(after);
++        if constexpr(std::is_same_v<Command,ShapeReferenceCommand>||
++                     std::is_same_v<Command,StickyReferenceCommand>)
++            return a.content==b.content&&a.showExpandButton==b.showExpandButton&&sameLayout(a.labelLayout,b.labelLayout);
++        else if constexpr(std::is_same_v<Command,RichTextReferenceCommand>)
++            return a.content==b.content&&a.showExpandButton==b.showExpandButton&&
++                a.suppressBorder==b.suppressBorder&&sameLayout(a.layout,b.layout);
++        else if constexpr(std::is_same_v<Command,TableReferenceCommand>)
++            return a.content==b.content&&a.activeCell==b.activeCell&&sameLayout(a.layout,b.layout);
++        else if constexpr(std::is_same_v<Command,SectionReferenceCommand>)
++            return a.content==b.content&&sameLayout(a.titleLayout,b.titleLayout);
++        else return a==b;
++    },before);
++}
+ bool addEraseDamage(RenderGroupManager::EraseDamage& damage,
+     const semantic::EraseCubicSegment& segment,const semantic::Transform2D& transform) {
+     const auto& a=segment.p0.position;const auto& b=segment.p1.position;
+@@ -63,7 +108,7 @@ RenderGroupManager::Update RenderGroupManager::update(std::span<const ReferenceT
+         }else{
+             auto& old=found->second;const auto& a=old.source.record;const auto& b=source.record;
+             const RenderGroupChange change{
+-                a.kind!=b.kind||a.kindVersion!=b.kindVersion||a.content!=b.content||old.source.command!=source.command||a.textLayout!=b.textLayout,
++                a.kind!=b.kind||a.kindVersion!=b.kindVersion||a.content!=b.content||!sameCommand(old.source.command,source.command)||!sameLayout(a.textLayout,b.textLayout),
+                 a.transform!=b.transform,clip_!=clip,a.properties!=b.properties||a.eraseMasks!=b.eraseMasks||a.derivedGeometry!=b.derivedGeometry,
+                 old.ordinal!=ordinal||a.placement!=b.placement||old.source.contributesPixels!=source.contributesPixels,
+                 old.resourceEpoch!=resourceEpoch||a.directDependencies!=b.directDependencies,
+diff --git a/runtime/render/src/selection_region_geometry.cpp b/runtime/render/src/selection_region_geometry.cpp
+index d99831ba..da4392cb 100644
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -372,6 +372,23 @@ SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord& record,con
+ }
+ namespace internal {
+ struct EraseMaskPathCache::Impl {
++    struct QueryResult {
++        std::shared_ptr<const PreparedNavigationGeometry> body;
++        std::shared_ptr<const Entry> query;
++        std::shared_ptr<MaskHistoryPlan> history;
++        semantic::Transform2D transform{};
++        std::uint32_t version=0;
++        Hit result=Hit::kInvalid;
++        resources::ResourceLease metadata;
++        std::shared_ptr<ErasePathUsage> usage;
++        std::size_t bytes=0;
++        ~QueryResult(){if(usage)usage->bytes-=bytes;}
++        QueryResult(std::shared_ptr<const PreparedNavigationGeometry> b,std::shared_ptr<const Entry> q,
++            std::shared_ptr<MaskHistoryPlan> h,semantic::Transform2D t,std::uint32_t v,Hit r,
++            resources::ResourceLease lease,std::shared_ptr<ErasePathUsage> u,std::size_t n)
++            :body(std::move(b)),query(std::move(q)),history(std::move(h)),transform(t),version(v),result(r),metadata(std::move(lease)),usage(std::move(u)),bytes(n){usage->bytes+=bytes;}
++    };
++    std::optional<QueryResult> lastQuery;
+     struct Refusal {
+         std::weak_ptr<const std::vector<semantic::EraseMaskRecord>> owner;
+         const void* pointee=nullptr;
+@@ -389,9 +406,12 @@ struct EraseMaskPathCache::Impl {
+     std::vector<std::shared_ptr<Refusal>> refusals;
+     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+-    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size();}
++    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size()+std::size_t(lastQuery.has_value());}
+     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
+     bool evict(){
++        // A one-query memo is optional and can pin paths/body/history. Drop it
++        // first on actual quota pressure so existing work remains reclaimable.
++        if(lastQuery){lastQuery.reset();return true;}
+         auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
+             if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
+         auto plan=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
+@@ -405,7 +425,7 @@ struct EraseMaskPathCache::Impl {
+ };
+ EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
+ EraseMaskPathCache::~EraseMaskPathCache()=default;
+-void EraseMaskPathCache::clear()noexcept{std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
++void EraseMaskPathCache::clear()noexcept{impl_->lastQuery.reset();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+ void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+ EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
+@@ -641,7 +661,30 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
+             }else cost.fallbackReason=prepared&&options?(options->enabled?2:7):1;
+             if(body){++cost.bodyUses;cost.bodyIdentity=body->identity();}
+             else ++cost.fallbacks;
+-            return eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
++            // The one retained decision pins its validated complete body and
++            // canonical query path/history, plus charged metadata. IDs alone
++            // never qualify equality. Unknown allocations still go through
++            // PreparedGeometryCache's complete body comparison above.
++            auto queryPath=body?get(mask):nullptr;
++            const auto sameHistory=[&](const auto& old){
++                if(bool(old)!=bool(historyPlan))return false;
++                return !old||std::as_const(old->records)==std::as_const(historyPlan->records);
++            };
++            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&impl_->lastQuery){const auto& old=*impl_->lastQuery;
++                if(old.body==body&&old.query==queryPath&&old.transform==record.transform&&old.version==record.kindVersion&&sameHistory(old.history)){
++                    ++impl_->stats.equivalentQueryHits;UR2D_COUNT(equivalentHits);return old.result;
++                }
++            }
++            const auto result=eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
++            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
++                impl_->lastQuery.reset();
++                constexpr auto bytes=sizeof(Impl::QueryResult)+256;
++                const auto token=impl_->usage->bytes<=impl_->capacity&&bytes<=impl_->capacity-impl_->usage->bytes?
++                    impl_->budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
++                if(token)impl_->lastQuery.emplace(body,queryPath,historyPlan,record.transform,record.kindVersion,result,
++                    resources::ResourceLease(impl_->budget,*token),impl_->usage,bytes);
++            }
++            return result;
+         }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost);}
+     };
+     const auto result=run();
+@@ -668,6 +711,81 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
+ SelectionGeometryHit intersectEraseGeometryComponentOracle(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask) noexcept {
+     return eraseGeometryQuery(record,mask,nullptr,false);
+ }
++SelectionGeometryHit EraseMaskPathCache::selectionQuery(const RuntimeSceneRecord& record,
++    std::span<const foundation::WorldPoint> region,std::shared_ptr<resources::ResourceBudgetManager> budget,
++    std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options)noexcept {
++    const auto fallback=[&]{return intersectVisibleSelectionGeometry(record,region);};
++    const auto* compact=std::get_if<semantic::CompactStrokeContent>(&record.content.get());
++    if(!budget||!prepared||!options||!options->enabled||record.kind!=semantic::ObjectKind::kVectorStroke||!compact||
++       compact->stroke.config.algorithmVersion!=4||
++       (compact->stroke.config.family!=foundation::InkFamily::kRound&&compact->stroke.config.family!=foundation::InkFamily::kMarker)||
++       compact->stroke.config.opacity*compact->stroke.config.color[3]<=0)return fallback();
++    try {
++        const auto& t=record.transform;const double determinant=t.a*t.d-t.b*t.c;
++        if(region.size()<3||!std::isfinite(determinant)||std::abs(determinant)<1e-12)return Hit::kInvalid;
++        SkPathBuilder builder(SkPathFillType::kEvenOdd);
++        for(std::size_t i=0;i<region.size();++i){
++            const double x=region[i].x-t.tx,y=region[i].y-t.ty;
++            const float lx=f((t.d*x-t.c*y)/determinant),ly=f((-t.b*x+t.a*y)/determinant);
++            if(!std::isfinite(lx)||!std::isfinite(ly))return Hit::kInvalid;
++            if(i)builder.lineTo(lx,ly);else builder.moveTo(lx,ly);
++        }
++        builder.close();auto selection=builder.detach();auto contact=stroke(selection,2e-4);
++        auto plan=history(record.eraseMasks,budget,std::min<std::size_t>(capacity,8*1024*1024));
++        ReferenceTraversalEntry entry;entry.record.content=record.content;
++        entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
++        auto& work=impl_->stats.exact;++work.queries;
++        const auto before=prepared->statistics();
++        auto body=prepared->get(entry,*options,budget,true,PreparedConsumer::kExact,true,true);
++        if(!body){
++            ++work.fullValidations;const bool valid=semantic::validCompactStroke(compact->stroke);
++            if(!valid)return fallback();work.validationKnots+=compact->stroke.knots.size();
++            body=prepared->get(entry,*options,budget,true,PreparedConsumer::kExact);
++        }
++        const auto after=prepared->statistics();
++        work.preparedCompileCalls+=after.syncCompileCalls-before.syncCompileCalls;
++        work.preparedCompileInputs+=after.syncCompileInputs-before.syncCompileInputs;
++        work.preparedValidationKnots+=after.validationKnots-before.validationKnots;
++        work.contentComparisonKnots+=after.contentComparisonKnots-before.contentComparisonKnots;
++        if(!body||!body->ready()||!body->exactValidated())return fallback();
++        auto token=budget->reserve(resources::ResourceClass::kScratch,4096,true);
++        if(!token)return fallback();resources::ResourceLease scratch(budget,*token);
++        ++work.bodyUses;work.bodyIdentity=body->identity();
++        // Validate every historical path before an empty/disjoint shortcut.
++        // The old selection evaluates the entire source/history, unlike erase.
++        std::vector<std::shared_ptr<const Entry>> pins;pins.reserve(record.eraseMasks.size());
++        std::vector<SkPath> paths;paths.reserve(record.eraseMasks.size());
++        for(std::size_t i=0;i<record.eraseMasks.size();++i){
++            auto path=plan?historicalPath(plan,i):get(record.eraseMasks[i].geometry,true);
++            if(!path||!path->path.isFinite())return fallback();
++            paths.push_back(path->path);pins.push_back(std::move(path));
++        }
++        // Preserve both original tests separately. The contact outline is a
++        // stroke of the original selection, never a stroke of query-minus-mask.
++        for(const auto& path:paths){
++            auto remaining=Op(selection,path,kDifference_SkPathOp);
++            auto remainingContact=Op(contact,path,kDifference_SkPathOp);
++            impl_->stats.history.historicalDifferences+=2;
++            if(!remaining||!remainingContact)return fallback();
++            selection=*remaining;contact=*remainingContact;
++        }
++        bool invalid=false,hit=false;SkRect demand=selection.getBounds();demand.join(contact.getBounds());
++        if(selection.isEmpty()&&contact.isEmpty())return Hit::kMiss;
++        ExactComponentWork local;
++        body->visitExact(demand,[&](const SkPath& part){
++            for(const auto* query:{&selection,&contact}){
++                if(part.isEmpty()||query->isEmpty()||!SkRect::Intersects(part.getBounds(),query->getBounds()))continue;
++                ++impl_->stats.history.componentIntersections;
++                const auto overlap=Op(part,*query,kIntersect_SkPathOp);
++                if(!overlap){invalid=true;return false;}
++                if(!overlap->isEmpty()){hit=true;return false;}
++            }return true;
++        },local);
++        work.indexNodes+=local.groups;work.boundsTests+=local.boundsTests;work.componentChecks+=local.components;
++        work.replayKnots+=local.replayKnots;work.materializedPaths+=local.materializedPaths;
++        return invalid?fallback():hit?Hit::kHit:Hit::kMiss;
++    }catch(const std::bad_alloc&){return fallback();}
++}
+ }
+ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {
+     try {
+diff --git a/runtime/render/src/selection_region_geometry_internal.hpp b/runtime/render/src/selection_region_geometry_internal.hpp
+index 92d3ee80..d580abcb 100644
+--- a/runtime/render/src/selection_region_geometry_internal.hpp
++++ b/runtime/render/src/selection_region_geometry_internal.hpp
+@@ -22,12 +22,15 @@ struct ExactQueryWork final {
+ class EraseMaskPathCache final {
+  public:
+     struct Entry;
+-    struct Work {std::uint64_t builds=0,hits=0,denied=0,pathValueComparisons=0,pathPrimitiveComparisons=0;std::size_t bytes=0;ExactQueryWork exact;MaskHistoryWork history;std::uint64_t localRefusals=0,refusalHits=0,resourceWaits=0;};
++    struct Work {std::uint64_t builds=0,hits=0,denied=0,pathValueComparisons=0,pathPrimitiveComparisons=0;std::size_t bytes=0;ExactQueryWork exact;MaskHistoryWork history;std::uint64_t localRefusals=0,refusalHits=0,resourceWaits=0,equivalentQueryHits=0;};
+     EraseMaskPathCache();
+     ~EraseMaskPathCache();
+     SelectionGeometryHit query(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&,
+         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+         PreparedGeometryCache* prepared=nullptr,const RenderCacheOptions* options=nullptr)noexcept;
++    SelectionGeometryHit selectionQuery(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>,
++        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
++        PreparedGeometryCache*,const RenderCacheOptions*)noexcept;
+     void setRetentionPool(std::shared_ptr<SourceRetentionPool>);
+     std::shared_ptr<MaskHistoryPlan> history(const scene::SharedVector<semantic::EraseMaskRecord>&,
+         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index c40d0c76..34b3b2e3 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -17,6 +17,92 @@ namespace g5 = canvas::foundation::internal::g5;
+ #include <chrono>
+ 
+ namespace canvas::render::internal {
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++#define OI_NOTE(...) do { __VA_ARGS__; } while(false)
++#else
++#define OI_NOTE(...) ((void)0)
++#endif
++void SkiaRenderCache::invalidateStaticScene([[maybe_unused]] bool count) noexcept {
++    OI_NOTE(if(count && staticScene_) ++objectWork.invalidations);
++    staticScene_.reset();
++    OI_NOTE(objectWork.leaseBytes=0);
++}
++bool SkiaRenderCache::staticSceneBasisMatches(const FramePlan& plan,
++    std::size_t activeIndex,std::size_t activeEnd) const noexcept {
++    if (!staticScene_ || !staticScene_->valid() || activeIndex>=plan.referenceDrawList.entries.size()) return false;
++    if (staticScene_->target!=target_ || staticScene_->resourceEpoch!=resourceEpoch_ ||
++        staticScene_->targetEpoch!=targetEpoch_ || staticScene_->surface!=surface_ ||
++        staticScene_->context!=surface_->recordingContext() ||
++        staticScene_->frame.viewId!=plan.frame.viewId || staticScene_->frame.camera!=plan.frame.camera ||
++        staticScene_->frame.viewportClip!=plan.frame.viewportClip ||
++        staticScene_->frame.sceneGeneration!=plan.frame.sceneGeneration ||
++        staticScene_->frame.sceneReadToken!=plan.frame.sceneReadToken || staticScene_->frame.metrics!=plan.frame.metrics ||
++        staticScene_->frame.surfaceGeneration!=plan.frame.surfaceGeneration || staticScene_->frame.metricsGeneration!=plan.frame.metricsGeneration ||
++        staticScene_->frame.worldViewport!=plan.frame.worldViewport || staticScene_->transform!=plan.referenceDrawList.worldToView ||
++        staticScene_->background!=plan.background || staticScene_->transparent!=plan.transparentBackground ||
++        staticScene_->isolate!=plan.isolateEraseMasks || staticScene_->active!=activeSource_ ||
++        staticScene_->activeIndex!=activeIndex || staticScene_->activeEnd!=activeEnd ||
++        staticScene_->stamps.size()!=plan.referenceDrawList.entries.size()) return false;
++    for (std::size_t i=0;i<staticScene_->stamps.size();++i) {
++        const auto& entry=plan.referenceDrawList.entries[i];
++        if (staticScene_->stamps[i].id!=entry.record.objectId) return false;
++        if (i>=activeIndex && i<activeEnd) continue;
++        const auto* group=groups_.find(entry.record.objectId);
++        if (!group || staticScene_->stamps[i]!=StaticSceneStamp{entry.record.objectId,group->revisions,
++            entry.presentationOpacity,entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds}) return false;
++    }
++    return true;
++}
++bool SkiaRenderCache::buildStaticScene(SkCanvas& canvas,const FramePlan& plan,
++    std::size_t activeIndex,std::size_t activeEnd,ImageResourceResolver* images,SkiaTextResources* text,
++    const CompactDeviceGrid* grid) {
++    if(!budget || !sourceAdmission_ || plan.referenceDrawList.entries.size()>options.maxEntries) return false;
++    const auto info=surface_->imageInfo(); const auto bytes=std::size_t(info.width())*info.height()*4;
++    const bool needSuffix=activeEnd<plan.referenceDrawList.entries.size();
++    const auto metadataBytes=sizeof(StaticSceneCache)+plan.referenceDrawList.entries.size()*sizeof(StaticSceneStamp)+256U;
++    const auto planes=std::size_t(1+needSuffix);
++    if(metadataBytes>options.maxBytes || bytes>(options.maxBytes-metadataBytes)/planes) {
++        OI_NOTE(++objectWork.denials); return false;
++    }
++    const auto total=bytes*planes;
++    auto metadata=budget->reserve(resources::ResourceClass::kRecorded,metadataBytes,true);
++    if(!metadata){OI_NOTE(++objectWork.denials);return false;}
++    resources::ResourceLease metadataLease(budget,*metadata);
++    auto token=budget->reserve(resources::ResourceClass::kRaster,total,true);
++    if(!token){OI_NOTE(++objectWork.denials);return false;}
++    resources::ResourceLease lease(budget,*token);
++    const bool marked=lease.markGpuUse(); (void)marked; OI_NOTE(objectWork.gpuLeaseMarks+=marked);
++    auto candidate=std::make_shared<StaticSceneCache>(target_,surface_->recordingContext(),resourceEpoch_,targetEpoch_,plan.frame,
++        plan.referenceDrawList.worldToView,plan.background,plan.transparentBackground,plan.isolateEraseMasks,
++        true,activeSource_,activeIndex);
++    candidate->surface=surface_;candidate->activeEnd=activeEnd;
++    candidate->pixelLease=std::move(lease);candidate->metadataLease=std::move(metadataLease);
++    candidate->leaseBytes=total+metadataBytes;
++    candidate->stamps.reserve(plan.referenceDrawList.entries.size());
++    for(const auto& entry:plan.referenceDrawList.entries){
++        const auto* group=groups_.find(entry.record.objectId);if(!group)return false;
++        candidate->stamps.push_back({entry.record.objectId,group->revisions,entry.presentationOpacity,
++            entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds});
++    }
++    // Both ranges retain the original full plan's isolation and device grid.
++    auto prefix=canvas.makeSurface(info);if(!prefix)return false;
++    drawReferenceBackgroundToSkCanvas(*prefix->getCanvas(),plan);
++    drawValidatedReferenceRangeToSkCanvas(*prefix->getCanvas(),plan,0,activeIndex,images,text,true,this,grid);
++    if(damageFailed_)return false;
++    candidate->prefix=prefix->makeImageSnapshot();if(!candidate->prefix)return false;
++    if(needSuffix){
++        auto suffix=canvas.makeSurface(info);if(!suffix)return false;
++        suffix->getCanvas()->clear(SK_ColorTRANSPARENT);
++        drawValidatedReferenceRangeToSkCanvas(*suffix->getCanvas(),plan,activeEnd,
++            plan.referenceDrawList.entries.size(),images,text,true,this,grid);
++        if(damageFailed_)return false;
++        candidate->suffix=suffix->makeImageSnapshot();if(!candidate->suffix)return false;
++    }
++    if(auto* execution=RenderExecutionScope::current();execution&&(execution->pending()||execution->rejected()))return false;
++    staticScene_=std::move(candidate);
++    OI_NOTE(++objectWork.builds;objectWork.leaseBytes=staticScene_->leaseBytes);
++    return true;
++}
+ void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+     if(maskHistory&&!entry.record.eraseMasks.empty()){
+         [[maybe_unused]]const auto before=maskHistory->work().history;
+@@ -45,7 +131,7 @@ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
+     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
+     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+ }
+-void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
++void SkiaRenderCache::clear() noexcept {invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
+     const void* target,std::uint64_t resourceEpoch)noexcept{
+     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
+@@ -63,7 +149,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+         return entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+     });
+-    if(resourceEpoch_!=resourceEpoch){inkLayers_.clear();work.inkLayerBytes=0;}
++    if(resourceEpoch_!=resourceEpoch){invalidateStaticScene();inkLayers_.clear();work.inkLayerBytes=0;}
+     resourceEpoch_=resourceEpoch;
+     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
+     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
+@@ -96,6 +182,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         frame_->surfaceGeneration!=f.surfaceGeneration||frame_->metrics!=f.metrics||
+         frame_->metricsGeneration!=f.metricsGeneration;
+     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
++    if(changed || !transient || activeSource_!=activeSource) invalidateStaticScene();
+     if(changed){inkLayers_.clear();work.inkLayerBytes=0;}
+     else inkLayers_.prune(plan.referenceDrawList.entries);
+     coverageTargets_.budget=budget;
+@@ -846,13 +933,62 @@ bool SkiaRenderCache::compositeRetainedRun(SkCanvas& canvas,const FramePlan& pla
+     }
+     return false;
+ }
+-bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid){
++bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid,bool objectTransform){
+     struct Restore {bool& value;bool old;~Restore(){value=old;}} restore{damageOnly_,damageOnly_};
+     damageOnly_=damageOnly;damageFailed_=false;
+     // A transient source may include permanent masks that cooperative exact
+     // preparation routes Direct. Reuse/build its bounded isolated cache here;
+     // never keep an exact-frame admission that forbids that source reuse.
+     resetPreparation();
++    const auto& entries=plan.referenceDrawList.entries;
++    const auto active=std::find_if(entries.begin(),entries.end(),[&](const auto& e){return e.record.objectId==activeSource_;});
++    const bool supported=active!=entries.end() && active->contributesPixels &&
++        (active->record.kind==semantic::ObjectKind::kShape || active->record.kind==semantic::ObjectKind::kSticky ||
++         active->record.kind==semantic::ObjectKind::kTable || active->record.kind==semantic::ObjectKind::kImage);
++    bool eligible=objectTransform && options.enabled && sourceAdmission_ && !stagedBodies_ &&
++        includeInk && !damageOnly && supported && canvas.getTotalMatrix().isIdentity() && canvas.isClipRect() &&
++        canvas.getDeviceClipBounds()==SkIRect::MakeWH(surface_->width(),surface_->height());
++    std::size_t first=std::size_t(std::distance(entries.begin(),active)),end=first+1;
++    const bool hasNonInk=requiresInkIsolation(plan);
++    if(eligible)for(std::size_t i=0;i<entries.size();++i){
++        const auto& e=entries[i];
++        if(e.presentationEraseActive || !e.presentationEraseMasks.empty())eligible=false;
++        if(i!=first && !e.record.eraseMasks.empty() &&
++           !requiresInkEntryIsolation(e,hasNonInk) && !plan.isolateEraseMasks)eligible=false;
++        if(i!=first && std::find(e.record.directDependencies.begin(),e.record.directDependencies.end(),activeSource_)!=e.record.directDependencies.end())eligible=false;
++        if(e.record.placement.parent_id && *e.record.placement.parent_id==activeSource_){
++            if(i!=end)eligible=false;else ++end;
++        }
++    }
++    if(eligible){
++        const bool hit=staticSceneBasisMatches(plan,first,end);
++        if(!hit){
++            invalidateStaticScene();
++            if(buildStaticScene(canvas,plan,first,end,images,text,grid)){
++                OI_NOTE(++objectWork.fullSceneDraws);
++            }else if(damageFailed_ || (RenderExecutionScope::current() &&
++                (RenderExecutionScope::current()->pending() || RenderExecutionScope::current()->rejected())))return false;
++        }
++        const auto retained=staticScene_;
++        if(retained){
++            const bool marked=retained->pixelLease.markGpuUse();(void)marked;
++            OI_NOTE(objectWork.gpuLeaseMarks+=marked;objectWork.hits+=hit;++objectWork.activeDraws);
++            if(auto* execution=RenderExecutionScope::current())execution->reusePixels();
++            {SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
++             SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
++             canvas.drawImage(retained->prefix,0,0,SkSamplingOptions{},&paint);}
++            drawValidatedReferenceRangeToSkCanvas(canvas,plan,first,end,images,text,true,this,grid);
++            if(damageFailed_)return false;
++            if(retained->suffix){
++                (void)retained->pixelLease.markGpuUse();
++                SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
++                SkPaint paint;paint.setBlendMode(SkBlendMode::kSrcOver);
++                canvas.drawImage(retained->suffix,0,0,SkSamplingOptions{},&paint);
++            }
++            return true;
++        }
++    }else invalidateStaticScene();
++    OI_NOTE(++objectWork.fullSceneDraws);
+     drawReferenceBackgroundToSkCanvas(canvas,plan);
+     std::size_t begin=0;
+     if(includeInk)for(std::size_t i=0;i<plan.referenceDrawList.entries.size();++i){
+diff --git a/runtime/render/src/skia_render_cache_internal.hpp b/runtime/render/src/skia_render_cache_internal.hpp
+index 22262f60..ef8d651f 100644
+--- a/runtime/render/src/skia_render_cache_internal.hpp
++++ b/runtime/render/src/skia_render_cache_internal.hpp
+@@ -15,6 +15,13 @@
+ #include <unordered_map>
+ 
+ namespace canvas::render::internal {
++// Private qualification counters. Updates and observation APIs are compiled
++// out of normal consumers; this value is never part of a consumer DTO.
++struct ObjectInteractionWork final {
++    std::uint64_t builds=0,hits=0,invalidations=0,fullSceneDraws=0,activeDraws=0;
++    std::uint64_t retries=0,gpuLeaseMarks=0,denials=0;
++    std::size_t leaseBytes=0;
++};
+ // Immutable completed pixels shared by exact presentation and navigation.
+ // Both aliases retain this one charged allocation; no framebuffer recapture.
+ struct PreparedFrameImage final {
+@@ -33,6 +40,7 @@ class SkiaRenderCache final {
+     RenderCacheOptions options{};
+     RenderCacheWork work{};
+     RenderDamage damage{};
++    ObjectInteractionWork objectWork{};
+     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {},bool transient=false);
+     CompactCoverageTargets& executionTargets() noexcept {coverageTargets_.budget=budget;return coverageTargets_;}
+     bool canRetainCompact(const SkCanvas&,const ReferenceTraversalEntry&) const noexcept;
+@@ -58,7 +66,7 @@ class SkiaRenderCache final {
+     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
+     // Retained ordered compact runs qualify approximate editing only. Exact
+     // frames still consume per-object/streamed composition in original order.
+-    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr);
++    bool drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk,bool damageOnly=false,const CompactDeviceGrid* grid=nullptr,bool objectTransform=false);
+     [[nodiscard]] const RenderGroupManager::EraseDamage& eraseDamage()const noexcept{return eraseDamage_;}
+     void acknowledgeTransient() noexcept {pendingErase_={};hasPendingErase_=false;}
+     bool acquireTransientSurface(SkCanvas& canvas,sk_sp<SkSurface>& surface,resources::ResourceLease& lease){return acquireWorkSurface(canvas,surface,lease,true,resources::ResourceClass::kCanonicalFrame);}
+@@ -78,6 +86,42 @@ class SkiaRenderCache final {
+         const void* target,std::uint64_t resourceEpoch)noexcept;
+     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
+   private:
++    struct StaticSceneStamp final {
++        foundation::ObjectId id{};
++        RenderGroupRevisions revisions{};
++        float opacity=1.0F;
++        bool contributes=false;
++        foundation::WorldRect visualBounds{},worldBounds{};
++        bool operator==(const StaticSceneStamp&) const = default;
++    };
++    struct StaticSceneCache final {
++        const void* target=nullptr;
++        const void* context=nullptr;
++        const SkSurface* surface=nullptr;
++        std::uint64_t resourceEpoch=0,targetEpoch=0;
++        FrameState frame{};
++        WorldToViewAffine transform{};
++        foundation::DocumentBackground background{};
++        bool transparent=false,isolate=false,includeInk=true;
++        foundation::ObjectId active{};
++        std::size_t activeIndex=0,activeEnd=0;
++        std::vector<StaticSceneStamp> stamps;
++        sk_sp<SkImage> prefix,suffix;
++        resources::ResourceLease pixelLease,metadataLease;
++        std::size_t leaseBytes=0;
++        StaticSceneCache(const void* t,const void* c,std::uint64_t resource,
++            std::uint64_t epoch, const FrameState& f,const WorldToViewAffine& x,
++            const foundation::DocumentBackground& bg,bool clear,bool isolate,
++            bool ink,foundation::ObjectId id,std::size_t index)
++            :target(t),context(c),resourceEpoch(resource),targetEpoch(epoch),frame(f),
++             transform(x),background(bg),transparent(clear),isolate(isolate),includeInk(ink),
++             active(id),activeIndex(index) {}
++        bool valid() const noexcept { return prefix != nullptr; }
++    };
++    std::shared_ptr<StaticSceneCache> staticScene_;
++    void invalidateStaticScene(bool count=true) noexcept;
++    bool staticSceneBasisMatches(const FramePlan&,std::size_t,std::size_t) const noexcept;
++    bool buildStaticScene(SkCanvas&,const FramePlan&,std::size_t,std::size_t,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
+     struct BodyDependency {
+         ImmutableSourceIdentity identity;
+         std::shared_ptr<const PreparedNavigationGeometry> body;
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index ecd08197..74342caa 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -765,10 +765,30 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
+ }
+ void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+-    if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
+-    if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+-    const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
+-    return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
++    if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
++    try{
++        // Exact Up may precede any surface paint after restore. Admit derived
++        // query state in this same renderer owner rather than repeatedly using
++        // the uncached full-history evaluator until a render happens to run.
++        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
++            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
++        if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
++        if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
++        preparedGeometry_->setRetentionPool(sourceRetention_);
++        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
++        eraseQueries_->setRetentionPool(sourceRetention_);
++        const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
++        return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
++    }catch(const std::bad_alloc&){return canvas::render::intersectEraseGeometry(record,geometry);}
++}
++SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeSceneRecord& record,
++    std::span<const foundation::WorldPoint> points)const noexcept{
++    if(!resourceBudget_||!preparedGeometry_)return canvas::render::intersectVisibleSelectionGeometry(record,points);
++    try{
++        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
++        return eraseQueries_->selectionQuery(record,points,resourceBudget_,
++            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),preparedGeometry_.get(),&renderCacheOptions_);
++    }catch(const std::bad_alloc&){return canvas::render::intersectVisibleSelectionGeometry(record,points);}
+ }
+ RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);
+     if(preparedGeometry_){const auto s=preparedGeometry_->statistics();result.preparedBodyBuilds=s.builds;result.preparedBodyHits=s.hits;
+@@ -781,6 +801,11 @@ RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=render
+     if(eraseQueries_){result.maskHistory=eraseQueries_->work().history;const auto s=eraseQueries_->work().exact;result.exactFullValidations=s.fullValidations;result.exactValidationKnots=s.validationKnots;result.exactCompileCalls=s.compileCalls;result.exactCompileInputs=s.compileInputs;result.exactConstructedComponents=s.constructedComponents;result.exactBodyUses=s.bodyUses;}
+     return result;}
+ RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
++internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexcept {
++    return renderCache_?renderCache_->objectWork:internal::ObjectInteractionWork{};
++}
++#endif
+ 
+ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     SkiaSurfaceProvider& provider, const FramePlan& plan,
+@@ -998,7 +1023,12 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     try {
+         if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
+             if(staged){if(!cache->completedFrame())scene=BackendSubmissionResult::retry("transient staged frame unavailable");}
+-            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
++            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid,
++                selectionOverlay->active() && selectionOverlay->selectionOutline().visible &&
++                !selectionOverlay->creationPreview() && !selectionOverlay->creationHover() &&
++                !selectionOverlay->textCaret && !selectionOverlay->textBox &&
++                selectionOverlay->readOnlyOutlines.empty() && selectionOverlay->candidateOutlines.empty() &&
++                selectionOverlay->acquisitionOutline.empty()))
+                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
+             else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+         }
+diff --git a/runtime/render/tests/transient_display_retry_test.cpp b/runtime/render/tests/transient_display_retry_test.cpp
+index da998228..33b37408 100644
+--- a/runtime/render/tests/transient_display_retry_test.cpp
++++ b/runtime/render/tests/transient_display_retry_test.cpp
+@@ -6,6 +6,8 @@
+ #include "../src/transient_display_state.hpp"
+ #include <nlohmann/json.hpp>
+ #include <iostream>
++#include "canvas/text/text_layout.hpp"
++#include "canvas/render/image_resource.hpp"
+ namespace {
+ ReferenceTraversalEntry displaySource(){
+  auto e=source();e.record.kind=semantic::ObjectKind::kVectorStroke;e.record.kindVersion=3;
+@@ -73,6 +75,329 @@ FramePlan displayPlan(unsigned tails,std::uint64_t id,unsigned dpr,unsigned bg=0
+  foundation::DocumentBackground background;if(bg==2)background.color={.25F,.5F,.75F,1};
+  return {f,std::move(draw),background,bg==1,true};
+ }
++
++ReferenceTraversalEntry continuityShape(std::uint64_t id, double x, double y,
++    float red, float green, float blue) {
++ auto object=semantic::ObjectRecord{}; object.id=ObjectId::fromUint64(id);
++ object.kind=semantic::ObjectKind::kShape; object.kind_version=1;
++ object.content=semantic::ShapeContent{1,90,52}; object.transform.tx=x; object.transform.ty=y;
++ object.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{red,green,blue,1.0F}}}}};
++ const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
++ return {projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
++}
++
++FramePlan objectContinuityPlan(std::uint64_t id, const ReferenceTraversalEntry& before,
++    const ReferenceTraversalEntry& active, const ReferenceTraversalEntry& after,
++    std::uint64_t surfaceGeneration=1) {
++ const auto base=displayPlan(1,id,1).frame;
++ FrameState frame{base.viewId,base.camera,{0,0,256,128},
++   {256,128,256,128,1,1},semantic::SemanticGeneration{1},SceneRevision{1},
++   SurfaceGeneration{surfaceGeneration},base.metricsGeneration,FrameId{id},{0,0,256,128}};
++ ReferenceDrawList draw{frame}; draw.viewportClip=frame.viewportClip;
++ draw.entries={before,active,after};
++ return {frame,std::move(draw),{},false,false};
++}
++
++std::vector<std::uint8_t> pixels(DisplayTarget&,const FramePlan&);
++std::string pixelDigest(const std::vector<std::uint8_t>& bytes) {
++ std::uint64_t hash=1469598103934665603ULL;
++ for(const auto byte:bytes){hash^=byte;hash*=1099511628211ULL;}
++ std::ostringstream value;value<<std::hex<<hash;return value.str();
++}
++
++void objectContinuityStaticReuse(const std::filesystem::path& out) {
++ std::filesystem::create_directories(out);
++ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++ auto completion=std::make_shared<NativeMetalCompletion>();
++ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++ completion->context=GrDirectContexts::MakeMetal(backend);
++ DisplayTarget target(completion),reference(completion);
++ require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity target");
++ require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"object continuity oracle");
++ auto before=continuityShape(41001,8,24,.15F,.25F,.85F);
++ auto active=continuityShape(41002,82,38,.85F,.20F,.15F);
++ auto after=continuityShape(41003,166,60,.15F,.70F,.25F);
++ SkiaRenderer cached,oracle; RenderCacheOptions disabled; disabled.enabled=false; oracle.setRenderCacheOptions(disabled);
++ const auto initial=objectContinuityPlan(100, before, active, after);
++ require(cached.renderFrame(target,initial).code==BackendSubmissionCode::kAccepted,"object continuity canonical warm");
++ require(oracle.renderFrame(reference,initial).code==BackendSubmissionCode::kAccepted,"object continuity oracle warm");
++ EditingOverlay overlay(initial.frame);
++ require(overlay.update({.selectedObject=active.record.objectId,.worldBounds=active.record.worldBounds,
++                         .objectTransform=active.record.transform,.selected=true,.active=true}),
++         "object continuity selection chrome");
++ const auto directBefore=cached.renderCacheWork().directGroups;
++ for(unsigned i=0;i<3;++i){
++   active.record.transform.tx+=7.0;
++   const auto moved=objectContinuityPlan(101+i,before,active,after);
++   require(cached.renderTransientOverlay(target,moved,&overlay).code==BackendSubmissionCode::kAccepted,
++           "object continuity cached move");
++   require(oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted,
++           "object continuity direct move");
++   const auto actual=pixels(target,moved),expected=pixels(reference,moved);
++   saveBuffer(out/(std::to_string(i)+"-actual.rgba"),actual);
++   saveBuffer(out/(std::to_string(i)+"-oracle.rgba"),expected);
++   std::ofstream(out/(std::to_string(i)+"-pixels.json"))<<nlohmann::json{
++     {"actual_digest",pixelDigest(actual)},{"oracle_digest",pixelDigest(expected)},
++     {"oracle_static_builds",oracle.objectInteractionWork().builds},
++     {"oracle_static_hits",oracle.objectInteractionWork().hits}}<<'\n';
++   require(oracle.objectInteractionWork().builds==0&&oracle.objectInteractionWork().hits==0,
++           "disabled independent oracle entered static optimization");
++   require(actual==expected,"object continuity pixel/order mismatch");
++ }
++ const auto directDelta=cached.renderCacheWork().directGroups-directBefore;
++ const auto work=cached.objectInteractionWork();
++ const auto actual=pixels(target,objectContinuityPlan(104,before,active,after));
++ const auto expected=pixels(reference,objectContinuityPlan(104,before,active,after));
++ std::ofstream(out/"old-static-reuse-red.json")
++     << nlohmann::json{{"direct_groups_delta",directDelta},{"moves",3},
++       {"static_reuse_builds",work.builds},{"static_reuse_hits",work.hits},
++       {"static_reuse_invalidations",work.invalidations},
++       {"full_transient_scene_draws",work.fullSceneDraws},{"active_object_draws",work.activeDraws},
++       {"static_reuse_lease_bytes",work.leaseBytes},
++       {"actual_pixel_digest",pixelDigest(actual)},{"oracle_pixel_digest",pixelDigest(expected)}}
++     << '\n';
++ // The old renderer redraws all three non-ink entries on every move. The
++ // production implementation must keep the unchanged prefix/suffix stable.
++ require(directDelta<=5,"static scene redraw was not reduced to active object work");
++}
++
++semantic::RichTextContent denseLabel(std::uint64_t id,const char* value) {
++ const semantic::TextStyle style{semantic::ResourceId{ObjectId::fromUint64(87000)},16,400,false,false,{.08F,.12F,.18F,1}};
++ return {{{semantic::Paragraph{ObjectId::fromUint64(id),
++     {semantic::ParagraphAlignment::kLeft,1,0,0},{{value,style}}}}}};
++}
++ReferenceTraversalEntry denseObject(unsigned kind,text::RichTextLayoutService& layout) {
++ semantic::ObjectRecord object;object.id=ObjectId::fromUint64(88000+kind);object.kind_version=1;
++ object.transform.tx=140+kind*105;object.transform.ty=100+kind*58;
++ switch(kind){
++ case 0:object.kind=semantic::ObjectKind::kShape;object.kind_version=3;
++   object.content=semantic::ShapeContent{1,150,95,denseLabel(89000,"Shape label")};break;
++ case 1:object.kind=semantic::ObjectKind::kSticky;object.content=semantic::StickyContent{170,110};break;
++ case 2:{object.kind=semantic::ObjectKind::kTable;semantic::TableContent table;
++   table.rows={{{ObjectId::fromUint64(89101)},40},{{ObjectId::fromUint64(89102)},40}};
++   table.columns={{{ObjectId::fromUint64(89103)},85},{{ObjectId::fromUint64(89104)},85}};
++   for(unsigned i=0;i<4;++i)table.cells.push_back({denseLabel(89110+i,"Cell"),{.92F,.96F,1,1}});
++   object.content=std::move(table);break;}
++ case 3:{object.kind=semantic::ObjectKind::kImage;semantic::ImageContent image;
++   image.resource_id.value=ObjectId::fromUint64(87001);image.width=160;image.height=100;
++   image.intrinsic_width=1;image.intrinsic_height=1;object.content=image;break;}
++ default:throw std::runtime_error("dense object kind");
++ }
++ object.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{.35F,.65F,.85F,1}}}},{0x3U,.72F}};
++ const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1},&layout);
++ ReferenceTraversalEntry entry;entry.record=projection.records.front();
++ if(kind==0)entry.command=ShapeReferenceCommand{scene::ImmutableValue<semantic::ShapeContent>::alias(entry.record.content),entry.record.textLayout,true};
++ if(kind==1){entry.record.textLayout=layout.resolveStickyLabel(object.id,denseLabel(89120,"Sticky label"),std::get<semantic::StickyContent>(object.content),true,object.transform);
++   entry.command=StickyReferenceCommand{scene::ImmutableValue<semantic::StickyContent>::alias(entry.record.content),entry.record.textLayout,true};}
++ if(kind==2)entry.command=TableReferenceCommand{scene::ImmutableValue<semantic::TableContent>::alias(entry.record.content),entry.record.textLayout,1};
++ if(kind==3)entry.command=ImageReferenceCommand{scene::ImmutableValue<semantic::ImageContent>::alias(entry.record.content)};
++ return entry;
++}
++FramePlan denseObjectPlan(const ReferenceTraversalEntry& line,std::vector<ReferenceTraversalEntry> objects,
++    unsigned active,unsigned dpr,unsigned frame,double offset,std::uint64_t generation=1,bool reverse=false) {
++ // The desktop reconstruction is 1431x1010. DPR4 uses an 800x500 logical
++ // viewport so its mandatory complete display and isolation planes can fit
++ // the unchanged 96MiB contract; report both dimensions in every observation.
++ const unsigned width=dpr==4?800:1431,height=dpr==4?500:1010;
++ FrameState state{ViewId{1},CameraState{{0,0},1,0,CameraGeneration{1}},{0,0,float(width),float(height)},
++   {float(width),float(height),width*dpr,height*dpr,float(dpr),1},semantic::SemanticGeneration{1},SceneRevision{1},
++   SurfaceGeneration{generation},MetricsGeneration{1},FrameId{frame},{0,0,float(width),float(height)}};
++ ReferenceDrawList draw{state};draw.viewportClip=state.viewportClip;
++ objects[active].record.transform.tx+=offset;
++ const auto original=objects[active].record.worldBounds;
++ objects[active].record.worldBounds={original.left+float(offset),original.top,original.right+float(offset),original.bottom};
++ objects[active].record.visualBounds=objects[active].record.worldBounds;
++ for(auto& object:objects)if(object.record.textLayout){
++   object.record.textLayout=std::make_shared<text::TextLayoutSnapshot>(*object.record.textLayout);
++   std::visit([&](auto& command){
++     if constexpr(requires{command.labelLayout;})command.labelLayout=object.record.textLayout;
++     else if constexpr(requires{command.layout;})command.layout=object.record.textLayout;
++   },object.command);
++ }
++ for(unsigned i=0;i<19;++i){
++   auto copy=line;copy.record.objectId=ObjectId::fromUint64(90000+i);
++   copy.record.transform.ty=45+i*13;copy.record.worldBounds={0,float(70+i*13),1440,float(150+i*13)};
++   copy.record.visualBounds=copy.record.worldBounds;
++   draw.entries.push_back(std::move(copy));
++   if(i>=3&&i<=15&&i%4==3)draw.entries.push_back(objects[(i-3)/4]);
++ }
++ if(reverse)std::reverse(draw.entries.begin(),draw.entries.end());
++ return {state,std::move(draw),{},false,true};
++}
++std::vector<std::uint8_t> denseIndependentBoundary(const FramePlan& plan) {
++ const auto width=plan.frame.metrics.physicalWidth,height=plan.frame.metrics.physicalHeight;
++ auto surface=SkSurfaces::Raster(SkImageInfo::MakeA8(width,height));
++ auto* canvas=surface->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
++ SkPaint boundary;boundary.setColor(SK_ColorWHITE);boundary.setStyle(SkPaint::kStroke_Style);
++ boundary.setStrokeWidth(2);boundary.setAntiAlias(true);
++ // Same independent per-primitive, two-device-pixel band as the existing
++ // canonical working-set oracle. Never derive the band from candidate pixels.
++ const auto first=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
++ require(first!=plan.referenceDrawList.entries.end(),"dense independent ink source");
++ const auto& stroke=std::get<CompactStrokeReferenceCommand>(first->command).content.get().stroke;
++ const auto contour=ink::compileCompactContour(stroke.config,stroke.knots);
++ for(const auto& entry:plan.referenceDrawList.entries){
++   if(!std::holds_alternative<CompactStrokeReferenceCommand>(entry.command))continue;
++   const auto& t=entry.record.transform;
++   auto matrix=SkMatrix::Scale(plan.frame.metrics.physicalWidth/plan.frame.metrics.logicalWidth,
++       plan.frame.metrics.physicalHeight/plan.frame.metrics.logicalHeight);
++   const auto& v=plan.referenceDrawList.worldToView;
++   matrix.preConcat(SkMatrix::MakeAll(v.a,v.c,v.tx,v.b,v.d,v.ty,0,0,1));
++   matrix.preConcat(SkMatrix::MakeAll(t.a,t.c,t.tx,t.b,t.d,t.ty,0,0,1));
++   for(std::size_t i=0;i+1<contour.patches.size();++i)
++     canvas->drawPath(compactContourRibbon(std::span(contour.patches).subspan(i,2)).makeTransform(matrix),boundary);
++   for(const auto& cap:contour.caps){SkPathBuilder path;path.addCircle(float(cap.x),float(cap.y),float(cap.radius));canvas->drawPath(path.detach().makeTransform(matrix),boundary);}
++ }
++ std::vector<std::uint8_t> mask(std::size_t(width)*height);
++ require(surface->readPixels(SkImageInfo::MakeA8(width,height),mask.data(),width,0,0),"dense independent boundary readback");
++ return mask;
++}
++void denseObjectContinuity(const std::filesystem::path& out) {
++ std::filesystem::create_directories(out);
++ auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++ auto completion=std::make_shared<NativeMetalCompletion>();
++ GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++ completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"dense Metal context");
++ runtime::MemoryResourceProvider resources;
++ std::ifstream font(G47_LATIN_FONT,std::ios::binary);std::vector<std::uint8_t> fontBytes{std::istreambuf_iterator<char>(font),{}};
++ require(!fontBytes.empty(),"dense locked font");resources.publish(ObjectId::fromUint64(87000),fontBytes);
++ resources.publish(ObjectId::fromUint64(87001),{0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,
++   0,0,0,0x0d,0x49,0x48,0x44,0x52,0,0,0,1,0,0,0,1,8,6,0,0,0,0x1f,0x15,0xc4,0x89,
++   0,0,0,0x0d,0x49,0x44,0x41,0x54,0x78,0x9c,0x63,0xf8,0xcf,0xc0,0xf0,0x1f,0,5,0,1,0xff,0x89,0x99,
++   0x3d,0x1d,0,0,0,0,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82});
++ text::RichTextLayoutService layouts(resources,{170,1});layouts.registerFont({{ObjectId::fromUint64(87000)},std::string(text::kRobotoSha256),0});
++ std::vector<ReferenceTraversalEntry> objects;for(unsigned kind=0;kind<4;++kind)objects.push_back(denseObject(kind,layouts));
++ for(unsigned kind=0;kind<3;++kind)require(objects[kind].record.textLayout&&!objects[kind].record.textLayout->fonts.empty(),"dense shaped text layout absent");
++ auto line=source();line.record.kind=semantic::ObjectKind::kVectorStroke;line.record.kindVersion=3;
++ line.record.content.update([](auto& v){auto& stroke=std::get<semantic::CompactStrokeContent>(v).stroke;stroke.config.opacity=.55;});
++ line.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(line.record.content)};
++ for(unsigned h=0;h<2;++h){semantic::SweptCircleMask mask;
++   for(unsigned j=0;j<4;++j){const double x=100+h*140+j*9;mask.segments.push_back({{{x,25},6},{{x+5,105},6},{x,45},{x+5,85}});}
++   line.record.eraseMasks.push_back({ObjectId::fromUint64(91000+h),std::move(mask)});
++ }
++ nlohmann::json observations=nlohmann::json::array();
++ for(unsigned dpr:{1U,2U,4U})for(unsigned kind=0;kind<4;++kind){
++   const auto caseOut=out/(std::to_string(dpr)+"-"+std::to_string(kind));std::filesystem::create_directories(caseOut);
++   auto initial=denseObjectPlan(line,objects,kind,dpr,1,0);
++   DisplayTarget target(completion),reference(completion);const auto width=initial.frame.metrics.physicalWidth,height=initial.frame.metrics.physicalHeight;
++   require(target.resize(width,height).code==BackendSubmissionCode::kAccepted&&reference.resize(width,height).code==BackendSubmissionCode::kAccepted,"dense targets");
++   SkiaRenderer candidate,oracle;ImageResourceResolver candidateImages(resources),oracleImages(resources);
++   candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
++   RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
++   auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
++   std::vector<std::uint8_t> last=pixels(target,initial);unsigned retries=0,accepted=0;
++   const auto independentBoundary=denseIndependentBoundary(initial);
++   const auto boundaryPixels=std::count_if(independentBoundary.begin(),independentBoundary.end(),[](auto p){return p!=0;});
++   saveBuffer(caseOut/"independent-boundary.a8",independentBoundary);
++   std::shared_ptr<resources::ResourceBudgetManager> candidateBudget;
++   auto submit=[&](const FramePlan& plan,bool canonical,bool inject=false){
++     EditingOverlay overlay(plan.frame);
++     const auto active=std::find_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.record.objectId==objects[kind].record.objectId;});
++     require(active!=plan.referenceDrawList.entries.end(),"dense active present");
++     require(overlay.update({.selectedObject=active->record.objectId,.worldBounds=active->record.worldBounds,.objectTransform=active->record.transform,.selected=true,.active=!canonical}),"dense selection");
++     RenderPreparationBudget bounded;BackendSubmissionResult result;unsigned calls=0;
++     do{
++       const auto presents=target.presentCount(),submits=candidate.submissionCount();
++       if(inject)transientDisplayFault.beforePublish=true;
++       result=canonical?candidate.renderFrame(target,plan,&overlay,&bounded):candidate.renderTransientOverlay(target,plan,&overlay);
++       if(!canonical)candidateBudget=transientDisplayBudget.lock();
++       completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();++calls;
++       if(result.code==BackendSubmissionCode::kRetry){++retries;auto failed=pixels(target,plan);
++         require(failed==last&&target.presentCount()==presents&&candidate.submissionCount()==submits,"dense Retry modified accepted pixels/receipt");
++         if(inject)return calls;
++       }
++       if(result.code==BackendSubmissionCode::kRejected)std::cerr<<result.message<<'\n';
++       require(result.code!=BackendSubmissionCode::kRejected&&calls<512,"dense finite stable request failed");
++     }while(result.code!=BackendSubmissionCode::kAccepted);
++     ++accepted;last=pixels(target,plan);
++     const auto expected=canonical?oracle.renderFrame(reference,plan,&overlay):oracle.renderTransientOverlay(reference,plan,&overlay);
++     require(expected.code==BackendSubmissionCode::kAccepted,"dense disabled Direct reference");
++     const auto expectedPixels=pixels(reference,plan);
++     const auto cameraBoundary=plan.referenceDrawList.worldToView==WorldToViewAffine{}?
++       std::vector<std::uint8_t>{}:denseIndependentBoundary(plan);
++     const auto& band=cameraBoundary.empty()?independentBoundary:cameraBoundary;
++     std::size_t changedPixels=0,interiorFailures=0;unsigned maxDifference=0;
++     for(std::size_t i=0;i<last.size();i+=4){bool changed=false;for(unsigned c=0;c<4;++c){
++       const auto difference=unsigned(std::abs(int(last[i+c])-int(expectedPixels[i+c])));
++       changed|=difference!=0;maxDifference=std::max(maxDifference,difference);
++       if(!band[i/4]&&difference>2)++interiorFailures;
++     }changedPixels+=changed;}
++     const auto prefix=caseOut/std::to_string(plan.frame.frameId.value());
++     saveBuffer(prefix.string()+"-actual.rgba",last);saveBuffer(prefix.string()+"-oracle.rgba",expectedPixels);
++     const auto oracleWork=oracle.objectInteractionWork();
++     const nlohmann::json row{{"DPR",dpr},{"kind",kind},{"frame",plan.frame.frameId.value()},{"canonical",canonical},{"calls",calls},
++       {"width",width},{"height",height},{"actual",pixelDigest(last)},{"oracle",pixelDigest(expectedPixels)},
++       {"oracle_static_builds",oracleWork.builds},{"oracle_static_hits",oracleWork.hits},{"pixel_equal",last==expectedPixels},
++       {"changed_pixels",changedPixels},{"max_channel_difference",maxDifference},{"non_aa_failures",interiorFailures}};
++     std::ofstream(prefix.string()+"-pixels.json")<<row.dump(2)<<'\n';
++     require(oracleWork.builds==0&&oracleWork.hits==0,"dense Direct oracle reused candidate static scene");
++     require(interiorFailures==0,"dense static order/mask/opacity/text/image mismatch outside frozen AA band");return calls;
++   };
++   submit(initial,true);
++   for(unsigned move=0;move<3;++move)submit(denseObjectPlan(line,objects,kind,dpr,2+move,7.5*(move+1)),false);
++   auto changed=denseObjectPlan(line,objects,kind,dpr,5,28);
++   submit(changed,false,true);submit(changed,false);
++   submit(denseObjectPlan(line,objects,kind,dpr,6,0),false); // drag cancel
++   submit(denseObjectPlan(line,objects,kind,dpr,7,0,1,true),false); // order invalidation
++   if(dpr==1&&kind==0){
++     auto changedObjects=objects;
++     changedObjects[1].record.properties.entries.back().value=.4F;
++     submit(denseObjectPlan(line,changedObjects,kind,dpr,8,0),false); // static effect/content basis
++     submit(denseObjectPlan(line,objects,kind,dpr,9,0),false);
++     const auto current=denseObjectPlan(line,objects,kind,dpr,10,0);
++     auto clipped=current.referenceDrawList;clipped.viewportClip={8,8,1400,990};
++     submit(FramePlan{current.frame,std::move(clipped),current.background,false,true},false);
++     submit(denseObjectPlan(line,objects,kind,dpr,11,0),false);
++     auto changedHistory=line;semantic::SweptCircleMask extra;
++     extra.segments.push_back({{{400,30},5},{{400,100},5},{400,45},{400,85}});
++     changedHistory.record.eraseMasks.push_back({ObjectId::fromUint64(91999),extra});
++     submit(denseObjectPlan(changedHistory,objects,kind,dpr,12,0),false);
++     submit(denseObjectPlan(line,objects,kind,dpr,13,0),false);
++     auto camera=denseObjectPlan(line,objects,kind,dpr,14,0);
++     auto translated=camera.referenceDrawList;translated.worldToView.tx=3.5;
++     submit(FramePlan{camera.frame,std::move(translated),camera.background,false,true},false);
++     submit(denseObjectPlan(line,objects,kind,dpr,15,0),false);
++     auto background=denseObjectPlan(line,objects,kind,dpr,16,0);
++     foundation::DocumentBackground blue;blue.color={.88F,.93F,1,1};
++     submit(FramePlan{background.frame,background.referenceDrawList,blue,false,true},false);
++     submit(denseObjectPlan(line,objects,kind,dpr,17,0),false);
++     // An epoch change invalidates source pixels even when the resource owner
++     // pointer is the same. Both independent renderers bind their own resolver.
++     candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
++     completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();oracle.serviceResourceRetirements();
++     submit(denseObjectPlan(line,objects,kind,dpr,18,0),false);
++     require(candidateImages.decodeCount()==1&&oracleImages.decodeCount()==1,"dense image decoded every move");
++   }
++   const auto work=candidate.renderCacheWork();const auto interaction=candidate.objectInteractionWork();
++   require(work.cpuCoverageTiles==0&&work.preparedMaxAdvanceKnots<=32,"dense changed GPU/quantum policy");
++   require(work.preparedBodyBuilds==(dpr==1&&kind==0?2U:1U),"dense equal body prepared more than once per resource epoch");
++   if(dpr==1)require(interaction.builds>0&&interaction.hits>=2,"dense affordable static reuse not reached");
++   auto liveBudget=transientDisplayBudget.lock();require(bool(liveBudget)&&liveBudget->used()<=96U*1024U*1024U,"dense budget witness");
++   // The last observer is the oracle; it owns a separate default manager.
++   auto rebound=denseObjectPlan(line,objects,kind,dpr,8,0,target.generation());
++   const auto presents=target.presentCount();require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"dense generation");
++   EditingOverlay stale(rebound.frame);require(candidate.renderTransientOverlay(target,rebound,&stale).code==BackendSubmissionCode::kRejected&&target.presentCount()==presents,"dense stale target presented");
++   if(dpr==1&&kind==0){
++     require(reference.advanceGeneration().code==BackendSubmissionCode::kAccepted,"dense oracle generation");
++     submit(denseObjectPlan(line,objects,kind,dpr,19,0,target.generation()),false);
++   }
++   oracle.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);oracle.serviceResourceRetirements();
++   require(liveBudget->used()==0,"dense oracle lease release");
++   candidate.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);candidate.serviceResourceRetirements();
++   require(candidateBudget&&candidateBudget->used()==0,"dense candidate leases not retired");
++   observations.push_back({{"DPR",dpr},{"kind",kind},{"width",width},{"height",height},{"lines",19},{"knots_per_body",7199},{"historical_masks",2},
++     {"accepted",accepted},{"retries",retries},{"body_builds",work.preparedBodyBuilds},{"body_compile",work.preparedCompileInputs},
++     {"max_advance_knots",work.preparedMaxAdvanceKnots},{"static_builds",interaction.builds},{"static_hits",interaction.hits},
++     {"static_invalidations",interaction.invalidations},{"static_denials",interaction.denials},{"lease_bytes",interaction.leaseBytes},
++     {"gpu_marks",interaction.gpuLeaseMarks},{"cpu_tiles",work.cpuCoverageTiles},{"non_aa_pixels_match",true},
++     {"candidate_clear_bytes",candidateBudget->used()},{"oracle_clear_bytes",liveBudget->used()}});
++   observations.back()["independent_band_pixels"]=boundaryPixels;
++   observations.back()["independent_band_fraction"]=double(boundaryPixels)/independentBoundary.size();
++   observations.back()["non_aa_channel_tolerance"]=2;
++   std::cout<<observations.back().dump()<<std::endl;
++ }
++ std::ofstream(out/"dense-mixed-counters.json")<<observations.dump(2)<<'\n';
++}
+ std::vector<std::uint8_t> pixels(DisplayTarget& t,const FramePlan& p){std::vector<std::uint8_t> out(std::size_t(p.frame.metrics.physicalWidth)*p.frame.metrics.physicalHeight*4);require(t.readbackRgba(out).code==BackendSubmissionCode::kAccepted,"actual target capture");return out;}
+ void settle(SkiaRenderer& r,DisplayTarget& t,const FramePlan& p,const std::shared_ptr<NativeMetalCompletion>& c){
+  EditingOverlay overlay{p.frame};
+@@ -163,7 +488,7 @@ void handoffInflight(const std::filesystem::path& out){
+ }
+ int main(int argc,char** argv){try{
+ #if defined(__APPLE__)
+- auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");{const std::string mode=argc>1?argv[1]:"--pixels";const auto out=std::filesystem::path(argc>2?argv[2]:"out/transient-display-pixels");if(mode=="--handoff-inflight")handoffInflight(out);else if(mode=="--handoff"){if(!handoffProgress(out)){message(pool,"drain");return 1;}}else if(mode=="--continuity")continuity(out);else if(mode=="--object-continuity")objectContinuityStaticReuse(out);else if(mode=="--dense-objects")denseObjectContinuity(out);else if(mode=="--recovery")recovery(out);else failedPixels(mode=="--pixels"?out:std::filesystem::path(mode));}message(pool,"drain");
+ #else
+  (void)argc;(void)argv;
+ #endif

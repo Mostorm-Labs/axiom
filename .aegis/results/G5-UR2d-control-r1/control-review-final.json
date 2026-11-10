@@ -1,0 +1,82 @@
+{
+  "schema": "g5-ur2d-control-review-final-v1",
+  "status": "SCOPED_CODE_AND_FUNCTIONAL_CLOSURE_ACCEPTED_WITH_PERFORMANCE_FINDINGS",
+  "reviewed_utc": "2026-11-10T11:59:57.545116+00:00",
+  "result": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/result.json",
+    "sha256": "97e76f5772f81161875cb51ae724cb117874a53ce2b7f2496305021153417e43"
+  },
+  "artifact_manifest": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/artifact-manifest.json",
+    "sha256": "53c35d2217851de61b71af40f7e05c0c4e8ca2804eee91966e04fc1fb1a40e6d"
+  },
+  "source": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0"
+  },
+  "scope": "UR2d-A selectionlocalexactreuse+inputclosure and UR2d-BsynchronousUpequivalentexactreuse",
+  "product_findings": [],
+  "verification_defects_resolved": [
+    "fullGPUhashmandatoryassert",
+    "zeroAA-bandmandatoryassert",
+    "liveDemoaccesslogfrozenmanifest"
+  ],
+  "original_required_obligations": {
+    "D-A1": "Frozenold55selectiondecisionsmatch;supporting172zerochanges;warmdenseworkreduced.",
+    "D-A2": "PublicS0/S2mouseUp/Cancel/lost/blur/reentryandparentedSectioncompositionverified.",
+    "D-B1": "ActualUp1/8/16/32copies3runs/equivalentmemo7/15/31canonicalmaskbytespreserved.",
+    "D-B2": "OperationHistoryatomicity/Scene/failurekeepersandactualtwoUpimmediateDown+wheel/UndoRedofinalpixelsverified.",
+    "D-PERF": "Threeactualbrowserpairsnowavailable; mixedUp/nextDownandcontentfeedbackfindingsretained,notuniformperformancePASS.",
+    "D-REG": "78targetednative;control14fresh;634+6erase/55selection+172support;leaseclear/normalnohooks/sourceSDKbinding."
+  },
+  "independent_refs": [
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/code-review-checkpoint.json",
+      "sha256": "0e454244eb340f2ac80a5f09581bec7759364d7220d407e9ac46420e6b469570"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/pair-completion-independent-functional.json",
+      "sha256": "bcd151ce9331ae5662fed8420c25b468f446d805a3eb17631c5d3423af7c2aa6"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/pair-completion-independent-pixel.json",
+      "sha256": "7310f55924d30f20b5b075590162f79cad8a00ce1490136092fa5452dc1b9a73"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/harness-final-artifact-check.json",
+      "sha256": "2e2fd29bf6dfc9fb74c3f59f6592ce7cdef882812ba26914e430959523aa5cc3"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json",
+      "sha256": "99b46a3a40173fdaab43abb4fe0b29e81aeb62a785d3b248741a18b9fbbff9b9"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/snapshot-review.json",
+      "sha256": "71e9746bea1a600d3fc487c27571c4e7f83c60cac9a69660e41eab0c745b4de0"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-final-native.json",
+      "sha256": "6c1850f3e5e488908a0ba750fafaf0ed3f02cc31d9f7b49a2d64d94713c89496"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/independent-harness-checks.json",
+      "sha256": "96bbf84bac344ee00f706fc7e14fbf4fdfd6b67ebd7d1ecc9c33e3f03774789f"
+    }
+  ],
+  "performance_findings": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/performance-classification.json",
+    "sha256": "37b0f9ec727f80084a46b4f3593f053ce8738bcabc82359a9dd9be26a54f63e6"
+  },
+  "remaining": [
+    "Coldselection~85msstillaboveinteractiveframebudget.",
+    "BrowsereraseUpmixed(~5-10ms),nativeequivalentcopygainnotbroadspeedup.",
+    "Contentwritesaftererase~hundredsofms;selectionphaseslackactualcontentwritefacts;donotequateadmissionwithfeedback.",
+    "Newuserfullscreenareaexposescache/worksetcliffs,newuserauthorizedbudgettaskseparate."
+  ],
+  "next_user_authorized_package": {
+    "path": ".aegis/packages/G5-desktop-render-budget-r1/package.json",
+    "sha256": "17714da21f8c44b3d124e53f16ea7a55f06afa51d114f01dc6b061dff6e3bfcf"
+  },
+  "official_P34_G5_platform_release_pass": false,
+  "commit_push": false
+}

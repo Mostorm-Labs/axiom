@@ -1,0 +1,15 @@
+{
+  "command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native",
+    "-R",
+    "^(G47TextLayout|G47TextPipeline|G47ImageResource|G5RenderDamage|G5ObjectInteractionLayoutIdentity|G5ObjectInteractionStaticOracle|G5TransientDisplayRetryPixels|G5TransientDisplayContinuity|G5TransientDisplayRecovery|G5TransientDisplayHandoff|G5TransientDisplayHandoffInflight|FC01CreationControlBinding)$",
+    "--output-on-failure",
+    "--timeout",
+    "90"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 7.770984458969906,
+  "dense_final_separate": "dense-mixed-basis-invocation.json"
+}

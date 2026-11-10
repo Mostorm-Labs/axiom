@@ -1,0 +1,28 @@
+{
+  "schema": "g5-object-interaction-continuity-r2-evidence-v1",
+  "classification": "CONTROL_REVIEW_REQUIRED",
+  "blocking": [
+    "LI-01",
+    "OI2-01",
+    "OI2-02",
+    "OI2-03",
+    "OI2-04"
+  ],
+  "prohibited_claims": [
+    "G5 PASS",
+    "P34 PASS",
+    "platform PASS",
+    "formal Web qualification PASS"
+  ],
+  "prior_r1_immutable": true,
+  "must_report": [
+    "exact source/delta hashes",
+    "layout identity RED/GREEN",
+    "staged publication retry counts",
+    "static builds/hits/invalidations/lease/GPU marks",
+    "independent Direct oracle counters and digests",
+    "dense mixed fixture coverage or exact blocker",
+    "Web/toolchain status",
+    "cleanup/remaining work"
+  ]
+}

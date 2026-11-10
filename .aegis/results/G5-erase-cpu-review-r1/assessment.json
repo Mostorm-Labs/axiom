@@ -1,0 +1,156 @@
+{
+  "schema": "g5-partial-erase-cpu-readonly-assessment-v1",
+  "status": "SYNCHRONOUS_UP_BLOCKING_REPRODUCED_PROLONGED_IDLE_CPU_NOT_REPRODUCED",
+  "created_utc": "2026-11-10T12:40:19.581917+00:00",
+  "scope": "Sameordinary4317SDK40copies/7199knotsS2+long160acceptedMoves;profilingdiagnosticnotperformancebaseline",
+  "sdk_wasm": "e8ec401356de9cbc957cb4f2c4875397fbeff107dffdc5cab472623681b54638",
+  "public_Web_rows": [
+    {
+      "round": 0,
+      "long_up_ms": 1012.8999999761581,
+      "next_small_up_ms": 77.69999992847443,
+      "next_down_ms": 1.100000023841858,
+      "generation_delta": 2,
+      "next_down_active_contacts": 1,
+      "final_contacts": 0,
+      "final_generation": "26",
+      "presented_generation": "26",
+      "idle_after_6s_pending": 0,
+      "idle_ms_since_last_RAF": 5482.899999976158,
+      "last_actual_content_after_up_ms": 498.2999999523163
+    },
+    {
+      "round": 1,
+      "long_up_ms": 1023.7999999523163,
+      "next_small_up_ms": 149.79999995231628,
+      "next_down_ms": 1.0,
+      "generation_delta": 2,
+      "next_down_active_contacts": 1,
+      "final_contacts": 0,
+      "final_generation": "28",
+      "presented_generation": "28",
+      "idle_after_6s_pending": 0,
+      "idle_ms_since_last_RAF": 5441.599999904633,
+      "last_actual_content_after_up_ms": 533.5
+    },
+    {
+      "round": 2,
+      "long_up_ms": 1866.8999999761581,
+      "next_small_up_ms": 274.40000009536743,
+      "next_down_ms": 1.5,
+      "generation_delta": 1,
+      "next_down_active_contacts": 1,
+      "final_contacts": 0,
+      "final_generation": "29",
+      "presented_generation": "29",
+      "idle_after_6s_pending": 0,
+      "idle_ms_since_last_RAF": 5395.399999976158,
+      "last_actual_content_after_up_ms": 584.1000000238419
+    }
+  ],
+  "native_actual_owner": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/runtime-result.json",
+    "sha256": "f1941ff8df03e59eae04b1054418b73ca567f118748dba925c8a25252476adee"
+  },
+  "native_cache_only": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/long-result.json",
+    "sha256": "6c92e65931f4ecdf24711d6c437724b4c07b1d4a4b914db43de81bf7775ffc75"
+  },
+  "browser_raw": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/browser-result.json",
+    "sha256": "8992b3b1a975a09d227759d74634f46af2d056d086076b9c42873a9148bf80b0"
+  },
+  "browser_guard": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/browser-window.worker.json",
+    "sha256": "ff7467bb844fea66ef4fbb9747e9c89db2d85f93561f4f2b78f1ede4bbcc43f5"
+  },
+  "cpu_profile": {
+    "path": ".aegis/results/G5-erase-cpu-review-r1/cpu-profile.json",
+    "sha256": "caf69e3afa469de89f7b3b9c86bc6bb5add640560c87cbcf52fd27fec686393e"
+  },
+  "facts": [
+    "LongprimaryWebUp1.01/1.02/1.87seconds;immediatenextDownadmitted1–1.5ms;smallnextUpto274ms. PriorUpoccupiesmainthreadbeforebrowsercanprocessnextgesture.",
+    "Idle6saftereveryroundshowsgeneration==presentedGenerationandpendingRAF0;actualcontentwritesstop~0.5–0.58safterlastUp. Noindefiniteretryinthisfixture.",
+    "Native40copiessecondUp81trace~218ms,exact~182ms;equivalentqueryhits39→0aftercanonicalperobjectmaskIDsdiverge. Morehistoryprimitivepreparation/copyingandScene~13–48msalsoobserved.",
+    "Cache-onlyIDforklosesquerymemo15→0andhistoryprepared160→2560,butwalltimenotconsistentlyslower. Identityredundancyisrealbutnotprovenmaincost.",
+    "CPUprofilerfunction6789dominatesnonidleWASMselfsamples(~2.57s)incallbackcommitstack;symbolnotyetidentified. Do notassertCPUcoverageorPathOpsfromCPU100alone.",
+    "Largebudgetimprovesresidency/dragbutdoesnotremoveCPUexactsemanticqueriesorcanonicalinvalidationwork."
+  ],
+  "user_video_observation": {
+    "file": "/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/TemporaryItems/NSIRD_screencaptureui_EHdg6d/录屏2026-11-10 20.11.20.mov",
+    "duration_seconds": 134.148333,
+    "inspected_seconds": [
+      0,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      65,
+      70,
+      80,
+      90,
+      95,
+      100,
+      110,
+      120,
+      125,
+      130
+    ],
+    "visible": "4317,42objects,partialeraserselected,taskmanagerCPU100around60–90s,GPUcolumn~292MB;recoverslater. Exactinputtimeline/callstacknotavailablefromvideo."
+  },
+  "next_actions": [
+    "ResolveCPUprofilefunctionidentityfromsameobjectlinksymbolswithoutchangingnormalSDK.",
+    "PrioritizeCPUexactUp maskpathunion/intersections andequivalentgeometryproof;preservecanonicalmaskIDsandpayload/atomicOperation.",
+    "Measurecontinuousrepeatedactualeraserlongtrace/historydensity;includeidleCPUreturnandactualnextfeedback.",
+    "Ifprolongedbusyrecurscaptureexactjobprogress/restart/PathOps/GPUdrivercalls ratherthanassumeexistingboundedRAFguaranteesboundedlatency."
+  ],
+  "changes": "No production source or userpage mutated, no commitpush.",
+  "symbolization_result": {
+    "status": "NOT_ATTRIBUTED",
+    "record": ".aegis/results/G5-erase-cpu-review-r1/symbol-resolution.json",
+    "reason": "Separateemit-symbol-maprelinkchangedWASMindices; directmappingdiscarded. No claimfunction6789isPathOpsorcodec."
+  },
+  "prior_budget_status": {
+    "control_review": ".aegis/results/G5-desktop-render-budget-control-r1/control-review.json",
+    "demo": "http://127.0.0.1:4317/example.html",
+    "effective_mib": [
+      256,
+      512,
+      64
+    ]
+  },
+  "ranked_followup": [
+    {
+      "priority": 1,
+      "goal": "Shorten actual synchronousUp onlongtraceandrealdivergedmaskhistories",
+      "work": [
+        "Timequery-pathconstruction/unionandperobjectexactintersect/history/preparationseparatelyinadiagnosticbuild.",
+        "Shareonlyprovedderivedgeometry/historyshapeequivalencewhilepreservingperobjectcanonicalmaskIDsandatomicUp.",
+        "Exploreincrementalnewquerypathorbalanced/batcheduniononlyifoldexactoracleprovesidenticalgeometry/failurebehavior;nofulltracepercopyrebuild."
+      ],
+      "proof": "40×7199; traces160/400/longselfintersection; actual3Up→immediateDown/navig/noop/cancel; oldCPUexact/pixels/Historyunchanged."
+    },
+    {
+      "priority": 2,
+      "goal": "Avoidwhole-bodycoverageandfullhistoryreplayaftermask-onlycommit",
+      "work": [
+        "Measurewhichcompletedbody/history/materialtiles aredroppedbetweenliveeraseandcanonical.",
+        "Keepvalidbody/basepixels; updatechangedmask/regions; everyGPUdisplaymuststillcorrespondtocurrentatomiccommit.",
+        "Boundeachcooperativetaskincludingmaskwork; countrestart/resumeprogressandCPUwork,notjustRAF."
+      ],
+      "proof": "Actualfirstfeedback/lastUpcanonicalcompletion/nextstrokecontentandpostidleCPUreturn. Changesrequireseparatescope;notdonehere."
+    },
+    {
+      "priority": 3,
+      "goal": "Onlythenmove remainingunavoidableCPUworkoffmainownerthread",
+      "work": [
+        "UseuniqueRuntimeowner+immutableinput/output+job-local scratch+uniqueGPUcontextowner.",
+        "Concurrencydoesnotreplacecompleteidentityprooforremoverepeatedworkbyitself."
+      ],
+      "proof": "Keepoperationordering/stalebasisreject/Upcancelanddisplayreplacementreceipts."
+    }
+  ],
+  "not_closed": "Uservideo42objects/manyrealhistoryerasesCPU100fortensofsecondsstillnotreproducedwiththeisolated40copy160Move3roundfixture. Do notdeclarebugfixed."
+}

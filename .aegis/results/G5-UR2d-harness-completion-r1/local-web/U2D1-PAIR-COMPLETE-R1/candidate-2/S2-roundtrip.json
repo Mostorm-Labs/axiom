@@ -1,0 +1,90 @@
+{
+  "status": "QUALIFIED",
+  "before": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "after": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "roundtrip": {
+    "status": "QUALIFIED",
+    "compared_pixels": 5076225,
+    "aa_boundary_pixels": 705015,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 0,
+    "max_interior_delta": 0,
+    "witnesses": [],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "fullViewport": {
+    "status": "FAILED",
+    "compared_pixels": 5781240,
+    "aa_boundary_pixels": 0,
+    "hud_excluded_pixels": 0,
+    "interior_mismatched_pixels": 1,
+    "max_interior_delta": 4,
+    "witnesses": [
+      {
+        "pixel": 1623325,
+        "actual": [
+          125,
+          133,
+          145,
+          255
+        ],
+        "reference": [
+          123,
+          129,
+          142,
+          255
+        ]
+      }
+    ],
+    "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+  },
+  "rule": "Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.",
+  "oracle": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "request": {
+    "width": 2862,
+    "height": 2020,
+    "logical_width": 1431,
+    "logical_height": 1010,
+    "camera": {
+      "scale": 1,
+      "x": -24,
+      "y": -15
+    },
+    "hud_bounds": []
+  },
+  "samples": [
+    {
+      "snapshot_sha256": "101eed533b7df3e4533b425a8301a9bc0c80b9f78c09ad196a5850ce5db57634",
+      "actual_sha256": "b95d2e6537551fdf8db5e5f91ec90d7f0974324b10bef61ee7029e33fcb4589b",
+      "reference_sha256": "0271339ba44537f43b5c219b9291f71bd2c7c50c736e2e3ff5a8aa1eac53cd62",
+      "band_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    },
+    {
+      "snapshot_sha256": "3a5e86c4950b4d9151344ea459a4ece26ab3e9499996fed4930d779c7c424a21",
+      "actual_sha256": "57a7b17a8aed23bafe439aae7a563b689a4bf50fce54189c173a3da194a7e58e",
+      "reference_sha256": "0271339ba44537f43b5c219b9291f71bd2c7c50c736e2e3ff5a8aa1eac53cd62",
+      "band_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    }
+  ]
+}

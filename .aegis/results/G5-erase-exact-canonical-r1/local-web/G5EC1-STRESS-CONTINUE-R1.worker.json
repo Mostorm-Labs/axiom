@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/stress-continue-request.json",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R1"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 1.6984447500000002,
+  "peak_process_family_rss_kib": 1430224,
+  "rss_limit_kib": 4194304,
+  "timeout_s": 153,
+  "last_stage": {
+    "stage": "closed",
+    "status": "FAILED",
+    "error": "page.evaluate: TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:61249/g5/erase_undo_readiness.mjs\n    at undoWorker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:136:25)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:149:123"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

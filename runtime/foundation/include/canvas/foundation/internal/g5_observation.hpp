@@ -1,6 +1,26 @@
 #pragma once
 // Private qualification observations. No canonical owner or consumer SDK API.
 #include <cstdint>
+#if defined(AXIOM_UR2D_TESTS)
+#include <array>
+#include <chrono>
+namespace canvas::foundation::internal::g5 {
+enum class UpPhase : unsigned { exact,history,publication,apply,finalize,observer,scene,count };
+struct Ur2dUpWork {std::array<std::uint64_t,unsigned(UpPhase::count)> nanoseconds{};std::uint64_t masksBuilt=0,exactCalls=0,equivalentHits=0;};
+inline thread_local Ur2dUpWork ur2dUpWork;
+struct UpTimer {UpPhase phase;std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();bool active=true;
+ explicit UpTimer(UpPhase p):phase(p){}~UpTimer(){finish();}
+ void finish(){if(active){ur2dUpWork.nanoseconds[unsigned(phase)]+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();active=false;}}
+};
+}
+#define UR2D_PHASE(name,phase) ::canvas::foundation::internal::g5::UpTimer name{::canvas::foundation::internal::g5::UpPhase::phase}
+#define UR2D_END(name) name.finish()
+#define UR2D_COUNT(field) (++::canvas::foundation::internal::g5::ur2dUpWork.field)
+#else
+#define UR2D_PHASE(...) ((void)0)
+#define UR2D_END(...) ((void)0)
+#define UR2D_COUNT(...) ((void)0)
+#endif
 namespace canvas::foundation::internal::g5 {
 enum class Kind : unsigned { Stage=1, Begin, End, Admission, Basis, Commit, Scene, Decision, Leaf, Counter, Submit, Complete, GpuSubmit, GpuComplete, GpuRetire, Terminal };
 enum class Tag : unsigned { input=1, eraser_begin, eraser_up, exact_prepare, publication_prepare, semantic_apply, observer, history, scene_apply, canonical, transient, navigation, preview, reference_build, reference_encode, reference_digest, coverage, material, provider, lookup, geometry_build, geometry_replay, copy, target, pointer_identity, canonical_basis, canonical_commit, input_result, canonical_receipt, cached_pixels, erase_damage, mask, prepare, render_direct, record_commands, routed_sample, eraser_revision, history_prepare, history_finalize, pathops, navigation_basis, brush_revision, resource_lease, control_result, display_record, display_roster, composition_proof, exact_body, mask_history, mask_scene, moving_erase_progress };

@@ -1,0 +1,26 @@
+{
+  "status": "ACTUAL_CONSTRUCTOR_LIMITS_VERIFIED",
+  "desktop": {
+    "actual_renderer_admission_checked": true,
+    "entry_mib": 64,
+    "leases_after_clear": 0,
+    "optional_mib": 256,
+    "shared_mib": 512
+  },
+  "conservative": {
+    "actual_renderer_admission_checked": true,
+    "entry_mib": 8,
+    "leases_after_clear": 0,
+    "optional_mib": 32,
+    "shared_mib": 96
+  },
+  "entry_compiledef_private": true,
+  "value_profile": [
+    32,
+    96,
+    8
+  ],
+  "web_compile": "out/G5-UR2d-selection-up-continue-r1/A/build-web-normal/compile_commands.json",
+  "explicit_hotcall_options": "canonical raster submit options.maxEntryBytes; Direct skia_renderer passes renderCacheOptions_.maxEntryBytes and pointer. Default8 remains for standalone omitted-options reference calls.",
+  "preallocation": false
+}

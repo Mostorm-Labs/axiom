@@ -1,0 +1,2598 @@
+{
+  "classification": "PAIRED_LOCAL_OBSERVATIONS_NOT_PERFORMANCE_PASS",
+  "unit": "ms",
+  "all_rows": [
+    {
+      "pair": 0,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S0.json",
+        "sha256": "b67a0cf6ec58ff0841bc2dbd2cc956f09bb3058a44170240f113857ac22dc0ed",
+        "bytes": 69684
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 36.09999990463257,
+        "warm_up_ms": 27.399999976158142,
+        "blank_next_down_ms": 0.6000000238418579,
+        "all_event_duration_ms": [
+          0.8999999761581421,
+          1.2000000476837158,
+          36.09999990463257,
+          27.399999976158142,
+          0.6000000238418579,
+          0.2999999523162842
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 25.600000023841858,
+          "input_callback_js_wall_ms": 65.50000011920929,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 950.3999999761581,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.8999999761581421,
+            0.2999999523162842,
+            0.10000002384185791,
+            7.599999904632568,
+            0.30000007152557373,
+            0.20000004768371582,
+            5.600000023841858,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            7.599999904632568,
+            5.600000023841858
+          ],
+          "down_ms": [
+            0.8999999761581421,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.10000002384185791,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 310.6999999284744,
+            "last_dispatch_to_first_content_write_ms": 294.6999999284744,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 133.89999985694885,
+            "input_callback_js_wall_ms": 14.299999952316284,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1463.8000000715256,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.5999999046325684,
+            0.20000004768371582,
+            0.09999990463256836,
+            5.700000047683716,
+            0.19999992847442627,
+            0.20000004768371582,
+            4.300000071525574,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            5.700000047683716,
+            4.300000071525574
+          ],
+          "down_ms": [
+            0.5999999046325684,
+            0.19999992847442627
+          ],
+          "next_down_ms": 0.19999992847442627,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 318.39999997615814,
+            "last_dispatch_to_first_content_write_ms": 306.2000000476837,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 136.40000009536743,
+            "input_callback_js_wall_ms": 10.900000095367432,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1827.7000000476837,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.20000004768371582,
+            0.10000002384185791,
+            5.399999976158142,
+            0.2999999523162842,
+            0.20000004768371582,
+            4.799999952316284,
+            0.30000007152557373
+          ],
+          "up_ms": [
+            5.399999976158142,
+            4.799999952316284
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.30000007152557373,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 371.1999999284744,
+            "last_dispatch_to_first_content_write_ms": 359.09999990463257,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 25,
+            "raf_callback_js_wall_ms": 185.90000009536743,
+            "input_callback_js_wall_ms": 10.699999928474426,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2234.100000023842,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S2.json",
+        "sha256": "87b0a8f6fa6882e19e98c589bded423ddd77a619e199ef8f3f1d5d77360430d8",
+        "bytes": 69108
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 14695.800000071526,
+        "warm_up_ms": 14698.099999904633,
+        "blank_next_down_ms": 0.6000000238418579,
+        "all_event_duration_ms": [
+          1.0,
+          0.30000007152557373,
+          14695.800000071526,
+          14698.099999904633,
+          0.6000000238418579,
+          0.2999999523162842
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.199999928474426,
+          "input_callback_js_wall_ms": 29394.99999988079,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 35493,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.20000004768371582,
+            82.59999990463257,
+            0.30000007152557373,
+            0.20000004768371582,
+            13.799999952316284,
+            0.30000007152557373
+          ],
+          "up_ms": [
+            82.59999990463257,
+            13.799999952316284
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.30000007152557373,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 401.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 302.5,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 139.70000004768372,
+            "input_callback_js_wall_ms": 97.00000011920929,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 36112.10000002384,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.20000004768371582,
+            10.299999952316284,
+            0.30000007152557373,
+            0.20000004768371582,
+            9.5,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            10.299999952316284,
+            9.5
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 320.89999997615814,
+            "last_dispatch_to_first_content_write_ms": 299.0,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 142.39999985694885,
+            "input_callback_js_wall_ms": 20.700000047683716,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 36459.800000071526,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.10000002384185791,
+            9.799999952316284,
+            0.2999999523162842,
+            0.20000004768371582,
+            9.599999904632568,
+            0.30000007152557373
+          ],
+          "up_ms": [
+            9.799999952316284,
+            9.599999904632568
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.30000007152557373,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 323.2999999523163,
+            "last_dispatch_to_first_content_write_ms": 301.89999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 140.89999997615814,
+            "input_callback_js_wall_ms": 20.299999713897705,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 36814.800000071526,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/row-S0.json",
+        "sha256": "38c0ba9e6da96bf93e2db14d38432eab723427b6db76817839f97036c30bf208",
+        "bytes": 68418
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 3.6999999284744263,
+        "warm_up_ms": 0.8000000715255737,
+        "blank_next_down_ms": 0.6000000238418579,
+        "all_event_duration_ms": [
+          1.0,
+          1.2000000476837158,
+          3.6999999284744263,
+          0.8000000715255737,
+          0.6000000238418579,
+          0.30000007152557373
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.0,
+          "input_callback_js_wall_ms": 6.799999952316284,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 854.5,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.8000000715255737,
+            0.20000004768371582,
+            0.19999992847442627,
+            9.200000047683716,
+            0.2999999523162842,
+            0.20000004768371582,
+            5.600000023841858,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            9.200000047683716,
+            5.600000023841858
+          ],
+          "down_ms": [
+            0.8000000715255737,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 316.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 298.60000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 133.10000002384186,
+            "input_callback_js_wall_ms": 15.800000071525574,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1367.1000000238419,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.6000000238418579,
+            0.09999990463256836,
+            0.10000002384185791,
+            7,
+            0.30000007152557373,
+            0.10000002384185791,
+            4.899999976158142,
+            0.20000004768371582
+          ],
+          "up_ms": [
+            7,
+            4.899999976158142
+          ],
+          "down_ms": [
+            0.6000000238418579,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.20000004768371582,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.10000002384185791,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 325.2999999523163,
+            "last_dispatch_to_first_content_write_ms": 311.09999990463257,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 143.30000007152557,
+            "input_callback_js_wall_ms": 12.5,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1709.6000000238419,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.20000004768371582,
+            0.19999992847442627,
+            5.5,
+            0.20000004768371582,
+            0.20000004768371582,
+            4.100000023841858,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            5.5,
+            4.100000023841858
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.20000004768371582
+          ],
+          "next_down_ms": 0.20000004768371582,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 317.89999997615814,
+            "last_dispatch_to_first_content_write_ms": 306.2999999523163,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 143.70000004768372,
+            "input_callback_js_wall_ms": 10.00000011920929,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2063,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/worker-result.json",
+        "sha256": "4700972f0150103caca528387bb64a8cf7743ea40991a87c52a0a0eb48bcb2c6",
+        "bytes": 365967,
+        "json_pointer": "/partial/1",
+        "note": "Original AA assertion stopped before persistRow; immutable partial contains complete timed row."
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 82.5,
+        "warm_up_ms": 7.300000071525574,
+        "blank_next_down_ms": 0.8999999761581421,
+        "all_event_duration_ms": [
+          1.0,
+          0.20000004768371582,
+          82.5,
+          7.300000071525574,
+          0.8999999761581421,
+          0.2999999523162842
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 1,
+          "raf_callback_js_wall_ms": 20.5,
+          "input_callback_js_wall_ms": 91.09999978542328,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 5949.100000023842,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.09999990463256836,
+            14.100000023841858,
+            0.3999999761581421,
+            0.10000002384185791,
+            13.299999952316284,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            14.100000023841858,
+            13.299999952316284
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 341.7000000476837,
+            "last_dispatch_to_first_content_write_ms": 312.2000000476837,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 145.89999997615814,
+            "input_callback_js_wall_ms": 28.199999928474426,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 6494.900000095367,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.19999992847442627,
+            0.20000004768371582,
+            10.399999976158142,
+            0.3999999761581421,
+            0.10000002384185791,
+            10.300000071525574,
+            0.30000007152557373
+          ],
+          "up_ms": [
+            10.399999976158142,
+            10.300000071525574
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.30000007152557373,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.09999990463256836,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 330.7999999523163,
+            "last_dispatch_to_first_content_write_ms": 307.89999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 145.099999666214,
+            "input_callback_js_wall_ms": 21.399999856948853,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 6848.900000095367,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.20000004768371582,
+            11.099999904632568,
+            0.40000009536743164,
+            0.19999992847442627,
+            10.200000047683716,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            11.099999904632568,
+            10.200000047683716
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.40000009536743164
+          ],
+          "next_down_ms": 0.40000009536743164,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 327.1999999284744,
+            "last_dispatch_to_first_content_write_ms": 303.89999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 145.5,
+            "input_callback_js_wall_ms": 22.199999928474426,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 7195.200000047684,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/row-S0.json",
+        "sha256": "a277789f119be32b17be9253070000503cd5bda2a2b0a137fa16e8edf20585d3",
+        "bytes": 71868
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 37.10000002384186,
+        "warm_up_ms": 28.200000047683716,
+        "blank_next_down_ms": 0.7000000476837158,
+        "all_event_duration_ms": [
+          1.2999999523162842,
+          1.3000000715255737,
+          37.10000002384186,
+          28.200000047683716,
+          0.7000000476837158,
+          0.30000007152557373
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 27.200000047683716,
+          "input_callback_js_wall_ms": 67.80000019073486,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 1026.3000000715256,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            1.0,
+            0.2999999523162842,
+            0.19999992847442627,
+            8.899999976158142,
+            0.30000007152557373,
+            0.10000002384185791,
+            5.0,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            8.899999976158142,
+            5.0
+          ],
+          "down_ms": [
+            1.0,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.10000002384185791,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 331.6999999284744,
+            "last_dispatch_to_first_content_write_ms": 314.6999999284744,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 149.69999992847443,
+            "input_callback_js_wall_ms": 15.400000095367432,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1554.7000000476837,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.6000000238418579,
+            0.20000004768371582,
+            0.19999992847442627,
+            6.399999976158142,
+            0.30000007152557373,
+            0.20000004768371582,
+            4.600000023841858,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            6.399999976158142,
+            4.600000023841858
+          ],
+          "down_ms": [
+            0.6000000238418579,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 334.89999997615814,
+            "last_dispatch_to_first_content_write_ms": 321.5,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 149.59999990463257,
+            "input_callback_js_wall_ms": 12.00000011920929,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1921.4000000953674,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.5,
+            0.30000007152557373,
+            0.19999992847442627,
+            5.200000047683716,
+            0.30000007152557373,
+            0.10000002384185791,
+            3.799999952316284,
+            0.40000009536743164
+          ],
+          "up_ms": [
+            5.200000047683716,
+            3.799999952316284
+          ],
+          "down_ms": [
+            0.5,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.40000009536743164,
+          "up_to_next_down_gap_ms": 0.09999990463256836,
+          "second_up_to_wheel_gap_ms": 0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 320.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 308.6999999284744,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 148.9999998807907,
+            "input_callback_js_wall_ms": 9.900000095367432,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2271.600000023842,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/row-S2.json",
+        "sha256": "78f3e83cff090a2b8c73b610f3d823614ef4b72b9daaee8f1f808ea1bec7a968",
+        "bytes": 71982
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 14785.799999952316,
+        "warm_up_ms": 14799.0,
+        "blank_next_down_ms": 0.5,
+        "all_event_duration_ms": [
+          0.8999999761581421,
+          0.2999999523162842,
+          14785.799999952316,
+          14799.0,
+          0.5,
+          0.30000007152557373
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.399999976158142,
+          "input_callback_js_wall_ms": 29586.099999904633,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 43164.800000071526,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.19999992847442627,
+            86.5,
+            0.5,
+            0.20000004768371582,
+            9.300000071525574,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            86.5,
+            9.300000071525574
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.5
+          ],
+          "next_down_ms": 0.5,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 407.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 309.10000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 146.19999969005585,
+            "input_callback_js_wall_ms": 96.59999990463257,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 43804.300000071526,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.20000004768371582,
+            8.699999928474426,
+            0.19999992847442627,
+            0.20000004768371582,
+            6.800000071525574,
+            0.5
+          ],
+          "up_ms": [
+            8.699999928474426,
+            6.800000071525574
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.19999992847442627
+          ],
+          "next_down_ms": 0.19999992847442627,
+          "wheel_ms": 0.5,
+          "up_to_next_down_gap_ms": 0.20000004768371582,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 332.5,
+            "last_dispatch_to_first_content_write_ms": 314.60000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 149.89999973773956,
+            "input_callback_js_wall_ms": 16.09999978542328,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 44151.700000047684,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.2999999523162842,
+            0.20000004768371582,
+            4.400000095367432,
+            0.40000009536743164,
+            0.30000007152557373,
+            4.0,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            4.400000095367432,
+            4.0
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.40000009536743164
+          ],
+          "next_down_ms": 0.40000009536743164,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.09999990463256836,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 332.7999999523163,
+            "last_dispatch_to_first_content_write_ms": 322.0,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 157.19999969005585,
+            "input_callback_js_wall_ms": 9.200000047683716,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 44507.200000047684,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/row-S0.json",
+        "sha256": "543b6e14fcfc5e73b8a968f3fa0f1e07f61c67e55791ef1430db15ae8c89a7d8",
+        "bytes": 71223
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 3.799999952316284,
+        "warm_up_ms": 0.8999999761581421,
+        "blank_next_down_ms": 0.7000000476837158,
+        "all_event_duration_ms": [
+          1.100000023841858,
+          1.2000000476837158,
+          3.799999952316284,
+          0.8999999761581421,
+          0.7000000476837158,
+          0.2999999523162842
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.699999928474426,
+          "input_callback_js_wall_ms": 7.299999952316284,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 863.6000000238419,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            1.0,
+            0.2999999523162842,
+            0.10000002384185791,
+            9.700000047683716,
+            0.2999999523162842,
+            0.20000004768371582,
+            7.900000095367432,
+            0.40000009536743164
+          ],
+          "up_ms": [
+            9.700000047683716,
+            7.900000095367432
+          ],
+          "down_ms": [
+            1.0,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.40000009536743164,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.09999990463256836,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 309.0,
+            "last_dispatch_to_first_content_write_ms": 288.2999999523163,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 136.7000002861023,
+            "input_callback_js_wall_ms": 19.100000023841858,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1373.8999999761581,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.6000000238418579,
+            0.30000007152557373,
+            0.19999992847442627,
+            7.700000047683716,
+            0.30000007152557373,
+            0.09999990463256836,
+            4.600000023841858,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            7.700000047683716,
+            4.600000023841858
+          ],
+          "down_ms": [
+            0.6000000238418579,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.09999990463256836,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 313.3000000715256,
+            "last_dispatch_to_first_content_write_ms": 298.8000000715256,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 134.90000009536743,
+            "input_callback_js_wall_ms": 13.200000047683716,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1717.6000000238419,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.20000004768371582,
+            0.2999999523162842,
+            5.899999976158142,
+            0.2999999523162842,
+            0.20000004768371582,
+            4.199999928474426,
+            0.20000004768371582
+          ],
+          "up_ms": [
+            5.899999976158142,
+            4.199999928474426
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.20000004768371582,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 314.6999999284744,
+            "last_dispatch_to_first_content_write_ms": 302.7999999523163,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 138.69999980926514,
+            "input_callback_js_wall_ms": 10.599999904632568,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2067.8000000715256,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/row-S2.json",
+        "sha256": "57a26288b7ad47e9848eaae2c89d2ff337035248796da0606d8e753410b49ecc",
+        "bytes": 72229
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 85.39999997615814,
+        "warm_up_ms": 7.399999976158142,
+        "blank_next_down_ms": 0.6999999284744263,
+        "all_event_duration_ms": [
+          0.8999999761581421,
+          0.20000004768371582,
+          85.39999997615814,
+          7.399999976158142,
+          0.6999999284744263,
+          0.3999999761581421
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.399999976158142,
+          "input_callback_js_wall_ms": 94.19999980926514,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 13241.300000071526,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.40000009536743164,
+            0.19999992847442627,
+            0.30000007152557373,
+            12.599999904632568,
+            0.30000007152557373,
+            0.19999992847442627,
+            11.5,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            12.599999904632568,
+            11.5
+          ],
+          "down_ms": [
+            0.40000009536743164,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 350.5,
+            "last_dispatch_to_first_content_write_ms": 324.39999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 158.70000004768372,
+            "input_callback_js_wall_ms": 25.0,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 13784.899999976158,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.2999999523162842,
+            6.100000023841858,
+            0.2999999523162842,
+            0.10000002384185791,
+            7.299999952316284,
+            0.5
+          ],
+          "up_ms": [
+            6.100000023841858,
+            7.299999952316284
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.5,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 338.0,
+            "last_dispatch_to_first_content_write_ms": 322.39999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 167.39999961853027,
+            "input_callback_js_wall_ms": 13.899999856948853,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 14154.899999976158,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.2999999523162842,
+            4.899999976158142,
+            0.3999999761581421,
+            0.10000002384185791,
+            3.899999976158142,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            4.899999976158142,
+            3.899999976158142
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 332.3000000715256,
+            "last_dispatch_to_first_content_write_ms": 321.3000000715256,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 152.69999992847443,
+            "input_callback_js_wall_ms": 9.5,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 14516.700000047684,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/row-S0.json",
+        "sha256": "b1f598078d8deebf11c2631376ed733144a0c8a0a51a7c8ea723cf76ad75dc6e",
+        "bytes": 71137
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 35.5,
+        "warm_up_ms": 27.399999976158142,
+        "blank_next_down_ms": 0.5,
+        "all_event_duration_ms": [
+          1.0999999046325684,
+          1.2000000476837158,
+          35.5,
+          27.399999976158142,
+          0.5,
+          0.30000007152557373
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.699999928474426,
+          "input_callback_js_wall_ms": 65.29999995231628,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 930.7999999523163,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            1.0,
+            0.20000004768371582,
+            0.19999992847442627,
+            8.100000023841858,
+            0.2999999523162842,
+            0.09999990463256836,
+            4.899999976158142,
+            0.5
+          ],
+          "up_ms": [
+            8.100000023841858,
+            4.899999976158142
+          ],
+          "down_ms": [
+            1.0,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.5,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 319.5,
+            "last_dispatch_to_first_content_write_ms": 303.40000009536743,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 137.89999973773956,
+            "input_callback_js_wall_ms": 14.199999809265137,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1475.6999999284744,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.7000000476837158,
+            0.19999992847442627,
+            0.20000004768371582,
+            6.100000023841858,
+            0.40000009536743164,
+            0.19999992847442627,
+            4.5,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            6.100000023841858,
+            4.5
+          ],
+          "down_ms": [
+            0.7000000476837158,
+            0.40000009536743164
+          ],
+          "next_down_ms": 0.40000009536743164,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.09999990463256836,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 306.5,
+            "last_dispatch_to_first_content_write_ms": 293.60000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 20,
+            "raf_callback_js_wall_ms": 133.80000030994415,
+            "input_callback_js_wall_ms": 11.799999952316284,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1805.0999999046326,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.30000007152557373,
+            0.19999992847442627,
+            0.20000004768371582,
+            5.699999928474426,
+            0.30000007152557373,
+            0.20000004768371582,
+            4.200000047683716,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            5.699999928474426,
+            4.200000047683716
+          ],
+          "down_ms": [
+            0.30000007152557373,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 313.3000000715256,
+            "last_dispatch_to_first_content_write_ms": 301.60000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 135.19999980926514,
+            "input_callback_js_wall_ms": 10.5,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2146.1999999284744,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/row-S2.json",
+        "sha256": "084a2c725106066299db351024434dc87c2b20b956906ee7a60781e8c41a1380",
+        "bytes": 72356
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 14972.899999976158,
+        "warm_up_ms": 14719.0,
+        "blank_next_down_ms": 0.6000000238418579,
+        "all_event_duration_ms": [
+          1.600000023841858,
+          0.2999999523162842,
+          14972.899999976158,
+          14719.0,
+          0.6000000238418579,
+          0.2999999523162842
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 3,
+          "raf_callback_js_wall_ms": 25.49999988079071,
+          "input_callback_js_wall_ms": 29693.900000095367,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 43124.59999990463,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.2999999523162842,
+            0.10000002384185791,
+            0.19999992847442627,
+            84.0,
+            0.3999999761581421,
+            0.2999999523162842,
+            7.799999952316284,
+            0.5
+          ],
+          "up_ms": [
+            84.0,
+            7.799999952316284
+          ],
+          "down_ms": [
+            0.2999999523162842,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.5,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 390.0,
+            "last_dispatch_to_first_content_write_ms": 295.7000000476837,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 140.60000014305115,
+            "input_callback_js_wall_ms": 92.59999966621399,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 43744.59999990463,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.30000007152557373,
+            0.20000004768371582,
+            0.19999992847442627,
+            4.300000071525574,
+            0.20000004768371582,
+            0.19999992847442627,
+            4.100000023841858,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            4.300000071525574,
+            4.100000023841858
+          ],
+          "down_ms": [
+            0.30000007152557373,
+            0.20000004768371582
+          ],
+          "next_down_ms": 0.20000004768371582,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.09999990463256836,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 323.3000000715256,
+            "last_dispatch_to_first_content_write_ms": 312.8000000715256,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 141.10000002384186,
+            "input_callback_js_wall_ms": 8.600000143051147,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 44112.299999952316,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.20000004768371582,
+            8.0,
+            0.2999999523162842,
+            0.30000007152557373,
+            8.0,
+            0.2999999523162842
+          ],
+          "up_ms": [
+            8.0,
+            8.0
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.2999999523162842,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 332.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 314.10000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 22,
+            "raf_callback_js_wall_ms": 143.09999990463257,
+            "input_callback_js_wall_ms": 16.699999928474426,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 44461.299999952316,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/row-S0.json",
+        "sha256": "f293bf9d4c39b69535cc217a25badda0574c772de1bad02146e39e90eaa859f8",
+        "bytes": 71736
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": 3.899999976158142,
+        "warm_up_ms": 0.7999999523162842,
+        "blank_next_down_ms": 0.7999999523162842,
+        "all_event_duration_ms": [
+          1.2000000476837158,
+          1.5,
+          3.899999976158142,
+          0.7999999523162842,
+          0.7999999523162842,
+          0.3999999761581421
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.899999856948853,
+          "input_callback_js_wall_ms": 7.799999833106995,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 889.3999999761581,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.8999999761581421,
+            0.2999999523162842,
+            0.20000004768371582,
+            9.899999976158142,
+            0.30000007152557373,
+            0.09999990463256836,
+            7.600000023841858,
+            0.6000000238418579
+          ],
+          "up_ms": [
+            9.899999976158142,
+            7.600000023841858
+          ],
+          "down_ms": [
+            0.8999999761581421,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.6000000238418579,
+          "up_to_next_down_gap_ms": 0.19999992847442627,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 323.10000002384186,
+            "last_dispatch_to_first_content_write_ms": 302.39999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 144.69999969005585,
+            "input_callback_js_wall_ms": 18.699999809265137,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1415.5,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.6999999284744263,
+            0.10000002384185791,
+            0.09999990463256836,
+            6.5,
+            0.3999999761581421,
+            0.10000002384185791,
+            4.699999928474426,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            6.5,
+            4.699999928474426
+          ],
+          "down_ms": [
+            0.6999999284744263,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 333.6999999284744,
+            "last_dispatch_to_first_content_write_ms": 320.0,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 147.20000004768372,
+            "input_callback_js_wall_ms": 11.99999988079071,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 1782.1000000238419,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.2999999523162842,
+            0.30000007152557373,
+            4.899999976158142,
+            0.2999999523162842,
+            0.20000004768371582,
+            3.5999999046325684,
+            0.30000007152557373
+          ],
+          "up_ms": [
+            4.899999976158142,
+            3.5999999046325684
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.2999999523162842
+          ],
+          "next_down_ms": 0.2999999523162842,
+          "wheel_ms": 0.30000007152557373,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 349.39999997615814,
+            "last_dispatch_to_first_content_write_ms": 338.89999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 23,
+            "raf_callback_js_wall_ms": 172.099999666214,
+            "input_callback_js_wall_ms": 9.399999856948853,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 2146.899999976158,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/row-S2.json",
+        "sha256": "07efc219ba6e8aad9eda1e32b9f296429e0080f3c907229afeeaf6c755a293b1",
+        "bytes": 72201
+      },
+      "width_css": 1431,
+      "height_css": 1010,
+      "dpr": 2,
+      "copies": 16,
+      "knots_per_copy": 7199,
+      "history_fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": 85.09999990463257,
+        "warm_up_ms": 7.300000071525574,
+        "blank_next_down_ms": 0.7000000476837158,
+        "all_event_duration_ms": [
+          1.5,
+          0.20000004768371582,
+          85.09999990463257,
+          7.300000071525574,
+          0.7000000476837158,
+          0.30000007152557373
+        ],
+        "observation": {
+          "content_feedback": "MISSING",
+          "content_writes": 0,
+          "input_to_first_content_write_ms": null,
+          "last_dispatch_to_first_content_write_ms": null,
+          "content_write_gaps_ms": [],
+          "raf_callbacks": 2,
+          "raf_callback_js_wall_ms": 26.5,
+          "input_callback_js_wall_ms": 94.30000007152557,
+          "native_cpu_phase_data": "MISSING",
+          "observation_ended": 13463.700000047684,
+          "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "all_event_duration_ms": [
+            0.3999999761581421,
+            0.20000004768371582,
+            0.20000004768371582,
+            13.299999952316284,
+            0.3999999761581421,
+            0.19999992847442627,
+            8.0,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            13.299999952316284,
+            8.0
+          ],
+          "down_ms": [
+            0.3999999761581421,
+            0.3999999761581421
+          ],
+          "next_down_ms": 0.3999999761581421,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.20000004768371582,
+          "second_up_to_wheel_gap_ms": 0.10000002384185791,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 335.0,
+            "last_dispatch_to_first_content_write_ms": 311.10000002384186,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 152.29999995231628,
+            "input_callback_js_wall_ms": 21.99999988079071,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 13997.5,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 1,
+          "all_event_duration_ms": [
+            0.5,
+            0.19999992847442627,
+            0.20000004768371582,
+            4.699999928474426,
+            0.30000007152557373,
+            0.19999992847442627,
+            4.600000023841858,
+            0.5
+          ],
+          "up_ms": [
+            4.699999928474426,
+            4.600000023841858
+          ],
+          "down_ms": [
+            0.5,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.5,
+          "up_to_next_down_gap_ms": 0.0,
+          "second_up_to_wheel_gap_ms": 0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 332.7999999523163,
+            "last_dispatch_to_first_content_write_ms": 321.39999997615814,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 21,
+            "raf_callback_js_wall_ms": 146.90000021457672,
+            "input_callback_js_wall_ms": 10.0,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 14364.200000047684,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        },
+        {
+          "repeat": 2,
+          "all_event_duration_ms": [
+            0.30000007152557373,
+            0.10000002384185791,
+            0.20000004768371582,
+            6.5,
+            0.30000007152557373,
+            0.10000002384185791,
+            7.5,
+            0.3999999761581421
+          ],
+          "up_ms": [
+            6.5,
+            7.5
+          ],
+          "down_ms": [
+            0.30000007152557373,
+            0.30000007152557373
+          ],
+          "next_down_ms": 0.30000007152557373,
+          "wheel_ms": 0.3999999761581421,
+          "up_to_next_down_gap_ms": 0.10000002384185791,
+          "second_up_to_wheel_gap_ms": 0.0,
+          "observation": {
+            "content_feedback": "OBSERVED_CONTENT_WRITE",
+            "content_writes": 1,
+            "input_to_first_content_write_ms": 339.90000009536743,
+            "last_dispatch_to_first_content_write_ms": 323.7000000476837,
+            "content_write_gaps_ms": [],
+            "raf_callbacks": 23,
+            "raf_callback_js_wall_ms": 156.89999985694885,
+            "input_callback_js_wall_ms": 14.400000214576721,
+            "native_cpu_phase_data": "MISSING",
+            "observation_ended": 14730.799999952316,
+            "limitations": "GL content write is not GPU completion. RAF JS wall time is not native CPU attribution or presentation latency. A single content write cannot establish a submission-gap distribution."
+          }
+        }
+      ]
+    }
+  ],
+  "paired": [
+    {
+      "pair": 0,
+      "fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 36.09999990463257,
+          "candidate": 3.6999999284744263,
+          "old_over_candidate": 9.756756919591947
+        },
+        "warm_up_ms": {
+          "old": 27.399999976158142,
+          "candidate": 0.8000000715255737,
+          "old_over_candidate": 34.24999690800933
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            7.599999904632568,
+            5.600000023841858
+          ],
+          "candidate_up_ms": [
+            9.200000047683716,
+            5.600000023841858
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.2999999523162842,
+          "next_down_change_percent": -3.973642037635727e-05,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.3999999761581421
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            5.700000047683716,
+            4.300000071525574
+          ],
+          "candidate_up_ms": [
+            7,
+            4.899999976158142
+          ],
+          "old_next_down_ms": 0.19999992847442627,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": 50.00008940699914,
+          "old_wheel_ms": 0.2999999523162842,
+          "candidate_wheel_ms": 0.20000004768371582
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            5.399999976158142,
+            4.799999952316284
+          ],
+          "candidate_up_ms": [
+            5.5,
+            4.100000023841858
+          ],
+          "old_next_down_ms": 0.2999999523162842,
+          "candidate_next_down_ms": 0.20000004768371582,
+          "next_down_change_percent": -33.33330684237589,
+          "old_wheel_ms": 0.30000007152557373,
+          "candidate_wheel_ms": 0.3999999761581421
+        }
+      ]
+    },
+    {
+      "pair": 0,
+      "fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 14695.800000071526,
+          "candidate": 82.5,
+          "old_over_candidate": 178.13090909177606
+        },
+        "warm_up_ms": {
+          "old": 14698.099999904633,
+          "candidate": 7.300000071525574,
+          "old_over_candidate": 2013.4383364236028
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            82.59999990463257,
+            13.799999952316284
+          ],
+          "candidate_up_ms": [
+            14.100000023841858,
+            13.299999952316284
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.3999999761581421,
+          "next_down_change_percent": 33.33329359691295,
+          "old_wheel_ms": 0.30000007152557373,
+          "candidate_wheel_ms": 0.3999999761581421
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            10.299999952316284,
+            9.5
+          ],
+          "candidate_up_ms": [
+            10.399999976158142,
+            10.300000071525574
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.3999999761581421,
+          "next_down_change_percent": 33.33329359691295,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.30000007152557373
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            9.799999952316284,
+            9.599999904632568
+          ],
+          "candidate_up_ms": [
+            11.099999904632568,
+            10.200000047683716
+          ],
+          "old_next_down_ms": 0.2999999523162842,
+          "candidate_next_down_ms": 0.40000009536743164,
+          "next_down_change_percent": 33.33338631524823,
+          "old_wheel_ms": 0.30000007152557373,
+          "candidate_wheel_ms": 0.2999999523162842
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 37.10000002384186,
+          "candidate": 3.799999952316284,
+          "old_over_candidate": 9.763158023522502
+        },
+        "warm_up_ms": {
+          "old": 28.200000047683716,
+          "candidate": 0.8999999761581421,
+          "old_over_candidate": 31.33333421636513
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            8.899999976158142,
+            5.0
+          ],
+          "candidate_up_ms": [
+            9.700000047683716,
+            7.900000095367432
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.2999999523162842,
+          "next_down_change_percent": -3.973642037635727e-05,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.40000009536743164
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            6.399999976158142,
+            4.600000023841858
+          ],
+          "candidate_up_ms": [
+            7.700000047683716,
+            4.600000023841858
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": 0.0,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.2999999523162842
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            5.200000047683716,
+            3.799999952316284
+          ],
+          "candidate_up_ms": [
+            5.899999976158142,
+            4.199999928474426
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.2999999523162842,
+          "next_down_change_percent": -3.973642037635727e-05,
+          "old_wheel_ms": 0.40000009536743164,
+          "candidate_wheel_ms": 0.20000004768371582
+        }
+      ]
+    },
+    {
+      "pair": 1,
+      "fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 14785.799999952316,
+          "candidate": 85.39999997615814,
+          "old_over_candidate": 173.1358314295105
+        },
+        "warm_up_ms": {
+          "old": 14799.0,
+          "candidate": 7.399999976158142,
+          "old_over_candidate": 1999.8648713081748
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            86.5,
+            9.300000071525574
+          ],
+          "candidate_up_ms": [
+            12.599999904632568,
+            11.5
+          ],
+          "old_next_down_ms": 0.5,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": -39.999985694885254,
+          "old_wheel_ms": 0.2999999523162842,
+          "candidate_wheel_ms": 0.3999999761581421
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            8.699999928474426,
+            6.800000071525574
+          ],
+          "candidate_up_ms": [
+            6.100000023841858,
+            7.299999952316284
+          ],
+          "old_next_down_ms": 0.19999992847442627,
+          "candidate_next_down_ms": 0.2999999523162842,
+          "next_down_change_percent": 50.000029802333046,
+          "old_wheel_ms": 0.5,
+          "candidate_wheel_ms": 0.5
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            4.400000095367432,
+            4.0
+          ],
+          "candidate_up_ms": [
+            4.899999976158142,
+            3.899999976158142
+          ],
+          "old_next_down_ms": 0.40000009536743164,
+          "candidate_next_down_ms": 0.3999999761581421,
+          "next_down_change_percent": -2.9802315282267955e-05,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.2999999523162842
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "fixture": "S0",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 35.5,
+          "candidate": 3.899999976158142,
+          "old_over_candidate": 9.10256415821078
+        },
+        "warm_up_ms": {
+          "old": 27.399999976158142,
+          "candidate": 0.7999999523162842,
+          "old_over_candidate": 34.25000201165688
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            8.100000023841858,
+            4.899999976158142
+          ],
+          "candidate_up_ms": [
+            9.899999976158142,
+            7.600000023841858
+          ],
+          "old_next_down_ms": 0.2999999523162842,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": 3.973643616372868e-05,
+          "old_wheel_ms": 0.5,
+          "candidate_wheel_ms": 0.6000000238418579
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            6.100000023841858,
+            4.5
+          ],
+          "candidate_up_ms": [
+            6.5,
+            4.699999928474426
+          ],
+          "old_next_down_ms": 0.40000009536743164,
+          "candidate_next_down_ms": 0.3999999761581421,
+          "next_down_change_percent": -2.9802315282267955e-05,
+          "old_wheel_ms": 0.2999999523162842,
+          "candidate_wheel_ms": 0.3999999761581421
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            5.699999928474426,
+            4.200000047683716
+          ],
+          "candidate_up_ms": [
+            4.899999976158142,
+            3.5999999046325684
+          ],
+          "old_next_down_ms": 0.30000007152557373,
+          "candidate_next_down_ms": 0.2999999523162842,
+          "next_down_change_percent": -3.973642037635727e-05,
+          "old_wheel_ms": 0.2999999523162842,
+          "candidate_wheel_ms": 0.30000007152557373
+        }
+      ]
+    },
+    {
+      "pair": 2,
+      "fixture": "S2",
+      "selection": {
+        "cold_large_move_ms": {
+          "old": 14972.899999976158,
+          "candidate": 85.09999990463257,
+          "old_over_candidate": 175.94477105470693
+        },
+        "warm_up_ms": {
+          "old": 14719.0,
+          "candidate": 7.300000071525574,
+          "old_over_candidate": 2016.301350107245
+        }
+      },
+      "erase": [
+        {
+          "repeat": 0,
+          "old_up_ms": [
+            84.0,
+            7.799999952316284
+          ],
+          "candidate_up_ms": [
+            13.299999952316284,
+            8.0
+          ],
+          "old_next_down_ms": 0.3999999761581421,
+          "candidate_next_down_ms": 0.3999999761581421,
+          "next_down_change_percent": 0.0,
+          "old_wheel_ms": 0.5,
+          "candidate_wheel_ms": 0.3999999761581421
+        },
+        {
+          "repeat": 1,
+          "old_up_ms": [
+            4.300000071525574,
+            4.100000023841858
+          ],
+          "candidate_up_ms": [
+            4.699999928474426,
+            4.600000023841858
+          ],
+          "old_next_down_ms": 0.20000004768371582,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": 50.0,
+          "old_wheel_ms": 0.3999999761581421,
+          "candidate_wheel_ms": 0.5
+        },
+        {
+          "repeat": 2,
+          "old_up_ms": [
+            8.0,
+            8.0
+          ],
+          "candidate_up_ms": [
+            6.5,
+            7.5
+          ],
+          "old_next_down_ms": 0.2999999523162842,
+          "candidate_next_down_ms": 0.30000007152557373,
+          "next_down_change_percent": 3.973643616372868e-05,
+          "old_wheel_ms": 0.2999999523162842,
+          "candidate_wheel_ms": 0.3999999761581421
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "S0": {
+      "old": {
+        "cold_large_move_ms": [
+          36.09999990463257,
+          37.10000002384186,
+          35.5
+        ],
+        "warm_selection_up_ms": [
+          27.399999976158142,
+          28.200000047683716,
+          27.399999976158142
+        ],
+        "erase_up_ms_all": [
+          7.599999904632568,
+          5.600000023841858,
+          5.700000047683716,
+          4.300000071525574,
+          5.399999976158142,
+          4.799999952316284,
+          8.899999976158142,
+          5.0,
+          6.399999976158142,
+          4.600000023841858,
+          5.200000047683716,
+          3.799999952316284,
+          8.100000023841858,
+          4.899999976158142,
+          6.100000023841858,
+          4.5,
+          5.699999928474426,
+          4.200000047683716
+        ],
+        "next_down_ms_all": [
+          0.30000007152557373,
+          0.19999992847442627,
+          0.2999999523162842,
+          0.30000007152557373,
+          0.30000007152557373,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.40000009536743164,
+          0.30000007152557373
+        ],
+        "wheel_ms_all": [
+          0.3999999761581421,
+          0.2999999523162842,
+          0.30000007152557373,
+          0.3999999761581421,
+          0.3999999761581421,
+          0.40000009536743164,
+          0.5,
+          0.2999999523162842,
+          0.2999999523162842
+        ],
+        "erase_input_to_first_content_ms_all": [
+          310.6999999284744,
+          318.39999997615814,
+          371.1999999284744,
+          331.6999999284744,
+          334.89999997615814,
+          320.10000002384186,
+          319.5,
+          306.5,
+          313.3000000715256
+        ],
+        "cold_large_move_ms_median": 36.09999990463257,
+        "warm_selection_up_ms_median": 27.399999976158142,
+        "erase_up_ms_all_median": 5.300000011920929,
+        "next_down_ms_all_median": 0.30000007152557373,
+        "wheel_ms_all_median": 0.3999999761581421,
+        "erase_input_to_first_content_ms_all_median": 319.5
+      },
+      "candidate": {
+        "cold_large_move_ms": [
+          3.6999999284744263,
+          3.799999952316284,
+          3.899999976158142
+        ],
+        "warm_selection_up_ms": [
+          0.8000000715255737,
+          0.8999999761581421,
+          0.7999999523162842
+        ],
+        "erase_up_ms_all": [
+          9.200000047683716,
+          5.600000023841858,
+          7,
+          4.899999976158142,
+          5.5,
+          4.100000023841858,
+          9.700000047683716,
+          7.900000095367432,
+          7.700000047683716,
+          4.600000023841858,
+          5.899999976158142,
+          4.199999928474426,
+          9.899999976158142,
+          7.600000023841858,
+          6.5,
+          4.699999928474426,
+          4.899999976158142,
+          3.5999999046325684
+        ],
+        "next_down_ms_all": [
+          0.2999999523162842,
+          0.30000007152557373,
+          0.20000004768371582,
+          0.2999999523162842,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.30000007152557373,
+          0.3999999761581421,
+          0.2999999523162842
+        ],
+        "wheel_ms_all": [
+          0.3999999761581421,
+          0.20000004768371582,
+          0.3999999761581421,
+          0.40000009536743164,
+          0.2999999523162842,
+          0.20000004768371582,
+          0.6000000238418579,
+          0.3999999761581421,
+          0.30000007152557373
+        ],
+        "erase_input_to_first_content_ms_all": [
+          316.10000002384186,
+          325.2999999523163,
+          317.89999997615814,
+          309.0,
+          313.3000000715256,
+          314.6999999284744,
+          323.10000002384186,
+          333.6999999284744,
+          349.39999997615814
+        ],
+        "cold_large_move_ms_median": 3.799999952316284,
+        "warm_selection_up_ms_median": 0.8000000715255737,
+        "erase_up_ms_all_median": 5.75,
+        "next_down_ms_all_median": 0.2999999523162842,
+        "wheel_ms_all_median": 0.3999999761581421,
+        "erase_input_to_first_content_ms_all_median": 317.89999997615814
+      }
+    },
+    "S2": {
+      "old": {
+        "cold_large_move_ms": [
+          14695.800000071526,
+          14785.799999952316,
+          14972.899999976158
+        ],
+        "warm_selection_up_ms": [
+          14698.099999904633,
+          14799.0,
+          14719.0
+        ],
+        "erase_up_ms_all": [
+          82.59999990463257,
+          13.799999952316284,
+          10.299999952316284,
+          9.5,
+          9.799999952316284,
+          9.599999904632568,
+          86.5,
+          9.300000071525574,
+          8.699999928474426,
+          6.800000071525574,
+          4.400000095367432,
+          4.0,
+          84.0,
+          7.799999952316284,
+          4.300000071525574,
+          4.100000023841858,
+          8.0,
+          8.0
+        ],
+        "next_down_ms_all": [
+          0.30000007152557373,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.5,
+          0.19999992847442627,
+          0.40000009536743164,
+          0.3999999761581421,
+          0.20000004768371582,
+          0.2999999523162842
+        ],
+        "wheel_ms_all": [
+          0.30000007152557373,
+          0.3999999761581421,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.5,
+          0.3999999761581421,
+          0.5,
+          0.3999999761581421,
+          0.2999999523162842
+        ],
+        "erase_input_to_first_content_ms_all": [
+          401.10000002384186,
+          320.89999997615814,
+          323.2999999523163,
+          407.10000002384186,
+          332.5,
+          332.7999999523163,
+          390.0,
+          323.3000000715256,
+          332.10000002384186
+        ],
+        "cold_large_move_ms_median": 14785.799999952316,
+        "warm_selection_up_ms_median": 14719.0,
+        "erase_up_ms_all_median": 9.0,
+        "next_down_ms_all_median": 0.30000007152557373,
+        "wheel_ms_all_median": 0.3999999761581421,
+        "erase_input_to_first_content_ms_all_median": 332.5
+      },
+      "candidate": {
+        "cold_large_move_ms": [
+          82.5,
+          85.39999997615814,
+          85.09999990463257
+        ],
+        "warm_selection_up_ms": [
+          7.300000071525574,
+          7.399999976158142,
+          7.300000071525574
+        ],
+        "erase_up_ms_all": [
+          14.100000023841858,
+          13.299999952316284,
+          10.399999976158142,
+          10.300000071525574,
+          11.099999904632568,
+          10.200000047683716,
+          12.599999904632568,
+          11.5,
+          6.100000023841858,
+          7.299999952316284,
+          4.899999976158142,
+          3.899999976158142,
+          13.299999952316284,
+          8.0,
+          4.699999928474426,
+          4.600000023841858,
+          6.5,
+          7.5
+        ],
+        "next_down_ms_all": [
+          0.3999999761581421,
+          0.3999999761581421,
+          0.40000009536743164,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.3999999761581421,
+          0.3999999761581421,
+          0.30000007152557373,
+          0.30000007152557373
+        ],
+        "wheel_ms_all": [
+          0.3999999761581421,
+          0.30000007152557373,
+          0.2999999523162842,
+          0.3999999761581421,
+          0.5,
+          0.2999999523162842,
+          0.3999999761581421,
+          0.5,
+          0.3999999761581421
+        ],
+        "erase_input_to_first_content_ms_all": [
+          341.7000000476837,
+          330.7999999523163,
+          327.1999999284744,
+          350.5,
+          338.0,
+          332.3000000715256,
+          335.0,
+          332.7999999523163,
+          339.90000009536743
+        ],
+        "cold_large_move_ms_median": 85.09999990463257,
+        "warm_selection_up_ms_median": 7.300000071525574,
+        "erase_up_ms_all_median": 9.100000023841858,
+        "next_down_ms_all_median": 0.3999999761581421,
+        "wheel_ms_all_median": 0.3999999761581421,
+        "erase_input_to_first_content_ms_all_median": 335.0
+      }
+    }
+  },
+  "normal_web_only": true,
+  "native_cpu_phase_attribution": "MISSING in ordinary SDK observations; separate instrumented native raw remains bound.",
+  "content_feedback_missing_selection_rows": 12,
+  "timed_phases_exclude_snapshot_readback_oracle": true,
+  "discarded_samples": [],
+  "sleep_added_to_immediate_reentry": false
+}

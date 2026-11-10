@@ -1,0 +1,47 @@
+{
+  "status": "MILESTONE_A_READY",
+  "nativeparity": "selection-parity.json",
+  "pairedcost": "paired-native-costs-A.json",
+  "publicfunctional": "input-lifecycle-A.json",
+  "publicguard": {
+    "id": "U2D1-A-F",
+    "status": "COMPLETED",
+    "reserved_seconds": 240,
+    "rss_mib": 3072,
+    "guard": {
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur2d_selection_up.mjs",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/A-F-request.json",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-A-F"
+      ],
+      "reason": "completed",
+      "returncode": 0,
+      "elapsed_s": 5.974624166963622,
+      "peak_process_family_rss_kib": 1754736,
+      "rss_limit_kib": 3145728,
+      "timeout_s": 240,
+      "last_stage": {
+        "stage": "closed",
+        "status": "OBSERVED"
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    "worker_status": "OBSERVED",
+    "source_stable": true,
+    "charged_seconds": 6
+  },
+  "sources": {
+    "runtime/render/src/selection_region_geometry.cpp": "7c565aa033fb27cd249cc17bba7978967ad2c5098348e1525f0e443c2b6cb8c1",
+    "runtime/render/src/selection_region_geometry_internal.hpp": "9c6f2b8ee18c7f54059cd371d3ab4e554fde0fff1f2d23b78b3e001e8f801245",
+    "runtime/render/src/skia_renderer.cpp": "3ec395173d0a2d5275cdc53308b0442115074b71a4880f132788970e0e4932f3",
+    "runtime/render/include/canvas/render/skia_renderer.hpp": "83074d1a3c782531d05a47dfc353160f12b316258fe5565f2d18009cdac00016",
+    "runtime/interaction/src/canvas_region_selection.cpp": "3dd17fe32d271c85276791b20c9c0e82c0207a9ff967844817a79bfc8d35a182",
+    "runtime/render/tests/ur2d_selection_up_test.cpp": "62defe7a5b31f7b75bad553bf34676996cd5b5cf8173b56fd9f1392b957650ec",
+    "runtime/render/CMakeLists.txt": "8276a421dcc7fd1691521ea11ed0bff6d43d41103a285e90a3dd7d1e7d20b3e5"
+  },
+  "sourcepublicsurface": "unchangedpublicSDK;onlyprivaterenderseam",
+  "next": "continueB actualeraserFinishphasebaselineandmeasuredrepeatelimination",
+  "notfinalUR2d": true
+}

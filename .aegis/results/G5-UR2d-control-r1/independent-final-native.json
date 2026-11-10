@@ -1,0 +1,18 @@
+{
+  "command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native",
+    "-R",
+    "^(G5UR2DSelectionLocality|G5UR2DUpRuntime|FC01ASelectionInputIntegration|SDKPublicSelectionInput|G5UR2BExactLocality|G5UR2BExactInvalidation|G5UR2BExactPressure|G5UR2BExactInputRuntime|G5UR2CHistoryExactParity|G5UR2CLeaseAccounting|G5UR2CMaskOnlyScene|G5UR2CAtomicRecovery|G5UR2AHistory|G5UR2ALifecycle)$",
+    "--output-on-failure",
+    "--parallel",
+    "2",
+    "--timeout",
+    "60",
+    "--output-junit",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/independent-final-native.xml"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 0.98167675
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-erase-undo-readiness-supplement-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 explicitusersteeringaugmentssameongoingA+B",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "completed_through": [
+      "parentpreflight/frozenoldoracles",
+      "G5EC1-BASELINE completed54s",
+      "baselinephaseattribution/memoRED"
+    ],
+    "next_action": "ContinueAandprepareactualUndoUIlonggestureobserverbeforeunusedDIAGNOSTIC;thenB/finalclosure"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-erase-undo-readiness-supplement-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "01c281f6a9858e52eaadd37067c003578f69e690a746bb333af952f508462095"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "fe84eb904961ca7bd973b7fe42f938e70255cf7a126baee6076339977c129019"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "357836adf93cfe124371b1a846c59c3f1d891361f4a1db235602fc06fcdbfd25"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "c4c2c2838f0c8f20a5db1eada11e4ce6345d73004e2c431e98ca53160aa90b2c"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "403eafa2e443c411316478176f4fc705164edf1f95fd9fe35acf3d5b657c2d0d"
+  },
+  "parent_package": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/package.json",
+    "sha256": "c7683d087fc3d8bb30629b90967257ea97ad748346c059b5f2e9627a0feb220b"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

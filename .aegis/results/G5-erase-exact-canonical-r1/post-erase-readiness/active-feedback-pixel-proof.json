@@ -1,0 +1,272 @@
+{
+  "status": "PARTIAL_NOT_FULLY_VERIFIED",
+  "qualified": [
+    {
+      "variant": "old",
+      "kind": "erase",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/old-erase.json",
+        "sha256": "2003a4f7c14bc77b4f3bc3bea5af33f6bbe2537e27177d068b679e07d4d6fe21",
+        "bytes": 877108
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 6287.600000023842,
+        "category": "over5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 51,
+        "after_revision": 53
+      },
+      "pose_correct": true,
+      "positive_pixels": 256,
+      "canonical_generation": "33",
+      "presented_generation": "33",
+      "active_contacts": 0
+    },
+    {
+      "variant": "old",
+      "kind": "pan",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/old-pan.json",
+        "sha256": "93fad21b5eca0ce26e72e3f7f3211edbbbc4d2cb3c0020137375f9d3d4ceaf89",
+        "bytes": 6649806
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 4292.600000023842,
+        "category": "3to5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "pose_correct": true,
+      "positive_pixels": 16,
+      "canonical_generation": "32",
+      "presented_generation": "32",
+      "active_contacts": 0
+    },
+    {
+      "variant": "old",
+      "kind": "rectangle",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/old-rectangle.json",
+        "sha256": "639dfbcca55bb54a18bbfbfac054623e61ea918c9919b7451a4dea9f8d0fe59f",
+        "bytes": 3486785
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 5375.200000047684,
+        "category": "over5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 45,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 52,
+        "after_revision": 54
+      },
+      "pose_correct": true,
+      "positive_pixels": 256,
+      "canonical_generation": "34",
+      "presented_generation": "34",
+      "active_contacts": 0
+    },
+    {
+      "variant": "candidate",
+      "kind": "ready",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/candidate-ready.json",
+        "sha256": "2192d711281d6462d503a0db8eed9b720b5d8771dbf2466f097ab19340a52d5a",
+        "bytes": 811920
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 4882.700000047684,
+        "category": "3to5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "pose_correct": null,
+      "positive_pixels": null,
+      "canonical_generation": "32",
+      "presented_generation": "32",
+      "active_contacts": 0
+    },
+    {
+      "variant": "candidate",
+      "kind": "erase",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/candidate-erase.json",
+        "sha256": "fbe5bf2733e1c468a120f6e8a0018c267a88cc368861125a428f196ab198c5ed",
+        "bytes": 879208
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 6117.300000071526,
+        "category": "over5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 51,
+        "after_revision": 53
+      },
+      "pose_correct": true,
+      "positive_pixels": 256,
+      "canonical_generation": "33",
+      "presented_generation": "33",
+      "active_contacts": 0
+    },
+    {
+      "variant": "candidate",
+      "kind": "pan",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/candidate-pan.json",
+        "sha256": "c54b09febac20b6770c9411b75c1adcfd4e3634a79506d8b4aea87d85e67e862",
+        "bytes": 6651915
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 4256.799999952316,
+        "category": "3to5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "pose_correct": true,
+      "positive_pixels": 16,
+      "canonical_generation": "32",
+      "presented_generation": "32",
+      "active_contacts": 0
+    },
+    {
+      "variant": "candidate",
+      "kind": "zoom",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-CONTINUE-R1/candidate-zoom.json",
+        "sha256": "d64754665231dbee8ef31cba7495bbb3ed28cd864c2bb35a108c941cacff508b",
+        "bytes": 6656188
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 5112,
+        "category": "over5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "pose_correct": true,
+      "positive_pixels": 16,
+      "canonical_generation": "32",
+      "presented_generation": "32",
+      "active_contacts": 0
+    },
+    {
+      "variant": "candidate",
+      "kind": "rectangle",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-CONTINUE-R1/candidate-rectangle.json",
+        "sha256": "db76065c04ffe1d70286b8a1009894f1b0108cff8a46ed765a6a6704e0f24206",
+        "bytes": 3488806
+      },
+      "feedback": {
+        "status": "QUALIFIED"
+      },
+      "timing": {
+        "ms": 5255.700000047684,
+        "category": "over5s",
+        "goal_ms": 3000,
+        "reference_ms": 5000
+      },
+      "snapshot_roundtrip": {
+        "objects": 45,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 52,
+        "after_revision": 54
+      },
+      "pose_correct": true,
+      "positive_pixels": 224,
+      "canonical_generation": "34",
+      "presented_generation": "34",
+      "active_contacts": 0
+    }
+  ],
+  "oldCPU_prefix": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/successor-prefix-independent-proof.json",
+    "sha256": "b790fb59820001b49736731b51e31df64bb0caf6d92b6f86272d3302e136d3ae",
+    "bytes": 896
+  },
+  "analytic_nonink": "Preseedblue rectangle expectedcamera position; rectangle newfootprint outsideold actualblue +translation80/30. FullcanonicalUndoRedo equality.",
+  "missing": [
+    "Stickytyped200x200/yellowactiveROI:invalidtest",
+    "Table/image:notexecuted"
+  ],
+  "no_claim": "Finalpixels/transform cannotbackfillmissingactivefeedback; genericFBOwrite notproof."
+}

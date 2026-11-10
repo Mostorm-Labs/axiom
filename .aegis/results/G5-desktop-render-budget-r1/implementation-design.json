@@ -1,0 +1,18 @@
+{
+  "owner": "SkiaRenderer -> SkiaRenderCache / existing ResourceBudgetManager / GpuResourceRetirement",
+  "flow": "compile-time profile -> configured RenderCacheOptions -> existing cache/resource owners -> existing provider, operation/receipt unchanged",
+  "public_API_impact": "none",
+  "policy": "desktop 256/512/64; conservative/mobile 32/96/8. Optional and shared CMake overrides preserved; default entry clamps to effective cache; explicitly incoherent limits reject. RenderCacheOptions value default remains explicit conservative profile.",
+  "area_RED": {
+    "path": ".aegis/results/G5-viewport-area-review-r1/probe-result.json",
+    "sha256": "3c4d8eef474b28466defb374aadac808d26077e40115fa00a4a06cb20287416b"
+  },
+  "tests": [
+    "CMake positive/invalid/legacy overrides RED/GREEN",
+    "actual ordinary renderer configured budgets",
+    "native existing dense mixed fullscreen DPR2 reuse/pixels and lease release",
+    "one bounded public paired area window"
+  ],
+  "unresolved_semantic_decisions": [],
+  "scope_conflict": false
+}

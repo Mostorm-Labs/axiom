@@ -1,0 +1,26 @@
+{
+  "status": "CANONICAL_HISTORY_SCENE_KEEPERS_AND_PUBLIC_RECEIPTS_QUALIFIED",
+  "native_actual_up": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/B-final-paired-native.json",
+    "sha256": "3b772b8888536dda71ebcf2bcae12b8b1d3fd25fd6f6bbae3e752ef4ced80b06",
+    "bytes": 11014
+  },
+  "native_candidate_cases": 12,
+  "full_snapshot_roundtrips": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-review.json",
+    "sha256": "c848dec2237fcafabe7dad9a8ac7ddb3dc39889650180715ea0480a9636fd8be",
+    "bytes": 3005
+  },
+  "public_receipts": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/web-functional.json",
+    "sha256": "d52d1c1c91324af50740087ac41a7e1126c06fb7e802344c1364e77f7657e2d9",
+    "bytes": 45803
+  },
+  "atomicity_and_recovery": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/failure-recovery.json",
+    "sha256": "7ae306c5641fbf4292634c53cd33f6b7a9b143e425c4933b6a7f6c4ec062b1e8",
+    "bytes": 2883
+  },
+  "ordering": "prepareRecord -> publication reservation -> OperationEngine -> commitPrepared/observer -> Scene unchanged",
+  "per_copy_payload": "Canonical masks are still constructed per copy. Only complete equivalent exact decisions are shared."
+}

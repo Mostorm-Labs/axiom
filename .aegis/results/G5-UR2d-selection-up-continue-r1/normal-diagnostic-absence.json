@@ -1,0 +1,22 @@
+{
+  "status": "VERIFIED",
+  "normal_up_timer_symbols_absent": [
+    "ur2dUpWork",
+    "UpTimer"
+  ],
+  "compile_commands": [
+    {
+      "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/A/build-web-normal",
+      "command": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/em++ -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror @runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o.modmap -o runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "output": "runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o"
+    },
+    {
+      "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/A/build-web-normal",
+      "command": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/em++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_SHARED_MIB=96 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/A/build-web-normal/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -Wno-missing-designated-field-initializers @runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o.modmap -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/selection_region_geometry.cpp",
+      "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/selection_region_geometry.cpp",
+      "output": "runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o"
+    }
+  ],
+  "no_consumer_export_change": true
+}

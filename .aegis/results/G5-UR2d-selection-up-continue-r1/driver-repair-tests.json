@@ -1,0 +1,35 @@
+{
+  "status": "HARNESS_READY",
+  "tests": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "verification/tests/g5_ur2d_selection_up.test.mjs"
+      ],
+      "exit_code": 0,
+      "log": "node-harness.log"
+    },
+    {
+      "command": [
+        "python3.12",
+        "-m",
+        "unittest",
+        "verification.tests.test_g5_ur2d_selection_up"
+      ],
+      "exit_code": 0,
+      "log": "python-harness.log"
+    }
+  ],
+  "chunk_bytes": 65536,
+  "max_inflight": 1,
+  "pixel_buffer": "Uint8Array untilchunkpersist",
+  "old_crash_stage": "unknown; no stage markers before; last nativepresentframe76; notprovedwholeRSSwastransport",
+  "production_preimages_unchanged": true,
+  "no_browser_starts": true,
+  "runner_hashes": {
+    "verification/runners/g5/ur2d_selection_up.mjs": "a23f953982f3a896956fd5de6d6037d5cf9938d84f48f89e0300b00eff4eccfc",
+    "verification/runners/g5/ur2d_selection_up_contract.mjs": "d8f639495926cd748ee74f184dd61c455cf25cbc1c30983d9d5cb123d131458c",
+    "verification/runners/g5/ur2d_selection_up_runner.py": "4ec679d131d7560dedd8d9e38921e99a61241736e34efbeead2b55eba2465f8b"
+  }
+}

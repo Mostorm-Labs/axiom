@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="6"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="3"
+	timestamp="2026-11-10T22:01:34"
+	>
+	<testcase name="G5CanonicalPreparedBody" classname="G5CanonicalPreparedBody" time="0.130155" status="run">
+		<properties/>
+		<system-out>{"copies":1,"knots":7199,"canonical_attempts":1,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":3}
+{"actual_consumers":true,"copies":1,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":8,"direct_draws":1}
+{"copies":8,"knots":7199,"canonical_attempts":4,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":24}
+{"actual_consumers":true,"copies":8,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":64,"direct_draws":8}
+{"copies":16,"knots":7199,"canonical_attempts":8,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":48}
+{"actual_consumers":true,"copies":16,"body_builds":1,"unique_support":7199,"unique_compile":7199,"canonical_draws":128,"direct_draws":...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5CanonicalPreparedBodyPixels" classname="G5CanonicalPreparedBodyPixels" time="0.217331" status="run">
+		<properties/>
+		<system-out>pixel mismatch dpr=1 variant=2 channels=1 max=1
+pixel mismatch dpr=2 variant=1 channels=12 max=22
+pixel mismatch dpr=2 variant=2 channels=12 max=22
+pixel mismatch dpr=4 variant=2 channels=2 max=1
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":0,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":1,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":2,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":0,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":1,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":2,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":0,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":1,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":2,"one_step_attempts":790}
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactCanonical" classname="G5EraseExactCanonical" time="0.61769" status="run">
+		<properties/>
+		<system-out>{"copies":1,"decisions":[0],"difference_ns":0,"history_builds":160,"history_path_ns":13402333,"history_unions":160,"intersect_ns":1069834,"memo_hits":0,"moves":160,"ms":52.941459,"query_path_ns":37682833,"query_unions":160,"round":0}
+{"copies":1,"decisions":[0],"difference_ns":1801500,"history_builds":160,"history_path_ns":0,"history_unions":0,"intersect_ns":3534458,"memo_hits":0,"moves":160,"ms":41.348083,"query_path_ns":35960750,"query_unions":160,"round":1}
+{"copies":1,"decisions":[0],"difference_ns":1806625,"history_builds":160,"history_path_ns":0,"history_unions":0,"intersect_ns":706750,"memo_hits":0,"moves":160,"ms":38.742917,"query_path_ns":36182167,"query_unions":160,"round":2}
+{"copies":16,"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"difference_ns":0,"history_builds":160,"history_path_ns":13322042,"history_unions":160,"intersect_ns":1057126,"memo_hits":15,"moves":160,"ms":51.749208,"query_path_ns":36807042,"query_unions":160,"round":0}
+{"copies":16,"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"dif...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryInvalidation" classname="G5UR2CHistoryInvalidation" time="0.699056" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":0,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":1,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":2,"canonical_history_consumer":true,"family":1,"native_dpr":1,"ordered_mask_states":6,"original_AA_pixels":true}
+{"backdrop_variant":0,"canonical_history_consumer":true,"family":0,...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CLeaseAccounting" classname="G5UR2CLeaseAccounting" time="0.0155562" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="G5EraseExactCanonicalRuntime" classname="G5EraseExactCanonicalRuntime" time="1.58483" status="run">
+		<properties/>
+		<system-out>{"body_builds":1,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":160,"history_path_builds":2,"history_value_primitives":0,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.063959,"new_query_builds":1,"phase_ns":[55121542,6791,42,54042,541,250,572042],"round":0,"trace_samples":161,"up_ms":55.774166}
+{"body_builds":0,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":160,"history_path_builds":0,"history_value_primitives":160,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.065542,"new_query_builds":1,"phase_ns":[44428917,2042,41,27125,292,125,437084],"round":1,"trace_samples":161,"up_ms":44.90675}
+{"body_builds":0,"copies":1,"equivalent_hits":0,"exact_calls":1,"generation_delta":1,"history_denied":0,"history_new_primitives":160,"history_path_builds":0,"history_value_primitives":480,"knots":7199,"masks_built":1,"move_dispatch_sum_ms":0.057625,"new_query_builds":1,"phase_ns":[42393...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

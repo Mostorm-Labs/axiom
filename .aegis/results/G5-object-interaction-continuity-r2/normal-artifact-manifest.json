@@ -1,0 +1,4290 @@
+{
+  "schema": "g5-r2-normal-web-artifacts-v1",
+  "status": "BUILT_MATCHING_NORMAL",
+  "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/normal-install/js",
+  "files": {
+    "README.md": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+    "api/axiom.d.mts": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+    "api/axiom.mjs": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+    "api/demo-controls.d.mts": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+    "api/demo-controls.mjs": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+    "api/internal/controller.mjs": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+    "api/internal/transport.d.mts": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+    "api/internal/transport.mjs": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+    "api/internal/values.mjs": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+    "axiom.d.mts": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5",
+    "axiom.data": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c",
+    "axiom.mjs": "7a26f6a4be34e61ebce1233cb748eb813c1c7472f9e43fd3b8486c42fba4a638",
+    "axiom.wasm": "2ec3e5935e4021dcf6b8b5f824f742a9c4d21609809cc50eff83ab794336bd09",
+    "example.html": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+    "internal/axiom.mjs": "b0b5b26a321f9da221646664efac1a22b107abf514e41d4057c13f0b1cbb63a1",
+    "licenses/fonts/Excalifont/OFL.txt": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b",
+    "licenses/nlohmann-json-LICENSE.MIT": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603",
+    "licenses/noto-cjk-LICENSE.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+    "licenses/noto-cjk-NOTICE.txt": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359",
+    "licenses/semantic/Abseil.txt": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747",
+    "licenses/semantic/Protobuf.txt": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d",
+    "licenses/semantic/utf8_range.txt": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074",
+    "licenses/skia/Expat.txt": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87",
+    "licenses/skia/FreeType.txt": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+    "licenses/skia/HarfBuzz.txt": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64",
+    "licenses/skia/ICU.txt": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af",
+    "licenses/skia/Skia.txt": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd",
+    "licenses/skia/Wuffs.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/skia/libjpeg-turbo.txt": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430",
+    "licenses/skia/libpng.txt": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+    "licenses/skia/libwebp.txt": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+    "licenses/skia/zlib.txt": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c",
+    "package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+    "pointer_input.mjs": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc",
+    "serve.py": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c",
+    "text_input.mjs": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+  },
+  "members": 36,
+  "product_source_identity": {
+    "CMakeLists.txt": {
+      "sha256": "442532dadc98afb53b55830f0ce9ab45be309f7f82c66f06f6962645948bb0bd",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/CMakeLists.txt": {
+      "sha256": "daa105db792c10f6a4f827e82ddabffe2b8fd7012e940b1d7adc32b0b9f0fd85",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/common/camera_controller.cpp": {
+      "sha256": "6b51d83c78876f17d64e986483dd4917a39f969700854562d1b1efae04db9f51",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/common/camera_controller.hpp": {
+      "sha256": "ff1c73948f19d2283f7b1f922767a520773b0af3deff2b8e65d51f470ef7f90a",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/common/demo_hit_select.cpp": {
+      "sha256": "0ffba38cc1c2700c9619a1901e713561df2fa8c87b094fa06fac5f5f15259988",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/common/demo_hit_select.hpp": {
+      "sha256": "1717240fcb98be8a9998ad62b47a21f114dc8277ce1e8fbf90f26cfbc5f6868d",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/common/demo_transient_state.hpp": {
+      "sha256": "b62124a7e5dc07c052e293d5e5f743ae5f4fe21dbaf5f96812cc621849991c73",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/bridge.cpp": {
+      "sha256": "8dc7e52b8d6d45b3503088ae88e6ad93c990fe0244540eb4edd0a002851193c9",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/host.js": {
+      "sha256": "e95b07b7cd5f80eb1cada503d6356916ce203a91699e76e0bf3e46a0a8e42097",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/image_input.js": {
+      "sha256": "cbc3a1edc0e3e91e8ca33278b6f23d14c58a54d6126aa45cc51c71c736ec7d69",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/index.html": {
+      "sha256": "4b34359a6b6dba4924361b01cbcb58bab3bb08bac94905984f6112303aa415f6",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/section_bridge.inl": {
+      "sha256": "6092cb13eae701a7504c66bfe63f73f2746f24e1b5d8e698a9043f04cca3a618",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl": {
+      "sha256": "42aca634e01a6d08d956b49de0706ff71ca34124bbf9d95535b9e3d55b18232d",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/web_surface_host.cpp": {
+      "sha256": "49427448851fce68e0f528ef0a8cf6437577ac6735c294d0dafcc9089552b8af",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/web/web_surface_host.hpp": {
+      "sha256": "5512828a5cf1be0e307f7952baaa5416b0ded9f0861da96bffa75e3996eda1f1",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/windows/main.cpp": {
+      "sha256": "8fdb3c3ee7c723920c47d9333dbe5c3748d9f194957847987b08a16f6c6e09d1",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.cpp": {
+      "sha256": "e844ba28fd216abfd19ae06d6e23466cb8d446d15d785540e1471aeb0784aadc",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.hpp": {
+      "sha256": "5a2b20fffdffb645a1d9d6b1bc25bd86fb0865ce15c95475d5d149b16ed3b9b1",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/windows/windows_surface_adapter.cpp": {
+      "sha256": "4f4a3170f733ebe7e6a9052d152671c1dca1431f71c5c74e8f4ffc0f60222c07",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/platform/windows/windows_surface_adapter.hpp": {
+      "sha256": "59e33870f8deaf8f8ddfe178461d239660caac16e54e8d60729c2ad537e1ee3c",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/camera_controller_test.cpp": {
+      "sha256": "4fe04b4924ffaf0fa103c94ba39ed1f8f477c2695648aee65617c7fdaabfe253",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/demo_hit_select_test.cpp": {
+      "sha256": "4bf3928811dce50d0ba67d87ac83d70316dc7c9c96675ffccca546be767bf3fd",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/fc02_text_consumer.mjs": {
+      "sha256": "3ca7d8a89ceb432d0241452494a0bc85e42990db517fb8bed10aadabcde4ae59",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_context_recovery_test.html": {
+      "sha256": "410f13b4b74ba01975b7bf5ab480d129cd2cfb5b52ba57d89b53774e528f9e68",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_fc02_text_test.html": {
+      "sha256": "05939539fcf8d597d252a2ad75c100b19ebf993dba3bec9c7afc237db2cb8cec",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_fit_scene_test.html": {
+      "sha256": "5c7217bb06bce6dcf228a602972d81ac25e9220a29b7f1b067dab65059f8e04b",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_fit_tool_test.html": {
+      "sha256": "81b045fb421edae6ab6e1e4f9bf4fb1f9db19c4fd235a5b0cf26f3260aad8186",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_image_picker_test.mjs": {
+      "sha256": "1cae3b9b5fb13f4769d86f61fb7b75c675831b28951b4ad74be879781e0eef69",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_minimal_runtime_test.html": {
+      "sha256": "8d1d7a8983495fbcd46c8849c22017b6dd200eaa8bd05e31d043e1e961d20818",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_selection_batch1.mjs": {
+      "sha256": "55b176012785c700e3dfef3fdff81856ab4baefbe9d9f931aa664eb56435536b",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_selection_batch2.mjs": {
+      "sha256": "bccd6c1bf560d4ed7cdcb8a738d74fa79b8c6b12b31dc5ffc93f5f193dce70e8",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_selection_batch3.mjs": {
+      "sha256": "63612ce13d67b6e0f59cfdadf20290ef14283d8675761febac588d755b747ed4",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_sticky_fractional_test.html": {
+      "sha256": "53c519b58475cebd0c85b17b4eecb2dc7891d67e3cb6fbb2a27c9a885e25ab7c",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp": {
+      "sha256": "ef130b4d0d777e952cf0e0d54eecad61a7f9b8349b1a35c5ddc35f1a8bfe3929",
+      "executable": false
+    },
+    "apps/axiom_canvas_demo/tests/windows_surface_adapter_test.cpp": {
+      "sha256": "919a04f17d5712441216155d72a9487618b41871e69174463fb93517efadb71a",
+      "executable": false
+    },
+    "apps/brush_lab/CMakeLists.txt": {
+      "sha256": "8300f1e82f31e4633759d9eda4d476db95b6175486bfad940ad54f8fb074ec4c",
+      "executable": false
+    },
+    "apps/brush_lab/common/brush_lab.cpp": {
+      "sha256": "931f67600d17773f9551ceee0f4579ba7ae779c53fb9ecff6517b77091377392",
+      "executable": false
+    },
+    "apps/brush_lab/common/brush_lab.hpp": {
+      "sha256": "166b1700dbccd87ccc62363341dfe57855e4182954515b5d18c2855671c6d7b2",
+      "executable": false
+    },
+    "apps/brush_lab/tests/brush_lab_test.cpp": {
+      "sha256": "e338f7eaffb5baabc35698b306e60c484f0808739fdfc94577a2b6dcd5f778b3",
+      "executable": false
+    },
+    "apps/brush_lab/tools/brush_lab_main.cpp": {
+      "sha256": "ca30215a2e4e8b426ecf390cec9f209f43fea58de8c9e97902d6ba75d43bf02f",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/CMakeLists.txt": {
+      "sha256": "979a901a999d5be7da751b8c1a348c0edc81766d4afaf6f53d7873a7b97400a3",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/host_font_resources.hpp": {
+      "sha256": "9a658334922439a032909eaca86ac711cbd2b6bbd54f3cdea0fe3cd5443c0bcf",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/host_text_font.hpp.in": {
+      "sha256": "18bafe7bd93895ab539472fd3c84b7a30a2e97373c43cc909e5a3eb9c851ed36",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/minimal_runtime_facade.cpp": {
+      "sha256": "5d0605d53b5e34c5344792699326791b98084bc23d11fae32f51de356099d28e",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/minimal_runtime_facade.hpp": {
+      "sha256": "d820ca0d2edc4dbb0efe267eaa6d25cfd9fecb585debb867a4c73db8436d2723",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/minimal_runtime_host.cpp": {
+      "sha256": "e88edffd53a23c4de8938f757267fad8f488a32c7096da70a9a177a8742c8656",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/minimal_runtime_host.hpp": {
+      "sha256": "14c61ecebe1a21e2546cacdb4c88dc4721efdaa20829d280b8d3f41f0e324d44",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp": {
+      "sha256": "c3546155e20ce4be35ef5c6a2265ca6aa7466ed2bf6461fbe16373d9deb25e24",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/presentation_cache_test.cpp": {
+      "sha256": "c23a44384eef5b2da55c397eaa5bff11cffa89b47c6af461ab51fd2ee50d65a8",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/section_debug_ui_test.cpp": {
+      "sha256": "9a06b81bab85a553164ff32d9c5b004f70fd5613e1e690ebd5a2ef0a8298c1f9",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/text_consumer_test.cpp": {
+      "sha256": "4fee6294bac23dde0c12ca28a00024c41e6fee504e89a868ea8b25a291df4635",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_geometry_fit_test.cpp": {
+      "sha256": "2ce61f88b376cba01f862aa8a4ca62e07d95ac5b761494e9f4fb4e353f03cf8b",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_image_debug_ui_test.cpp": {
+      "sha256": "e51600c651528ee78149aa2efec94790df4d9d87e0fc96f7dd61f39bd6bf8c1d",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_input_pipeline_test.cpp": {
+      "sha256": "c4773cfe4e089e3bafdf886f682ff8bda112ec35db861c8715ce8e7748e69a88",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_public_adapter_test.cpp": {
+      "sha256": "6cc998bc613884cd85c2f9c84f653a693c57e5fef1b30a8a440d48e27fa3a70c",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_surface_binding_test.cpp": {
+      "sha256": "aae778f1baccbcedb147caf41f5be3f543fe6768784ac6ead3a4f374f4ed6154",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_text_pipeline_test.cpp": {
+      "sha256": "ab4e56aa3034f75c9feb2214382dbca31502c2c25452c392c83bfbaefadfa1ba",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_text_tool_entry_test.cpp": {
+      "sha256": "89893861e57fdf5b9e28ddb8219fe35deca7e441f2723fc6bd2263c5b495b85e",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/tests/windows_touch_pipeline_test.cpp": {
+      "sha256": "7b4f5ff5e2933c27eeb9919c1ea37024535a2a1ee5fd8ce347461b229696d30c",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_d3d12_surface_provider.cpp": {
+      "sha256": "d4187ca5f2774b629a335fa3c5e8e5e77644baf40ca9848deb41535cfaf30f4a",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_d3d12_surface_provider.hpp": {
+      "sha256": "71d556b48f5c49719e14565ba11a90c0f60c7f409f7dcf4cda55adad056b9436",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_image_file.hpp": {
+      "sha256": "09fc099f9c4230afe72ac04796473dbeaf51fe476280d07eb69410fb1c449eaa",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_main.cpp": {
+      "sha256": "c9b15b8a8195ee471471f75bb64a671cac7189180c8509856f064a4ab909490b",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_pointer_input.inl": {
+      "sha256": "05361a3864e07ea2280183f48ff7e98ca1e63fd011892834c45b17d66cb8826e",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_presentation_cache.hpp": {
+      "sha256": "ff3e289b6a4902de01d44301fb9a97a63bf6c8655ef12bbaa7958ce3d105eb5c",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_runtime_adapter.cpp": {
+      "sha256": "c2a3775bde2aa48dfe2710626fff7ebe5d1fc440fbdcf427ec5dbfc096dad8b2",
+      "executable": false
+    },
+    "apps/minimal_runtime_host/windows_text_input.inl": {
+      "sha256": "098f904f645d699029875b59cb3073460d9eaa12347dc9f9ca04eb65452f5389",
+      "executable": false
+    },
+    "cmake/AxiomBuildInfo.cmake": {
+      "sha256": "0a40bd05cadcc065f7e187ec308b9383e868ec0c6f4de4b813d215559cc53a49",
+      "executable": false
+    },
+    "cmake/AxiomHostTextFont.cmake": {
+      "sha256": "3290765a3eb10c77a02ea5efe2b46e7eef04d6bd46f9b8dabdff7eb83987381d",
+      "executable": false
+    },
+    "cmake/AxiomRuntimeConfig.cmake.in": {
+      "sha256": "9d5abcbb0ce59f5a881917cdae37f53004a619d69525812b40654d097e2944f0",
+      "executable": false
+    },
+    "cmake/AxiomRuntimeWebConfig.cmake.in": {
+      "sha256": "f6116985124ca0f334627e93a1bd7051bc49ffea32aac080193b723968019f34",
+      "executable": false
+    },
+    "cmake/ios-simulator.toolchain.cmake": {
+      "sha256": "f0869ca26673d8692661fd2fdc2228ec564df009d299820386d5d143393d2662",
+      "executable": false
+    },
+    "cmake/ios.toolchain.cmake": {
+      "sha256": "503138e883f7162fd3a0b889bbb86a69a04afa29260cbdae0a5bb1c3a15ba58e",
+      "executable": false
+    },
+    "debug_ui/CMakeLists.txt": {
+      "sha256": "95b805b1bc272cabb7ca9ded37db6946c5ecc1355c6422416c2ee71e4cc9f6ca",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/activity.hpp": {
+      "sha256": "b881fa580f3a8ce4a067d8647118232bab3d526ca73451cfa9cda13058200cfd",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/activity_log.hpp": {
+      "sha256": "6c9fc7bfa82a6f8e6c1869b48851639d0c1ad6394683938398654084a2238731",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/builtin_panels.hpp": {
+      "sha256": "17c87e1d6f64c81825b8868cd471b0096fcc2726629a3ee3e1dffc30e5add23c",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/control_router.hpp": {
+      "sha256": "461ffbc7220fc02e23829adc05346d45255808faadb52a4973d64d22f98b65e2",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/controller.hpp": {
+      "sha256": "ec23b02380629227c2af4b732803c7c4213f646667d5ff324a73e9cb3d641816",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/debug_command_queue.hpp": {
+      "sha256": "08d927e1e42931017ee8cfe3dfe71f23898db4b05885d19d62460fb9a00068a8",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/imgui_skia_renderer.hpp": {
+      "sha256": "21595ca3058949195d49352da7e9be2c57a9037df8681946b037ca4dda42e9f8",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/input_capture.hpp": {
+      "sha256": "8bd385c25eb5d9188b4dadaabf283cfd3295dab667d28386506eb6f0cb7fb330",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/panel.hpp": {
+      "sha256": "c86cdcce58723c4390bcb464c1902013398a6bb5a6516aaf5114ef98bbe08acb",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/panel_model.hpp": {
+      "sha256": "48abade764b0fa679cfce3502acac3846da7b29739cb4e478acd7562e8cd0af4",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/panel_registry.hpp": {
+      "sha256": "78455e7edde1eb60aec1ca083e213820255be241ad92bd8c87ad1900f3ecff27",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/runtime_facade.hpp": {
+      "sha256": "234b4409b1953c0b3604cf3fb9153fa373c91b0e1e159aaf5dc06d235f9422ae",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/snapshot.hpp": {
+      "sha256": "7e04dc211f6242e76919335396cd5d59b884ffdfee20764dcbc7a389024327bd",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp": {
+      "sha256": "3e18f9ff4660e028aff8fcd1dda5b60f3ee30451f28086236fe40278563aa258",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/surface.hpp": {
+      "sha256": "17dd8eeaa6eb3b483ca210bd08593b2b901207edc0ebb42f6abeb12302974444",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/surface_debug_queue.hpp": {
+      "sha256": "f06cc7ffd889e652ee7bb350d60a1f230f4139d14176fa45de8211151f1fb49b",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/telemetry.hpp": {
+      "sha256": "bea2a9002fcde614075570a2d169f24854650f1b20ad07df55aee55e1add3e02",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/ui_session_state.hpp": {
+      "sha256": "6a2767bb0e0489c229641404f50a890397596765b827e0d05d0bedca9997c07e",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/windows_host.hpp": {
+      "sha256": "5f315734629fe26c20500f04278c25512a0e9e8aa7f446a8726443472bb428f4",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/workbench.hpp": {
+      "sha256": "6be31d043d94f059bafb9a44149c9a88b7e0442acec0b26e4b04248d64b37445",
+      "executable": false
+    },
+    "debug_ui/include/canvas/debug_ui/workspace.hpp": {
+      "sha256": "021d153897424b2e74d6335d1006ad79a68a2ab3afc080a9e5130f7b895c0bea",
+      "executable": false
+    },
+    "debug_ui/src/activity_log.cpp": {
+      "sha256": "f4df653ddfd77bb11da09e786a93281343924cb9ebeb31bc7722362042f86886",
+      "executable": false
+    },
+    "debug_ui/src/builtin_panels.cpp": {
+      "sha256": "30d38363a00b0d009746b7b8cde5cfa56537cd702073904f038b9578b63d1d6d",
+      "executable": false
+    },
+    "debug_ui/src/control_router.cpp": {
+      "sha256": "efcbe6c1f76b3fb7a0b547618af43b73622a63f29de9a01efdb80b894ee965a7",
+      "executable": false
+    },
+    "debug_ui/src/controller.cpp": {
+      "sha256": "bbfd517e66b0cf6a7d4cdcd2be703288460f35be5430f95daf42ed84a2d5aa9c",
+      "executable": false
+    },
+    "debug_ui/src/imgui_skia_renderer.cpp": {
+      "sha256": "c7f8cff9623909e0f98f0c549fbe47f71483f0388adc1e2a9453a88733a72caf",
+      "executable": false
+    },
+    "debug_ui/src/input_capture.cpp": {
+      "sha256": "54761de6a792eba4294211aebe5f1ef592bb8280b900a25066b153c53a8cfdaf",
+      "executable": false
+    },
+    "debug_ui/src/panel_model.cpp": {
+      "sha256": "e4d94aa9e8712f0e8cee0947bca31faa31c855250fc207191b7ca61d5e8297a9",
+      "executable": false
+    },
+    "debug_ui/src/panel_registry.cpp": {
+      "sha256": "a2d1a529e999f5ebd7e70b685da3fdf5c117759fadf266024def04ea3cc2bad8",
+      "executable": false
+    },
+    "debug_ui/src/panels/control.cpp": {
+      "sha256": "359e5ccc7d83f733f8899255d90313648d366bf9a7f5035100eddb42d3aeea45",
+      "executable": false
+    },
+    "debug_ui/src/panels/dashboard.cpp": {
+      "sha256": "4ca70b3b60f72df556ac2e6a3a1c7814d61d79fcc5f8227442aea8f1fbc53cc3",
+      "executable": false
+    },
+    "debug_ui/src/panels/features/ink.cpp": {
+      "sha256": "88ae0a080256bf5a768b70fb2d5b619fceda70dbe52d2ac4bfe4e58f4285edb0",
+      "executable": false
+    },
+    "debug_ui/src/panels/inspect.cpp": {
+      "sha256": "10142396cf01f123c07ddcff80e40dd049665a22ab606e92472ab4f1cc868d6d",
+      "executable": false
+    },
+    "debug_ui/src/panels/performance.cpp": {
+      "sha256": "7fa27f2ffe305ad57a18dc5181cee3315da1770815e094dc6cad808205828e65",
+      "executable": false
+    },
+    "debug_ui/src/panels/runtime.cpp": {
+      "sha256": "28567556d37332bb6c0c423fd703f329bfed8c569a32bc9e057b3dfbbe48310b",
+      "executable": false
+    },
+    "debug_ui/src/panels/scenarios.cpp": {
+      "sha256": "cfd2f8a9811daabd982d15b0b814989370188a64a0e428bd47d1cf9f7c96bd98",
+      "executable": false
+    },
+    "debug_ui/src/panels/selection_summary_view.hpp": {
+      "sha256": "c924f4873aaba10f939dc11d68901c5f1377ca3b1b52943c68256ed6afecbe38",
+      "executable": false
+    },
+    "debug_ui/src/panels/widgets.hpp": {
+      "sha256": "898f2f528f76487f7ac4e37a1a850e07c0631ac0a5b5aa3e45b017848460d57f",
+      "executable": false
+    },
+    "debug_ui/src/snapshot.cpp": {
+      "sha256": "f5b5b1fd00ed0e3a95b2db048996941f42d06d76fe2c2f46efbb8995b5c33dbb",
+      "executable": false
+    },
+    "debug_ui/src/snapshot_assembler.cpp": {
+      "sha256": "b46ec65f18f5162d706a0035d92b3410918deea27522b3a2a54f23c1618d1e17",
+      "executable": false
+    },
+    "debug_ui/src/windows_host.cpp": {
+      "sha256": "6ec894c9076c8d36633f5582705d5ac3b975f96a88a00b0a3bf276412f7c03f4",
+      "executable": false
+    },
+    "debug_ui/src/workbench.cpp": {
+      "sha256": "7b3ec88b45106a0868c045324049dc2b295aec383dc031262258b978af388fc2",
+      "executable": false
+    },
+    "debug_ui/tests/control_router_test.cpp": {
+      "sha256": "ba7dd7d9c335962385d54d5b58450b7624a8f04f19ddcbbb33ed006ac75247cb",
+      "executable": false
+    },
+    "debug_ui/tests/debug_ui_test.cpp": {
+      "sha256": "321de9b42ed23244cf44cea896f6bc2aebbcb371c28ce6fe7a1252b1152dc537",
+      "executable": false
+    },
+    "debug_ui/tests/dui_m1_panel_model_test.cpp": {
+      "sha256": "5eaf19c82f17c3d89b5f548baafe3234f96cf44d8103275a79b15193217a7a89",
+      "executable": false
+    },
+    "debug_ui/tests/panel_registry_test.cpp": {
+      "sha256": "d85c9173ace0cebe6e7120c21d05ba7d726c93178c2278e97b4f1f35d319b67d",
+      "executable": false
+    },
+    "debug_ui/tests/runtime_contract_test.cpp": {
+      "sha256": "3748726e05c1621d1eb0f0fa4329705ca82793f20bafd80393de056896756499",
+      "executable": false
+    },
+    "debug_ui/tests/selection_summary_ui_test.cpp": {
+      "sha256": "641cdad02808cd16dfb3ef6d2603dc4ee9fe24c144747280678320811300f9c6",
+      "executable": false
+    },
+    "debug_ui/tests/snapshot_assembler_test.cpp": {
+      "sha256": "903e7285d2d343baa64b045f32cf6be4d4632451a99c7c5da8a5520c87e9b81d",
+      "executable": false
+    },
+    "debug_ui/tests/windows_host_test.cpp": {
+      "sha256": "7b7a0f590000e8db7ad874323dfcec198efe245c5e1daaa4d213a3a6657aa258",
+      "executable": false
+    },
+    "debug_ui/tests/workbench_state_test.cpp": {
+      "sha256": "9d34b9dc4086bd8e2a00c6d7f97c38fbb29c5169fbce834e4abf4f251bf24fb0",
+      "executable": false
+    },
+    "r1-full-skia-sdk.lock.json": {
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "executable": false
+    },
+    "runtime/composition/CMakeLists.txt": {
+      "sha256": "bae636bfe6e9b132036fb3c8a8abeff282410db940144b32da524f78299973b8",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/platform/web_runtime_adapter.hpp": {
+      "sha256": "13a6f06c821506f99051fbb1b691302ca8921fcdede461d37ba6507229a85b76",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/platform/windows_runtime_adapter.hpp": {
+      "sha256": "e41c1edd3859605901c8143a946043de8b0ddc96b1de2d50b610288704dfd34d",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp": {
+      "sha256": "abaf45c3d490b75230fbcd271adfa72d0268debb34aa36047564381e955e95df",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp": {
+      "sha256": "815b218ac146b092794f37b2a4bb5ea20eef65b56f1c7d83a8b5fc1aa148b5e7",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": {
+      "sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp": {
+      "sha256": "b1d083303481e360a6307d54ce856bf614c2c172dad38304c6d80aa53a010c5f",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/resource_binding.hpp": {
+      "sha256": "582cf38e5498c0eff3a93a55d1180aac9a14491d09ec3917c016e2cc1ddf7c22",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp": {
+      "sha256": "8d276b193bcacf8d5d2381e5f35d335bd3b8cc9be356b5b7a6814f4c92459e2b",
+      "executable": false
+    },
+    "runtime/composition/include/canvas/runtime/scene_adapter.hpp": {
+      "sha256": "f575d89ab59d6c84e6c294eee54c7165edc0dd38f8e5b4d0441c794beb8ae77a",
+      "executable": false
+    },
+    "runtime/composition/src/canvas_runtime_connector_sticky.cpp": {
+      "sha256": "b83c9e3595415630176a658b1da4da9a8feeef45bf9d0bd1f2455cfddca36f57",
+      "executable": false
+    },
+    "runtime/composition/src/canvas_runtime_facade.cpp": {
+      "sha256": "aec89ed818b94669c5623532b9e33df507efadf3b49a018018f710b048c64570",
+      "executable": false
+    },
+    "runtime/composition/src/canvas_runtime_image.cpp": {
+      "sha256": "8cc226c650f0ed814c8177012b2eb8bde5c7011389eabd44bd6e32fa21ce255c",
+      "executable": false
+    },
+    "runtime/composition/src/canvas_runtime_section.cpp": {
+      "sha256": "d078f5ede550f10979b301f5c93ed230db6aebf539790a9138eaf98ad86e095a",
+      "executable": false
+    },
+    "runtime/composition/src/canvas_runtime_text.cpp": {
+      "sha256": "72c61b78907381b4691ec290b94417ac8d945b547716c183dcf89bb313ba42e6",
+      "executable": false
+    },
+    "runtime/composition/src/multi_selection_port.cpp": {
+      "sha256": "2924d1eff6b995661afd0baa0ed0b1f71b457e5cdf3130a186e80cc91705f92c",
+      "executable": false
+    },
+    "runtime/composition/src/public_composition.cpp": {
+      "sha256": "23f4efb8bb7feac4a2e5c714b33d0671e4371a4fa96481401f3482a5003c08cb",
+      "executable": false
+    },
+    "runtime/composition/src/resource_binding.cpp": {
+      "sha256": "ae31f1b120eee2af94c05a70ec9551a95b98ad1767b8f66c1ee9653a01c0130b",
+      "executable": false
+    },
+    "runtime/composition/src/runtime_composition.cpp": {
+      "sha256": "abe34d15a52e25054fae31b521ce0bf3ae4d07413003f27bddb32d780b9ed9a8",
+      "executable": false
+    },
+    "runtime/composition/src/scene_adapter.cpp": {
+      "sha256": "cbf670df669b3a0e402e99baed3f2fcdbab7fd41c2c5d92888d8dc1002ea5e21",
+      "executable": false
+    },
+    "runtime/composition/tests/brush_batch_frame_retry_test.cpp": {
+      "sha256": "26112c48363802ca4836ea60cf1606a47d23e271734686dced6ea0274ea6ccdf",
+      "executable": false
+    },
+    "runtime/composition/tests/canvas_runtime_facade_test.cpp": {
+      "sha256": "d90f95bb59007405e9a900fa5e422fa341ce1aa91a64f384acce08bba7e2608b",
+      "executable": false
+    },
+    "runtime/composition/tests/fc02_text_geometry_test.cpp": {
+      "sha256": "da626e01c5c1ce22cf588594191830e1280e8ea9695e761d827c120cdd2578a9",
+      "executable": false
+    },
+    "runtime/composition/tests/fc02_text_test.cpp": {
+      "sha256": "0b007378058e12c07637b21d40495a4a2f1a4a51c6e278fc5f17bcaeda43d3e5",
+      "executable": false
+    },
+    "runtime/composition/tests/fc03_image_facade_test.cpp": {
+      "sha256": "b0c6a00606428f4a261a0e2dbe95b59c85d5a8efa8df4f10e61c79e23d900ab1",
+      "executable": false
+    },
+    "runtime/composition/tests/fc05_connector_facade_test.cpp": {
+      "sha256": "de4253d1ccb9f87453d4f814b42682a08cda3beba17421287b51ab89e10610fb",
+      "executable": false
+    },
+    "runtime/composition/tests/fc08_section_consumer_test.cpp": {
+      "sha256": "0c8cbd8b960e8783df88f41181d135740b8e2260e47223f1d6abe8352818bedc",
+      "executable": false
+    },
+    "runtime/composition/tests/ink_v2_runtime_test.cpp": {
+      "sha256": "b8baee414c249d9b244a1d2766505ccda4c322c7dcfcfcb77614199ace8d7c47",
+      "executable": false
+    },
+    "runtime/composition/tests/ink_v2_storage_test.cpp": {
+      "sha256": "fb40b3617d082bbcd5b99a22c30acf5bd2add06214ddd0cc64486bb19d15660f",
+      "executable": false
+    },
+    "runtime/composition/tests/navigation_presentation_test.cpp": {
+      "sha256": "bf487a5ffd60f1394cc8098152b421b53943ebb62674feedb5c10f5c601c7170",
+      "executable": false
+    },
+    "runtime/composition/tests/public_document_background_test.cpp": {
+      "sha256": "99e7ffdc8d7a3207414af89e1de469343e17623280a119930a6086139643ef0f",
+      "executable": false
+    },
+    "runtime/composition/tests/public_document_identity_test.cpp": {
+      "sha256": "0057d2f9333f27e19393bea5762843f13beaa3e10ee0d16f6793fe00c9d9a6a6",
+      "executable": false
+    },
+    "runtime/composition/tests/public_document_operations_test.cpp": {
+      "sha256": "e14594c8470e50a8405614c6b5c5cd33458d41d1005cd1215e09d2e0eb2e0d1a",
+      "executable": false
+    },
+    "runtime/composition/tests/public_document_snapshot_test.cpp": {
+      "sha256": "0301a80a25635d0ac1a062ee0c8a0bf3e59bb648f6e90e7a611cc7df892b8108",
+      "executable": false
+    },
+    "runtime/composition/tests/public_image_export_test.cpp": {
+      "sha256": "e12c9b94ff6975acd5c180d0884fcb9e85a75fdf40cd793dd2b71d83c4e6a1b9",
+      "executable": false
+    },
+    "runtime/composition/tests/public_object_identity_process_test.py": {
+      "sha256": "05b97f943b6be9b055c662fff9dfe36cf33d743b2f8eaaa2e6480dde1c3b207e",
+      "executable": false
+    },
+    "runtime/composition/tests/public_object_identity_test.cpp": {
+      "sha256": "7c0bbc5bcb285876e924daf77037f1110b3b64a5381fb25524529c885239928c",
+      "executable": false
+    },
+    "runtime/composition/tests/public_operation_identity_test.cpp": {
+      "sha256": "0794eb20263568280b9231ae1ef3a0304e6d09f02e0a3133bb7e689b6cbc875a",
+      "executable": false
+    },
+    "runtime/composition/tests/public_resources_test.cpp": {
+      "sha256": "40412592615b8053763a63dd84a5437817b438782e77a28cd8aacf512b64886a",
+      "executable": false
+    },
+    "runtime/composition/tests/public_selection_input_test.cpp": {
+      "sha256": "6ae488635b8a96c8dbba4652caf7fb2d472ba474ca817e34ae6d8c46d5881968",
+      "executable": false
+    },
+    "runtime/composition/tests/runtime_composition_test.cpp": {
+      "sha256": "5a4c4998afdc453f61a537421094f7adcb1279c081e0a86854f5f6a7a5bf5d62",
+      "executable": false
+    },
+    "runtime/composition/tests/selection_input_integration_test.cpp": {
+      "sha256": "f08df8f7dde5ccd9e31080e06aa744d545ddd98d41e21efeb875c8d22c4e379e",
+      "executable": false
+    },
+    "runtime/composition/tests/selection_summary_test.cpp": {
+      "sha256": "abe811e0c737845e0b40f2cd3c8dc0c0113b53ee2e8cf92486f84b8835109769",
+      "executable": false
+    },
+    "runtime/composition/tests/ur2a_handoff_test.cpp": {
+      "sha256": "b7ab049247ba930e228a3c8a54d7e557b418588f37b624b54c46f7f56339cdb5",
+      "executable": false
+    },
+    "runtime/composition/tests/ur2b_exact_query_runtime_test.cpp": {
+      "sha256": "c87018cc525a2722e29269cb97c19fd209f817111f90be33c9929ab7ddbff724",
+      "executable": false
+    },
+    "runtime/composition/tests/ur2c_mask_pipeline_test.cpp": {
+      "sha256": "42693737397f7a6b6f89791ea3f1c42bee731e2449d31bf943ea25cde4a17d30",
+      "executable": false
+    },
+    "runtime/control/CMakeLists.txt": {
+      "sha256": "09f3154a1480ec01cbbad9daada0c92d19983364c6e4f07b6f84a3373da5f4a6",
+      "executable": false
+    },
+    "runtime/control/include/canvas/control/build_info.hpp": {
+      "sha256": "98a068aec13db7f6d026c22c0bd1c7f2799bcc12d860c8014e13f96f3e9f74bd",
+      "executable": false
+    },
+    "runtime/control/include/canvas/control/canvas_control_port.hpp": {
+      "sha256": "ee69c536b820a834105a3875d32538655b6ebb9a06345fde30a8365a3e6426dd",
+      "executable": false
+    },
+    "runtime/control/include/canvas/control/canvas_control_service.hpp": {
+      "sha256": "1656141ac259283925d905529aa0e499ac9476548f9d2d26d414a6ceb375ffa6",
+      "executable": false
+    },
+    "runtime/control/src/build_info.cpp": {
+      "sha256": "fee54264aa707bece4ddd9824beffd341cdd109680387b14b94f4a125193a748",
+      "executable": false
+    },
+    "runtime/control/src/canvas_control_service.cpp": {
+      "sha256": "eca12ad2ef1090fcea578e66a7c3d73f759b47cf65b78bb573520c057f8ffcae",
+      "executable": false
+    },
+    "runtime/control/src/multi_selection_queue.hpp": {
+      "sha256": "679cf6c932ceca92410234457cf36a5c4033846867df1dfd469cb2066869e9be",
+      "executable": false
+    },
+    "runtime/control/tests/build_info_test.cpp": {
+      "sha256": "a831ce3889f9c408179bb0d96af492e7c213b677e9c5f721b2072c6ff7ab7c9c",
+      "executable": false
+    },
+    "runtime/control/tests/canvas_control_service_test.cpp": {
+      "sha256": "c2789343b17aec7a5f135fcb352c523c23428aea70d8f01e1fd1ddf93497b726",
+      "executable": false
+    },
+    "runtime/foundation/CMakeLists.txt": {
+      "sha256": "6bc8b1c3bcad91fb6738f9510989d8983636bb6245928e9b56b25fd9a1415cfb",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/document_background.hpp": {
+      "sha256": "7fac9bc5461583746d358bcf4aa5090f1e206e65faad2feaa46311a713265fc7",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": {
+      "sha256": "a1c900e9543221b10db48a4a4cb004534545b4b59e30daab67b00d23269041cc",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": {
+      "sha256": "09629e353c74c216e218abc75b8d8930a613a0fa4160730d00a3911a4a6c3320",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/object_id.hpp": {
+      "sha256": "920d6010ecbd589f671839077cba89c5a87894852853c45d2435fd9b67a07cbf",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/result.hpp": {
+      "sha256": "2e2f864d739f06adeccc1dcb3f02882e922b9b55b15697dab073ff1a32ff11e0",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/revision.hpp": {
+      "sha256": "3f2fc03cacbffc713c1e90944f5a51250b2308b7dcb191747d9f76415551dd21",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/stable_order_key.hpp": {
+      "sha256": "a41f9f0ae9671d191cec4ab26a19e0922f9af0036b33d4c340c5105a63087371",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/foundation/world_geometry.hpp": {
+      "sha256": "3e88f282bc1fef37dba23e15b4326148fc104441a5eabf4fcf2da1eb5b4a85cf",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/appearance.hpp": {
+      "sha256": "ef3e9e83aae1ae080b4426bec713b63c492cbb2b54b36798723eb72f7fe258ee",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/canvas_control_types.hpp": {
+      "sha256": "2fabce9fd7919c9f6162c8fe6244c73ad5cc90d8e6a9a933b367db9c107f2f54",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/canvas_target.hpp": {
+      "sha256": "b74e90eef3b0a6214659bbe978bc8e5ed6f77209031f966dfdd064ded632c9c3",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/connector_route.hpp": {
+      "sha256": "3d885c535370d95572d59277b25e257bb4eb528a50d728e8e67b4a75b44a1824",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/connector_sticky_input.hpp": {
+      "sha256": "5a5e0f7d664683b83131b2ec5cdb896b6ec16052f3924c073f2f179406b23f23",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/debug_control.hpp": {
+      "sha256": "3c9897b917777dd8a7230dd29b014c12eea1f3d5b89dc1086e6706c04cd25023",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/diagnostics.hpp": {
+      "sha256": "5c3db185f8c9a30a9894010e3d52890e17b5478c8318a5380a274acfce70600b",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp": {
+      "sha256": "1a099613090a53196d2b475a0279034d5b45ba4b01050dfb9380f8ccd0a51052",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/image_export.hpp": {
+      "sha256": "9586a7efa596a7a29a6ad1df16561e50c977c3582bcf9a307c34070cc69053fd",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/image_input.hpp": {
+      "sha256": "dc8ce7e85f65e7fcfd75013f31336f89e9d7a20db791b67dc1271f89d6c8e5bf",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/ink_brush.hpp": {
+      "sha256": "96be7d55ea910d0d86d32b104bbbbf7323b3e9234b12d31db79fb961f0a4ab2b",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/multi_selection.hpp": {
+      "sha256": "2c6df54dfcde7141b2c3a9fc79e4ef93f9a4de18aeb78fa8bba4a73a68cf82bc",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/object_clipboard.hpp": {
+      "sha256": "5a71135021afc922739629fea968c066d23ddfd57aa5f59ad1375b08e33062cb",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/product_control.hpp": {
+      "sha256": "a5113203433de3fc8ea0eb4f9460b8649825cec95c7e124f11b5dc06989fb4ea",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/resource_provider.hpp": {
+      "sha256": "d3b7e79fd3ac19f00d8a56542b2eb36fec4b37ece7e4b4ef5a6c569a1b4e3d5c",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp": {
+      "sha256": "f2b6d3057ec8d69aa17fd8892e973becfb054dba1d4517770bcad0bc347ec884",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/runtime_state.hpp": {
+      "sha256": "d23bee0fbca909fefdf068ae08eda105c190b7a14877c8610f539603d0b63694",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/section_input.hpp": {
+      "sha256": "73a13bfd0b397c44543050dffe0f6de473eba529c200510aadba298a67fa7eee",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/selection_acquisition.hpp": {
+      "sha256": "8313ae24a79f6fe462dc9ce9284cbde16a41925f7c94c5381460871ca77e2ebd",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/selection_summary.hpp": {
+      "sha256": "e0481b432f197f9e370dd2aaaac4dad1b0184877646c83a3ed5380b3bde399fc",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/surface_debug_control.hpp": {
+      "sha256": "ab497eb4ec2f835dde304b47ba4fb2d2d25868912d5688090e0eab22338142bf",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/table_input.hpp": {
+      "sha256": "1c837a596496061f3596e438af8c96a612de80089579bbd86d599677ebda8e57",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/telemetry.hpp": {
+      "sha256": "5d0e0126d36326272ac703b9c53999dd14c324369cf1f1c7d6012c5d230c66ca",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/text_input.hpp": {
+      "sha256": "8d8ecdb2b6f70f7509e00f85298e9acb912f06e51a3aa206cf7278fe018ef1b6",
+      "executable": false
+    },
+    "runtime/foundation/include/canvas/runtime/vector_path_input.hpp": {
+      "sha256": "644b1ab30e94cfbcc1a175fd01f8041f526ac0e2c5b4ba0233338c9d820af919",
+      "executable": false
+    },
+    "runtime/foundation/src/g5_observation.cpp": {
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+      "executable": false
+    },
+    "runtime/foundation/tests/g5_observation_test.cpp": {
+      "sha256": "a41be4d31662017515c153627e8b99128a6ad92f24c0b01b120d2258356c2375",
+      "executable": false
+    },
+    "runtime/ink/CMakeLists.txt": {
+      "sha256": "621a2108fe65e91ad50101c890f9df10cf64e2b8f5bed39469bb48c45b72cc48",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/RESOURCE_PROVENANCE.md": {
+      "sha256": "e74876457d78ed349c40341c0267f923a482681eae9e15320681a98c77b686cb",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/grain-editor-source-v2.png": {
+      "sha256": "dec56d1124fc4d4df87cf8bb00b41258bf6b3a24456189ff799db290c3d8de30",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v1.png": {
+      "sha256": "d6c0834bd8e9992c3ca448ca5747b76db4ec7f79cd3d82167273c7d71e1bd520",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/grain-screenshot-extract-v2.png": {
+      "sha256": "b0770b02eaaf52869ea4dbe16b034c32d59149fbece1a9abf21fec55712a8fe6",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/manifest.json": {
+      "sha256": "67f16d972f699c86e1e84d921102e81562506a5210b2bcddd9cb336fef004d07",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/pipeline.json": {
+      "sha256": "afae2cd4558dd4c9d5903ff34d28217fc2cb465b7107df476a81be1b4907ec1c",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/shape-editor-source-v2.png": {
+      "sha256": "e6ada60486c1da76d9446bd78abe01a8a5cb991eccb2104381fd9f0386e25ded",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v1.png": {
+      "sha256": "4171df4f399e11b7bc44fa9c688c19f7517622b95c845d63eadda91bbd8feaae",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-grain-v1/shape-screenshot-extract-v2.png": {
+      "sha256": "d88a0c58d904a5041bed7f1d79273f4dadcbd92b31e0bb76a0c5dc376ecf594a",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-watercolor-v3/coverage.sksl": {
+      "sha256": "e67aafcf85ec2b37802cbca1aec358003c5ddb17ad21a487c4f31a9b91f804ed",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-watercolor-v3/manifest.json": {
+      "sha256": "3bc950710a02aec348691d9451169a6601efb4b656cdddb172bd0c79ba2214fe",
+      "executable": false
+    },
+    "runtime/ink/assets/chalk-watercolor-v3/material.sksl": {
+      "sha256": "519e8651e514f5b7a5114bfa413d09ab48e479f96b7dd28a2b0425380d5ea238",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v1/coverage.sksl": {
+      "sha256": "26caaaa8da2a20ce99da258dbd8fe31475c489fb35eb27444e78f7449f807c28",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v1/manifest.json": {
+      "sha256": "6220b46e2a4451f29e244aac988f441895c9a378007e1b2d2d2e9fc2ab28b847",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v1/material.sksl": {
+      "sha256": "01de92252280e0a43760df5e35633d3d3174800b924114e0dad77d18140aa760",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v2/manifest.json": {
+      "sha256": "ce807c014b840d22a9193f97abd078b9b760da1c35220fff0cc8799f94f41a10",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v2/material.sksl": {
+      "sha256": "b8ec1b84fcc43afeddecdfe02eb85b572e664b19caa5e0e774f9046efa046d62",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v3/coverage.sksl": {
+      "sha256": "30ce732ef97f21c6b2a5da82307cbf50d02dc65fc5bfb55d778023a4539a00ca",
+      "executable": false
+    },
+    "runtime/ink/assets/compact-material-v3/manifest.json": {
+      "sha256": "1d66aa8c8ac90fa60fd848e8de0a403c0ec972807369e92ce7fed49e6e1ed147",
+      "executable": false
+    },
+    "runtime/ink/assets/crayon-material-v3/coverage.sksl": {
+      "sha256": "c6676aa87455182bd03737bf959dc136a395b4681a0ea60aec64fcdee3de28a5",
+      "executable": false
+    },
+    "runtime/ink/assets/crayon-material-v3/manifest.json": {
+      "sha256": "16f7abefaad1e722c8c51b54691c25ac3a4aad676260a176abacbd26d82374fd",
+      "executable": false
+    },
+    "runtime/ink/assets/crayon-material-v3/material.sksl": {
+      "sha256": "27b722a2083d2a02a1de98eaa80d64512bae3520de66f449dd42105f6ad2a6b2",
+      "executable": false
+    },
+    "runtime/ink/assets/marker-flat-v1/manifest.json": {
+      "sha256": "19107c64f063f3c14e43bc24175a051080d716302ab8ff191f73a6ef8aea2a33",
+      "executable": false
+    },
+    "runtime/ink/assets/marker-flat-v1/pipeline.json": {
+      "sha256": "792d953c9834c7136639eceb1b1c18b776c7c55996fd2aaf2a06e351107d9572",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/RESOURCE_PROVENANCE.md": {
+      "sha256": "f27826d97505cb7e1e91a963c1e602559fd17a15ad828d09e1a83ddb3872706b",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/grain.png": {
+      "sha256": "1e25a30049035541827d7e7b9ea24a785f707a3b9f877a363abcb4efd8ed5007",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/manifest.json": {
+      "sha256": "7dbb02ba01ce10ca9fc46188f86585b64e1631a8c04c08c2749bf4f1a1cb975a",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/pipeline.json": {
+      "sha256": "aac2462b14b4db95d7266c7ef7fac4d45efa2ab3260ef6e9c9a4d2d762ab4550",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/preview.png": {
+      "sha256": "2f9f3aa9aae02d71e37c9fd7c74d91995ef5b588179f07fad92a9f6e3c6fa0de",
+      "executable": false
+    },
+    "runtime/ink/assets/membrane-v1/shape.png": {
+      "sha256": "5660f0e297ff65ccab4e8e9ffcf918523bb44157ff8770c1dffd0379e1e7b34e",
+      "executable": false
+    },
+    "runtime/ink/assets/vector-solid-v1/manifest.json": {
+      "sha256": "974baef15d4cbe96a13007b3ff93039ad18b1800d1c67b72fc51f5ab5d2b0b10",
+      "executable": false
+    },
+    "runtime/ink/assets/vector-solid-v1/pipeline.json": {
+      "sha256": "07dcbdfa54026dfbd7446262791b9482d82998fe16b9692555f28d3817b45db3",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/arc_preview_bridge.hpp": {
+      "sha256": "8e79c9330d0e5834f7306bf32ad9b58ea08b7a885fff7cb1794e08bd74057e73",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/arc_runtime_sinks.hpp": {
+      "sha256": "c2be9322be41aa8868d8db5847831066cee3a3cd887c4d4363e9f0fbd5ea143f",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_commit_intent.hpp": {
+      "sha256": "59acfd044882828947f6ba285d7f0043840b0f8b3a1d8fc2e25c25f8a56f2c95",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_engine.hpp": {
+      "sha256": "c1b0cab05ff87586965f70682a4a0c0c0ae0f8ec629f5e2ff1395b07fe9526f3",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_execution_plan.hpp": {
+      "sha256": "26b8867d2ac80ea398278317d9dc7275f1acfa9dece37809abfdef04089a8338",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_package.hpp": {
+      "sha256": "ae65924804db629759f9897f6ee065ed8603c825de48f2960e06be16a48738bc",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_package_catalog.hpp": {
+      "sha256": "492d479ba5ca9249c03d04a712282d18dad0a6155dd0858956707c77ae48a664",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_preview_delta.hpp": {
+      "sha256": "29d969896fd0c26c0a0611f00c448c4b5fc2deeb9a73c5955ce35956fdb34276",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_preview_handoff.hpp": {
+      "sha256": "fb2667e7e6f32dd93d3cf267af4bd35aba982e43b5f901ad0a0999c859ad22cf",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/brush_session.hpp": {
+      "sha256": "b1cfa783eb37cdb58de2269915713373dbe2a94b6d3d973263b5f157ae173634",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/canonical_brush_commit.hpp": {
+      "sha256": "6323c15845a1da18ef34ac72765dfb9d150ccfe260eaee156ad931e195cff7b3",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/chalk_dab_evaluator.hpp": {
+      "sha256": "8fcd654bd25c39de9bfada6057d858e76722146199934f20ec1f00928c4c9593",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/compact_brush_session.hpp": {
+      "sha256": "1143dbbc274fa09ff32dc518fff5301b3f7f63c68825e338c7ea8708b482d766",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/compact_contour.hpp": {
+      "sha256": "d7404f23baf2f0e466b83311f4030ac15db7ccf9603b70c1a606d4eef7c62dc0",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/compact_geometry.hpp": {
+      "sha256": "09ce066782e3a97548b2cc8f661b29788959e3b5b774fc986b3837c7fff3811f",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/ink_engine.hpp": {
+      "sha256": "bb81bf86114702661ec589acea09915e27d32c433e39445aa938a4cc41a8c880",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/laser_trail.hpp": {
+      "sha256": "57a5ee838f09cd05bffd5bb4d206721663bb08f161651a911731fe2e6b92f72c",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/legacy_v1_readonly.hpp": {
+      "sha256": "6c401aefaa0d51118701d4efbe4f9810820ceb1349356855f4b6b7b881d59a71",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/multipointer_replay.hpp": {
+      "sha256": "40e4302898c9b0df39604fd18b129b96111a33bcac6043a2fb57c7fcd78a32fa",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/pointer_trace.hpp": {
+      "sha256": "51f100c58c40f95691109fa5c2b8e201155d6d88ff04acd0c2d0cab6937a05e4",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/preview_model.hpp": {
+      "sha256": "e47a904e1fcd6a9abb9082df234c76823cdbc43d6383be8949546f1eb9a7430a",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/programmable_brush.hpp": {
+      "sha256": "b9d114d242ea6602a945b0f6eeb70e784dfa441391d1fffef960e9b1a6d0215e",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/replay_runner.hpp": {
+      "sha256": "df8bc7fdb83038edb6dabd459dad707aac8cdffd4585b2b801249a92cd75835f",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/resolved_brush_state.hpp": {
+      "sha256": "6cf950404b3350e861bb7cad2c7f4fc0a4d8ffecae72dd68ee2b06c3c0f4c8dd",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/stroke_session.hpp": {
+      "sha256": "2ca9262037885906e34db95578d67f00c277a0295856ec0db650017f22603289",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/transient_trail_geometry.hpp": {
+      "sha256": "65b286f8695ad223b510182a5a84788fad754f813e6253cef73a07d68b141cd3",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/vector_path_node.hpp": {
+      "sha256": "587ea240e5c00d535622245cb27a625e0dc61bb5b082899a44d10623e242249f",
+      "executable": false
+    },
+    "runtime/ink/include/canvas/ink/vector_stroke_reference.hpp": {
+      "sha256": "41ab79d4717b81298a88c7fcec13a138b1bf2515ecc81d9e87649598eff81cf3",
+      "executable": false
+    },
+    "runtime/ink/src/arc_preview_bridge.cpp": {
+      "sha256": "5e3510ad0a57821e47e4d0d89647570f0b946d5b7c3cce5f1c671abb9ff4a555",
+      "executable": false
+    },
+    "runtime/ink/src/brush_engine.cpp": {
+      "sha256": "5ccff78903992140a02334984872b40bce5723d4da5b18808b75db54c8c1c450",
+      "executable": false
+    },
+    "runtime/ink/src/brush_execution_plan.cpp": {
+      "sha256": "d8eb78c5e25fd1ac11b701a2790c5debff1daae913e73c896dcd02881f64cc20",
+      "executable": false
+    },
+    "runtime/ink/src/brush_package.cpp": {
+      "sha256": "de9ea6929695b67055316a02377fb3580e3ec1a64d025009d897787518aad466",
+      "executable": false
+    },
+    "runtime/ink/src/brush_package_catalog.cpp": {
+      "sha256": "bdebf7bcb5cdde0098e09046602df988d4d8f1c7fee859f6d0904a33af2728b1",
+      "executable": false
+    },
+    "runtime/ink/src/brush_preview_handoff.cpp": {
+      "sha256": "bfe172dadeb6493886e256d52c7f1a22ec26eccc5801d428ee9b9668fd9d8126",
+      "executable": false
+    },
+    "runtime/ink/src/brush_session.cpp": {
+      "sha256": "70484e461914b4f33afc4e2a937af4b298397c55db9df6a872c42a7618cf661b",
+      "executable": false
+    },
+    "runtime/ink/src/canonical_brush_commit.cpp": {
+      "sha256": "0c502ef336e583ce8c83da75fefbd6421d67a8cdf603bffedf6cd6901850020f",
+      "executable": false
+    },
+    "runtime/ink/src/chalk_dab_evaluator.cpp": {
+      "sha256": "f437db360085339a22814b91559e700ccf4b9d7d60861b36279f160425ffb70b",
+      "executable": false
+    },
+    "runtime/ink/src/compact_brush_quality.cpp": {
+      "sha256": "21b6eb6781c4c482ecef9a08db65fbbcf00eb6cc2e03ad38354399e85718c35f",
+      "executable": false
+    },
+    "runtime/ink/src/compact_brush_session.cpp": {
+      "sha256": "4136f024dcfdc867c0db174b13f51a4c01b00ee75e8ed5d4f4acf9c69af5eebc",
+      "executable": false
+    },
+    "runtime/ink/src/compact_contour.cpp": {
+      "sha256": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+      "executable": false
+    },
+    "runtime/ink/src/ink_engine.cpp": {
+      "sha256": "2811653679d88291e350b3fc17f3580faccbdd6e341fb5081555813fb2379afa",
+      "executable": false
+    },
+    "runtime/ink/src/legacy_v1_readonly.cpp": {
+      "sha256": "4418f5d4e2689f89793b940ddc076372278ea17f417f7619633efcc3f27ebce7",
+      "executable": false
+    },
+    "runtime/ink/src/multipointer_replay.cpp": {
+      "sha256": "22535094a1fc673a11cff72c89066b06371712aea188e841c19d71ef35d6878e",
+      "executable": false
+    },
+    "runtime/ink/src/pointer_trace.cpp": {
+      "sha256": "5c794f47784b4f0e07d103fb74b8f3fecbe1369b7a2a86c5e7f10acdeb74cdce",
+      "executable": false
+    },
+    "runtime/ink/src/preview_model.cpp": {
+      "sha256": "a0377d36415988ee1468633cf7a1b13b57ae6683ea95b7d07307786862aee43d",
+      "executable": false
+    },
+    "runtime/ink/src/programmable_brush.cpp": {
+      "sha256": "0d047df37ee3bbbb17d4f4af82fb9d5cd9abc239a22b4e6bfc76115a49eb4ffa",
+      "executable": false
+    },
+    "runtime/ink/src/replay_runner.cpp": {
+      "sha256": "ab8ab2555a61ab090dfe2c1b76c9c4d1b221a8c625100a04ccc2cfb06ebaba53",
+      "executable": false
+    },
+    "runtime/ink/src/resolved_brush_state.cpp": {
+      "sha256": "b6693a3445ea555c9280a955f393190620e2a0c10caf822a53a8d119c2283154",
+      "executable": false
+    },
+    "runtime/ink/src/stroke_session.cpp": {
+      "sha256": "d1699fe9cc77bf655affb76070023f82400575f4ab0fd98c59e7d8aba687f4c8",
+      "executable": false
+    },
+    "runtime/ink/src/vector_path_node.cpp": {
+      "sha256": "1a4a0ac311f64b819597aada8ca802e3f4e217fdf6e0fd804452f1b5c43a8c9a",
+      "executable": false
+    },
+    "runtime/ink/src/vector_stroke_reference.cpp": {
+      "sha256": "5aa8fdea628019ebc23b99d9d0748622e3df907ce0f9bc65691dc45d4e66ca8b",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_complexity_test.cpp": {
+      "sha256": "aac6c449790989f13534a769ab3b0ac955346442da54735733076e15beeeceff",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_operation_intent_test.cpp": {
+      "sha256": "7814ecbc36737cbf6516a7d329da1298229cd7625e89b4238a1704b2cf1ee19e",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_package_catalog_test.cpp": {
+      "sha256": "30693f443c17f410d193c41fc10537e5242c8447bd1c2220374ade5b2b827f3a",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_package_test.cpp": {
+      "sha256": "03c2ff39ddbb684dbc22f3e750c2bd0b1c93145e106d4cb6441663f20eeace8e",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_plan_test.cpp": {
+      "sha256": "e1f12905064bcecb81b8240c25ab49992bb73eaf77d1b5200f4931a6fb403030",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_preview_handoff_test.cpp": {
+      "sha256": "5d74da6d86811c1ba4b2ccd762481dd5378dd7d929c5f74fcf181d7bd75415b8",
+      "executable": false
+    },
+    "runtime/ink/tests/brush_session_test.cpp": {
+      "sha256": "3f3290154436a2357ca35f739bdc9efea02c896ffb276752bd9faf7f4252ba76",
+      "executable": false
+    },
+    "runtime/ink/tests/canonical_brush_commit_test.cpp": {
+      "sha256": "34223e6cb2c2ad9eabb5958a8337513dc428838fab0cc6badd691f0f4aca00bf",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_engine_test.cpp": {
+      "sha256": "86875710164048676cddc3eef9e6b2bb11bc2b87d9b47f3e2637d417fb0e16f0",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_v2_laser_test.cpp": {
+      "sha256": "5c03bd72295b49f45eb8f6431687fca9d621af8a8c1bb4983db1a56e8f767941",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_v2_pen_test.cpp": {
+      "sha256": "523b44fa863890894354babcd9757a306ed60fe191fb27f047955a9e89b5c5a9",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_v2_pressure_test.cpp": {
+      "sha256": "5d2fb11cb5118ce2d9c9beffc993736207c4d45da544a1fe7423757142c8f157",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_v2_resample_test.cpp": {
+      "sha256": "0132846430a8d15f69c6b68013b7c9d3c92dc2dc787c405529509b9cac66f5c9",
+      "executable": false
+    },
+    "runtime/ink/tests/ink_visual_quality_test.cpp": {
+      "sha256": "01a35482470ca5ebabecb8b7f6bd15dd4ac5d70ca3299c74c34d049eef66c311",
+      "executable": false
+    },
+    "runtime/ink/tests/multipointer_replay_test.cpp": {
+      "sha256": "16bfac289c3995006e72025070e324c8951cd26ac8831a51a51cc06b5879a1ba",
+      "executable": false
+    },
+    "runtime/ink/tests/pointer_trace_test.cpp": {
+      "sha256": "adbc69ca5de5890e443456d7521fbf71256830c327f1cf36224bd85651538e39",
+      "executable": false
+    },
+    "runtime/ink/tests/preview_model_test.cpp": {
+      "sha256": "1a0253173109a861a479bdffde7a9da50729776115526205e58dbad85c6b13dd",
+      "executable": false
+    },
+    "runtime/ink/tests/programmable_brush_test.cpp": {
+      "sha256": "5d278c32e37833b0d639edc637d86717a10617b62445f37e1bbeab8f3ccb90cf",
+      "executable": false
+    },
+    "runtime/ink/tests/vector_quality_test.cpp": {
+      "sha256": "0396068866e3b6a1397108f0f548dfa1b0e073c9deb2ab2ec5720ea5622cc0fd",
+      "executable": false
+    },
+    "runtime/ink/tests/vector_stroke_reference_fixtures.hpp": {
+      "sha256": "1074c29c5877e766b259cbc01a12f0762bd43138d28fe6e47a3fc3e0fa34e618",
+      "executable": false
+    },
+    "runtime/ink/tests/vector_stroke_reference_test.cpp": {
+      "sha256": "d4bcf7511ebe68c50e11d4d94eddf448a45d0d3e9c30eb61202e2196df61223d",
+      "executable": false
+    },
+    "runtime/ink/tests/vector_tuning_test.cpp": {
+      "sha256": "fb8eda8b8f85d30faabc44d0af524c9897559e14bb45357168f1b451451ca545",
+      "executable": false
+    },
+    "runtime/input/CMakeLists.txt": {
+      "sha256": "07fde580e5e923c84938450186ecd4071df4c3e9b06e0bbdc569aadeb4d01a77",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/active_pointer_registry.hpp": {
+      "sha256": "1147d489696a36e6f544f492591860ad7be4e2dd54ecbba0bb92cf5f45640f63",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/arc_input_adapter.hpp": {
+      "sha256": "5cf2b2e3c00cfc770f01261a27fc94c379812e10cdf7b3fd343f1d7a8656e912",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/input_capture_gate.hpp": {
+      "sha256": "ead4610254c0011c586617fb03a4ffb464e66f7821f4e99c453ff38810a437c8",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/input_router.hpp": {
+      "sha256": "9b94344e051389ef7b7eefccb65239c8d1a199e6b3d5a16c2fd89621a9b4aff6",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/platform_input_contract.hpp": {
+      "sha256": "5fe1e926fc513bea36c16055d7846ac5b5f5c21c985123b7a0c71cf1be14baff",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/platform_interaction_ingress.hpp": {
+      "sha256": "f8712abfada4f296f973d94ce399a89756cd1ed1ff299a41cf430ef0c4e50afd",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/platform_normalization.hpp": {
+      "sha256": "8358cd59eda6d36731e0ba5f9d98f53c844a7347f8451dc9830bbf42dbfda4f5",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_capabilities.hpp": {
+      "sha256": "67bbe66261005d2902864c8cc804d8509cdfa71c316f654151264cb6e87bf86a",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_key.hpp": {
+      "sha256": "1d2fca1b86a1f0715d99d89acc1d99c4cbb6626a98df7510caeaf974b1e0a7eb",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_modifiers.hpp": {
+      "sha256": "e51fac581e3752e42fa71018f2b7dbcad6e6d3e7b9c9c808ed5ef6aa8f6314be",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_phase.hpp": {
+      "sha256": "1f6eefe1f55f1c56dbebc3b879bfffba453d9baab7a7cb6a721f8ed37a546abd",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_sample.hpp": {
+      "sha256": "28a44ff2fbd528c46e7eadae2efb65f805e5684b6a9e6390497de05266e2988e",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/pointer_sample_batch.hpp": {
+      "sha256": "f7a2307c66dd49a01c4515ab0a3782841846d58eb401d5881142b7c6e7da7595",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/sample_provenance.hpp": {
+      "sha256": "6e43f7c83e5f6fb9fc5d45ad2696472b4296f1f26977553cfa11e5a4273eaea2",
+      "executable": false
+    },
+    "runtime/input/include/canvas/input/web_input_adapter.hpp": {
+      "sha256": "71961c2f989b7197d63b592e15b1757d1e513d54a7f80653a8af1efe1b0e03a6",
+      "executable": false
+    },
+    "runtime/input/src/active_pointer_registry.cpp": {
+      "sha256": "a1f1f2c40183cf25d9e816159f7a9942f0fbbf4086598056e5146bf61b6ce5c4",
+      "executable": false
+    },
+    "runtime/input/src/arc_input_adapter.cpp": {
+      "sha256": "94b2ae42d5b033fbbeabd7da7b6febcadd20ee80237ae19170d2a82a5380546d",
+      "executable": false
+    },
+    "runtime/input/src/input_router.cpp": {
+      "sha256": "28e4e7101dc0910bfe375a1c4f0e2421953e025875b2167e51b56002eb9dd5a1",
+      "executable": false
+    },
+    "runtime/input/src/platform_interaction_ingress.cpp": {
+      "sha256": "7093902e386a2f6b812c08caa05f87a4f4b65567717b4bb756e14164cbdd9594",
+      "executable": false
+    },
+    "runtime/input/src/web_input_adapter.cpp": {
+      "sha256": "f7778d6b1e8be20aaa80c45c5d62993a45f7ff237840da676a505127763758c0",
+      "executable": false
+    },
+    "runtime/input/tests/c1_platform_fixture_test.cpp": {
+      "sha256": "105eb9a6e054dd02c216e3668caca6b8e52d79f588f9aec87ab1d844d7b126d4",
+      "executable": false
+    },
+    "runtime/input/tests/input_router_test.cpp": {
+      "sha256": "3f5aafaff9e3b3cd24dae8fff699a12fd4f6d8d1a97d75d084abb408692cd4a3",
+      "executable": false
+    },
+    "runtime/input/tests/multipointer_foundation_test.cpp": {
+      "sha256": "a3be0844f9a43d4009e26e94a0878f9620afc46879f52880778cad37df04cb34",
+      "executable": false
+    },
+    "runtime/input/tests/platform_interaction_ingress_test.cpp": {
+      "sha256": "6f654dfd0373b01f291567f2c84b965282e3789669d96c2f54c7d28f860ddbca",
+      "executable": false
+    },
+    "runtime/input/tests/platform_normalization_test.cpp": {
+      "sha256": "b5ecc7fe262b1b7c8d39c41342e2ecc520b0646f47f0bf12d06db0853c658809",
+      "executable": false
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "sha256": "a3d399ca8b178fdd03f220845b08939a2d9e718e6a99f80a8fc54d5208945d5f",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/brush_commit_adapter.hpp": {
+      "sha256": "9046f2b10db602436fb4347bb9d9829d2642a1d294d8aead86929c6f0a1acb94",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": {
+      "sha256": "ad3d74905171f4a9e6d17a0511d9f1e72d4c2006a9879072c35ccee79c5cc8cd",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/canvas_interaction_coordinator.hpp": {
+      "sha256": "4b0fddb25c86bbf921f0c613c378b8d74ff7579a9df071087416d89898bce28d",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/creation_session.hpp": {
+      "sha256": "738b110622f169bacdf7393d20a1944480fac07f3a101d275f80d3e53ce0ef7b",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/editor_history.hpp": {
+      "sha256": "421a73db4652cfdfda849364d761d6bb993bd0c42bcfdcec357f232498d3ea5b",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/editor_session.hpp": {
+      "sha256": "49673f0dd6e9c28c387189ad7a9c388fe464553b834ade5b9d4472e96da23358",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/eraser_session.hpp": {
+      "sha256": "57773a898dcbf2bca4fe0dba13295334b5f88cffc6ad9b2c8907325d33fad293",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/gesture_arbiter.hpp": {
+      "sha256": "96c4707b3f8a02201ca58f83fecbefc5ba8288cc1a5428a70eb2aa988323ef52",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/hit_test_service.hpp": {
+      "sha256": "9aea853c8544c2a45de2af10c621b5b8323ddeece5e03e766d57628bee633b20",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/interaction_dependency_footprint.hpp": {
+      "sha256": "a05d83fd112214a0db3a905ddf3a72176e89a9514b592e736be84bf312a2975d",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/interaction_dispatch_runtime.hpp": {
+      "sha256": "7e28a1810f1a43b77ed6944f95371eedf65daec87dc1da41d549d4f1b694a7df",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/interaction_ports.hpp": {
+      "sha256": "cdade54871a0a31c0fead41862614a6a05d0818a959df4e0d58c180bbe596d13",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/interaction_runtime.hpp": {
+      "sha256": "723fef043290f33ed2c5f6fd0c0833461ec7a35fd73a6896ed654dc40acaf27b",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/local_operation_sink.hpp": {
+      "sha256": "08b846f96d7e569f94d1dc39d34c44e8804d4f1a64b9d203f58a8f756948a5a3",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/multi_contact_coordinator.hpp": {
+      "sha256": "25010abfb126e1f4a1fde8b6eedb9306451c131c4b6f9a932edfc9f3862c1726",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/multi_contact_policy.hpp": {
+      "sha256": "d91f075c58ef1456dad3aa92bebdbe99e7e91766f320964abfaf5b9fe724e508",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/region_selection_geometry.hpp": {
+      "sha256": "259a89225143710d71f23691318f3fd875c219dc0f5bcb0c898f25c10859c27a",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/region_selection_session.hpp": {
+      "sha256": "1299ef97d2f54b8645d76d40592f157e702032b1306131415888f99216d18034",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/selection_session.hpp": {
+      "sha256": "ddbfd09f5d8e793831cf58b2024e77af1f4c527bfae5c4795155f98379fbe788",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/selection_state.hpp": {
+      "sha256": "9e1686e5c34a4cd4fdcee13c87558ba583004f7d41cec96dd52ccded2fcb6a8c",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/session_manager.hpp": {
+      "sha256": "39aea55bed6dad8d95f37fed20d3b92e07053cb19e7123d8f8f0afe78e811d9f",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/text_edit_session.hpp": {
+      "sha256": "dc971619c4743f65db26d198193a0817362dafe9afffbbd600f8b488f023ff47",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/transform_handle_drag.hpp": {
+      "sha256": "f81344e90a84bc15951b838e047705ecdf2dc302618a4e0d64e5a72113e81fa0",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/transform_session.hpp": {
+      "sha256": "adc28109cbde2ce6179cb49f54e5df8222ef16de7f5f18119a4db4f57ec8be54",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/viewport_constraints.hpp": {
+      "sha256": "7306b07315827292421a93b6bbcfabac8979a569746d93eadfa7808e9394d0dc",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/viewport_gesture.hpp": {
+      "sha256": "f6236e9a3785d0a952d1caf2ebb93017e2de0aeab7994b01a9dd299df2c7a1a6",
+      "executable": false
+    },
+    "runtime/interaction/include/canvas/interaction/viewport_interaction_controller.hpp": {
+      "sha256": "8ca7d9ff44584a0ed6c8b6655d04514587564c2bef5e7e5d30af7012aa77fd5e",
+      "executable": false
+    },
+    "runtime/interaction/src/brush_commit_adapter.cpp": {
+      "sha256": "664167aa69bd2bd5bef4ba5984ebcfbf99605e2aeb96cdacc809498a9b114264",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_appearance.cpp": {
+      "sha256": "8779dda694247bf09473163515203e455111b294021d29dea18eba2c2eef3c4a",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_connector_routing.cpp": {
+      "sha256": "7badf051f71ff9d71a35e52dd6056a8542cf3c07f1b673902d9c72e102d0c5cd",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_creation_hover.cpp": {
+      "sha256": "d17dd59290f095af66ee474ace724622ce7d1664b570b43ec37169ae96f83c8f",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "8baa6d413b463f6424f9b0a867ef1e1b5bbd8ba4d5508a757b017e7b110d97b3",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_image_export.cpp": {
+      "sha256": "c3ffe2d3e97a531ff8adb67120ef4c377d5714f51b3a38503f970805f4d2eff4",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_interaction_coordinator.cpp": {
+      "sha256": "af378032971e59033a6268567cbf8a9eb29619063b8d04707f4b1a01019d01f3",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_object_clipboard.cpp": {
+      "sha256": "2278ef7d267b8df224ba4c5a706d84d4eae213e7f49f6c33e995bcd1ff191557",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "sha256": "5ec2c05a48bcb1a8f9433ca7a8b0a85802b0577a179a39bb9f844db8cb60cc4b",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_placement.cpp": {
+      "sha256": "29569df262d908a49352c6a6655adfd60f8757c9e2793cb0667e39d9fa3d609f",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_region_selection.cpp": {
+      "sha256": "c307e94b64688bd79caa45db674fcb5391c5dcac42790859cb27e18f1de580d0",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_section_commands.cpp": {
+      "sha256": "05732ddb1ec04aaf906364b37d2c83b9254b435cbfde4f25ef0c88e5ab2395c3",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_selection_summary.cpp": {
+      "sha256": "d7f6537ab1f9868a238223363c14f1118d3f167d4071bd9ba9f9df692fcef024",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_table.cpp": {
+      "sha256": "217377bef8be1556503e2f9c72d13d2c0da92bd1f1a0cea7eacdf3c626ef8094",
+      "executable": false
+    },
+    "runtime/interaction/src/canvas_text_geometry.cpp": {
+      "sha256": "66e256bcf9ae58045e7515a75c7b251109a6f16066efa5d1b735fd0f02875158",
+      "executable": false
+    },
+    "runtime/interaction/src/creation_session.cpp": {
+      "sha256": "1b0c5a0c5157aab100cfcd87a76f98ea9875d79f146fb4c2279c46d1ec66bcf1",
+      "executable": false
+    },
+    "runtime/interaction/src/editor_history.cpp": {
+      "sha256": "9bc7a5c6f2fcfd9e2e9532f35338dc18d3267cf8bb1b6e237dee16872b5d4c82",
+      "executable": false
+    },
+    "runtime/interaction/src/editor_session.cpp": {
+      "sha256": "a633f4d0aecfd1adf9b288daf14344d980989082a7c4236d54b0081678d2d5d0",
+      "executable": false
+    },
+    "runtime/interaction/src/eraser_session.cpp": {
+      "sha256": "f01910c0806a4d119dafe7c9298e114b4be09078d9381f753928712d803b75be",
+      "executable": false
+    },
+    "runtime/interaction/src/gesture_arbiter.cpp": {
+      "sha256": "2c09249942413a8f313f8408f1d747fa035185533326da2abe4b48250c3c236e",
+      "executable": false
+    },
+    "runtime/interaction/src/hit_test_service.cpp": {
+      "sha256": "cd83a58f019bd51c5e930c237d5ff6fea943268fb71a320686fd769ca523e072",
+      "executable": false
+    },
+    "runtime/interaction/src/interaction_dependency_footprint.cpp": {
+      "sha256": "afe90e71a2df354964b93c4084587d99927c76491e2f528d86f0f4d8fecd25e2",
+      "executable": false
+    },
+    "runtime/interaction/src/interaction_dispatch_runtime.cpp": {
+      "sha256": "6fac4c51ea922b96fd1ead262d6d73164990c141d9696bd57e438e48b1f01820",
+      "executable": false
+    },
+    "runtime/interaction/src/interaction_runtime.cpp": {
+      "sha256": "86c8bd6de3281e9d2a948c5cbe920a3e2607f326d096197af31a69bdaff5c5b0",
+      "executable": false
+    },
+    "runtime/interaction/src/multi_contact_coordinator.cpp": {
+      "sha256": "7b08a9ea7de403f56a2871587e9b675f480e25f4bc6f071254ce9a069ef2a1a1",
+      "executable": false
+    },
+    "runtime/interaction/src/partial_erase_geometry.hpp": {
+      "sha256": "714643946001e27d6e7a48451ec8fbfc8055d11e2378abd40f239da6bae2044f",
+      "executable": false
+    },
+    "runtime/interaction/src/qualification_checkpoint.hpp": {
+      "sha256": "2f3e2d68da7d493e0d5c30fd5c936e53b4cb24de40f9fcd1e2f635bb61a04616",
+      "executable": false
+    },
+    "runtime/interaction/src/region_selection_geometry.cpp": {
+      "sha256": "074bf49f77e6c4758e0515ea3d8ab32cb78e4fcec9f6d14656e428c5dc50f4c0",
+      "executable": false
+    },
+    "runtime/interaction/src/region_selection_session.cpp": {
+      "sha256": "c5370eb3a09a4b7393cc175be9adc0711f4f03958951aa0bd7b55d74d2e92588",
+      "executable": false
+    },
+    "runtime/interaction/src/selection_session.cpp": {
+      "sha256": "ba1e7a57226a29801d9a6c60ef0ed617f0c98621bed39e871f75a151e6f749fd",
+      "executable": false
+    },
+    "runtime/interaction/src/session_manager.cpp": {
+      "sha256": "bf45d57f755be249162dfada589609226160b5e36fbdfbe1f5184f48baa1363c",
+      "executable": false
+    },
+    "runtime/interaction/src/text_edit_session.cpp": {
+      "sha256": "b21fde0a67da88b15077fb6273523bc16336274151449c3087a65c8193b6e913",
+      "executable": false
+    },
+    "runtime/interaction/src/transform_handle_drag.cpp": {
+      "sha256": "e80cedd95c75fa5cc1c0bc7cea979287cf11ba7504951acf2af5c6bfe7b0846e",
+      "executable": false
+    },
+    "runtime/interaction/src/transform_session.cpp": {
+      "sha256": "47cca58c51fbb2d894c5e187e1d10653aa0e6d78b7cc9394012a79f642234dcf",
+      "executable": false
+    },
+    "runtime/interaction/src/undoable_command.cpp": {
+      "sha256": "057a1bdb2ba4fb4e189160f66e9c72af777d5298cbe1f960007c08ecd0c6ea85",
+      "executable": false
+    },
+    "runtime/interaction/src/undoable_command.hpp": {
+      "sha256": "bc8cc39f117583b2c4485f468551a7a1c3a4f5e71e7ebcf3af5030a6497eebf1",
+      "executable": false
+    },
+    "runtime/interaction/src/viewport_constraints.cpp": {
+      "sha256": "b8b95ccd9edce224529b42572704d2e8e9e9aa6fe3e592358fecb25865f22989",
+      "executable": false
+    },
+    "runtime/interaction/src/viewport_interaction_controller.cpp": {
+      "sha256": "945f7e85c1b6522cae4315d698638b4221211720a1dbf44700d6434a3f49e125",
+      "executable": false
+    },
+    "runtime/interaction/tests/canvas_interaction_coordinator_test.cpp": {
+      "sha256": "d8c7994107612202e98679533551c9960532c9e38009bc7b280aee9998b7adfe",
+      "executable": false
+    },
+    "runtime/interaction/tests/content_revision_style_test.cpp": {
+      "sha256": "8832097b888282c4f3d8d7a9cd45cd3c840ffb146d97ee85796fddc40516fc4b",
+      "executable": false
+    },
+    "runtime/interaction/tests/editor_history_test.cpp": {
+      "sha256": "eba312eb0cdd4fa2516d6adad9be0339ef728c4b8bfe567781a10c68e4d7f3ce",
+      "executable": false
+    },
+    "runtime/interaction/tests/eraser_session_test.cpp": {
+      "sha256": "cfbb6fc29b6fa0acb09f16287e296dd48c91a5674957fdd6bc1e3f21475f7ae7",
+      "executable": false
+    },
+    "runtime/interaction/tests/f08_frame_qualification_boundary_test.py": {
+      "sha256": "88f9cbee955916811e44bcaa85d71bbab37b6186ac8e824bdc3561c81685bbb7",
+      "executable": false
+    },
+    "runtime/interaction/tests/gesture_arbiter_test.cpp": {
+      "sha256": "2face284d72bca99934c674a34b6769766dcca31c69b731d664afbfa5883d288",
+      "executable": false
+    },
+    "runtime/interaction/tests/multi_contact_coordinator_test.cpp": {
+      "sha256": "dc213fca7642f8ed1b2ae6b5b4cd53b0e2c31f0caef086682265cbf5e0f9449d",
+      "executable": false
+    },
+    "runtime/interaction/tests/region_selection_session_test.cpp": {
+      "sha256": "5dc64e5bb1ac14c79c94a9052f850e32f6377bb778e56cbcfdb2ba8b7de07078",
+      "executable": false
+    },
+    "runtime/interaction/tests/selection_coverage_test.cpp": {
+      "sha256": "73016bde8ad0e3497f17b8ff52bb21faa90d32706eb0a0ace82f107df200706d",
+      "executable": false
+    },
+    "runtime/interaction/tests/selection_session_test.cpp": {
+      "sha256": "c729ac044ceee02ba040439e1e2595f1cdeb9ec9412600710b7d483683832935",
+      "executable": false
+    },
+    "runtime/interaction/tests/session_conflict_test.cpp": {
+      "sha256": "650b60d0d1c670e87161b7b7f091d8478c6e92afac630d975930b09e0c325ff6",
+      "executable": false
+    },
+    "runtime/interaction/tests/session_lifecycle_test.cpp": {
+      "sha256": "64ec83e8ed3a91d69c0fd60e1f2c51dbfec77b4987ae59c5f207ffc0d5834de4",
+      "executable": false
+    },
+    "runtime/interaction/tests/session_manager_test.cpp": {
+      "sha256": "e4d947a0dadaa7672dc192b41842847d3e916f7e63bcd16fa788bfcb6927a964",
+      "executable": false
+    },
+    "runtime/interaction/tests/transform_handle_drag_test.cpp": {
+      "sha256": "3fc83c52cad7581caa128f57f1cea9e49d3fdf2f796f4cc5f0085b425f97e1c8",
+      "executable": false
+    },
+    "runtime/interaction/tests/transform_session_test.cpp": {
+      "sha256": "2b33e2ffa303505f45744f89adb0f65b0f12b29958f18d2b448d434bcc570c9e",
+      "executable": false
+    },
+    "runtime/interaction/tests/viewport_constraints_test.cpp": {
+      "sha256": "828fb4cc382341d889fe8b19b42bcadd7c4d24520a2167d891ffc8e60bc42698",
+      "executable": false
+    },
+    "runtime/interaction/tests/viewport_gesture_test.cpp": {
+      "sha256": "84a347044b8d8eb283aa222962a50bc535910d880af91f72130d3ee2a98ecd66",
+      "executable": false
+    },
+    "runtime/interaction/tests/viewport_interaction_controller_test.cpp": {
+      "sha256": "4eb55e3bc9e6e68a07d4e864f01185c181a3cda0c41651d7d04941ed224b5f1d",
+      "executable": false
+    },
+    "runtime/render/CMakeFiles/axiom_transient_display_retry_tests.dir/tests/transient_display_retry_test.cpp.o.d": {
+      "sha256": "484f37355fa553d519845c08fa8ded949a417252eebf77400748e8441c0ff8f2",
+      "executable": false
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "24b0795a044332ab4a0d4b861f9cc6f81e7642fe072f0deda4ebc8b137dccc82",
+      "executable": false
+    },
+    "runtime/render/fixtures/g3-07/nine-kind-v1.axsnap": {
+      "sha256": "b4d04c4424c50370991729bce124c48e8c822487c788de6d535e959aab27c37f",
+      "executable": false
+    },
+    "runtime/render/fixtures/g3-07/nine-kind-v1.expected.json": {
+      "sha256": "c58e6bb09e53e8f5d5862aeb2d0d6b281e54d2eecfebe44f08e903ab4b33a35e",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/brush_outline_skia_path.hpp": {
+      "sha256": "f280b1af36f416666168d0ce645979ae2b8f9d3d406ad739f4ef18b2fabd302b",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/brush_render_point.hpp": {
+      "sha256": "767438b32c0b20a6e6dee9f3a64b65b32b5e3e756574e4c3fee344b5ff5847e2",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/canonical_handoff.hpp": {
+      "sha256": "ba7a86febc3773e1fe58cc2601b674732f645068bbf0e1d23bb8fa2cfbcc462e",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/damage_tracker.hpp": {
+      "sha256": "6a0c00d634dfe0167a166d5e22ef754f96fbb841fd7b5018064ebd87f8f3eee2",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/direct_reference_source.hpp": {
+      "sha256": "cc1d1550bbe6475160e4e441651c51a70ad0119d3eb6d30c88e79e235937b78e",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/editing_overlay.hpp": {
+      "sha256": "2937a7a31a258a0d24ddbc1818fdd6e4bd43e2bd55e54f4c2cfba0a23d39657a",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/frame_plan.hpp": {
+      "sha256": "1576152f1fa95753b2b9fa608340b5bd65670958dafafa54f7982fbe6e388432",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/frame_state.hpp": {
+      "sha256": "fc735ed425296b4bf596bcc6371baa83dc197d18e013048ce7075092c5a15fd4",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/image_crop_geometry.hpp": {
+      "sha256": "048f6d1e1599f18c2f03039755d5e35d7311b9feeefb330a9dff7bccc6c404c1",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/image_encode.hpp": {
+      "sha256": "23949694728fef85c7ffa04af789b8718d11ed7b76016a076511613c03581bf7",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/image_resource.hpp": {
+      "sha256": "56ce9b13043bd4161f2e57c7964b05cb51f408e73159862ca976aae7691ef12b",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/navigation_sources.hpp": {
+      "sha256": "d4d2b8358d64c74df342965233b9c14b4bc0988938836bda4460dfa58ff27639",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/presentation_tracker.hpp": {
+      "sha256": "0c10f6ab1c517661a74f98f765ae53cfdad7724ed34b3694a5c8a240c37fadb6",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/preview_surface.hpp": {
+      "sha256": "16824721fc743e8021ce1b1f0d4e28bec4e9ac747dbd07df3a18174f76d00ed6",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/reference_draw_list.hpp": {
+      "sha256": "6cb16631431b1508454d3cfffa3db0259af4dd20691d28419f9b41648d512b95",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_backend.hpp": {
+      "sha256": "adced73cdccbc1e1f41e9851f1d9ea8030e9d8c0b99905f9e7edbf119a527724",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_cache.hpp": {
+      "sha256": "8b2bf98b5767ec0ca8f8ef7a08d8d5d4cb890859626fd23e6a0b84626dc226f2",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_group.hpp": {
+      "sha256": "91df9da6e229d72dd015e5305ac32fc7f5476247afbb0bd10fe0fa7e976d4c77",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_group_manager.hpp": {
+      "sha256": "cfd1714357825869880bf671471874cdf4e480f90749b86eec05d68f40eee5d0",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_target.hpp": {
+      "sha256": "1c528b18278953f353c5f786311783beaf2232c803f783b00768532efdf02f3f",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/render_view_runtime.hpp": {
+      "sha256": "8b6781944efac7621bf06c3208eba8a512d7e54500b41a19689fc6b65028af17",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/runtime_app_binding.hpp": {
+      "sha256": "a20b9b88e2aa074e154878f07113ac992069f12ac22b30df0469b291782d50d6",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/runtime_frame_coordinator.hpp": {
+      "sha256": "1630894ac7b68c60f6c3381516c72f395bb61acabcb09d00c5a6b40cc7be2028",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/selection_region_geometry.hpp": {
+      "sha256": "75b1c32188c336cfaa1143f79345959803828a496bcd718711ba1b039ec746ae",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_brush_renderer.hpp": {
+      "sha256": "d787ddb2ed25d2397f691005f868b2091e308d6073c9e94519e0fa9a1af3accf",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_headless_backend.hpp": {
+      "sha256": "3a07ae0e5e0650553b5c689343b72fc4665f093ed21c5a2bee0893cdddeb01b4",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_ink_backend.hpp": {
+      "sha256": "7546ec7148c298c6b625a438f296489c44136ae683e8f069e0a404bda6650e09",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "sha256": "85c129643be7f8a42fcddbd2062222302fbcca444e6d846e8501914554de3d2e",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp": {
+      "sha256": "57befee380676aa70bb247b5352f1e28c0754c608e877880354abe1e0ca0ffb1",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_surface_provider.hpp": {
+      "sha256": "6a4ec68a18ce2822f19c25ce4c62fa3cbe73d427267424deb8e6d27d9d1f95df",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/skia_text_resources.hpp": {
+      "sha256": "ed63821b36f9dd5e8373de464e98a0534701ecc960f5ac596116c564e2d75f12",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/surface_lifecycle.hpp": {
+      "sha256": "ac6e2e1f984be20cde06ec38bdc7ceb01f3b28737054aaae6df650395ae0aef1",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/surface_metrics.hpp": {
+      "sha256": "9cd0e6b74200a7a1457124c09d29d58833d0df6b82b707943051b163b6679d73",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/tile/tile_grid.hpp": {
+      "sha256": "9f74c6dccc8ee3e0180a2b80d16cda6d2b59ded9de08cdd275e79131e368965a",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/visibility_resolver.hpp": {
+      "sha256": "2417695dfa8190b5acf35e2f2d52ddfa8ff57b4ca160c5e68ecf6df66dce5f3f",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/visibility_result.hpp": {
+      "sha256": "105b74989afe75c8cc5266687ba3d90ea2d60cdfe039917de327fae2111ce4b2",
+      "executable": false
+    },
+    "runtime/render/include/canvas/render/webgl_surface_backend.hpp": {
+      "sha256": "aae71f86343e8dcf86a9ca3f952bc4fb6afd7b98419f8ff4c2dd50ea05057749",
+      "executable": false
+    },
+    "runtime/render/src/affine_bounds.hpp": {
+      "sha256": "b3564395dc846966edb538f01c587eba71efa40cfb0e4bac75f305ddf70eed90",
+      "executable": false
+    },
+    "runtime/render/src/brush_outline_skia_path.cpp": {
+      "sha256": "e66a38c93c077ef1c916ae791734f5e0873e5ce441452f31651ef21ecd5c873a",
+      "executable": false
+    },
+    "runtime/render/src/canonical_handoff.cpp": {
+      "sha256": "1386e8111c474954e9e2b21227feff5bb51e08ef8cfa2131d5c9eacf1e4200ae",
+      "executable": false
+    },
+    "runtime/render/src/chunk_query.hpp": {
+      "sha256": "64da044e32d4c64a3246d55f06713504359810ee1b524501250e98aa40f77ace",
+      "executable": false
+    },
+    "runtime/render/src/compact_contour_skia_path.hpp": {
+      "sha256": "85bafe3038d6c8c25e408e763b894ea2fec038cdef076eed6a380ad8c504617c",
+      "executable": false
+    },
+    "runtime/render/src/compact_raster_internal.hpp": {
+      "sha256": "a68a7df4488309cced8dfc713e36b15d971b9e8eab2114b8821cdd82a80fb53c",
+      "executable": false
+    },
+    "runtime/render/src/damage_tracker.cpp": {
+      "sha256": "bd03f9c0ad400b30bd9ba7a4e39b38c4d6556f2f0b201d06740b84004aa90a34",
+      "executable": false
+    },
+    "runtime/render/src/direct_reference_source.cpp": {
+      "sha256": "3f6371e3e60bb551a4405d50dd5b26c9222934eb75a52bd24dde9e0ec188c900",
+      "executable": false
+    },
+    "runtime/render/src/editing_overlay.cpp": {
+      "sha256": "1aa582c5b43b4112f27b6c1beab39901be7f762da5d7753b55646cdbaf37cf9a",
+      "executable": false
+    },
+    "runtime/render/src/frame_plan.cpp": {
+      "sha256": "6ad95bfe6e4b42416764184b348fb99ee2601600166963c55eff10b5f3c95d71",
+      "executable": false
+    },
+    "runtime/render/src/gpu_resource_retirement.hpp": {
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5",
+      "executable": false
+    },
+    "runtime/render/src/image_encode.cpp": {
+      "sha256": "e2524f362f735b4cbcccb98d6b698aae0a4be9a989598863e2afb7b52fa5d5a5",
+      "executable": false
+    },
+    "runtime/render/src/image_resource.cpp": {
+      "sha256": "e5503a342c91cf4ce5ec6a5ae8368dc50fc25c12987009b6e03ad6bf78a247a8",
+      "executable": false
+    },
+    "runtime/render/src/navigation_pixel_validity.cpp": {
+      "sha256": "edac3ea2fb83ce0cd1e1b12ab7f1bcd8903085acb90d646a118f5ff5b90bd309",
+      "executable": false
+    },
+    "runtime/render/src/navigation_pixel_validity.hpp": {
+      "sha256": "6ac55adf05da4191f6f28e7ecae02a213240abde1456fcbd14b43ac9018afe3e",
+      "executable": false
+    },
+    "runtime/render/src/navigation_source_snapshot.hpp": {
+      "sha256": "f102c7705d9745594cd18317a4fac148b77a858350bcdec83f445266b7fead36",
+      "executable": false
+    },
+    "runtime/render/src/prepared_body_job.cpp": {
+      "sha256": "c5e40a65018c45c9bd247e31bc1bb1715ea4794182622bcbc0dd21c0c537a701",
+      "executable": false
+    },
+    "runtime/render/src/prepared_body_job.hpp": {
+      "sha256": "11f7ee7e88708cd7d2e33c21f76d1150c959bb69d34c6c654e052f1b8d2f94ca",
+      "executable": false
+    },
+    "runtime/render/src/presentation_tracker.cpp": {
+      "sha256": "b3db9de34e813b5ba80adbf41bdd5c14f41c26d1a193655adffc544f6e1d12ba",
+      "executable": false
+    },
+    "runtime/render/src/preview_surface.cpp": {
+      "sha256": "a4f2eba74606f551b433d0a4281239bb445d90d076f586299af5401b9f183884",
+      "executable": false
+    },
+    "runtime/render/src/render_backend.cpp": {
+      "sha256": "459effb951324f8ae7f724dbda8f3b73003dc3c271114d3d7096cd62a9e0dd76",
+      "executable": false
+    },
+    "runtime/render/src/render_execution.cpp": {
+      "sha256": "db9ad78813397347f1031daafef71bebc86e5320aeb3f8314b31275a36ef69fe",
+      "executable": false
+    },
+    "runtime/render/src/render_execution.hpp": {
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2",
+      "executable": false
+    },
+    "runtime/render/src/render_group_manager.cpp": {
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "executable": false
+    },
+    "runtime/render/src/render_target.cpp": {
+      "sha256": "45c6a2c26d9d7b248b676d45739a9911a0217dcb366c39b48445f67fa26d0990",
+      "executable": false
+    },
+    "runtime/render/src/resource_reclaim.hpp": {
+      "sha256": "a3f357b7497f12dfff22c4379bc85d05450508925ac32c02eefd82bcfafda467",
+      "executable": false
+    },
+    "runtime/render/src/runtime_app_binding.cpp": {
+      "sha256": "6f5ee4039d8d8664794e478af13c0b8c9fe2513ba69bfc4324fb632036e29130",
+      "executable": false
+    },
+    "runtime/render/src/runtime_frame_coordinator.cpp": {
+      "sha256": "f1798283adabb2fdcdf2ee6915862af1cf3634b10c99bf46c4032b9ed963b577",
+      "executable": false
+    },
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "44ea582c5294e6f0f8d39a24cfcc17afeb6076b47a188a891fd9efffb167e2da",
+      "executable": false
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "sha256": "d44e8830556ced27d2089d0ddea919b4467340de5ea32309283f2553f057750a",
+      "executable": false
+    },
+    "runtime/render/src/skia_brush_renderer.cpp": {
+      "sha256": "10db517440885ddfa0d0e10e7166596fffc775b60e182bd577c3121234cfc34c",
+      "executable": false
+    },
+    "runtime/render/src/skia_compact_material.cpp": {
+      "sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8",
+      "executable": false
+    },
+    "runtime/render/src/skia_erase_mask.hpp": {
+      "sha256": "b17d16999fe375060e5e9c4210edcd98b109c871287bbe0bab2ca90992df62aa",
+      "executable": false
+    },
+    "runtime/render/src/skia_geometry_internal.hpp": {
+      "sha256": "9362db7b748f9024f02dc9b2ea76fc80704609d8a253c7fbd7b7bc4fc80eaf81",
+      "executable": false
+    },
+    "runtime/render/src/skia_gpu_lifetime.hpp": {
+      "sha256": "297135aa4720cedb0b9de8ec795ed7af4edf3a9f10577228ae6a6115967b1000",
+      "executable": false
+    },
+    "runtime/render/src/skia_headless_backend.cpp": {
+      "sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38",
+      "executable": false
+    },
+    "runtime/render/src/skia_ink_backend.cpp": {
+      "sha256": "3cd0e4e6f6b5c1db40bf9a9e1ddb13db6a5f4242bda433c8fb763736a15f0d17",
+      "executable": false
+    },
+    "runtime/render/src/skia_ink_layers.cpp": {
+      "sha256": "c4a094cbb0b62b5b3d21ca7ee283c8122d60b38d593b340165328f16ffb95475",
+      "executable": false
+    },
+    "runtime/render/src/skia_ink_layers.hpp": {
+      "sha256": "a313803ab79bc39ecaf1e0671f8d97dbeb3f517b1eaecbe4d4dd9c5939658faa",
+      "executable": false
+    },
+    "runtime/render/src/skia_mask_history.cpp": {
+      "sha256": "7972804662f1819073883f018ee59b0b85460b917cb1dbb7619fd7829c86a66f",
+      "executable": false
+    },
+    "runtime/render/src/skia_mask_history.hpp": {
+      "sha256": "9d4fd59ded08c1e73ac4daa76b7b49857947359334542ce12946e8d082b5ca73",
+      "executable": false
+    },
+    "runtime/render/src/skia_navigation_tiles.cpp": {
+      "sha256": "367ef141f6e7069ba9b3e4c705124c5e8f79636d8c2923d2fad6696c5612a8c1",
+      "executable": false
+    },
+    "runtime/render/src/skia_navigation_tiles.hpp": {
+      "sha256": "bb85cfcf21923c94fa4a7a9d52a4566841bb22ee3b9eb40c34e08a7dd4368094",
+      "executable": false
+    },
+    "runtime/render/src/skia_prepared_geometry.cpp": {
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+      "executable": false
+    },
+    "runtime/render/src/skia_prepared_geometry.hpp": {
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da",
+      "executable": false
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+      "executable": false
+    },
+    "runtime/render/src/skia_render_cache_internal.hpp": {
+      "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "executable": false
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+      "executable": false
+    },
+    "runtime/render/src/skia_scene_renderer.cpp": {
+      "sha256": "19a25143f9f0c4ad9d3a0012cdb1e5e836e20328733304f54f447e43c583d70e",
+      "executable": false
+    },
+    "runtime/render/src/skia_surface_provider.cpp": {
+      "sha256": "27665a63eae3a5a43bd403b0df4c411ff0fcd8f23126e86bff3c67307eb33191",
+      "executable": false
+    },
+    "runtime/render/src/skia_text_resources.cpp": {
+      "sha256": "3f7a516d1a4ce73237011905438025d971ea733f421c0af040a1b94e0686f287",
+      "executable": false
+    },
+    "runtime/render/src/source_retention.hpp": {
+      "sha256": "34166388b14044654358980750d14d67dcf361353563a7175c5bd15c02a55a9c",
+      "executable": false
+    },
+    "runtime/render/src/surface_lifecycle.cpp": {
+      "sha256": "4a9c21c261293cc2a0f2d392f06354f6e4949695469bf1df0675eedcde42d847",
+      "executable": false
+    },
+    "runtime/render/src/transient_display_state.hpp": {
+      "sha256": "f389b7fa8983e2fd7e529415cee04032a651c9f4bf1f31caf8faa395944e31b8",
+      "executable": false
+    },
+    "runtime/render/src/visibility_resolver.cpp": {
+      "sha256": "818ccfa46584c8db81ac564d04dfb141ccf02efed80c1fb767a0ad7d8fe44610",
+      "executable": false
+    },
+    "runtime/render/src/webgl_context_liveness.hpp": {
+      "sha256": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0",
+      "executable": false
+    },
+    "runtime/render/src/webgl_surface_backend.cpp": {
+      "sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "executable": false
+    },
+    "runtime/render/tests/brush_outline_skia_path_test.cpp": {
+      "sha256": "c3d9106b03cd316bfbf045e6a792464437c07853f711110f4a7ac10d2d39241f",
+      "executable": false
+    },
+    "runtime/render/tests/canonical_handoff_test.cpp": {
+      "sha256": "c2ca0caaec00c9450377e8d4d0f52d752b36b21f05346051568094b0ad0db2af",
+      "executable": false
+    },
+    "runtime/render/tests/canonical_prepared_body_test.cpp": {
+      "sha256": "5e51ebd1c148b366f03a0a01062be9c50ddb3b84cdeeba5c027d016e8b4d3837",
+      "executable": false
+    },
+    "runtime/render/tests/chalk_continuous_texture_test.cpp": {
+      "sha256": "2792ef7ebde9a984835fdb4aeca5fb8049f8a7ae847b50158519f1782f8c0512",
+      "executable": false
+    },
+    "runtime/render/tests/chalk_texture_test.cpp": {
+      "sha256": "82d921b6c652a32399950d763ac6eca38f5135146e5e304c3170216cf3ea920e",
+      "executable": false
+    },
+    "runtime/render/tests/damage_ownership_test.cpp": {
+      "sha256": "8803b0866c00b17e8f3e7dfaa9aabaa275d8fafb124bf8c3176708802bf7764d",
+      "executable": false
+    },
+    "runtime/render/tests/direct_reference_source_test.cpp": {
+      "sha256": "0c90267d9bdbc5b196babf7b4b3c432ab4dd6667de13e68fa63b4377fc4b7c5f",
+      "executable": false
+    },
+    "runtime/render/tests/editing_overlay_test.cpp": {
+      "sha256": "4e2be24a3370bde3b8101214825d2a50ce92a7acfee1793e2b4bb89f09071854",
+      "executable": false
+    },
+    "runtime/render/tests/erase_hit_test.cpp": {
+      "sha256": "73b10ced0b0fdeb7e21ae56fbd44bdd48e5fa9746a794ee2bcb8a5b1d43c27a1",
+      "executable": false
+    },
+    "runtime/render/tests/exact_contour_locality_oracle.hpp": {
+      "sha256": "8e5ead9e58ddba3628c33d7cea20a86e1b87e4283cdfe186ea0b5f65bfdbbf00",
+      "executable": false
+    },
+    "runtime/render/tests/exact_contour_replay_oracle.hpp": {
+      "sha256": "82c5e9f677860fcd66d1f6b5b33986bc6075d537a2b53ed88f2a3e30b13cddc9",
+      "executable": false
+    },
+    "runtime/render/tests/frame_orchestration_test.cpp": {
+      "sha256": "394dcc7065b759e6dc2b2c08aabe32795c7a90962fcd8fc0209a6718c134c43c",
+      "executable": false
+    },
+    "runtime/render/tests/frame_state_contract_test.cpp": {
+      "sha256": "d605379a76ff4761691e035bdcec62133b7b0f0d1bf601de61b7ce5b065c95d1",
+      "executable": false
+    },
+    "runtime/render/tests/g5_observation_identity_test.cpp": {
+      "sha256": "c916a6875954ec2889cb5bc12a2cc9a5e271f6a5c91265c191e5db1202ba9d03",
+      "executable": false
+    },
+    "runtime/render/tests/gpu_resource_recovery_test.cpp": {
+      "sha256": "56a00100804f57042c2d1bed60a5bcfc7b8258208dd6f178959f6e23ef271e72",
+      "executable": false
+    },
+    "runtime/render/tests/gpu_retirement_contract_test.cpp": {
+      "sha256": "d64865e29b00f79274d19fa85b74e6bd078131063fb8a1e63abb8072cf55379e",
+      "executable": false
+    },
+    "runtime/render/tests/headless_canvas_demo_test.cpp": {
+      "sha256": "c0ad918f50383f1c630ebd0eb86205a355b7eb0a27470cafb1109fbd39bff4ba",
+      "executable": false
+    },
+    "runtime/render/tests/image_resource_test.cpp": {
+      "sha256": "840527658f521f655ffcfa43fd754da49d60ec4adebfd4de5e61505f5dc1e353",
+      "executable": false
+    },
+    "runtime/render/tests/ink_v2_material_test.cpp": {
+      "sha256": "166c0780e019a3fd6ed252577745058f08ccc5471155ef189c4a36fa994b5e01",
+      "executable": false
+    },
+    "runtime/render/tests/ink_v2_work_test.cpp": {
+      "sha256": "d7e2fdfbf3507924a6f69bd0cd7f6dae2436ee51688839482a8913ffdf434b65",
+      "executable": false
+    },
+    "runtime/render/tests/moving_erase_progress_test.cpp": {
+      "sha256": "f662d39b9d5c0f7f18af5d5d07f3f731d27c4e5e3a00e08735bf5496209e8ade",
+      "executable": false
+    },
+    "runtime/render/tests/navigation_alpha_mask_oracle.hpp": {
+      "sha256": "8c23397a630669ed91f21c5a107188cfb038ad72c7ff6df98f82b90500b67ca2",
+      "executable": false
+    },
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": {
+      "sha256": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b",
+      "executable": false
+    },
+    "runtime/render/tests/prepared_body_index_test.cpp": {
+      "sha256": "7316c608e55827c62f75d98f6a419c4b187d975501288b9a24afdd7cd47108f5",
+      "executable": false
+    },
+    "runtime/render/tests/prepared_geometry_test.cpp": {
+      "sha256": "936ca249d6729001af7abacbb4cbdaa546a88965bce04f6e636acca915706f3d",
+      "executable": false
+    },
+    "runtime/render/tests/preview_surface_test.cpp": {
+      "sha256": "28bb2cb5c6fd5a81338647524cad8613b5688469c66e33adacdf9c09156f7809",
+      "executable": false
+    },
+    "runtime/render/tests/reference_draw_stream_oracle.hpp": {
+      "sha256": "e212ab07f0cae6dc4e1ad82b2b661d3faeca489d211bd5294b1c67d55462884f",
+      "executable": false
+    },
+    "runtime/render/tests/render_cache_test.cpp": {
+      "sha256": "0dd7a4a0564d18bd2236edcc4ea0a9c5526770b10efd07e8ce6ef261729ee8ed",
+      "executable": false
+    },
+    "runtime/render/tests/render_execution_test.cpp": {
+      "sha256": "29bb62128c2f6d14d01cf458b524b62f813ac544ece290daba67f358954076d0",
+      "executable": false
+    },
+    "runtime/render/tests/render_target_test.cpp": {
+      "sha256": "162675b4add91afd4df634a30884c4b5d0cb747fce3215d29238df34e237dc23",
+      "executable": false
+    },
+    "runtime/render/tests/runtime_app_binding_test.cpp": {
+      "sha256": "90b16a4416506b1c08d50515141525c41a3268ae0c483b657c6349aea656def6",
+      "executable": false
+    },
+    "runtime/render/tests/runtime_frame_coordinator_test.cpp": {
+      "sha256": "f2a08b58daeb190cad263668b3457513c19174835fbcf80d6a5f33792ddb8f57",
+      "executable": false
+    },
+    "runtime/render/tests/runtime_isolation_test.cpp": {
+      "sha256": "3db396f5c57a94fa3094f3cc4a5c3791122ecaa9b6bae977e10bcb2d21f0c2f6",
+      "executable": false
+    },
+    "runtime/render/tests/shared_scene_test.cpp": {
+      "sha256": "dfa345d3f7a62064fdba4dcdb13d0f4c65a7cedb35bffda132404ea967448c14",
+      "executable": false
+    },
+    "runtime/render/tests/skia_brush_primitive_test.cpp": {
+      "sha256": "4b69280af080b9b88c43afdfebb9339ec177119ba7a048a6a8c128b6dec6141c",
+      "executable": false
+    },
+    "runtime/render/tests/skia_chunk_range_entry_test.cpp": {
+      "sha256": "c9fd604b6f347a986eedd51f0f112c129bedd380f5e7114a5c9fd010b84591f2",
+      "executable": false
+    },
+    "runtime/render/tests/skia_headless_backend_test.cpp": {
+      "sha256": "b93ba28bfddd008e44416dd97255cec69ed55b5763702b5e171be6fa0896570c",
+      "executable": false
+    },
+    "runtime/render/tests/skia_ink_backend_test.cpp": {
+      "sha256": "4db5979c6f096c3b3a72280cb977beb141e1e2ea8208599f146f211f7d23e00a",
+      "executable": false
+    },
+    "runtime/render/tests/skia_surface_provider_test.cpp": {
+      "sha256": "b5debdf02cb51b4824ab8a613960cd0e8301079b098ed490428ecb26b3d63cac",
+      "executable": false
+    },
+    "runtime/render/tests/surface_presentation_test.cpp": {
+      "sha256": "de8b67860d18cbd7947cdfa57aef15f30373f5beba4554ce5f8cbb2df69a0993",
+      "executable": false
+    },
+    "runtime/render/tests/text_pipeline_test.cpp": {
+      "sha256": "307ab9452eb1921d19f99ede9c5f73b30021fae6eb8fe91be7fa4691adc7e17f",
+      "executable": false
+    },
+    "runtime/render/tests/tile_work_test.cpp": {
+      "sha256": "6cb0ed0cbc0443396756a68268105812078acc021b17fb252ba4f17c17de2f2e",
+      "executable": false
+    },
+    "runtime/render/tests/transient_display_retry_test.cpp": {
+      "sha256": "dfc5c1f002cc902b81bc3395085e659d9b06d9253e1eefa80628b82cd16ef046",
+      "executable": false
+    },
+    "runtime/render/tests/transient_reference_test.cpp": {
+      "sha256": "751a79993a508b32d6abe81b034afaf792b488260fec673f778ffddbdf740c37",
+      "executable": false
+    },
+    "runtime/render/tests/ur2a_current_composition_test.cpp": {
+      "sha256": "5bca9807c565ee9998162ff0e13771b26f23c91260a2b51a1b963a64844e34d8",
+      "executable": false
+    },
+    "runtime/render/tests/ur2a_mask_isolation_test.cpp": {
+      "sha256": "57152d79bf4c888fdca0456f14389dab502294895c18698b652cacac882c4244",
+      "executable": false
+    },
+    "runtime/render/tests/ur2b_exact_query_test.cpp": {
+      "sha256": "427bab6065ecea3e842c362535749fb2d48b65f48784d26ec0251ea3e9c8c4cb",
+      "executable": false
+    },
+    "runtime/render/tests/ur2c_mask_history_test.cpp": {
+      "sha256": "da96e6769094e76c614bfeb8d2fd29e739f133ca89dd510ed92bf857b66af4bc",
+      "executable": false
+    },
+    "runtime/render/tests/visibility_resolver_test.cpp": {
+      "sha256": "335590253586953ba5607ddd1406cbffc4d381930e9c8ac417c3bcdd5c4ede3d",
+      "executable": false
+    },
+    "runtime/render/tools/embed_binary.py": {
+      "sha256": "8ccc4e2ccec77c0ecab0158f8d99ff82041517683d5b96d29f0ebe71f94fe736",
+      "executable": false
+    },
+    "runtime/render/tools/headless_canvas_demo.cpp": {
+      "sha256": "96a6d438c6253e9a90c9039554ffec691891c9ef0250d864fee817a7a7c09854",
+      "executable": false
+    },
+    "runtime/resources/CMakeLists.txt": {
+      "sha256": "ee9bd28ecd2f976e089d70d4eb7840ffa2f1a49fbee7d8d3201646f90fc833ef",
+      "executable": false
+    },
+    "runtime/resources/include/canvas/resources/resource_budget_manager.hpp": {
+      "sha256": "1c3f391180733808cd780f96ad16276cb649eb489222811f3c0e90dc09ed117d",
+      "executable": false
+    },
+    "runtime/scene/CMakeLists.txt": {
+      "sha256": "31ee6c458f8e91910f034f6d617aa0123bcbbd67b1321951bbadb0bd6bf371f6",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/bounds_system.hpp": {
+      "sha256": "784d915f512bd70eb5e2ff402c3c4a9e4189f7e0eb40c9b6536601386ebe9384",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/connector_router.hpp": {
+      "sha256": "a718e02c14c8b48a9bbb6baa0d84b9fff6d5a807ab2a236032720d4464c93e61",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/corner_geometry.hpp": {
+      "sha256": "53ccb791010a38dd0114f7e28354943549d3eb34b0458fc97cdba8987438e839",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/damage_tracker.hpp": {
+      "sha256": "ec74a2fc1096e59ef84c4626a624983918dbd04b9f25d788f45c3d02b3104de9",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/derived_geometry.hpp": {
+      "sha256": "860c73967bbb3cfcb32797dfcdb4705705f819acd2e344ee38ed3baf40ca51e4",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/direct_render_scene.hpp": {
+      "sha256": "c1ae76ab51eb3369c13a6b0a59358eeee7a8e3874b11560d20d185b8d0365e39",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/full_scene_compiler.hpp": {
+      "sha256": "e7d8db2a9281b384878a4676849104a6ca775903307e9bf648f2328ada4fe34e",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/geometry_chunk.hpp": {
+      "sha256": "51fafd49530e19ca3aba8ba86368f6b370e735511e9ba18d9a63da135b79e9ec",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/hierarchy_geometry.hpp": {
+      "sha256": "7cf7a00e80eac622ab57e2dcde6908c9f137ab48c9f50f314c0ff29a55b79262",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp": {
+      "sha256": "810ece437df83fdd2a1d66d1457f330e217273e2a0e93c09f11dc4ab260b032e",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/linear_spatial_index.hpp": {
+      "sha256": "92b65b5b48398f9425adea10fac5d575ac2ab0710cbe674b2574cc0b12e82d42",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/reference_geometry.hpp": {
+      "sha256": "29425791ae54d79b8cae12080746bce12c2b60c83f5c2b8a8c252de9d9eaafc0",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/render_scene.hpp": {
+      "sha256": "7aa14df228145e2a9027ff85ce562b3344cce94860d795fae1ad959e6f466be4",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp": {
+      "sha256": "e7ae968667af78b88e85689ce49ad4f5d6ed4992a5ce04d6f8c319b2276c6df0",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene.hpp": {
+      "sha256": "8e52c3997ff5b8aac5eaad155d3cde5358c0ceb40e6a17707d77350bcbd3af43",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_binding.hpp": {
+      "sha256": "93aa6978795a644aeafc8a6fc58066a9710d4e77a19e52461e68d04e2c5bcda8",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_change_journal.hpp": {
+      "sha256": "4a78d1441d33d50115e093b8bd903ff57a71289d43e50b3e047fe190c5e14759",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_commit_input.hpp": {
+      "sha256": "877351ea14e5bcf53d5997fac3b29db449117b2ed9291e8ae69d22adbf55939e",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_compiler.hpp": {
+      "sha256": "d91b54ef96d3166535dcbbe925a0e49bbeffcf099854eee0ef7e9e752a318a4b",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_delta.hpp": {
+      "sha256": "131fa388705dc1853d5beb037dac2cfbaacde775c86941185b0dfc883953bc66",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_dependency_graph.hpp": {
+      "sha256": "a481db52043cfef617337ddaf6be19d67466684fedfb78bc0035f1347e99b5a7",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_frame.hpp": {
+      "sha256": "2e67d3b94ed547d498c9a8435760c3e820cbc58784c791afa5332e493bc4f8f2",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_impact.hpp": {
+      "sha256": "f9e98473f7f27407451d7ee0bfef62318e1a6632d53332d6207744767f40612a",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_query.hpp": {
+      "sha256": "c6f4ddb17414db535ffdcbd1e480ca38d6c54df5fbadbc26861ef7d70d6730c7",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_record_store.hpp": {
+      "sha256": "68de83a9f44588972b39f65b30918503b9e7420dd4d63c4001c18e8ee7b626d7",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_types.hpp": {
+      "sha256": "da3b746c454c4d9afbdadbb2ef04ce9147124b09b50e49c655627793f12d3d54",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/scene_view.hpp": {
+      "sha256": "81706171bbfcc551c907e0285407905f34ba9e105e55a1750047c586dfb058b2",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/shadow_render_scene.hpp": {
+      "sha256": "771919fcc9f3f299a1def74914ebefa29cd0dbc578bfbd32feef53612dfbe725",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/shared_scene_value.hpp": {
+      "sha256": "2883ad6ea3ef1cef6a945887da3f1fda9c2e3b4e135e43410b322169ae1ce755",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/sketch_geometry.hpp": {
+      "sha256": "317612315aa0633c9e7fcd1b841f08c20c81507ba1b881e7c73abda6474f4ca9",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/spatial_delta.hpp": {
+      "sha256": "14382491077e5d792ba76a228a597673a74596521bae99a94ec09bb0d791355c",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/spatial_index.hpp": {
+      "sha256": "76d5c6ca779e21479b1720ed4636233caeb6490e26e5c5257886230f48df03b7",
+      "executable": false
+    },
+    "runtime/scene/include/canvas/scene/uniform_grid_spatial_index.hpp": {
+      "sha256": "609dad747afa3fe3acb68ec303773f62a19a2df9753561dacb88a93cc13b636c",
+      "executable": false
+    },
+    "runtime/scene/src/bounds_system.cpp": {
+      "sha256": "59c7633bd3e7b360eeca17aca1d6c6cba820eb3efbcd83b33757d2b41022a875",
+      "executable": false
+    },
+    "runtime/scene/src/connector_router.cpp": {
+      "sha256": "7ff20322f21170e6fad9e68ed81e6261128d61eadf7afcb6104c4a48f744a12f",
+      "executable": false
+    },
+    "runtime/scene/src/corner_geometry.cpp": {
+      "sha256": "bfd55c9876ae80427a402f8ddc8cbd68c452aed8f2dde93bb48d453bd02a7e9e",
+      "executable": false
+    },
+    "runtime/scene/src/derived_geometry.cpp": {
+      "sha256": "7040ca441905675e8641f1877b89b63c30d2153d8dcfdb8f5c5a7ae133c42c91",
+      "executable": false
+    },
+    "runtime/scene/src/direct_render_scene.cpp": {
+      "sha256": "77ec43652dde3b9553f7813c0dacac1d3c760a6f373a6fa7ddff9dcf643835c6",
+      "executable": false
+    },
+    "runtime/scene/src/full_scene_compiler.cpp": {
+      "sha256": "22917c2ca879fb2ca63f10a9dc2b501a1b70e114f160e6cee95a2be9f2b6279c",
+      "executable": false
+    },
+    "runtime/scene/src/geometry_chunk.cpp": {
+      "sha256": "a945515eb3ec722d2664b378c5d7438f56a904d6534c0143e278d884e3b57658",
+      "executable": false
+    },
+    "runtime/scene/src/hierarchy_geometry.cpp": {
+      "sha256": "95705488756159e0c5d446806b44bb433085c6e9e53e9d284f90cdcaffd59739",
+      "executable": false
+    },
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": {
+      "sha256": "eb021b0b294c91d9c04fc03f42d6c3bb0fa344f0bf41bbdbdb58e26f716b30ac",
+      "executable": false
+    },
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp": {
+      "sha256": "5331acbf7e2142859535b44cc40c2b9779c72ad796d68a2fb309e5b88c63bffe",
+      "executable": false
+    },
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.hpp": {
+      "sha256": "be8c9b76d9ebb287d2671df3048d344284e0d13283485b67c3efcce190f0e396",
+      "executable": false
+    },
+    "runtime/scene/src/linear_spatial_index.cpp": {
+      "sha256": "5265e49b8b73b9c120fb4b0ce2d6c3bdd79a9af2f15aa3cc8994d97314a2f6ea",
+      "executable": false
+    },
+    "runtime/scene/src/reference_geometry.cpp": {
+      "sha256": "b4fdc5b9919dd16bb3d8571c8888faaa7b53adcdf3bc3b08f0c7b8231f9e3433",
+      "executable": false
+    },
+    "runtime/scene/src/rounded_sketch_geometry.cpp": {
+      "sha256": "ec5c7cff2141b709137ad27675e29921d5fe295074d3f505c62a77701861d2d7",
+      "executable": false
+    },
+    "runtime/scene/src/runtime_scene_projection.cpp": {
+      "sha256": "cbdbe61d07142e9b50242c78bc9efb9e0611995cbc2d0db6956876c4c06253c1",
+      "executable": false
+    },
+    "runtime/scene/src/scene.cpp": {
+      "sha256": "da1ced652d5b8bce04709b8b5885f01be8443b4775675a3556bd9d4e2cc0e4d5",
+      "executable": false
+    },
+    "runtime/scene/src/scene_binding.cpp": {
+      "sha256": "b5db764f6dc7fd165456527e5d3d45be61cb67eca67f902439690a9471f6259b",
+      "executable": false
+    },
+    "runtime/scene/src/scene_change_journal.cpp": {
+      "sha256": "b091b2a0322aebfbb2a87cc8f52c48d094289727f6e66891da2b100e8b8c97c5",
+      "executable": false
+    },
+    "runtime/scene/src/scene_delta.cpp": {
+      "sha256": "c7ae247675f5dc85b0232b9b241fed406ce58d65bad9d7911e1a71b6be8fadd3",
+      "executable": false
+    },
+    "runtime/scene/src/scene_dependency_graph.cpp": {
+      "sha256": "547e200afcad9b2b365bfab19327e075f90bcc2079468f082031feb0f3ca3ef5",
+      "executable": false
+    },
+    "runtime/scene/src/scene_impact.cpp": {
+      "sha256": "356786785dd13fa6488919ca64c613d1e4cf90051bd65ab17ec151c4ce84ad26",
+      "executable": false
+    },
+    "runtime/scene/src/scene_record_store.cpp": {
+      "sha256": "c8f804874a43e21c7d23f84995adec87ad54c92ff81344d206b6a211fe968cf2",
+      "executable": false
+    },
+    "runtime/scene/src/scene_view.cpp": {
+      "sha256": "8f0f1b07165647de6e2c0be34cfeea8df27da43448c97cf0ac21b483ffe23547",
+      "executable": false
+    },
+    "runtime/scene/src/shadow_render_scene.cpp": {
+      "sha256": "31ddb2d44eb48768a5c7eb79824d7911c9db59f5f97f3be94fde29e58c64e807",
+      "executable": false
+    },
+    "runtime/scene/src/sketch_extended_geometry.cpp": {
+      "sha256": "66ce958e133498800c1f6202f4e743c37b2aefc63d4c8883db869872cb19b363",
+      "executable": false
+    },
+    "runtime/scene/src/sketch_geometry.cpp": {
+      "sha256": "3b49554038dad1672c134060d2528b058fd4f7cdd68c9ee7323391343ffb145a",
+      "executable": false
+    },
+    "runtime/scene/src/sketch_geometry_internal.hpp": {
+      "sha256": "f00531a102ed2c48f6946511456ff9c545ef95e9ecbddd34461bff14a1adbf6d",
+      "executable": false
+    },
+    "runtime/scene/src/spatial_delta.cpp": {
+      "sha256": "4c19e1c8f7e7a287ca70e264d5af55fb519c7e0dc4899ca7fbe1bd8bf1b76ac9",
+      "executable": false
+    },
+    "runtime/scene/src/uniform_grid_spatial_index.cpp": {
+      "sha256": "8047d13e3d6da3735cb0fd74fc4e89f91c1d72a3dbab6984b887a114ef1a8ecf",
+      "executable": false
+    },
+    "runtime/scene/testing/CMakeLists.txt": {
+      "sha256": "89272571880a89c58700edf1133350ce57f87270279ba46390bc3261d0da3316",
+      "executable": false
+    },
+    "runtime/scene/testing/include/canvas/scene/testing/fake_render_scene.hpp": {
+      "sha256": "3dbe8212bd8d553cbe5ec6098115a1d998952f742be6ecef295704c3d4886e4d",
+      "executable": false
+    },
+    "runtime/scene/testing/include/canvas/scene/testing/fake_spatial_index.hpp": {
+      "sha256": "c7c576258afa58560853979f8e1ee46a9438604cfed236a6eac1f9cc74f746cd",
+      "executable": false
+    },
+    "runtime/scene/testing/src/fake_render_scene.cpp": {
+      "sha256": "4c1f3ed1ffd65fb8aa115b9cb21fe1a60ba8bb45ef4a7bafe2098871b62e5fa7",
+      "executable": false
+    },
+    "runtime/scene/testing/src/fake_spatial_index.cpp": {
+      "sha256": "19ef46d8858b56e92740df4bd84300a8811f80d3564820c06b00acffaf9e4b28",
+      "executable": false
+    },
+    "runtime/scene/tests/CMakeLists.txt": {
+      "sha256": "1f34555e51818524f2cd96ce162a8d63b0c4eb21f99b0ec262e86029a23b2a46",
+      "executable": false
+    },
+    "runtime/scene/tests/bounds_system_test.cpp": {
+      "sha256": "c5c0e71978a573c51ad9bdda77b2583e166e1bec15edab5cee22bb6ca2b5bd7f",
+      "executable": false
+    },
+    "runtime/scene/tests/corner_geometry_test.cpp": {
+      "sha256": "95f12706ea0bf616566601cda4a54cd1c860cef2658797964f7cf0a5eba06f0c",
+      "executable": false
+    },
+    "runtime/scene/tests/corner_runtime_test.cpp": {
+      "sha256": "4f8eaf137633142e22d557bf03ca566fccc5dbc28f63f924df378e502f88e0cb",
+      "executable": false
+    },
+    "runtime/scene/tests/damage_view_test.cpp": {
+      "sha256": "6f492b7b9b485cc4a0c2d9be013d60886d1435cbfc93fee082bc2cf2af297df5",
+      "executable": false
+    },
+    "runtime/scene/tests/dependency_closure_test.cpp": {
+      "sha256": "5b4721dfcd9779077a16ad3e3e0bbb812ef97a0d4e219d20b73d7a76d86f3271",
+      "executable": false
+    },
+    "runtime/scene/tests/derived_geometry_test.cpp": {
+      "sha256": "1357d587615c7e103aeff734a15975d3a8104ea35bdd700932f4aa04024c5142",
+      "executable": false
+    },
+    "runtime/scene/tests/fc03_image_scene_test.cpp": {
+      "sha256": "e0c7c070d4c45a4ad4dec093e9c88b3f8d20f2b802a6d14f0478f3ba8c3b6a0c",
+      "executable": false
+    },
+    "runtime/scene/tests/fc05_route_test.cpp": {
+      "sha256": "8b0d58f764047cc516c77c8d4e302c0b8d64fb16b03bbef809fc2ecb404b71f7",
+      "executable": false
+    },
+    "runtime/scene/tests/fc08_section_geometry_test.cpp": {
+      "sha256": "c0fa78d27c644f7ca02c944a95c083e12690995eaa260b816160ff3765bb980e",
+      "executable": false
+    },
+    "runtime/scene/tests/full_incremental_equivalence_test.cpp": {
+      "sha256": "a3bf77654dd37515ba0efa440edcb883b100c71e9b0f2261198002b43599ec73",
+      "executable": false
+    },
+    "runtime/scene/tests/geometry_chunk_locality_test.cpp": {
+      "sha256": "ff2129d91ecad3bfb66faee0b90c2a3a4807ef7ff6f1b246c33df8e49bdb42f0",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp": {
+      "sha256": "cd896ff9482df1c7bb0303528285439a76de1cf61bd2df3a1e3c31695e02b2ff",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_coordinator_test.cpp": {
+      "sha256": "271291103eea0d2014d3e772dd60c2b292aed6c325ec3559b95d4b571127b56e",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_full_oracle_adapter.cpp": {
+      "sha256": "4e11c868c2f0e7e300e94ce599c466998efc0a60832932a55f7921ecabca6b19",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_full_oracle_adapter.hpp": {
+      "sha256": "dfab50f12b41400fe408a91970288cb22cf535ad3db7bcba6649842ba0ac7144",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_recovery_test.cpp": {
+      "sha256": "2241e68c251bda3a88f844b9fb56e0c90c5115798e2925f28486dbc56bfff2eb",
+      "executable": false
+    },
+    "runtime/scene/tests/incremental_runtime_test_access.hpp": {
+      "sha256": "b4a70788b230e978a9a9c60389a563e980f9dfe58bb21f674e4bdfc8c4af59aa",
+      "executable": false
+    },
+    "runtime/scene/tests/public_abi_c_test.c": {
+      "sha256": "07d3a4f77751b247db1d4b634257fa5e0c725aa194bbfca88d8d03153e19ffef",
+      "executable": false
+    },
+    "runtime/scene/tests/public_abi_cpp_test.cpp": {
+      "sha256": "35eee598b8342eeb0393fa0a5a587b4587f131c068618cb7c5f086ac9cb92e11",
+      "executable": false
+    },
+    "runtime/scene/tests/reference_geometry_test.cpp": {
+      "sha256": "859d5676bcb237ce544ad5577b5b0cbd09bda49e3e2632f879aee6635383844e",
+      "executable": false
+    },
+    "runtime/scene/tests/rich_text_layout_red_test.cpp": {
+      "sha256": "49b31afa992d3a0a83ef3e0b69083811b85db8a13bd005219c719ef0baa4b096",
+      "executable": false
+    },
+    "runtime/scene/tests/rounded_font_test.cpp": {
+      "sha256": "0355176bebfcac6cd4f41c6c0042f24df4fac13a1f6e6b6af7316b762ca2b805",
+      "executable": false
+    },
+    "runtime/scene/tests/runtime_record_projection_test.cpp": {
+      "sha256": "843d8942131e40fc60686f7b38d12f474998d1b473613733849123944ff708a8",
+      "executable": false
+    },
+    "runtime/scene/tests/scene_atomicity_test.cpp": {
+      "sha256": "7678e8afdd3f11d00989081e90416ee385ef92a38a71e69bd73f79b219bb8068",
+      "executable": false
+    },
+    "runtime/scene/tests/scene_binding_test.cpp": {
+      "sha256": "03298576e6b6e602dc5b7739596079d9dd7ba870b379677ac1d1d24ade8cf56c",
+      "executable": false
+    },
+    "runtime/scene/tests/scene_delta_test.cpp": {
+      "sha256": "b38dcaaf60ecd77c50dc3a08c3e5d11cb3a4ab570d09a510f15ecb21299005aa",
+      "executable": false
+    },
+    "runtime/scene/tests/scene_full_rebuild_test.cpp": {
+      "sha256": "b25b206777226c196eb948cf801b9277b7df0283b7ed0de56f15197d261572c0",
+      "executable": false
+    },
+    "runtime/scene/tests/scene_impact_test.cpp": {
+      "sha256": "9ac9e734f9fb6522a324c1e2d934580ac6eb3d4fbbe8d11e4fa69a8c3939adad",
+      "executable": false
+    },
+    "runtime/scene/tests/semantic_generation_binding_test.cpp": {
+      "sha256": "cd057dcf6db26d8b6f6d2474da21c956e1119d7406d49c5878575b270083d607",
+      "executable": false
+    },
+    "runtime/scene/tests/shape_label_scene_test.cpp": {
+      "sha256": "85b22f0db9add02994e85a1c9936b0fba72a2dc6ac78f94653e196e9683d8237",
+      "executable": false
+    },
+    "runtime/scene/tests/sketch_extended_test.cpp": {
+      "sha256": "305988862e8ba626e44b7cb022ae62a38e021d6ad3f6534053dd1a475211a772",
+      "executable": false
+    },
+    "runtime/scene/tests/sketch_geometry_test.cpp": {
+      "sha256": "b774d7bcd6dcb61faf371ddb7adf7f699d75bc60a6eca2a15a88fb97ca5d0f43",
+      "executable": false
+    },
+    "runtime/scene/tests/spatial_index_d6_benchmark.cpp": {
+      "sha256": "9ebc65de81a12d0aeaab43ab04491f9b427eb2014ab23af162ce61c099db0e10",
+      "executable": false
+    },
+    "runtime/scene/tests/spatial_index_differential_test.cpp": {
+      "sha256": "febc3ad968241b619ef3ced2694415dfb2a10d0030d7fc41637dec091b4b1a4c",
+      "executable": false
+    },
+    "runtime/scene/tests/ur2c_mask_only_scene_test.cpp": {
+      "sha256": "391c951414e17998e7b61d82dbb0b2dacec7e92e8a4cb6b760e045767d8f91df",
+      "executable": false
+    },
+    "runtime/scene/tools/corner_path_probe.cpp": {
+      "sha256": "014af2e5dc50008c7672c159f5ccf91798c4b6830c82201185ef38b110839e4f",
+      "executable": false
+    },
+    "runtime/scene/tools/fc05_route_probe.cpp": {
+      "sha256": "c7ea89592152b2febb99ff8018bb3d85bb36fc2d626194bd443a39dee5d0670b",
+      "executable": false
+    },
+    "runtime/scene/tools/sketch_path_probe.cpp": {
+      "sha256": "8ea0cc479898c6616ff6b9402377a206a6df415d018055c14a029d92507cd62d",
+      "executable": false
+    },
+    "runtime/scheduling/CMakeLists.txt": {
+      "sha256": "6d1e3fe8c758928e0268e69757761111071995e0d63a14ac5c20f2b6eb8f1d1d",
+      "executable": false
+    },
+    "runtime/scheduling/include/canvas/scheduling/runtime_scheduler.hpp": {
+      "sha256": "a700a43bcff0e0a77fb50944d5bbd3a221f320aedcb7967c7feeb357e54c0ec6",
+      "executable": false
+    },
+    "runtime/semantic/CMakeLists.txt": {
+      "sha256": "8b04ac32b48915015f66410ca900bb800ea41bed58e5cb5112280bb5df115718",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp": {
+      "sha256": "74ff656cea68bab24d7f7b36b7826376085c9b4b1db04e705d50ad4448cb1e00",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/apply_plan.hpp": {
+      "sha256": "0a4d2d322395249370763e57890a6bcfc6b03ed23c3085cc08b85c52d85e1e65",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/apply_source.hpp": {
+      "sha256": "26790e4b2ccf450fa9c54320a84567dd77defc71bed693c5721c932ff7de645e",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/brush_engine_codec.hpp": {
+      "sha256": "59308d7c59167f008061724e304ea6d37ca289ee18b7ea8ae60617b11937811d",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/canonical_commit_clock.hpp": {
+      "sha256": "bfaf96d6e269df2fcf400974a0512cfc4c8a3f5fe4c06274cf5a0b156b20aefd",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/canonical_commit_record.hpp": {
+      "sha256": "5bd230541142e861e899463d772d793937a3cf21de3018fb8b0f61ffaaea2f7c",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/canonical_commit_stamp.hpp": {
+      "sha256": "f8cdbaae910ce881ac2762c8a78b3f99a7a26913c9a9857619d2804e2f838ae4",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/canonical_numeric.hpp": {
+      "sha256": "3cb6127719dc5a28b9b83591d0a2fb236f08edcd432892e461b9279ac1a29cc0",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/change_set.hpp": {
+      "sha256": "81bf6b2484c306716def87b30428520a5a60267919ad137ba6278bc69da0b700",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/codec.hpp": {
+      "sha256": "58944991af9f65a3c0e6529c9015cdf645e3fbf79039a4bdfa03476b66916032",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/commit_publication_projection.hpp": {
+      "sha256": "3dc24186eaf53d955b9c60a8ebe52add95059c578dbe964ffa0cbc233f534700",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/compact_stroke.hpp": {
+      "sha256": "b3cf97aa49b1277b1c1094741a5575a2b92a91ba7ce6e7cb58b423e63fee9910",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/connector_validation.hpp": {
+      "sha256": "68cc9433fc94d80ca33c72b06679e68603e6433e97dc311c4cddd6cff61c3497",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/container_operation.hpp": {
+      "sha256": "0aecd9d69a785608791c7ddb8973e38a602fc58e8bc392060dd9854c462d563b",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/delete_closure.hpp": {
+      "sha256": "5e10421f607ecdc9f065723b7207cf9142d0bf35fbe290d1aadc71d851fa72ef",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/document_id.hpp": {
+      "sha256": "d0d591439e33d9f7e4775862d374199dfdc8f70a8187f8a1850f2fe8dbc0f529",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/document_runtime_state.hpp": {
+      "sha256": "11689ae8aa1abe07a005a078d4d205d2ba07a89515b53e1393f7c5c56e39ff7d",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/erase_mask.hpp": {
+      "sha256": "12ef049625c7eb49382ef843795868db678cf8dd29e01a0bf0810bc49dd82303",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/geometry_accounting_v1.hpp": {
+      "sha256": "48ee6311ab79601e99ef908026533e0741186de4d48075922e391fc91d527d4e",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/hierarchy_capability_validation.hpp": {
+      "sha256": "b890b40d87dfd26806fe2cde526ab07701e6867e23a684fbfa235151238a1785",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/hierarchy_validation.hpp": {
+      "sha256": "8ca26b5ec9e697018565e670766f2523d9cb1bfbc5343044a78b5d520905d88f",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/idempotency.hpp": {
+      "sha256": "752f4203184fb9f5072efbe5c7ea6292b65456c612d22a7c34ae6aa7919fcbe1",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp": {
+      "sha256": "36ef957ed1ee78af7ffa076472ce73a26b556b94b5a3013774d59b8eb4987064",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/normalizer.hpp": {
+      "sha256": "628d3032b4e11246ae545381e597450a8570443182dbf671b51f2aadec7e1ae7",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/object_content.hpp": {
+      "sha256": "12ed6210ef28b8addee847c94e5be9bfdb332e8b3203ac32924373a278e70ca2",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/object_record.hpp": {
+      "sha256": "8ae5d94d39062da651206a85ec30fb9cc4b39d2c610a970c449decd93e95c675",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/object_store.hpp": {
+      "sha256": "4d7861c9b590aa90ba7c6039b9fa8abc6d1d0e65f7ae1e981c5b9508c2f800b4",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation.hpp": {
+      "sha256": "30ae8919f27895f64230b2daecf5641e6c2e95cf2950f72ea562f22ec7742b78",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": {
+      "sha256": "e4fddf7ab75943a5143eecc3b05f8af2b580035989137e7bd6e445e51e9c5c1f",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_fingerprint.hpp": {
+      "sha256": "574d42e9f20f8a263288ce99eaa154a54600c293c22f73e06bc3578d3d0acf58",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_id.hpp": {
+      "sha256": "e371e634bfbda42b6eef4b524e602d5499ce8822486aacfb4976026ebb12d6eb",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_payload.hpp": {
+      "sha256": "e5d7cceaf8da576d618a600c76769a3e75a591b818dcbd21bc07e61a3400a193",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_specific_validation.hpp": {
+      "sha256": "45df9740a7bdc45f05db4c8304dfbcadad088cc6c536ad6ec02ca5047d553d3c",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/operation_state_validator.hpp": {
+      "sha256": "3d4d5ceadbbe57b8eac00164fde4732eab66ea717ad9042f75f89685246c8181",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/order_key.hpp": {
+      "sha256": "806c4c781aff2cd1b9e14ad92a9cc7a58504b826315a6e429dcea58fe760871c",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/property_value.hpp": {
+      "sha256": "c8426faf4df0f0b9f2a0ddc7b700ff28e7a16e0f438ba841fa1afa0c697549d1",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/reference_object_store.hpp": {
+      "sha256": "571cd5f5a27fc50360e63fde217b2d909626575895779961e646935cff12e8d9",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/replay.hpp": {
+      "sha256": "e205fa70f904c106fe8cb052b936e3977cb71332608c166b3ec4dfa62dc013f9",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/resource_manifest.hpp": {
+      "sha256": "87fbfe584f8060e0e622214f1185cac4694bd615e289c269a14f81546821efa7",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/resource_manifest_operation.hpp": {
+      "sha256": "05c2de2048acf150353232f631ca172f15927752ec219d4fb48fe4b2c39879fa",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/restore_planner.hpp": {
+      "sha256": "077be388d2369617bf000cece3270c827d45653ce4d9468ec0a222ce65a5f6a6",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/rich_text_state.hpp": {
+      "sha256": "ec11f1ceab86289f2f3ba4b317d17502083d865f28358128f9f86b61de5ecdfa",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/section_content.hpp": {
+      "sha256": "47dfd55c6c6a90a07c6c2af5a99a09721d2429cf8a46b51da35024828d6bc6b8",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/semantic_error.hpp": {
+      "sha256": "8d31576b5fd2a996adde25360b818cdb5dfbe1f32a731d9131e79829c06822b2",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/semantic_generation.hpp": {
+      "sha256": "6bd5b97677300d6f4d7f5ea52a8d724fcd9dfd866e6efacdd5a9cb0d25246b5e",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/semantic_geometry.hpp": {
+      "sha256": "0f8a3a258b001958ab3a0698d5fdea4c8f50f9b8050fe617c174f1f8d75e3c0a",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/semantic_id.hpp": {
+      "sha256": "5a3cfeec2bdf6c0e914a870bd866ac850e2d47dd776254338596d56370c446e3",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/semantic_read_view.hpp": {
+      "sha256": "903e7c014dadd3fc83ca867a1fbd75ed2740e3ef0949b6db1ce8b276d9471f99",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/snapshot.hpp": {
+      "sha256": "ad6470663108855eab487720cc9c210754cf496498ba1daf4a9556e500be717d",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp": {
+      "sha256": "0b592334665083f5b04af3f37c5b24cd4c3b2dd0443e2b8c471539ffe4f61d4f",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/staged_object_view.hpp": {
+      "sha256": "d12213e0af133e634a54975c0235832d163e2ebc0c905f62c93f19a0bac215b1",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/stateful_validation.hpp": {
+      "sha256": "7d3817be918f9f4c7ad71d18dc72b17c0972005aea7e4b700af5ec11bf069d7e",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/table_content.hpp": {
+      "sha256": "2b245eb101e7760c4d364a2469daf6d0c03b15fa760cb072a8e5a1f027003018",
+      "executable": false
+    },
+    "runtime/semantic/include/canvas/semantic/validator.hpp": {
+      "sha256": "2b2234ba5165885a48fe18471ecdedb58b9f57f474f078d4e1533ab26d36b001",
+      "executable": false
+    },
+    "runtime/semantic/src/applied_operation_ledger.cpp": {
+      "sha256": "9bd861a467c1e2854f42daec8932fc16de7375e6fb6a5bb37f2a9a19391c9bce",
+      "executable": false
+    },
+    "runtime/semantic/src/apply_plan.cpp": {
+      "sha256": "0da59b5d1c239405740cbe0b25c64b7a7f4772f67905f78bed982a06fc3cbbf0",
+      "executable": false
+    },
+    "runtime/semantic/src/atomic_apply.cpp": {
+      "sha256": "d7aff7bc617338d68a616bb8f21db0dd7bb8f49de5c402305b96558074390835",
+      "executable": false
+    },
+    "runtime/semantic/src/atomic_apply.hpp": {
+      "sha256": "9668c3b97908683e05b149f34446a8102bd463e3369eb393a1e908f097a5fba2",
+      "executable": false
+    },
+    "runtime/semantic/src/brush_engine_codec.cpp": {
+      "sha256": "6b95a34b335ae431e1278c98cf4304c6a9a650aef13606c6016449803d5cff04",
+      "executable": false
+    },
+    "runtime/semantic/src/change_set.cpp": {
+      "sha256": "43e4f93a10d81820768b2ce1f760f5cfe78d210711353d8172976c87f7db313f",
+      "executable": false
+    },
+    "runtime/semantic/src/change_set_builder.cpp": {
+      "sha256": "db0cca77c14ec6af2eee2f72cf22d0b5e82a7bc7a9a5f90f76434e967ef49047",
+      "executable": false
+    },
+    "runtime/semantic/src/change_set_builder.hpp": {
+      "sha256": "b6b7da97e836ea1c3fd92cd22db816e6959f24e63c76b7c03d39d3aa72f8d0c2",
+      "executable": false
+    },
+    "runtime/semantic/src/codec.cpp": {
+      "sha256": "e11800bbd5d40e9cadb719e7afd1cc5ae6a96452773488e8dce06fc490e80d06",
+      "executable": false
+    },
+    "runtime/semantic/src/compact_stroke_mapping.cpp": {
+      "sha256": "3536c58337edc178b704088b33fc278b7149aea783a95ac172ca7d27e9974007",
+      "executable": false
+    },
+    "runtime/semantic/src/compact_stroke_mapping.hpp": {
+      "sha256": "57764623c879576770a71e7e5255b5e5ed2526da52a03b93c1f89e578ddd1c88",
+      "executable": false
+    },
+    "runtime/semantic/src/connector_validation.cpp": {
+      "sha256": "8ba18e449b542e76c07c04c2f192a8e4d8bc137344358ea5765913c50a62fbd8",
+      "executable": false
+    },
+    "runtime/semantic/src/container_operation_internal.hpp": {
+      "sha256": "27d10ac45c98cce0e62c4799b00175d4a25f38d8d9101063b0f5dae742480669",
+      "executable": false
+    },
+    "runtime/semantic/src/container_operation_mapping.cpp": {
+      "sha256": "28d12fb6b6d040cf538e4855a74ffa7e8c3d27ee119f6addb6fdc672135d8332",
+      "executable": false
+    },
+    "runtime/semantic/src/container_operation_mapping.hpp": {
+      "sha256": "ae350cff56b7527c4aacfe7cf80cdca019a97b0a22aacbcde3cc57b967acaec1",
+      "executable": false
+    },
+    "runtime/semantic/src/container_operation_normalization.cpp": {
+      "sha256": "34f7ac84b9f47ddeeb89c5406d94aaa78523777b418911601879c97435f7c8c0",
+      "executable": false
+    },
+    "runtime/semantic/src/container_operation_validation.cpp": {
+      "sha256": "8f9d859f055f89792ddde03da1624d3e4597e1f48900a7e62af3b495a1c3bec1",
+      "executable": false
+    },
+    "runtime/semantic/src/container_topology_plan.cpp": {
+      "sha256": "031204417995b738ff5d0dd19d4fec51a2c89db8f65f738971a694470a3c0eab",
+      "executable": false
+    },
+    "runtime/semantic/src/delete_closure.cpp": {
+      "sha256": "28b71bf0891416bd6ab2a877175f72aecb74137afe0dcba1e1f3edcfea3ebbcb",
+      "executable": false
+    },
+    "runtime/semantic/src/delete_closure_internal.hpp": {
+      "sha256": "db56b0ba6dd903dad34f65016cdb4e35a5c57527de453e73250b910194987866",
+      "executable": false
+    },
+    "runtime/semantic/src/document_background_mapping.hpp": {
+      "sha256": "6505815150b997e381ea95b33451146d1fb7839299c871a54192c59d71f59752",
+      "executable": false
+    },
+    "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp": {
+      "sha256": "3126ae44228c6ec98882d15d83262b448952abb04237c010b1efc5244c1c0399",
+      "executable": false
+    },
+    "runtime/semantic/src/hierarchy_capability_validation.cpp": {
+      "sha256": "1467e9beeeb42164a5a88dd69830d1c231bc9bc13bb912c4e792209d6ab2dfd9",
+      "executable": false
+    },
+    "runtime/semantic/src/hierarchy_validation.cpp": {
+      "sha256": "890478f6196658936900ff06c2ed0e98779e17d651f3617610da678abb35f1f5",
+      "executable": false
+    },
+    "runtime/semantic/src/idempotency.cpp": {
+      "sha256": "62f6dd472531c6f23743430eea84db583feb1fb35fd3c429c18d56cbf7050b57",
+      "executable": false
+    },
+    "runtime/semantic/src/indexed_object_store.cpp": {
+      "sha256": "32d7cfc9b3f0fcdd57172522c1e155239883369df13b946340fa4acbd6d2a953",
+      "executable": false
+    },
+    "runtime/semantic/src/normalizer.cpp": {
+      "sha256": "774bfe95b2363e0e4c258fb675848fdff1f1808c43f37fd7b30cfe4b23813560",
+      "executable": false
+    },
+    "runtime/semantic/src/object_index.cpp": {
+      "sha256": "86b4ba612433e649873d96a808a777026bc4d0b6a2e65c3234d8023ee8317648",
+      "executable": false
+    },
+    "runtime/semantic/src/object_index.hpp": {
+      "sha256": "8a31d7f4ca33c8d4fd51689f90f5873b9c24710b57460e2ba054b7dcc3d5f6c2",
+      "executable": false
+    },
+    "runtime/semantic/src/object_record_semantics_internal.hpp": {
+      "sha256": "6a266e69c088fafe50b2e60e07d2210e3d67a5c87e25547c5810513bc3477442",
+      "executable": false
+    },
+    "runtime/semantic/src/object_store_mutator.hpp": {
+      "sha256": "f6490d17ac73b97a26b344739f3d14c6bb826b20f3465c1498bcbd620063d7f3",
+      "executable": false
+    },
+    "runtime/semantic/src/operation_engine.cpp": {
+      "sha256": "b8c1a39c7040bfae1bae46374ac02de6ba1b8e228e0e67fe32d2b53ce9557d86",
+      "executable": false
+    },
+    "runtime/semantic/src/operation_fingerprint.cpp": {
+      "sha256": "877ce0fec1cd2c84091acc646a7afe8d75c02dad4872a1861230e07e4bda0ae9",
+      "executable": false
+    },
+    "runtime/semantic/src/operation_specific_validation.cpp": {
+      "sha256": "a6610dbcdc15fbf5a942e043082e2cd9b6e54435f1174a876364955bfc6d6a83",
+      "executable": false
+    },
+    "runtime/semantic/src/operation_state_validator.cpp": {
+      "sha256": "caad8808fb82d40c6ab37b97e7f9a062bf3dfa0022c0c5c8243fbd35d10947dc",
+      "executable": false
+    },
+    "runtime/semantic/src/protobuf_codec_internal.hpp": {
+      "sha256": "993ba838045377c8b60614a53027b00dc15dc2f135c2c93f5fe60efde96cfb39",
+      "executable": false
+    },
+    "runtime/semantic/src/protobuf_object_mapping.cpp": {
+      "sha256": "a2266db2ff474fc56219b8755d91b51cdb20667652f95b80eba13ad4d9c0231b",
+      "executable": false
+    },
+    "runtime/semantic/src/protobuf_object_mapping.hpp": {
+      "sha256": "b812de1dcf6311f6ca4971231f4384f41adb5e366e9e3167ae0b30bee7a66ccb",
+      "executable": false
+    },
+    "runtime/semantic/src/protobuf_owned_append.hpp": {
+      "sha256": "ca3a9a6182f7b76f4f452e02df2cb956f5c1f452a0c80ff3a19f46e8b359b692",
+      "executable": false
+    },
+    "runtime/semantic/src/qualification_checkpoint.hpp": {
+      "sha256": "f069e4d30cba1961205685714e5191092f84d9474939867009621a409b7b5eb1",
+      "executable": false
+    },
+    "runtime/semantic/src/reference_object_store.cpp": {
+      "sha256": "8d6aefbe18417122521584f55cbdf4a372d1642ec68f2ab91f05be744c4f6e2d",
+      "executable": false
+    },
+    "runtime/semantic/src/replay.cpp": {
+      "sha256": "3160c367c045d6e4b80cd9eb15193c5e68b2a448a113d95c46af60f35c63a89a",
+      "executable": false
+    },
+    "runtime/semantic/src/resource_manifest.cpp": {
+      "sha256": "328bbce7ec652d29acdad6ffd37ffeae933464c5322ca016bb90edffba90f38b",
+      "executable": false
+    },
+    "runtime/semantic/src/restore_planner.cpp": {
+      "sha256": "f4d4b4f00d140656af87ba655d98fdad9dcf2e1f010804b934911799e65f3469",
+      "executable": false
+    },
+    "runtime/semantic/src/rich_text_state.cpp": {
+      "sha256": "861f58df8cfb5bf6210d6c8223b517bfc4682d440d8a9801a3947df81bcbe6a2",
+      "executable": false
+    },
+    "runtime/semantic/src/rich_text_state_plan.cpp": {
+      "sha256": "2db1b26bd25e4cb3e05257b195665b79248616da2fdd6f48cdc0bdb1816216b2",
+      "executable": false
+    },
+    "runtime/semantic/src/rich_text_state_plan.hpp": {
+      "sha256": "b920103e952cfeac0f076eea0b62504cd8069eb57e97e25206d4bd58c826017c",
+      "executable": false
+    },
+    "runtime/semantic/src/semantic_types.cpp": {
+      "sha256": "a9fadd3621e3053501f69a6675b5df5388169916621e2ebfb4f03241cf2e018b",
+      "executable": false
+    },
+    "runtime/semantic/src/sha256_internal.cpp": {
+      "sha256": "8e5d96a682b77a2ae6332d42d9d50a10980c393afee4bae2f134c7e1a8bcf799",
+      "executable": false
+    },
+    "runtime/semantic/src/sha256_internal.hpp": {
+      "sha256": "17082077a89c8dc77b4acd8be7f7c182b43c7db778177b18255dc693a0f9d082",
+      "executable": false
+    },
+    "runtime/semantic/src/snapshot.cpp": {
+      "sha256": "d7b6b6be9a736c8868619c23be9ba6c688094e9e78de7e1e3322fa749a24cc7f",
+      "executable": false
+    },
+    "runtime/semantic/src/snapshot_bootstrap.cpp": {
+      "sha256": "1871def1002577f79f128f3e83fe130114ceca50cb383cc2d74961e7564409a3",
+      "executable": false
+    },
+    "runtime/semantic/src/staged_object_view.cpp": {
+      "sha256": "86a65b3fab26fb2b3d7d00c775cf55598533fee267cc344a4f05f62ba8bf49b2",
+      "executable": false
+    },
+    "runtime/semantic/src/stateful_validation.cpp": {
+      "sha256": "684274e168bc0fa984885b4b44c633ecc16d37b3479553a251e8e3efdfa9a522",
+      "executable": false
+    },
+    "runtime/semantic/src/table_content.cpp": {
+      "sha256": "6a5ebbebbcfa4c37b4efaafdac5246f4024db5246b6a9a094a982490c796a351",
+      "executable": false
+    },
+    "runtime/semantic/src/validator.cpp": {
+      "sha256": "7edaedf827fde9b4d03debc03205afb6bff03270f4cb84e693e84838402f9df3",
+      "executable": false
+    },
+    "runtime/semantic/tests/CMakeLists.txt": {
+      "sha256": "e7744b7eb53c90a6f6ded8b97df64ffb0d44c266369431a30b8e413e7bd9d48b",
+      "executable": false
+    },
+    "runtime/semantic/tests/a_lane_no_mutation_test.cpp": {
+      "sha256": "518d6b1bb6d50448dfb721080a8a9ad8d9622a5eea38866f0811700f236b68b5",
+      "executable": false
+    },
+    "runtime/semantic/tests/apply_plan_test.cpp": {
+      "sha256": "75750e06c54fbe4cbf2564a32cf4d7b9e7dc7835104e2e6aa2f36cbb91465f5b",
+      "executable": false
+    },
+    "runtime/semantic/tests/atomic_apply_differential_test.cpp": {
+      "sha256": "becac659f805746a745e3b91873ed19e1c084864ebcce4a0648c02419b96c182",
+      "executable": false
+    },
+    "runtime/semantic/tests/atomic_apply_test.cpp": {
+      "sha256": "600a7e8efbb9d04d5d31a9f99a7d7be1d5e50fb53ab879df72b6170d44fa31eb",
+      "executable": false
+    },
+    "runtime/semantic/tests/brush_engine_codec_test.cpp": {
+      "sha256": "a8bfe437cf28a7a226c68fa1a7c100e94a144b02cd1a979d07a0fef3513fb8e1",
+      "executable": false
+    },
+    "runtime/semantic/tests/brush_snapshot_v2_test.cpp": {
+      "sha256": "933caef8d2032e3ebc333f9e7f45fc0c6e966c381c69be812ce865dd119d64a5",
+      "executable": false
+    },
+    "runtime/semantic/tests/canonical_commit_clock_test.cpp": {
+      "sha256": "22dc776965526397cdd43f1e435506194115089f5db778f6a7d6168c9979a0aa",
+      "executable": false
+    },
+    "runtime/semantic/tests/codec_negative_test.cpp": {
+      "sha256": "c07f1ae7458ebf08026da8003a603e660e37175d47cdcffdf45638a83c0ffa6c",
+      "executable": false
+    },
+    "runtime/semantic/tests/codec_operation_ingress_test.cpp": {
+      "sha256": "15946a092ab0ca3990e0cc42a4eea65fca99a22933cd34a06897df34abb3011a",
+      "executable": false
+    },
+    "runtime/semantic/tests/codec_test.cpp": {
+      "sha256": "0c2d132c2f17b82cf8845089c73c6b07d24f5af7a5ded38300dba17d70de3e07",
+      "executable": false
+    },
+    "runtime/semantic/tests/connector_stateful_validation_test.cpp": {
+      "sha256": "0bd9f80843b359427fbc9a36776aee9f78485166a019d170333e4279196869d4",
+      "executable": false
+    },
+    "runtime/semantic/tests/delete_closure_test.cpp": {
+      "sha256": "87c4807aa4029934dbedda417e6be1ac6718d6d3eefe516e00ecbfbea3d0bb40",
+      "executable": false
+    },
+    "runtime/semantic/tests/envelope_validation_test.cpp": {
+      "sha256": "bb0cfe875c84ee416109b3b0bb885d4121ee922b880f35ebf679a9f467be596a",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc01_shape2_apply_test.cpp": {
+      "sha256": "22f3754dab30e31cd4c4bbd2b0cf338df1d0598061fa4f3f6ffea0e7010e9232",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc01_shape2_validation_test.cpp": {
+      "sha256": "28384c1efd3565955a46553dae1fd1a465fc651da3aac5b57517d68349402967",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc05_connector_sticky_test.cpp": {
+      "sha256": "d4d3f5eea6b0cedf06daa5d5addb8e4d2c1356de442d4d7cac22755bd8ad02fe",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_container_fixture.hpp": {
+      "sha256": "219c3faefc169e5a5b447b4fea151e4a150247e7279970f394c6aed291f09669",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_allocation_test.cpp": {
+      "sha256": "78c64343ab21d8d272e589b295a0f4c9244da6a08c5372ccc03756639ad6531e",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_codec_test.cpp": {
+      "sha256": "20b93090c8d3dbb066006d368830d0ba166b436a55e7062063f2a912d838d021",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_history_allocation_test.cpp": {
+      "sha256": "7f400dc0cd61a3f73603ff99de48085477df6501c779c365ee633e176f16b0bc",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_history_test.cpp": {
+      "sha256": "277ec7b386339e763163378ff77dc74eaaff0b5be3492974f6b05dd5690ec18f",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_operation_test.cpp": {
+      "sha256": "a0b48960202a7b284598fc479e74e1b13650a2af23c93f8565c0fac2218a7148",
+      "executable": false
+    },
+    "runtime/semantic/tests/fc08_section_safety_test.cpp": {
+      "sha256": "da4772b68a77fa64e634ab18a36ad6f87bbe1b0910c79b2d4208ac4812d71daa",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_b_no_mutation_test.cpp": {
+      "sha256": "82c791ad5f86d0cfd28440823648db89f38c473a5af3fa810ccec712f61eb131",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp": {
+      "sha256": "0a04b7b9916323a8f741cb0a51b12a3d9a556f9512bc6377b32058cadc57511d",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_c_fixture_decoder_test.cpp": {
+      "sha256": "df725d74bf0141e339da6c00ce42185203870dab9944819a56561a02195bbd1b",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_c_geometry_overflow_source_test.cpp": {
+      "sha256": "e3b9fb2eb302126d39eadb9ab8c3232f1d948a5280e2e84449576b886b85d429",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_c_observer_contract_test.cpp": {
+      "sha256": "7c4048965eaa6213aba6816c0c0f8851aa5cde0f00600a6e4e827efc4835645f",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_c_observer_coverage_test.cpp": {
+      "sha256": "1d07d7740ac5e306be6fedc7ad771147bf2b531881ae48d845325230c3693173",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_04_c_projection_test.cpp": {
+      "sha256": "eec7e50043e1ca40ba0d041b30dad51504d92f7a8e82d365a2b4df31dcf613cf",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_digest_test.cpp": {
+      "sha256": "b5d8fb271569a3ef33e29f0e525b34c649b2683e1bed6577ec1afb71670b9af9",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_integration_test.cpp": {
+      "sha256": "f279298d8b83ba998bcb433fb70916432825e8fbaf043f8043b7e227e404568d",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_projection_differential_test.cpp": {
+      "sha256": "51978cf198d86856687afed3d7c5eed86c6bd3003b85545efbdc5b157666423c",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_projection_test.cpp": {
+      "sha256": "0d7ae05c094b9579f0f6be3a1bba0800ee90757d953cf547abb9caca6313abe8",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_replay_differential_test.cpp": {
+      "sha256": "82bef243a619171a8460a11538ca501f07c174bfd69bafb842025ac087e02142",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_replay_test.cpp": {
+      "sha256": "187104a5bfda50295d12cc69d26c4bc9d0210f8fd4b69b22ae238d4a8574241e",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp": {
+      "sha256": "3f627a0d3ecde31718aee1c34fae578c54d90764c8085b6638966edf4c767276",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_06_snapshot_test.cpp": {
+      "sha256": "11dcd0c0b6130bfff1bc9e69725caddd3fac94e25dba65f1f3d6400e48079881",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_07_replay_inspector_cli_test.cpp": {
+      "sha256": "873cfe026de9366c9824ffe0b50357b8107f464c3437f0f1ace473b25595ed13",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_07_replay_inspector_test.cpp": {
+      "sha256": "054ed7abba57cb67350fe80a6ea719936556a9d7e0aeedb778082e9b57708aac",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_08_locality_test.cpp": {
+      "sha256": "4d8ef220499b0a3cc147bf38375d36fb509cefb0bc319fd3ee7c3d07b0d29c32",
+      "executable": false
+    },
+    "runtime/semantic/tests/g1_08_reference_differential_test.cpp": {
+      "sha256": "9059bb3d8f2ba05e0e75c03d0b6ff2634b141461bb7fde759beec9d006f27cd5",
+      "executable": false
+    },
+    "runtime/semantic/tests/hierarchy_capability_validation_test.cpp": {
+      "sha256": "593dcc61f74dcc37e7ac47b3f0fc640c89438d7b0fbb371e0303ff1c93306cac",
+      "executable": false
+    },
+    "runtime/semantic/tests/hierarchy_stateful_validation_test.cpp": {
+      "sha256": "b8dd3e603abea6a68499caf6a98a3fff568b8ab87dfe03c11883f1c4eb8c99fc",
+      "executable": false
+    },
+    "runtime/semantic/tests/idempotency_test.cpp": {
+      "sha256": "ae5187ab9be9ce33d8231dcdc6899798ad01de886d90ab82b30a128ea17cfdcb",
+      "executable": false
+    },
+    "runtime/semantic/tests/indexed_object_store_test.cpp": {
+      "sha256": "006dd85bf49731bb5e09af5132cefc5177169a99f65bdd56945d34dd08a33a3b",
+      "executable": false
+    },
+    "runtime/semantic/tests/ink_v2_compact_test.cpp": {
+      "sha256": "d83768bcac05f8a30617632cfa9f152c0aab226daf4a7aa5c7fbcc74dd65b05b",
+      "executable": false
+    },
+    "runtime/semantic/tests/leaf_structure_validation_test.cpp": {
+      "sha256": "4118382f2eb7d033dff48c8e59558a7159940a8c9f424da0a7b6e45e1eec40b7",
+      "executable": false
+    },
+    "runtime/semantic/tests/normalization_test.cpp": {
+      "sha256": "cae514d41924f1ac492635eca32623f9c5af7528164ec4508c0d3939d6e75b63",
+      "executable": false
+    },
+    "runtime/semantic/tests/object_store_differential_test.cpp": {
+      "sha256": "7a88f4906aa571dfe763e9894fd5ffc5867c9c751e451aee8d62a846f72858e7",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_15_operation_conformance_test.cpp": {
+      "sha256": "6143f876e647d3076d4896caf0aaf1dce9198570a12daa8e46bdc903ac4fc18e",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_apply_differential_test.cpp": {
+      "sha256": "94c0dba934000246836bfc822eb41d40ac5eec8aff09c88bd4ad544e5dfbf7b0",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_apply_test.cpp": {
+      "sha256": "b86e5bcafa67de19ee098d0f3ba5130de65a6f16ce1b5125ddfdd8e6c05ed253",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_axis_publication_truth_test.cpp": {
+      "sha256": "3212ba58a47a8e4bbc8940f6bc3051215654e93aebeaae7a02ad9da5bd6e4cd2",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_boundary_test.cpp": {
+      "sha256": "b9923f43c54671919f3b92be78df9f79cbf66252ed09f87b9366527e6b9670a6",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_canonical_commit_differential_test.cpp": {
+      "sha256": "c4cada0abdc91c5d5f87f5cd860bc90ebde329d1a871619cebc02f683daefddc",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_canonical_commit_test.cpp": {
+      "sha256": "14a4919a40d687a74054911f6c2c67da5e0c54627dabfab3527fd04e537fd4a6",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_generation_change_set_differential_test.cpp": {
+      "sha256": "a418034f076a7faffb17d2fe3e3a43fa8d279378ebd97239846ad019bfede948",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_generation_change_set_test.cpp": {
+      "sha256": "2a04019811b1c6c55856c87fb31f1f1bccbb9f6ddc6c98fe4e265176caa0f69d",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_engine_publication_projection_test.cpp": {
+      "sha256": "b7bac84f48bd96f1979fa95c11c26bba62498d1215cecd7ad34c35e071d74239",
+      "executable": false
+    },
+    "runtime/semantic/tests/operation_specific_stateful_validation_test.cpp": {
+      "sha256": "b6c31f669fa133a1232f4a9ee9e693d8016a16dac9a8944d1e17e79e912cf7c9",
+      "executable": false
+    },
+    "runtime/semantic/tests/payload_structure_test.cpp": {
+      "sha256": "2472715ba55d8812cc9cb787d35ee0caaaa9a2505445051d7ccdef34e279e830",
+      "executable": false
+    },
+    "runtime/semantic/tests/reference_object_store_test.cpp": {
+      "sha256": "580551f6d8c92f98e8c0e6378d5f35f32f08b86d9def4926fe4c0bd40a11a561",
+      "executable": false
+    },
+    "runtime/semantic/tests/resource_manifest_test.cpp": {
+      "sha256": "acfc2ce4e03c42ec92aa84475fc822501c37d1caf026377e30aacda51edfdf92",
+      "executable": false
+    },
+    "runtime/semantic/tests/restore_stateful_validation_test.cpp": {
+      "sha256": "b342b40cac7a8abc3d37b42460ee2473a1dd7a3260759f03927f50ac83454316",
+      "executable": false
+    },
+    "runtime/semantic/tests/rich_text_state_plan_test.cpp": {
+      "sha256": "eda013eefc24191b6331aaba6175d03297ae193b7607f6246d63592d63d31151",
+      "executable": false
+    },
+    "runtime/semantic/tests/semantic_read_view_contract_test.cpp": {
+      "sha256": "702adcbda2381deb8a5102c1387f6c9e950e415575d5da9bcd5765e02e06aacf",
+      "executable": false
+    },
+    "runtime/semantic/tests/semantic_types_test.cpp": {
+      "sha256": "0a3eba7a9745e8d88932a4ef4b2ee16623e5bf5e36ea4a299d72454c126fd9e4",
+      "executable": false
+    },
+    "runtime/semantic/tests/sketch_test.cpp": {
+      "sha256": "1245b77fd25dd6ba25a37e696de52475c720ee2ecc096b995a5b3a79c489fd7a",
+      "executable": false
+    },
+    "runtime/semantic/tests/staged_object_view_test.cpp": {
+      "sha256": "dca15cd0ae2e83eb65fecc8e09cec7134d3539624ec8cf38b2b89ded41bd2db9",
+      "executable": false
+    },
+    "runtime/semantic/tests/stateful_context_test.cpp": {
+      "sha256": "300d4dc7eebb1fe62e8046ce728002bbf4270fd5248d07d8f91a783ed9444e2d",
+      "executable": false
+    },
+    "runtime/semantic/tests/stateful_kind_applicability_test.cpp": {
+      "sha256": "084eb45879bac1eba54d6920b20dc57d8efa7bd9a9717a1038ab31d256de2e97",
+      "executable": false
+    },
+    "runtime/semantic/tests/stateful_validation_differential_test.cpp": {
+      "sha256": "aa5ae0e8167461751488480f4df0126c640e383fe312488f6aea38bff2fe4ff2",
+      "executable": false
+    },
+    "runtime/semantic/tests/table_test.cpp": {
+      "sha256": "dc578d021a1437578c7e63eebea3a604fa756de25353124363bbc0a1128c352b",
+      "executable": false
+    },
+    "runtime/semantic/tools/CMakeLists.txt": {
+      "sha256": "6a2e7164cc27deaee530f23279c87d017702227a00aeab68d1cca7fbf1c361d1",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_fixture_decoder.cpp": {
+      "sha256": "38072715a826a10da760d315cf2d6020d5fad8aa0c91023124b0c376e5e63560",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_fixture_decoder.hpp": {
+      "sha256": "cadece40629ffefdd28d9c63c7d46405e159f093b637dc33e6e370e1ad728ede",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_fixture_runtime.cpp": {
+      "sha256": "1118b82f1400120bcee299002b732ed68c9ba0bc59685fbdfb205593238d335a",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_fixture_runtime.hpp": {
+      "sha256": "0a87ea9a1f6f6ffd2f855fe98c943e871083581956915117ae3bcd1866e18801",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_observation_export.cpp": {
+      "sha256": "c2a6af26f748d0cec89276d76a3c1da0cee1a65d5fc685f97b7edfa8c73a80e8",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_observer.cpp": {
+      "sha256": "566dcc6038c918ec984b8852d6e7e7f22136a47c50d4353d42f44aad44f6fee4",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_projection.cpp": {
+      "sha256": "dc2ed7a829bf92c4bc855acdeff1e65a6dbd0d5d632ae88791aa478dede88dc4",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_04_c_projection.hpp": {
+      "sha256": "be36f503ac311a08e186ced8d91e372b7bcd1f2080608c06b4cb4bbe5af9a4cc",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_06_digest.cpp": {
+      "sha256": "e0740b1cf56fb068ed2593201d5a7475af956ca496c1ff623e654500f2d0b6bf",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_06_digest.hpp": {
+      "sha256": "50006c7ae8a231072dbd9e9ba97ea6413d5b8ddacee58ba4f8d7f4f2e4d9c19a",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_06_projection.cpp": {
+      "sha256": "231424687141f62147cd9b3feb56c1bc76a3f8091573a94944f744d5295680e1",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_06_projection.hpp": {
+      "sha256": "2cca0832130c5f0e7dace298e4433e3ac50a725923f0e16333567ed1f08a4957",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_07_replay_corpus.cpp": {
+      "sha256": "6823070750944ff7c8c12b20aa6243a03f9ace85c4094730210f291163b2cae2",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_07_replay_corpus.hpp": {
+      "sha256": "a1e82b2bf22c003d4cf29f238e676073c9dcd6bf72d3304b204e1b5cb25e9c1b",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_07_replay_inspector.cpp": {
+      "sha256": "46ba2691b46985e74b411bef8db76d52d1538c20b77c1900ced8dac6cea3dd56",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_07_replay_inspector.hpp": {
+      "sha256": "1056389cf5bbc0da8818c99e2ae0d096aaf42aa0979a43cbe1f7dc1125669da8",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_07_replay_inspector_main.cpp": {
+      "sha256": "3834f17ce942050dd4405bb65e50eb0d2b7af74b85c3a3ac5bc20df5b05fac9c",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_08_locality_workload.cpp": {
+      "sha256": "76cc47a2d213d9986b913b46bfa708cdb3b4c3c506ed7c397f656e5c61a1547e",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_08_locality_workload.hpp": {
+      "sha256": "0ec6aa8fd31de815b8472f285c3494969dba43f2d56a5653c857667d6a67a3af",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_08_verifier.cpp": {
+      "sha256": "62d7d1f88f33130b027806cdafcfc1d78107dc5d0b1f265e82776b7706335b7b",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_08_verifier.hpp": {
+      "sha256": "8cfb5d25df8e92713c84d5ef9163f27240013f76ccc5c250f1f307a907674a96",
+      "executable": false
+    },
+    "runtime/semantic/tools/g1_08_verifier_main.cpp": {
+      "sha256": "479d312a42949783f243c63cbc89f96d314b971fa7bf744b9669b30a9ad7bcbe",
+      "executable": false
+    },
+    "runtime/semantic/tools/golden_probe.cpp": {
+      "sha256": "b493b5934a6df0777e06fd22838c9a132978e8e3eb38dfcf987bd0452099a0bf",
+      "executable": false
+    },
+    "runtime/text/CMakeLists.txt": {
+      "sha256": "e8a5ce63223b1be3a572b5ae1b2cdaede69094fc924635cca11a9624a780abf6",
+      "executable": false
+    },
+    "runtime/text/include/canvas/text/text_layout.hpp": {
+      "sha256": "0567449c0c628e0893f754108a0ebd0958c42aa5dc4904c81c2a0efe2dde768c",
+      "executable": false
+    },
+    "runtime/text/src/sha256.cpp": {
+      "sha256": "85b98a9469f61b73174237e9ddb75b27784916b90ad6643688c1861be0107e6f",
+      "executable": false
+    },
+    "runtime/text/src/sha256.h": {
+      "sha256": "d02134bb6721410a70ced9ae2dfc84235248bb0e5439baae5b935a9d214b0cf8",
+      "executable": false
+    },
+    "runtime/text/src/skia_font_materialization.hpp": {
+      "sha256": "acd619e75b1094b52d84ffe81ac2716ab4b86f1555014a170cde7202372e4e33",
+      "executable": false
+    },
+    "runtime/text/src/text_layout.cpp": {
+      "sha256": "bcc5e76367da2261f860430a4bfc753241370466600a0b4f37f8202c277969af",
+      "executable": false
+    },
+    "runtime/text/tests/text_layout_test.cpp": {
+      "sha256": "5e790ad3ff0583fc0ff896530ed1da96506877a702bc052e9fd1be9a9402acda",
+      "executable": false
+    },
+    "schema/axiom/v1/README.md": {
+      "sha256": "29840c341560f4f38292c5b6870a566d6a42a010c7b1224895613f649fd8d335",
+      "executable": false
+    },
+    "schema/axiom/v1/canonical/canonical_profile_v1.yaml": {
+      "sha256": "d6326914b65b8d96eab34c5d3bb88b07e87d912812c2ee3250f90a2bac9ba76a",
+      "executable": false
+    },
+    "schema/axiom/v1/canonical/geometry_accounting_v1.yaml": {
+      "sha256": "ffeba03b35c71182eaf48ef33d7e7b70b96436e07d1d9bed6b9d88978d336b1e",
+      "executable": false
+    },
+    "schema/axiom/v1/canonical/operation_structural_profile_v1.yaml": {
+      "sha256": "9f44e3eb350d8348e9980194a529d010b87b64e1e4172ca243f799f02fb315fe",
+      "executable": false
+    },
+    "schema/axiom/v1/canonical/protocol_hard_limits_v1.yaml": {
+      "sha256": "5ddf7c6dbb537d8a32c964adbfd2bebfbf0f0dafd72800c92f540916f87969b9",
+      "executable": false
+    },
+    "schema/axiom/v1/canonical/semantic_leaf_constraints_v1.yaml": {
+      "sha256": "9ec8df1adcd3446ec7addb4d06c4d672893e60909ef1658bec3b9527fc173481",
+      "executable": false
+    },
+    "schema/axiom/v1/descriptor/README.md": {
+      "sha256": "0631675f6602b5103c7ffaa11e26aeceeb7f2956734ec07abf128dbf78dfac7d",
+      "executable": false
+    },
+    "schema/axiom/v1/descriptor/descriptor.current.pb": {
+      "sha256": "d47a93655e9306756b05bc5b5beafadd73c2a294cecb753668fb01dda4ffcb9d",
+      "executable": false
+    },
+    "schema/axiom/v1/descriptor/descriptor.current.sha256": {
+      "sha256": "42c9640aacf2080c9b62bcf68084d2411f47df128c70cdd52f056b9e6dcf9a2a",
+      "executable": false
+    },
+    "schema/axiom/v1/descriptor/descriptor.lock.pb": {
+      "sha256": "8c1da1c19b754f9345472f96452e58505ebd18c0874b04480e378eb95a38654d",
+      "executable": false
+    },
+    "schema/axiom/v1/descriptor/descriptor.lock.sha256": {
+      "sha256": "7a5c6aa67d6256f442a20de7086fc3a3a6714bff2cafe8596aaad6cec109aa7b",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto": {
+      "sha256": "d61abcb963dca259aecd01598350ff2579f939911a5f511eaaa2acc8db7209ec",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_stroke.proto": {
+      "sha256": "4d09856c710e3c649b907d4ca26ec34f479bc36d36051be591fdfe8c2b817b6a",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/common.proto": {
+      "sha256": "c4ae15df0603bd47ad458dc21e48347842728856c789db36f1d06539ff831f4f",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/compact_stroke.proto": {
+      "sha256": "f6c567432ed7446f5037a913fe9bb0952d3b2f7ba6555bd2ecde5f2d1c1827bc",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/connector.proto": {
+      "sha256": "fda2af65ddf673ea3f432330c50521eebc6e013dc300056bae6b9c6d237129b1",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/container_operations.proto": {
+      "sha256": "bf315a504bc0f7805e18ae897dc33164129d6590a2bbb8999573aad24a1b8203",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/document_background.proto": {
+      "sha256": "767b0de21e36ca5be7baf95fa11ae51155df6e378d2c5d36fe03806f2d78ad02",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/erase_mask.proto": {
+      "sha256": "7396300fefe1c501aa8063cb91cde0fe0e45a0cc47528e6e6df6458978dbb844",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/geometry.proto": {
+      "sha256": "0cad1d9b78c3153488023d693f7676899bafac3f240913cf1ea6fd3113e97a80",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto": {
+      "sha256": "6ce04d57bc0f4dc915115b4ef01402a8cbfc78d816b5ea281ac52ab88d497bdc",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto": {
+      "sha256": "dfacb17818d7109ed3772e5dc29283ddc3935215231dc19f67bece4aace27bf3",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/paint.proto": {
+      "sha256": "1b64ad3c94f41303a31e22338c0f0e04d73030dace42cdfd69c897b22b24d48f",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/property.proto": {
+      "sha256": "4d240099c651393a475ff7112a7b1ea4beb25a40d4820736fd7fa9670fc29622",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/rich_text.proto": {
+      "sha256": "85a0a8324e14c499a4a6e16d371ad57c12b4ec946982aa08a22ceae731f125fc",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/section.proto": {
+      "sha256": "7c1ae10a94147aa16ea0e79199a50dba064a27e15616e5262489b5da4499bd84",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto": {
+      "sha256": "bbca0ba061c974e21bed648504a5d8964b63622d185fa4224b6ccb0f58eb41c5",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/table.proto": {
+      "sha256": "0505eba9eeb134777df4bc76b82e87f58de899bc3b3b7770d8a09e70c7c4addb",
+      "executable": false
+    },
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/vector_path.proto": {
+      "sha256": "4b1621e376e68762b000bafcdf4d4ce87116ecdc3db9c2c2a4e7fd90f4a9d88b",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/brush_family_registry_v1.yaml": {
+      "sha256": "1c81f153c4d9035117fa9d25dfb15573c701adcd1abe70ae93d96b38bc7799b7",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/compact_stroke_v1.yaml": {
+      "sha256": "07de11120540f82302036e3c281567ba5f983ec2a85121dce2549753930fc20e",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/field_registry_v1.yaml": {
+      "sha256": "7247a3c0be2302ae702fb43779ffd8dab8b88cf94684b2e289840c35864afa14",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml": {
+      "sha256": "4693bd7e3258491f8b5a383ecbe278efd5ae402499abba904c7490877432432e",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/operation_registry_v1.yaml": {
+      "sha256": "ddb64f22aa143be3818c3c497a8655d62537f11b1f7deb983f44860e34303923",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/rounded_font_v1.yaml": {
+      "sha256": "8f1fa4ea6da4e3d3b56fcd9cf90a83afde7017fd6d43d777627a11222fc5a7e4",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/shape_kind_registry_v1.yaml": {
+      "sha256": "b726c4edf5cf04cacec7ef98722d19403bce42681a51094e74ebb992e8bbc7b4",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/sketch_extended_v1.yaml": {
+      "sha256": "48741eaceabb2c3b6c2ad53e65c19ecf8770f844cf43b838a28f3ff00ea4c1bd",
+      "executable": false
+    },
+    "schema/axiom/v1/registry/sketch_v1.yaml": {
+      "sha256": "329c973cfe4853b6d5ffc32ed30ddd988906bc2466e8e9edc2e47077543e69ea",
+      "executable": false
+    },
+    "schema/axiom/v1/toolchain/toolchain.lock.json": {
+      "sha256": "9dfe03c46cedecdfdd1f417aeb492f730e2cf0f3719091e0332304fab674c182",
+      "executable": false
+    },
+    "sdk/VERSIONING.md": {
+      "sha256": "dd96cac776e2e6b00160642f0606733341118957a30ba9ea48e8de520a8a2e6a",
+      "executable": false
+    },
+    "sdk/api/README.md": {
+      "sha256": "e197006e0d89bea2a3cc285ab95763ca10004320abcdf4f05bf661c6605292dc",
+      "executable": false
+    },
+    "sdk/api/axiom.d.mts": {
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59",
+      "executable": false
+    },
+    "sdk/api/axiom.mjs": {
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41",
+      "executable": false
+    },
+    "sdk/api/demo-controls.d.mts": {
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e",
+      "executable": false
+    },
+    "sdk/api/demo-controls.mjs": {
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb",
+      "executable": false
+    },
+    "sdk/api/internal/controller.mjs": {
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45",
+      "executable": false
+    },
+    "sdk/api/internal/transport.d.mts": {
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e",
+      "executable": false
+    },
+    "sdk/api/internal/transport.mjs": {
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc",
+      "executable": false
+    },
+    "sdk/api/internal/values.mjs": {
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e",
+      "executable": false
+    },
+    "sdk/api/package.json": {
+      "sha256": "0989e16c01d14538dd02ddca9511fd5d546d9d1e072a977f44e040ae708ec195",
+      "executable": false
+    },
+    "sdk/common/CMakeLists.txt": {
+      "sha256": "678be27e2a65d5192ce07d2fd0e95bfedabb966722ab3e4aa015f8d3550ae7f7",
+      "executable": false
+    },
+    "sdk/common/contact_recovery_test.cpp": {
+      "sha256": "5da5a96f6e9f783b94d18473b0ad38a71ce29f930ea3c5eb9970c7a59542fefc",
+      "executable": false
+    },
+    "sdk/common/data_port.hpp": {
+      "sha256": "c0c10885e3f6bb0380e05b3516b7d0b1ce97035769fb2b83c74fd7acd54e3513",
+      "executable": false
+    },
+    "sdk/common/ink_v2_session_test.cpp": {
+      "sha256": "8491599bb0664fb4d1026c6e4bd85b56dd866586165af03857471ebf486e0991",
+      "executable": false
+    },
+    "sdk/common/session.cpp": {
+      "sha256": "2a78fdf38c1f54773fac40f3ad2ed2fd877c84f0aa55ace2f383e61d9501d7de",
+      "executable": false
+    },
+    "sdk/common/session.hpp": {
+      "sha256": "91a665cb09571f25539bad35437b9c13efc60a5bdecc6e76f2139ad0c76a807e",
+      "executable": false
+    },
+    "sdk/common/text_bridge.inl": {
+      "sha256": "facc418621d6ca937fdc112f9f6d4e93f6db9024c7de50847a33179b1178c68f",
+      "executable": false
+    },
+    "sdk/native/CMakeLists.txt": {
+      "sha256": "c1253e7dbc1777c22629c6c6f5845e475eae2c9c52e4aefe968c33ecb44aea7b",
+      "executable": false
+    },
+    "sdk/native/README.md": {
+      "sha256": "24a3c72c6b6216eb89aff603d65f1a4b5a48e71f8746c24688bb5b8555c4940f",
+      "executable": false
+    },
+    "sdk/native/exports.map": {
+      "sha256": "517998f4dea7f5196e366f98b91996634ea7ad5f79a56441baffe2149865b08c",
+      "executable": false
+    },
+    "sdk/native/exports.txt": {
+      "sha256": "d68b4d492592cd70d3e2c165c7ac50f5047bca1bee92194d07830ca9bb5cafb8",
+      "executable": false
+    },
+    "sdk/native/host_contract.md": {
+      "sha256": "a55389884789ce745dd59bfec172659f69955a9139713db9e9b4a850047d4af1",
+      "executable": false
+    },
+    "sdk/native/include/axiom/native.h": {
+      "sha256": "9412217f95a5c55a91854054f715da97ba786b031e8c6f7811b22b8516db3635",
+      "executable": false
+    },
+    "sdk/native/src/android_surface.cpp": {
+      "sha256": "60fa35f3aeda67b73a36c743533fb7220102d81451118f5cf9d7216456383f38",
+      "executable": false
+    },
+    "sdk/native/src/android_surface.hpp": {
+      "sha256": "854f3e870a5a414d10e6d456a6eae4f05a902d5b3b0edb70daa6e829da0511d8",
+      "executable": false
+    },
+    "sdk/native/src/metal_surface.hpp": {
+      "sha256": "5d11712bd1275b5d66a0f009e72f3fe68d7ddd2a54bee3add1c5e319cf41919a",
+      "executable": false
+    },
+    "sdk/native/src/metal_surface.mm": {
+      "sha256": "02630a26db1be170c8edda845653398eee9447c834d5e46c3523722922c392c6",
+      "executable": false
+    },
+    "sdk/native/src/native_api.cpp": {
+      "sha256": "138afa37296ce16175c90d296c58149af37605d7897f314976fceda1dd582173",
+      "executable": false
+    },
+    "sdk/native/src/native_session.cpp": {
+      "sha256": "3fed835cebf06555e7e06c74e8c2739f0aa6ce3d9f75f9f83919845f7454fff3",
+      "executable": false
+    },
+    "sdk/native/src/native_session.hpp": {
+      "sha256": "c40af19b21222e6eca875545b8c7fb39485719710760fb956d10b6cab442b339",
+      "executable": false
+    },
+    "sdk/native/src/skia_native_platform.cpp": {
+      "sha256": "46ddcba079b1214cd2aeb26226a497dbd153f4cd561a3adab1d8e544a15fc9ae",
+      "executable": false
+    },
+    "sdk/native/src/skia_native_platform.hpp": {
+      "sha256": "b21c43b01df02d6c528b76788d43d313550e656b5d2aa225ad2c4db6a973e01b",
+      "executable": false
+    },
+    "sdk/native/src/windows_surface.cpp": {
+      "sha256": "e0d21e6aa88f687a2201b6d0b82043f87596d849069cfe182775e62114724079",
+      "executable": false
+    },
+    "sdk/native/src/windows_surface.hpp": {
+      "sha256": "136e821ddbe1eb5d6c32fd695f4e1243020dbafb65baafd12c676a91ad139204",
+      "executable": false
+    },
+    "sdk/native/tests/transport_host.cpp": {
+      "sha256": "d7ac45165e9355e5dfbb37ab042115cb0d4bedceb78c3a2ffda4f1e0b4d5841b",
+      "executable": false
+    },
+    "sdk/react-native-android/README.md": {
+      "sha256": "01a6df31c00258ddbe7a44bebdab0fff75f34a6497e6012eae1bcd9a062c6139",
+      "executable": false
+    },
+    "sdk/react-native-android/package.json": {
+      "sha256": "f57d6e5c2423a9929acd1efe21e837095aef9184215f9ef19f713df8d6cad879",
+      "executable": false
+    },
+    "sdk/react-native-ios/README.md": {
+      "sha256": "b6c0cb50f35ee6e9ad36546a59595d4c12dadddbf03c5f3232425b3139c6554a",
+      "executable": false
+    },
+    "sdk/react-native-ios/package.json": {
+      "sha256": "5efd409a762e724c7ff2450528bfa9d29786e5d8a7d395fdff8a2ce3eb12ee21",
+      "executable": false
+    },
+    "sdk/react-native-macos/README.md": {
+      "sha256": "e23b359a7cb22cfc8735751ef9dafd00b2f75928a5108255d78ee950aa063e12",
+      "executable": false
+    },
+    "sdk/react-native-macos/package.json": {
+      "sha256": "85e625f8cdc517297689b39d1174ffe4ca005f6a356331e2ab368b47612de383",
+      "executable": false
+    },
+    "sdk/react-native-windows/README.md": {
+      "sha256": "3029e0bd528536056ee35179539b25875ccdc3c2c027a30d5cdc818af32a81c8",
+      "executable": false
+    },
+    "sdk/react-native-windows/package.json": {
+      "sha256": "1b65fb4979a58a830f727782feb6cb8dd12f4b0624f7fe53b08f373766710238",
+      "executable": false
+    },
+    "sdk/react-native/AxiomReactNative.podspec": {
+      "sha256": "638c80e30a7ed7667b15b0c3ed171ab2614ad198860a4898eb0caeeeb266a5a5",
+      "executable": false
+    },
+    "sdk/react-native/PACKAGING.md": {
+      "sha256": "9be6ef83d83355c4e56631f74f3c91277e8b214ea40b5d5d78f668c1c7c8bf82",
+      "executable": false
+    },
+    "sdk/react-native/README.md": {
+      "sha256": "1801fd2de4b78320a508fde972d2634874ec860134c21d3c3daa20c9d45e64aa",
+      "executable": false
+    },
+    "sdk/react-native/android/CMakeLists.txt": {
+      "sha256": "36170b6903ff308c882105df39712eb9c700e0a534fabfd8527c3cbe7f8d8c5e",
+      "executable": false
+    },
+    "sdk/react-native/android/build.gradle": {
+      "sha256": "84b6329803fe803eacd1a570c727496590f3786add65f33afb899ccc9be4f976",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/AndroidManifest.xml": {
+      "sha256": "343d5be1ac17cdd45d1a2f2ddc616c509290e655869125a9422a96d88aa66066",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/cpp/axiom_jni.cpp": {
+      "sha256": "72e13c4e6e854173557562c8f5c40b7e3274b3d9592be6d70b2d0b705286e8fe",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomCanvasView.kt": {
+      "sha256": "16ea87d730c7ead35f817506e7b5e85445eb34b82f31a7d7c4417979b9b8043e",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomCanvasViewManager.kt": {
+      "sha256": "ff2816db33b11089c1b9de9a9fcf03dc1f2b4e79e922db6a77f160f8ce1c7f34",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomNativeModule.kt": {
+      "sha256": "4c5f12c7aad2e330b10b2208ad87300e40dfbd1891c4b05d2d61d545c12ef8c4",
+      "executable": false
+    },
+    "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomPackage.kt": {
+      "sha256": "684924a9119675358c328b7e0a83eddc6503fecfe3750e1603e39afe4dc8eef5",
+      "executable": false
+    },
+    "sdk/react-native/apple/AxiomCanvasHost.mm": {
+      "sha256": "ab2067ed0a65644cd520769ebfaccc1016344e1542a21d09e04222971867eba2",
+      "executable": false
+    },
+    "sdk/react-native/apple/AxiomCanvasView.h": {
+      "sha256": "e997ca8b8fe92de407d2296eb70d0ff889af36c9c6135f5bfb335907d3863091",
+      "executable": false
+    },
+    "sdk/react-native/apple/AxiomCanvasView.mm": {
+      "sha256": "5c8f255e8ccc8d976ce8984843ac188694681f2b947867ada51c2b8c59cabe25",
+      "executable": false
+    },
+    "sdk/react-native/apple/AxiomNative.h": {
+      "sha256": "7e3d1f24d6027d14f793d405e3d24d0ee606f2534510d9fa16cd84bee41dc34c",
+      "executable": false
+    },
+    "sdk/react-native/apple/AxiomNative.mm": {
+      "sha256": "88bbf3a729f7b0edae490bf1d326d8bac18309ba75dbd44d79318b5de9af93d8",
+      "executable": false
+    },
+    "sdk/react-native/example.tsx": {
+      "sha256": "81a5f75df81c1d86ea0af345bc09e38c2b86752d1ceee4a24a3e7fa267aef1d2",
+      "executable": false
+    },
+    "sdk/react-native/native/README.md": {
+      "sha256": "3ab489c403984cf41d11a54cd2ba4d284182d82810f3c9698f1f0ebc91546639",
+      "executable": false
+    },
+    "sdk/react-native/package.json": {
+      "sha256": "cfabb4eba93aa1eecddee2972f9cdd500071dd4d4ec7517d35694a51584c41aa",
+      "executable": false
+    },
+    "sdk/react-native/react-native.config.cjs": {
+      "sha256": "41324f530a20aa920d6aa2fda2a11d7842baed3511f74ba05f1c65e690fc3818",
+      "executable": false
+    },
+    "sdk/react-native/src/controller.ts": {
+      "sha256": "36d80f9d47ff4d73f0522e0a80f08d864f52711e27472311e59e805983980b3c",
+      "executable": false
+    },
+    "sdk/react-native/src/index.ts": {
+      "sha256": "5c51434f6f0f29ee89895952e2fce6ff71a0fcce7b7af31d1cb9c9975697705a",
+      "executable": false
+    },
+    "sdk/react-native/src/specs/AxiomCanvasViewNativeComponent.ts": {
+      "sha256": "ccb3f8b29a57b49c837b38b282d52484ee06701a5d876f6b96df84738042d09b",
+      "executable": false
+    },
+    "sdk/react-native/src/specs/NativeAxiom.ts": {
+      "sha256": "6b591a8b09a44a80ce3413af49d466e9d7cba8b167966d2d635c9cb309dcf5f1",
+      "executable": false
+    },
+    "sdk/react-native/windows/AxiomCanvasView.h": {
+      "sha256": "77a1c13b230cfa641672efbc4993ca28b792de97f440208ec246ae808b79ceeb",
+      "executable": false
+    },
+    "sdk/react-native/windows/AxiomModule.h": {
+      "sha256": "f48e23ba3c39dc6a2cd13b1460dd3938e25ff6988230bfa85b6f9867d633bc90",
+      "executable": false
+    },
+    "sdk/react-native/windows/AxiomPackageProvider.h": {
+      "sha256": "16bc1a1b9e5dc05498e615b0eacffbd0edd8b1dbd96adacfdfc63b6717eb2693",
+      "executable": false
+    },
+    "sdk/react-native/windows/AxiomReactNative.def": {
+      "sha256": "b4f768701c4139e645f6ee55229039b0f19c91f2f3c7ed9c3bff0233c539bad5",
+      "executable": false
+    },
+    "sdk/react-native/windows/AxiomReactNative.vcxproj": {
+      "sha256": "b12e81bf2aa7a7eeb4710bff787c9cbe4c866042d51b0725f2ad39dd6ced223c",
+      "executable": false
+    },
+    "sdk/react-native/windows/ExperimentalFeatures.props": {
+      "sha256": "43f5d6fad8e6b6cd5a9baf5466929beb57e21ba16caf6ff2825c9d46198db289",
+      "executable": false
+    },
+    "sdk/react-native/windows/README.md": {
+      "sha256": "82491890b458ea45c632a1d251d86597e224bbdd72a8719b905f746ec49b1fb9",
+      "executable": false
+    },
+    "sdk/react-native/windows/ReactPackageProvider.cpp": {
+      "sha256": "f4287be5078bcd926aea1fe9b103cfb61d4d41704507200c22481d29887b0ae3",
+      "executable": false
+    },
+    "sdk/react-native/windows/ReactPackageProvider.h": {
+      "sha256": "7932f711d6c8e6f5fb5fe7aaf25efa6aa9518cad634031865df341141a8c117f",
+      "executable": false
+    },
+    "sdk/react-native/windows/ReactPackageProvider.idl": {
+      "sha256": "cbbf4add12b3bb186b4f30198358aa3b96f8fa85b17d1d11215c7b301881931a",
+      "executable": false
+    },
+    "sdk/react-native/windows/pch.cpp": {
+      "sha256": "b7cb2190d8f04fa432c3b0af4288f41d8f20a178325887619ebf61d2961228e7",
+      "executable": false
+    },
+    "sdk/react-native/windows/pch.h": {
+      "sha256": "8f11a7fb25bfa3342fe48bf159b95333b0fff11319f6ab6b8f1ec5e9481782a2",
+      "executable": false
+    },
+    "sdk/version.json": {
+      "sha256": "39fcd743675e56b5247ebbbb5f98b1d6128d62241ec63337a31e34f3a3d3dc77",
+      "executable": false
+    },
+    "sdk/web/CMakeLists.txt": {
+      "sha256": "8d5bbedb1db0693ce582068befa92bfad079e10d88c0ddee22631489e960733d",
+      "executable": false
+    },
+    "sdk/web/README.md": {
+      "sha256": "176b9bc8f2b02b947e78d20c95a465456cb3f49e08705101fc73054441e7affb",
+      "executable": false
+    },
+    "sdk/web/axiom.d.mts": {
+      "sha256": "ca35fe98851a70e6cc7770f29d21c68ed87dc87aee6156c5741cc9403b983647",
+      "executable": false
+    },
+    "sdk/web/axiom.mjs": {
+      "sha256": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+      "executable": false
+    },
+    "sdk/web/bridge.cpp": {
+      "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9",
+      "executable": false
+    },
+    "sdk/web/example.html": {
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+      "executable": false
+    },
+    "sdk/web/package.json": {
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+      "executable": false
+    },
+    "sdk/web/text_input.mjs": {
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6",
+      "executable": false
+    },
+    "sdk/web/web_runtime_adapter.cpp": {
+      "sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "executable": false
+    },
+    "sdk/windows/AxiomSDKConfig.cmake": {
+      "sha256": "95bf8be0d0ce0c1dd8de76e789e4a5b75cec40a568442fed64aeea2cb58cc9f2",
+      "executable": false
+    },
+    "sdk/windows/CMakeLists.txt": {
+      "sha256": "dc602b2b857f3efecf0a18600f5853d0bf3fc6a6ca1a2a7651504966c56879ad",
+      "executable": false
+    },
+    "sdk/windows/README.md": {
+      "sha256": "21eef861b97a22b422a1f22a5f7f313924689b0b312ef4168c39e98f3324f1e5",
+      "executable": false
+    },
+    "sdk/windows/api.cpp": {
+      "sha256": "d157bc02948660354628c76a2d44e8e3201a12ce19934ebc1fc3afef71fb03ce",
+      "executable": false
+    },
+    "sdk/windows/include/axiom/api.h": {
+      "sha256": "f13abed4c7e12a7aef9739c61f12088ddae8fe96f950c0acfe80ec08149901cf",
+      "executable": false
+    },
+    "sdk/windows/include/axiom/axiom.hpp": {
+      "sha256": "a1ef1f28c3d94ce976c33f67163df7a3b568cdbb884ab79e01e16c3154508ccf",
+      "executable": false
+    },
+    "sdk/windows/native_collectors.inl": {
+      "sha256": "405c28d9d14572b11892ae16b23a58004014b5299816fef3519af5d3acabf992",
+      "executable": false
+    },
+    "sdk/windows/native_platform.cpp": {
+      "sha256": "a449b9b3421e26122668e79ea243e6b2406bd3288098885ca8c125ab5f4be951",
+      "executable": false
+    },
+    "sdk/windows/native_platform.hpp": {
+      "sha256": "d9f520948acad7ad2d0fb6829fa37aed72ded8f93e097fb7592b3b0a1e80bea9",
+      "executable": false
+    },
+    "semantic-sdk.lock.json": {
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "executable": false
+    }
+  },
+  "product_source_sha256": "16547634ad654965f0b9442ee9a4393d03ffbb9282217d233fc9b230f16912a0",
+  "full_identity_changed_only_result_logs": [
+    ".aegis/results/G5-object-interaction-continuity-r2/web-build-driver.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-source-before.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-configure.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/native-keeper-build.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-install-command.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-install.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-build-command.json",
+    ".aegis/results/G5-object-interaction-r2-demo/server.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-environment-offline.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-environment-offline-command.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/native-regression.log",
+    ".aegis/results/G5-object-interaction-continuity-r2/native-keeper-build-result.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-configure-command.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/native-keeper-command.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-demo-build-checks.json",
+    ".aegis/results/G5-object-interaction-continuity-r2/web-normal-build.log"
+  ],
+  "full_identity_false_positive_preserved": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/web-build-driver.log",
+  "diagnostics": "OFF",
+  "frame_timing": "OFF",
+  "native_faults": "ABSENT",
+  "developer_components": "OFF",
+  "render_cache_MiB": 32,
+  "render_shared_MiB": 96,
+  "build_checks": [
+    {
+      "name": "web-normal-environment-offline",
+      "returncode": 0,
+      "elapsed_seconds": 0.3844073750078678
+    },
+    {
+      "name": "web-normal-configure",
+      "returncode": 0,
+      "elapsed_seconds": 4.095523415948264
+    },
+    {
+      "name": "web-normal-build",
+      "returncode": 0,
+      "elapsed_seconds": 151.29870179202408
+    },
+    {
+      "name": "web-normal-install",
+      "returncode": 0,
+      "elapsed_seconds": 0.02009187499061227
+    }
+  ]
+}

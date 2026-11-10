@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: frozen long trace and explicit window bounds
+ok 1 - frozen long trace and explicit window bounds
+  ---
+  duration_ms: 0.666042
+  ...
+# Subtest: stress intermediate rounds need admission/decision proof while only final tail requires idle
+ok 2 - stress intermediate rounds need admission/decision proof while only final tail requires idle
+  ---
+  duration_ms: 0.120875
+  ...
+# Subtest: completion requires actual per-round commits, closed contacts and tail quiescence
+ok 3 - completion requires actual per-round commits, closed contacts and tail quiescence
+  ---
+  duration_ms: 0.173792
+  ...
+# Subtest: separates blocked Up, stale DOM and real busy history without inventing readiness
+ok 4 - separates blocked Up, stale DOM and real busy history without inventing readiness
+  ---
+  duration_ms: 0.437458
+  ...
+# Subtest: browser wait helper executes without host imports or runtime dependencies
+ok 5 - browser wait helper executes without host imports or runtime dependencies
+  ---
+  duration_ms: 0.855958
+  ...
+# Subtest: actual UI asynchronous Undo must advance generation before settle and capture metadata
+ok 6 - actual UI asynchronous Undo must advance generation before settle and capture metadata
+  ---
+  duration_ms: 0.288708
+  ...
+# Subtest: candidate operation roster and three baseline families are complete
+ok 7 - candidate operation roster and three baseline families are complete
+  ---
+  duration_ms: 0.428
+  ...
+# Subtest: T0 includes blocked Up; timings remain findings while actual positive pixels are required
+ok 8 - T0 includes blocked Up; timings remain findings while actual positive pixels are required
+  ---
+  duration_ms: 0.154417
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 248.530916

@@ -1,0 +1,77 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2d-selection-up-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 approved twoordered UR2d slices -> P32",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1",
+    "identity": "package-local refs contentaddressed; noGitcommitrequested"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "4378d59d32c2b53e104980b4ec61061141905a3b9870b1107c65452843b43a48"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "90a172ba999c82483f64b3f3f16910d48ae15af2f8a16cc1d25487d23147db10"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "69b3a8ee285977bde8e9f8db6d0833c7f46fc7002126d0b1aa57dc2de590b2fe"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "03d28c20bc8b1ea9e4ef179f0502b13456998c013ad05665cc8d8c925c1b3d70"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "3c0319f7b218b5c2128ec7ad8823c5c51723bf0e36560aeb6df200dc6202c868"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "b252d812da776a98ae58a05b3120c9000f85564baa9e2ae2dd8b6541eb1fd8ce"
+  },
+  "web_plan_ref": {
+    "path": "web-plan.json",
+    "sha256": "427f57a5d77d10b40d1256e9c0d0726f66d21c79e543eae2ef3979fba9f97fee"
+  },
+  "regression_plan_ref": {
+    "path": "regression-plan.json",
+    "sha256": "4580e0b6f972a7f74bf40d0b9cab3f1010ebfe8dbd4c1df9ad2ec6d509562c8d"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "allowed_milestones": [
+    "UR2d-A",
+    "UR2d-B"
+  ],
+  "excluded_milestones": [
+    "UR3",
+    "multithreading",
+    "officialG5/P34",
+    "commit/push"
+  ],
+  "accepted_starting_source": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/source-manifest.json",
+    "sha256": "ddc9a58d99eb1416a9f80fbc843d8da12ad732b18196ba87ae334b53adb4435f",
+    "bytes": 3422
+  },
+  "human_authorization": "User explicitly authorized tasks1and2 inpreviousproposal, with persistentdesign/control + pairedsolewriter and completionnotifications."
+}

@@ -1,0 +1,342 @@
+{
+  "schema": "g5-control-feedback-measurement-classification-v1",
+  "created_utc": "2026-11-10T14:46:17.819013+00:00",
+  "status": "HARNESS_FIXED_PROBE_MISSING_FIRST_FEEDBACK_MEASUREMENT",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL/candidate-zoom.json",
+    "sha256": "3758ce0f50ac40e5e305155a006c41b7b09e8f5aa71df3acd02f0742ee21fc63"
+  },
+  "facts": {
+    "expected_camera": {
+      "scale": 1.2712491503214047,
+      "x": -162.7494901928428,
+      "y": -108.49966012856191
+    },
+    "actual_camera": {
+      "scale": 1.2712491750717163,
+      "x": -162.74945068359375,
+      "y": -108.4996337890625
+    },
+    "camera_pose_qualified": true,
+    "probe_ms_after_first_wheel": 111.60000002384186,
+    "probe_expected_color_matches": 0,
+    "baseline_equals_active_roi": true,
+    "later_stages": {
+      "initial": {
+        "pixels": [
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ],
+          [
+            255,
+            255,
+            255,
+            255
+          ]
+        ],
+        "expected_color_matches": 0
+      },
+      "final": {
+        "pixels": [
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ]
+        ],
+        "expected_color_matches": 16
+      },
+      "redo": {
+        "pixels": [
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ],
+          [
+            51,
+            128,
+            204,
+            255
+          ]
+        ],
+        "expected_color_matches": 16
+      }
+    },
+    "actualReady_ms_after_Upstart": 5119.0
+  },
+  "classification": "Actual feedback is absent at fixed~100ms probe but appears correctly by final/redo; fixed probe does not measure first correct feedback or prove permanent product failure. Keep sampled delay and raw MISSING; repair observer only to measure until first correct witness within finite15s/no-progress cap.",
+  "remaining_frozen_cases": [
+    "candidate zoom observation",
+    "candidate rectangle",
+    "candidate sticky",
+    "candidate table",
+    "candidate image"
+  ],
+  "no_product_change": true,
+  "timing_policy": "3sgoal5sreferenceonly;notfixed100msblock",
+  "limits": "No further stress sampling. Reallocate at most240s across 5 unfinished readiness cases from combined1200s; 762s consumed so still bounded."
+}

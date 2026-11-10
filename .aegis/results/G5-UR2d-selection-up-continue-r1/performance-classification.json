@@ -1,0 +1,23 @@
+{
+  "status": "BLOCKED_EVIDENCE",
+  "blocking_obligation": "D-PERF_REQUIRED_THREE_BROWSER_PAIRS",
+  "required_pairs": 3,
+  "actual_pairs": 1,
+  "missing_repetitions": [
+    1,
+    2
+  ],
+  "browserstarts_exhausted": true,
+  "source": "partial-paired-Web-timing.json",
+  "native_A_threeiterations": "paired-native-costs-A.json",
+  "native_B_threeiterations": "B-final-paired-native.json",
+  "native_B_structural_hits": "copies8/16/32 => 7/15/31equivalentdecisionhits",
+  "facts": [
+    "S2oldselectionlargeMove14695.8ms/up14698.1ms vs candidatecold82.5ms/up7.3ms firstpaironly",
+    "B normalWeb Upmedians notuniformlyimproved fromonepair; no performancePASS",
+    "Missingrepetitions are missing,notnoise. Noextrapolationofnativeoronepairto3pairs."
+  ],
+  "driver_defect": "zeroedgefullviewport<=2 is sufficientproofonly; cannotreject AA-bound pixelwithoutoriginalCPUband. DriverstilldoesnotfullyimplementrequiredAAfallback;oldCOMPAREST0PPEDpreserved.",
+  "product_failure_proven": false,
+  "officialPASS": false
+}

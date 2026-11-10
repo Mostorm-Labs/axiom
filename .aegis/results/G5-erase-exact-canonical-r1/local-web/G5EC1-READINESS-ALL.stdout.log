@@ -1,0 +1,14 @@
+{"stage":"readiness-start","kind":"erase","variant":"old"}
+{"stage":"readiness-complete","kind":"erase","variant":"old","timing":{"ms":6287.600000023842,"category":"over5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"pan","variant":"old"}
+{"stage":"readiness-complete","kind":"pan","variant":"old","timing":{"ms":4292.600000023842,"category":"3to5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"rectangle","variant":"old"}
+{"stage":"readiness-complete","kind":"rectangle","variant":"old","timing":{"ms":5375.200000047684,"category":"over5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"ready","variant":"candidate"}
+{"stage":"readiness-complete","kind":"ready","variant":"candidate","timing":{"ms":4882.700000047684,"category":"3to5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"erase","variant":"candidate"}
+{"stage":"readiness-complete","kind":"erase","variant":"candidate","timing":{"ms":6117.300000071526,"category":"over5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"pan","variant":"candidate"}
+{"stage":"readiness-complete","kind":"pan","variant":"candidate","timing":{"ms":4256.799999952316,"category":"3to5s","goal_ms":3000,"reference_ms":5000}}
+{"stage":"readiness-start","kind":"zoom","variant":"candidate"}
+{"stage":"closed","status":"FAILED","error":"Error: successor actual feedback MISSING zoom\n    at readinessWorker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_erase_interaction_readiness.mjs:33:38)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_erase_interaction_readiness.mjs:40:129"}

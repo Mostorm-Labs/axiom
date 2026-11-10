@@ -6,6 +6,9 @@
 namespace canvas::render {
 struct RenderCacheOptions final {
     bool enabled=true;
+    // Explicit value profile stays conservative for tests/tools. The ordinary
+    // SkiaRenderer constructor applies the private CMake desktop/mobile policy
+    // to all three limits; these ceilings do not preallocate memory.
     std::size_t maxBytes=32U*1024U*1024U;
     // Shared derived-resource hard cap, independent of optional cache capacity.
     // Mandatory cooperative work buffers use this same manager, not a new pool.

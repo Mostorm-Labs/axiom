@@ -1,0 +1,36 @@
+[0/2] Re-checking globbed directories...
+[1/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/preview_surface.cpp.o
+[2/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_compact_material.cpp.o
+[3/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_execution.cpp.o
+[4/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o
+[5/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_backend.cpp.o
+[6/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_headless_backend.cpp.o
+[7/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o
+FAILED: runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o 
+/usr/bin/c++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_SHARED_MIB=96 -DAXIOM_TRANSIENT_DISPLAY_TESTS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o -MF runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o.d -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp:68:55: error: object of type 'FrameState' cannot be assigned because its copy assignment operator is implicitly deleted
+   68 |     candidate.targetEpoch=targetEpoch_;candidate.frame=plan.frame;candidate.transform=plan.referenceDrawList.worldToView;
+      |                                                       ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/frame_state.hpp:53:18: note: copy assignment operator of 'FrameState' is implicitly deleted because field 'viewId' has no copy assignment operator
+   53 |     const ViewId viewId{};
+      |                  ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp:76:17: error: object of type 'std::optional<StaticSceneCache>' cannot be assigned because its copy assignment operator is implicitly deleted
+   76 |     staticScene_=std::move(candidate);work.staticReuseLeaseBytes=total;++work.staticReuseBuilds;return true;
+      |                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1045:45: note: explicitly defaulted function was implicitly deleted here
+ 1045 |   _LIBCPP_HIDE_FROM_ABI constexpr optional& operator=(const optional&) = default;
+      |                                             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:806:7: note: copy assignment operator of 'optional<canvas::render::internal::SkiaRenderCache::StaticSceneCache>' is implicitly deleted because base class '__optional_sfinae_assign_base_t<canvas::render::internal::SkiaRenderCache::StaticSceneCache>' (aka '__sfinae_assign_base<(is_copy_constructible_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache> && is_copy_assignable_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache>) || is_lvalue_reference_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache>, (is_move_constructible_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache> && is_move_assignable_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache>) || is_lvalue_reference_v<canvas::render::internal::SkiaRenderCache::StaticSceneCache>>') has a deleted copy assignment operator
+  806 |       private __optional_sfinae_assign_base_t<_Tp>,
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__tuple/sfinae_helpers.h:76:25: note: 'operator=' has been explicitly marked deleted here
+   76 |   __sfinae_assign_base& operator=(__sfinae_assign_base const&) = delete;
+      |                         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp:78:73: error: unused parameter 'plan' [-Werror,-Wunused-parameter]
+   78 | bool SkiaRenderCache::drawStaticScene(SkCanvas& canvas,const FramePlan& plan,
+      |                                                                         ^
+3 errors generated.
+[8/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_layers.cpp.o
+[9/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_navigation_tiles.cpp.o
+[10/15] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o
+ninja: build stopped: subcommand failed.

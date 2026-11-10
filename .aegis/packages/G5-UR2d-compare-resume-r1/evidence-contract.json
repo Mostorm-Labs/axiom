@@ -1,0 +1,22 @@
+{
+  "original_evidence": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/evidence-contract.json",
+    "sha256": "3c0319f7b218b5c2128ec7ad8823c5c51723bf0e36560aeb6df200dc6202c868"
+  },
+  "parent_evidence": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-continue-r1/evidence-contract.json",
+    "sha256": "5ae3e600dd4f61c703a6517ad67ffbbb5c3582671bd39643ce34d0505aca205f"
+  },
+  "decision_ref": {
+    "path": "control-decision.json",
+    "sha256": "7a409ed258b5fa53849edaa96bf063367402b37512fa47cb92b43ca9ef6c25bf"
+  },
+  "result_namespace": ".aegis/results/G5-UR2d-selection-up-continue-r1",
+  "preserved_attempts": [
+    "U2D1-OLD-F RSSguard",
+    "U2D1-A-F observed",
+    "U2D1-B-F fullSHAassertfailure"
+  ],
+  "append_only_authorization": true,
+  "required": "Fullfinalreviewbundle withoriginalfailedrefs+controlclassification+lastCOMPARErealraw;noresamplingnewIDsorrelabelfailureasoriginalsuccess."
+}

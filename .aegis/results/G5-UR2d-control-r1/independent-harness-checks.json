@@ -1,0 +1,27 @@
+[
+  {
+    "name": "independent-node",
+    "command": [
+      "node",
+      "--test",
+      "verification/tests/g5_ur2d_selection_up.test.mjs",
+      "verification/tests/g5_ur2b_exact_query.test.mjs",
+      "verification/tests/g5_ur2c_mask_history.test.mjs"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.661532334
+  },
+  {
+    "name": "independent-python",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "verification.tests.test_g5_ur2d_selection_up",
+      "verification.tests.test_g5_ur2b_exact_query",
+      "verification.tests.test_g5_ur2c_mask_history"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.05594958299999997
+  }
+]

@@ -1,0 +1,410 @@
+--- a/verification/runners/g5/ur2d_selection_up.mjs
++++ b/verification/runners/g5/ur2d_selection_up.mjs
+@@ -3,7 +3,69 @@
+ import http from 'node:http';
+ import path from 'node:path';
+ import {createHash} from 'node:crypto';
++import {execFileSync} from 'node:child_process';
++import {isDeepStrictEqual} from 'node:util';
+ import {validateChunk} from './ur2d_selection_up_contract.mjs';
++import {comparePixels} from './ur0/pixel_oracle.mjs';
++
++const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
++export function pairConsumerRequest(request,variant,repetition){
++ const completion=request.id==='U2D1-PAIR-COMPLETE-R1';
++ if(completion&&(![1,2].includes(repetition)||!['old','candidate'].includes(variant)))
++  throw Error('unplanned completion pair');
++ const paired=completion||request.id==='U2D1-COMPARE';
++ return {...request,id:paired?'U2D1-COMPARE':request.id,windowId:request.id,variant,repetition};
++}
++function nonblankReference(bytes){
++ if(!(bytes instanceof Uint8Array)||!bytes.length||bytes.length%4||bytes.length>128*1024*1024)
++  throw Error('missing or malformed reference RGBA');
++ let opaque=false,ink=false;
++ for(let i=0;i<bytes.length;i+=4){opaque||=bytes[i+3]>0;ink||=bytes[i+3]>0&&(bytes[i]<250||bytes[i+1]<250||bytes[i+2]<250);}
++ if(!opaque||!ink)throw Error('blank independent reference');
++}
++export function evaluateIndependentRoundtrip(before,after,beforeReference,afterReference,beforeBand,afterBand){
++ nonblankReference(beforeReference);nonblankReference(afterReference);
++ if(!isDeepStrictEqual(beforeReference,afterReference)||!isDeepStrictEqual(beforeBand,afterBand))
++  throw Error('History reference or independent band changed');
++ const beforeProof=comparePixels(before,beforeReference,beforeBand),afterProof=comparePixels(after,afterReference,afterBand);
++ const roundtrip=comparePixels(after,before,beforeBand),fullViewport=comparePixels(after,before,new Uint8Array(before.length/4));
++ return {status:[beforeProof,afterProof,roundtrip].every(r=>r.status==='QUALIFIED')?'QUALIFIED':'FAILED',before:beforeProof,after:afterProof,roundtrip,fullViewport,
++  rule:'Original independent CPU geometry AA band; <=2 per channel outside that band. Full viewport is a sufficient additional proof only.'};
++}
++export async function qualifyPersistedRoundtrip({directory,name,basis,oracle}){
++ if(!/^S[02]$/.test(name)||!oracle?.path||!oracle?.sha256||sha(await fs.readFile(oracle.path))!==oracle.sha256)
++  throw Error('missing or foreign independent oracle');
++ const {width,height,logical_width,logical_height,camera,final,redo}=basis??{};
++ if(!Number.isSafeInteger(width)||!Number.isSafeInteger(height)||width<=0||height<=0||width*height>16777216||
++   !Number.isFinite(logical_width)||logical_width<=0||!Number.isFinite(logical_height)||logical_height<=0||
++   !camera||!Number.isFinite(camera.scale)||camera.scale<=0||![camera.x,camera.y].every(Number.isFinite)||
++   !isDeepStrictEqual(final?.state?.camera,camera)||!isDeepStrictEqual(redo?.state?.camera,camera)||
++   final?.state?.selected?.length!==0||redo?.state?.selected?.length!==0)
++  throw Error('incompatible public pixel basis');
++ const request={width,height,logical_width,logical_height,camera,hud_bounds:[]};
++ const requestFile=path.join(directory,name+'-independent.request.json');await fs.writeFile(requestFile,JSON.stringify(request));
++ const samples=[];
++ for(const stage of ['final','redo']){
++  const snapshot=path.join(directory,name+'-'+stage+'.axsnap'),actual=await fs.readFile(path.join(directory,name+'-'+stage+'.rgba'));
++  const bytes=await fs.readFile(snapshot),metadata=basis[stage];
++  if(sha(bytes)!==metadata.sha256||bytes.length!==metadata.byteLength||actual.length!==width*height*4)
++   throw Error('saved snapshot/pixel identity mismatch');
++  const prefix=path.join(directory,name+'-'+stage+'-independent');
++  // Exactly one invocation per snapshot/request. Oracle failure/timeout is
++  // durable and terminal; never retry or substitute a candidate-derived band.
++  const invocation={oracle,stage,snapshot_sha256:sha(bytes),request,timeout_ms:10000};
++  try{
++   invocation.reference=JSON.parse(execFileSync(oracle.path,['--pixels',snapshot,requestFile,prefix],{encoding:'utf8',timeout:10000,maxBuffer:1024*1024,stdio:['ignore','pipe','pipe']}));
++   if(invocation.reference.status!=='REFERENCE_RENDERED')throw Error('independent reference unavailable');
++   invocation.status='REFERENCE_RENDERED';
++  }catch(error){invocation.status='FAILED';invocation.error=String(error);await fs.writeFile(prefix+'-invocation.json',JSON.stringify(invocation,null,2)+'\n');throw error;}
++  await fs.writeFile(prefix+'-invocation.json',JSON.stringify(invocation,null,2)+'\n');
++  const reference=await fs.readFile(prefix+'.rgba'),band=await fs.readFile(prefix+'.edge');
++  samples.push({actual,reference,band,identity:{snapshot_sha256:sha(bytes),actual_sha256:sha(actual),reference_sha256:sha(reference),band_sha256:sha(band)}});
++ }
++ const proof=evaluateIndependentRoundtrip(samples[0].actual,samples[1].actual,samples[0].reference,samples[1].reference,samples[0].band,samples[1].band);
++ return {...proof,oracle,request,samples:samples.map(s=>s.identity)};
++}
+ 
+ export async function consumer(config){
+  const {createRuntime}=await import('/sdk/axiom.mjs');
+@@ -78,7 +140,9 @@
+    await sdk.undo();await settle();row.undo=await snapshot(fixture.name+'-undo');await sdk.redo();await settle();row.redo=await snapshot(fixture.name+'-redo');row.redoPixels=await pixels(fixture.name+'-redo');
+    // Exact file hashes remain metadata. The frozen comparator owns pixel
+    // acceptance and permits <=2 channel levels outside its independent band.
+-   row.roundtrip=await window.compareRoundtrip(fixture.name);check(row.roundtrip.status==='QUALIFIED','Undo/Redo pixel policy failed');
++   row.roundtrip=await window.compareRoundtrip({name:fixture.name,basis:{
++    width:sdk.canvas.width,height:sdk.canvas.height,logical_width:state().surface.width,logical_height:state().surface.height,
++    camera:state().camera,final:row.final,redo:row.redo}});check(row.roundtrip.status==='QUALIFIED','Undo/Redo pixel policy failed');
+   }
+   row.frameCount=frameCount;check(errors.length===0,'public handler errors');await window.persistRow(row);observer.restore();await sdk.close();document.getElementById('mount').replaceChildren();sdk=null;
+  }
+@@ -104,11 +168,8 @@
+   await fs.mkdir(runOut,{recursive:true});page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});page.on('pageerror',e=>result.errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'){if(result.console.length<256)result.console.push(m.text());else ++result.consoleDropped;}});
+   await page.exposeFunction('persistStage',async row=>{await fs.appendFile(path.join(runOut,'stages.jsonl'),JSON.stringify(row)+'\n');console.log(JSON.stringify(row));});
+   await page.exposeFunction('persistRow',async row=>fs.writeFile(path.join(runOut,'row-'+row.fixture+'.json'),JSON.stringify(row,null,2)+'\n'));
+-  await page.exposeFunction('compareRoundtrip',async name=>{
+-   if(!/^S[02]$/.test(name))throw Error('unknown fixture');
+-   const {comparePixels}=await import('./ur0/pixel_oracle.mjs');
+-   const a=await fs.readFile(path.join(runOut,name+'-final.rgba')),b=await fs.readFile(path.join(runOut,name+'-redo.rgba'));
+-   const comparison=comparePixels(b,a,new Uint8Array(a.length/4));
++  await page.exposeFunction('compareRoundtrip',async({name,basis})=>{
++   const comparison=await qualifyPersistedRoundtrip({directory:runOut,name,basis,oracle:request.oracle});
+    await fs.writeFile(path.join(runOut,name+'-roundtrip.json'),JSON.stringify(comparison,null,2)+'\n');return comparison;
+   });
+   const transfers=new Map();
+@@ -124,17 +185,19 @@
+   });
+   await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>typeof window.run==='function');
+   };
+-  const variants=request.id==='U2D1-COMPARE'?request.variants:[{name:'candidate',sdk:request.sdk}];
+-  if(request.id==='U2D1-COMPARE'&&(!Array.isArray(variants)||variants.length!==2||new Set(variants.map(v=>v.name)).size!==2))throw Error('paired comparison requires old and candidate SDKs');
++  const paired=request.id==='U2D1-COMPARE'||request.id==='U2D1-PAIR-COMPLETE-R1';
++  const variants=paired?request.variants:[{name:'candidate',sdk:request.sdk}];
++  if(paired&&(!Array.isArray(variants)||variants.length!==2||variants[0].name!=='old'||variants[1].name!=='candidate'))throw Error('paired comparison requires ordered old and candidate SDKs');
++  const repetitions=request.id==='U2D1-PAIR-COMPLETE-R1'?[1,2]:request.id==='U2D1-COMPARE'?[0,1,2]:[0];
+   result.runs=[];
+-  for(let repetition=0;repetition<(request.id==='U2D1-COMPARE'?3:1);repetition++){
++  for(const repetition of repetitions){
+    for(const variant of variants){
+     request.sdk=variant.sdk;
+     const sdkFiles={};for(const name of ['axiom.mjs','internal/axiom.mjs','axiom.wasm','axiom.data'])sdkFiles[name]=createHash('sha256').update(await fs.readFile(path.join(variant.sdk,name))).digest('hex');
+     await fs.appendFile(path.join(out,'variants.jsonl'),JSON.stringify({name:variant.name,repetition,sdk:variant.sdk})+'\n');
+     // Fresh page prevents imported module identity from crossing old/candidate.
+     if(page)await page.close();await openPage(path.join(out,variant.name+'-'+repetition));
+-    const value=await page.evaluate(config=>window.run(config),{...request,variant:variant.name,repetition});
++    const value=await page.evaluate(config=>window.run(config),pairConsumerRequest(request,variant.name,repetition));
+     result.runs.push({variant:variant.name,repetition,sdkFiles,rows:value.rows});
+    }
+   }
+--- a/verification/tests/g5_ur2d_selection_up.test.mjs
++++ b/verification/tests/g5_ur2d_selection_up.test.mjs
+@@ -6,6 +6,7 @@
+ import {createHash} from 'node:crypto';
+ import {CHUNK_BYTES,MAX_BUFFER_BYTES,sendBinaryChunks,validateChunk,classifyWindow,classifyPerformance} from '../runners/g5/ur2d_selection_up_contract.mjs';
+ import {comparePixels} from '../runners/g5/ur0/pixel_oracle.mjs';
++import * as driver from '../runners/g5/ur2d_selection_up.mjs';
+ 
+ test('DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk',async()=>{
+  const bytes=new Uint8Array(2862*2020*4);for(let i=0;i<bytes.length;i++)bytes[i]=(i*23+71)%256;
+@@ -54,6 +55,25 @@
+  assert.equal(comparePixels(one,original,new Uint8Array(101)).status,'QUALIFIED');
+  assert.equal(comparePixels(three,original,new Uint8Array(101)).status,'FAILED');
+ });
++test('roundtrip accepts an independent edge-only delta4 and rejects a non-AA delta3',()=>{
++ assert.equal(typeof driver.evaluateIndependentRoundtrip,'function','roundtrip must use the frozen independent band');
++ const reference=new Uint8Array(404).fill(127),before=reference.slice(),after=reference.slice(),band=new Uint8Array(101);
++ band[3]=1;after[12]+=4;
++ const qualified=driver.evaluateIndependentRoundtrip(before,after,reference,reference,band,band);
++ assert.equal(qualified.fullViewport.status,'FAILED');assert.equal(qualified.status,'QUALIFIED');
++ after[16]+=3;assert.equal(driver.evaluateIndependentRoundtrip(before,after,reference,reference,band,band).status,'FAILED');
++});
++test('missing, malformed, blank or incompatible independent references cannot qualify',()=>{
++ assert.equal(typeof driver.evaluateIndependentRoundtrip,'function');
++ const reference=new Uint8Array(404).fill(127),band=new Uint8Array(101);
++ for(const expected of [null,new Uint8Array(),new Uint8Array(4),new Uint8Array(404)])
++  assert.throws(()=>driver.evaluateIndependentRoundtrip(reference,reference,expected,reference,band,band));
++ assert.throws(()=>driver.evaluateIndependentRoundtrip(reference,reference,reference,reference,new Uint8Array(2),band));
++ const bad=band.slice();bad[0]=2;
++ assert.throws(()=>driver.evaluateIndependentRoundtrip(reference,reference,reference,reference,bad,band));
++ const different=band.slice();different[0]=1;
++ assert.throws(()=>driver.evaluateIndependentRoundtrip(reference,reference,reference,reference,different,band));
++});
+ test('driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage',async()=>{
+  const source=await fs.readFile(new URL('../runners/g5/ur2d_selection_up.mjs',import.meta.url),'utf8');
+  assert.ok(!source.includes('Array.from(v.bytes)'));assert.ok(!source.includes('Array.from(r.bytes)'));assert.ok(!source.includes('value.buffers'));
+@@ -61,10 +81,31 @@
+  assert.match(source,/onFrame:\(\)=>\+\+frameCount/);assert.match(source,/process\.exitCode=1/);assert.match(source,/persistStage/);
+ });
+ 
+-test('COMPARE binds two SDKs and alternates all three repetitions with fresh pages',async()=>{
++test('pair completion binds ordered SDKs and runs only missing repetitions with fresh pages',async()=>{
+  const source=await fs.readFile(new URL('../runners/g5/ur2d_selection_up.mjs',import.meta.url),'utf8');
+- assert.match(source,/for\(let repetition=0;repetition<\(request.id==='U2D1-COMPARE'\?3:1\);repetition\+\+\)/);
++ assert.match(source,/request.id==='U2D1-PAIR-COMPLETE-R1'\?\[1,2\]/);
++ assert.match(source,/for\(const repetition of repetitions\)/);
+  assert.match(source,/for\(const variant of variants\)/);assert.match(source,/if\(page\)await page.close\(\);await openPage/);
+  assert.match(source,/row.roundtrip=await window.compareRoundtrip/);
+  assert.ok(!source.includes('comparison page bindings must be reinstalled'));
++ for(const repetition of [1,2])for(const variant of ['old','candidate']){
++  const config=driver.pairConsumerRequest({id:'U2D1-PAIR-COMPLETE-R1',fixtures:['same']},variant,repetition);
++  assert.equal(config.id,'U2D1-COMPARE');assert.equal(config.windowId,'U2D1-PAIR-COMPLETE-R1');
++  assert.equal(config.repetition,repetition);assert.equal(config.variant,variant);assert.deepEqual(config.fixtures,['same']);
++  // These are the established consumer branches: one selection gesture,
++  // no extra Cancel matrix and mandatory Undo/Redo independent roundtrip.
++  assert.equal(config.id==='U2D1-OLD-F'||config.id==='U2D1-COMPARE'?1:3,1);
++  assert.equal(config.id!=='U2D1-OLD-F'&&config.id!=='U2D1-COMPARE',false);
++  assert.equal(config.id==='U2D1-B-F'||config.id==='U2D1-COMPARE',true);
++ }
++ assert.throws(()=>driver.pairConsumerRequest({id:'U2D1-PAIR-COMPLETE-R1'},'old',0));
+ });
++test('oracle identity and incompatible public camera fail before spawning a reference',async()=>{
++ const directory=await fs.mkdtemp(path.join(os.tmpdir(),'ur2d-oracle-'));
++ try{
++  const fake=path.join(directory,'oracle');await fs.writeFile(fake,'not an oracle');
++  await assert.rejects(driver.qualifyPersistedRoundtrip({directory,name:'S0',basis:{},oracle:{path:fake,sha256:'0'.repeat(64)}}),/foreign/);
++  const digest=createHash('sha256').update('not an oracle').digest('hex');
++  await assert.rejects(driver.qualifyPersistedRoundtrip({directory,name:'S0',basis:{},oracle:{path:fake,sha256:digest}}),/basis/);
++ }finally{await fs.rm(directory,{recursive:true,force:true});}
++});
+--- /dev/null
++++ b/verification/runners/g5/ur2d_pair_completion_runner.py
+@@ -0,0 +1,168 @@
++"""One authorized UR2d verification-completion process; no historic ID reuse."""
++from pathlib import Path
++import hashlib
++import importlib.util
++import json
++import math
++import subprocess
++import sys
++
++ROOT=Path(__file__).resolve().parents[3]
++HERE=Path(__file__).resolve().parent
++RESULT=ROOT/'.aegis/results/G5-UR2d-harness-completion-r1'
++WINDOW='U2D1-PAIR-COMPLETE-R1'
++PRIOR_SECONDS=105
++LIMIT_SECONDS=240
++TOTAL_CAP=960
++EXPECTED_ORACLE='ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105'
++ALLOWED_CHANGED={
++    'verification/runners/g5/ur2d_selection_up.mjs',
++    'verification/tests/g5_ur2d_selection_up.test.mjs',
++}
++
++def sha(path):
++    digest=hashlib.sha256()
++    with Path(path).open('rb') as stream:
++        for block in iter(lambda:stream.read(1024*1024),b''):
++            digest.update(block)
++    return digest.hexdigest()
++
++def read(path):
++    return json.loads(Path(path).read_text())
++
++def write(path,value):
++    path=Path(path)
++    path.parent.mkdir(parents=True,exist_ok=True)
++    path.write_text(json.dumps(value,indent=2)+'\n')
++
++def module(name,path):
++    spec=importlib.util.spec_from_file_location(name,path)
++    value=importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(value)
++    return value
++
++def artifacts(root):
++    root=Path(root)
++    return {str(p.relative_to(root)):sha(p) for p in sorted(root.rglob('*')) if p.is_file()}
++
++def request_roots(request):
++    if request.get('id')!=WINDOW or request.get('repetitions')!=[1,2]:
++        raise ValueError('only missing repetitions1/2 on the authorized ID may run')
++    variants=request.get('variants')
++    if not isinstance(variants,list) or [v.get('name') for v in variants]!=['old','candidate']:
++        raise ValueError('ordered old/candidate SDK pair required')
++    roots={v['name']:Path(v['sdk']).resolve(strict=True) for v in variants}
++    if roots['old']==roots['candidate']:
++        raise ValueError('old and candidate SDK identities must be independent')
++    if [f.get('name') for f in request.get('fixtures',[])]!=['S0','S2']:
++        raise ValueError('exact S0/S2 fixture pair required')
++    return roots
++
++def reserve(ledger,window):
++    if window!=WINDOW or ledger['attempts'] or ledger.get('charged_seconds')!=PRIOR_SECONDS:
++        raise ValueError('unplanned, repeated or concurrent completion process')
++    if ledger['charged_seconds']+LIMIT_SECONDS>TOTAL_CAP:
++        raise ValueError('original cumulative allowance exhausted')
++    ledger['attempts'].append({'id':window,'status':'STARTED','reserved_seconds':LIMIT_SECONDS,'rss_mib':3072,'repetitions':[1,2]})
++
++def charge(guard):
++    elapsed=guard.get('elapsed_s') if isinstance(guard,dict) else None
++    trusted=isinstance(elapsed,(int,float)) and not isinstance(elapsed,bool) and math.isfinite(elapsed) and 0<=elapsed<=LIMIT_SECONDS+5
++    return math.ceil(elapsed) if trusted else LIMIT_SECONDS
++
++def classify(guard,worker,stable):
++    if not (guard and guard.get('reason')=='completed' and guard.get('returncode')==0 and
++            guard.get('cleanup_complete') is True and guard.get('remaining_owned_pids')==[] and stable and
++            worker and worker.get('status')=='OBSERVED'):
++        return 'STOPPED'
++    runs=worker.get('runs',[])
++    if [(r.get('repetition'),r.get('variant')) for r in runs]!=[(1,'old'),(1,'candidate'),(2,'old'),(2,'candidate')]:
++        return 'STOPPED'
++    for run in runs:
++        rows=run.get('rows',[])
++        if [row.get('fixture') for row in rows]!=['S0','S2']:
++            return 'STOPPED'
++        for row in rows:
++            if row.get('errors') or row.get('roundtrip',{}).get('status')!='QUALIFIED':
++                return 'STOPPED'
++    return 'COMPLETED'
++
++def source_identity():
++    names=subprocess.check_output(['git','ls-files','-z','--cached','--others','--exclude-standard'],cwd=ROOT).decode().split('\0')
++    files={name:sha(ROOT/name) for name in sorted(set(names)) if name and (ROOT/name).is_file() and
++           name.startswith(('runtime/','sdk/','schema/','cmake/','verification/runners/g5/','verification/tests/')) and
++           (ROOT/name).suffix in ('.cpp','.hpp','.h','.mjs','.py','.json','.cmake','.txt')}
++    return {'files':files,'sha256':hashlib.sha256(json.dumps(files,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
++
++def frozen_inputs(request):
++    roots=request_roots(request)
++    parent=ROOT/'.aegis/results/G5-UR2d-selection-up-continue-r1'
++    source=read(parent/'source-manifest.json')
++    for name,ref in source['files'].items():
++        if name not in ALLOWED_CHANGED and sha(ROOT/name)!=ref['sha256']:
++            raise ValueError('frozen source changed: '+name)
++    pair_ref=request['pair0']
++    if sha(pair_ref['path'])!=pair_ref['sha256']:
++        raise ValueError('pair0 raw identity changed')
++    freeze=read(parent/'local-web/U2D1-COMPARE/freeze.json')
++    if request['fixtures']!=freeze['request']['fixtures']:
++        raise ValueError('fixture/request changed from pair0')
++    sdk={name:artifacts(root) for name,root in roots.items()}
++    if sdk!=freeze['artifacts'] or any(len(files)!=36 for files in sdk.values()):
++        raise ValueError('old/candidate SDK changed from pair0')
++    for fixture in request['fixtures']:
++        if sha(fixture['path'])!=fixture['sha256']:
++            raise ValueError('fixture bytes changed')
++    oracle=request.get('oracle',{})
++    if oracle.get('sha256')!=EXPECTED_ORACLE or sha(oracle['path'])!=EXPECTED_ORACLE:
++        raise ValueError('foreign or missing old CPU oracle')
++    preserved=read(RESULT/'preserved-evidence-before.json')
++    for name,digest in preserved.items():
++        if sha(ROOT/name)!=digest:
++            raise ValueError('old evidence modified: '+name)
++    return {'source':source_identity(),'SDK':sdk,'oracle':oracle,'fixtures':request['fixtures'],
++            'old_evidence':preserved,'pair0':pair_ref,'driver_sha256':sha(HERE/'ur2d_selection_up.mjs')}
++
++def execute(request_path):
++    request=read(request_path)
++    # All admission checks precede recording/spawning any browser process.
++    before=frozen_inputs(request)
++    offline=read(RESULT/'offline-harness-red-green.json')
++    if offline.get('status')!='OFFLINE_RED_GREEN_VERIFIED':
++        raise ValueError('offline AA repair proof missing')
++    path=RESULT/'sampling-ledger.json'
++    ledger=read(path) if path.exists() else {'schema':'g5-ur2d-single-completion-ledger-v1','prior_starts':4,
++          'prior_charged_seconds':PRIOR_SECONDS,'charged_seconds':PRIOR_SECONDS,'cap_seconds':TOTAL_CAP,
++          'attempts':[],'preserved_ledger':'.aegis/results/G5-UR2d-selection-up-continue-r1/sampling-ledger.json'}
++    out=RESULT/'local-web'/WINDOW
++    if out.exists():
++        raise ValueError('completion output already exists; no retry or ID reuse')
++    reserve(ledger,request['id'])
++    out.mkdir(parents=True,exist_ok=False)
++    write(out/'freeze.json',{'inputs':before,'request':request,'request_sha256':sha(request_path)})
++    write(path,ledger)
++    command=['node',str(HERE/'ur2d_selection_up.mjs'),str(request_path),str(out)]
++    guard=module('ur2d_pair_guard',HERE/'bounded_worker.py')
++    try:
++        outcome=guard.run(command,out,LIMIT_SECONDS,3072*1024)
++    except BaseException as error:
++        outcome={'reason':'guard_exception','error':repr(error),'cleanup_complete':False,'remaining_owned_pids':[]}
++    worker=read(out/'worker-result.json') if (out/'worker-result.json').is_file() else None
++    try:
++        after=frozen_inputs(request)
++        stable=before==after
++    except Exception as error:
++        after={'error':repr(error)}
++        stable=False
++    write(out/'inputs-after.json',after)
++    status=classify(outcome,worker,stable)
++    charged=charge(outcome)
++    ledger['attempts'][0].update(status=status,guard=outcome,worker_status=worker.get('status') if worker else 'MISSING',
++            source_artifact_stable=stable,charged_seconds=charged)
++    ledger['charged_seconds']+=charged
++    write(path,ledger)
++    print(json.dumps(ledger['attempts'][0]),flush=True)
++    return 0 if status=='COMPLETED' else 1
++
++if __name__=='__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/tests/test_g5_ur2d_pair_completion.py
+@@ -0,0 +1,45 @@
++import importlib.util
++from pathlib import Path
++import tempfile
++import unittest
++
++P=Path(__file__).resolve().parents[1]/'runners/g5/ur2d_pair_completion_runner.py'
++spec=importlib.util.spec_from_file_location('ur2d_pair_completion',P)
++m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++
++class CompletionTests(unittest.TestCase):
++    def test_only_single_new_id_and_prior105_ceil_accounting(self):
++        ledger=dict(attempts=[],charged_seconds=105)
++        for name in ['U2D1-OLD-F','U2D1-COMPARE','smoke']:
++            with self.assertRaises(ValueError):m.reserve(ledger,name)
++        m.reserve(ledger,m.WINDOW)
++        with self.assertRaises(ValueError):m.reserve(ledger,m.WINDOW)
++        self.assertEqual(m.charge(dict(elapsed_s=51.940357)),52)
++        for value in [None,-1,True,float('nan'),float('inf'),246]:
++            self.assertEqual(m.charge(dict(elapsed_s=value)),240)
++    def test_request_requires_missing_pairs_and_ordered_distinct_SDKs(self):
++        with tempfile.TemporaryDirectory() as directory:
++            a=Path(directory)/'old';b=Path(directory)/'candidate';a.mkdir();b.mkdir()
++            request=dict(id=m.WINDOW,repetitions=[1,2],variants=[dict(name='old',sdk=str(a)),dict(name='candidate',sdk=str(b))],fixtures=[dict(name='S0'),dict(name='S2')])
++            self.assertEqual(set(m.request_roots(request)),{'old','candidate'})
++            for patch in [dict(id='U2D1-COMPARE'),dict(repetitions=[0,1,2]),dict(variants=list(reversed(request['variants']))),dict(fixtures=[])]:
++                with self.assertRaises(ValueError):m.request_roots(request|patch)
++    def test_completion_requires_all_four_runs_both_fixtures_and_original_pixel_proof(self):
++        guard=dict(reason='completed',returncode=0,cleanup_complete=True,remaining_owned_pids=[])
++        runs=[dict(repetition=i,variant=v,rows=[dict(fixture=f,errors=[],roundtrip=dict(status='QUALIFIED')) for f in ['S0','S2']]) for i in [1,2] for v in ['old','candidate']]
++        worker=dict(status='OBSERVED',runs=runs)
++        self.assertEqual(m.classify(guard,worker,True),'COMPLETED')
++        for patch in [dict(reason='rss_limit'),dict(reason='timeout'),dict(returncode=1),dict(cleanup_complete=False),dict(remaining_owned_pids=[1])]:
++            self.assertEqual(m.classify(guard|patch,worker,True),'STOPPED')
++        self.assertEqual(m.classify(guard,worker,False),'STOPPED')
++        self.assertEqual(m.classify(guard,worker|dict(runs=runs[:3]),True),'STOPPED')
++        runs[0]['rows'][1]['roundtrip']['status']='FAILED'
++        self.assertEqual(m.classify(guard,worker,True),'STOPPED')
++    def test_prior_results_are_only_read_and_frozen_product_excludes_exact_two_authorized_files(self):
++        source=P.read_text()
++        self.assertIn("RESULT=ROOT/'.aegis/results/G5-UR2d-harness-completion-r1'",source)
++        self.assertEqual(m.ALLOWED_CHANGED,{'verification/runners/g5/ur2d_selection_up.mjs','verification/tests/g5_ur2d_selection_up.test.mjs'})
++        self.assertIn("if name not in ALLOWED_CHANGED",source)
++        self.assertNotIn("write(parent/",source)
++
++if __name__=='__main__':unittest.main()

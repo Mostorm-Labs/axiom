@@ -1,0 +1,31 @@
+{
+  "status": "PAIR0_COMPATIBLE_EXACT_INPUTS",
+  "original_pair0": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/worker-result.json",
+    "sha256": "4700972f0150103caca528387bb64a8cf7743ea40991a87c52a0a0eb48bcb2c6"
+  },
+  "pair0SDKmaps_match_new": true,
+  "S0_S2fixturebytes_exact": true,
+  "timed_workload_formula_lines_unchanged": [
+    "  const rect=sdk.canvas.getBoundingClientRect();clock+=16666667;",
+    "  const repetitions=config.id==='U2D1-OLD-F'||config.id==='U2D1-COMPARE'?1:3;",
+    "   const events=[pointer('down',30,30),pointer('move',35,35),pointer('move',235,205),pointer('up',235,205),pointer('down',1300,850),pointer('up',1300,850)];",
+    "  if(config.id!=='U2D1-OLD-F'&&config.id!=='U2D1-COMPARE'){",
+    "  if(config.id!=='U2D1-A-F'){",
+    "    const x=465+repeat*22,y=180;const events=[pointer('down',x,y),pointer('move',x+2,y+15),pointer('move',x+5,y+30),pointer('up',x+5,y+30),pointer('down',x+10,y+35),pointer('move',x+12,y+50),pointer('up',x+12,y+50)];",
+    "    const wheel=new WheelEvent('wheel',{clientX:600,clientY:400,deltaX:8,deltaY:5,bubbles:true,cancelable:true});const start=performance.now();sdk.canvas.dispatchEvent(wheel);events.push({phase:'wheel',start,end:performance.now()});",
+    "  if(config.id==='U2D1-B-F'||config.id==='U2D1-COMPARE'){"
+  ],
+  "new_window_consumer_id": "U2D1-COMPARE",
+  "new_repetitions": [
+    1,
+    2
+  ],
+  "prior_failed_status_not_changed": "FUNCTIONAL_OR_HARNESS_FAILURE",
+  "candidate_pair0_S2_pixel_requalified_by": ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json",
+  "input_checks": "twoactualUp/immediateDown/wheel/receipts;3erasepairsperfixture",
+  "old_and_candidate_roots": {
+    "old": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-r1/old-sdk",
+    "candidate": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR2d-selection-up-continue-r1/final/normal-install/js"
+  }
+}

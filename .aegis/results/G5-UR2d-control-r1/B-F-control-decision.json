@@ -1,0 +1,47 @@
+{
+  "schema": "g5-ur2d-BF-control-classification-v1",
+  "status": "VERIFICATION_ASSERTION_DEFECT_LOCAL_PIXEL_OBLIGATION_REQUALIFIED",
+  "classified_at": "2026-11-10T19:02:14.664925+08:00",
+  "original_failure": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-B-F/worker-result.json",
+    "sha256": "6ef7e0adacd93ef47f381c7ce324df8a7127ac16ee984e4e29c72d3809af7056"
+  },
+  "original_guard": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-B-F.worker.json",
+    "sha256": "f87260af3f90399a93810ccbe2f8d7d8853baf4d78cd3c082e917417638d6905"
+  },
+  "preserve_original_exit1": true,
+  "independent_evidence": {
+    "whole_target_noedge_comparator": {
+      "path": ".aegis/results/G5-UR2d-control-r1/B-F-offline-pixel-comparison.json",
+      "sha256": "60e1b36cb8b534e6642d9bdccc0b71858e6090ce3a86a872d76fb089885da277"
+    },
+    "oldCPUoracle": {
+      "path": ".aegis/results/G5-UR2d-control-r1/B-F-independent-oracle-review.json",
+      "sha256": "a602f18b5a0e477e2aa4f62ded078fe9e2b73af9ecfc021339dca14f11a3e909"
+    },
+    "canonical_objects": {
+      "path": ".aegis/results/G5-UR2d-control-r1/snapshot-roundtrip-result.json",
+      "sha256": "0aabfaa5609da3802cd0e5e703b0e4e9886e03fe6dd24286ed10d66cc93d2871"
+    }
+  },
+  "facts": "2pixelsdelta1 in5781240;fulltargetzeroedge <=2QUALIFIED;oldCPUoraclefinalandredoequalRGBA+band;bothsubjectoutputs exactinterioroutsideoldband.17objects/all96maskrecords/manifest/background/documentdigest equal;onlynormalHistoryrevision7->9.",
+  "reason": "Worker addedfullGPUbyteSHAequalitystricterthanparent existingAA/<=2policy. Fixassertiontooriginalindependentrule; nocandidatealgorithm/renderbudget/AAchanges.",
+  "not_requalified": "S2 neverexecuted inB-F becausefirstS0roundtripaborted. RequiredS2/immediateinput/pairedfunctional remainspending.",
+  "decision": "Authorize onlyremaining originalU2D1-COMPARE once, withfixeddriver andexactold/candidateSDK, samebaselinebytes andthreepairediterations. Itmust covermissingS2+Bfunctional andfinalcorrectness;oldBFrawlabelunchanged.",
+  "remaining_allowance": {
+    "id": "U2D1-COMPARE",
+    "starts": 1,
+    "wall_seconds": 240,
+    "rss_mib": 3072,
+    "prior_cumulative_charged_seconds": 53,
+    "overall_cap_seconds": 960,
+    "no_new_or_reused_id": true
+  },
+  "required_harness_fix": [
+    "KeeprawSHAasmetadata; compare savedRGBAofflinewithoriginalcomparePixels/independentoldoracleband, do notfullSHAabort. Fullviewportmax<=2mayproveunconditionally evenwithoutband.",
+    "Mandatoryhardfailonactualsemantic/mask/receipt/nonAAerrors; candidatecoldpixelchecksuseexistingoldoracle. Do notexcludefailurepixelsoradjustAA.",
+    "FinalCOMPARE timebudget includesall3pairs sequentialsameprocess,actualDown/Move/Up+nextDown/wheelwithoutsettle,correctnessreadbackafterprimary. Ifoldlongselectionwouldexceed240s, limittooriginalselectiononegesture/core workload andrecordexactoldlatency; nativefullmatrixalreadybound. Do notskipoldfailuretocallallpass.",
+    "Beforestartofflineunitcheckpairrunloop,twoSDKhashfreeze,chunktransfer,casebinding/lifecycle/2operation andcompletion rules. Product+runnerfrozenduringwindow."
+  ]
+}

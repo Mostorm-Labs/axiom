@@ -1,0 +1,121 @@
+{
+  "status": "FROZEN_KEEPERS_REUSED_EXACT_SOURCE",
+  "junit": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-keeper-junit.xml",
+    "sha256": "4a6e402cf783dc9ad0aa373c0bd6d210d83350c1c2121007404a910c96b98e6c",
+    "bytes": 49957
+  },
+  "native_log": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-native-regression.log",
+    "sha256": "985d0fca83a7866a95abe90573dd9f240ed9f32235d27dcdd00d0846f722214c",
+    "bytes": 9907
+  },
+  "cases": [
+    {
+      "name": "canvas_rf01_scene_atomicity",
+      "time": "0.00722138",
+      "failed": false
+    },
+    {
+      "name": "canvas_g2_a6_atomic_publication",
+      "time": "0.00859446",
+      "failed": false
+    },
+    {
+      "name": "canvas_g2_a6_recovery",
+      "time": "0.0135524",
+      "failed": false
+    },
+    {
+      "name": "G5UR2CAtomicRecovery",
+      "time": "0.0186605",
+      "failed": false
+    },
+    {
+      "name": "G4EditorHistory",
+      "time": "0.00981362",
+      "failed": false
+    },
+    {
+      "name": "FC01EditorHistoryInverseFamilies",
+      "time": "0.00521338",
+      "failed": false
+    },
+    {
+      "name": "G5GpuResourceRecovery",
+      "time": "0.095274",
+      "failed": false
+    },
+    {
+      "name": "G5UR2BExactPressure",
+      "time": "0.014507",
+      "failed": false
+    },
+    {
+      "name": "G5UR2CLeaseAccounting",
+      "time": "0.0135222",
+      "failed": false
+    },
+    {
+      "name": "G5UR2CHistoryAdmission",
+      "time": "0.0268075",
+      "failed": false
+    },
+    {
+      "name": "G5UR2CHistoryProgressSafety",
+      "time": "0.0846533",
+      "failed": false
+    },
+    {
+      "name": "G5TransientDisplayRecovery",
+      "time": "0.363743",
+      "failed": false
+    },
+    {
+      "name": "G5UR2AReadmissionAcquire",
+      "time": "0.633003",
+      "failed": false
+    },
+    {
+      "name": "G5UR2AReadmissionPresent",
+      "time": "0.0114214",
+      "failed": false
+    },
+    {
+      "name": "G5UR2ASceneRecovery",
+      "time": "0.0106685",
+      "failed": false
+    },
+    {
+      "name": "G5UR2AHistory",
+      "time": "0.0124553",
+      "failed": false
+    },
+    {
+      "name": "G5UR2BExactInputRuntime",
+      "time": "0.649096",
+      "failed": false
+    },
+    {
+      "name": "G5UR2CContinuousInput",
+      "time": "0.707313",
+      "failed": false
+    },
+    {
+      "name": "G5UR2DUpRuntime",
+      "time": "1.02389",
+      "failed": false
+    }
+  ],
+  "source_binding": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0",
+    "bytes": 5268
+  },
+  "source_stability": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/source-artifact-checks.json",
+    "sha256": "9e55cd58a6c99f829074520b88d797523737b128d8484a790aefb52ff59339e2",
+    "bytes": 190393
+  },
+  "no_native_rerun": true
+}

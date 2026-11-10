@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/stress-continue2-request.json",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2"
+  ],
+  "reason": "timeout",
+  "returncode": 1,
+  "elapsed_s": 151.28058279200002,
+  "peak_process_family_rss_kib": 1974160,
+  "rss_limit_kib": 4194304,
+  "timeout_s": 151,
+  "last_stage": {
+    "stage": "closed",
+    "status": "FAILED",
+    "error": "page.evaluate: Target crashed \n    at undoWorker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:145:142)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/erase_undo_readiness.mjs:152:123"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

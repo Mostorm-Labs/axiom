@@ -249,22 +249,40 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
         if (root.isZero()) continue;
         const auto* projection=projected.find(id);
         if (!projection) {result.status=Status::kStale;return result;}
-        auto object=*canonical;object.transform=projection->transform;
-        const auto intersection=intersectSelectionRegion(object,world,projection);
+        RegionIntersection intersection;
+        if(canonical->kind==semantic::ObjectKind::kVectorStroke&&
+           std::holds_alternative<semantic::CompactStrokeContent>(projection->content.get())){
+            std::vector<foundation::WorldPoint> query;query.reserve(world.size());
+            for(const auto p:world)query.push_back({float(p.x),float(p.y)});
+            switch(skiaRenderer_.intersectSelectionGeometry(*projection,query)){
+            case render::SelectionGeometryHit::kHit:intersection=RegionIntersection::kHit;break;
+            case render::SelectionGeometryHit::kMiss:intersection=RegionIntersection::kMiss;break;
+            case render::SelectionGeometryHit::kUnsupported:intersection=RegionIntersection::kUnsupported;break;
+            case render::SelectionGeometryHit::kInvalid:intersection=RegionIntersection::kInvalid;break;
+            }
+        }else{
+            auto object=*canonical;object.transform=projection->transform;
+            intersection=intersectSelectionRegion(object,world,projection);
+        }
         if (intersection==RegionIntersection::kInvalid) {result.status=Status::kFailed;return result;}
         if (intersection==RegionIntersection::kUnsupported) {
             // Only intentionally unsupported brush coverage may be skipped.
             // Missing layout/routes/resources still preserve the old selection.
-            const bool brush=object.kind==semantic::ObjectKind::kDabStroke ||
-                (object.kind==semantic::ObjectKind::kVectorStroke&&
-                 std::holds_alternative<semantic::CompactStrokeContent>(object.content));
+            const bool brush=canonical->kind==semantic::ObjectKind::kDabStroke ||
+                (canonical->kind==semantic::ObjectKind::kVectorStroke&&
+                 std::holds_alternative<semantic::CompactStrokeContent>(canonical->content));
             result.publishable&=brush;
             result.status=Status::kPartial;
-            const auto kind=static_cast<std::uint32_t>(object.kind);
+            const auto kind=static_cast<std::uint32_t>(canonical->kind);
             if (std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())
                 result.unsupportedKinds.push_back(kind);
         } else if(intersection==RegionIntersection::kHit) {
-            auto& targets=object.kind==semantic::ObjectKind::kSection&&selectionRegionInsideSection(object,world)?sectionBackgrounds:result.roots;
+            bool sectionBackground=false;
+            if(canonical->kind==semantic::ObjectKind::kSection){
+                auto section=*canonical;section.transform=projection->transform;
+                sectionBackground=selectionRegionInsideSection(section,world);
+            }
+            auto& targets=sectionBackground?sectionBackgrounds:result.roots;
             if(std::find(targets.begin(),targets.end(),root)==targets.end())targets.push_back(root);
         }
     }

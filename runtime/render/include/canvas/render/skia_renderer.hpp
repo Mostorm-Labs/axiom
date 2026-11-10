@@ -22,6 +22,7 @@ class SkCanvas;
 
 namespace canvas::render {
 namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
+namespace internal {struct ObjectInteractionWork;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -89,10 +90,15 @@ class SkiaRenderer final {
     void setRenderCacheOptions(RenderCacheOptions options);
     void clearRenderCache() noexcept;
     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
+    [[nodiscard]] internal::ObjectInteractionWork objectInteractionWork() const noexcept;
+#endif
     // Owner-thread derived exact-query reuse. Returns only a value decision;
     // canonical target selection still belongs to the interaction owner.
     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
         const semantic::EraseMaskGeometry&) const noexcept;
+    [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
+        std::span<const foundation::WorldPoint>) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
@@ -104,10 +110,10 @@ class SkiaRenderer final {
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;
-    std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
+    mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
-    std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
-    std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
+    mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
+    mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;

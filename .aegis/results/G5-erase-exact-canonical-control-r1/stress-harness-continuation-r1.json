@@ -1,0 +1,63 @@
+{
+  "schema": "g5-control-harness-repair-continuation-v1",
+  "created_utc": "2026-11-10T14:19:55.054476+00:00",
+  "status": "AUTHORIZED_FROZEN_PROOF_CONTINUATION",
+  "owner": "control_thread_01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "root_cause": "Harness observes stale pre-click generation after async actual Demo Undo enqueue; settle can return before command executes and snapshot then rejects stale expected generation. Frozen product requirements unchanged. Preserve raw old successorUp 9245ms.",
+  "bindings": [
+    {
+      "path": ".aegis/packages/G5-erase-exact-canonical-r1/package.json",
+      "sha256": "c7683d087fc3d8bb30629b90967257ea97ad748346c059b5f2e9627a0feb220b"
+    },
+    {
+      "path": ".aegis/packages/G5-post-erase-interaction-readiness-r1/package.json",
+      "sha256": "3810f315f31823a4a8693a32a170b649b552ea2708ebed8076de602568cac39d"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+      "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS/worker-result.json",
+      "sha256": "b0b058e95808c9b8c6b0beac118fa2443c7f1beafc5e5c2bfdeef8b8753b89a4"
+    }
+  ],
+  "repair_scope": [
+    "Wait after real Undo/Redo UI click for expected +1/+2 generation before settle and capture; fail if no progress. Never wait before immediate successor.",
+    "Offline negative case reproducing async queue race and corrected complete observed-generation wait.",
+    "No product/source/SDK/oracle/tolerance changes; matching final-normal-install WASM1e1c18d1."
+  ],
+  "windows": [
+    {
+      "id": "G5EC1-STRESS-CONTINUE-R1",
+      "starts": 1,
+      "wall_seconds": 153,
+      "rss_mib": 4096,
+      "cases": [
+        "old ordinary Demo1600 main Up\u2192immediate successor, close missing UndoRedo/snapshot proof",
+        "candidate ordinary Demo1600 main Up\u2192immediate successor active-pixel proof and UndoRedo",
+        "candidate10 continuous rounds/cancel/noop/hitUpwheel/UndoRedo/full independent pixels"
+      ],
+      "purpose": "Only frozen unfinished STRESS proof; leftover original180minus27 consumed. Prior STOPPED immutable. No retries."
+    },
+    {
+      "id": "G5EC1-READINESS-ALL",
+      "starts": 1,
+      "wall_seconds": 300,
+      "rss_mib": 4096,
+      "cases": "same frozen 11 rows, no new operation/DPR/cartesian work"
+    }
+  ],
+  "allowance_accounting": {
+    "charged_so_far_seconds": 416,
+    "original_stress_cap_seconds": 180,
+    "stress_consumed_seconds": 27,
+    "stress_remaining_seconds": 153,
+    "parent_cap_seconds": 900,
+    "combined_cap_seconds": 1200,
+    "extra_process_start": "exactly one controlled repair continuation for classified harness failure; replaces no prior observation"
+  },
+  "readiness_rule": "Retain full original EC-READY-ALL/CORRECT actual feedback and semantic/pixel requirements. 3s goal5s reference engineering findings only. Readiness starts after stress continuation classification.",
+  "terminal_policy": "Continue all executable frozen work; genuine pixel/decision/receipt/resource regression preserve and classify; no arbitrary resampling; final return honest incomplete proof if limits exhausted.",
+  "publication": "no commit or push; old user Demos/docs preserved"
+}

@@ -1,0 +1,71 @@
+{
+  "status": "CANONICAL_ROUNDTRIPS_EQUAL",
+  "checks": [
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/0-old-S0.json",
+      "sha256": "56b2dd1752546bb63cbd959903e98e54b6411a9994e5a6abb3a96834bfae5724",
+      "bytes": 1593
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/0-old-S2.json",
+      "sha256": "6a978716340ec851d626b6d74b238c1a448fa82e13fc0e8d1516fdcfa821e6f9",
+      "bytes": 1595
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/0-candidate-S0.json",
+      "sha256": "d7af223f38fa6370bfda78aa27bbe1083d05c70e813cf23124fcddb46bc4b328",
+      "bytes": 1623
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/0-candidate-S2.json",
+      "sha256": "47429c02deb7b5720e803ba4df226d942f6eacd18043ab09bc47131fb592aa40",
+      "bytes": 1625
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/1-old-S0.json",
+      "sha256": "4a570ae5d74c5f55d018af645f7579ea019fe4ced0950d3e434ff9f058a71e5c",
+      "bytes": 1617
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/1-old-S2.json",
+      "sha256": "ca7c3ebc13f44e3e65d5ca2314e5c100a5c9ffd54fe784d200cf00ba0fcd30ad",
+      "bytes": 1619
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/1-candidate-S0.json",
+      "sha256": "a0bfc5c074e6ccf91eca74dc4b2315c41f36e9c8326297f998a99b84f0dbdd76",
+      "bytes": 1647
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/1-candidate-S2.json",
+      "sha256": "370e7e654889d6312841513ed7de29abb87511d5b545b9f6b575ba5a80a27630",
+      "bytes": 1649
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/2-old-S0.json",
+      "sha256": "6a7b66abaf3b6dde126db8a699ef082bda7b0cf52081df0194403e648599964d",
+      "bytes": 1617
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/2-old-S2.json",
+      "sha256": "5ad66d998515f68d13130d1711fb744004a3102e10b40fcf91abdb1f9e9a5154",
+      "bytes": 1619
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/2-candidate-S0.json",
+      "sha256": "13b01820a405b3e9b0f22ad322a19339679bb2b2203d3b0bfac24f1b650fee8b",
+      "bytes": 1647
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/snapshot-checks/2-candidate-S2.json",
+      "sha256": "75624eef6d93a53d1b23cc32ade0d7bba7b027e7180bb665d2a2f32be627523e",
+      "bytes": 1649
+    }
+  ],
+  "checker": {
+    "path": ".aegis/results/G5-UR2d-control-r1/snapshot-roundtrip",
+    "sha256": "880baedc8763def9acb68a90e28513289ec9d1e321f20ddc80152fc52f40bab3",
+    "bytes": 9589200
+  },
+  "scope": "Within each run: full objects including canonical masks/target ids, manifest, background, document identity/capabilities and digest. Created random object ids preclude cross-run byte equality."
+}

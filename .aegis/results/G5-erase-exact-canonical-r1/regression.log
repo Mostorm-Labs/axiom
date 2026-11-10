@@ -1,0 +1,123 @@
+Test project /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native
+      Start 543: canvas_rf01_scene_atomicity
+ 1/54 Test #543: canvas_rf01_scene_atomicity .................   Passed    0.58 sec
+      Start 556: canvas_g2_a3_full_incremental_equivalence
+ 2/54 Test #556: canvas_g2_a3_full_incremental_equivalence ...   Passed    0.47 sec
+      Start 559: canvas_g2_a6_atomic_publication
+ 3/54 Test #559: canvas_g2_a6_atomic_publication .............   Passed    0.46 sec
+      Start 560: canvas_g2_a6_recovery
+ 4/54 Test #560: canvas_g2_a6_recovery .......................   Passed    0.47 sec
+      Start 567: G5UR2CMaskOnlyScene
+ 5/54 Test #567: G5UR2CMaskOnlyScene .........................   Passed    0.51 sec
+      Start 568: G5UR2CMixedMaskScene
+ 6/54 Test #568: G5UR2CMixedMaskScene ........................   Passed    0.02 sec
+      Start 569: G5UR2CAtomicRecovery
+ 7/54 Test #569: G5UR2CAtomicRecovery ........................   Passed    0.02 sec
+      Start 587: FC01ARegionSelection
+ 8/54 Test #587: FC01ARegionSelection ........................   Passed    0.35 sec
+      Start 615: G5GpuRetirementContract
+ 9/54 Test #615: G5GpuRetirementContract .....................   Passed    0.32 sec
+      Start 616: G5GpuResourceRecovery
+10/54 Test #616: G5GpuResourceRecovery .......................   Passed    0.62 sec
+      Start 617: G5CanonicalPreparedBody
+11/54 Test #617: G5CanonicalPreparedBody .....................Subprocess aborted***Exception:   0.76 sec
+libc++abi: terminating due to uncaught exception of type std::runtime_error: actual canonical/Direct did not consume one prepared body
+{"copies":1,"knots":7199,"canonical_attempts":1,"canonical_support":0,"canonical_length_inputs":0,"canonical_compile_inputs":0,"edit_support":0,"edit_length_inputs":0,"edit_compile_inputs":0,"gpu_tiles":3}
+
+      Start 618: G5CanonicalPreparedBodyBounded
+12/54 Test #618: G5CanonicalPreparedBodyBounded ..............   Passed    0.02 sec
+      Start 619: G5CanonicalPreparedBodyPixels
+13/54 Test #619: G5CanonicalPreparedBodyPixels ...............Subprocess aborted***Exception:   0.18 sec
+libc++abi: terminating due to uncaught exception of type std::runtime_error: actual canonical raster job bypassed ready body
+
+      Start 621: G5PreparedBodyIndex
+14/54 Test #621: G5PreparedBodyIndex .........................   Passed    0.67 sec
+      Start 622: G5RenderExecution
+15/54 Test #622: G5RenderExecution ...........................   Passed    0.56 sec
+      Start 623: G5EraseExactHit
+16/54 Test #623: G5EraseExactHit .............................   Passed    0.36 sec
+      Start 629: G5InkBodyMaskReuse
+17/54 Test #629: G5InkBodyMaskReuse ..........................   Passed    0.47 sec
+      Start 633: G5MaskedCanonicalRecovery
+18/54 Test #633: G5MaskedCanonicalRecovery ...................   Passed    0.32 sec
+      Start 640: G5UR2DSelectionLocality
+19/54 Test #640: G5UR2DSelectionLocality .....................   Passed    0.43 sec
+      Start 677: G5PreparedGeometry
+20/54 Test #677: G5PreparedGeometry ..........................   Passed    0.74 sec
+      Start 704: G5UR2BExactLocality
+21/54 Test #704: G5UR2BExactLocality .........................   Passed    0.69 sec
+      Start 705: G5UR2BExactInvalidation
+22/54 Test #705: G5UR2BExactInvalidation .....................   Passed    0.01 sec
+      Start 706: G5UR2BExactPressure
+23/54 Test #706: G5UR2BExactPressure .........................   Passed    0.01 sec
+      Start 707: G5UR2CHistoryPlanReuse
+24/54 Test #707: G5UR2CHistoryPlanReuse ......................   Passed    1.14 sec
+      Start 708: G5UR2CHistoryInvalidation
+25/54 Test #708: G5UR2CHistoryInvalidation ...................   Passed    0.76 sec
+      Start 709: G5UR2CHistoryExactParity
+26/54 Test #709: G5UR2CHistoryExactParity ....................   Passed    0.55 sec
+      Start 710: G5UR2CLeaseAccounting
+27/54 Test #710: G5UR2CLeaseAccounting .......................   Passed    0.02 sec
+      Start 711: G5UR2CHistoryProgress
+28/54 Test #711: G5UR2CHistoryProgress .......................   Passed    1.73 sec
+      Start 712: G5UR2CHistoryAdmission
+29/54 Test #712: G5UR2CHistoryAdmission ......................   Passed    0.03 sec
+      Start 713: G5UR2CHistoryProgressSafety
+30/54 Test #713: G5UR2CHistoryProgressSafety .................   Passed    0.07 sec
+      Start 714: G5RenderMemoryBudget
+31/54 Test #714: G5RenderMemoryBudget ........................   Passed    0.51 sec
+      Start 715: G5TransientDisplayRetryPixels
+32/54 Test #715: G5TransientDisplayRetryPixels ...............   Passed    0.67 sec
+      Start 716: G5TransientDisplayContinuity
+33/54 Test #716: G5TransientDisplayContinuity ................   Passed    0.42 sec
+      Start 717: G5TransientDisplayRecovery
+34/54 Test #717: G5TransientDisplayRecovery ..................   Passed    0.38 sec
+      Start 718: G5ObjectInteractionStaticOracle
+35/54 Test #718: G5ObjectInteractionStaticOracle .............   Passed    0.09 sec
+      Start 719: G5ObjectInteractionDenseMixed
+36/54 Test #719: G5ObjectInteractionDenseMixed ...............   Passed   28.69 sec
+      Start 720: G5DesktopRenderBudgetArea
+37/54 Test #720: G5DesktopRenderBudgetArea ...................   Passed   60.59 sec
+      Start 721: G5TransientDisplayHandoff
+38/54 Test #721: G5TransientDisplayHandoff ...................   Passed    5.33 sec
+      Start 722: G5TransientDisplayHandoffInflight
+39/54 Test #722: G5TransientDisplayHandoffInflight ...........   Passed    3.47 sec
+      Start 726: FC01ASelectionInputIntegration
+40/54 Test #726: FC01ASelectionInputIntegration ..............   Passed    0.89 sec
+      Start 740: SDKPublicDocumentSnapshot
+41/54 Test #740: SDKPublicDocumentSnapshot ...................   Passed    0.61 sec
+      Start 746: SDKPublicSelectionInput
+42/54 Test #746: SDKPublicSelectionInput .....................   Passed    0.63 sec
+      Start 757: G5UR2AReadmissionAcquire
+43/54 Test #757: G5UR2AReadmissionAcquire ....................   Passed    0.61 sec
+      Start 758: G5UR2AReadmissionPresent
+44/54 Test #758: G5UR2AReadmissionPresent ....................   Passed    0.01 sec
+      Start 759: G5UR2ANavigation
+45/54 Test #759: G5UR2ANavigation ............................   Passed    0.01 sec
+      Start 760: G5UR2AHandoff
+46/54 Test #760: G5UR2AHandoff ...............................   Passed    0.01 sec
+      Start 761: G5UR2ASceneRecovery
+47/54 Test #761: G5UR2ASceneRecovery .........................   Passed    0.01 sec
+      Start 762: G5UR2AHistory
+48/54 Test #762: G5UR2AHistory ...............................   Passed    0.01 sec
+      Start 763: G5UR2ALifecycle
+49/54 Test #763: G5UR2ALifecycle .............................   Passed    0.01 sec
+      Start 764: G5UR2ANavigationSafety
+50/54 Test #764: G5UR2ANavigationSafety ......................   Passed    0.12 sec
+      Start 765: G5UR2ABrushVisibility
+51/54 Test #765: G5UR2ABrushVisibility .......................   Passed    0.02 sec
+      Start 766: G5UR2BExactInputRuntime
+52/54 Test #766: G5UR2BExactInputRuntime .....................   Passed    0.63 sec
+      Start 767: G5UR2DUpRuntime
+53/54 Test #767: G5UR2DUpRuntime .............................   Passed    1.05 sec
+      Start 768: G5UR2CContinuousInput
+54/54 Test #768: G5UR2CContinuousInput .......................   Passed    0.66 sec
+
+96% tests passed, 2 tests failed out of 54
+
+Total Test time (real) = 118.85 sec
+
+The following tests FAILED:
+	617 - G5CanonicalPreparedBody (Subprocess aborted)
+	619 - G5CanonicalPreparedBodyPixels (Subprocess aborted)
+Errors while running CTest

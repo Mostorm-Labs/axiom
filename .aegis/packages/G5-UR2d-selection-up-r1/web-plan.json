@@ -1,0 +1,41 @@
+{
+  "schema": "g5-ur2d-bounded-web-plan-v1",
+  "profile": "LOCAL_SCOPED_REGRESSION_NOT_OFFICIAL_GATE",
+  "new_ids": [
+    "U2D1-OLD-F",
+    "U2D1-A-F",
+    "U2D1-B-F",
+    "U2D1-COMPARE"
+  ],
+  "max_browser_process_starts": 4,
+  "per_process_wall_seconds": 240,
+  "total_wall_seconds": 960,
+  "process_family_rss_mib": 3072,
+  "allowance": "Includes setup + timed work + final correctness. IDs unique and consume once. Baseline selection individual-query CPU cost may be diagnosed natively rather than deliberately blocking browser for many dense drags.",
+  "sequence": [
+    {
+      "id": "U2D1-OLD-F",
+      "when": "before any production mutation",
+      "purpose": "Freeze ordinary r2 SDK and public scripted scenario; capture identical baseline fixture/resources and timing. Preserve old selection RED and old exact binary. Max one browser process; cap pathological selection case to one gesture with deadline and keep timeout as RED."
+    },
+    {
+      "id": "U2D1-A-F",
+      "when": "A implemented/native parity green, before B changes",
+      "purpose": "Public selection point-blank drag and explicit rectangle/freeform; mouse Up/Cancel/source lost/reused ID. Record active state;3paired repetitions baseline/candidate internally as safe."
+    },
+    {
+      "id": "U2D1-B-F",
+      "when": "B implemented/native commit parity green",
+      "purpose": "Public Up immediately next Down, immediate wheel pan/zoom, no-op/cancel, Undo/Redo; S0/S2 same bytes; final independent pixels and qualified canonical identity."
+    },
+    {
+      "id": "U2D1-COMPARE",
+      "when": "final candidate frozen",
+      "purpose": "One serial browser process can host sequential baseline/candidate paired iterations3x for exact same scenarios. No waits inserted before next input; isolate final readback/diagnostic from timing. Count pages and renderer memory; all owned PIDs cleanup."
+    }
+  ],
+  "safety": "No attach/reload/close existing user tabs4315/4298/4297. No source mutation while any comparison worker runs. Source scope excludes result/out logs. Freeze compiler/product/tests/runner/JS-WASM-resources before run.",
+  "hard_stop": "On timeout/OOM/unsafe operation or pixel/decision/receipt failure preserve raw and cleanup. Native/debug fixes within scope remain authorized, but no new browser start/ID after4 or960sec without control continuation. Do not reuse UR2c IDs/allowance or rerun historic ledgers.",
+  "return_policy": "If required real browser functional coverage cannot be completed under allowed windows, return exact BLOCKED_EVIDENCE and verified code checkpoint. Do not silently swap normal proof for qualification/mocks.",
+  "demo": "After successful build and local checks start ordinary final demo on fresh free port >=4316; verify matching JS/WASM/data SHA and show URL; preserve4315. Do not auto-open UI or mutate user document."
+}

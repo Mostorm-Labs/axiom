@@ -1,0 +1,21 @@
+{
+  "command": [
+    "node",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_erase_interaction_readiness.mjs",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/readiness-request.json",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-READINESS-ALL"
+  ],
+  "reason": "nonzero_exit",
+  "returncode": 1,
+  "elapsed_s": 191.496393125,
+  "peak_process_family_rss_kib": 2429152,
+  "rss_limit_kib": 4194304,
+  "timeout_s": 300,
+  "last_stage": {
+    "stage": "closed",
+    "status": "FAILED",
+    "error": "Error: successor actual feedback MISSING zoom\n    at readinessWorker (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_erase_interaction_readiness.mjs:33:38)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/post_erase_interaction_readiness.mjs:40:129"
+  },
+  "cleanup_complete": true,
+  "remaining_owned_pids": []
+}

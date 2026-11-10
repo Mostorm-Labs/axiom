@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR2d-harness-completion-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 repair of original verification assertion -> complete original UR2d",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "completed_through": [
+      "A+B production frozen",
+      "78native+634+6exact",
+      "control independent S0/S2 canonical/pixel/input facts",
+      "first browser pair0 retained"
+    ],
+    "next_action": "Fix original AA harness assertion offline then one controlled process missingpairs1/2 and final closure"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR2d-harness-completion-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b935b15eb0a13888a54760818d89ae0d2003b95f478a17354acb743a9c576fed"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "ea634ded2a7fe2dfed819974614170f573327de660223ad00448d6617f987d93"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e08125ec5f01768de57916e3da49f13486784ad829b76045f15d3c68b3883d18"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "f2c78b114e5830b88d701d05c9b073291d892acb1619d9787d239239401d253a"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "361c0c8712e73c89704ca2ef4d927d6cab685c0d4ec2b1e258e685629dee6452"
+  },
+  "control_decision_ref": {
+    "path": "control-decision.json",
+    "sha256": "dfcbfd076135453c5f2b44c2c3366d7d2b0d275781df5530c36da438f3e61e58"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

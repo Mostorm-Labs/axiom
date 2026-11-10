@@ -1,3 +1,5 @@
 assets/fonts/** text eol=lf
 assets/fonts/**/*.otf -text
 assets/fonts/**/*.ttf -text
+# Evidence hashes bind original bytes, including captured source line endings.
+.aegis/** -text

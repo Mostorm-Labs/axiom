@@ -1,0 +1,22 @@
+{
+  "status": "FROZEN_EXPLICIT_USER_MATRIX_EXTENSION",
+  "parent": {
+    "path": ".aegis/packages/G5-erase-exact-canonical-r1/evidence-contract.json",
+    "sha256": "b2ca4b87a5c885e48849cae50ed5d9724df6d7cf0f190ac593a3375d502ecf46"
+  },
+  "undo_supplement": {
+    "path": ".aegis/packages/G5-erase-undo-readiness-supplement-r1/evidence-contract.json",
+    "sha256": "403eafa2e443c411316478176f4fc705164edf1f95fd9fe35acf3d5b657c2d0d"
+  },
+  "required": [
+    "post-erase-action-matrix.json",
+    "active-feedback-pixel-proof.json",
+    "admission-commit-presentation.json",
+    "interaction-recovery-timing.json",
+    "performance-classification.json",
+    "sampling-ledger.json",
+    "cleanup.json"
+  ],
+  "proof_rules": "Eachcasehasexactinputsequence/fixture/sdk/profile/DPR,oldandcandidateboundarytimestamps,T0Upbegin,actualpositivefeedbackqualificationandfinalpixel/History/receipt; rawfailurespreserved. 3scriticalfailurecannotbehiddenasnoisyfinding.",
+  "materialization": "Parentcontrolledhashboundlocalbundle. NoofficialGate/P34/release/gitpublication. Oldrefsremainimmutable."
+}

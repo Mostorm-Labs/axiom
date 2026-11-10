@@ -1,0 +1,18 @@
+...................................................................................................E................................................
+======================================================================
+ERROR: test_g5_ur0_resume_runner (unittest.loader._FailedTest.test_g5_ur0_resume_runner)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_g5_ur0_resume_runner
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/loader.py", line 137, in loadTestsFromName
+    module = __import__(module_name)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/test_g5_ur0_resume_runner.py", line 4, in <module>
+    import test_g5_ur0_repair_runner as repair_tests
+ModuleNotFoundError: No module named 'test_g5_ur0_repair_runner'
+
+
+----------------------------------------------------------------------
+Ran 148 tests in 23.366s
+
+FAILED (errors=1)

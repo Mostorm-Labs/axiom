@@ -1,0 +1,124 @@
+{
+  "schema": "g5-desktop-render-budget-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS",
+  "package": {
+    "path": ".aegis/packages/G5-desktop-render-budget-r1/package.json",
+    "sha256": "17714da21f8c44b3d124e53f16ea7a55f06afa51d114f01dc6b061dff6e3bfcf",
+    "bytes": 1863
+  },
+  "result_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-desktop-render-budget-r1"
+  },
+  "source": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/source-manifest.json",
+    "sha256": "b3c0245c8f1f4e1f0979a993462f8ecc1f22f1eaf9345191f10f63535f3d35e1",
+    "bytes": 12142
+  },
+  "delta": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/source-delta.patch",
+    "sha256": "bc0e45cf23aab86a525e118af7d5ed09496579220613b6160de70d446f11e47e",
+    "bytes": 51757
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/artifact-manifest.json",
+    "sha256": "ff91b5fc0cbcd4adb6f79b40b8be533164c8361f5b0aa577d9e3f8db02b851be",
+    "bytes": 48568
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/normal-artifacts.json",
+    "sha256": "aa3dfa43e731054f6bdb01a08cb9b9b593fa701f5ba95c269635dabb9131d880",
+    "bytes": 3913
+  },
+  "driver": {
+    "path": "verification/runners/g5/desktop_render_budget.mjs",
+    "sha256": "7034e18dae6cec3b75786a7d4e7426c5c3fe5104407dd41989cc1215f96526f4",
+    "bytes": 11906
+  },
+  "runner": {
+    "path": "verification/runners/g5/desktop_render_budget_runner.py",
+    "sha256": "70882f389d9dbb25ba6a31686e7d509542e4af5426b5216d595c7efedec8385c",
+    "bytes": 4992
+  },
+  "evidence_input_refs": [
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/PackageBindingPreflight.json",
+      "sha256": "72cbf56bf5849177ca18eb648fccaaa51c938d05f2d072b7ee9939aaea421dfd",
+      "bytes": 2019
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/implementation-design.json",
+      "sha256": "294272772a35d0a24fae4ab287f406799cc8104d8f52f29dfc4fe2af3394a736",
+      "bytes": 1044
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/effective-budget.json",
+      "sha256": "f0c859a0d71846f779dbab2ee99b007bbff67375d0900c9f7bd5af7bf0bd7453",
+      "bytes": 811
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/configuration-tests.json",
+      "sha256": "7f7db841d533ae56ed4eda20aa607a1907a060be1d3a56d63bef8be5ff56ee41",
+      "bytes": 770
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/native-area-budget-comparison.json",
+      "sha256": "3faab0f55961d0e1c1aa1adbe4b495784a5861ca91dcf21851329458595387ac",
+      "bytes": 94907
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/web-area-comparison.json",
+      "sha256": "994d3ac4decbb0f7e233acd8f37d9ef858759d2ee0d3908ef5d1036d6aa9b927",
+      "bytes": 44011
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/regressions.json",
+      "sha256": "e878a1dabe666caa21bdb831cd108b211ff7c022ff3edf1ba3ca0666e83b0464",
+      "bytes": 2981
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/normal-artifacts.json",
+      "sha256": "aa3dfa43e731054f6bdb01a08cb9b9b593fa701f5ba95c269635dabb9131d880",
+      "bytes": 3913
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/demo.json",
+      "sha256": "906255d51c0e278018d18385c673f4e5b7e195d0f90870b6b34da2fef881db27",
+      "bytes": 1541
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/cleanup.json",
+      "sha256": "c75b1808a9a89517cdaab082f8e87c39058c61282ee21b9f26b5e2f92625ee6f",
+      "bytes": 988
+    }
+  ],
+  "functional": {
+    "actual_constructor_profiles": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/effective-budget.json",
+      "sha256": "f0c859a0d71846f779dbab2ee99b007bbff67375d0900c9f7bd5af7bf0bd7453",
+      "bytes": 811
+    },
+    "native_area_cases": 30,
+    "native_pixel_rows": 210,
+    "Web_cases": 8,
+    "native_regressions": 18
+  },
+  "new_normalDemoURL": "http://127.0.0.1:4317/example.html",
+  "prior_normalDemoURL": "http://127.0.0.1:4316/example.html",
+  "findings": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/findings.json",
+    "sha256": "4cbce021e00085fdf4c2fbf4d450760064ebe6750f656c7d6a73ccecc2db96a7",
+    "bytes": 4442
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-desktop-render-budget-r1/sampling-ledger.json",
+    "sha256": "c52aa2463bd434ab25189d0d343a98b50092fa2504bd2acd639eeb3f25d35018",
+    "bytes": 1114
+  },
+  "no_commit_push": true,
+  "official_gate_p34_performance_pass": false,
+  "next_owner": "Control review / separately scoped erase CPU diagnosis"
+}

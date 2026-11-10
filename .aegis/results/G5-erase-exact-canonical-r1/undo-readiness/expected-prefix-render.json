@@ -1,0 +1,13 @@
+{
+  "command": [
+    "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "--pixels",
+    ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/expected-prefix.axsnap",
+    ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/expected-prefix.request.json",
+    ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/expected-prefix-reference"
+  ],
+  "exit": 0,
+  "stdout": "{\n  \"boundary\": \"accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference\",\n  \"edge_bytes\": 5781240,\n  \"height\": 2020,\n  \"method\": \"accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache\",\n  \"objects\": 40,\n  \"private_frame_ids\": \"oracle-local only; not production receipts\",\n  \"rgba_bytes\": 23124960,\n  \"status\": \"REFERENCE_RENDERED\",\n  \"width\": 2862\n}\n",
+  "stderr": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"42\",\"prepare_ns\":8563375,\"publish_ns\":167,\"metadata_rows_copied\":0,\"payload_reuses\":0,\"index_builds\":40}\n",
+  "elapsed": 8.015164083
+}

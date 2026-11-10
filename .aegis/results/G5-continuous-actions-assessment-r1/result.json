@@ -1,0 +1,138 @@
+{
+  "schema": "g5-continuous-actions-assessment-v1",
+  "classification": "ASSESSMENT_ONLY_NOT_IMPLEMENTATION_OR_QUALIFICATION",
+  "created_at": "2026-11-10T17:47:44.196890+08:00",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "user_gesture": "confirmed macOS accessibility three-finger mouse drag",
+  "reference_chat": {
+    "id": "01a1bbbc-0af4-7c50-b747-8c21c1cacf4c",
+    "title": "axiom codex 2 g5 perf (3)",
+    "latest_design_turn": "01a1bca1-9e92-71b3-b69e-449c06dc37bc",
+    "status": "advisory draft; not execution authority"
+  },
+  "evidence_levels": [
+    {
+      "finding": "Point mode empty-space drag enters region selection; each dragged Move and Up runs synchronous exact region query.",
+      "classification": "CODE_CONFIRMED",
+      "refs": [
+        "runtime/interaction/src/canvas_region_selection.cpp:311",
+        "runtime/interaction/src/canvas_region_selection.cpp:353"
+      ]
+    },
+    {
+      "finding": "Region selection rebuilds full compact contour and subtracts every historical mask from every component before local region intersection; it does not consume the shared prepared exact path.",
+      "classification": "CODE_CONFIRMED_AND_NATIVE_SYNTHETIC_COST_OBSERVED",
+      "refs": [
+        "runtime/render/src/selection_region_geometry.cpp:93",
+        "runtime/render/src/selection_region_geometry.cpp:241",
+        "runtime/render/src/selection_region_geometry.cpp:686"
+      ]
+    },
+    {
+      "finding": "This expensive selection path is a strong candidate for the recorded sustained freeze, but no exact user event/stack capture proves it was the sole cause. Missing terminal input or stuck active session remains possible.",
+      "classification": "USER_RECORDING_CAUSE_NOT_PROVEN"
+    },
+    {
+      "finding": "Default-budget DPR2/4 dense native fixture requires 13/12/12 stable calls per three changed poses and static reuse0; continuous Move under nondefault maxEntries1 remains0/60accepted.",
+      "classification": "PRIOR_BOUND_EVIDENCE_NOT_LIVE_BROWSER_LATENCY",
+      "refs": [
+        ".aegis/results/G5-object-interaction-continuity-r2/dense-mixed-basis/2-0/2-pixels.json",
+        ".aegis/results/G5-object-interaction-continuity-r2/staged-publication/run/summary.json"
+      ]
+    },
+    {
+      "finding": "Input and frame WASM calls share the JS event thread. GPU fence pending also gates further frame preparation; CPU blocking, GPU/resource waiting, and repeated work invalidation are different causes.",
+      "classification": "CODE_CONFIRMED_NOT_YET_PER_VIDEO_ATTRIBUTED",
+      "refs": [
+        "sdk/web/axiom.mjs:49",
+        "sdk/web/web_runtime_adapter.cpp:135"
+      ]
+    }
+  ],
+  "synthetic_probe": {
+    "rows": [
+      {
+        "knots": 512,
+        "historical_masks": 2,
+        "segments_per_mask": 80,
+        "query": "5x5 region inside removed ink",
+        "native_selection_no_mask_ms": 1.17921,
+        "native_selection_with_masks_ms": 86.7175,
+        "native_exact_erase_same_polygon_ms": 7.28717,
+        "both_masked_results": "Miss"
+      },
+      {
+        "knots": 2048,
+        "historical_masks": 2,
+        "segments_per_mask": 80,
+        "query": "5x5 region inside removed ink",
+        "native_selection_no_mask_ms": 0.767,
+        "native_selection_with_masks_ms": 290.105,
+        "native_exact_erase_same_polygon_ms": 6.98163,
+        "both_masked_results": "Miss"
+      },
+      {
+        "knots": 7199,
+        "historical_masks": 2,
+        "segments_per_mask": 80,
+        "query": "5x5 region inside removed ink",
+        "native_selection_no_mask_ms": 1.10058,
+        "native_selection_with_masks_ms": 987.829,
+        "native_exact_erase_same_polygon_ms": 7.45763,
+        "both_masked_results": "Miss"
+      }
+    ],
+    "scope": "one native optimized build, synthetic full-history code path, no browser performance or user document identity claim",
+    "raw": "comparison-guard.stdout.log",
+    "guard": "comparison-guard.worker.json",
+    "source": "selection-erase-comparison.cpp",
+    "product_source_modified": false
+  },
+  "proposed_order_not_dispatched": [
+    "First UR2d slice: localized exact selection/erase query reuse, eliminating repeated body/history preparation; keep selection tolerance, fill rules, real mask semantics and independent oracle. Add precise mouse Down/Move/Up/Cancel continuity diagnosis for blank-space point drag.",
+    "Continue UR2d Up critical path: query, publication preparation, Operation apply, History and Scene timing; optimize repeated work, retaining existing synchronous commit semantics unless separately designed.",
+    "UR3: continuous operation transitions and default pressure paths; compatible staged progress/static ordered ranges, masked transforms, navigation and preview routes. Validate immediate actions without waiting for settle.",
+    "Then targeted worker execution for measured remaining irreducible CPU tasks. Move this earlier only if a valid bounded decomposition cannot keep the owner responsive."
+  ],
+  "worker_evaluation": {
+    "recommended_roles": [
+      "UI facts",
+      "single Runtime canonical/History owner",
+      "bounded CPU compute executor",
+      "single GPU context/cache owner"
+    ],
+    "initial_mapping": "retain Runtime/Render owners; pure CPU jobs first",
+    "requirements": [
+      "immutable leased input and original basis",
+      "job-local scratch",
+      "cooperative cancellation and stale result disposal",
+      "owner validation and atomic publication",
+      "bounded queues and global resource accounting",
+      "no owner synchronous waiting"
+    ],
+    "web_current": "locked Skia release/debug/asan pthread=false; current application ENVIRONMENT=web",
+    "not_a_fix_for": [
+      "repeatedly invalidated work",
+      "missing terminal input",
+      "GPU quota/retirement wait",
+      "same-worker synchronous long task"
+    ]
+  },
+  "preserved": {
+    "prior_production_and_test_hashes": true,
+    "user_demo_and_document": true,
+    "UR2c_ledger_and_evidence": true
+  },
+  "actions": {
+    "production_edits": false,
+    "test_suite_edits": false,
+    "source_builds_or_SDK_rebuilds": false,
+    "isolated_diagnostic_compile": true,
+    "browser_sampling_or_ui_actions": false,
+    "new_task_or_executor_dispatch": false,
+    "commit_push": false
+  },
+  "next_action": "User/control chooses bounded UR2d first slice; this assessment does not authorize a worker implementation or declare the freeze fixed."
+}

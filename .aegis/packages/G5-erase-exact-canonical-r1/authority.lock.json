@@ -1,0 +1,101 @@
+{
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "user_authorization": "进行下一轮的优化处理吧：长擦除轨迹精确查询/可信本体查询历史mask几何复用，然后mask-only提交后的重复重画。后台线程留后。",
+  "current_authority": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "trusted_baseline": {
+    "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "budget_result": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/result.json",
+      "sha256": "3a965f5191bd03bfd5861391b02afbb8a9c1547be5433f4bbe5b263abbae551e"
+    },
+    "budget_review": {
+      "path": ".aegis/results/G5-desktop-render-budget-control-r1/control-review.json",
+      "sha256": "f2e61eb83ec72e8520f7f1594412af143a14f5a38d8929c3e188d0a7692613e2"
+    },
+    "source": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/source-manifest.json",
+      "sha256": "b3c0245c8f1f4e1f0979a993462f8ecc1f22f1eaf9345191f10f63535f3d35e1"
+    },
+    "normal_sdk": {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/normal-artifacts.json",
+      "sha256": "aa3dfa43e731054f6bdb01a08cb9b9b593fa701f5ba95c269635dabb9131d880"
+    },
+    "postimage_files": {
+      "runtime/render/CMakeLists.txt": "0d88ac98f3eda5e7a02ab44d7147a7fd66b23fe1518d335e00d5c740032705be",
+      "runtime/render/src/skia_renderer.cpp": "79ae67acc14dba8d853df280bb47dc51206f1ebd1df98936e9dd184e9b7a00f2",
+      "runtime/render/include/canvas/render/render_cache.hpp": "75ba8b660c69e163b5b918dfc24bbd10ee761da6ac1d23a5c589d14424da9cea",
+      "runtime/render/tests/transient_display_retry_test.cpp": "14d3de900f737541e68a8748b0e52daedd99d019aadf6784e998a72fb3bd1ccf",
+      "runtime/render/tests/render_cache_test.cpp": "0dd7a4a0564d18bd2236edcc4ea0a9c5526770b10efd07e8ce6ef261729ee8ed",
+      "verification/runners/g5/ur2d_selection_up.mjs": "f77efd42cac3a983b067546eafce403c28894759c2c8b5514d791bd2e4e26bc9",
+      "verification/tests/g5_ur2d_selection_up.test.mjs": "b1f4ab99153d180d5f7b1e67e7495af520f4266db8b858e6a6ddcc264ef04a74",
+      "cmake/AxiomRenderMemoryBudget.cmake": "5c8e43db2472a3bd6988058e9b7751c24920dff7faddbce8239c8a6b67e94423",
+      "runtime/render/src/render_memory_budget.hpp": "d800ad4c65fa42ad0267d4b28057399e87a2ec691df0651a8b88bcb93a749a41",
+      "runtime/render/tests/render_memory_budget_test.cpp": "9c8b82621a9c47f7c63ab5d5e8337455dc03c9e8c160e42abeff72363462fa2a",
+      "verification/runners/g5/desktop_render_budget.mjs": "7034e18dae6cec3b75786a7d4e7426c5c3fe5104407dd41989cc1215f96526f4",
+      "verification/runners/g5/desktop_render_budget_runner.py": "70882f389d9dbb25ba6a31686e7d509542e4af5426b5216d595c7efedec8385c",
+      "verification/tests/test_desktop_render_budget.py": "b219e4d2d97dde86d9bb37fbfa96f160e3216320bd1992fdced6f825cf715a81",
+      "docs/planning/G5_DESKTOP_RENDER_MEMORY_PROFILE_2026_11_10.md": "3feef8da7c6be332cd3b4d81f97a0539d5e0aedc19c7c739d84f8d8da94031da",
+      "runtime/composition/CMakeLists.txt": "783454b8ca1dcfe972ce7df4573e31cf478cf64f09f01a52260761f17432f172",
+      "runtime/composition/tests/selection_input_integration_test.cpp": "423f8bf9f3ac7f54c5a042b66baaed0c771a28c39e39b4c112bcf9d9cccf8308",
+      "runtime/composition/tests/ur2d_selection_up_test.cpp": "9960a1b52f00a8e67d8ac7691ad03e9ef1d4f03e71e5937db8234e356b13b054",
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": "5f912b0a2fe390879f4b41118a8ca972be68ddd9fbc0a0888ed41917d066e30d",
+      "runtime/interaction/CMakeLists.txt": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "runtime/interaction/src/canvas_editing_runtime.cpp": "04da5c51be16ab6d02ac7d9d1ac6c9f7e7d64730f97cb1a3ce6c88b7f9a52ff9",
+      "runtime/interaction/src/canvas_partial_erase.cpp": "f543af86927b449765b0fe878254a529faf6206e0fa42389b6193ae59345139f",
+      "runtime/interaction/src/canvas_region_selection.cpp": "5a6d88adb57fad783191c5703b17997f6ab65b4f2ff1d564a9b07caddb3176db",
+      "runtime/render/include/canvas/render/skia_renderer.hpp": "298ec30c292fbd1e54ec95a0ce399b586d24fac90ee9fa1a4046204f1b79be2d",
+      "runtime/render/src/render_group_manager.cpp": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "runtime/render/src/selection_region_geometry.cpp": "08cd5917fc5493efb946e8b02b5a3d55d48787b279646673deefc458104bc661",
+      "runtime/render/src/selection_region_geometry_internal.hpp": "99b5a3aee641845a63bbdd846cfeb44e8f36727aa72cc625764300ae6cab3e20",
+      "runtime/render/src/skia_render_cache.cpp": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+      "runtime/render/src/skia_render_cache_internal.hpp": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "runtime/render/tests/ur2d_selection_up_test.cpp": "d15cd4abfb09ed4c53396bed8af85bb73f4cc5adc54d0ff0fced59309f0e9de1"
+    },
+    "analysis": {
+      "path": ".aegis/results/G5-erase-cpu-review-r1/assessment.json",
+      "sha256": "4f7bca8b992e3706ddac7731c2ac810c42a0e56253dbd11a7289bee4e9fb10b1"
+    }
+  },
+  "statements": [
+    "OperationEngine remains sole canonical mutation owner. Interaction owns accepted samples, exact targets, mask ID allocation, History/publication/atomicApply and Scene updates. Render owns shared prepared body/query/history/device pixels.",
+    "Derived geometry can share across distinct canonical maskIDs only after complete ordered geometry equality (all coordinates/radius/fill/commands, body/config/transform/version/resource proofs as applicable); canonical IDs, bytes, targeting, mask ordering and Undo/Redo stay exact.",
+    "Hit/Miss/Invalid/Unsupported and full finite-validation behavior preserved; no raster/GPU/bounds-only positive oracle. Mask/query caches use current quotas and owner-thread scratch.",
+    "Desktop256/512/64 and conservative32/96/8 stay unchanged. Query/history retained state remains bounded under currentlocal8MiBquota; pins/scratch/metadata charged once and evictable.",
+    "Preview/canonical reuse never equates activity with commit or GPU completion with presentation; preserve matchingCanonicalVisible/currentdisplayproof.",
+    "No worker/pthreads/asyncUp/newadmission/publicSDKschemaABIversion/brushAAchange. Do not bypasssemanticvalidation or weakenreceipt to win latency.",
+    "Accepted dirty UR2d/budget modifications are baseline; no reset/stash/clean/commit/push/newworktree; old4317and4316normalinstalls/userdocuments remain untouched."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "status": "VERIFIED_ABSENT",
+  "command": [
+    "/usr/bin/nm",
+    "-C",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal/runtime/render/libcanvas_runtime_render.a"
+  ],
+  "symbols": {
+    "SkiaRenderer::objectInteractionWork": [],
+    "transientDisplayFault": [],
+    "transientDisplayBudget": [],
+    "transientDisplayAttempt": [],
+    "axiom_g5_trace_control": []
+  },
+  "compile_commands": [
+    {
+      "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal",
+      "command": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/em++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_SHARED_MIB=96 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -Wno-missing-designated-field-initializers @runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_group_manager.cpp.o.modmap -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_group_manager.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/render_group_manager.cpp",
+      "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/render_group_manager.cpp",
+      "output": "runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_group_manager.cpp.o"
+    },
+    {
+      "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal",
+      "command": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/em++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_SHARED_MIB=96 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -Wno-missing-designated-field-initializers @runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o.modmap -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_renderer.cpp",
+      "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_renderer.cpp",
+      "output": "runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o"
+    },
+    {
+      "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal",
+      "command": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/em++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_SHARED_MIB=96 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-web-normal/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/web-wasm-webgl2/release -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -Wno-missing-designated-field-initializers @runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o.modmap -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp",
+      "file": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/skia_render_cache.cpp",
+      "output": "runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o"
+    }
+  ],
+  "normal_sdk_apis_unchanged": true
+}

@@ -28,10 +28,12 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         const auto& b=record.worldBounds;
         if(b.right<left-radius||b.left>right+radius||b.bottom<top-radius||b.top>bottom+radius)continue;
         auto mask=partialEraseGeometry(trace,record.transform,radius);
+        UR2D_COUNT(masksBuilt);
         if(!mask)return std::nullopt;
         if(exactHit) {
             G5_SCOPE(g5Path,g5::Tag::pathops,g5::Purpose::none);
             const auto hit=skiaRenderer_.intersectEraseGeometry(record,*mask);
+            UR2D_COUNT(exactCalls);
             G5_SCOPE_END(g5Path);
             if(hit==render::SelectionGeometryHit::kInvalid){
 #if defined(AXIOM_ENABLE_FRAME_TIMING)

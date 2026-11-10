@@ -1,0 +1,199 @@
+{
+  "status": "EXISTING_FUNCTIONAL_FACTS_VERIFIED_WITH_OFFLINE_REQUALIFICATION",
+  "rows": [
+    {
+      "variant": "old",
+      "fixture": "S0",
+      "operation_deltas": [
+        2,
+        2,
+        2
+      ],
+      "active_contacts": 0,
+      "semantic_generation": "7",
+      "presented_generation": "7",
+      "canonical_receipt": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "74872d801317ed0a48bdf0472efdaa27",
+        "ordinal": "7",
+        "presentedGeneration": "7",
+        "runtimeEpoch": "1"
+      },
+      "camera": {
+        "scale": 1,
+        "x": -24,
+        "y": -15
+      },
+      "selection": [],
+      "roundtrip_raw": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 1,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "offline_pixel_policy": "controlcompare-independent/pixel-review.json",
+      "history_snapshot": "capturedfinal/undo/redo"
+    },
+    {
+      "variant": "old",
+      "fixture": "S2",
+      "operation_deltas": [
+        2,
+        2,
+        2
+      ],
+      "active_contacts": 0,
+      "semantic_generation": "7",
+      "presented_generation": "7",
+      "canonical_receipt": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "087d9114c66619b55869e16ca350f4cf",
+        "ordinal": "7",
+        "presentedGeneration": "7",
+        "runtimeEpoch": "1"
+      },
+      "camera": {
+        "scale": 1,
+        "x": -24,
+        "y": -15
+      },
+      "selection": [],
+      "roundtrip_raw": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 0,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "offline_pixel_policy": "controlcompare-independent/pixel-review.json",
+      "history_snapshot": "capturedfinal/undo/redo"
+    },
+    {
+      "variant": "candidate",
+      "fixture": "S0",
+      "operation_deltas": [
+        2,
+        2,
+        2
+      ],
+      "active_contacts": 0,
+      "semantic_generation": "7",
+      "presented_generation": "7",
+      "canonical_receipt": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "81b14193df2911198de2422cff1471a6",
+        "ordinal": "7",
+        "presentedGeneration": "7",
+        "runtimeEpoch": "1"
+      },
+      "camera": {
+        "scale": 1,
+        "x": -24,
+        "y": -15
+      },
+      "selection": [],
+      "roundtrip_raw": {
+        "status": "QUALIFIED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 0,
+        "max_interior_delta": 1,
+        "witnesses": [],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "offline_pixel_policy": "controlcompare-independent/pixel-review.json",
+      "history_snapshot": "capturedfinal/undo/redo"
+    },
+    {
+      "variant": "candidate",
+      "fixture": "S2",
+      "operation_deltas": [
+        2,
+        2,
+        2
+      ],
+      "active_contacts": 0,
+      "semantic_generation": "7",
+      "presented_generation": "7",
+      "canonical_receipt": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "7eec098cfc450618eab100804cafa049",
+        "ordinal": "7",
+        "presentedGeneration": "7",
+        "runtimeEpoch": "1"
+      },
+      "camera": {
+        "scale": 1,
+        "x": -24,
+        "y": -15
+      },
+      "selection": [],
+      "roundtrip_raw": {
+        "status": "FAILED",
+        "compared_pixels": 5781240,
+        "aa_boundary_pixels": 0,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 1,
+        "max_interior_delta": 4,
+        "witnesses": [
+          {
+            "pixel": 1623325,
+            "actual": [
+              138,
+              144,
+              154,
+              255
+            ],
+            "reference": [
+              134,
+              141,
+              152,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "offline_pixel_policy": "controlcompare-independent/pixel-review.json",
+      "history_snapshot": "capturedfinal/undo/redo"
+    }
+  ],
+  "A_lifecycle": "input-lifecycle-A.json",
+  "raw_window_STATUS_preserved": [
+    "OLD-Frssguard",
+    "A-FOBSERVED",
+    "B-FfullSHAexit1",
+    "COMPAREzeroedgeexit1"
+  ],
+  "control_evidence": {
+    ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json": {
+      "sha256": "99b46a3a40173fdaab43abb4fe0b29e81aeb62a785d3b248741a18b9fbbff9b9",
+      "bytes": 4211
+    },
+    ".aegis/results/G5-UR2d-control-r1/snapshot-roundtrip-result.json": {
+      "sha256": "0aabfaa5609da3802cd0e5e703b0e4e9886e03fe6dd24286ed10d66cc93d2871",
+      "bytes": 154
+    },
+    ".aegis/results/G5-UR2d-control-r1/memo-result.log": {
+      "sha256": "5e57c76e9e6c4c07f005e3b289f8ad2c2eca35b3bfdbeec4c906022381df5104",
+      "bytes": 65
+    },
+    ".aegis/results/G5-UR2d-control-r1/independent-A-parity.json": {
+      "sha256": "a86c30519b36d754c584165a476edd171ca19a8c43617d87f37145fd1b060cca",
+      "bytes": 561
+    }
+  },
+  "no_three_pair_claim": true
+}

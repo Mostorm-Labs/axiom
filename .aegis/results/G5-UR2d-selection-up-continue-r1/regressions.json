@@ -1,0 +1,31 @@
+{
+  "status": "SCOPED_REGRESSIONS_GREEN",
+  "native_tests": 78,
+  "native_exit": 0,
+  "native_log": "final-native-regression.log",
+  "exact634": "original634-final-comparison.json",
+  "finite6": "finite-six-final.log",
+  "focused_node": {
+    "passed": 49,
+    "log": "final-node-keepers.log",
+    "version_note": "beforefinalSectiontestonly;productRenderunchanged"
+  },
+  "focused_python": {
+    "passed": 35,
+    "log": "final-python-keepers.log"
+  },
+  "final_runner_node": {
+    "passed": 7,
+    "log": "COMPARE-offline-node.log"
+  },
+  "final_runner_python": {
+    "passed": 6,
+    "log": "COMPARE-offline-python.log"
+  },
+  "boundary": {
+    "contracts": 120,
+    "log": "checkpoint-boundary.log"
+  },
+  "prior8broad_baseline": "notrerunwideorrelabeled;frozenr2keeperbaselinebound",
+  "new_product_regression": false
+}

@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "repository": "Mostorm-Labs/axiom",
+  "package_sha256": "17714da21f8c44b3d124e53f16ea7a55f06afa51d114f01dc6b061dff6e3bfcf",
+  "bindings": {
+    ".aegis/packages/G5-desktop-render-budget-r1/authority.lock.json": "82198f7e161a11d88e4721b51e5fccf724fafd8ec32d0cc35522cf24e892f358",
+    ".aegis/packages/G5-desktop-render-budget-r1/verification.lock.json": "ae01eb10a64b428da11bea539c7de4846935fedd72b2a5bad1b3c23d4b4bf652",
+    ".aegis/packages/G5-desktop-render-budget-r1/execution-contract.json": "3ba5c1100588c8ebc0851f677e21bb087cfc3528d74c0335edec88e8459a3e6c",
+    ".aegis/packages/G5-desktop-render-budget-r1/implementation-context.md": "551a912d79de853c0fa6a4dc8ff09adc39b0b419e6aeefcc44e737602e4702b5",
+    ".aegis/packages/G5-desktop-render-budget-r1/evidence-contract.json": "de834f8c0bf6ddb95a23ec379c8181b7874e0de5313aecb64928ae63eca9f1f3"
+  },
+  "UR2d_final": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/result.json",
+    "sha256": "97e76f5772f81161875cb51ae724cb117874a53ce2b7f2496305021153417e43"
+  },
+  "source_before": {
+    "runtime/render/CMakeLists.txt": "16e07a36aeeaecdb5211541a5c31b3cf04c154c2c0a8c0f1c1890995e9fd3156",
+    "runtime/render/src/skia_renderer.cpp": "68597803c1230f44c5c16c5db5c6e515416f01a37c6927e85e2a867788fa75dd",
+    "runtime/render/include/canvas/render/render_cache.hpp": "8b2bf98b5767ec0ca8f8ef7a08d8d5d4cb890859626fd23e6a0b84626dc226f2",
+    "runtime/render/tests/transient_display_retry_test.cpp": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+    "runtime/render/tests/render_cache_test.cpp": "0dd7a4a0564d18bd2236edcc4ea0a9c5526770b10efd07e8ce6ef261729ee8ed",
+    "verification/runners/g5/ur2d_selection_up.mjs": "f77efd42cac3a983b067546eafce403c28894759c2c8b5514d791bd2e4e26bc9",
+    "verification/tests/g5_ur2d_selection_up.test.mjs": "b1f4ab99153d180d5f7b1e67e7495af520f4266db8b858e6a6ddcc264ef04a74"
+  },
+  "old_normal_manifest_sha256": "a81ddee2d58a1c27db1d58a0404a6537d975cd7f58849311f9e7b7792f6799d0"
+}

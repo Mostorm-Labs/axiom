@@ -1,0 +1,362 @@
+{
+  "status": "ORIGINAL_PIXEL_OBLIGATION_QUALIFIED",
+  "rows": [
+    {
+      "pair": 0,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S0.json",
+        "sha256": "b67a0cf6ec58ff0841bc2dbd2cc956f09bb3058a44170240f113857ac22dc0ed",
+        "bytes": 69684
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S0.json",
+        "sha256": "b67a0cf6ec58ff0841bc2dbd2cc956f09bb3058a44170240f113857ac22dc0ed",
+        "bytes": 69684
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "whole-target sufficient check",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/S0-final.rgba",
+        "sha256": "32d1d36282846aae8216a24185651bb9d8983907c0ad76e74427e402ba34f90d",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/S0-redo.rgba",
+        "sha256": "d66ead5972ec1fb7741cd59ea2785bad9ef331c6649706bcea36f1a11c42bfd7",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 0,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S2.json",
+        "sha256": "87b0a8f6fa6882e19e98c589bded423ddd77a619e199ef8f3f1d5d77360430d8",
+        "bytes": 69108
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/row-S2.json",
+        "sha256": "87b0a8f6fa6882e19e98c589bded423ddd77a619e199ef8f3f1d5d77360430d8",
+        "bytes": 69108
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "whole-target sufficient check",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/S2-final.rgba",
+        "sha256": "2d7783159a38f52b1ec20d3b8a7b2f74e3db6b137c41489efb19737f63c98969",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/old-0/S2-redo.rgba",
+        "sha256": "2d7783159a38f52b1ec20d3b8a7b2f74e3db6b137c41489efb19737f63c98969",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 0,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/row-S0.json",
+        "sha256": "38c0ba9e6da96bf93e2db14d38432eab723427b6db76817839f97036c30bf208",
+        "bytes": 68418
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/offline-harness-red-green.json",
+        "sha256": "073d2eb3aea6c7d6f9e934d10f49b203990f02067dbfb04657281f414b18307d",
+        "bytes": 9066,
+        "json_pointer": "/rows/0/green_independent"
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S0-final.rgba",
+        "sha256": "67296468e52a5c719b16602bb616be8cffde4bf858ace987069d81bd6fcad47d",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S0-redo.rgba",
+        "sha256": "8573dcd3ea321c1c54cd10e344e9a6103f832cb20de75746ab3943b297528721",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 0,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/worker-result.json",
+        "sha256": "4700972f0150103caca528387bb64a8cf7743ea40991a87c52a0a0eb48bcb2c6",
+        "bytes": 365967,
+        "json_pointer": "/partial/1",
+        "note": "Original AA assertion stopped before persistRow; immutable partial contains complete timed row."
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/offline-harness-red-green.json",
+        "sha256": "073d2eb3aea6c7d6f9e934d10f49b203990f02067dbfb04657281f414b18307d",
+        "bytes": 9066,
+        "json_pointer": "/rows/1/green_independent"
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "FAILED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S2-final.rgba",
+        "sha256": "a36d04f8a8ce70ab47545c9518f07bf4f84f79df323278fd719d3bbcd7967a31",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S2-redo.rgba",
+        "sha256": "75848a06153ef3a5c2944d046549ebb21886d9ded334711b27d4b713adcbe30b",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 1,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/row-S0.json",
+        "sha256": "a277789f119be32b17be9253070000503cd5bda2a2b0a137fa16e8edf20585d3",
+        "bytes": 71868
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S0-roundtrip.json",
+        "sha256": "fce5313a84a16f37b1e1d78b34f257e04e807c42b32f7ce4773bc8110c2b747f",
+        "bytes": 3063
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S0-final.rgba",
+        "sha256": "3e3df15cb725f97fe5b539e9fba0dbc34b3a1813c7eb2a095439d1ec2a73f9c0",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S0-redo.rgba",
+        "sha256": "a361d5897a2960bb044fac5c9bdef054533947d6dfe904240564f818725f647d",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 1,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/row-S2.json",
+        "sha256": "78f3e83cff090a2b8c73b610f3d823614ef4b72b9daaee8f1f808ea1bec7a968",
+        "bytes": 71982
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S2-roundtrip.json",
+        "sha256": "120d2d70f1e4334ee664d1cb55e019151a985839bb704677bb9ba65b835339f9",
+        "bytes": 2841
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S2-final.rgba",
+        "sha256": "137ad9ebad93f0874710f25a74f72191e0807c63da4acb47b36b146b61527ddb",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-1/S2-redo.rgba",
+        "sha256": "137ad9ebad93f0874710f25a74f72191e0807c63da4acb47b36b146b61527ddb",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 1,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/row-S0.json",
+        "sha256": "543b6e14fcfc5e73b8a968f3fa0f1e07f61c67e55791ef1430db15ae8c89a7d8",
+        "bytes": 71223
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S0-roundtrip.json",
+        "sha256": "996cf1cd9b4d6426ad039f44ba80e2146f20ed4258014940ae819a1e87d05532",
+        "bytes": 2841
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S0-final.rgba",
+        "sha256": "84455cf02272dab36f6a3a628432e92a851cee4f57c04660922114c0e68c1549",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S0-redo.rgba",
+        "sha256": "84455cf02272dab36f6a3a628432e92a851cee4f57c04660922114c0e68c1549",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 1,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/row-S2.json",
+        "sha256": "57a26288b7ad47e9848eaae2c89d2ff337035248796da0606d8e753410b49ecc",
+        "bytes": 72229
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S2-roundtrip.json",
+        "sha256": "21bc08adf9860659c18cc94f4e2532f0444b60545967f8eb4a1595233ef4dac1",
+        "bytes": 2841
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S2-final.rgba",
+        "sha256": "f9bfd4efe2f6b9f11b38593decae095fc161bafd450960e1049385543ba42f07",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-1/S2-redo.rgba",
+        "sha256": "f9bfd4efe2f6b9f11b38593decae095fc161bafd450960e1049385543ba42f07",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 2,
+      "variant": "old",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/row-S0.json",
+        "sha256": "b1f598078d8deebf11c2631376ed733144a0c8a0a51a7c8ea723cf76ad75dc6e",
+        "bytes": 71137
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S0-roundtrip.json",
+        "sha256": "0f6398db3b1ff99ea791bf32b4243706b283ae1b887ca866567f30d8c30e7f3b",
+        "bytes": 2841
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S0-final.rgba",
+        "sha256": "ab3d6449b419fe2a25fbddfd65683a7a7112d41daac11a0db1c88a99a4cd44b4",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S0-redo.rgba",
+        "sha256": "9dbc1ee62d54af1b931cf53940ae16a307dc92ee6fec94effd44098af8b0ce8e",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 2,
+      "variant": "old",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/row-S2.json",
+        "sha256": "084a2c725106066299db351024434dc87c2b20b956906ee7a60781e8c41a1380",
+        "bytes": 72356
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S2-roundtrip.json",
+        "sha256": "25a9c0ae8552cc0a523caf5d8d6a4e69ef0190b57a9b652a0e0aee654c521dfe",
+        "bytes": 3067
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S2-final.rgba",
+        "sha256": "a12e205d38227ba3a108331a0efab8a63b5763da44a97aa9ab95f945f18e2db2",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/old-2/S2-redo.rgba",
+        "sha256": "1bd2688755d05ffa5c9bd8013d7fc69c67074a8518ae2b8ea954f7afde8b69f5",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 2,
+      "variant": "candidate",
+      "fixture": "S0",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/row-S0.json",
+        "sha256": "f293bf9d4c39b69535cc217a25badda0574c772de1bad02146e39e90eaa859f8",
+        "bytes": 71736
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S0-roundtrip.json",
+        "sha256": "2d4fd3696f2271ad8e8543eba229680ebabb25561a075c561ee489b9b20a17d1",
+        "bytes": 2841
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S0-final.rgba",
+        "sha256": "cdc0c3ce8f432ef65db7622c8a520f3b5041446fc0e8505e1a5438736dfa5560",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S0-redo.rgba",
+        "sha256": "cdc0c3ce8f432ef65db7622c8a520f3b5041446fc0e8505e1a5438736dfa5560",
+        "bytes": 23124960
+      }
+    },
+    {
+      "pair": 2,
+      "variant": "candidate",
+      "fixture": "S2",
+      "raw": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/row-S2.json",
+        "sha256": "07efc219ba6e8aad9eda1e32b9f296429e0080f3c907229afeeaf6c755a293b1",
+        "bytes": 72201
+      },
+      "proof": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-roundtrip.json",
+        "sha256": "0ed69c39e14321473042fde621f1d2172a69d682116639088c24953bd4954f7f",
+        "bytes": 3067
+      },
+      "status": "QUALIFIED",
+      "original_raw_status": "QUALIFIED",
+      "method": "frozen CPU reference and independent AA band",
+      "final_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-final.rgba",
+        "sha256": "b95d2e6537551fdf8db5e5f91ec90d7f0974324b10bef61ee7029e33fcb4589b",
+        "bytes": 23124960
+      },
+      "redo_rgba": {
+        "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-redo.rgba",
+        "sha256": "57a7b17a8aed23bafe439aae7a563b689a4bf50fce54189c173a3da194a7e58e",
+        "bytes": 23124960
+      }
+    }
+  ],
+  "comparator": {
+    "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+    "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+    "bytes": 3316
+  },
+  "oracle": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "pair0_independent_control_review": {
+    "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json",
+    "sha256": "99b46a3a40173fdaab43abb4fe0b29e81aeb62a785d3b248741a18b9fbbff9b9",
+    "bytes": 4211
+  },
+  "new_pixel_cpu_invocations": 16,
+  "original_failed_raw_unchanged": true,
+  "no_new_pixel_renderer_invocations_during_aggregation": true
+}

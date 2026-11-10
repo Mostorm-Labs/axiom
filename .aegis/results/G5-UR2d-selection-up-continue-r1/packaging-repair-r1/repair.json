@@ -1,0 +1,28 @@
+{
+  "schema": "g5-ur2d-evidence-packaging-repair-v1",
+  "scope": "Immutable artifact packaging only; no production, tests, SDK, sampling raw or ledger changes.",
+  "captured_utc": "2026-11-10T11:23:23.145874+00:00",
+  "previous_result": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/packaging-repair-r1/result-before.json",
+    "sha256": "7dbc106bbd70645fc16e39d8acd9729fb422b120c06f6e6eb2a07d601fa6e7ba"
+  },
+  "previous_manifest": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/packaging-repair-r1/artifact-manifest-before.json",
+    "sha256": "e40512bd1dcc17ddb4a80d244edde3e9ec1ee4536372099f059c263ee15a6b4a"
+  },
+  "live_log_excluded": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/demo-server.log",
+    "reason": "Running ordinary HTTP server appends access records; mutable runtime output is not a frozen artifact."
+  },
+  "immutable_log_cutoff": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/packaging-repair-r1/demo-server-cutoff.log",
+    "sha256": "441f96713473b36f711e0dbb364d518651b968d88fbf680828771bdd6e1c0576",
+    "bytes": 1943
+  },
+  "cutoff_rule": "Exactly the first fstat-size bytes read from one open live-log descriptor; later server writes belong only to the excluded live log.",
+  "previous_bound_members_unchanged_except_result_and_live_log": true,
+  "source_manifest_sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0",
+  "sampling_restarted": false,
+  "demo_restarted": false,
+  "semantic_result_classification_unchanged": "BLOCKED_EVIDENCE: three required Web pairs remain incomplete."
+}

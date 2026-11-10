@@ -1,0 +1,132 @@
+{
+  "candidate_tests": 199,
+  "candidate_passed": 191,
+  "candidate_failed": [
+    {
+      "name": "canvas_rf01_full_rebuild",
+      "status": "fail",
+      "detail": "line 88: expectation failed: store.find(second.objectId) == &store.records()[0]\n1 RF01-1 full rebuild expectations failed\n"
+    },
+    {
+      "name": "canvas_fc02_shape_label_scene",
+      "status": "fail",
+      "detail": "Assertion failed: (projected.records[0].referenceGeometryDigest != digest), function operator(), file shape_label_scene_test.cpp, line 64.\n"
+    },
+    {
+      "name": "G5CanonicalPreparedWorkingSet",
+      "status": "fail",
+      "detail": "libc++abi: terminating due to uncaught exception of type std::runtime_error: working-set Direct failed stable demand\n{\"held_ready_bodies\":513,\"pending_job_survived_retirement\":true,\"last_release\":true}\n{\"reclaimable_bytes_before\":79060192,\"resident_before_release\":60024591,\"actual_staged_calls\":257,\"reclaimed\":true,\"last_release\":true}\n"
+    },
+    {
+      "name": "G5RenderCache",
+      "status": "fail",
+      "detail": ""
+    },
+    {
+      "name": "G3HeadlessCanvasDemo",
+      "status": "fail",
+      "detail": "Assertion failed: (field(evidence, \"visibility_ids\") == \"[501,502,503,504,505,506,507,508]\"), function assertStageCorrelation, file headless_canvas_demo_test.cpp, line 191.\n"
+    },
+    {
+      "name": "FC00XRuntimeComposition",
+      "status": "fail",
+      "detail": "[axiom] present begin frame=1 objects=0 scene_records=0\n[axiom] finish begin pointer=1 objects=0 scene_gen=0\n[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1\n[axiom] present begin frame=2 objects=1 scene_records=1\n[axiom] finish begin pointer=1 objects=0 scene_gen=0\n[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1\n[axiom] finish begin pointer=1 objects=0 scene_gen=0\n[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1\n[axiom] present begin frame=1 objects=1 scene_records=1\n[axiom] present begin frame=1 objects=1 scene_records=1\nAssertion failed: (a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 1U), function canonicalFeedbackCannotQualifyAnotherInstance, file runtime_composition_test.cpp, line 519.\n"
+    },
+    {
+      "name": "SketchSemantic",
+      "status": "fail",
+      "detail": "etry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner (0 ms)\n[ RUN      ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary\n[       OK ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary (0 ms)\n[ RUN      ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty\n[       OK ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty (6 ms)\n[ RUN      ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable\n[       OK ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable (0 ms)\n[----------] 5 tests from CornerGeometry (7 ms total)\n\n[----------] 3 tests from HandwritingFont\n[ RUN      ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles\n[       OK ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles (0 ms)\n[ RUN      ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback\n/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/tests/rounded_font_test.cpp:57: Failure\nValue of: snapshot->diagnostics.empty()\n  Actual: false\nExpected: true\n\n[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback (45 ms)\n[ RUN      ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects\n[       OK ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects (0 ms)\n[----------] 3 tests from HandwritingFont (45 ms total)\n\n[----------] 2 tests from CornerSemantic\n[ RUN      ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed\n[       OK ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed (0 ms)\n[ RUN      ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability\n[       OK ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability (0 ms)\n[----------] 2 tests from CornerSemantic (0 ms total)\n\n[----------] 1 test from CornerRuntime\n[ RUN      ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable\n[axiom] present begin frame=2 objects=1 scene_records=1\n[axiom] present begin frame=3 objects=1 scene_records=1\n[       OK ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable (0 ms)\n[----------] 1 test from CornerRuntime (0 ms total)\n\n[----------] Global test environment tear-down\n[==========] 45 tests from 11 test suites ran. (84 ms total)\n[  PASSED  ] 44 tests.\n[  FAILED  ] 1 test, listed below:\n[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback\n\n 1 FAILED TEST\n"
+    },
+    {
+      "name": "G45BrushRuntimePipeline",
+      "status": "fail",
+      "detail": "[axiom] finish begin pointer=1812 objects=1 scene_gen=1\n[axiom] scene apply pointer=1812 ok=1 objects=2 scene_gen=2\n[axiom] present begin frame=1 objects=2 scene_records=2\nAssertion failed: (host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0)), function canonicalPixels, file brush_runtime_pipeline_test.cpp, line 12.\n"
+    }
+  ],
+  "baseline_method": "Same object files/dependencies and accepted r1 checkpoint; replace only candidate RenderGroupManager.o with git HEAD pre-LI-01 and relink separate executables. No checkout or source mutation.",
+  "baseline_results": [
+    {
+      "target": "canvas_rf01_full_rebuild_test",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/canvas_rf01_full_rebuild_test"
+      ],
+      "exit_code": 1,
+      "reason": "completed",
+      "elapsed_seconds": 0.6099162499886006,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/canvas_rf01_full_rebuild_test.log"
+    },
+    {
+      "target": "canvas_fc02_shape_label_scene_test",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/canvas_fc02_shape_label_scene_test"
+      ],
+      "exit_code": -6,
+      "reason": "completed",
+      "elapsed_seconds": 0.5599471660098061,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/canvas_fc02_shape_label_scene_test.log"
+    },
+    {
+      "target": "axiom_canonical_prepared_body_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_canonical_prepared_body_tests",
+        "--working-set"
+      ],
+      "exit_code": -6,
+      "reason": "completed",
+      "elapsed_seconds": 4.230943292030133,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_canonical_prepared_body_tests.log"
+    },
+    {
+      "target": "axiom_render_cache_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_render_cache_tests"
+      ],
+      "exit_code": 124,
+      "reason": "timeout",
+      "elapsed_seconds": 90.0062968749553,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_render_cache_tests.log"
+    },
+    {
+      "target": "axiom_render_headless_canvas_demo_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_render_headless_canvas_demo_tests"
+      ],
+      "exit_code": -6,
+      "reason": "completed",
+      "elapsed_seconds": 0.8246786249801517,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_render_headless_canvas_demo_tests.log"
+    },
+    {
+      "target": "axiom_fc00x_runtime_composition_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_fc00x_runtime_composition_tests"
+      ],
+      "exit_code": -6,
+      "reason": "completed",
+      "elapsed_seconds": 0.6680092080496252,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_fc00x_runtime_composition_tests.log"
+    },
+    {
+      "target": "axiom_sketch_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_sketch_tests"
+      ],
+      "exit_code": 1,
+      "reason": "completed",
+      "elapsed_seconds": 0.7286957090254873,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_sketch_tests.log"
+    },
+    {
+      "target": "axiom_brush_runtime_pipeline_tests",
+      "run_command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_brush_runtime_pipeline_tests"
+      ],
+      "exit_code": -6,
+      "reason": "completed",
+      "elapsed_seconds": 0.6665116249350831,
+      "log": ".aegis/results/G5-object-interaction-continuity-r2/baseline-comparison/axiom_brush_runtime_pipeline_tests.log"
+    }
+  ],
+  "new_keeper_regressions": 0,
+  "note": "G5RenderCache is censored at identical 90s timeout on both builds, not established as a success. Both wide runs preserved."
+}

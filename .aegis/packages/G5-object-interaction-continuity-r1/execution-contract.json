@@ -1,0 +1,83 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-object-interaction-continuity-r1",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 private interaction continuity repair",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "exact-current"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "required_changes": [
+    "Add first-present diagnostics and native regressions for Shape, Sticky, Table and Image placement: formal selected/primary state, selection overlay identity, canonical/preview submission and presented state. Fix only confirmed overlay replacement/ordering defects while preserving Sticky/Table text entry.",
+    "Implement bounded static-scene reuse for one selected non-ink object drag over a mixed scene in existing SkiaRenderCache/SkiaRenderer ownership. Reuse unchanged background/prefix/suffix only when FramePlan basis, scene order, opacity, resources, camera, surface and GPU context match; redraw the active object with its transform override and preserve composition order.",
+    "Add private counters for static reuse build/hit, full transient scene draws, active object draws, retries and resource leases; compile diagnostics out of normal SDK builds.",
+    "Add native mixed-scene drag and first-present creation regressions, run existing render/interaction/boundary suites, and materialize a matching manual Web build/trace without starting UR2c browser windows."
+  ],
+  "allowed_paths": [
+    "runtime/interaction/src/canvas_text_geometry.cpp",
+    "runtime/interaction/src/canvas_placement.cpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/src/render_group_manager.cpp",
+    "runtime/render/include/canvas/render/render_group_manager.hpp",
+    "runtime/render/tests/selection_transform_test.cpp",
+    "runtime/render/tests/transient_display_retry_test.cpp",
+    "verification/runtime_qualification/tests/creation_control_binding_test.cpp",
+    "verification/runtime_qualification/tests/brush_runtime_pipeline_test.cpp",
+    "verification/tests/g5_render_execution.test.mjs",
+    "verification/tests/g5_performance.test.mjs"
+  ],
+  "allowed_new_paths": [
+    "runtime/render/tests/object_interaction_continuity_test.cpp",
+    "verification/tests/g5_object_interaction_continuity.test.mjs",
+    "verification/tests/test_g5_object_interaction_continuity.py",
+    ".aegis/results/G5-object-interaction-continuity-r1/"
+  ],
+  "forbidden_changes": [
+    "No BrushPackage/geometry/pressure/input-loss/schema/OperationEngine/History/public SDK changes.",
+    "No edits to G5-UR2c package/results/ledger/raw evidence; no candidate browser starts or retries.",
+    "No stale static image publication, active-object top-layer shortcut, unbudgeted retention, synchronous GPU waits or silent CPU fallback.",
+    "No commit/push/merge/reset/clean/stash without later explicit control authorization."
+  ],
+  "terminal_success": [
+    "Confirmed first-present creation regressions green for Shape/Sticky/Table/Image or an exact environment blocker recorded.",
+    "Mixed drag static reuse has actual counter and pixel/order evidence and no new keeper regression.",
+    "Native suites and boundary checks pass; matching manual Web artifact/trace is materialized.",
+    "Return READY_FOR_CONTROL_REVIEW and notify control thread."
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_OR_SCOPE_CONFLICT",
+    "NEW_KEEPER_REGRESSION",
+    "STATIC_REUSE_PIXEL_OR_ORDER_FAILURE",
+    "RESOURCE_BUDGET_FAILURE",
+    "ENVIRONMENT_BLOCKER",
+    "MISSING_REVIEW_MATERIALIZATION"
+  ],
+  "notify_control": {
+    "threadId": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "required_on": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit terminal blocker"
+    ]
+  },
+  "execution_authorized": true,
+  "diagnostic_correction": "presentCanonicalFrame already refreshes selection overlay. Missing immediate refresh is only a hypothesis; no production fix authorized by this draft.",
+  "authority_lock_ref": {
+    "path": "authority.lock.json"
+  }
+}

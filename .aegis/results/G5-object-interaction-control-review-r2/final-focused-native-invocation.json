@@ -1,0 +1,29 @@
+{
+  "command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native",
+    "-R",
+    "^(G5ObjectInteractionLayoutIdentity|G5RenderDamage|G5ObjectInteractionStaticOracle|G5ObjectInteractionDenseMixed|G5TransientDisplayRetryPixels|G5TransientDisplayContinuity|G5TransientDisplayRecovery|G47TextLayout|G47TextPipeline|G47ImageResource|FC01CreationControlBinding|G46EditingOverlay)$",
+    "--output-on-failure",
+    "--timeout",
+    "60"
+  ],
+  "exit_code": 0,
+  "seconds": 26.377651875,
+  "source_before": {
+    "runtime/render/src/render_group_manager.cpp": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+    "runtime/render/src/skia_render_cache.cpp": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+    "runtime/render/src/skia_renderer.cpp": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+    "runtime/render/tests/transient_display_retry_test.cpp": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b"
+  },
+  "source_after": {
+    "runtime/render/src/render_group_manager.cpp": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+    "runtime/render/src/skia_render_cache.cpp": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+    "runtime/render/src/skia_renderer.cpp": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+    "runtime/render/tests/transient_display_retry_test.cpp": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b"
+  },
+  "source_stable": true
+}

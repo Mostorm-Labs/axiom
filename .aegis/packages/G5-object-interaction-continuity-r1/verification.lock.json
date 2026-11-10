@@ -1,0 +1,42 @@
+{
+  "schema": "g5-object-interaction-continuity-verification-v1",
+  "status": "FROZEN_NEW_OBLIGATIONS",
+  "source_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "obligations": [
+    {
+      "id": "OI-01",
+      "requirement": "Creation of Shape, Sticky, Table and Image exposes formal selection and selection chrome in the first post-Up presented state.",
+      "oracle": "Native creation/placement path plus exact selected/primary/overlay assertions; no second pointer click.",
+      "acceptance": "selectedCount=1, primary is the created object (or table root), point acquisition mode is active, and overlay is updated before the next input opportunity."
+    },
+    {
+      "id": "OI-02",
+      "requirement": "A stationary click on a newly created object remains a click and does not require a compensating click.",
+      "oracle": "Creation control and table/placement regressions with immediate state inspection.",
+      "acceptance": "No extra operation or second click is needed; text/table edit entry remains valid."
+    },
+    {
+      "id": "OI-03",
+      "requirement": "Dragging one non-ink object over a mixed scene reuses unchanged content while the active object follows input.",
+      "oracle": "Native mixed fixture with long compact ink background and Shape/Sticky/Table/Image; private counters plus independent pixel/order checks.",
+      "acceptance": "Static reuse hit after first frame; full-scene draw count does not equal Move count; active transform updates each accepted Move; ordering/opacity are unchanged."
+    },
+    {
+      "id": "OI-04",
+      "requirement": "Static reuse is basis-bound and bounded.",
+      "oracle": "Generation/camera/surface/resource/content invalidation and cancellation tests.",
+      "acceptance": "Any basis change invalidates/rebuilds; no stale image is published; resource leases remain budgeted and GPU lifetime rules remain intact."
+    },
+    {
+      "id": "OI-05",
+      "requirement": "Existing erase/navigation/selection/canonical regressions remain green.",
+      "oracle": "Existing selected-transform, transient display, render execution and boundary suites.",
+      "acceptance": "No regression; UR2c frozen evidence remains untouched."
+    }
+  ],
+  "browser_policy": {
+    "candidate_windows_started": 0,
+    "required": false,
+    "reason": "Manual Web trace/build only; no new formal browser qualification in this repair package."
+  }
+}

@@ -17,6 +17,92 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <chrono>
 
 namespace canvas::render::internal {
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
+#define OI_NOTE(...) do { __VA_ARGS__; } while(false)
+#else
+#define OI_NOTE(...) ((void)0)
+#endif
+void SkiaRenderCache::invalidateStaticScene([[maybe_unused]] bool count) noexcept {
+    OI_NOTE(if(count && staticScene_) ++objectWork.invalidations);
+    staticScene_.reset();
+    OI_NOTE(objectWork.leaseBytes=0);
+}
+bool SkiaRenderCache::staticSceneBasisMatches(const FramePlan& plan,
+    std::size_t activeIndex,std::size_t activeEnd) const noexcept {
+    if (!staticScene_ || !staticScene_->valid() || activeIndex>=plan.referenceDrawList.entries.size()) return false;
+    if (staticScene_->target!=target_ || staticScene_->resourceEpoch!=resourceEpoch_ ||
+        staticScene_->targetEpoch!=targetEpoch_ || staticScene_->surface!=surface_ ||
+        staticScene_->context!=surface_->recordingContext() ||
+        staticScene_->frame.viewId!=plan.frame.viewId || staticScene_->frame.camera!=plan.frame.camera ||
+        staticScene_->frame.viewportClip!=plan.frame.viewportClip ||
+        staticScene_->frame.sceneGeneration!=plan.frame.sceneGeneration ||
+        staticScene_->frame.sceneReadToken!=plan.frame.sceneReadToken || staticScene_->frame.metrics!=plan.frame.metrics ||
+        staticScene_->frame.surfaceGeneration!=plan.frame.surfaceGeneration || staticScene_->frame.metricsGeneration!=plan.frame.metricsGeneration ||
+        staticScene_->frame.worldViewport!=plan.frame.worldViewport || staticScene_->transform!=plan.referenceDrawList.worldToView ||
+        staticScene_->background!=plan.background || staticScene_->transparent!=plan.transparentBackground ||
+        staticScene_->isolate!=plan.isolateEraseMasks || staticScene_->active!=activeSource_ ||
+        staticScene_->activeIndex!=activeIndex || staticScene_->activeEnd!=activeEnd ||
+        staticScene_->stamps.size()!=plan.referenceDrawList.entries.size()) return false;
+    for (std::size_t i=0;i<staticScene_->stamps.size();++i) {
+        const auto& entry=plan.referenceDrawList.entries[i];
+        if (staticScene_->stamps[i].id!=entry.record.objectId) return false;
+        if (i>=activeIndex && i<activeEnd) continue;
+        const auto* group=groups_.find(entry.record.objectId);
+        if (!group || staticScene_->stamps[i]!=StaticSceneStamp{entry.record.objectId,group->revisions,
+            entry.presentationOpacity,entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds}) return false;
+    }
+    return true;
+}
+bool SkiaRenderCache::buildStaticScene(SkCanvas& canvas,const FramePlan& plan,
+    std::size_t activeIndex,std::size_t activeEnd,ImageResourceResolver* images,SkiaTextResources* text,
+    const CompactDeviceGrid* grid) {
+    if(!budget || !sourceAdmission_ || plan.referenceDrawList.entries.size()>options.maxEntries) return false;
+    const auto info=surface_->imageInfo(); const auto bytes=std::size_t(info.width())*info.height()*4;
+    const bool needSuffix=activeEnd<plan.referenceDrawList.entries.size();
+    const auto metadataBytes=sizeof(StaticSceneCache)+plan.referenceDrawList.entries.size()*sizeof(StaticSceneStamp)+256U;
+    const auto planes=std::size_t(1+needSuffix);
+    if(metadataBytes>options.maxBytes || bytes>(options.maxBytes-metadataBytes)/planes) {
+        OI_NOTE(++objectWork.denials); return false;
+    }
+    const auto total=bytes*planes;
+    auto metadata=budget->reserve(resources::ResourceClass::kRecorded,metadataBytes,true);
+    if(!metadata){OI_NOTE(++objectWork.denials);return false;}
+    resources::ResourceLease metadataLease(budget,*metadata);
+    auto token=budget->reserve(resources::ResourceClass::kRaster,total,true);
+    if(!token){OI_NOTE(++objectWork.denials);return false;}
+    resources::ResourceLease lease(budget,*token);
+    const bool marked=lease.markGpuUse(); (void)marked; OI_NOTE(objectWork.gpuLeaseMarks+=marked);
+    auto candidate=std::make_shared<StaticSceneCache>(target_,surface_->recordingContext(),resourceEpoch_,targetEpoch_,plan.frame,
+        plan.referenceDrawList.worldToView,plan.background,plan.transparentBackground,plan.isolateEraseMasks,
+        true,activeSource_,activeIndex);
+    candidate->surface=surface_;candidate->activeEnd=activeEnd;
+    candidate->pixelLease=std::move(lease);candidate->metadataLease=std::move(metadataLease);
+    candidate->leaseBytes=total+metadataBytes;
+    candidate->stamps.reserve(plan.referenceDrawList.entries.size());
+    for(const auto& entry:plan.referenceDrawList.entries){
+        const auto* group=groups_.find(entry.record.objectId);if(!group)return false;
+        candidate->stamps.push_back({entry.record.objectId,group->revisions,entry.presentationOpacity,
+            entry.contributesPixels,entry.record.visualBounds,entry.record.worldBounds});
+    }
+    // Both ranges retain the original full plan's isolation and device grid.
+    auto prefix=canvas.makeSurface(info);if(!prefix)return false;
+    drawReferenceBackgroundToSkCanvas(*prefix->getCanvas(),plan);
+    drawValidatedReferenceRangeToSkCanvas(*prefix->getCanvas(),plan,0,activeIndex,images,text,true,this,grid);
+    if(damageFailed_)return false;
+    candidate->prefix=prefix->makeImageSnapshot();if(!candidate->prefix)return false;
+    if(needSuffix){
+        auto suffix=canvas.makeSurface(info);if(!suffix)return false;
+        suffix->getCanvas()->clear(SK_ColorTRANSPARENT);
+        drawValidatedReferenceRangeToSkCanvas(*suffix->getCanvas(),plan,activeEnd,
+            plan.referenceDrawList.entries.size(),images,text,true,this,grid);
+        if(damageFailed_)return false;
+        candidate->suffix=suffix->makeImageSnapshot();if(!candidate->suffix)return false;
+    }
+    if(auto* execution=RenderExecutionScope::current();execution&&(execution->pending()||execution->rejected()))return false;
+    staticScene_=std::move(candidate);
+    OI_NOTE(++objectWork.builds;objectWork.leaseBytes=staticScene_->leaseBytes);
+    return true;
+}
 void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
     if(maskHistory&&!entry.record.eraseMasks.empty()){
         [[maybe_unused]]const auto before=maskHistory->work().history;
@@ -45,7 +131,7 @@ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
 }
-void SkiaRenderCache::clear() noexcept {bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -63,7 +149,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
         return entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
     });
-    if(resourceEpoch_!=resourceEpoch){inkLayers_.clear();work.inkLayerBytes=0;}
+    if(resourceEpoch_!=resourceEpoch){invalidateStaticScene();inkLayers_.clear();work.inkLayerBytes=0;}
     resourceEpoch_=resourceEpoch;
     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
@@ -96,6 +182,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
         frame_->surfaceGeneration!=f.surfaceGeneration||frame_->metrics!=f.metrics||
         frame_->metricsGeneration!=f.metricsGeneration;
     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
+    if(changed || !transient || activeSource_!=activeSource) invalidateStaticScene();
     if(changed){inkLayers_.clear();work.inkLayerBytes=0;}
     else inkLayers_.prune(plan.referenceDrawList.entries);
     coverageTargets_.budget=budget;
@@ -618,6 +705,42 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             continue;
         }
         if(exhausted())return yield();
+        // Reuse the existing device body/history tiles for canonical isolated
+        // v4 sources too. Partial work stays on disposable scratch; each retry
+        // clears scratch and resumes already qualified tiles, never a provider.
+        const auto* layered=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+        const auto layerBytes=std::uint64_t(admission->second.crop.width()+2*SkiaInkLayers::tileSize)*
+            (admission->second.crop.height()+2*SkiaInkLayers::tileSize)*10;
+        const auto inkCount=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){return std::holds_alternative<CompactStrokeReferenceCommand>(e.command);});
+        const auto tileCount=std::size_t((admission->second.crop.width()+SkiaInkLayers::tileSize-1)/SkiaInkLayers::tileSize+1)*
+            ((admission->second.crop.height()+SkiaInkLayers::tileSize-1)/SkiaInkLayers::tileSize+1);
+        const bool layerFits=inkCount&&layerBytes<=options.maxBytes/std::size_t(inkCount)&&
+            tileCount<=options.maxEntries/std::size_t(inkCount);
+        if(raster&&!pending_&&layered&&layered->content.get().stroke.config.algorithmVersion==4&&
+           options.gpuCoverageCandidate&&canvas.recordingContext()&&layerFits&&
+           (plan.isolateEraseMasks||requiresInkEntryIsolation(entry,requiresInkIsolation(plan)))){
+            if(!ensureScratch(canvas,true))return allocationFailure_;
+            auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
+            const auto& clip=plan.referenceDrawList.viewportClip;const auto& metrics=plan.frame.metrics;
+            SkIRect viewport;SkMatrix scale=SkMatrix::Scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
+            scale.mapRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom)).roundOut(&viewport);
+            viewport.intersect(SkIRect::MakeWH(surface_->width(),surface_->height()));
+            target->save();target->clipIRect(admission->second.crop);
+            bool painted=false,resourcePending=false;
+            const bool complete=inkLayers_.draw(*target,*scratch_,entry,entryMatrix(canvas,plan,entry),viewport,nullptr,
+                options,budget,sourcePool,coverageTargets_,work,painted,resourcePending,preparedGeometry,
+                readyBody(entry,PreparedConsumer::kCanonical),maskHistory,&allowance);
+            target->restore();
+            if(!complete){if(resourcePending)return yield();}
+            else {
+                const bool stored=store(canvas,entry,validity,admission->second.crop,false,true);
+                if(!stored)return yield();
+                const auto& resident=entries_.at(entry.record.objectId);
+                captureRunEntry(plan,preparationCursor_,resident.image,resident.bounds.left(),resident.bounds.top());
+                if(streamFrame_)composite_->getCanvas()->drawImage(resident.image,float(resident.bounds.left()),float(resident.bounds.top()));
+                ++built;continue;
+            }
+        }
         if(!pending_){
             if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
             const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
@@ -846,13 +969,62 @@ bool SkiaRenderCache::compositeRetainedRun(SkCanvas& canvas,const FramePlan& pla
     }
     return false;
 }
-bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid){
+bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,ImageResourceResolver* images,SkiaTextResources* text,bool includeInk,bool damageOnly,const CompactDeviceGrid* grid,bool objectTransform){
     struct Restore {bool& value;bool old;~Restore(){value=old;}} restore{damageOnly_,damageOnly_};
     damageOnly_=damageOnly;damageFailed_=false;
     // A transient source may include permanent masks that cooperative exact
     // preparation routes Direct. Reuse/build its bounded isolated cache here;
     // never keep an exact-frame admission that forbids that source reuse.
     resetPreparation();
+    const auto& entries=plan.referenceDrawList.entries;
+    const auto active=std::find_if(entries.begin(),entries.end(),[&](const auto& e){return e.record.objectId==activeSource_;});
+    const bool supported=active!=entries.end() && active->contributesPixels &&
+        (active->record.kind==semantic::ObjectKind::kShape || active->record.kind==semantic::ObjectKind::kSticky ||
+         active->record.kind==semantic::ObjectKind::kTable || active->record.kind==semantic::ObjectKind::kImage);
+    bool eligible=objectTransform && options.enabled && sourceAdmission_ && !stagedBodies_ &&
+        includeInk && !damageOnly && supported && canvas.getTotalMatrix().isIdentity() && canvas.isClipRect() &&
+        canvas.getDeviceClipBounds()==SkIRect::MakeWH(surface_->width(),surface_->height());
+    std::size_t first=std::size_t(std::distance(entries.begin(),active)),end=first+1;
+    const bool hasNonInk=requiresInkIsolation(plan);
+    if(eligible)for(std::size_t i=0;i<entries.size();++i){
+        const auto& e=entries[i];
+        if(e.presentationEraseActive || !e.presentationEraseMasks.empty())eligible=false;
+        if(i!=first && !e.record.eraseMasks.empty() &&
+           !requiresInkEntryIsolation(e,hasNonInk) && !plan.isolateEraseMasks)eligible=false;
+        if(i!=first && std::find(e.record.directDependencies.begin(),e.record.directDependencies.end(),activeSource_)!=e.record.directDependencies.end())eligible=false;
+        if(e.record.placement.parent_id && *e.record.placement.parent_id==activeSource_){
+            if(i!=end)eligible=false;else ++end;
+        }
+    }
+    if(eligible){
+        const bool hit=staticSceneBasisMatches(plan,first,end);
+        if(!hit){
+            invalidateStaticScene();
+            if(buildStaticScene(canvas,plan,first,end,images,text,grid)){
+                OI_NOTE(++objectWork.fullSceneDraws);
+            }else if(damageFailed_ || (RenderExecutionScope::current() &&
+                (RenderExecutionScope::current()->pending() || RenderExecutionScope::current()->rejected())))return false;
+        }
+        const auto retained=staticScene_;
+        if(retained){
+            const bool marked=retained->pixelLease.markGpuUse();(void)marked;
+            OI_NOTE(objectWork.gpuLeaseMarks+=marked;objectWork.hits+=hit;++objectWork.activeDraws);
+            if(auto* execution=RenderExecutionScope::current())execution->reusePixels();
+            {SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
+             SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
+             canvas.drawImage(retained->prefix,0,0,SkSamplingOptions{},&paint);}
+            drawValidatedReferenceRangeToSkCanvas(canvas,plan,first,end,images,text,true,this,grid);
+            if(damageFailed_)return false;
+            if(retained->suffix){
+                (void)retained->pixelLease.markGpuUse();
+                SkAutoCanvasRestore restoreCanvas(&canvas,true);canvas.resetMatrix();
+                SkPaint paint;paint.setBlendMode(SkBlendMode::kSrcOver);
+                canvas.drawImage(retained->suffix,0,0,SkSamplingOptions{},&paint);
+            }
+            return true;
+        }
+    }else invalidateStaticScene();
+    OI_NOTE(++objectWork.fullSceneDraws);
     drawReferenceBackgroundToSkCanvas(canvas,plan);
     std::size_t begin=0;
     if(includeInk)for(std::size_t i=0;i<plan.referenceDrawList.entries.size();++i){

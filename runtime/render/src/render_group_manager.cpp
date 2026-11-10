@@ -1,9 +1,54 @@
 #include "canvas/render/render_group_manager.hpp"
+#include "canvas/text/text_layout.hpp"
 #include <unordered_set>
 #include <cmath>
+#include <tuple>
+#include <type_traits>
 
 namespace canvas::render {
 namespace {
+bool sameLayout(const std::shared_ptr<const text::TextLayoutSnapshot>& before,
+    const std::shared_ptr<const text::TextLayoutSnapshot>& after) {
+    if(before==after)return true;
+    if(!before||!after||before->digest.empty()||after->digest.empty())return false;
+    const auto& a=*before;const auto& b=*after;
+    // Layout wrappers are derived per frame. Their addresses are not painted
+    // content identity. Keep the external paint basis explicit: table digests,
+    // in particular, contain child digests but not the table's own bounds.
+    if(std::tie(a.digest,a.contentDigest,a.profile,a.context,a.localBounds,
+        a.shapeLabel,a.placeholder,a.overflow,a.labelScaleX,a.labelScaleY,
+        a.labelViewport,a.expandButton,a.labelOffsetX,a.labelOffsetY,a.diagnostics)!=
+       std::tie(b.digest,b.contentDigest,b.profile,b.context,b.localBounds,
+        b.shapeLabel,b.placeholder,b.overflow,b.labelScaleX,b.labelScaleY,
+        b.labelViewport,b.expandButton,b.labelOffsetX,b.labelOffsetY,b.diagnostics))return false;
+    if(a.fonts.size()!=b.fonts.size()||a.tableCells.size()!=b.tableCells.size())return false;
+    for(std::size_t i=0;i<a.fonts.size();++i){
+        const auto& x=a.fonts[i];const auto& y=b.fonts[i];
+        if(std::tie(x.resourceId,x.generation,x.sha256,x.collectionIndex,x.weight,x.italic,x.syntheticStyle)!=
+           std::tie(y.resourceId,y.generation,y.sha256,y.collectionIndex,y.weight,y.italic,y.syntheticStyle))return false;
+    }
+    for(std::size_t i=0;i<a.tableCells.size();++i)
+        if(!sameLayout(a.tableCells[i],b.tableCells[i]))return false;
+    return true;
+}
+bool sameCommand(const ReferenceCommand& before,const ReferenceCommand& after) {
+    if(before.index()!=after.index())return false;
+    return std::visit([&](const auto& a){
+        using Command=std::remove_cvref_t<decltype(a)>;
+        const auto& b=std::get<Command>(after);
+        if constexpr(std::is_same_v<Command,ShapeReferenceCommand>||
+                     std::is_same_v<Command,StickyReferenceCommand>)
+            return a.content==b.content&&a.showExpandButton==b.showExpandButton&&sameLayout(a.labelLayout,b.labelLayout);
+        else if constexpr(std::is_same_v<Command,RichTextReferenceCommand>)
+            return a.content==b.content&&a.showExpandButton==b.showExpandButton&&
+                a.suppressBorder==b.suppressBorder&&sameLayout(a.layout,b.layout);
+        else if constexpr(std::is_same_v<Command,TableReferenceCommand>)
+            return a.content==b.content&&a.activeCell==b.activeCell&&sameLayout(a.layout,b.layout);
+        else if constexpr(std::is_same_v<Command,SectionReferenceCommand>)
+            return a.content==b.content&&sameLayout(a.titleLayout,b.titleLayout);
+        else return a==b;
+    },before);
+}
 bool addEraseDamage(RenderGroupManager::EraseDamage& damage,
     const semantic::EraseCubicSegment& segment,const semantic::Transform2D& transform) {
     const auto& a=segment.p0.position;const auto& b=segment.p1.position;
@@ -63,7 +108,7 @@ RenderGroupManager::Update RenderGroupManager::update(std::span<const ReferenceT
         }else{
             auto& old=found->second;const auto& a=old.source.record;const auto& b=source.record;
             const RenderGroupChange change{
-                a.kind!=b.kind||a.kindVersion!=b.kindVersion||a.content!=b.content||old.source.command!=source.command||a.textLayout!=b.textLayout,
+                a.kind!=b.kind||a.kindVersion!=b.kindVersion||a.content!=b.content||!sameCommand(old.source.command,source.command)||!sameLayout(a.textLayout,b.textLayout),
                 a.transform!=b.transform,clip_!=clip,a.properties!=b.properties||a.eraseMasks!=b.eraseMasks||a.derivedGeometry!=b.derivedGeometry,
                 old.ordinal!=ordinal||a.placement!=b.placement||old.source.contributesPixels!=source.contributesPixels,
                 old.resourceEpoch!=resourceEpoch||a.directDependencies!=b.directDependencies,

@@ -1,0 +1,65 @@
+{
+  "schema": "g5-r2-source-manifest-v1",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "files": {
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "24b0795a044332ab4a0d4b861f9cc6f81e7642fe072f0deda4ebc8b137dccc82",
+      "bytes": 48308
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "sha256": "85c129643be7f8a42fcddbd2062222302fbcca444e6d846e8501914554de3d2e",
+      "bytes": 6737
+    },
+    "runtime/render/src/render_group_manager.cpp": {
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "bytes": 9051
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+      "bytes": 85268
+    },
+    "runtime/render/src/skia_render_cache_internal.hpp": {
+      "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "bytes": 12609
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "854cff42da2ae3d2387b52d84183ee7545478ef5945872d557d57e3ebd5ad49b",
+      "bytes": 98604
+    },
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp": {
+      "sha256": "6b63fc4c5bbba19671a89ba65db88c1cfc1dfae89cd7337daba5865f1c00589b",
+      "bytes": 8735
+    },
+    "runtime/render/tests/transient_display_retry_test.cpp": {
+      "sha256": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+      "bytes": 50655
+    }
+  },
+  "new_files": [
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp"
+  ],
+  "tracked_delta": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/source-delta.patch",
+    "sha256": "6a551a28af2f9c85dd94460c3b01ae65e9651db687bd43f32149d0a4e13f2655",
+    "note": "git diff excludes new untracked regression; new test is separately archived and hashed"
+  },
+  "package_hashes": {
+    ".aegis/packages/G5-object-interaction-continuity-r2/authority.lock.json": "8a405ab37a9fb8aa33362a01703b2f2ab2a730043a2751ff24e53d67b6db8e84",
+    ".aegis/packages/G5-object-interaction-continuity-r2/evidence-contract.json": "8fff3fe8a3e078d16067d38ad2b1a8394a0eea21da541a503475811a32c9a939",
+    ".aegis/packages/G5-object-interaction-continuity-r2/execution-contract.json": "ac049aaf878ac707faddbfd4ecf41a916950392e8e0573654217ed0b5b34346a",
+    ".aegis/packages/G5-object-interaction-continuity-r2/implementation-context.md": "c9de09937592857ae6cd5dac1752ee5a317dc3c67e7e39ca4c2c9e421f928207",
+    ".aegis/packages/G5-object-interaction-continuity-r2/package-preflight.json": "51a25d2e3198449a0e61e3029ac3d9e056f984d8f45673dd7d3ff24cae31c866",
+    ".aegis/packages/G5-object-interaction-continuity-r2/package.json": "be190a086db5287d4a3ce3416b3ed1a52a9b5f851037fbc4c500f73023a11d84",
+    ".aegis/packages/G5-object-interaction-continuity-r2/verification.lock.json": "325b7453d8148f912f0fbccc80fc575d543219434c1aa9d0f8d98b8453c2fa4b"
+  },
+  "baseline": "0b3b436e plus accepted r1 source-delta 20ae9a613616c081ed468697a9710c2872abd2fc47a94e726a8ccfb1568c321a",
+  "new_production_delta": [
+    "runtime/render/src/render_group_manager.cpp"
+  ],
+  "public_api_change": false,
+  "third_party_rebuild": false,
+  "commit_push": false,
+  "source_manifest_digest": "e5211899a5a26420846d4e071e77b40032972cc8e663048076b87f74caba3b79"
+}

@@ -1,0 +1,29 @@
+{
+  "status": "DISPATCHED_AND_RUNNING",
+  "created_at": "2026-11-10T18:20:30.012812+08:00",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "executor_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "execution_turn": "01a1c4ef-dd9e-76e1-bd30-97053c0430c5",
+  "package_ref": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/packages/G5-UR2d-selection-up-r1/package.json",
+  "package_sha256": "09a8f3d1c2e927f3943838d543327df7f30a6b09c9d9281f0ad0e6797d4154a8",
+  "obligations": [
+    "UR2d-A selectionlocality+terminalclosure",
+    "UR2d-B actualUpcriticalpath"
+  ],
+  "package_bindings": {
+    "authority_lock_ref": true,
+    "verification_lock_ref": true,
+    "execution_contract_ref": true,
+    "implementation_context_ref": true,
+    "evidence_contract_ref": true,
+    "workload_ref": true,
+    "web_plan_ref": true,
+    "regression_plan_ref": true
+  },
+  "preflight_result": ".aegis/results/G5-UR2d-selection-up-r1/PackageBindingPreflight.json",
+  "old_oracle_hashes_checked": true,
+  "notify_policy": "A milestone callback then continueB; final andblocker callbacks required; userauthorized",
+  "production_writer": "executor only",
+  "commit_push": false,
+  "UR3_workers": "excluded"
+}

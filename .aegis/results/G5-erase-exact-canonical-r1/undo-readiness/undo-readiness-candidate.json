@@ -1,0 +1,41 @@
+{
+  "status": "ACTUAL_UI_LONG1600_OBSERVED",
+  "rows": [
+    {
+      "variant": "old",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2/old-undo-1600.json",
+        "sha256": "9743bb7d91291996384a0c7a4213ba3e7decbe2521666a0633096401055aca5d",
+        "bytes": 863888
+      },
+      "main_Up_ms": 4162.600000023842,
+      "successor_Up_ms": 9219.299999952316,
+      "feedback_from_T0_ms": 6158.600000023842,
+      "dark_to_white_before_Up": 256,
+      "Undo_generation": "27",
+      "Redo_generation": "28",
+      "classification": "SYNC_UP_BLOCK_AND_LATE_POST_ERASE_FEEDBACK"
+    },
+    {
+      "variant": "candidate",
+      "raw": {
+        "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS-CONTINUE-R2/candidate-undo-1600.json",
+        "sha256": "b78028d5ce4d64c07de748198392c437414f07e1942d761c6ddc3d8e97846a6d",
+        "bytes": 864482
+      },
+      "main_Up_ms": 4130.5,
+      "successor_Up_ms": 9125.5,
+      "feedback_from_T0_ms": 6114.5,
+      "dark_to_white_before_Up": 256,
+      "Undo_generation": "27",
+      "Redo_generation": "28",
+      "classification": "SYNC_UP_BLOCK_AND_LATE_POST_ERASE_FEEDBACK"
+    }
+  ],
+  "independent_prefix": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/successor-prefix-independent-proof.json",
+    "sha256": "b790fb59820001b49736731b51e31df64bb0caf6d92b6f86272d3302e136d3ae",
+    "bytes": 896
+  },
+  "limitation": "Shared exact/canonical optimization barely improves long1600/nextshortUp. User10sbusy notclaimedresolved."
+}

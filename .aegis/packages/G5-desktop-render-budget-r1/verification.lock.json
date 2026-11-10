@@ -1,0 +1,52 @@
+{
+  "status": "FROZEN_BEFORE_BUDGET_IMPLEMENTATION",
+  "obligations": [
+    {
+      "id": "MB1",
+      "requirement": "All3 effective desktop budgets raised coherently, constrained profiles preserved.",
+      "oracle": "Actual compiledefs+SkiaRenderer effectiveoptions plus configuredCMakeprofiles; headermacrosprivateboundaries.",
+      "acceptance": "Desktopdefault256/512/64; mobile/conservative32/96/8; explicitCMakeoverridesvalidatedpositive<=4096andentry<=cache<=shared. Existingconfigured32/96buildscontinuecompiling: entrydefault must not silentlybe64greaterthan32; deriveperprofileandclampdefaultentrytoexplicitcache,or requireexplicitentryoverride innewbuild. Zero/negative/nonint/overcap/incoherentexplicitreject. Native tests forcinglowcapsstillwork.",
+      "evidence_required": [
+        "effective-budget.json",
+        "configuration-tests.json"
+      ]
+    },
+    {
+      "id": "MB2",
+      "requirement": "Windowarea no longercauses desktop-staticreuse refusal at1431x1010DPR2.",
+      "oracle": "ExistingnativeMetaltest actual ObjectInteractionWork/RenderCacheWork + independentdisabledreference. Same19x7199body/two masks+shape stickytableimage; varyonly viewportareaandbudget.",
+      "acceptance": "At256/512/64 DPR2fullscreenstaticbuilds>0/warmhits>0 for all4noninkactivekinds,preservepixel/order/mask/text/imageandfailurelastframe. DPR4 800x500boundedcase fit/progress reported. Compactstrokeactive remainsseparatecurrentpath: record actual cachehits/misses/evictions/coverage/retries ratherthanassertstaticnoninkcache applies. No testcasepassesonlyDPR1whiledesktop2skipsreuse.",
+      "evidence_required": [
+        "native-area-budget-comparison.json",
+        "native-pixel-regression.log"
+      ]
+    },
+    {
+      "id": "MB3",
+      "requirement": "MatchingordinaryWebdemo and bounded samefixturehalf/fullcompare.",
+      "oracle": "PublicrootSDKcreateRuntime/restore/selectiondrag; oneownedserialChromeprocess withtwoSDKroots (4316baseline frozen, newdesktop); no privateSDKbusinessAPI. PixelreadbackaftertimingonlywithfrozenoldCPUoracle originalAApolicy.",
+      "acceptance": "NormalmatchedJS/WASM/resources; newport>=4317 preserved4316/userdocs. Fixedfixture samecamera/content atlogical600x900and1431x1010DPR2,dragshapeandonecompactstroke,baseline/candidate3shortmoves warm/cold; recordinputdispatch,actualdefaultFBwrites,completionwait andbudget/countersfromseparatenative. FinalUndoRedo+canonical/pixel/selection/contactsintact. Reportimprovementorremainingfindinghonestly; nooverallSLO/P34/Vibeclaim.",
+      "evidence_required": [
+        "web-area-comparison.json",
+        "normal-artifacts.json",
+        "demo.json"
+      ]
+    },
+    {
+      "id": "MB4",
+      "requirement": "ResourceownerretirementandnoSDK/semanticregressions.",
+      "oracle": "ExistingG5GpuRetirementContract/GpuResourceRecovery/exacthistory/canonical/transientfocusedchecks+boundarychecker.",
+      "acceptance": "KeepquotaandrealGPUcompletion/noopcancel/HistoryScenecontracts. LiveleasesclearafterGPUcompletion; recordmemorybyclassnotjustbrowserRSS. No thirdpartysourcebuildlockedit orconsumerdiagnostics.",
+      "evidence_required": [
+        "regressions.json",
+        "cleanup.json",
+        "source-manifest.json"
+      ]
+    }
+  ],
+  "pixel_oracle": {
+    "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "threshold_role": "Budget-targetacceptance and actualtimingfindings,notnewglobalperformanceSLO"
+}

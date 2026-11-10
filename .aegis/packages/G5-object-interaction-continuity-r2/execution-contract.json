@@ -1,0 +1,107 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-object-interaction-continuity-r2",
+  "status": "FROZEN_AUTHORIZED_FOR_CODE_EXECUTION",
+  "stage": "P31 successor: layout identity and staged publication starvation",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+    "relation": "exact-current"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "preserved_prior": {
+    "package": ".aegis/packages/G5-object-interaction-continuity-r1",
+    "result": ".aegis/results/G5-object-interaction-continuity-r1/result-final-checkpoint.json",
+    "status": "BLOCKED_EVIDENCE",
+    "do_not_mutate": true
+  },
+  "required_changes": [
+    "Implement stable derived layout identity in the existing RenderGroup/Scene render owner: equal text layout snapshots with equal digest/content identity must not increment content revision solely because shared_ptr addresses differ; changed digest, font generation, context, content, bounds or relevant presentation command still invalidates.",
+    "Preserve compatible preparation/staged progress across text placeholder/layout wrapper recreation and object transform frames. Do not publish stale/mixed basis; keep generation, camera, surface, resource, order and opacity checks. Do not remove validation or add synchronous GPU/CPU fallback.",
+    "Finish corrected static prefix/background -> active range -> transparent suffix composition in existing SkiaRenderCache owner. Gate by options.enabled, non-damage, supported single non-ink active object, compatible context/surface/frame/order/dependency stamps. A disabled-cache Direct oracle must bypass the optimization. Budget one owning pixel lease plus metadata and mark GPU use at record/publish.",
+    "Add private diagnostics/counters only under qualification/test macros. Keep normal Web SDK free of diagnostic fields and renderer internals.",
+    "Add native RED/GREEN layout identity test, independent static reuse pixel/order test, text/object staged publication test, and dense long-line historical-mask mixed fixture covering available Shape/Sticky/Table/Image paths. If an object cannot be constructed by an existing owner, record the exact verification gap rather than fabricating it.",
+    "Run existing Render/Scene/Text/Interaction/Boundary suites and produce a matching Web normal build/diagnostic if the environment permits. Do not consume UR2c browser windows."
+  ],
+  "allowed_paths": [
+    "runtime/render/src/render_group_manager.cpp",
+    "runtime/render/include/canvas/render/render_group_manager.hpp",
+    "runtime/render/include/canvas/render/render_group.hpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/include/canvas/render/render_cache.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/include/canvas/render/skia_renderer.hpp",
+    "runtime/render/tests/transient_display_retry_test.cpp",
+    "runtime/render/tests/render_cache_test.cpp",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp",
+    "runtime/text/src/text_layout.cpp",
+    "runtime/composition/src/runtime_composition.cpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "verification/runtime_qualification/tests/creation_control_binding_test.cpp",
+    "verification/runtime_qualification/tests/brush_runtime_pipeline_test.cpp"
+  ],
+  "allowed_new_paths": [
+    "runtime/render/tests/object_interaction_continuity_r2_test.cpp",
+    "runtime/interaction/tests/layout_identity_test.cpp",
+    "verification/tests/g5_object_interaction_continuity_r2.test.mjs",
+    ".aegis/results/G5-object-interaction-continuity-r2/"
+  ],
+  "forbidden_changes": [
+    "No BrushPackage/geometry/pressure/input loss/schema/OperationEngine/History/public SDK/ABI/version changes.",
+    "No mutation of r1 package/results, UR2c package/results/ledger/raw evidence, or old browser IDs.",
+    "No active-object top-layer shortcut, stale static image, unbudgeted retention, synchronous GPU wait or silent CPU fallback.",
+    "No commit/push/merge/reset/clean/stash without explicit later control authorization."
+  ],
+  "tests": {
+    "required": [
+      "LI-RED/GREEN layout identity",
+      "OI2-independent-static-oracle",
+      "OI2-staged-text/object publication",
+      "OI2-dense-long-line-history-mixed",
+      "existing-render-scene-text-interaction-boundaries"
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "manual Web normal diagnostic on a fresh local port; no formal UR2c window"
+      ]
+    },
+    "browser_starts_authorized": 0
+  },
+  "terminal_success": [
+    "Stable layout identity RED/GREEN and no real content-change regression.",
+    "Independent static oracle stays disabled-cache and passes pixel/order/AA under valid reuse.",
+    "Dense long-line/history mixed fixture has explicit counters and pixel evidence, or an exact scoped verification blocker is recorded.",
+    "Web diagnostic/build status and source manifests are durable.",
+    "Return READY_FOR_CONTROL_REVIEW only if all blocking items are satisfied; otherwise explicit BLOCKED_EVIDENCE/terminal blocker and proactive callback."
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_OR_SCOPE_CONFLICT",
+    "BLOCKED_EXECUTION_DIVERGENCE",
+    "NEW_KEEPER_REGRESSION",
+    "STATIC_REUSE_PIXEL_OR_ORDER_FAILURE",
+    "LAYOUT_IDENTITY_COLLISION",
+    "RESOURCE_BUDGET_FAILURE",
+    "ENVIRONMENT_BLOCKER",
+    "BLOCKED_EVIDENCE"
+  ],
+  "notify_control": {
+    "threadId": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "required_on": [
+      "READY_FOR_CONTROL_REVIEW",
+      "any explicit terminal blocker"
+    ]
+  },
+  "human_authorization": "User authorized continued paired development and completion notifications."
+}

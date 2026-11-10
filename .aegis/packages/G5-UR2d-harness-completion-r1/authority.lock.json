@@ -1,0 +1,32 @@
+{
+  "status": "CURRENT_SCOPED_USER_AUTHORIZED",
+  "original_authority": {
+    "path": ".aegis/packages/G5-UR2d-selection-up-r1/authority.lock.json",
+    "sha256": "4378d59d32c2b53e104980b4ec61061141905a3b9870b1107c65452843b43a48"
+  },
+  "control_decision_ref": {
+    "path": "control-decision.json",
+    "sha256": "dfcbfd076135453c5f2b44c2c3366d7d2b0d275781df5530c36da438f3e61e58"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_source": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0"
+  },
+  "ordinary_sdk": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-normal-artifacts.json",
+    "sha256": "a81ddee2d58a1c27db1d58a0404a6537d975cd7f58849311f9e7b7792f6799d0"
+  },
+  "accepted_completed_pair": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/freeze.json",
+    "sha256": "9a93f4e4d907234c3dabaa6f93f445620fdc71a48d294377708428422a3f8b56"
+  },
+  "statements": [
+    "Existing Interaction/Render/Scene owners and sole OperationEngine unchanged.",
+    "Production source, SDK and dependency locks frozen. Only harness correction and isolated evidence compilation permitted.",
+    "No UR3, workers, async Up, budget, Brush, AA, public API, schema, admission or Git publication changes."
+  ]
+}

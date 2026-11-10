@@ -1,0 +1,56 @@
+{
+  "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+  "invocations": [
+    {
+      "fixture": "S0",
+      "stage": "final",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+        "--pixels",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S0-final.axsnap",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/request.json",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/S0-final"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"boundary\": \"accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference\",\n  \"edge_bytes\": 5781240,\n  \"height\": 2020,\n  \"method\": \"accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache\",\n  \"objects\": 17,\n  \"private_frame_ids\": \"oracle-local only; not production receipts\",\n  \"rgba_bytes\": 23124960,\n  \"status\": \"REFERENCE_RENDERED\",\n  \"width\": 2862\n}\n",
+      "stderr": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"7\",\"prepare_ns\":3595250,\"publish_ns\":125,\"metadata_rows_copied\":0,\"payload_reuses\":0,\"index_builds\":16}\n",
+      "snapshot_sha256": "27f3087d4ed52f91ae8942527362c2b821a59c8e2e293e4f17df329e66c0314e",
+      "reference_rgba_sha256": "604fd6302e0476dea16971fac4a059ee1caaaf4a478b0abeeb17c60665b36019",
+      "reference_edge_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    },
+    {
+      "fixture": "S2",
+      "stage": "final",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+        "--pixels",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S2-final.axsnap",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/request.json",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/S2-final"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"boundary\": \"accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference\",\n  \"edge_bytes\": 5781240,\n  \"height\": 2020,\n  \"method\": \"accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache\",\n  \"objects\": 17,\n  \"private_frame_ids\": \"oracle-local only; not production receipts\",\n  \"rgba_bytes\": 23124960,\n  \"status\": \"REFERENCE_RENDERED\",\n  \"width\": 2862\n}\n",
+      "stderr": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"7\",\"prepare_ns\":3443833,\"publish_ns\":125,\"metadata_rows_copied\":0,\"payload_reuses\":0,\"index_builds\":16}\n",
+      "snapshot_sha256": "532e86d5816b3cd33338dce6e532f6b3c0532d05fd4e06a691d35c034f421e05",
+      "reference_rgba_sha256": "ffa6c19a55c6a136ec001e1d957e9f7a2c39e82e129c3e92b144e9ed310d304e",
+      "reference_edge_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    },
+    {
+      "fixture": "S2",
+      "stage": "redo",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+        "--pixels",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/candidate-0/S2-redo.axsnap",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/request.json",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/compare-independent/S2-redo"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"boundary\": \"accepted per-primitive two-device-pixel contour/mask boundary plus independent per-object alpha edges; never candidate difference\",\n  \"edge_bytes\": 5781240,\n  \"height\": 2020,\n  \"method\": \"accepted public snapshot -> independent full Scene/reference -> CPU Raster Direct with null prepared/cache\",\n  \"objects\": 17,\n  \"private_frame_ids\": \"oracle-local only; not production receipts\",\n  \"rgba_bytes\": 23124960,\n  \"status\": \"REFERENCE_RENDERED\",\n  \"width\": 2862\n}\n",
+      "stderr": "AXIOM_SCENE_TIMING {\"version\":1,\"generation\":\"9\",\"prepare_ns\":3521625,\"publish_ns\":83,\"metadata_rows_copied\":0,\"payload_reuses\":0,\"index_builds\":16}\n",
+      "snapshot_sha256": "c82a88c8167b340c2675bf706890bfe4d71f4374267813c012838cfd36203137",
+      "reference_rgba_sha256": "ffa6c19a55c6a136ec001e1d957e9f7a2c39e82e129c3e92b144e9ed310d304e",
+      "reference_edge_sha256": "44851c414fa9e9229d70f598f174191a00f845706c8d9a0896230d44adc8d10d"
+    }
+  ]
+}

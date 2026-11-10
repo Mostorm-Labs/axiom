@@ -1,0 +1,37 @@
+{
+  "pair": 2,
+  "variant": "candidate",
+  "fixture": "S2",
+  "checker": {
+    "path": ".aegis/results/G5-UR2d-control-r1/snapshot-roundtrip",
+    "sha256": "880baedc8763def9acb68a90e28513289ec9d1e321f20ddc80152fc52f40bab3",
+    "bytes": 9589200
+  },
+  "command": [
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-final.axsnap",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-redo.axsnap"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"objects\":17,\"total_masks\":128,\"objects_equal\":true,\"manifest_background_equal\":true,\"document_digest_equal\":true,\"before_revision\":7,\"after_revision\":9}\n",
+  "stderr": "",
+  "facts": {
+    "objects": 17,
+    "total_masks": 128,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 7,
+    "after_revision": 9
+  },
+  "final": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-final.axsnap",
+    "sha256": "101eed533b7df3e4533b425a8301a9bc0c80b9f78c09ad196a5850ce5db57634",
+    "bytes": 2205444
+  },
+  "redo": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/local-web/U2D1-PAIR-COMPLETE-R1/candidate-2/S2-redo.axsnap",
+    "sha256": "3a5e86c4950b4d9151344ea459a4ece26ab3e9499996fed4930d779c7c424a21",
+    "bytes": 2205444
+  }
+}

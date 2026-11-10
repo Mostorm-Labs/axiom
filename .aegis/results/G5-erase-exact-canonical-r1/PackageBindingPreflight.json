@@ -1,0 +1,211 @@
+{
+  "status": "PASS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "observed_HEAD": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "classification": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "package_sha256": "c7683d087fc3d8bb30629b90967257ea97ad748346c059b5f2e9627a0feb220b",
+  "bindings": {
+    "authority.lock.json": "56a27fd905e505441cba03a56eed381ecdfebbb23ddc4cf87d17b46543a3f27d",
+    "verification.lock.json": "1e44da392deb27f0b93ec30788e47a8c3106f845973ae96f5d837361c5521db1",
+    "execution-contract.json": "ab1f8b57e3d8eb51555f1d932d85effc6c8280acec2f51d0a346ffdd66d29bc5",
+    "implementation-context.md": "8bcb6e6d969bc44061c76ea86a9af90e093e62ac1683339ae59faad3aeb6180d",
+    "evidence-contract.json": "b2ca4b87a5c885e48849cae50ed5d9724df6d7cf0f190ac593a3375d502ecf46",
+    "workload.json": "b377e139840fc97faa4744fc765bd4d82f6169f934d711dfe74aec8487a7bb4e",
+    "regression-plan.json": "ff70fcc03a6e0334d5463f4e0159f34ebb418e61331fc3f33ce23ee584781a75"
+  },
+  "trusted_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/result.json",
+      "sha256": "3a965f5191bd03bfd5861391b02afbb8a9c1547be5433f4bbe5b263abbae551e"
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-control-r1/control-review.json",
+      "sha256": "f2e61eb83ec72e8520f7f1594412af143a14f5a38d8929c3e188d0a7692613e2"
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/source-manifest.json",
+      "sha256": "b3c0245c8f1f4e1f0979a993462f8ecc1f22f1eaf9345191f10f63535f3d35e1"
+    },
+    {
+      "path": ".aegis/results/G5-desktop-render-budget-r1/normal-artifacts.json",
+      "sha256": "aa3dfa43e731054f6bdb01a08cb9b9b593fa701f5ba95c269635dabb9131d880"
+    },
+    {
+      "path": ".aegis/results/G5-erase-cpu-review-r1/assessment.json",
+      "sha256": "4f7bca8b992e3706ddac7731c2ac810c42a0e56253dbd11a7289bee4e9fb10b1"
+    }
+  ],
+  "source_before": {
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "08cd5917fc5493efb946e8b02b5a3d55d48787b279646673deefc458104bc661",
+      "bytes": 60780
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "sha256": "99b5a3aee641845a63bbdd846cfeb44e8f36727aa72cc625764300ae6cab3e20",
+      "bytes": 2821
+    },
+    "runtime/render/src/skia_mask_history.hpp": {
+      "sha256": "9d4fd59ded08c1e73ac4daa76b7b49857947359334542ce12946e8d082b5ca73",
+      "bytes": 1530
+    },
+    "runtime/render/src/skia_mask_history.cpp": {
+      "sha256": "7972804662f1819073883f018ee59b0b85460b917cb1dbb7619fd7829c86a66f",
+      "bytes": 190
+    },
+    "runtime/render/src/skia_prepared_geometry.cpp": {
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+      "bytes": 37159
+    },
+    "runtime/render/src/skia_prepared_geometry.hpp": {
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da",
+      "bytes": 10255
+    },
+    "runtime/render/src/source_retention.cpp": {
+      "existed": false
+    },
+    "runtime/render/src/source_retention.hpp": {
+      "sha256": "34166388b14044654358980750d14d67dcf361353563a7175c5bd15c02a55a9c",
+      "bytes": 12418
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "79ae67acc14dba8d853df280bb47dc51206f1ebd1df98936e9dd184e9b7a00f2",
+      "bytes": 100121
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "sha256": "298ec30c292fbd1e54ec95a0ce399b586d24fac90ee9fa1a4046204f1b79be2d",
+      "bytes": 6919
+    },
+    "runtime/render/include/canvas/render/render_cache.hpp": {
+      "sha256": "75ba8b660c69e163b5b918dfc24bbd10ee761da6ac1d23a5c589d14424da9cea",
+      "bytes": 6878
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+      "bytes": 85268
+    },
+    "runtime/render/src/skia_render_cache_internal.hpp": {
+      "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "bytes": 12609
+    },
+    "runtime/render/src/skia_ink_layers.cpp": {
+      "sha256": "c4a094cbb0b62b5b3d21ca7ee283c8122d60b38d593b340165328f16ffb95475",
+      "bytes": 13593
+    },
+    "runtime/render/src/skia_ink_layers.hpp": {
+      "sha256": "a313803ab79bc39ecaf1e0671f8d97dbeb3f517b1eaecbe4d4dd9c5939658faa",
+      "bytes": 2476
+    },
+    "runtime/render/src/render_group_manager.cpp": {
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "bytes": 9051
+    },
+    "runtime/render/include/canvas/render/render_group_manager.hpp": {
+      "sha256": "cfd1714357825869880bf671471874cdf4e480f90749b86eec05d68f40eee5d0",
+      "bytes": 1039
+    },
+    "runtime/render/src/compact_raster_internal.hpp": {
+      "sha256": "a68a7df4488309cced8dfc713e36b15d971b9e8eab2114b8821cdd82a80fb53c",
+      "bytes": 4239
+    },
+    "runtime/render/src/skia_compact_material.cpp": {
+      "sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8",
+      "bytes": 50647
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "sha256": "f543af86927b449765b0fe878254a529faf6206e0fa42389b6193ae59345139f",
+      "bytes": 4367
+    },
+    "runtime/interaction/src/partial_erase_geometry.hpp": {
+      "sha256": "714643946001e27d6e7a48451ec8fbfc8055d11e2378abd40f239da6bae2044f",
+      "bytes": 4970
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "04da5c51be16ab6d02ac7d9d1ac6c9f7e7d64730f97cb1a3ce6c88b7f9a52ff9",
+      "bytes": 321043
+    },
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": {
+      "sha256": "ad3d74905171f4a9e6d17a0511d9f1e72d4c2006a9879072c35ccee79c5cc8cd",
+      "bytes": 63301
+    },
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": {
+      "sha256": "5f912b0a2fe390879f4b41118a8ca972be68ddd9fbc0a0888ed41917d066e30d",
+      "bytes": 8164
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "0d88ac98f3eda5e7a02ab44d7147a7fd66b23fe1518d335e00d5c740032705be",
+      "bytes": 48717
+    },
+    "runtime/composition/CMakeLists.txt": {
+      "sha256": "783454b8ca1dcfe972ce7df4573e31cf478cf64f09f01a52260761f17432f172",
+      "bytes": 21693
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "sha256": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "bytes": 14086
+    },
+    "runtime/render/tests/ur2b_exact_query_test.cpp": {
+      "sha256": "427bab6065ecea3e842c362535749fb2d48b65f48784d26ec0251ea3e9c8c4cb",
+      "bytes": 15786
+    },
+    "runtime/render/tests/ur2c_mask_history_test.cpp": {
+      "sha256": "da96e6769094e76c614bfeb8d2fd29e739f133ca89dd510ed92bf857b66af4bc",
+      "bytes": 24792
+    },
+    "runtime/render/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "d15cd4abfb09ed4c53396bed8af85bb73f4cc5adc54d0ff0fced59309f0e9de1",
+      "bytes": 7943
+    },
+    "runtime/render/tests/transient_display_retry_test.cpp": {
+      "sha256": "14d3de900f737541e68a8748b0e52daedd99d019aadf6784e998a72fb3bd1ccf",
+      "bytes": 53749
+    },
+    "runtime/composition/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "9960a1b52f00a8e67d8ac7691ad03e9ef1d4f03e71e5937db8234e356b13b054",
+      "bytes": 7690
+    },
+    "runtime/scene/src/runtime_scene_projection.cpp": {
+      "sha256": "cbdbe61d07142e9b50242c78bc9efb9e0611995cbc2d0db6956876c4c06253c1",
+      "bytes": 15784
+    },
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": {
+      "sha256": "eb021b0b294c91d9c04fc03f42d6c3bb0fa344f0bf41bbdbdb58e26f716b30ac",
+      "bytes": 32153
+    }
+  },
+  "accepted_dirty_baseline": true
+}

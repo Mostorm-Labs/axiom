@@ -1,0 +1,14 @@
+{
+  "id": "OI-R2-IMAGE-MOVE",
+  "diagnostic_only": true,
+  "purpose": "Followup exact public image move from bounds-center; previous image run reached handle resize, correctly retained as separate evidence",
+  "source_sdk": "LI-01+r1checkpoint same installed SDK",
+  "fixture": "19longlines2erase3objects2324853bytePNG",
+  "input": "60Move + cancel + undo/redo",
+  "bounds": "selection.bounds center, camera1",
+  "guard": {
+    "timeout_s": 180,
+    "rss_mib": 3072
+  },
+  "protected": "all old evidence,4298page,UR2c IDs"
+}

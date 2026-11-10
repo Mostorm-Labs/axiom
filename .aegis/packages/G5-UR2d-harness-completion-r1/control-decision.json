@@ -1,0 +1,56 @@
+{
+  "schema": "g5-ur2d-control-verification-repair-v1",
+  "status": "AUTHORIZED_SAME_SCOPE_VERIFICATION_REPAIR",
+  "created_utc": "2026-11-10T11:29:38.041646+00:00",
+  "human_scope": "按照这个顺序开始优化吧，先做1和2两个ur2d的任务",
+  "classification": "TASK_PACKAGE_DEFECT / harness assertion did not implement already frozen independent AA rule",
+  "facts": [
+    "A and B production code implemented; all 78 targeted native tests green, independent focused14 green.",
+    "COMPARE S0/S2 actual two-Up immediate Down and wheel, final/Undo/Redo states exist; only one of three planned pairs executed.",
+    "COMPARE zero-edge failure: one pixel max4 inside independently generated old CPU AA band; both full outputs match old CPU exactly outside original band; canonical objects and 128 masks equal.",
+    "Zero-edge full-target <=2 is a sufficient proof, not a necessary test. No product tolerance changes are needed."
+  ],
+  "preserve": [
+    {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/result.json",
+      "sha256": "5574116193e3b76d87451b35962bdd6381cc62189c1dff639c4db6ee7c725511"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/artifact-manifest.json",
+      "sha256": "22a0ce036b2d3138a2a60ab1b3f7e0d91d44101effed7789cb903f0cb55cdb12"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/sampling-ledger.json",
+      "sha256": "7f84fb131e2f682b56198488f6c785c1bc3ac3eaa7f304e13c0b0766254bc585"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/continuation-ledger.json",
+      "sha256": "ddfa67221ffb97e07c5cfc2cdd8713a5049369ffe252189747d48653ea1575af"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/pixel-review.json",
+      "sha256": "99b46a3a40173fdaab43abb4fe0b29e81aeb62a785d3b248741a18b9fbbff9b9"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-control-r1/compare-independent/snapshot-review.json",
+      "sha256": "71e9746bea1a600d3fc487c27571c4e7f83c60cac9a69660e41eab0c745b4de0"
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/local-web/U2D1-COMPARE/freeze.json",
+      "sha256": "9a93f4e4d907234c3dabaa6f93f445620fdc71a48d294377708428422a3f8b56"
+    }
+  ],
+  "decision": "Repair the verification driver only. Keep completed pair0 as immutable evidence. One explicitly new controlled browser process completes repetitions1 and2 only on same old/candidate SDKs and fixture bytes; never overwrite or reuse original four IDs. All original obligations unchanged; do not declare missing samples noise.",
+  "additional_allowance": {
+    "id": "U2D1-PAIR-COMPLETE-R1",
+    "starts": 1,
+    "wall_seconds": 240,
+    "rss_mib": 3072,
+    "completed_starts_before": 4,
+    "charged_seconds_before": 105,
+    "original_total_seconds_cap": 960,
+    "maximum_cumulative_seconds_after": 345
+  },
+  "no_product_mutation": true,
+  "no_user_permission_needed": "Existing user authorization is UR2d A+B completion; this repairs its already required verification, with no product/API/semantic scope expansion."
+}

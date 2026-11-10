@@ -1,0 +1,45 @@
+{
+  "classification": "VERIFICATION_DRIVER_ASYNC_UI_GENERATION_RACE",
+  "raw": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS/worker-result.json",
+    "sha256": "b0b058e95808c9b8c6b0beac118fa2443c7f1beafc5e5c2bfdeef8b8753b89a4"
+  },
+  "guard": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/local-web/G5EC1-STRESS.worker.json",
+    "sha256": "2eb316a0f6995393af9232f651919a452a066ec6b9c4736606030088f078ec17"
+  },
+  "source_SDK_stable": true,
+  "observed": "actualbutton.click returns before asynchronous sdk.undo enqueued task runs. settle checks oldgeneration26==presented26/pending0 and returns; row.undo captured26. captureSnapshot reads26 into request then queued Undo advances27; native expectedSemanticGeneration26 rejects snapshot.",
+  "evidence": {
+    "finalGeneration": "26",
+    "incorrectly_observed_undo_generation": "26",
+    "later_runtime_generation": "27",
+    "later_presented": "26"
+  },
+  "code_paths": [
+    "sdk/web/example.html:button onclick -> run awaitsaction",
+    "sdk/web/axiom.mjs enqueue tail.then; captureSnapshotmetadata expectedgeneration",
+    "sdk/common/session.cpp snapshot validatesexpectedSemanticGeneration"
+  ],
+  "repair": "Verification waits exact expected generation and matchingpresented before settleandcaptures. DoesnotchangeproductSDK,History,pixelsorreceipts.",
+  "offline_RED": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/async-Undo-RED.log",
+    "sha256": "c03eabc23d6a220a6246c914700567de5b58116a98740a169bd6d9eac99f4d4f"
+  },
+  "offline_GREEN": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/undo-readiness/async-Undo-GREEN.log",
+    "sha256": "de130eba936a02bc15a5db890e21ea7b59b1ac54d9b2ee50ef0a6bd44efd2ecc"
+  },
+  "preserved_actual_performance": {
+    "mainUp_ms": 4173.100000023842,
+    "successorUp_ms": 9245.099999904633,
+    "positive_ink_to_white_pixels": 256,
+    "actual_feedback_before_Up": true
+  },
+  "missing": [
+    "candidate1600",
+    "candidate10round",
+    "oldactualUndoRedoqualification"
+  ],
+  "no_restart_old_id": true
+}

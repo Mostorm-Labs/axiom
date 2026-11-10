@@ -4,6 +4,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/render/skia_renderer.hpp"
 #include "resource_reclaim.hpp"
 #include "render_execution.hpp"
+#include "render_memory_budget.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -46,10 +47,7 @@ struct ObservationCounters final {
 }
 #endif
 
-SkiaRenderer::SkiaRenderer(){
-    renderCacheOptions_.maxBytes=std::size_t(AXIOM_RENDER_CACHE_MIB)*1024*1024;
-    renderCacheOptions_.sharedMaxBytes=std::size_t(AXIOM_RENDER_SHARED_MIB)*1024*1024;
-}
+SkiaRenderer::SkiaRenderer():renderCacheOptions_(internal::configuredRenderCacheOptions()){}
 SkiaRenderer::~SkiaRenderer(){
     // Seal quota before old contexts can abandon their completion callbacks.
     if(resourceBudget_)resourceBudget_->close();
@@ -765,10 +763,30 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
 }
 void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
-    if(!resourceBudget_)return canvas::render::intersectEraseGeometry(record,geometry);
-    if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-    const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
-    return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
+    if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
+    try{
+        // Exact Up may precede any surface paint after restore. Admit derived
+        // query state in this same renderer owner rather than repeatedly using
+        // the uncached full-history evaluator until a render happens to run.
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
+        if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+        if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
+        preparedGeometry_->setRetentionPool(sourceRetention_);
+        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+        eraseQueries_->setRetentionPool(sourceRetention_);
+        const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
+        return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
+    }catch(const std::bad_alloc&){return canvas::render::intersectEraseGeometry(record,geometry);}
+}
+SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeSceneRecord& record,
+    std::span<const foundation::WorldPoint> points)const noexcept{
+    if(!resourceBudget_||!preparedGeometry_)return canvas::render::intersectVisibleSelectionGeometry(record,points);
+    try{
+        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+        return eraseQueries_->selectionQuery(record,points,resourceBudget_,
+            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),preparedGeometry_.get(),&renderCacheOptions_);
+    }catch(const std::bad_alloc&){return canvas::render::intersectVisibleSelectionGeometry(record,points);}
 }
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=renderCache_?renderCache_->work:RenderCacheWork{};internal::copyExecutionCounters(result,executionWork_);
     if(preparedGeometry_){const auto s=preparedGeometry_->statistics();result.preparedBodyBuilds=s.builds;result.preparedBodyHits=s.hits;
@@ -781,6 +799,11 @@ RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{auto result=render
     if(eraseQueries_){result.maskHistory=eraseQueries_->work().history;const auto s=eraseQueries_->work().exact;result.exactFullValidations=s.fullValidations;result.exactValidationKnots=s.validationKnots;result.exactCompileCalls=s.compileCalls;result.exactCompileInputs=s.compileInputs;result.exactConstructedComponents=s.constructedComponents;result.exactBodyUses=s.bodyUses;}
     return result;}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
+internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexcept {
+    return renderCache_?renderCache_->objectWork:internal::ObjectInteractionWork{};
+}
+#endif
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
@@ -882,6 +905,19 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
     }
     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
+    if(gpuLiveV4&&eraseQueries_){
+        // One optional owner-frame advance, shared across all affected copies.
+        // Keep the original sequential union order; final exact Up validates
+        // the complete local geometry and finishes any unprepared remainder.
+        const ReferenceTraversalEntry* common=nullptr;std::size_t aliases=0;
+        for(const auto& entry:plan.referenceDrawList.entries)if(entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()){
+            const auto count=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& other){
+                return other.presentationEraseActive&&!other.presentationEraseMasks.empty()&&other.record.transform==entry.record.transform;});
+            if(std::size_t(count)>aliases){common=&entry;aliases=count;}
+        }
+        if(common)eraseQueries_->prepareQueryPrefix(common->presentationEraseMasks.back().geometry,resourceBudget_,
+            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),8);
+    }
     internal::PreparationAllowance allowance;
     if(cache){
         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
@@ -998,7 +1034,12 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     try {
         if(!incremental||!canvas->getDeviceClipBounds().isEmpty()) {
             if(staged){if(!cache->completedFrame())scene=BackendSubmissionResult::retry("transient staged frame unavailable");}
-            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid))
+            else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid,
+                selectionOverlay->active() && selectionOverlay->selectionOutline().visible &&
+                !selectionOverlay->creationPreview() && !selectionOverlay->creationHover() &&
+                !selectionOverlay->textCaret && !selectionOverlay->textBox &&
+                selectionOverlay->readOnlyOutlines.empty() && selectionOverlay->candidateOutlines.empty() &&
+                selectionOverlay->acquisitionOutline.empty()))
                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
             else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
         }

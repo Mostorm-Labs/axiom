@@ -1,0 +1,588 @@
+Test project /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native
+        Start  75: G47TextLayout
+        Start  76: FC08SectionGeometry
+  1/199 Test  #75: G47TextLayout ...............................   Passed    0.59 sec
+        Start  77: canvas_rf01_scene_atomicity
+  2/199 Test  #76: FC08SectionGeometry .........................   Passed    0.60 sec
+        Start  78: canvas_rf01_full_rebuild
+  3/199 Test  #77: canvas_rf01_scene_atomicity .................   Passed    0.47 sec
+        Start  79: canvas_rf01_scene_binding
+  4/199 Test  #78: canvas_rf01_full_rebuild ....................***Failed    0.46 sec
+line 88: expectation failed: store.find(second.objectId) == &store.records()[0]
+1 RF01-1 full rebuild expectations failed
+
+        Start  80: canvas_g2_a0_semantic_generation_binding
+  5/199 Test  #79: canvas_rf01_scene_binding ...................   Passed    0.47 sec
+        Start  81: canvas_g2_a1_runtime_record_projection
+  6/199 Test  #80: canvas_g2_a0_semantic_generation_binding ....   Passed    0.47 sec
+        Start  82: G5GeometryChunkLocality
+  7/199 Test  #82: G5GeometryChunkLocality .....................   Passed    0.30 sec
+        Start  83: canvas_g2_a2_bounds_system
+  8/199 Test  #81: canvas_g2_a1_runtime_record_projection ......   Passed    0.50 sec
+        Start  84: FC05Route
+  9/199 Test  #83: canvas_g2_a2_bounds_system ..................   Passed    0.26 sec
+        Start  85: canvas_fc02_shape_label_scene
+ 10/199 Test  #84: FC05Route ...................................   Passed    0.36 sec
+        Start  86: canvas_g2_a2_reference_geometry
+ 11/199 Test  #86: canvas_g2_a2_reference_geometry .............   Passed    0.26 sec
+        Start  87: canvas_g2_a2_scene_impact
+ 12/199 Test  #85: canvas_fc02_shape_label_scene ...............Subprocess aborted***Exception:   0.58 sec
+Assertion failed: (projected.records[0].referenceGeometryDigest != digest), function operator(), file shape_label_scene_test.cpp, line 64.
+
+        Start  88: FC03ImageScene
+ 13/199 Test  #87: canvas_g2_a2_scene_impact ...................   Passed    0.26 sec
+        Start  89: canvas_g2_a2_dependency_closure
+ 14/199 Test  #88: FC03ImageScene ..............................   Passed    0.49 sec
+        Start  90: canvas_g2_a3_full_incremental_equivalence
+ 15/199 Test  #89: canvas_g2_a2_dependency_closure .............   Passed    0.26 sec
+        Start  91: canvas_g2_a4_scene_delta
+ 16/199 Test  #91: canvas_g2_a4_scene_delta ....................   Passed    0.39 sec
+        Start  92: canvas_g2_a6_incremental_equivalence
+ 17/199 Test  #90: canvas_g2_a3_full_incremental_equivalence ...   Passed    0.45 sec
+        Start  93: canvas_g2_a6_atomic_publication
+ 18/199 Test  #92: canvas_g2_a6_incremental_equivalence ........   Passed    0.53 sec
+        Start  94: canvas_g2_a6_recovery
+ 19/199 Test  #93: canvas_g2_a6_atomic_publication .............   Passed    0.51 sec
+        Start  95: canvas_g2_a5_spatial_index_differential
+ 20/199 Test  #95: canvas_g2_a5_spatial_index_differential .....   Passed    0.01 sec
+        Start  96: canvas_g2_a5_d6_spatial_index_benchmark
+ 21/199 Test  #94: canvas_g2_a6_recovery .......................   Passed    0.47 sec
+        Start  97: canvas_rf01_damage_view
+ 22/199 Test  #97: canvas_rf01_damage_view .....................   Passed    0.27 sec
+        Start  98: canvas_rf01_module_boundaries
+ 23/199 Test  #98: canvas_rf01_module_boundaries ...............   Passed    0.11 sec
+        Start  99: canvas_rf01_public_abi_manifest
+ 24/199 Test  #99: canvas_rf01_public_abi_manifest .............   Passed    0.04 sec
+        Start 100: canvas_fc01_derived_geometry
+ 25/199 Test  #96: canvas_g2_a5_d6_spatial_index_benchmark .....   Passed    1.17 sec
+        Start 101: G5UR2CMaskOnlyScene
+ 26/199 Test #100: canvas_fc01_derived_geometry ................   Passed    0.47 sec
+        Start 102: G5UR2CMixedMaskScene
+ 27/199 Test #101: G5UR2CMaskOnlyScene .........................   Passed    0.47 sec
+        Start 103: G5UR2CAtomicRecovery
+ 28/199 Test #102: G5UR2CMixedMaskScene ........................   Passed    0.35 sec
+        Start 104: F08FrameQualificationBoundary
+ 29/199 Test #103: G5UR2CAtomicRecovery ........................   Passed    0.02 sec
+        Start 105: G4InteractionSessionManager
+ 30/199 Test #104: F08FrameQualificationBoundary ...............   Passed    0.03 sec
+        Start 106: G4SelectionSession
+ 31/199 Test #106: G4SelectionSession ..........................   Passed    0.27 sec
+        Start 107: G4TransformSession
+ 32/199 Test #105: G4InteractionSessionManager .................   Passed    0.33 sec
+        Start 108: G46TransformHandleDrag
+ 33/199 Test #107: G4TransformSession ..........................   Passed    0.28 sec
+        Start 109: G4EraserSession
+ 34/199 Test #108: G46TransformHandleDrag ......................   Passed    0.25 sec
+        Start 110: G4EditorHistory
+ 35/199 Test #109: G4EraserSession .............................   Passed    0.27 sec
+        Start 111: FC01EditorHistoryInverseFamilies
+ 36/199 Test #111: FC01EditorHistoryInverseFamilies ............   Passed    0.07 sec
+        Start 112: G4SessionConflict
+ 37/199 Test #110: G4EditorHistory .............................   Passed    0.32 sec
+        Start 113: G4SessionLifecycle
+ 38/199 Test #113: G4SessionLifecycle ..........................   Passed    0.27 sec
+        Start 114: G4GestureArbiter
+ 39/199 Test #112: G4SessionConflict ...........................   Passed    0.39 sec
+        Start 115: G4MultiContactCoordinator
+ 40/199 Test #114: G4GestureArbiter ............................   Passed    0.35 sec
+        Start 116: G4ViewportGesture
+ 41/199 Test #115: G4MultiContactCoordinator ...................   Passed    0.27 sec
+        Start 117: C0CanvasInteractionCoordinator
+ 42/199 Test #116: G4ViewportGesture ...........................   Passed    0.29 sec
+        Start 118: C0ViewportInteractionController
+ 43/199 Test #117: C0CanvasInteractionCoordinator ..............   Passed    0.30 sec
+        Start 119: G46BViewportConstraints
+ 44/199 Test #118: C0ViewportInteractionController .............   Passed    0.26 sec
+        Start 120: FC00XContentRevisionStyle
+ 45/199 Test #119: G46BViewportConstraints .....................   Passed    0.27 sec
+        Start 121: FC01ARegionSelection
+ 46/199 Test #121: FC01ARegionSelection ........................   Passed    0.35 sec
+        Start 122: SelectionBatch2Coverage
+ 47/199 Test #120: FC00XContentRevisionStyle ...................   Passed    0.61 sec
+        Start 149: G5GpuRetirementContract
+ 48/199 Test #122: SelectionBatch2Coverage .....................   Passed    0.33 sec
+        Start 150: G5GpuResourceRecovery
+ 49/199 Test #149: G5GpuRetirementContract .....................   Passed    0.31 sec
+        Start 151: G5CanonicalPreparedBody
+ 50/199 Test #150: G5GpuResourceRecovery .......................   Passed    0.63 sec
+        Start 152: G5CanonicalPreparedBodyBounded
+ 51/199 Test #152: G5CanonicalPreparedBodyBounded ..............   Passed    0.12 sec
+        Start 153: G5CanonicalPreparedBodyPixels
+ 52/199 Test #151: G5CanonicalPreparedBody .....................   Passed    0.65 sec
+        Start 154: G5CanonicalPreparedWorkingSet
+ 53/199 Test #153: G5CanonicalPreparedBodyPixels ...............   Passed    0.54 sec
+        Start 155: G5PreparedBodyIndex
+ 54/199 Test #155: G5PreparedBodyIndex .........................   Passed    0.79 sec
+        Start 156: G5RenderExecution
+ 55/199 Test #156: G5RenderExecution ...........................   Passed    0.61 sec
+        Start 157: G5EraseExactHit
+ 56/199 Test #157: G5EraseExactHit .............................   Passed    0.35 sec
+        Start 158: G5RenderCache
+ 57/199 Test #154: G5CanonicalPreparedWorkingSet ...............Subprocess aborted***Exception:   3.71 sec
+libc++abi: terminating due to uncaught exception of type std::runtime_error: working-set Direct failed stable demand
+{"held_ready_bodies":513,"pending_job_survived_retirement":true,"last_release":true}
+{"reclaimable_bytes_before":79060192,"resident_before_release":60024591,"actual_staged_calls":257,"reclaimed":true,"last_release":true}
+
+        Start 159: G5CanonicalPreparedCompatibility
+ 58/199 Test #159: G5CanonicalPreparedCompatibility ............   Passed    0.02 sec
+        Start 160: G5LiveEraseGpuMiss
+ 59/199 Test #160: G5LiveEraseGpuMiss ..........................   Passed    0.02 sec
+        Start 161: G5LiveEraseDpr
+ 60/199 Test #161: G5LiveEraseDpr ..............................   Passed    0.02 sec
+        Start 162: G5TranslatedV4Drag
+ 61/199 Test #162: G5TranslatedV4Drag ..........................   Passed    0.18 sec
+        Start 163: G5InkBodyMaskReuse
+ 62/199 Test #163: G5InkBodyMaskReuse ..........................   Passed    0.04 sec
+        Start 164: G5RegionalMaskValidity
+ 63/199 Test #164: G5RegionalMaskValidity ......................   Passed    0.07 sec
+        Start 165: G5MaskedNavigationProgress
+ 64/199 Test #165: G5MaskedNavigationProgress ..................   Passed    0.02 sec
+        Start 166: G5V4CoverageFallback
+ 65/199 Test #166: G5V4CoverageFallback ........................   Passed    0.02 sec
+        Start 167: G5MaskedCanonicalRecovery
+ 66/199 Test #167: G5MaskedCanonicalRecovery ...................   Passed    0.40 sec
+        Start 168: G5ErasedMixedNavigation
+ 67/199 Test #168: G5ErasedMixedNavigation .....................   Passed    0.23 sec
+        Start 169: G5RetainedZoomReentry
+ 68/199 Test #169: G5RetainedZoomReentry .......................   Passed    0.05 sec
+        Start 170: G5MixedNavigationReentry
+ 69/199 Test #170: G5MixedNavigationReentry ....................   Passed    0.04 sec
+        Start 171: G5TileWork
+ 70/199 Test #171: G5TileWork ..................................   Passed    0.36 sec
+        Start 172: G5RenderDamage
+ 71/199 Test #172: G5RenderDamage ..............................   Passed    0.38 sec
+        Start 173: G5ObjectInteractionLayoutIdentity
+ 72/199 Test #173: G5ObjectInteractionLayoutIdentity ...........   Passed    0.01 sec
+        Start 174: G47ImageResource
+ 73/199 Test #174: G47ImageResource ............................   Passed    0.43 sec
+        Start 175: G47TextPipeline
+ 74/199 Test #175: G47TextPipeline .............................   Passed    0.62 sec
+        Start 176: G45BrushOutlineSkiaPath
+ 75/199 Test #176: G45BrushOutlineSkiaPath .....................   Passed    0.31 sec
+        Start 177: G4WindowsSkiaInkViewport
+ 76/199 Test #177: G4WindowsSkiaInkViewport ....................   Passed    0.38 sec
+        Start 178: G4SkiaBrushPrimitiveDab
+ 77/199 Test #178: G4SkiaBrushPrimitiveDab .....................   Passed    0.38 sec
+        Start 179: G4SkiaChalkTexture
+ 78/199 Test #179: G4SkiaChalkTexture ..........................   Passed    0.33 sec
+        Start 180: G4SkiaChalkContinuousTexture
+ 79/199 Test #180: G4SkiaChalkContinuousTexture ................   Passed    0.38 sec
+        Start 181: InkV2Work
+ 80/199 Test #181: InkV2Work ...................................   Passed   50.71 sec
+        Start 182: InkV2RetinaPreview
+ 81/199 Test #158: G5RenderCache ...............................***Timeout  90.03 sec
+
+        Start 183: InkV2Material-marker
+ 82/199 Test #183: InkV2Material-marker ........................   Passed    0.59 sec
+        Start 184: InkV2Material-chalk
+ 83/199 Test #184: InkV2Material-chalk .........................   Passed    0.01 sec
+        Start 185: InkV2Material-crayon
+ 84/199 Test #185: InkV2Material-crayon ........................   Passed    0.01 sec
+        Start 186: InkV2Material-water
+ 85/199 Test #186: InkV2Material-water .........................   Passed    0.01 sec
+        Start 187: InkV2Material-parity
+ 86/199 Test #187: InkV2Material-parity ........................   Passed    0.27 sec
+        Start 188: InkV2Material-presets
+ 87/199 Test #188: InkV2Material-presets .......................   Passed    0.01 sec
+        Start 189: InkV2Material-sampling
+ 88/199 Test #189: InkV2Material-sampling ......................   Passed    0.03 sec
+        Start 190: InkV2Material-cache
+ 89/199 Test #190: InkV2Material-cache .........................   Passed    2.85 sec
+        Start 191: InkV2Material-scene-mask
+ 90/199 Test #191: InkV2Material-scene-mask ....................   Passed    0.01 sec
+        Start 192: InkV2Material-visual
+ 91/199 Test #192: InkV2Material-visual ........................   Passed    0.01 sec
+        Start 193: InkV2Material-tuning
+ 92/199 Test #193: InkV2Material-tuning ........................   Passed    1.98 sec
+        Start 194: InkV2Material-quality
+ 93/199 Test #194: InkV2Material-quality .......................   Passed    0.19 sec
+        Start 195: InkV2Material-wax
+ 94/199 Test #195: InkV2Material-wax ...........................   Passed    2.71 sec
+        Start 196: InkV2Material-wax-mask
+ 95/199 Test #196: InkV2Material-wax-mask ......................   Passed    0.01 sec
+        Start 197: InkV2Material-drywet
+ 96/199 Test #197: InkV2Material-drywet ........................   Passed    0.09 sec
+        Start 198: InkV2Material-drywet-parity
+ 97/199 Test #198: InkV2Material-drywet-parity .................   Passed    1.97 sec
+        Start 199: InkV2Material-drywet-mask
+ 98/199 Test #199: InkV2Material-drywet-mask ...................   Passed    0.01 sec
+        Start 200: InkV2Material-chunk-range
+ 99/199 Test #200: InkV2Material-chunk-range ...................   Passed    0.04 sec
+        Start 201: G3RuntimeAppBinding
+100/199 Test #201: G3RuntimeAppBinding .........................   Passed    0.32 sec
+        Start 202: FC00XRuntimeIsolation
+101/199 Test #202: FC00XRuntimeIsolation .......................   Passed    0.32 sec
+        Start 203: G3HeadlessCanvasDemo
+102/199 Test #203: G3HeadlessCanvasDemo ........................Subprocess aborted***Exception:   1.17 sec
+Assertion failed: (field(evidence, "visibility_ids") == "[501,502,503,504,505,506,507,508]"), function assertStageCorrelation, file headless_canvas_demo_test.cpp, line 191.
+
+        Start 204: G3HeadlessSkia
+103/199 Test #204: G3HeadlessSkia ..............................   Passed    0.42 sec
+        Start 205: FC05ConnectorPendingRaster
+104/199 Test #205: FC05ConnectorPendingRaster ..................   Passed    0.01 sec
+        Start 206: FC05StickyFractionalProduction
+105/199 Test #206: FC05StickyFractionalProduction ..............   Passed    0.01 sec
+        Start 207: FC01TriangleConnectorRaster
+106/199 Test #207: FC01TriangleConnectorRaster .................   Passed    0.01 sec
+        Start 208: G5SkiaChunkRangeEntry
+107/199 Test #208: G5SkiaChunkRangeEntry .......................   Passed    0.53 sec
+        Start 209: G5PreparedGeometry
+108/199 Test #209: G5PreparedGeometry ..........................   Passed    0.82 sec
+        Start 210: FC00XFrameCoordinator
+109/199 Test #210: FC00XFrameCoordinator .......................   Passed    0.29 sec
+        Start 211: G3RenderTargetSwitching
+110/199 Test #211: G3RenderTargetSwitching .....................   Passed    0.34 sec
+        Start 212: G3SkiaSurfaceProvider
+111/199 Test #212: G3SkiaSurfaceProvider .......................   Passed    0.39 sec
+        Start 213: G3PreviewSurface
+112/199 Test #213: G3PreviewSurface ............................   Passed    0.42 sec
+        Start 214: G3SurfacePresentation
+113/199 Test #214: G3SurfacePresentation .......................   Passed    0.31 sec
+        Start 215: G3FrameState
+114/199 Test #215: G3FrameState ................................   Passed    0.27 sec
+        Start 216: G46EditingOverlay
+115/199 Test #216: G46EditingOverlay ...........................   Passed    0.00 sec
+        Start 217: G3Visibility
+116/199 Test #182: InkV2RetinaPreview ..........................   Passed   49.83 sec
+        Start 218: G3DirectReference
+117/199 Test #217: G3Visibility ................................   Passed    0.71 sec
+        Start 219: G5TransientReference
+118/199 Test #218: G3DirectReference ...........................   Passed    0.80 sec
+        Start 220: G3FrameOrchestration
+119/199 Test #219: G5TransientReference ........................   Passed    0.62 sec
+        Start 221: G4CanonicalHandoff
+120/199 Test #220: G3FrameOrchestration ........................   Passed    0.35 sec
+        Start 222: G5SharedScenePayload
+121/199 Test #221: G4CanonicalHandoff ..........................   Passed    0.26 sec
+        Start 223: G5SharedSceneSnapshot
+122/199 Test #223: G5SharedSceneSnapshot .......................   Passed    0.42 sec
+        Start 224: G5SharedSceneIndex
+123/199 Test #222: G5SharedScenePayload ........................   Passed    0.56 sec
+        Start 225: G5SharedSceneReaders
+124/199 Test #225: G5SharedSceneReaders ........................   Passed    0.01 sec
+        Start 226: G5SharedSceneRetention
+125/199 Test #224: G5SharedSceneIndex ..........................   Passed    0.02 sec
+        Start 227: G5SharedSceneParity
+126/199 Test #226: G5SharedSceneRetention ......................   Passed    0.01 sec
+        Start 228: G5Ur0ObservationIdentity
+127/199 Test #227: G5SharedSceneParity .........................   Passed    0.01 sec
+        Start 229: G5UR2ACompositionProof
+128/199 Test #228: G5Ur0ObservationIdentity ....................   Passed    0.29 sec
+        Start 230: G5UR2AMaskIsolationDirect
+129/199 Test #229: G5UR2ACompositionProof ......................   Passed    0.58 sec
+        Start 231: G5UR2AMaskIsolationPrepared
+130/199 Test #230: G5UR2AMaskIsolationDirect ...................   Passed    0.69 sec
+        Start 232: G5UR2AMaskIsolationBackdrop
+131/199 Test #231: G5UR2AMaskIsolationPrepared .................   Passed    0.43 sec
+        Start 233: G5UR2AMaskIsolationLegacy
+132/199 Test #233: G5UR2AMaskIsolationLegacy ...................   Passed    0.19 sec
+        Start 234: G5UR2BExactParity
+133/199 Test #232: G5UR2AMaskIsolationBackdrop .................   Passed    0.31 sec
+        Start 235: G5UR2BExactBodySharing
+134/199 Test #234: G5UR2BExactParity ...........................   Passed    0.71 sec
+        Start 236: G5UR2BExactLocality
+135/199 Test #235: G5UR2BExactBodySharing ......................   Passed    0.63 sec
+        Start 237: G5UR2BExactInvalidation
+136/199 Test #237: G5UR2BExactInvalidation .....................   Passed    0.01 sec
+        Start 238: G5UR2BExactPressure
+137/199 Test #238: G5UR2BExactPressure .........................   Passed    0.01 sec
+        Start 239: G5UR2CHistoryPlanReuse
+138/199 Test #236: G5UR2BExactLocality .........................   Passed    0.11 sec
+        Start 240: G5UR2CHistoryInvalidation
+139/199 Test #239: G5UR2CHistoryPlanReuse ......................   Passed    1.29 sec
+        Start 241: G5UR2CHistoryExactParity
+140/199 Test #240: G5UR2CHistoryInvalidation ...................   Passed    1.69 sec
+        Start 242: G5UR2CLeaseAccounting
+141/199 Test #242: G5UR2CLeaseAccounting .......................   Passed    0.02 sec
+        Start 243: G5UR2CHistoryProgress
+142/199 Test #241: G5UR2CHistoryExactParity ....................   Passed    0.64 sec
+        Start 244: G5UR2CHistoryAdmission
+143/199 Test #244: G5UR2CHistoryAdmission ......................   Passed    0.03 sec
+        Start 245: G5UR2CHistoryProgressSafety
+144/199 Test #245: G5UR2CHistoryProgressSafety .................   Passed    0.14 sec
+        Start 246: G5TransientDisplayRetryPixels
+145/199 Test #246: G5TransientDisplayRetryPixels ...............   Passed    0.19 sec
+        Start 247: G5TransientDisplayContinuity
+146/199 Test #247: G5TransientDisplayContinuity ................   Passed    0.41 sec
+        Start 248: G5TransientDisplayRecovery
+147/199 Test #248: G5TransientDisplayRecovery ..................   Passed    0.42 sec
+        Start 249: G5ObjectInteractionStaticOracle
+148/199 Test #249: G5ObjectInteractionStaticOracle .............   Passed    0.15 sec
+        Start 250: G5ObjectInteractionDenseMixed
+149/199 Test #243: G5UR2CHistoryProgress .......................   Passed    1.82 sec
+        Start 251: G5TransientDisplayHandoff
+150/199 Test #251: G5TransientDisplayHandoff ...................   Passed    6.89 sec
+        Start 252: G5TransientDisplayHandoffInflight
+151/199 Test #252: G5TransientDisplayHandoffInflight ...........   Passed    2.13 sec
+        Start 253: InkV2Runtime
+152/199 Test #253: InkV2Runtime ................................   Passed    0.72 sec
+        Start 254: InkV2Storage
+153/199 Test #254: InkV2Storage ................................   Passed    0.92 sec
+        Start 255: SelectionBatch3Summary
+154/199 Test #255: SelectionBatch3Summary ......................   Passed    0.68 sec
+        Start 256: FC01ASelectionInputIntegration
+155/199 Test #256: FC01ASelectionInputIntegration ..............   Passed    0.79 sec
+        Start 257: FC08SectionConsumer
+156/199 Test #257: FC08SectionConsumer .........................   Passed    0.76 sec
+        Start 258: FC05ConnectorFacade
+157/199 Test #258: FC05ConnectorFacade .........................   Passed    0.70 sec
+        Start 259: FC02Text
+158/199 Test #250: G5ObjectInteractionDenseMixed ...............   Passed   27.35 sec
+        Start 260: FC00XBrushBatchEvaluation
+159/199 Test #260: FC00XBrushBatchEvaluation ...................   Passed    0.61 sec
+        Start 261: FC00XBrushPressureCapability
+160/199 Test #261: FC00XBrushPressureCapability ................   Passed    0.01 sec
+        Start 262: FC00XBrushBatchSemantics
+161/199 Test #262: FC00XBrushBatchSemantics ....................   Passed    0.01 sec
+        Start 263: FC00XCanonicalBusyPreviewProgress
+162/199 Test #263: FC00XCanonicalBusyPreviewProgress ...........   Passed    0.01 sec
+        Start 264: FC00XPreviewBusyCanonicalProgress
+163/199 Test #264: FC00XPreviewBusyCanonicalProgress ...........   Passed    0.01 sec
+        Start 265: FC00XBusyCanonicalPendingFeedback
+164/199 Test #265: FC00XBusyCanonicalPendingFeedback ...........   Passed    0.01 sec
+        Start 266: FC00XFatalProviderFailure
+165/199 Test #266: FC00XFatalProviderFailure ...................   Passed    0.01 sec
+        Start 267: SDKPublicResources
+166/199 Test #267: SDKPublicResources ..........................   Passed    0.60 sec
+        Start 268: SDKPublicDocumentIdentity
+167/199 Test #268: SDKPublicDocumentIdentity ...................   Passed    0.62 sec
+        Start 269: SDKPublicDocumentOperations
+168/199 Test #269: SDKPublicDocumentOperations .................   Passed    0.69 sec
+        Start 270: SDKPublicDocumentSnapshot
+169/199 Test #270: SDKPublicDocumentSnapshot ...................   Passed    0.61 sec
+        Start 271: SDKPublicOperationIdentity
+170/199 Test #271: SDKPublicOperationIdentity ..................   Passed    0.71 sec
+        Start 272: SDKPublicDocumentBackground
+171/199 Test #272: SDKPublicDocumentBackground .................   Passed    0.64 sec
+        Start 273: SDKPublicImageExport
+172/199 Test #273: SDKPublicImageExport ........................   Passed    0.65 sec
+        Start 274: SDKPublicObjectIdentity
+173/199 Test #274: SDKPublicObjectIdentity .....................   Passed    0.65 sec
+        Start 275: SDKPublicObjectIdentityProcessIsolation
+174/199 Test #275: SDKPublicObjectIdentityProcessIsolation .....   Passed    0.12 sec
+        Start 276: SDKPublicSelectionInput
+175/199 Test #276: SDKPublicSelectionInput .....................   Passed    0.61 sec
+        Start 277: FC00XRuntimeComposition
+176/199 Test #277: FC00XRuntimeComposition .....................Subprocess aborted***Exception:   0.80 sec
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+Assertion failed: (a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 1U), function canonicalFeedbackCannotQualifyAnotherInstance, file runtime_composition_test.cpp, line 519.
+
+        Start 278: FC00XLiveBrushPreview
+177/199 Test #278: FC00XLiveBrushPreview .......................   Passed    0.01 sec
+        Start 279: SDKNativeNavigationPreview
+178/199 Test #279: SDKNativeNavigationPreview ..................   Passed    0.01 sec
+        Start 280: FC00XCancelKeepsViewport
+179/199 Test #280: FC00XCancelKeepsViewport ....................   Passed    0.01 sec
+        Start 281: FC00XFitFullScene
+180/199 Test #281: FC00XFitFullScene ...........................   Passed    0.01 sec
+        Start 282: FC00XRuntimeFacade
+181/199 Test #282: FC00XRuntimeFacade ..........................   Passed    0.67 sec
+        Start 283: FC03ImageFacade
+182/199 Test #283: FC03ImageFacade .............................   Passed    0.62 sec
+        Start 284: TableSemantic
+183/199 Test #284: TableSemantic ...............................   Passed    0.70 sec
+        Start 285: SketchSemantic
+184/199 Test #285: SketchSemantic ..............................***Failed    0.71 sec
+Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 45 tests from 11 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from SketchSemantic
+[ RUN      ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips
+[       OK ] SketchSemantic.ZeroRoughnessRetainsSeedAndRoundTrips (1 ms)
+[ RUN      ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange
+[       OK ] SketchSemantic.RejectsUnknownVersionAndNonFiniteOrOutOfRange (0 ms)
+[ RUN      ] SketchSemantic.PatternRoundtripAndApplicability
+[       OK ] SketchSemantic.PatternRoundtripAndApplicability (0 ms)
+[ RUN      ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision
+[       OK ] SketchSemantic.StickyNoFillRequiresVersionedAppearanceRatherThanSilentLegacyElision (0 ms)
+[----------] 4 tests from SketchSemantic (1 ms total)
+
+[----------] 7 tests from SketchRuntime
+[ RUN      ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] SketchRuntime.PreviewIsTransientAndCommitIsOneHistoryEntry (4 ms)
+[ RUN      ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory
+[       OK ] SketchRuntime.DefaultsRetainDisabledPaintPreferencesWithoutDocumentHistory (0 ms)
+[ RUN      ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch
+[       OK ] SketchRuntime.OneRemotelyLockedTargetRejectsEntireAppearanceBatch (0 ms)
+[ RUN      ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles
+[       OK ] SketchRuntime.HatchGapsDoNotCreateTriangleSelectionHoles (0 ms)
+[ RUN      ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds
+[       OK ] SketchRuntime.CreationSnapsToAuthoredEdgesInsteadOfRoughInkBounds (0 ms)
+[ RUN      ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves
+[       OK ] SketchRuntime.SmallRoughEllipseCanCommitAfterIntermediateMoves (1 ms)
+[ RUN      ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering
+[       OK ] SketchRuntime.FailedRouteRetainsExistingDiagnosticRendering (11 ms)
+[----------] 7 tests from SketchRuntime (20 ms total)
+
+[----------] 8 tests from SketchGeometry
+[ RUN      ] SketchGeometry.DeterministicAndColorIndependent
+[       OK ] SketchGeometry.DeterministicAndColorIndependent (0 ms)
+[ RUN      ] SketchGeometry.RoughnessZeroExactAndContinuous
+[       OK ] SketchGeometry.RoughnessZeroExactAndContinuous (0 ms)
+[ RUN      ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline
+[       OK ] SketchGeometry.HatchBoundedIndependentAndCanCoexistWithRegularOutline (0 ms)
+[ RUN      ] SketchGeometry.ConnectorKeepsEndpointsAndDirections
+[       OK ] SketchGeometry.ConnectorKeepsEndpointsAndDirections (0 ms)
+[ RUN      ] SketchGeometry.HatchCurvesUseIndependentSeededStream
+[       OK ] SketchGeometry.HatchCurvesUseIndependentSeededStream (0 ms)
+[ RUN      ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents
+[       OK ] SketchGeometry.SingleConnectorSegmentHasVisibleBowWithExactTerminalTangents (0 ms)
+[ RUN      ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle
+[       OK ] SketchGeometry.ObstacleHullFallbackCannotBowIntoAdmittedObstacle (0 ms)
+[ RUN      ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable
+[       OK ] SketchGeometry.VisualBoundsCoverBezierHullsWhileGeometryBoundsRemainStable (0 ms)
+[----------] 8 tests from SketchGeometry (0 ms total)
+
+[----------] 5 tests from SketchExtendedGeometry
+[ RUN      ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline
+[       OK ] SketchExtendedGeometry.OpenCurveKeepsCanonicalCommandsAndNeverClosesItsOutline (0 ms)
+[ RUN      ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening
+[       OK ] SketchExtendedGeometry.HoleAndFillRuleRemainAnExactClipInsteadOfPolygonFlattening (0 ms)
+[ RUN      ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise
+[       OK ] SketchExtendedGeometry.TableDrawsEachWholeGridLineOnceAndRetainsUnchangedLineNoise (0 ms)
+[ RUN      ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds
+[       OK ] SketchExtendedGeometry.SectionBoundaryUsesItsAuthoredOffsetAndHasStableGeometryBounds (0 ms)
+[ RUN      ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths
+[       OK ] SketchExtendedGeometry.UnknownVersionsAndInvalidSeedsNeverGenerateExtendedPaths (0 ms)
+[----------] 5 tests from SketchExtendedGeometry (0 ms total)
+
+[----------] 2 tests from SketchExtendedSemantic
+[ RUN      ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke
+[       OK ] SketchExtendedSemantic.NewKindsAdmitVersionedAppearanceAndSectionExplicitNoStroke (0 ms)
+[ RUN      ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle
+[       OK ] SketchExtendedSemantic.SnapshotRequiresNewObjectCapabilityEvenForDisabledStyle (0 ms)
+[----------] 2 tests from SketchExtendedSemantic (0 ms total)
+
+[----------] 6 tests from SketchExtendedRuntime
+[ RUN      ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] SketchExtendedRuntime.TableUsesSharedAppearanceSessionWithoutDuplicatingGridPaint (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership
+[       OK ] SketchExtendedRuntime.SectionBoundaryAppearanceDoesNotChangeItsContentOrMembership (0 ms)
+[ RUN      ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry
+[axiom] present begin frame=1 objects=0 scene_records=0
+[       OK ] SketchExtendedRuntime.PublicVectorPathCreationUsesOwnerHistoryAndBoundedCanonicalGeometry (0 ms)
+[ RUN      ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox
+[       OK ] SketchExtendedRuntime.FilledPathHoleDoesNotAcquireItsBoundingBox (0 ms)
+[ RUN      ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody
+[       OK ] SketchExtendedRuntime.SectionRegionAcquiresVisibleBoundaryOutsideAuthoredBody (0 ms)
+[ RUN      ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange
+[       OK ] SketchExtendedRuntime.UnversionedPathKeepsItsFillUntilAnActualAppearanceChange (1 ms)
+[----------] 6 tests from SketchExtendedRuntime (3 ms total)
+
+[----------] 2 tests from SketchExtendedRender
+[ RUN      ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches
+[       OK ] SketchExtendedRender.PatternUsesExactEvenOddHoleAndLeavesGapsBetweenHatches (2 ms)
+[ RUN      ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder
+[       OK ] SketchExtendedRender.SectionExplicitNoStrokeHidesOnlyItsDocumentBorder (1 ms)
+[----------] 2 tests from SketchExtendedRender (4 ms total)
+
+[----------] 5 tests from CornerGeometry
+[ RUN      ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius
+[       OK ] CornerGeometry.RectangleAndTriangleUseCurvesAndClampExcessRadius (0 ms)
+[ RUN      ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner
+[       OK ] CornerGeometry.OpenRoutePreservesEndpointsAndAvoidsBlockedCorner (0 ms)
+[ RUN      ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary
+[       OK ] CornerGeometry.RoundedTriangleAttachmentLiesOnRoundedBoundary (0 ms)
+[ RUN      ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty
+[       OK ] CornerGeometry.ExistingSketchEllipsesRemainAcquirableWithoutRoundedProperty (6 ms)
+[ RUN      ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable
+[       OK ] CornerGeometry.FullyErasedBodyAndDerivedOutlineDoNotRemainSelectable (0 ms)
+[----------] 5 tests from CornerGeometry (7 ms total)
+
+[----------] 3 tests from HandwritingFont
+[ RUN      ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles
+[       OK ] HandwritingFont.ManifestAdmitsVersionedFontMetadataAndRejectsDanglingOrCycles (0 ms)
+[ RUN      ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/tests/rounded_font_test.cpp:57: Failure
+Value of: snapshot->diagnostics.empty()
+  Actual: false
+Expected: true
+
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback (45 ms)
+[ RUN      ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects
+[       OK ] HandwritingFont.SnapshotRequiresFallbackCapabilityEvenWithoutTextObjects (0 ms)
+[----------] 3 tests from HandwritingFont (45 ms total)
+
+[----------] 2 tests from CornerSemantic
+[ RUN      ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed
+[       OK ] CornerSemantic.CodecNormalizationAndUnsupportedKindsAreClosed (0 ms)
+[ RUN      ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability
+[       OK ] CornerSemantic.SnapshotRejectsReaderWithoutCornerCapability (0 ms)
+[----------] 2 tests from CornerSemantic (0 ms total)
+
+[----------] 1 test from CornerRuntime
+[ RUN      ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] CornerRuntime.PreviewCommitsOnceUndoRestoresAbsenceAndSeedStaysStable (0 ms)
+[----------] 1 test from CornerRuntime (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 45 tests from 11 test suites ran. (84 ms total)
+[  PASSED  ] 44 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] HandwritingFont.MixedTextUsesNotoAndExcalifontWithoutSystemFallback
+
+ 1 FAILED TEST
+
+        Start 286: G5Navigation
+185/199 Test #259: FC02Text ....................................   Passed   24.64 sec
+        Start 287: G5UR2AReadmissionAcquire
+186/199 Test #286: G5Navigation ................................   Passed    1.44 sec
+        Start 288: G5UR2AReadmissionPresent
+187/199 Test #287: G5UR2AReadmissionAcquire ....................   Passed    0.64 sec
+        Start 289: G5UR2ANavigation
+188/199 Test #288: G5UR2AReadmissionPresent ....................   Passed    0.30 sec
+        Start 290: G5UR2AHandoff
+189/199 Test #289: G5UR2ANavigation ............................   Passed    0.01 sec
+        Start 291: G5UR2ASceneRecovery
+190/199 Test #290: G5UR2AHandoff ...............................   Passed    0.01 sec
+        Start 292: G5UR2AHistory
+191/199 Test #291: G5UR2ASceneRecovery .........................   Passed    0.01 sec
+        Start 293: G5UR2ALifecycle
+192/199 Test #292: G5UR2AHistory ...............................   Passed    0.01 sec
+        Start 294: G5UR2ANavigationSafety
+193/199 Test #293: G5UR2ALifecycle .............................   Passed    0.01 sec
+        Start 295: G5UR2ABrushVisibility
+194/199 Test #295: G5UR2ABrushVisibility .......................   Passed    0.01 sec
+        Start 296: G5UR2BExactInputRuntime
+195/199 Test #294: G5UR2ANavigationSafety ......................   Passed    0.12 sec
+        Start 297: G5UR2CContinuousInput
+196/199 Test #296: G5UR2BExactInputRuntime .....................   Passed    0.63 sec
+        Start 339: FC01CreationControlBinding
+197/199 Test #339: FC01CreationControlBinding ..................   Passed    0.03 sec
+        Start 383: G45BrushRuntimePipeline
+198/199 Test #297: G5UR2CContinuousInput .......................   Passed    0.63 sec
+199/199 Test #383: G45BrushRuntimePipeline .....................Subprocess aborted***Exception:   0.74 sec
+[axiom] finish begin pointer=1812 objects=1 scene_gen=1
+[axiom] scene apply pointer=1812 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=2 scene_records=2
+Assertion failed: (host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0)), function canonicalPixels, file brush_runtime_pipeline_test.cpp, line 12.
+
+
+96% tests passed, 8 tests failed out of 199
+
+Total Test time (real) = 166.03 sec
+
+The following tests FAILED:
+	 78 - canvas_rf01_full_rebuild (Failed)
+	 85 - canvas_fc02_shape_label_scene (Subprocess aborted)
+	154 - G5CanonicalPreparedWorkingSet (Subprocess aborted)
+	158 - G5RenderCache (Timeout)
+	203 - G3HeadlessCanvasDemo (Subprocess aborted)
+	277 - FC00XRuntimeComposition (Subprocess aborted)
+	285 - SketchSemantic (Failed)
+	383 - G45BrushRuntimePipeline (Subprocess aborted)
+Errors while running CTest

@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+ok 1 - DPR2 full target persists incrementally with exact binary digest and bounded in-flight chunk
+  ---
+  duration_ms: 587.333166
+  ...
+# Subtest: transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+ok 2 - transfer rejects unsafe names, over-cap buffers, reordered/short chunks and missing acknowledgements
+  ---
+  duration_ms: 2.805375
+  ...
+# Subtest: guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+ok 3 - guard failure, crashed subject, missing worker or changed source never qualify despite cleanup
+  ---
+  duration_ms: 0.083083
+  ...
+# Subtest: performance needs every correct paired sample and does not hide missing or failed observations
+ok 4 - performance needs every correct paired sample and does not hide missing or failed observations
+  ---
+  duration_ms: 0.1275
+  ...
+# Subtest: original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+ok 5 - original roundtrip policy accepts one/two-level differences and rejects three without a candidate band
+  ---
+  duration_ms: 0.263667
+  ...
+# Subtest: driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+ok 6 - driver transfers outside timing and restores observer before SDK teardown with bounded diagnostic storage
+  ---
+  duration_ms: 1.210834
+  ...
+# Subtest: COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+ok 7 - COMPARE binds two SDKs and alternates all three repetitions with fresh pages
+  ---
+  duration_ms: 0.445625
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 632.955416

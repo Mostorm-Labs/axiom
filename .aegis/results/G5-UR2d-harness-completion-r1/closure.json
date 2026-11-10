@@ -1,0 +1,37 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS",
+  "package": {
+    "path": ".aegis/packages/G5-UR2d-harness-completion-r1/package.json",
+    "sha256": "d55bf3e4cecdba6f85afa6a627fe470b0e4220b49cf9774acff64520e86685de",
+    "bytes": 2500
+  },
+  "required_evidence_present": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "offline-harness-red-green.json",
+    "sampling-ledger.json",
+    "source-artifact-checks.json",
+    "web-functional.json",
+    "web-timing.json",
+    "pixel-review.json",
+    "performance-classification.json",
+    "obligation-index.json",
+    "cleanup.json",
+    "source-manifest.json",
+    "artifact-manifest.json",
+    "result.json"
+  ],
+  "production_frozen": true,
+  "three_pairs_actual": true,
+  "old_failed_result_preserved": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/result.json",
+    "sha256": "5574116193e3b76d87451b35962bdd6381cc62189c1dff639c4db6ee7c725511",
+    "bytes": 5869
+  },
+  "remaining": [
+    "Independent control review",
+    "Observed content-feedback latency and mixed ordinary-Web eraser timing are performance findings.",
+    "Fullscreen and general object interaction feedback are separate authorized follow-up scopes."
+  ],
+  "official_gate_p34_performance_pass": false
+}

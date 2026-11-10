@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="14"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="0"
+	timestamp="2026-11-10T19:18:19"
+	>
+	<testcase name="G5UR2CMaskOnlyScene" classname="G5UR2CMaskOnlyScene" time="0.0175613" status="run">
+		<properties/>
+		<system-out>{"mixed":0,"mask_only_prepares":24,"materialization_delta":0,"body_clone_bytes_delta":0,"full_projection_parity":24,"body_comparison_knots":172776}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CAtomicRecovery" classname="G5UR2CAtomicRecovery" time="0.0203404" status="run">
+		<properties/>
+		<system-out>{"mask_only_checkpoint_sweep":9,"canonical_mutations_preserved":true,"old_snapshots_immutable":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2DSelectionLocality" classname="G5UR2DSelectionLocality" time="0.252315" status="run">
+		<properties/>
+		<system-out>{"copies":1,"ms":[0.393375,0.341833,0.3595]}
+{"copies":8,"ms":[2.66875,2.712792,2.591292]}
+{"copies":16,"ms":[5.452875,5.292709,5.111375]}
+{"copies":32,"ms":[10.344167,10.389292,10.315875]}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactLocality" classname="G5UR2BExactLocality" time="0.12198" status="run">
+		<properties/>
+		<system-out>{"bounds_tests":29,"full_primitives":461,"index_groups":16,"local_components":11,"variant":0}
+{"bounds_tests":41,"full_primitives":442,"index_groups":15,"local_components":10,"variant":1}
+{"bounds_tests":25,"full_primitives":458,"index_groups":15,"local_components":9,"variant":2}
+{"bounds_tests":37,"full_primitives":439,"index_groups":14,"local_components":8,"variant":3}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":4}
+{"bounds_tests":2,"full_primitives":7,"index_groups":2,"local_components":0,"variant":5}
+{"bounds_tests":2,"full_primitives":12,"index_groups":2,"local_components":0,"variant":6}
+{"bounds_tests":2,"full_primitives":13,"index_groups":2,"local_components":0,"variant":7}
+{"checkpoint_replay_knots":1024,"index_groups":782,"materialized_paths":30}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInvalidation" classname="G5UR2BExactInvalidation" time="0.00934583" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactPressure" classname="G5UR2BExactPressure" time="0.0159315" status="run">
+		<properties/>
+		<system-out>finite derived full/cold/checkpoint/deferred/early-out parity PASS
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CHistoryExactParity" classname="G5UR2CHistoryExactParity" time="0.640919" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+{"copies":1,"exact_history":0,"path_builds":0,"path_primitive_checks":10,"path_value_checks":2}
+{"body_builds":2,"body_hits":4,"compared":0,"copied_bytes":0,"copies":1,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":2}
+{"copies":8,"exact_history":0,"path_builds":0,"path_primitive_checks":80,"path_value_checks":16}
+{"body_builds":16,"body_hits":32,"compared":0,"copied_bytes":0,"copies":8,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":16}
+{"copies":16,"exact_history":0,"path_builds":0,"path_primitive_checks":160,"path_value_checks":32}
+{"body_builds":32,"body_hits":64,"compared":0,"copied_bytes":0,"copies":16,"flattened":0,"history":0,"knots":7199,"structural_red":false,"warm_draws":32}
+{"copies":32,"exact_history":0,"path_builds":0,"path_primitive_checks":320,"path_value_checks":64}
+{"body_builds":64...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5UR2CLeaseAccounting" classname="G5UR2CLeaseAccounting" time="0.014932" status="run">
+		<properties/>
+		<system-out>{"stable_provenance":true,"complete_unknown_comparison":true,"append_suffix":32,"fork_reorder_truncate":true,"bounded_history_LRU":600,"last_release_bytes":0}
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="0.10675" status="run">
+		<properties/>
+		<system-out>Running main() from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 32 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 30 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (13 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (2 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (1 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (0 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStarts...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SDKPublicSelectionInput" classname="SDKPublicSelectionInput" time="0.0244212" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5UR2AHistory" classname="G5UR2AHistory" time="0.0387373" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2ALifecycle" classname="G5UR2ALifecycle" time="0.011485" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+{"stage":"qualified-seed","kind_version":3,"algorithm_version":4,"knots":24,"semantic":1,"qualified_receipts":2,"pending_brush":0,"preview_active":false}
+{"stage":"A-committed-pending","semantic":2,"scene":2,"masks":1}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2BExactInputRuntime" classname="G5UR2BExactInputRuntime" time="0.0348437" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+{"actual_Runtime_Up_prepared_uses":1,"full_validation_calls":0,"source_unchanged":true,"exactly_once_history":true,"cancel_undo_redo":true}
+</system-out>
+	</testcase>
+	<testcase name="G5UR2DUpRuntime" classname="G5UR2DUpRuntime" time="0.562474" status="run">
+		<properties/>
+		<system-out>{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[17916709,2625,125,504208,584,209,56333],"repeat":0,"scene_materializations":0,"up_ms":18.49925}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[16882541,2500,0,20000,375,375,561625],"repeat":1,"scene_materializations":0,"up_ms":17.482791}
+{"canonical_mask_bytes_equal":true,"copies":1,"equivalent_hits":0,"exact_calls":1,"history_exactly_once":true,"masks_built":1,"noop_cancel_undo_redo":true,"phase_nanoseconds":[15421708,2875,0,31375,291,417,47541],"repeat":2,"scene_materializations":0,"up_ms":15.554583}
+{"canonical_mask_bytes_equal":true,"copies":8,"equivalent_hits":7,"exact_calls":8,"history_exactly_once":true,"masks_built":8,"noop_cancel_undo_redo":true,"phase_nanoseconds":[37894458,5708,41,116250,500,542,133...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

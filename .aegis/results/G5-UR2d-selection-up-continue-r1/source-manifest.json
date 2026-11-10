@@ -1,0 +1,124 @@
+{
+  "schema": "g5-ur2d-final-source-manifest-v1",
+  "head": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "files": {
+    "runtime/composition/CMakeLists.txt": {
+      "sha256": "783454b8ca1dcfe972ce7df4573e31cf478cf64f09f01a52260761f17432f172",
+      "bytes": 21693
+    },
+    "runtime/composition/tests/selection_input_integration_test.cpp": {
+      "sha256": "423f8bf9f3ac7f54c5a042b66baaed0c771a28c39e39b4c112bcf9d9cccf8308",
+      "bytes": 48644
+    },
+    "runtime/composition/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "9960a1b52f00a8e67d8ac7691ad03e9ef1d4f03e71e5937db8234e356b13b054",
+      "bytes": 7690
+    },
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": {
+      "sha256": "5f912b0a2fe390879f4b41118a8ca972be68ddd9fbc0a0888ed41917d066e30d",
+      "bytes": 8164
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "sha256": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "bytes": 14086
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "04da5c51be16ab6d02ac7d9d1ac6c9f7e7d64730f97cb1a3ce6c88b7f9a52ff9",
+      "bytes": 321043
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "sha256": "f543af86927b449765b0fe878254a529faf6206e0fa42389b6193ae59345139f",
+      "bytes": 4367
+    },
+    "runtime/interaction/src/canvas_region_selection.cpp": {
+      "sha256": "5a6d88adb57fad783191c5703b17997f6ab65b4f2ff1d564a9b07caddb3176db",
+      "bytes": 25636
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "16e07a36aeeaecdb5211541a5c31b3cf04c154c2c0a8c0f1c1890995e9fd3156",
+      "bytes": 48760
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "sha256": "298ec30c292fbd1e54ec95a0ce399b586d24fac90ee9fa1a4046204f1b79be2d",
+      "bytes": 6919
+    },
+    "runtime/render/src/render_group_manager.cpp": {
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de",
+      "bytes": 9051
+    },
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "08cd5917fc5493efb946e8b02b5a3d55d48787b279646673deefc458104bc661",
+      "bytes": 60780
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "sha256": "99b5a3aee641845a63bbdd846cfeb44e8f36727aa72cc625764300ae6cab3e20",
+      "bytes": 2821
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "c5b73d37591ac54c06207ea151a3f647b379cbe6717254f9873733f02253ff47",
+      "bytes": 85268
+    },
+    "runtime/render/src/skia_render_cache_internal.hpp": {
+      "sha256": "ae88eb063f9ced2400c4c4c0957a31a67d7c4caf62377a142e9d298ab025955e",
+      "bytes": 12609
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "68597803c1230f44c5c16c5db5c6e515416f01a37c6927e85e2a867788fa75dd",
+      "bytes": 100191
+    },
+    "runtime/render/tests/transient_display_retry_test.cpp": {
+      "sha256": "eb8f6ddd15838eea6d985adc4fb32dab08d11bb2a56b6885cfc4ffb30f1e9485",
+      "bytes": 50655
+    },
+    "runtime/render/tests/ur2d_selection_up_test.cpp": {
+      "sha256": "d15cd4abfb09ed4c53396bed8af85bb73f4cc5adc54d0ff0fced59309f0e9de1",
+      "bytes": 7943
+    },
+    "verification/runners/g5/ur2d_selection_up.mjs": {
+      "sha256": "395ca1ae6d1111f2243aebd795468cac4f952a046abed6a4745759fb449cdab7",
+      "bytes": 14656
+    },
+    "verification/runners/g5/ur2d_selection_up_contract.mjs": {
+      "sha256": "d8f639495926cd748ee74f184dd61c455cf25cbc1c30983d9d5cb123d131458c",
+      "bytes": 2767
+    },
+    "verification/runners/g5/ur2d_selection_up_runner.py": {
+      "sha256": "ac6c27be1ec13e005888232c3c174e97c50588b1e33c2ba6f98542117509909d",
+      "bytes": 4849
+    },
+    "verification/tests/g5_ur2d_selection_up.test.mjs": {
+      "sha256": "2451ee91028a372a94bec706ebd04d3f8891cffb7bcac8cd82f3c16a73e53141",
+      "bytes": 5619
+    },
+    "verification/tests/test_g5_ur2d_selection_up.py": {
+      "sha256": "0b75251d4ab8a87b8410723613ba8cdaf72ab36b2ed494a765a795ba5e18f8e9",
+      "bytes": 3565
+    }
+  },
+  "newfiles": [
+    "runtime/composition/tests/ur2d_selection_up_test.cpp",
+    "runtime/render/tests/ur2d_selection_up_test.cpp",
+    "verification/runners/g5/ur2d_selection_up.mjs",
+    "verification/runners/g5/ur2d_selection_up_contract.mjs",
+    "verification/runners/g5/ur2d_selection_up_runner.py",
+    "verification/tests/g5_ur2d_selection_up.test.mjs",
+    "verification/tests/test_g5_ur2d_selection_up.py"
+  ],
+  "tracked_delta": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-delta.patch",
+    "sha256": "3c9065cca1f162bce32970e2ac711a253b65eedcd079b4042b105c85938c9ddb"
+  },
+  "accepted_r2_baseline": {
+    "path": ".aegis/results/G5-object-interaction-continuity-r2/source-manifest.json",
+    "sha256": "ddc9a58d99eb1416a9f80fbc843d8da12ad732b18196ba87ae334b53adb4435f"
+  },
+  "allnewfilespostimagesseparate": true,
+  "product_source_frozen_duringWeb": true,
+  "SDKpublicsourcechanged": false,
+  "thirdpartyrebuilt": false,
+  "semantic_schema_or_apply_changed": false,
+  "commitpush": false,
+  "source_digest": "dc16e9cbf97c936f57217f9a22a71384f4a9c215a99298dfe43822784a1595b1"
+}

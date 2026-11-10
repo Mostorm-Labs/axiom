@@ -16,7 +16,7 @@ class SkiaInkLayers final {
     bool draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry&,
         const SkMatrix&,const SkIRect& viewport,const CompactDeviceGrid*,
         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
-        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={});
+        const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={},PreparationAllowance* allowance=nullptr);
     void clear()noexcept;
     void prune(std::span<const ReferenceTraversalEntry>);
  private:
@@ -27,12 +27,15 @@ class SkiaInkLayers final {
         SkMatrix matrix;SkIRect viewport;
         std::vector<MaskPrimitive> masks; // Active transient tail only.
         std::shared_ptr<MaskHistoryPlan> history;
+        const void* context=nullptr;
+        std::array<int,4> grid{};
         resources::ResourceLease metadata;
         std::uint64_t epoch=1;
     };
     struct Key {foundation::ObjectId id;int x,y;bool operator<(const Key& b)const{return std::tie(id,x,y)<std::tie(b.id,b.x,b.y);}};
     struct Image {sk_sp<SkImage> pixels;resources::ResourceLease lease;};
-    struct Tile {Image body,result;std::uint64_t epoch=0,used=0;std::size_t applied=0,bytes=0;};
+    struct Tile {Image body,result;sk_sp<SkSurface> building;std::unique_ptr<CompactStrokeRasterJob> raster;
+        std::uint64_t epoch=0,used=0;std::size_t applied=0,bytes=0;};
     std::map<foundation::ObjectId,Source> sources_;
     std::map<Key,Tile> tiles_;
     std::shared_ptr<PreparedGeometryCache> geometry_;

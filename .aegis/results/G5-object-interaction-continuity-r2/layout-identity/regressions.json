@@ -1,0 +1,23 @@
+[
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native",
+      "-R",
+      "^(G5ObjectInteractionLayoutIdentity|G5RenderDamage)$",
+      "--output-on-failure"
+    ],
+    "log": ".aegis/results/G5-object-interaction-continuity-r2/layout-identity/ctest-green.log",
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+      "--object-continuity",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-continuity-r2/layout-identity/static-pixels"
+    ],
+    "log": ".aegis/results/G5-object-interaction-continuity-r2/layout-identity/static-regression.log",
+    "exit_code": 0
+  }
+]

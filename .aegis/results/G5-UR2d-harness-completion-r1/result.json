@@ -1,0 +1,135 @@
+{
+  "schema": "g5-ur2d-harness-completion-result-v1",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS",
+  "package": {
+    "path": ".aegis/packages/G5-UR2d-harness-completion-r1/package.json",
+    "sha256": "d55bf3e4cecdba6f85afa6a627fe470b0e4220b49cf9774acff64520e86685de",
+    "bytes": 2500
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1"
+  },
+  "result_revision": "0b3b436e1405d8b5e98ee3ba15af4a84c83a2dad",
+  "source": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/source-manifest.json",
+    "sha256": "f7ce0608bff36c9d872b370bfe8860fbd5be196efb376459000553777b95a9e8",
+    "bytes": 3469
+  },
+  "delta": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/source-delta.patch",
+    "sha256": "19710f0621a6bcba73e88f0e7534121dc24a64ea920bb475e28f52be0d879a55",
+    "bytes": 26640
+  },
+  "manifest": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/artifact-manifest.json",
+    "sha256": "53c35d2217851de61b71af40f7e05c0c4e8ca2804eee91966e04fc1fb1a40e6d",
+    "bytes": 46824
+  },
+  "product_source": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/source-manifest.json",
+    "sha256": "84df2a7affb7efb51b0d619c71ef3cb0dfb4ecdb3115d3234547fd8496a542f0",
+    "bytes": 5268
+  },
+  "normal_SDK": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/final-normal-artifacts.json",
+    "sha256": "a81ddee2d58a1c27db1d58a0404a6537d975cd7f58849311f9e7b7792f6799d0",
+    "bytes": 4482
+  },
+  "driver": {
+    "path": "verification/runners/g5/ur2d_selection_up.mjs",
+    "sha256": "f77efd42cac3a983b067546eafce403c28894759c2c8b5514d791bd2e4e26bc9",
+    "bytes": 19620
+  },
+  "runner": {
+    "path": "verification/runners/g5/ur2d_pair_completion_runner.py",
+    "sha256": "f46769df165909fc324a64bc819cc0b57a208d9167ef123622056218f24394bd",
+    "bytes": 8081
+  },
+  "evidence_input_refs": [
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/PackageBindingPreflight.json",
+      "sha256": "01a4989cffd2e806bb1b7cd5337dcf7247e00800d02f63dd091670d5e927e0b6",
+      "bytes": 10642
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/EvidenceContractPreflight.json",
+      "sha256": "3d30fed9122a19aeabd672d907c8d973a78611a2cdb202589e5115328abe2316",
+      "bytes": 3598
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/offline-harness-red-green.json",
+      "sha256": "073d2eb3aea6c7d6f9e934d10f49b203990f02067dbfb04657281f414b18307d",
+      "bytes": 9066
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/sampling-ledger.json",
+      "sha256": "877ebbc7ad52740256dc13daa8755065168177caf354b69983168c9e12dd6d21",
+      "bytes": 1398
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/source-artifact-checks.json",
+      "sha256": "9e55cd58a6c99f829074520b88d797523737b128d8484a790aefb52ff59339e2",
+      "bytes": 190393
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/web-functional.json",
+      "sha256": "d52d1c1c91324af50740087ac41a7e1126c06fb7e802344c1364e77f7657e2d9",
+      "bytes": 45803
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/web-timing.json",
+      "sha256": "ca1b40b0c130fc4f824c6e1adea25c18788c31e5aae756c47cf5fe4e9dcf6479",
+      "bytes": 92515
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/pixel-review.json",
+      "sha256": "e8591ea3eeac1b8af8aeda7e5fb1f357f5055c47f72902e3c0b2a94a39cf4498",
+      "bytes": 15869
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/performance-classification.json",
+      "sha256": "37b0f9ec727f80084a46b4f3593f053ce8738bcabc82359a9dd9be26a54f63e6",
+      "bytes": 3054
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/obligation-index.json",
+      "sha256": "08c09cc2c4adb37a29d9d152a7db2060468065150d864afce5ab50f41e315947",
+      "bytes": 12306
+    },
+    {
+      "path": ".aegis/results/G5-UR2d-harness-completion-r1/cleanup.json",
+      "sha256": "40b1850cf3f21df8f50587ca9a320ccdb6684ba4266fdbb5d92a4cb19f664050",
+      "bytes": 1506
+    }
+  ],
+  "three_actual_pairs": [
+    0,
+    1,
+    2
+  ],
+  "timing_scope": "Ordinary Web paired dispatch observations; content-write gaps explicitly separate from RAF and GPU completion.",
+  "ledger": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/sampling-ledger.json",
+    "sha256": "877ebbc7ad52740256dc13daa8755065168177caf354b69983168c9e12dd6d21",
+    "bytes": 1398
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-UR2d-harness-completion-r1/cleanup.json",
+    "sha256": "40b1850cf3f21df8f50587ca9a320ccdb6684ba4266fdbb5d92a4cb19f664050",
+    "bytes": 1506
+  },
+  "normalDemoURL": "http://127.0.0.1:4316/example.html",
+  "prior_BLOCKED_EVIDENCE_immutable": {
+    "path": ".aegis/results/G5-UR2d-selection-up-continue-r1/result.json",
+    "sha256": "5574116193e3b76d87451b35962bdd6381cc62189c1dff639c4db6ee7c725511",
+    "bytes": 5869
+  },
+  "new_production_changes": false,
+  "new_sdk_build": false,
+  "commit_push": false,
+  "official_gate_p34_performance_pass": false,
+  "next_action_owner": "Control review; no extra browser allowance remains in this package."
+}

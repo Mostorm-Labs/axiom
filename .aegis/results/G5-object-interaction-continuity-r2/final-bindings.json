@@ -1,0 +1,30 @@
+{
+  "schema": "g5-r2-final-binding-reconciliation-v1",
+  "package_hash_checks": {
+    "verification.lock.json": true,
+    "evidence-contract.json": true,
+    "implementation-context.md": true,
+    "authority.lock.json": true,
+    "package.json": true,
+    "execution-contract.json": true
+  },
+  "authority_sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+  "r1_package_hash_checks": {
+    ".aegis/packages/G5-object-interaction-continuity-r1/verification.lock.json": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/evidence-contract.json": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/implementation-context.md": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/authority.lock.json": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/package.json": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/package-preflight.json": true,
+    ".aegis/packages/G5-object-interaction-continuity-r1/execution-contract.json": true
+  },
+  "preserved_r1_production_hash_checks": {
+    "runtime/render/include/canvas/render/skia_renderer.hpp": true,
+    "runtime/render/src/skia_render_cache.cpp": true,
+    "runtime/render/src/skia_render_cache_internal.hpp": true,
+    "runtime/render/src/skia_renderer.cpp": true
+  },
+  "obligation_binding_exact": true,
+  "browser_starts_authorized": 0,
+  "note": "Final reconciliation. Initial binding is separately preserved; this does not relabel a later test as a pre-implementation run."
+}

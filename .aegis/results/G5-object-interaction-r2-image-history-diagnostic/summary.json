@@ -1,0 +1,77 @@
+{
+  "status": "RECORDED",
+  "errors": [],
+  "rows": [
+    {
+      "phase": "image-imported",
+      "bytes": 2324853,
+      "objects": 23,
+      "selected": 1,
+      "kind": 2,
+      "transform": [
+        1,
+        0,
+        0,
+        1,
+        535.5,
+        325
+      ],
+      "generation": "29",
+      "presented": "29"
+    },
+    {
+      "phase": "image-drag",
+      "during_publications": 61,
+      "raf": 82,
+      "transform": [
+        0.8666666666666667,
+        0,
+        0,
+        0.9166666666666666,
+        583.5,
+        355
+      ],
+      "max_content_gap_ms": 41.0,
+      "generation": "30",
+      "presented": "30"
+    },
+    {
+      "phase": "image-cancel",
+      "generation_preserved": true,
+      "transform_preserved": true,
+      "activeContacts": 0
+    },
+    {
+      "phase": "image-undo-redo",
+      "before": [
+        0.8666666666666667,
+        0,
+        0,
+        0.9166666666666666,
+        583.5,
+        355
+      ],
+      "undo": [
+        1,
+        0,
+        0,
+        1,
+        535.5,
+        325
+      ],
+      "redo": [
+        0.8666666666666667,
+        0,
+        0,
+        0.9166666666666666,
+        583.5,
+        355
+      ],
+      "redo_restored_transform": true,
+      "redo_presented": true
+    }
+  ],
+  "retries": {
+    "[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1": 13
+  }
+}

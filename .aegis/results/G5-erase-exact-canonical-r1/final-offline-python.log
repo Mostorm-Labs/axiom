@@ -1,0 +1,42 @@
+test_ceiling_and_history_are_preserved (verification.tests.test_g5_ur2a_handoff.Ledger) ... ok
+test_cleanup_does_not_turn_hard_failure_into_pass (verification.tests.test_g5_ur2a_handoff.Ledger) ... ok
+test_guard_or_missing_result_stops_and_charges_reservation (verification.tests.test_g5_ur2a_handoff.Ledger) ... ok
+test_no_repeat_concurrent_or_foreign (verification.tests.test_g5_ur2a_handoff.Ledger) ... ok
+test_owned_processes_exclude_existing_browser_and_retain_observed_children (verification.tests.test_g5_ur2a_handoff.Ledger) ... ok
+test_actual_ceil_and_history (verification.tests.test_g5_ur2b_exact_query.ClosedAllowance) ... ok
+test_exact_eight_order_and_limits (verification.tests.test_g5_ur2b_exact_query.ClosedAllowance) ... ok
+test_no_retry_or_concurrent_start (verification.tests.test_g5_ur2b_exact_query.ClosedAllowance) ... ok
+test_product_failure_or_identity_loss_stops_remaining (verification.tests.test_g5_ur2b_exact_query.ClosedAllowance) ... ok
+test_actual_ceil_and_history (verification.tests.test_g5_ur2c_mask_history.ClosedAllowance) ... ok
+test_exact_eight_order_and_limits (verification.tests.test_g5_ur2c_mask_history.ClosedAllowance) ... ok
+test_missing_production_consumption_stops_unused_windows (verification.tests.test_g5_ur2c_mask_history.ClosedAllowance) ... ok
+test_no_retry_or_concurrent_start (verification.tests.test_g5_ur2c_mask_history.ClosedAllowance) ... ok
+test_product_failure_or_identity_loss_stops_remaining (verification.tests.test_g5_ur2c_mask_history.ClosedAllowance) ... ok
+test_all_failure_kinds_stop_next_window (verification.tests.test_g5_transient_display_retry.DisplayLedger) ... ok
+test_exact_windows_and_limits (verification.tests.test_g5_transient_display_retry.DisplayLedger) ... ok
+test_historical_cap_cannot_be_reset (verification.tests.test_g5_transient_display_retry.DisplayLedger) ... ok
+test_missing_or_untrusted_elapsed_charges_full (verification.tests.test_g5_transient_display_retry.DisplayLedger) ... ok
+test_serial_once_only (verification.tests.test_g5_transient_display_retry.DisplayLedger) ... ok
+test_cap_cannot_be_reset (verification.tests.test_g5_transient_display_retry.LiveReferenceWindow) ... ok
+test_incomplete_cases_identity_cleanup_and_guard_fail_closed (verification.tests.test_g5_transient_display_retry.LiveReferenceWindow) ... ok
+test_old_ids_smoke_and_duplicate_window_are_rejected (verification.tests.test_g5_transient_display_retry.LiveReferenceWindow) ... ok
+test_one_normal_window_preserves_history_and_ceil_charge (verification.tests.test_g5_transient_display_retry.LiveReferenceWindow) ... ok
+test_untrusted_elapsed_charges_full_reservation (verification.tests.test_g5_transient_display_retry.LiveReferenceWindow) ... ok
+test_identity_and_cleanup_are_required (verification.tests.test_g5_moving_erase_progress.MovingLedger) ... ok
+test_serial_four_windows_and_exact_ceil_accounting (verification.tests.test_g5_moving_erase_progress.MovingLedger) ... ok
+test_unknown_time_charges_reservation_and_old_red_must_be_red (verification.tests.test_g5_moving_erase_progress.MovingLedger) ... ok
+test_unplanned_old_parallel_and_failed_id_cannot_restart (verification.tests.test_g5_moving_erase_progress.MovingLedger) ... ok
+test_guard_failure_stops_and_unknown_is_fully_charged (verification.tests.test_g5_render_execution.CandidateWindow) ... ok
+test_only_two_candidates_no_old_window_or_retry (verification.tests.test_g5_render_execution.CandidateWindow) ... ok
+test_no_retry_foreign_id_same_sdk_or_incomplete_matrix (verification.tests.test_desktop_render_budget.BudgetWindowTests) ... ok
+test_desktop_default_and_native_mobile_conservative (verification.tests.test_desktop_render_budget.MemoryProfileTests) ... ok
+test_explicit_conservative_and_legacy_cache_override (verification.tests.test_desktop_render_budget.MemoryProfileTests) ... ok
+test_rejects_invalid_or_incoherent_explicit_values (verification.tests.test_desktop_render_budget.MemoryProfileTests) ... ok
+test_failed_guard_or_source_never_qualifies (verification.tests.test_g5_erase_exact_canonical.WindowTests) ... ok
+test_unique_window_and_total_reservation (verification.tests.test_g5_erase_exact_canonical.WindowTests) ... ok
+test_additional_window_is_single_bounded_with_shared_cap (verification.tests.test_g5_post_erase_interaction_readiness.ReadinessTests) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.227s
+
+OK
