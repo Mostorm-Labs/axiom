@@ -9,6 +9,7 @@ import tempfile
 import zipfile
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
 from tools.release.preview_package import package_tree, sha256
+from tools.release.version_identity import read_identity, manifest_identity, validate_manifest
 
 NATIVE_REQUIRED=('bin/axiom.dll','lib/axiom.lib','include/axiom/api.h','include/axiom/axiom.hpp',
  'include/axiom/detail/json.hpp','lib/cmake/AxiomSDK/AxiomSDKConfig.cmake',
@@ -28,7 +29,7 @@ def validate_native_payload(prefix):
 
 def package(platform,prefix,demo,repo,output,revision):
     output.mkdir(parents=True,exist_ok=True)
-    version=json.loads((repo/'sdk/version.json').read_text(encoding='utf-8'))['version']
+    build=read_identity(repo);version=build['version']
     assets=[]
     with tempfile.TemporaryDirectory(prefix='axiom-consumer-package-') as tmp:
         root=Path(tmp)
@@ -40,9 +41,10 @@ def package(platform,prefix,demo,repo,output,revision):
             name='axiom-sdk-windows.zip';required=[*NATIVE_REQUIRED,'README.md','example/CMakeLists.txt'];kind='windows-sdk'
         else:
             stage=root/'sdk';shutil.copytree(prefix/'js',stage)
-            if json.loads((stage/'package.json').read_text())['version']!=version:raise ValueError('JS version mismatch')
+            metadata=json.loads((stage/'package.json').read_text())
+            if metadata['version']!=version or metadata.get('buildNumber')!=build['buildNumber']:raise ValueError('JS version/build mismatch')
             name='axiom-sdk-js.zip';required=list(JS_REQUIRED);kind='js-sdk'
-        package_tree(stage,output/name,required,revision,kind,version=version);assets.append(output/name)
+        package_tree(stage,output/name,required,revision,kind,version=version,build_number=build['buildNumber']);assets.append(output/name)
         app=root/'demo';shutil.copytree(demo if platform=='windows' else stage,app)
         if platform=='windows':
             shutil.copytree(prefix/'licenses',app/'licenses')
@@ -51,7 +53,7 @@ def package(platform,prefix,demo,repo,output,revision):
         else:
             shutil.copy2(app/'example.html',app/'index.html');required=[*JS_REQUIRED,'index.html']
         name=f'axiom-demo-{platform}.zip'
-        package_tree(app,output/name,required,revision,platform+'-demo',version=version);assets.append(output/name)
+        package_tree(app,output/name,required,revision,platform+'-demo',version=version,build_number=build['buildNumber']);assets.append(output/name)
     return assets
 
 def verify_release(directory,revision):
@@ -63,7 +65,7 @@ def verify_release(directory,revision):
         with zipfile.ZipFile(path) as z:
             members=z.namelist()
             if len(set(members))!=len(members) or any(n.startswith('/') or '..' in Path(n).parts or '\\' in n for n in members):raise ValueError('unsafe archive')
-            m=json.loads(z.read('manifest.json'));versions.add(m.get('sdk_version'))
+            m=json.loads(z.read('manifest.json'));build=validate_manifest(m);versions.add(build['displayVersion'])
             if m.get('source_revision')!=revision or m.get('kind')!=expected[name]:raise ValueError('release identity mismatch')
             if set(m['files'])!=set(members)-{'manifest.json'}:raise ValueError('manifest file set mismatch')
             for member,digest in m['files'].items():
@@ -71,10 +73,12 @@ def verify_release(directory,revision):
             if name=='axiom-sdk-windows.zip':
                 if {n for n in members if n.endswith(('.lib','.a'))}!={'lib/axiom.lib'}:raise ValueError('internal archives leaked')
                 if any(n.startswith('dependencies/') for n in members):raise ValueError('dependency SDK leaked')
-            if name=='axiom-sdk-js.zip' and json.loads(z.read('package.json'))['version']!=m['sdk_version']:raise ValueError('npm version mismatch')
+            if name in ('axiom-sdk-js.zip','axiom-demo-web.zip'):
+                npm=json.loads(z.read('package.json'))
+                if npm['version']!=build['version'] or npm.get('buildNumber')!=build['buildNumber']:raise ValueError('npm version/build mismatch')
     if len(versions)!=1 or None in versions:raise ValueError('SDK release versions differ')
     (directory/'SHA256SUMS').write_text(''.join(f'{sha256(actual[n])}  {n}\n' for n in sorted(actual)),encoding='ascii')
-    (directory/'release.json').write_text(json.dumps({'format':'axiom-consumer-release-v1','source_revision':revision,'sdk_version':versions.pop(),'assets':{n:sha256(p) for n,p in sorted(actual.items())}},indent=2)+'\n',encoding='utf-8')
+    (directory/'release.json').write_text(json.dumps({'format':'axiom-consumer-release-v1','source_revision':revision,**manifest_identity(build),'assets':{n:sha256(p) for n,p in sorted(actual.items())}},indent=2)+'\n',encoding='utf-8')
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--verify-release',type=Path);p.add_argument('--revision',required=True)

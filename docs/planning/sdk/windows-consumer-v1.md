@@ -59,3 +59,12 @@ D07 OOM and separately recorded legacy failures are not silently closed.
 
 
 Object clipboard v1 uses the existing C/POD Session transport and caller-side `axiom.hpp` methods. Requests/results remain value DTOs plus owned bytes and complete integer stamps. No DLL export, internal pointer, CRT ownership or public Runtime exposure is added. See `../object-clipboard-and-live-erase-v1.json`; actual Windows ABI/input qualification remains required on Windows.
+
+
+Version identity increment (0.4.4): the existing read-only `version` Session command
+returns `sdkVersion` as X.Y.Z.Build, `sdkSemver` as X.Y.Z and lossless numeric
+`buildNumber` (0 for local builds, positive for release builds). Root JS exports
+SDK_VERSION, SDK_SEMVER and SDK_BUILD_NUMBER; generated wrappers/declarations and
+engine must match. This adds value metadata without exposing Runtime owners,
+changing DLL exports, buffer lifetime, owner-thread/reentrancy or receipt semantics.
+See sdk/VERSIONING.md for immutable npm/tag and build lifecycle rules.

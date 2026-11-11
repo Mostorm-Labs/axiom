@@ -1,8 +1,12 @@
 {
   "name": "@mostorm/axiom-react-native",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "private": false,
-  "publishConfig": {"access": "restricted", "registry": "http://npm.nearhub.cc/", "tag": "latest"},
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "http://npm.nearhub.cc/",
+    "tag": "latest"
+  },
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -18,5 +22,12 @@
     "react-native": "0.83.10 || 0.84.1"
   },
   "react-native": "./src/index.ts",
-  "files": ["src/**", "api/**", "README.md", "example.tsx", "package.json"]
+  "files": [
+    "src/**",
+    "api/**",
+    "README.md",
+    "example.tsx",
+    "package.json"
+  ],
+  "buildNumber": 0
 }

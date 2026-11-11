@@ -45,6 +45,10 @@ foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${file}" "${_web_source}")
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${file}" DESTINATION js)
 endforeach()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+execute_process(COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/release/version_identity.py"
+  --repo "${PROJECT_SOURCE_DIR}" --output "${CMAKE_CURRENT_BINARY_DIR}" --build-number "${AXIOM_BUILD_NUMBER}"
+  COMMAND_ERROR_IS_FATAL ANY OUTPUT_QUIET)
 configure_file("${PROJECT_SOURCE_DIR}/verification/sdk_web_external/consumer/pointer_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" COPYONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/text_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/text_input.mjs" COPYONLY)
 configure_file("${PROJECT_SOURCE_DIR}/verification/sdk_web_external/consumer/serve.py" "${CMAKE_CURRENT_BINARY_DIR}/serve.py" COPYONLY)

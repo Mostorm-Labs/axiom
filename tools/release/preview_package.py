@@ -8,6 +8,9 @@ import re
 import shutil
 import tempfile
 import zipfile
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tools.release.version_identity import identity, manifest_identity
 
 
 def sha256(path):
@@ -18,7 +21,7 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def package_tree(stage, archive, required, revision, kind, version=None):
+def package_tree(stage, archive, required, revision, kind, version=None, build_number=0):
     stage, archive = Path(stage), Path(archive)
     if not re.fullmatch(r'[0-9a-f]{40}', revision):
         raise ValueError('source revision must be a full Git SHA-1')
@@ -36,7 +39,7 @@ def package_tree(stage, archive, required, revision, kind, version=None):
                 'source_revision': revision,
                 'files': {path.relative_to(stage).as_posix(): sha256(path) for path in files}}
     if version is not None:
-        manifest['sdk_version'] = version
+        manifest.update(manifest_identity(identity(version, build_number)))
     archive.parent.mkdir(parents=True, exist_ok=True)
     try:
         with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=6, allowZip64=True) as z:

@@ -133,6 +133,7 @@ const rgba = (value, alpha = 1) => [1, 3, 5].map(i => parseInt(value.slice(i, i 
 const setValue = (input, value) => { if (document.activeElement !== input) input.value = value; };
 try {
   sdk = await createRuntime({mount: $('canvas'), permission: 'localSingleUser', onError: fail, onChange: show});
+  document.title = `Axiom SDK ${sdk.version}`;
   const drawing = $('drawing-tools'), toolOptions = $('tool-options'), context = $('context-tools'), details = $('detail-tools'), board = $('board-tools');
   const drawingGroup = group(drawing);
   const toolButtons = [];

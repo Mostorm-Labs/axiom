@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 project(canvas_v2_pocs VERSION 0.1.0 LANGUAGES C CXX)
+include(cmake/AxiomSdkVersion.cmake)
 include(cmake/AxiomBuildInfo.cmake)
 
 option(AXIOM_G5_UR0_DIAGNOSTICS "Enable non-installed private UR0 observation variant" OFF)

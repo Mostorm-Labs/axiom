@@ -73,7 +73,8 @@ try {
   await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x+100,y:point.y+70,button:'left',buttons:0,clickCount:1});
   await until(`document.getElementById('status').textContent.includes('1 objects')`,'rectangle');
   await until(`(()=>{const c=document.querySelector('#canvas canvas'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(90,c.height-210,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20&&p[3]>0})()`,'visible rectangle');
-  observation.example={status:await evaluate(`document.getElementById('status').textContent`),toolIndicated:true,visibleRectangle:true,input:'Chrome CDP mouse'};
+  observation.example={versionTitle:await evaluate(`document.title`),status:await evaluate(`document.getElementById('status').textContent`),toolIndicated:true,visibleRectangle:true,input:'Chrome CDP mouse'};
+  if(observation.example.versionTitle!==`Axiom SDK ${observation.result.buildInfo.sdkVersion}`)throw Error('Demo version title mismatch');
   if(errors.length)throw Error('Example exception');
   console.log(JSON.stringify({example:observation.example}));
   await closeBrowser();

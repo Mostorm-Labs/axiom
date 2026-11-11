@@ -42,6 +42,8 @@ set_target_properties(axiom_native PROPERTIES OUTPUT_NAME axiom)
 if(APPLE)
  set_target_properties(axiom_native PROPERTIES FRAMEWORK TRUE FRAMEWORK_VERSION A
   OUTPUT_NAME axiom MACOSX_FRAMEWORK_IDENTIFIER dev.mostorm.axiom
+  MACOSX_FRAMEWORK_BUNDLE_VERSION "${AXIOM_BUILD_NUMBER}"
+  MACOSX_FRAMEWORK_SHORT_VERSION_STRING "${AXIOM_SDK_SEMVER}"
   PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/axiom/native.h")
 endif()
 target_compile_definitions(axiom_native PRIVATE AXIOM_NATIVE_BUILD)
@@ -71,7 +73,7 @@ if(BUILD_TESTING AND NOT ANDROID AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
  add_test(NAME SDKNativeCConsumer COMMAND axiom_native_c_tests "${PROJECT_SOURCE_DIR}/assets")
 endif()
 
-install(FILES "${PROJECT_SOURCE_DIR}/sdk/version.json" DESTINATION share/axiom-native COMPONENT AxiomNative)
+install(FILES "${CMAKE_BINARY_DIR}/axiom-sdk-version.json" DESTINATION share/axiom-native RENAME version.json COMPONENT AxiomNative)
 install(FILES "${AXIOM_HOST_FONT_PATH}" DESTINATION assets RENAME axiom-font.otf COMPONENT AxiomNative)
 install(FILES "${AXIOM_HOST_FONT_CATALOG_ROOT}/catalog.json" DESTINATION assets/fonts COMPONENT AxiomNative)
 install(DIRECTORY "${AXIOM_HOST_FONT_CATALOG_ROOT}/Excalifont" DESTINATION assets/fonts COMPONENT AxiomNative)

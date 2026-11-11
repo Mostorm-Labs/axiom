@@ -1,9 +1,17 @@
 name: Axiom React Native SDK release
 
 on:
-  push:
-    tags:
-      - 'v[0-9]*'
+  workflow_call:
+    inputs:
+      release_build_number:
+        required: true
+        type: string
+      publish_release:
+        required: true
+        type: boolean
+    secrets:
+      AXIOM_NPM_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       tag:
@@ -19,7 +27,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SDK_VERSION: 0.4.3
+  SDK_VERSION: 0.4.4
+  AXIOM_BUILD_NUMBER: ${{ inputs.release_build_number || '0' }}
   AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
 
 jobs:
@@ -42,7 +51,8 @@ jobs:
           revision=$(git rev-parse HEAD)
           version=$(python3 -c 'import json; print(json.load(open("sdk/version.json"))["version"])')
           test "$version" = "$SDK_VERSION"
-          if [[ "$GITHUB_EVENT_NAME" == push && "$GITHUB_REF_TYPE" == tag ]]; then
+          python3 tools/release/version_identity.py --require-fresh-build
+          if [[ '${{ inputs.publish_release }}' == true ]]; then
             test "$GITHUB_REF_NAME" = "v$version"
             publish=true
           else

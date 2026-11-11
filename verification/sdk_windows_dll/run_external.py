@@ -37,7 +37,7 @@ def verify(prefix, output, export=None):
             # Use an unrelated CWD: assets must resolve from the deployed DLL/exe.
             run([root/'build/axiom_example.exe','--test'],Path(tempfile.gettempdir()),records)
             identities=[json.loads(line.removeprefix('BUILD ')) for line in records[-1]['stdout'].splitlines() if line.startswith('BUILD ')]
-            expected_version=json.loads((prefix/'share/axiom-sdk/version.json').read_text(encoding='utf-8'))['version']
+            expected_version=json.loads((prefix/'share/axiom-sdk/version.json').read_text(encoding='utf-8'))['displayVersion']
             if len(identities)!=1 or identities[0]['sdkVersion']!=expected_version:
                 raise RuntimeError('missing or mismatched actual DLL identity')
             expected=os.environ.get('AXIOM_EXPECTED_REVISION')

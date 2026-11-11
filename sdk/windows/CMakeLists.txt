@@ -24,7 +24,8 @@ install(CODE "file(RENAME \"\${CMAKE_INSTALL_PREFIX}/bin/share/axiom/NotoSansCJK
 install(DIRECTORY "${AXIOM_HOST_FONT_CATALOG_ROOT}/" DESTINATION bin/share/axiom/fonts COMPONENT AxiomSDK)
 install(FILES "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/LICENSE.MIT" DESTINATION licenses/nlohmann-json COMPONENT AxiomSDK)
 install(FILES "${AXIOM_HOST_FONT_ROOT}/LICENSE.txt" "${AXIOM_HOST_FONT_ROOT}/NOTICE.txt" DESTINATION licenses/noto-cjk COMPONENT AxiomSDK)
-install(FILES "${PROJECT_SOURCE_DIR}/sdk/version.json" "${PROJECT_SOURCE_DIR}/semantic-sdk.lock.json" "${PROJECT_SOURCE_DIR}/r1-full-skia-sdk.lock.json" DESTINATION share/axiom-sdk COMPONENT AxiomSDK)
+install(FILES "${CMAKE_BINARY_DIR}/axiom-sdk-version.json" DESTINATION share/axiom-sdk RENAME version.json COMPONENT AxiomSDK)
+install(FILES "${PROJECT_SOURCE_DIR}/semantic-sdk.lock.json" "${PROJECT_SOURCE_DIR}/r1-full-skia-sdk.lock.json" DESTINATION share/axiom-sdk COMPONENT AxiomSDK)
 # Locked dependencies are linked privately; distribute their notices, never their archives.
 get_filename_component(_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
 install(DIRECTORY "${_semantic_root}/licenses/" DESTINATION licenses/semantic COMPONENT AxiomSDK)

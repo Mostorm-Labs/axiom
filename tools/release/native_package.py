@@ -12,6 +12,9 @@ import plistlib
 import shutil
 import subprocess
 import tempfile
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tools.release.version_identity import read_identity, manifest_identity, render_sdk_files, identity
 
 
 PLATFORMS = {
@@ -45,7 +48,9 @@ def validate_install(root, target, version, revision):
         required += ['lib/axiom.lib', 'assets/icudtl.dat']
     if any(not (root / name).exists() for name in required):
         raise ValueError('incomplete native install: ' + target)
-    if json.loads((root / 'share/axiom-native/version.json').read_text())['version'] != version:
+    native_version = json.loads((root / 'share/axiom-native/version.json').read_text())
+    expected_build = read_identity(Path(__file__).resolve().parents[2])['buildNumber']
+    if native_version['version'] != version or native_version.get('buildNumber') != expected_build:
         raise ValueError('native SDK version mismatch: ' + target)
     provenance_path = root / 'native-manifest.json'
     if not provenance_path.is_file():
@@ -54,7 +59,8 @@ def validate_install(root, target, version, revision):
     if (provenance.get('format') != 'axiom-native-development-v1' or
             provenance.get('runtime_name') != 'axiom' or
             provenance.get('source_revision') != revision or provenance.get('target') != target or
-            provenance.get('sdk_version') != version or provenance.get('dirty') is not False):
+            provenance.get('sdk_version') != identity(version, expected_build)['displayVersion'] or
+            provenance.get('buildNumber') != expected_build or provenance.get('dirty') is not False):
         raise ValueError('native build provenance mismatch: ' + target)
     actual = {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in root.rglob('*') if p.is_file() and p != provenance_path}
@@ -115,7 +121,8 @@ def _stage_react_native(repo, installs, output, revision):
         raise ValueError('exact revision, native installs and a new output directory are required')
     if source_identity(repo) != (revision, False):
         raise ValueError('consumer sources must be clean at the exact native build revision')
-    version = json.loads((repo / 'sdk/version.json').read_text())['version']
+    build = read_identity(repo)
+    version = build['version']
     ios = set(installs) & {'ios-arm64', 'ios-simulator-arm64'}
     if ios and len(ios) != 2:
         raise ValueError('iOS delivery requires device and simulator installs')
@@ -135,6 +142,8 @@ def _stage_react_native(repo, installs, output, revision):
     shutil.copytree(repo / 'sdk/api', output / 'api')
     for path in (output / 'src').rglob('*.ts'):
         path.write_text(path.read_text().replace("'../../api/", "'../api/"))
+    package['buildNumber'] = build['buildNumber']
+    render_sdk_files(repo, output, build['buildNumber'], api_only=True)
     package.update({'main': './src/index.ts', 'types': './src/index.ts',
                     'react-native': './src/index.ts',
                     'exports': {'.': {'types': './src/index.ts', 'react-native': './src/index.ts',
@@ -182,11 +191,11 @@ def _stage_react_native(repo, installs, output, revision):
         with (bundle / 'Info.plist').open('wb') as file:
             plistlib.dump({'CFBundleIdentifier': 'dev.mostorm.axiom.assets',
                           'CFBundleName': 'AxiomAssets', 'CFBundlePackageType': 'BNDL',
-                          'CFBundleVersion': version}, file)
+                          'CFBundleShortVersionString': version, 'CFBundleVersion': str(build['buildNumber'])}, file)
     files = {p.relative_to(output).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
              for p in output.rglob('*') if p.is_file()}
     manifest = {'format': 'axiom-react-native-development-v1', 'source_revision': revision,
-                'sdk_version': version, 'targets': sorted(installs),
+                **manifest_identity(build), 'targets': sorted(installs),
                 'qualification': 'NOT_QUALIFIED', 'files': files}
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
@@ -255,7 +264,8 @@ def _stage_react_native_common(repo, output, revision):
         raise ValueError('exact revision and a new output directory are required')
     if source_identity(repo) != (revision, False):
         raise ValueError('consumer sources must be clean at the exact revision')
-    version = json.loads((repo / 'sdk/version.json').read_text())['version']
+    build = read_identity(repo)
+    version = build['version']
     package = json.loads((repo / 'sdk/react-native/package.json').read_text())
     api_package = json.loads((repo / 'sdk/api/package.json').read_text())
     if package.get('version') != version or package.get('private') is not False:
@@ -269,11 +279,13 @@ def _stage_react_native_common(repo, output, revision):
         path.write_text(path.read_text().replace("'../../api/", "'../api/"))
     shutil.copy2(repo / 'sdk/react-native/README.md', output / 'README.md')
     shutil.copy2(repo / 'sdk/react-native/example.tsx', output / 'example.tsx')
+    package['buildNumber'] = build['buildNumber']
+    render_sdk_files(repo, output, build['buildNumber'], api_only=True)
     package['files'] = ['src/**', 'api/**', 'README.md', 'example.tsx', 'manifest.json', 'package.json']
     package['private'] = False
     (output / 'package.json').write_text(json.dumps(package, indent=2) + '\n')
     manifest = {'format': 'axiom-react-native-common-v1', 'source_revision': revision,
-                'sdk_version': version, 'qualification': 'NOT_QUALIFIED',
+                **manifest_identity(build), 'qualification': 'NOT_QUALIFIED',
                 'files': _package_files(output)}
     (output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     return manifest
@@ -315,7 +327,8 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
         raise ValueError('exact revision, native installs and a new output directory are required')
     if source_identity(repo) != (revision, False):
         raise ValueError('consumer sources must be clean at the exact revision')
-    version = json.loads((repo / 'sdk/version.json').read_text())['version']
+    build = read_identity(repo)
+    version = build['version']
     targets = set(installs)
     expected = {
         'android': {'android-arm64-v8a', 'android-x86_64'},
@@ -387,16 +400,21 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
         shutil.copytree(output / 'native/assets', bundle)
         with (bundle / 'Info.plist').open('wb') as file:
             plistlib.dump({'CFBundleIdentifier': 'dev.mostorm.axiom.assets', 'CFBundleName': 'AxiomAssets',
-                           'CFBundlePackageType': 'BNDL', 'CFBundleVersion': version}, file)
+                           'CFBundlePackageType': 'BNDL', 'CFBundleShortVersionString': version, 'CFBundleVersion': str(build['buildNumber'])}, file)
     package = json.loads((repo / f'sdk/react-native-{platform}/package.json').read_text())
+    for path in (output / 'android').rglob('AxiomNativeModule.kt'):
+        text = path.read_text()
+        text = re.sub(r'axiom-sdk-[0-9.]+', 'axiom-sdk-' + build['displayVersion'], text)
+        path.write_text(text)
     package['version'] = version
+    package['buildNumber'] = build['buildNumber']
     package['dependencies']['@mostorm/axiom-react-native'] = version
     package['files'] = [name for name in package.get('files', []) if name != 'manifest.json'] + ['manifest.json']
     (output / 'package.json').write_text(json.dumps(package, indent=2) + '\n')
     readme_platform = 'android' if platform.startswith('android-') else platform
     shutil.copy2(repo / f'sdk/react-native-{readme_platform}/README.md', output / 'README.md')
     manifest = {'format': 'axiom-react-native-platform-v1', 'platform': platform,
-                'source_revision': revision, 'sdk_version': version, 'targets': sorted(targets),
+                'source_revision': revision, **manifest_identity(build), 'targets': sorted(targets),
                 'runtime': 'axiom', 'adapter': 'consumer-built',
                 'runtime_files': {
                     'windows': ['native/windows/bin/axiom.dll', 'native/windows/lib/axiom.lib'],

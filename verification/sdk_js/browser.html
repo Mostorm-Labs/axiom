@@ -2,7 +2,7 @@
 <style>.mount{width:400px;height:300px;display:inline-block}</style>
 <div id="one" class="mount"></div><div id="two" class="mount"></div><pre id="result">PENDING</pre>
 <script type="module">
-import {createRuntime,AxiomError,SDK_VERSION} from './axiom.mjs';
+import {createRuntime,AxiomError,SDK_VERSION,SDK_SEMVER,SDK_BUILD_NUMBER} from './axiom.mjs';
 const results=[], errors=[], operations=[];
 const assert=(v,message)=>{if(!v)throw Error(message);results.push(message);};
 const pause=()=>new Promise(r=>setTimeout(r,50));
@@ -19,6 +19,7 @@ try {
   const b=await createRuntime({mount:document.getElementById('two'),documentId:'02ff'.padStart(32,'0'),onError:e=>errors.push(e)});
   assert(a.readBuildInfo().sdkVersion===SDK_VERSION && a.version===SDK_VERSION && /^[0-9a-f]{40}$/.test(a.readBuildInfo().sourceRevision),'matching wrapper and engine build identity');
   const buildInfo=a.readBuildInfo();
+  assert(buildInfo.sdkSemver===SDK_SEMVER && buildInfo.buildNumber===SDK_BUILD_NUMBER && SDK_VERSION===SDK_SEMVER+'.'+SDK_BUILD_NUMBER && Number.isSafeInteger(buildInfo.buildNumber),'separate product SemVer and lossless build number');
   assert(a.readState().documentId!==b.readState().documentId,'independent document identity');
   await a.selectShape('rectangle');await draw(a);
   assert(a.readState().objects===1 && b.readState().objects===0,'real pointer input and instance isolation');

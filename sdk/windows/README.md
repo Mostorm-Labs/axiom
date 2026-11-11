@@ -199,3 +199,9 @@ succeed before invoking Cut with the captured complete stamp. Refer to the Web
 README/object-clipboard-and-live-erase-v1 contract for v1 format, bounds, placement,
 resource requirements and errors. Windows binary/physical input qualification must
 be performed on Windows; macOS shared Runtime/Web checks do not establish it.
+
+
+Version readback: `readBuildInfo()` reports `sdkVersion` (`X.Y.Z.Build`),
+`sdkSemver` (`X.Y.Z`) and numeric `buildNumber`. npm `version` stays X.Y.Z with
+separate buildNumber metadata. Local builds use Build=0; release artifacts share
+one pipeline build number. See sdk/VERSIONING.md.

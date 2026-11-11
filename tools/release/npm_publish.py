@@ -15,6 +15,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.release.consumer_package import JS_REQUIRED
+from tools.release.version_identity import validate_manifest, identity
 
 PACKAGE_NAME = '@mostorm/axiom'
 REGISTRY = 'http://npm.nearhub.cc/'
@@ -63,10 +64,10 @@ def prepare_package(archive, output, revision):
             raise ValueError('npm registry/tag policy mismatch')
         if package.get('scripts'):
             raise ValueError('lifecycle scripts are forbidden in this consumer payload')
+        build = validate_manifest(manifest)
         version = package.get('version', '')
-        if (version != manifest.get('sdk_version') or not re.fullmatch(
-                r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version)):
-            raise ValueError('release npm version mismatch')
+        if identity(version, package.get('buildNumber')) != build:
+            raise ValueError('release npm version/buildNumber mismatch')
         if 'manifest.json' not in package.get('files', []):
             raise ValueError('npm whitelist must retain release provenance')
         # No output mutation until all identity, hash and package-policy checks pass.
@@ -76,7 +77,7 @@ def prepare_package(archive, output, revision):
             target.parent.mkdir(parents=True, exist_ok=True)
             with z.open(name) as source, target.open('xb') as destination:
                 shutil.copyfileobj(source, destination)
-    return {'name': PACKAGE_NAME, 'version': version, 'registry': REGISTRY,
+    return {'name': PACKAGE_NAME, **build, 'registry': REGISTRY,
             'tag': 'latest', 'source_revision': revision}
 
 

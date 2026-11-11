@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.semantic.cmake_consumer import consumer_cmake_arguments
 from tools.release.preview_package import build_assets, sha256
 from tools.release.consumer_package import package as build_consumer_assets
+from tools.release.version_identity import require_fresh_build
 
 
 def run(args, env=None):
@@ -137,6 +138,7 @@ def main():
     p.add_argument('--emsdk', type=Path)
     p.add_argument('--chrome', type=Path)
     args = p.parse_args()
+    require_fresh_build(os.environ)
     repo = Path(__file__).resolve().parents[2]
     actual_revision = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
     dirty = subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain'], text=True).strip()

@@ -28,7 +28,7 @@ class NpmPublicationTest(unittest.TestCase):
         declarations = (REPO / 'sdk/api/axiom.d.mts').read_text()
         versions = re.findall(r"SDK_VERSION\s*(?:=|:)\s*'([^']+)'", common + '\n' + declarations)
         versions += re.findall(r"readonly version:\s*'([^']+)'", types)
-        self.assertEqual(versions, [package['version']] * 3,
+        self.assertEqual(versions, [package['version'] + '.' + str(package['buildNumber'])] * 3,
                          'wrapper, declarations and native engine must report one SDK version')
 
     def prepare(self, archive, output, revision=REVISION):
@@ -46,7 +46,8 @@ class NpmPublicationTest(unittest.TestCase):
         payload['package.json'] = json.dumps(package).encode()
         payload.update(extra or {})
         manifest = {'format': 'axiom-sdk-preview-v1', 'kind': kind,
-                    'source_revision': revision, 'sdk_version': package['version'] if version is None else version,
+                    'source_revision': revision, 'version': package['version'], 'buildNumber': package['buildNumber'],
+                    'sdk_version': package['version'] + '.' + str(package['buildNumber']) if version is None else version,
                     'files': {k: hashlib.sha256(v).hexdigest() for k, v in payload.items()}}
         if corrupt:
             payload[corrupt] += b'tampered'
@@ -120,6 +121,23 @@ class NpmPublicationTest(unittest.TestCase):
                 root = Path(tmp); archive = self.archive(root, metadata=metadata)
                 with self.assertRaises(ValueError):
                     self.prepare(archive, root / 'npm')
+
+    def test_build_metadata_cannot_relabel_a_verified_release(self):
+        for number in (True, '0', -1, 1):
+            with self.subTest(number=number), tempfile.TemporaryDirectory() as tmp:
+                root=Path(tmp); archive=self.archive(root)
+                with zipfile.ZipFile(archive) as z:
+                    files={n:z.read(n) for n in z.namelist()}
+                package=json.loads(files['package.json']); package['buildNumber']=number
+                files['package.json']=json.dumps(package).encode()
+                manifest=json.loads(files['manifest.json'])
+                manifest['files']['package.json']=hashlib.sha256(files['package.json']).hexdigest()
+                files['manifest.json']=json.dumps(manifest).encode()
+                with zipfile.ZipFile(archive,'w') as z:
+                    for name,data in files.items():z.writestr(name,data)
+                with self.assertRaisesRegex(ValueError,'build|Build'):
+                    self.prepare(archive,root/'npm')
+                self.assertFalse((root/'npm').exists())
 
     def test_rejects_unmanifested_files(self):
         with tempfile.TemporaryDirectory() as tmp:

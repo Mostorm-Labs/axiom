@@ -1,17 +1,42 @@
 {
   "name": "@mostorm/axiom-react-native-windows",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Axiom React Native Windows adapter and axiom.dll runtime package",
   "private": false,
-  "publishConfig": {"access": "restricted", "registry": "http://npm.nearhub.cc/", "tag": "latest"},
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "http://npm.nearhub.cc/",
+    "tag": "latest"
+  },
   "type": "module",
   "codegenConfig": {
     "name": "AxiomNativeSpec",
     "type": "all",
     "jsSrcsDir": "src/specs",
-    "windows": {"namespace": "MostormAxiom", "outputDirectory": "windows/generated", "generators": ["componentsWindows"]}
+    "windows": {
+      "namespace": "MostormAxiom",
+      "outputDirectory": "windows/generated",
+      "generators": [
+        "componentsWindows"
+      ]
+    }
   },
-  "files": ["windows/**", "src/specs/**", "native/**", "react-native.config.cjs", "README.md", "manifest.json", "package.json"],
-  "dependencies": {"@mostorm/axiom-react-native": "0.4.3"},
-  "peerDependencies": {"react": "19.2.0 || 19.2.3", "react-native": "0.83.10 || 0.84.1", "react-native-windows": "0.84.0"}
+  "files": [
+    "windows/**",
+    "src/specs/**",
+    "native/**",
+    "react-native.config.cjs",
+    "README.md",
+    "manifest.json",
+    "package.json"
+  ],
+  "dependencies": {
+    "@mostorm/axiom-react-native": "0.4.4"
+  },
+  "peerDependencies": {
+    "react": "19.2.0 || 19.2.3",
+    "react-native": "0.83.10 || 0.84.1",
+    "react-native-windows": "0.84.0"
+  },
+  "buildNumber": 0
 }

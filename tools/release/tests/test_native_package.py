@@ -1,6 +1,7 @@
 import importlib.util
 import hashlib
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,6 +11,11 @@ REPO = Path(__file__).resolve().parents[3]
 
 
 class NativePackageTest(unittest.TestCase):
+    def setUp(self):
+        env = patch.dict(os.environ, {'AXIOM_BUILD_NUMBER': '0'})
+        env.start()
+        self.addCleanup(env.stop)
+
     def test_public_package_matrix_and_platform_naming_are_frozen(self):
         common=json.loads((REPO/'sdk/react-native/package.json').read_text())
         self.assertEqual(common['name'],'@mostorm/axiom-react-native')
@@ -123,7 +129,7 @@ class NativePackageTest(unittest.TestCase):
         files={p.relative_to(stage).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
                for p in stage.rglob('*') if p.is_file() and p.name!='native-manifest.json'}
         (stage/'native-manifest.json').write_text(json.dumps({'format':'axiom-native-development-v1','runtime_name':'axiom','source_revision':'a'*40,
-          'sdk_version':json.loads((REPO/'sdk/version.json').read_text())['version'],
+          'sdk_version':json.loads((REPO/'sdk/version.json').read_text())['version']+'.0','buildNumber':0,
           'target':target,'dirty':False,'files':files}))
 
     def test_stage_has_self_contained_shared_api_and_native_payload(self):
@@ -140,7 +146,7 @@ class NativePackageTest(unittest.TestCase):
             self.assertIn("from '../api/axiom.mjs'", source)
             self.assertNotIn('../../api/', source)
             metadata = json.loads((package / 'package.json').read_text())
-            self.assertEqual(metadata['version'], result['sdk_version'])
+            self.assertEqual(metadata['version']+'.'+str(metadata['buildNumber']), result['sdk_version'])
             self.assertEqual(set(metadata['exports']), {'.'})
             self.assertTrue(metadata['private'])
             self.assertFalse(list(package.rglob('*.a')))
@@ -215,7 +221,7 @@ class NativePackageTest(unittest.TestCase):
             root = Path(temp)
             stage = self.fixture(root)
             (stage / 'native-manifest.json').write_text(json.dumps({
-                'source_revision':'b'*40, 'sdk_version':json.loads((REPO/'sdk/version.json').read_text())['version'],
+                'source_revision':'b'*40, 'sdk_version':json.loads((REPO/'sdk/version.json').read_text())['version']+'.0','buildNumber':0,
                 'target':'android-arm64-v8a', 'dirty':False, 'files':{}}))
             with self.assertRaises(ValueError):
                 self.module().stage_react_native(REPO, {'android-arm64-v8a': stage}, root / 'output', 'a'*40)

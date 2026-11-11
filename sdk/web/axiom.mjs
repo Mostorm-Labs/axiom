@@ -1,6 +1,6 @@
-import {SDK_VERSION, AxiomError} from '../api/axiom.mjs';
+import {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError} from '../api/axiom.mjs';
 import {adaptController} from '../api/internal/controller.mjs';
-export {SDK_VERSION, AxiomError};
+export {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError};
 /** Async, DOM-free control contract shared with the native SDK. */
 export async function createController(options) {return adaptController(await createRuntime(options));}
 const enumValue = (values, name) => {

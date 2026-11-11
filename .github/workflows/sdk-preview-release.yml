@@ -3,6 +3,10 @@ name: Axiom SDK and demo release
 on:
   workflow_dispatch:
     inputs:
+      publish_release:
+        description: 'Publish an unpublished vX.Y.Z candidate using this new run/build number (tag ref required)'
+        type: boolean
+        default: false
       browser_probe_only:
         description: 'Run browser environment diagnostic only (no product qualification or release)'
         type: boolean
@@ -34,6 +38,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  identity:
+    if: github.event_name != 'workflow_dispatch' || !inputs.browser_probe_only
+    runs-on: ubuntu-24.04
+    outputs:
+      build_number: ${{ steps.identity.outputs.build_number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: identity
+        shell: bash
+        run: |
+          python tools/release/version_identity.py --ci --require-fresh-build
+          echo "build_number=$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+
   browser-probe:
     if: github.event_name == 'workflow_dispatch' && inputs.browser_probe_only
     runs-on: windows-2025
@@ -55,6 +74,7 @@ jobs:
           name: axiom-chrome-probe-${{ github.run_attempt }}
           path: out/chrome-probe.json
   build:
+    needs: identity
     if: github.event_name != 'workflow_dispatch' || !inputs.browser_probe_only
     name: Build and verify ${{ matrix.platform }}
     runs-on: windows-2025
@@ -71,6 +91,7 @@ jobs:
             skia_target: web-wasm-webgl2
     env:
       PYTHONUTF8: '1'
+      AXIOM_BUILD_NUMBER: ${{ needs.identity.outputs.build_number }}
       AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
     steps:
       - uses: actions/checkout@v4
@@ -111,7 +132,8 @@ jobs:
           tools.release.tests.test_preview_package
           tools.release.tests.test_consumer_package
           tools.release.tests.test_npm_publish
-          tools.release.tests.test_native_package -v
+          tools.release.tests.test_native_package
+          tools.release.tests.test_version_identity -v
       - name: Check public JavaScript SDK types
         if: matrix.platform == 'web'
         run: npx --yes --ignore-scripts --package typescript@5.9.3 -- tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts
@@ -148,8 +170,10 @@ jobs:
           retention-days: 90
 
   publish:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    needs: build
+    if: (github.event_name == 'push' || inputs.publish_release) && startsWith(github.ref, 'refs/tags/v')
+    needs: [identity, build]
+    env:
+      AXIOM_BUILD_NUMBER: ${{ needs.identity.outputs.build_number }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
@@ -178,16 +202,17 @@ jobs:
 
           Known limits: physical-input/IME coverage is incomplete; document persistence, synchronization and durable close are owned by the embedding application; Undo history is not restored from checkpoints. The known D07 Protobuf/Abseil allocation-failure hang is unresolved.
 
-          See each archive's README and manifest.json, and verify SHA256SUMS and release.json before use. All four assets share one exact source revision and SDK version.
+          See each archive's README and manifest.json, and verify SHA256SUMS and release.json before use. All four assets share one exact source revision, SemVer and pipeline build number. SDK/API display X.Y.Z.Build; npm keeps X.Y.Z plus buildNumber. Performance evidence checkpoints include known unresolved cumulative erase/live-continuity limits; this release is not a performance Gate PASS.
           EOF
-          version=$(python -c 'import json; print(json.load(open("release-assets/release.json"))["sdk_version"])')
+          display_version=$(python -c 'import json; print(json.load(open("release-assets/release.json"))["sdk_version"])')
+          version=$(python -c 'import json; print(json.load(open("release-assets/release.json"))["version"])')
           test "$GITHUB_REF_NAME" = "v$version"
-          gh release create "$GITHUB_REF_NAME" --verify-tag --target "$GITHUB_SHA" --draft --title "Axiom SDK $version" --notes-file release-notes.txt
+          gh release create "$GITHUB_REF_NAME" --verify-tag --target "$GITHUB_SHA" --draft --title "Axiom SDK $display_version" --notes-file release-notes.txt
           gh release upload "$GITHUB_REF_NAME" release-assets/*.zip release-assets/SHA256SUMS release-assets/release.json
           gh release edit "$GITHUB_REF_NAME" --draft=false --prerelease=false --latest=true
 
   publish-npm:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: (github.event_name == 'push' || inputs.publish_release) && startsWith(github.ref, 'refs/tags/v')
     needs: publish
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -226,3 +251,12 @@ jobs:
           npm publish ./npm-package --ignore-scripts --tag=latest --registry=http://npm.nearhub.cc/
           version=$(node --input-type=module -e 'import fs from "node:fs"; console.log(JSON.parse(fs.readFileSync("npm-package/package.json", "utf8")).version)')
           npm view "@mostorm/axiom@$version" version --json --registry=http://npm.nearhub.cc/
+
+  react-native:
+    if: (github.event_name == 'push' || inputs.publish_release) && startsWith(github.ref, 'refs/tags/v')
+    needs: [identity, publish]
+    uses: ./.github/workflows/rn-sdk-release.yml
+    with:
+      release_build_number: ${{ needs.identity.outputs.build_number }}
+      publish_release: true
+    secrets: inherit

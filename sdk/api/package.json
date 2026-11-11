@@ -1,7 +1,23 @@
 {
-  "name": "@mostorm/axiom-api", "version": "0.4.3", "type": "module",
+  "name": "@mostorm/axiom-api",
+  "version": "0.4.4",
+  "type": "module",
   "private": true,
-  "exports": {".": {"types": "./axiom.d.mts", "import": "./axiom.mjs"}},
-  "files": ["axiom.mjs", "axiom.d.mts", "demo-controls.mjs", "demo-controls.d.mts", "README.md"],
-  "engines": {"node": ">=22"}
+  "exports": {
+    ".": {
+      "types": "./axiom.d.mts",
+      "import": "./axiom.mjs"
+    }
+  },
+  "files": [
+    "axiom.mjs",
+    "axiom.d.mts",
+    "demo-controls.mjs",
+    "demo-controls.d.mts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "buildNumber": 0
 }

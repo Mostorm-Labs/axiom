@@ -541,3 +541,9 @@ non-ink objects and colored backgrounds remain visible through the cutout. Spars
 pointer samples are joined geometrically. Canonical state/History/publication change
 only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
 uses conservative bounded candidates; the renderer still clips against actual ink.
+
+
+Version readback: `readBuildInfo()` reports `sdkVersion` (`X.Y.Z.Build`),
+`sdkSemver` (`X.Y.Z`) and numeric `buildNumber`. npm `version` stays X.Y.Z with
+separate buildNumber metadata. Local builds use Build=0; release artifacts share
+one pipeline build number. See sdk/VERSIONING.md.

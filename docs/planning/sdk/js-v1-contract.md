@@ -73,3 +73,12 @@ preview assets.
 
 
 Object clipboard v1 and live partial erase increment: see `../object-clipboard-and-live-erase-v1.json` and `sdk/web/README.md`. Root JS synchronous Copy returns owned opaque bytes and an owner-bound full Stamp; queued Cut/Duplicate/Paste retain the full captured basis. The shared Runtime owns identity remapping, hierarchy, resource validation, atomic History and publication; the Demo owns OS clipboard/key translation only. No Semantic Operation schema or conflict protocol changes.
+
+
+Version identity increment (0.4.4): the existing read-only `version` Session command
+returns `sdkVersion` as X.Y.Z.Build, `sdkSemver` as X.Y.Z and lossless numeric
+`buildNumber` (0 for local builds, positive for release builds). Root JS exports
+SDK_VERSION, SDK_SEMVER and SDK_BUILD_NUMBER; generated wrappers/declarations and
+engine must match. This adds value metadata without exposing Runtime owners,
+changing DLL exports, buffer lifetime, owner-thread/reentrancy or receipt semantics.
+See sdk/VERSIONING.md for immutable npm/tag and build lifecycle rules.

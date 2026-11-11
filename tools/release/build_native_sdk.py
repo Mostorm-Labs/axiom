@@ -14,6 +14,7 @@ import sys
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 from tools.semantic.cmake_consumer import consumer_cmake_arguments
+from tools.release.version_identity import read_identity, manifest_identity, require_fresh_build
 
 TARGETS = {
     'macos-arm64': ('macos-arm64', 'macos-arm64-metal'),
@@ -48,6 +49,7 @@ def strip_android_runtime(output, ndk):
 def build(target, directory, output, ndk=None, offline=False):
     if output.exists():
         raise ValueError('refusing to overwrite native install: ' + str(output))
+    require_fresh_build(os.environ)
     semantic, skia_target = TARGETS[target]
     directory.mkdir(parents=True, exist_ok=True)
     facts_path = directory / 'environment.json'
@@ -92,7 +94,7 @@ def build(target, directory, output, ndk=None, offline=False):
     if target.startswith('android-'):
         strip_android_runtime(output, ndk)
     metadata = {'format': 'axiom-native-development-v1', 'target': target, 'runtime_name': 'axiom',
-                'sdk_version': json.loads((REPO / 'sdk/version.json').read_text())['version'],
+                **manifest_identity(read_identity(REPO)),
                 'source_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),
                 'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=REPO, text=True).strip()),
                 'qualification': 'NOT_QUALIFIED',

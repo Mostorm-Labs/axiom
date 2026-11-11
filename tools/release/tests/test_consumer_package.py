@@ -27,8 +27,23 @@ class ConsumerPayloadTest(unittest.TestCase):
                 stage=root/kind;stage.mkdir();(stage/'payload').write_bytes(b'packaging fixture, not product evidence')
                 if kind=='windows-sdk':
                     (stage/'lib').mkdir();(stage/'lib/axiom.lib').write_bytes(b'import stub fixture')
-                if kind=='js-sdk':(stage/'package.json').write_text(json.dumps({'version':'0.0.1'}))
+                if kind in ('js-sdk','web-demo'):(stage/'package.json').write_text(json.dumps({'version':'0.0.2' if kind=='web-demo' else '0.0.1','buildNumber':0}))
                 package_tree(stage,release/name,['payload'],'d'*40,kind,version='0.0.2' if kind=='web-demo' else '0.0.1')
+            with self.assertRaisesRegex(ValueError,'versions differ'):
+                verify_release(release,'d'*40)
+            self.assertFalse((release/'SHA256SUMS').exists())
+
+    def test_same_semver_does_not_allow_cross_platform_build_mixing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);release=root/'release';release.mkdir()
+            for name,kind in {'axiom-sdk-windows.zip':'windows-sdk','axiom-sdk-js.zip':'js-sdk','axiom-demo-windows.zip':'windows-demo','axiom-demo-web.zip':'web-demo'}.items():
+                stage=root/kind;stage.mkdir();(stage/'payload').write_bytes(b'fixture')
+                build=72 if kind=='web-demo' else 71
+                if kind=='windows-sdk':
+                    (stage/'lib').mkdir();(stage/'lib/axiom.lib').write_bytes(b'fixture')
+                if kind in ('js-sdk','web-demo'):
+                    (stage/'package.json').write_text(json.dumps({'version':'1.3.4','buildNumber':build}))
+                package_tree(stage,release/name,['payload'],'d'*40,kind,version='1.3.4',build_number=build)
             with self.assertRaisesRegex(ValueError,'versions differ'):
                 verify_release(release,'d'*40)
             self.assertFalse((release/'SHA256SUMS').exists())

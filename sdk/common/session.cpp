@@ -505,6 +505,8 @@ class Session::Impl {
                     {"apiVersion", 1},
                     {"features", {{"objectClipboard", 1}, {"livePartialErase", 1}, {"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}, {"inkV2",1}, {"compactStroke",1}, {"materialInk",1}, {"simulatedPressure",1}, {"devicePressure",1}, {"laserTransient",1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
+                    {"sdkSemver", AXIOM_SDK_SEMVER},
+                    {"buildNumber", AXIOM_SDK_BUILD_NUMBER},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
                     {"platform", b.platform}};

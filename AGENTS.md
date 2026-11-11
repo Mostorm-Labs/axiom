@@ -193,15 +193,21 @@ artifacts over downloading or compiling a new copy.
 
 ## SDK versioning and publication
 
-Follow `sdk/VERSIONING.md` and the user's `x.y.z` iteration rule: `z` for small
-improvements/fixes, `y` for small feature iterations (reset `z`), and `x` for large
-feature iterations (reset `y` and `z`). A release containing multiple levels uses
-the highest one. Use numeric versions without prerelease suffixes. Keep the version
-in `sdk/version.json`, Web package/wrapper/types, all platform SDKs and Demo
-manifests identical. Publish immutable `vx.y.z` GitHub tags and matching
-`@mostorm/axiom@x.y.z` npm packages with the `latest` distribution tag. The initial
-release requested in this session is `0.0.1`. Version labels do not replace the
-separate API/ABI/data compatibility contracts or platform verification.
+Follow `sdk/VERSIONING.md`. Product/SDK/API display `X.Y.Z.Build`; `X.Y.Z` follows
+SemVer compatibility: X for breaking public API changes, Y for backward-compatible
+features/deprecations, Z for backward-compatible fixes/performance/security work.
+Build is the shared positive main release-workflow run number, allocated once and
+passed to all platforms. Local unqualified builds use 0. A new compilation run
+gets a new Build; a publication-only retry reuses the exact verified artifacts.
+Do not rebuild jobs in an old run or change published packages/tags/assets.
+
+`sdk/version.json` owns logical `version` and local `buildNumber`. Generated SDKs,
+Demo manifests and readBuildInfo must agree on the full build identity. npm
+package.json uses three-part `version` plus numeric `buildNumber`; never put four
+parts in npm version. npm identity remains name@X.Y.Z, so changing only Build cannot
+republish an existing npm version. GitHub tags remain immutable `vX.Y.Z`, Release
+titles show `Axiom SDK X.Y.Z.Build`, and npm uses `latest`. API/ABI/data version
+contracts remain separate. Historical frozen authority/evidence stays unchanged.
 
 A tag becomes immutable once its SDK is published as a GitHub Release or npm
 version. To repair an unpublished candidate created by the current release task,
