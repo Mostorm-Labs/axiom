@@ -44,6 +44,9 @@ jobs:
     outputs:
       build_number: ${{ steps.identity.outputs.build_number }}
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -58,6 +61,9 @@ jobs:
     runs-on: windows-2025
     timeout-minutes: 10
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -94,6 +100,9 @@ jobs:
       AXIOM_BUILD_NUMBER: ${{ needs.identity.outputs.build_number }}
       AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -179,6 +188,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
@@ -219,6 +231,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           persist-credentials: false

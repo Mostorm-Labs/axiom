@@ -39,6 +39,9 @@ jobs:
       version: ${{ steps.identity.outputs.version }}
       publish: ${{ steps.identity.outputs.publish }}
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.tag || github.ref_name }}
@@ -91,6 +94,9 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 180
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.preflight.outputs.revision }}
@@ -141,6 +147,9 @@ jobs:
     needs: [preflight, native]
     runs-on: macos-15
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.preflight.outputs.revision }}
@@ -201,6 +210,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Enable long evidence paths before checkout
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.preflight.outputs.revision }}
