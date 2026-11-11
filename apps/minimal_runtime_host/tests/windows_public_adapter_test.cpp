@@ -1,6 +1,7 @@
 #include "canvas/platform/windows_runtime_adapter.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/diagnostics.hpp"
+#include "windows_d3d12_surface_provider.hpp"
 
 #define NOMINMAX
 #include <windows.h>
@@ -36,6 +37,16 @@ int main() {
   auto surface = diagnostics.readPlatformDiagnostics();
   assert(surface.surfaceAvailable && surface.width == 256U && surface.height == 256U);
   assert(surface.devicePixelRatio == 2.0F && surface.canonicalSurfaceGeneration != 0);
+  // A provider context remains independently serviceable across replacement.
+  canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider completionProvider(window);
+  assert(completionProvider.resize(32, 32).code == canvas::render::BackendSubmissionCode::kAccepted);
+  auto completion = completionProvider.gpuCompletionService();
+  assert(completion && completion->state() && !completion->state()->abandoned.load());
+  const auto completionState = completion->state();
+  assert(completionProvider.resize(48, 48).code == canvas::render::BackendSubmissionCode::kAccepted);
+  completion->service();
+  assert(completionProvider.gpuCompletionService()->state()->lifetime != completionState->lifetime);
+  assert(!completionState->physicalLost.load());
   assert(adapter.prepareFrame(true));
   assert(adapter.frameStatus().available && adapter.frameStatus().canonicalWorkId != 0);
   assert(adapter.present());

@@ -117,6 +117,13 @@ bool WindowsRuntimeAdapter::present() noexcept {
     impl_->canonicalConfirmed = count;
     impl_->lastPresentedFrame = work->frame.frameId.value();
   }
+  // Qualified exact canonical replacement may supersede the captured preview.
+  // Retire that capture without inventing a preview receipt for replaced pixels.
+  if (impl_->frame.previewWork && impl_->core.previewWorkState(*impl_->frame.previewWork) ==
+      runtime::RuntimePreviewWorkState::kSuperseded) {
+    (void)impl_->core.finishFrameOpportunity({impl_->frame.previewWork, true});
+    return true;
+  }
   const auto previewCount = impl_->preview->presentCount();
   if (impl_->frame.previewWork && previewCount <= impl_->previewConfirmed) return false;
   const bool accepted = impl_->core.finishFrameOpportunity({impl_->frame.previewWork, true});

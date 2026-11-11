@@ -29,6 +29,7 @@ class WindowsD3D12SurfaceProvider final
   [[nodiscard]] canvas::render::RenderTargetInfo describe() const noexcept override;
   [[nodiscard]] canvas::render::SkiaSurfaceAcquireResult acquire() noexcept override;
   void release() noexcept override;
+  [[nodiscard]] std::shared_ptr<canvas::render::GpuCompletionService> gpuCompletionService() const noexcept override;
   [[nodiscard]] canvas::render::BackendSubmissionResult lose() noexcept override;
   [[nodiscard]] canvas::render::BackendSubmissionResult present() noexcept override;
   [[nodiscard]] canvas::render::BackendSubmissionResult resize(std::uint32_t, std::uint32_t) noexcept override;

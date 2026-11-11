@@ -77,6 +77,39 @@ bool registerOverlayClass(HINSTANCE instance) noexcept {
   klass.lpszClassName = kOverlayClass;
   return RegisterClassW(&klass) != 0 || GetLastError() == ERROR_CLASS_ALREADY_EXISTS;
 }
+// Completion tickets retain this context, independently of HWND/provider
+// lifetime. Polling never draws, presents, waits, or calls the Runtime.
+class D3D12Completion final : public canvas::render::GpuCompletionService {
+ public:
+  D3D12Completion(sk_sp<GrDirectContext> context, ComPtr<ID3D12Device> device)
+      : context_(std::move(context)), device_(std::move(device)) {}
+  ~D3D12Completion() override {
+    state_->abandoned.store(true, std::memory_order_release);
+    if (context_) context_->releaseResourcesAndAbandonContext();
+  }
+  void service() noexcept override {
+    if (!context_ || state_->abandoned.load(std::memory_order_acquire)) return;
+    if (device_ && FAILED(device_->GetDeviceRemovedReason())) {
+      state_->physicalLost.store(true, std::memory_order_release);
+      state_->abandoned.store(true, std::memory_order_release);
+      context_->abandonContext();
+      return;
+    }
+    if (context_->abandoned()) {
+      state_->abandoned.store(true, std::memory_order_release);
+      return;
+    }
+    context_->checkAsyncWorkCompletion();
+  }
+  std::shared_ptr<const canvas::render::GpuCompletionState> state() const noexcept override {
+    return state_;
+  }
+ private:
+  sk_sp<GrDirectContext> context_;
+  ComPtr<ID3D12Device> device_;
+  std::shared_ptr<canvas::render::GpuCompletionState> state_ =
+      std::make_shared<canvas::render::GpuCompletionState>();
+};
 }  // namespace
 
 struct WindowsD3D12SurfaceProvider::Impl final {
@@ -88,6 +121,7 @@ struct WindowsD3D12SurfaceProvider::Impl final {
   ComPtr<IDCompositionTarget> target;
   ComPtr<IDCompositionVisual> visual;
   sk_sp<GrDirectContext> context;
+  std::shared_ptr<D3D12Completion> completion;
   std::array<ComPtr<ID3D12Resource>, 3> buffers;
   std::array<sk_sp<SkSurface>, 3> surfaces;
   ComPtr<ID3D12Fence> fence;
@@ -156,6 +190,10 @@ canvas::render::SkiaSurfaceAcquireResult WindowsD3D12SurfaceProvider::acquire() 
       {impl_->surfaces[index].get(), generation()});
 }
 void WindowsD3D12SurfaceProvider::release() noexcept {}
+std::shared_ptr<canvas::render::GpuCompletionService>
+WindowsD3D12SurfaceProvider::gpuCompletionService() const noexcept {
+  return impl_ ? impl_->completion : nullptr;
+}
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::lose() noexcept {
   lost_ = true;
   setOverlayVisible(false);
@@ -338,6 +376,8 @@ bool WindowsD3D12SurfaceProvider::createGpuSurface() noexcept {
   backend.fQueue.retain(impl_->queue.Get());
   impl_->context = GrDirectContexts::MakeD3D(backend);
   if (!impl_->context) return false;
+  try { impl_->completion = std::make_shared<D3D12Completion>(impl_->context, impl_->device); }
+  catch (const std::bad_alloc&) { return false; }
   DXGI_SWAP_CHAIN_DESC1 desc{};
   desc.Width = width_; desc.Height = height_; desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
   desc.BufferCount = static_cast<UINT>(impl_->buffers.size());
@@ -488,6 +528,7 @@ void WindowsD3D12SurfaceProvider::destroyGpuSurface() noexcept {
   impl_->swapChain.Reset();
   impl_->queue.Reset(); impl_->device.Reset(); impl_->adapter.Reset();
   impl_->fence.Reset();
+  impl_->completion.reset();
 }
 void WindowsD3D12SurfaceProvider::repositionOverlay() noexcept {
   if (attachToOwner_) {
@@ -524,6 +565,8 @@ WindowsD3D12SurfaceProvider::~WindowsD3D12SurfaceProvider() = default;
 canvas::render::RenderTargetInfo WindowsD3D12SurfaceProvider::describe() const noexcept { return {}; }
 canvas::render::SkiaSurfaceAcquireResult WindowsD3D12SurfaceProvider::acquire() noexcept { return {}; }
 void WindowsD3D12SurfaceProvider::release() noexcept {}
+std::shared_ptr<canvas::render::GpuCompletionService>
+WindowsD3D12SurfaceProvider::gpuCompletionService() const noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::lose() noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::present() noexcept { return {}; }
 canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::resize(std::uint32_t, std::uint32_t) noexcept { return {}; }

@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <functional>
+#include <utility>
 #include <limits>
 #include <thread>
 
@@ -21,7 +22,7 @@ class ResizeFailureProvider final : public canvas::render::SkiaSurfaceProvider {
   canvas::render::BackendSubmissionResult lose() noexcept override { return actual.lose(); }
   canvas::render::BackendSubmissionResult present() noexcept override { return actual.present(); }
   canvas::render::BackendSubmissionResult resize(std::uint32_t w, std::uint32_t h) noexcept override {
-    if (duringResize) { auto callback = std::move(duringResize); callback(); }
+    if (duringResize) { auto callback = std::exchange(duringResize, {}); callback(); }
     if (failResize && destructiveFailure) (void)actual.lose();
     return failResize ? canvas::render::BackendSubmissionResult::rejected("injected resize failure")
                       : actual.resize(w, h);
@@ -362,9 +363,14 @@ void bindingReplacementKeepsPendingBrushHandoff() {
       assert(composition.receivePlatformPresented({*fresh.canonicalWork, render::PresentOutcome::kPresented,
           render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
     };
-    if (canonicalFirst) presentCanonical();
-    assert(composition.finishFrameOpportunity({fresh.previewWork, true}));
-    if (!canonicalFirst) presentCanonical();
+    if (canonicalFirst) {
+      presentCanonical();
+      assert(composition.previewWorkState(*fresh.previewWork) == runtime::RuntimePreviewWorkState::kSuperseded);
+      assert(!composition.finishFrameOpportunity({fresh.previewWork, true}));
+    } else {
+      assert(composition.finishFrameOpportunity({fresh.previewWork, true}));
+      presentCanonical();
+    }
     assert(composition.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
     assert(!composition.previewActive());
   }
@@ -515,9 +521,11 @@ void canonicalFeedbackCannotQualifyAnotherInstance() {
       render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
   assert(a.receivePlatformPresented({*fa.canonicalWork, render::PresentOutcome::kPresented,
       render::PresentEvidenceKind::kPlatformQualified, std::nullopt}));
-  // Canonical-first remains pending until this instance's preview is qualified.
-  assert(a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 1U);
-  assert(a.finishFrameOpportunity({fa.previewWork, true}));
+  // The qualified exact roster replaces this instance's sealed display even
+  // when its superseded preview receipt arrives later (UR2a current handoff).
+  assert(!a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
+  assert(a.previewWorkState(*fa.previewWork) == runtime::RuntimePreviewWorkState::kSuperseded);
+  assert(!a.finishFrameOpportunity({fa.previewWork, true}));
   assert(!a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
 
   assert(b.close());
