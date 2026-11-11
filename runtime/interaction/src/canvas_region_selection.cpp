@@ -249,7 +249,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
         if (root.isZero()) continue;
         const auto* projection=projected.find(id);
         if (!projection) {result.status=Status::kStale;return result;}
-        RegionIntersection intersection;
+        RegionIntersection intersection=RegionIntersection::kInvalid;
         if(canonical->kind==semantic::ObjectKind::kVectorStroke&&
            std::holds_alternative<semantic::CompactStrokeContent>(projection->content.get())){
             std::vector<foundation::WorldPoint> query;query.reserve(world.size());
